@@ -6,6 +6,26 @@ import { describe, expect, it } from "vitest";
 import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } from "./gdelt";
 import { aggregateStream, buildStocktwitsRows } from "./stocktwits";
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
+import { extractScore, tonePrompt } from "./ollama";
+
+describe("ollama: extractScore", () => {
+  it("parses clean JSON", () => {
+    expect(extractScore('{"score": 0.7}')).toBe(0.7);
+    expect(extractScore('{"score": -1}')).toBe(-1);
+  });
+  it("finds JSON inside chatty replies", () => {
+    expect(extractScore('Sure! Here is the rating: {"score": 0.456} hope that helps')).toBe(0.456);
+  });
+  it("clamps out-of-range and rejects garbage", () => {
+    expect(extractScore('{"score": 5}')).toBe(1);
+    expect(extractScore("no json here")).toBeNull();
+    expect(extractScore('{"score": "banana"}')).toBeNull();
+  });
+  it("tonePrompt caps the input length", () => {
+    expect(tonePrompt("x".repeat(10000)).length).toBeLessThan(4000);
+    expect(tonePrompt("test")).toContain('"score"');
+  });
+});
 
 describe("gdelt-csv: plan B importer parsers", () => {
   const artlist = [
