@@ -9,6 +9,7 @@ import Screener from './pages/Screener'
 import DatabasePage from './pages/Database'
 import Lab from './pages/Lab'
 import Admin from './pages/Admin'
+import Workers from './pages/Workers'
 import Messages from './pages/Messages'
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
@@ -60,6 +61,7 @@ export default function App() {
       <Route path="/database" element={<AdminOnly><DatabasePage /></AdminOnly>} />
       <Route path="/lab" element={<AdminOnly><Lab /></AdminOnly>} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/workers" element={<AdminOnly><Workers /></AdminOnly>} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="*" element={<NotFound />} />

@@ -29,6 +29,7 @@ import { ShieldAlert, Database, FlaskConical, UserPlus, Trash2, KeyRound, ArrowU
 import { describeJob } from "@/lib/job-describe";
 import { jobToast } from "@/lib/job-toast";
 import { PriceImportCard } from "@/components/PriceImportCard";
+import { WorkersIntakeCard } from "@/components/WorkersIntakeCard";
 
 type ManualId = "engine-manual-en" | "engine-manual-ru" | "llm-context" | "design-value-signals";
 
@@ -327,6 +328,7 @@ export default function Admin() {
             </Link>
             {/* Stage 1.7 (3g): chunked upload of the Stooq bulk zip + import launch */}
             <PriceImportCard />
+            <WorkersIntakeCard />
           </div>
         </TabsContent>
       </Tabs>

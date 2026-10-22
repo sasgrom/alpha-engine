@@ -9,6 +9,8 @@ import { pricesRouter } from "./routers/prices";
 import { screenerRouter, eventsRouter } from "./routers/screener";
 import { messagesRouter } from "./routers/messages";
 import { activityRouter } from "./routers/activity";
+import { workersLocalRouter } from "./routers/workers-local";
+import { workersMonitorRouter } from "./routers/workers-monitor";
 
 export const appRouter = createRouter({
   ping: publicQuery.query(() => ({ ok: true, ts: Date.now() })),
@@ -30,6 +32,8 @@ export const appRouter = createRouter({
   messages: messagesRouter,
   activity: activityRouter,
   admin: adminRouter,
+  workersLocal: workersLocalRouter,
+  workersMonitor: workersMonitorRouter,
 });
 
 export type AppRouter = typeof appRouter;

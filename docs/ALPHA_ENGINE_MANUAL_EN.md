@@ -1041,6 +1041,15 @@ edge of 40-year history; documented, not fabricated away.
 - Dev-server fix: the @hono/vite-dev-server exclude must list REAL file extensions — tRPC paths contain dots (`auth.login`), a generic `/\.\w+$/` misroutes them to Vite → empty response.
 - 155/155 tests (13 new), tsc zero. Scheduling: Windows Task Scheduler (commands in worker/README.md).
 
+### 4.31 Iteration 4p: Workers Console — local UI and intake monitor (D49)
+
+**Problem.** Home workers were terminal-blind: no scheduler visibility, no logs, no intake stats, no GDELT throttling diagnostics.
+
+**Solution — two halves.**
+- Local `/workers` (admin-only, server-gated by LOCAL_WORKER_UI=1 — FORBIDDEN on prod; one worker at a time): run/kill gdelt / gdelt-backfill / stocktwits with from/to/only args, run registry (worker/.runs/registry.json), live log tail, Windows Task Scheduler status, GDELT probe (raw status+body — see 429 with eyes).
+- Cloud `workersMonitor.intake` on `/admin` (prod and home alike): per-source rows (live/backfill, last event/receipt), worker_keys liveness, latest 10 rows — terminal-free delivery verification.
+- Transport hardening: forced IPv4-first DNS (broken IPv6 egress hung fetch), 429 retryable with Retry-After, UA, 12s pacing, single-term GDELT queries (OR needs parens and gets throttled), --only diagnostic flag. 161/161 tests.
+
 ## 5. Cloud panel (UI)
 
 > Current as of 2026-10-19 (iteration 4h). Auth is local (username/password,
@@ -1139,6 +1148,7 @@ edge of 40-year history; documented, not fabricated away.
 | D46 | Short interest settlement-dated (yahoo_gw now, FINRA primary for the worker); insider_cluster = ≥3 distinct insiders, P only, no 10b5-1, 30d window, filingDate = max filed; FRED macro_points carry realtimeStart/End per row | SI is an overlay, never standalone (Boehmer et al. 2010); clusters follow Cohen–Malloy–Pomorski discipline; macro vintages get the same D2 discipline as XBRL |
 | D47 | Quote-grid metric history is pre-computed (metric_history, month-ends), tiles click through to a chart dialog; splits normalize EXACTLY (Yahoo stock actions) with the sourceFiled guard against restatement double-counting; EPS scales the other way (÷) | "pre-calculate and store as a static table so display is immediate" — owner's directive; lesson: nominal share counts × adjusted prices are incompatible by construction |
 | D48 | Datacenter-blocked collectors live in worker/ on the home machine; transport is the ingest endpoint only; prod→home data as read-only snapshots, code home→cloud via git + deploy key | network reality proven in 4j (hard-429/403); honesty: ingestedAt is server-stamped only, payloadKey dedupe makes redeliveries free |
+| D49 | Home workers are operated from the local /workers page (LOCAL_WORKER_UI=1 gate), delivery is verified via workersMonitor on /admin; machine-changing actions live on the home console only, never in prod | owner's terminal blindness; billing honesty: a spawn surface has no right to exist in the cloud |
 
 ## 7. Glossary
 

@@ -48,6 +48,7 @@ const NAV = [
  * who guesses /admin gets FORBIDDEN from every procedure.
  */
 const ADMIN_NAV = { icon: ShieldCheck, label: "Admin", path: "/admin" };
+const WORKERS_NAV = { icon: Activity, label: "Workers", path: "/workers" };
 
 function UtcClock() {
   const [now, setNow] = useState(new Date());
@@ -197,6 +198,8 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
   const location = useLocation();
   const navigate = useNavigate();
   const isAdmin = user?.role === "admin";
+  // 4p: Workers nav entry only on the home machine (LOCAL_WORKER_UI=1 server-side)
+  const workersUi = trpc.workersLocal.enabled.useQuery(undefined, { retry: false, enabled: isAdmin });
   const stats = trpc.dashboard.stats.useQuery(undefined, {
     refetchInterval: 5000,
     enabled: !!user,
@@ -288,7 +291,7 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
 
   /** Nav items shared by the desktop sidebar and the mobile drawer. */
   const renderNavItems = (onNavigate?: () => void) =>
-    [...NAV, ...(isAdmin ? [ADMIN_NAV] : [])].map((item) => {
+    [...NAV, ...(isAdmin ? [...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ADMIN_NAV] : [])].map((item) => {
       const active = location.pathname === item.path;
       return (
         <Link
