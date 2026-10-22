@@ -34,8 +34,8 @@ npx tsx worker/stocktwits.mts
 ## Schedule (Windows Task Scheduler, hourly, staggered)
 
 ```powershell
-schtasks /Create /TN "AlphaEngine-GDELT" /SC HOURLY /TR "cmd /c "cd /d C:\dev\alpha-engine & if not exist worker\.runs mkdir worker\.runs & npx tsx worker\gdelt.mts" >> worker\.runs\gdelt-scheduled.log 2>&1"
-schtasks /Create /TN "AlphaEngine-Stocktwits" /SC HOURLY /MO 1 /ST 00:30 /TR "cmd /c "cd /d C:\dev\alpha-engine & if not exist worker\.runs mkdir worker\.runs & npx tsx worker\stocktwits.mts" >> worker\.runs\stocktwits-scheduled.log 2>&1"
+schtasks /Create /TN "AlphaEngine-GDELT" /SC HOURLY /TR "cmd /c cd /d C:\dev\alpha-engine && if not exist worker\.runs mkdir worker\.runs && npx tsx worker\gdelt.mts >> worker\.runs\gdelt-scheduled.log 2>&1"
+schtasks /Create /TN "AlphaEngine-Stocktwits" /SC HOURLY /MO 1 /ST 00:30 /TR "cmd /c cd /d C:\dev\alpha-engine && if not exist worker\.runs mkdir worker\.runs && npx tsx worker\stocktwits.mts >> worker\.runs\stocktwits-scheduled.log 2>&1"
 ```
 
 ## Data honesty
