@@ -1,3 +1,6 @@
+// Broken IPv6 egress (Boot Camp / some ISPs) hangs Node's fetch — force IPv4 first.
+import dns from "node:dns";
+dns.setDefaultResultOrder("ipv4first");
 /**
  * Stocktwits collector (home worker, Variant C). Run: npx tsx worker/stocktwits.mts
  *

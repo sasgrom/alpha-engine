@@ -1,3 +1,6 @@
+// Broken IPv6 egress (Boot Camp / some ISPs) hangs Node's fetch — force IPv4 first.
+import dns from "node:dns";
+dns.setDefaultResultOrder("ipv4first");
 /**
  * GDELT historical backfill (home worker, one-off / on-demand).
  * Run:  npx tsx worker/gdelt-backfill.mts --from 2024-01-01 --to 2026-10-21
