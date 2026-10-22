@@ -7,8 +7,17 @@
  * viewer's LOCAL time (tz abbreviation shown) so "when did it happen" reads
  * naturally, while the UTC column stays available in the title tooltip.
  */
+import { useState } from "react";
 import { trpc } from "@/providers/trpc";
 import { Satellite } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+/** payloadKey "llm:<model>:edgar:<cik>:<accn>" → SEC filing index URL */
+function edgarFilingUrl(payloadKey: unknown): string | null {
+  const p = String(payloadKey ?? "").split(":");
+  if (p[2] !== "edgar" || !p[3] || !p[4]) return null;
+  return `https://www.sec.gov/Archives/edgar/data/${p[3]}/${p[4].replace(/-/g, "")}/`;
+}
 
 const TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const TZ_ABBR = new Date().toLocaleTimeString("en-US", { timeZoneName: "short" }).split(" ").pop();
@@ -26,6 +35,7 @@ const TD = "border border-border/40 px-3 py-1.5";
 
 export function WorkersIntakeCard() {
   const q = trpc.workersMonitor.intake.useQuery(undefined, { retry: false, refetchInterval: 60000 });
+  const [noteRow, setNoteRow] = useState<any | null>(null); // 5c: full-note dialog
   if (q.isError) return null; // admin page already shows the FORBIDDEN screen
   const d = q.data;
   return (
@@ -104,11 +114,51 @@ export function WorkersIntakeCard() {
               </td>
               <td className={TD}>{r.magnitude === null ? "—" : Number(r.magnitude)}</td>
               <td className={`${TD} text-muted-foreground`}>{r.src}</td>
-              <td className={`${TD} max-w-[380px] truncate text-muted-foreground`} title={r.note ?? undefined}>{r.note ?? "—"}</td>
+              <td className={`${TD} max-w-[380px] text-muted-foreground`}>
+                {r.note ? (
+                  <button className="block w-full text-left truncate hover:text-foreground" title="open full note"
+                    onClick={() => setNoteRow(r)}>
+                    {r.note}
+                  </button>
+                ) : "—"}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* 5c: full model note — click a truncated WHY cell */}
+      <Dialog open={!!noteRow} onOpenChange={(open) => !open && setNoteRow(null)}>
+        <DialogContent className="max-w-xl">
+          {noteRow && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="t-mono text-[13px]">
+                  {noteRow.ticker ?? noteRow.cik} · {noteRow.source} · {noteRow.signalType}{" "}
+                  {noteRow.score !== null && (
+                    <span className={Number(noteRow.score) >= 0 ? "text-emerald-400" : "text-crit-red"}>
+                      {Number(noteRow.score) >= 0 ? "+" : ""}{Number(noteRow.score).toFixed(2)}
+                    </span>
+                  )}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="t-mono text-[10px] text-muted-foreground">
+                event {toLocal(noteRow.eventTs)} local · received {toLocal(noteRow.ingestedAt)} · {noteRow.src}
+              </div>
+              <div className="max-h-72 overflow-y-auto whitespace-pre-wrap text-[13px] leading-relaxed border border-border/40 rounded p-3">
+                {noteRow.note}
+              </div>
+              {edgarFilingUrl(noteRow.payloadKey) && (
+                <a className="t-mono text-[11px] text-live-cyan underline underline-offset-2" target="_blank" rel="noreferrer"
+                  href={edgarFilingUrl(noteRow.payloadKey)!}>
+                  source filing on SEC EDGAR ↗
+                </a>
+              )}
+              <div className="t-mono text-[9px] text-muted-foreground break-all">{noteRow.payloadKey}</div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

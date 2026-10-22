@@ -23,7 +23,7 @@ export const workersMonitorRouter = createRouter({
     )[0] as any[];
     const recent: any[] = (
       await db.execute(sql`
-        SELECT s.cik, c.ticker, s.source, s.signalType, s.eventTs, s.ingestedAt, s.score, s.magnitude, s.src, s.note
+        SELECT s.cik, c.ticker, s.source, s.signalType, s.eventTs, s.ingestedAt, s.score, s.magnitude, s.src, s.note, s.payloadKey
         FROM signals s LEFT JOIN companies c ON c.cik = s.cik
         ORDER BY s.id DESC LIMIT 20`)
     )[0] as any[];

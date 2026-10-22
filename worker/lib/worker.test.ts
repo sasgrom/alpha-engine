@@ -222,6 +222,22 @@ describe("edgar extractScorableText", () => {
     expect(out).toContain("EPS beat.");
     expect(out).not.toContain("signed");
   });
+  it("8-K: cover page + TOC are skipped, scoring starts at the first Item heading", () => {
+    const k = [
+      "UNITED STATES SECURITIES AND EXCHANGE COMMISSION",
+      "FORM 8-K CURRENT REPORT",
+      "TABLE OF CONTENTS",
+      "Item 2.02 Results of Operations ..... 2",
+      "Item 2.02 Results of Operations",
+      "Revenue grew 40% year over year.",
+      "SIGNATURES",
+    ].join("\n");
+    const out = extractScorableText(k, "8-K");
+    expect(out).toContain("Revenue grew 40%");
+    expect(out).not.toContain("SECURITIES AND EXCHANGE");
+    expect(out).not.toContain("TABLE OF CONTENTS");
+    expect(out).not.toContain(".....");
+  });
   it("anchor miss on 10-K falls back to the head of the document", () => {
     const out = extractScorableText("No items here at all, just prose.", "10-K");
     expect(out).toContain("just prose.");

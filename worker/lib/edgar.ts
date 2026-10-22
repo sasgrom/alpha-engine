@@ -200,7 +200,23 @@ function findHeading(text: string, re: RegExp): number | null {
 export function extractScorableText(plain: string, form: string): string {
   const sigIdx = plain.search(/^\s*SIGNATURES?\s*$/im);
   const body = sigIdx > 0 ? plain.slice(0, sigIdx) : plain;
-  if (form === "8-K") return body;
+  if (form === "8-K") {
+    // 5c fix: the cover page + TABLE OF CONTENTS flooded the window and the
+    // model rightly reported "only TOC entries" (score 0). Skip the TOC block
+    // when present, then start at the first real Item heading; pre-2005
+    // filings without Item headings fall back to the whole body.
+    const toc = body.match(/^\s*table\s+of\s+contents\s*$/im);
+    let rest = body;
+    if (toc) {
+      // skip the TOC heading AND its entry lines (dot leaders / page numbers)
+      const lines = body.slice((toc.index ?? 0) + toc[0].length).split("\n");
+      let i = 0;
+      while (i < lines.length && (isTocLine(lines[i]) || lines[i].trim() === "")) i++;
+      rest = lines.slice(i).join("\n");
+    }
+    const firstItem = rest.match(/^\s*item\s+\d/im);
+    return (firstItem ? rest.slice(firstItem.index) : body).trim();
+  }
   const startRe = form === "10-K" ? /^\s*item\s+7[\.\:\s]/i : /^\s*item\s+2[\.\:\s]/i;
   const endRe = form === "10-K" ? /^\s*item\s+(7a|8)[\.\:\s]/i : /^\s*item\s+3[\.\:\s]/i;
   const start = findHeading(body, startRe);
