@@ -3,7 +3,7 @@
  * Run: npx vitest run worker/lib/worker.test.ts
  */
 import { describe, expect, it } from "vitest";
-import { toneFromBins, hourBucket, countArticles, buildGdeltRows } from "./gdelt";
+import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } from "./gdelt";
 import { aggregateStream, buildStocktwitsRows } from "./stocktwits";
 
 describe("gdelt: toneFromBins", () => {
@@ -52,6 +52,17 @@ describe("gdelt: hourBucket + rows", () => {
     const rows2 = buildGdeltRows(320193, b, [], { articles: [{}] });
     expect(rows2).toHaveLength(1);
     expect(rows2[0].magnitude).toBe(1);
+  });
+  it("dayBucket formats UTC day for backfill", () => {
+    const b = dayBucket(new Date("2026-03-05T17:43:11Z"));
+    expect(b.eventTs).toBe("2026-03-05 00:00:00");
+    expect(b.key).toBe("20260305");
+  });
+  it("backfill rows carry src=backfill and work without artlist", () => {
+    const rows = buildGdeltRows(789019, dayBucket(new Date("2026-03-05T00:00:00Z")), [{ bin: -4, count: 7 }], null, "backfill");
+    expect(rows).toHaveLength(2);
+    expect(rows[0]).toMatchObject({ src: "backfill", magnitude: 7, payloadKey: "gdelt:buzz:789019:20260305" });
+    expect(rows[1]).toMatchObject({ src: "backfill", score: -0.4 });
   });
   it("countArticles is defensive about shape", () => {
     expect(countArticles({})).toBe(0);

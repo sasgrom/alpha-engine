@@ -27,6 +27,14 @@ export function toneFromBins(bins: ToneBin[]): { score: number | null; articles:
   return { score: Math.round(clamped * 1000) / 1000, articles: n };
 }
 
+/** Day bucket "YYYY-MM-DD 00:00:00" (UTC) + payloadKey fragment — backfill granularity. */
+export function dayBucket(d: Date): { eventTs: string; key: string } {
+  const y = d.getUTCFullYear();
+  const p = (x: number) => String(x).padStart(2, "0");
+  const key = `${y}${p(d.getUTCMonth() + 1)}${p(d.getUTCDate())}`;
+  return { eventTs: `${y}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} 00:00:00`, key };
+}
+
 /** Hour bucket "YYYY-MM-DD HH:00:00" (UTC) + its payloadKey fragment. */
 export function hourBucket(d = new Date()): { eventTs: string; key: string } {
   const y = d.getUTCFullYear();
@@ -41,21 +49,27 @@ export function countArticles(artlist: unknown): number {
   return Array.isArray(arts) ? arts.length : 0;
 }
 
-/** Build the two rows (tone + buzz) for one company-hour. */
-export function buildGdeltRows(cik: number, bucket: { eventTs: string; key: string }, toneBins: ToneBin[], artlist: unknown): SignalRow[] {
+/** Build the two rows (tone + buzz) for one company-bucket. src marks live vs backfill. */
+export function buildGdeltRows(
+  cik: number,
+  bucket: { eventTs: string; key: string },
+  toneBins: ToneBin[],
+  artlist: unknown,
+  src: "live" | "backfill" = "live"
+): SignalRow[] {
   const { score, articles } = toneFromBins(toneBins);
   const listed = countArticles(artlist);
   const buzzCount = Math.max(articles, listed); // histogram total is the honest volume when present
   const rows: SignalRow[] = [
     {
       cik, source: "gdelt", signalType: "buzz", eventTs: bucket.eventTs,
-      magnitude: buzzCount, payloadKey: `gdelt:buzz:${cik}:${bucket.key}`, src: "live",
+      magnitude: buzzCount, payloadKey: `gdelt:buzz:${cik}:${bucket.key}`, src,
     },
   ];
   if (score !== null) {
     rows.push({
       cik, source: "gdelt", signalType: "tone", eventTs: bucket.eventTs,
-      score, magnitude: articles, payloadKey: `gdelt:tone:${cik}:${bucket.key}`, src: "live",
+      score, magnitude: articles, payloadKey: `gdelt:tone:${cik}:${bucket.key}`, src,
     });
   }
   return rows;

@@ -46,3 +46,14 @@ schtasks /Create /TN "AlphaEngine-Stocktwits" /SC HOURLY /MO 1 /ST 00:30 /TR "cm
   approximation, see `lib/gdelt.ts`).
 - Stocktwits label score = (bullish − bearish) / labeled messages of the
   30-message stream window; `null` when nothing labeled.
+
+## Historical backfill (one-off, on-demand)
+
+```powershell
+npx tsx worker/gdelt-backfill.mts --from 2024-01-01 --to 2026-10-21
+```
+
+Per company per UTC day, ONE ToneChart call yields both tone and exact
+article count. Rows are `src:"backfill"` with day-bucket payloadKeys —
+resumable by rerunning the same range. A year × 5 companies ≈ 3 h at the
+GDELT fair-use pace (6 s/call). Defaults: from = 2 years ago, to = yesterday.
