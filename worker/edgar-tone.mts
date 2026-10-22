@@ -104,12 +104,14 @@ for (const co of universe) {
     // contents") instead of declaring no substance — the why leaks the truth.
     // Such a window is noise: drop its score, keep the filing if others survive.
     const BOILER = /no substantive|only (a )?(table of contents|administrative|xbrl|cover)|cover page|boilerplate/i;
+    let parsed = 0, droppedBoiler = 0;
     for (const w of windows) {
       try {
         const r = await generate(tonePrompt(w));
         const v = extractVerdict(r.text);
         if (v != null) {
-          if (v.why && BOILER.test(v.why)) continue; // window was boilerplate — no tone to score
+          parsed++;
+          if (v.why && BOILER.test(v.why)) { droppedBoiler++; continue; } // window was boilerplate — no tone to score
           scores.push(v.score);
           if (v.why) whys.push(v.why);
         }
@@ -117,7 +119,14 @@ for (const co of universe) {
         prog.log(`! ${m.accessionNo}: LLM error ${String(err).slice(0, 120)}`);
       }
     }
-    if (scores.length === 0) { skipped++; m.error = "no parseable/substantive score"; continue; } // honesty: skip, never guess
+    // honest skip reasons, kept distinct for the manifest-error telemetry:
+    // "boilerplate-only" = model parsed fine but saw no content worth a score
+    // "no parseable score" = reply garbage / LLM errors — a REAL quality signal
+    if (scores.length === 0) {
+      skipped++;
+      m.error = parsed > 0 ? "boilerplate-only content" : "no parseable score";
+      continue;
+    }
     const avg = Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 1000) / 1000;
     box.rows.push({
       cik: co.cik,

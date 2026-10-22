@@ -141,17 +141,27 @@ export async function fetchDoc(cik: number, accessionNo: string, doc: string): P
   return (await secGet(filingDocUrl(cik, accessionNo, doc))).text();
 }
 
-/** Resolve + download the primary document; falls back to first .htm/.txt in the index. */
+/**
+ * Resolve + download the primary document. Old filings (pre-2005) often name
+ * a primaryDoc that no longer exists in Archives ("0001.txt" → 404): on ANY
+ * fetch failure of the named doc, fall back to the filing index and take the
+ * largest textual document actually present.
+ */
 export async function fetchFilingDocument(cik: number, f: EdgarFiling): Promise<{ docName: string; html: string }> {
-  let doc = f.primaryDoc;
-  if (!doc) {
-    const idx = await (await secGet(`${SEC_BASE}/Archives/edgar/data/${cik}/${f.accessionNo.replace(/-/g, "")}/index.json`)).json() as any;
-    const items: any[] = idx?.directory?.item ?? [];
-    doc = items.find((i) => /\.(htm|txt)$/i.test(i.name) && !/^index/i.test(i.name))?.name;
+  if (f.primaryDoc) {
+    try {
+      const res = await secGet(filingDocUrl(cik, f.accessionNo, f.primaryDoc));
+      return { docName: f.primaryDoc, html: await res.text() };
+    } catch {
+      // named doc missing/moved — rescue via the index below
+    }
   }
+  const docs = await listFilingDocs(cik, f.accessionNo);
+  const doc = docs
+    .filter((d) => /\.(htm|txt)$/i.test(d.name) && !/^index/i.test(d.name))
+    .sort((a, b) => b.size - a.size)[0];
   if (!doc) throw new Error(`no document for ${f.accessionNo}`);
-  const res = await secGet(filingDocUrl(cik, f.accessionNo, doc));
-  return { docName: doc, html: await res.text() };
+  return { docName: doc.name, html: await fetchDoc(cik, f.accessionNo, doc.name) };
 }
 
 // --- plaintext (verbatim port of api/services/documents.ts derivePlaintext) ----
