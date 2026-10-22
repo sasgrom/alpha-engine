@@ -33,6 +33,15 @@ const only = onlyIdx > -1 ? process.argv[onlyIdx + 1]?.toUpperCase() : null;
 // crashed before delivery, or to score again with another OLLAMA_MODEL — a
 // different model writes a different payloadKey, so nothing is overwritten).
 const rescore = process.argv.includes("--rescore");
+// --from YYYY-MM-DD: only filings filed on/after the date (owner: "rescore
+// the skipped for the last 10 years, not the whole history").
+const fromIdx = process.argv.indexOf("--from");
+const from = fromIdx > -1 ? process.argv[fromIdx + 1] : null;
+// --include-skipped: retry entries previously skipped as thin/boilerplate.
+// DEFAULT is to NOT retry them — re-spending LLM tokens on known boilerplate
+// on every incremental run is pure waste (owner caught this).
+const includeSkipped = process.argv.includes("--include-skipped");
+const SKIP_ERRORS = /^(thin content|boilerplate-only|no substantive)/;
 
 // --- preflight: daemon + model present (same contract as llm-test) ----------
 const st = await status();
@@ -53,7 +62,11 @@ for (const co of universe) {
   catch { prog.log(`${co.ticker}: no manifest (run edgar-fetch first)`); continue; }
 
   if (rescore) for (const m of manifest) if (m.fetched) { m.scored = false; delete m.error; }
-  const pending = manifest.filter((m) => m.fetched && !m.scored);
+  const pending = manifest.filter((m) =>
+    m.fetched && !m.scored
+    && (!from || m.filingDate >= from)
+    && (includeSkipped || !m.error || !SKIP_ERRORS.test(m.error))
+  );
   // Outbox: scored rows land on disk BEFORE delivery. If ingest fails (server
   // down etc.), the next run delivers the outbox first — GPU work is never
   // redone, and `scored` is set ONLY after the server confirms receipt.

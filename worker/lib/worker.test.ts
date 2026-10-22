@@ -42,6 +42,12 @@ describe("ollama: extractScore", () => {
     const prose = Array.from({ length: 30 }, () => "Revenue grew 40% year over year with strong margins.").join("\n");
     expect(isThinContent(prose)).toBe(false); // real multi-line prose passes
   });
+  it("material 8-K items pass even when short; plain covers still gated", () => {
+    expect(isThinContent("Item 5.02 Departure of Officers. The CFO resigned effective immediately.")).toBe(false); // 80 chars but material
+    expect(isThinContent("Item 2.02 Results of Operations. See the press release.")).toBe(false);
+    expect(isThinContent("FORM 8-K cover page, registrant address, date of report.".repeat(5))).toBe(true); // ~300 chars, no item
+    expect(isThinContent("Item 9.01 Financial Statements and Exhibits. Exhibit index follows.".repeat(2))).toBe(true); // 9.01 is NOT material
+  });
   it("tonePrompt asks for the why and caps the input length", () => {
     expect(tonePrompt("q")).toContain('"why"');
     expect(tonePrompt("x".repeat(200_000)).length).toBeLessThan(106_000); // 80% of num_ctx 32768 ≈ 104k chars

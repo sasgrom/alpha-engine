@@ -285,12 +285,18 @@ export function extractScorableText(plain: string, form: string): string {
  * garbage like -1.00 for "only administrative metadata". Thin = very short
  * OR dominated by TOC-style lines (dot leaders / bare page numbers).
  */
+/** Material 8-K items stay substantive even in two lines (owner: "a CEO firing
+ *  is a signal even at 800 chars") — they pass the gate regardless of length. */
+const SUBSTANTIVE_ITEM_RE = /item\s+(1\.01|1\.02|2\.02|3\.01|4\.01|5\.02|5\.03|5\.07|7\.01|8\.01)\b/i;
+
 export function isThinContent(text: string): boolean {
-  if (text.length < 1200) return true;
-  const lines = text.split("\n").filter((l) => l.trim()).slice(0, 80);
+  const lines = text.split("\n").filter((l) => l.trim());
+  // material item mention counts only OUTSIDE a TOC line ("Item 5.02 .... 7" is a listing, not content)
+  if (lines.some((l) => SUBSTANTIVE_ITEM_RE.test(l) && !isTocLine(l))) return false;
+  if (text.length < 700) return true; // owner call: 1200 → 700
   if (lines.length === 0) return true;
-  const tocish = lines.filter((l) => isTocLine(l)).length;
-  return tocish / lines.length > 0.5;
+  const tocish = lines.slice(0, 80).filter((l) => isTocLine(l)).length;
+  return tocish / Math.min(lines.length, 80) > 0.5;
 }
 
 /**
