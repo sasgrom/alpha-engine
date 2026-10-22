@@ -12,8 +12,23 @@ dns.setDefaultResultOrder("ipv4first");
  * re-scores never touch the network twice. Fair access: ~3 req/s serialized.
  */
 import "dotenv/config";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, statfsSync, writeFileSync } from "node:fs";
 import path from "node:path";
+
+/** All-night unattended crawl guard: stop before the disk fills up. */
+const MIN_FREE_BYTES = 15 * 2 ** 30; // 15 GiB
+function assertDiskSpace() {
+  try {
+    const s = statfsSync(path.resolve(import.meta.dirname));
+    if (s.bavail * s.bsize < MIN_FREE_BYTES) {
+      console.error(`[edgar-fetch] STOP: free disk space below 15 GiB — clear space and rerun (manifest resumes)`);
+      process.exit(2);
+    }
+  } catch (err: any) {
+    if (err?.message?.startsWith("[edgar-fetch]")) throw err;
+    // statfs unavailable → don't block the run on a failed check
+  }
+}
 import { fetchDoc, fetchFilingDocument, listFilingDocs, listFilings, loadEdgarUniverse, type EdgarFiling } from "./lib/edgar";
 
 export interface ManifestEntry extends EdgarFiling {
@@ -94,6 +109,7 @@ for (const co of universe) {
       failed++;
     }
     if ((i + 1) % 25 === 0) {
+      assertDiskSpace();
       saveManifest(co.cik, manifest);
       console.log(`[edgar-fetch] ${co.ticker}: ${i + 1}/${filings.length} (${fetched} downloaded, ${failed} failed)`);
     }

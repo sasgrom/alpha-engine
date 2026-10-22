@@ -322,9 +322,10 @@ describe("edgar mdaWindows", () => {
 });
 
 describe("edgar universe", () => {
-  it("carries the 6 EDGAR companies with CIKs", () => {
+  it("carries the full S&P 500 with the 6 core companies leading", () => {
     const u = loadEdgarUniverse();
-    expect(u.map((c) => c.ticker).sort()).toEqual(["AAPL", "IBM", "LMT", "META", "NVDA", "PLD"]);
+    expect(u.length).toBeGreaterThan(490);
+    expect(u.slice(0, 6).map((c) => c.ticker)).toEqual(["AAPL", "NVDA", "PLD", "META", "IBM", "LMT"]);
     expect(u.find((c) => c.ticker === "IBM")?.cik).toBe(51143);
     expect(u.find((c) => c.ticker === "META")?.cik).toBe(1326801);
     expect(u.find((c) => c.ticker === "LMT")?.cik).toBe(936468);

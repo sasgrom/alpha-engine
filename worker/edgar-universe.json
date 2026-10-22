@@ -1,8 +1,2512 @@
 [
-  { "cik": 320193,  "ticker": "AAPL", "name": "Apple Inc." },
-  { "cik": 1045810, "ticker": "NVDA", "name": "NVIDIA CORP" },
-  { "cik": 1045609, "ticker": "PLD",  "name": "Prologis, Inc." },
-  { "cik": 1326801, "ticker": "META", "name": "Meta Platforms, Inc." },
-  { "cik": 51143,   "ticker": "IBM",  "name": "INTERNATIONAL BUSINESS MACHINES CORP" },
-  { "cik": 936468,  "ticker": "LMT",  "name": "Lockheed Martin Corp" }
+ {
+  "cik": 320193,
+  "ticker": "AAPL",
+  "name": "AAPL"
+ },
+ {
+  "cik": 1045810,
+  "ticker": "NVDA",
+  "name": "NVDA"
+ },
+ {
+  "cik": 1045609,
+  "ticker": "PLD",
+  "name": "PLD"
+ },
+ {
+  "cik": 1326801,
+  "ticker": "META",
+  "name": "META"
+ },
+ {
+  "cik": 51143,
+  "ticker": "IBM",
+  "name": "IBM"
+ },
+ {
+  "cik": 936468,
+  "ticker": "LMT",
+  "name": "LMT"
+ },
+ {
+  "cik": 1090872,
+  "ticker": "A",
+  "name": "A"
+ },
+ {
+  "cik": 1551152,
+  "ticker": "ABBV",
+  "name": "ABBV"
+ },
+ {
+  "cik": 1559720,
+  "ticker": "ABNB",
+  "name": "ABNB"
+ },
+ {
+  "cik": 1800,
+  "ticker": "ABT",
+  "name": "ABT"
+ },
+ {
+  "cik": 947484,
+  "ticker": "ACGL",
+  "name": "ACGL"
+ },
+ {
+  "cik": 1467373,
+  "ticker": "ACN",
+  "name": "ACN"
+ },
+ {
+  "cik": 796343,
+  "ticker": "ADBE",
+  "name": "ADBE"
+ },
+ {
+  "cik": 6281,
+  "ticker": "ADI",
+  "name": "ADI"
+ },
+ {
+  "cik": 7084,
+  "ticker": "ADM",
+  "name": "ADM"
+ },
+ {
+  "cik": 8670,
+  "ticker": "ADP",
+  "name": "ADP"
+ },
+ {
+  "cik": 769397,
+  "ticker": "ADSK",
+  "name": "ADSK"
+ },
+ {
+  "cik": 1002910,
+  "ticker": "AEE",
+  "name": "AEE"
+ },
+ {
+  "cik": 4904,
+  "ticker": "AEP",
+  "name": "AEP"
+ },
+ {
+  "cik": 874761,
+  "ticker": "AES",
+  "name": "AES"
+ },
+ {
+  "cik": 4977,
+  "ticker": "AFL",
+  "name": "AFL"
+ },
+ {
+  "cik": 5271,
+  "ticker": "AIG",
+  "name": "AIG"
+ },
+ {
+  "cik": 1267238,
+  "ticker": "AIZ",
+  "name": "AIZ"
+ },
+ {
+  "cik": 354190,
+  "ticker": "AJG",
+  "name": "AJG"
+ },
+ {
+  "cik": 1086222,
+  "ticker": "AKAM",
+  "name": "AKAM"
+ },
+ {
+  "cik": 915913,
+  "ticker": "ALB",
+  "name": "ALB"
+ },
+ {
+  "cik": 1097149,
+  "ticker": "ALGN",
+  "name": "ALGN"
+ },
+ {
+  "cik": 899051,
+  "ticker": "ALL",
+  "name": "ALL"
+ },
+ {
+  "cik": 1579241,
+  "ticker": "ALLE",
+  "name": "ALLE"
+ },
+ {
+  "cik": 6951,
+  "ticker": "AMAT",
+  "name": "AMAT"
+ },
+ {
+  "cik": 1748790,
+  "ticker": "AMCR",
+  "name": "AMCR"
+ },
+ {
+  "cik": 2488,
+  "ticker": "AMD",
+  "name": "AMD"
+ },
+ {
+  "cik": 1037868,
+  "ticker": "AME",
+  "name": "AME"
+ },
+ {
+  "cik": 318154,
+  "ticker": "AMGN",
+  "name": "AMGN"
+ },
+ {
+  "cik": 820027,
+  "ticker": "AMP",
+  "name": "AMP"
+ },
+ {
+  "cik": 1053507,
+  "ticker": "AMT",
+  "name": "AMT"
+ },
+ {
+  "cik": 1018724,
+  "ticker": "AMZN",
+  "name": "AMZN"
+ },
+ {
+  "cik": 1596532,
+  "ticker": "ANET",
+  "name": "ANET"
+ },
+ {
+  "cik": 315293,
+  "ticker": "AON",
+  "name": "AON"
+ },
+ {
+  "cik": 91142,
+  "ticker": "AOS",
+  "name": "AOS"
+ },
+ {
+  "cik": 1841666,
+  "ticker": "APA",
+  "name": "APA"
+ },
+ {
+  "cik": 2969,
+  "ticker": "APD",
+  "name": "APD"
+ },
+ {
+  "cik": 820313,
+  "ticker": "APH",
+  "name": "APH"
+ },
+ {
+  "cik": 1858681,
+  "ticker": "APO",
+  "name": "APO"
+ },
+ {
+  "cik": 1751008,
+  "ticker": "APP",
+  "name": "APP"
+ },
+ {
+  "cik": 1521332,
+  "ticker": "APTV",
+  "name": "APTV"
+ },
+ {
+  "cik": 1035443,
+  "ticker": "ARE",
+  "name": "ARE"
+ },
+ {
+  "cik": 1176948,
+  "ticker": "ARES",
+  "name": "ARES"
+ },
+ {
+  "cik": 731802,
+  "ticker": "ATO",
+  "name": "ATO"
+ },
+ {
+  "cik": 1730168,
+  "ticker": "AVGO",
+  "name": "AVGO"
+ },
+ {
+  "cik": 8818,
+  "ticker": "AVY",
+  "name": "AVY"
+ },
+ {
+  "cik": 1410636,
+  "ticker": "AWK",
+  "name": "AWK"
+ },
+ {
+  "cik": 1069183,
+  "ticker": "AXON",
+  "name": "AXON"
+ },
+ {
+  "cik": 4962,
+  "ticker": "AXP",
+  "name": "AXP"
+ },
+ {
+  "cik": 866787,
+  "ticker": "AZO",
+  "name": "AZO"
+ },
+ {
+  "cik": 12927,
+  "ticker": "BA",
+  "name": "BA"
+ },
+ {
+  "cik": 70858,
+  "ticker": "BAC",
+  "name": "BAC"
+ },
+ {
+  "cik": 9389,
+  "ticker": "BALL",
+  "name": "BALL"
+ },
+ {
+  "cik": 10456,
+  "ticker": "BAX",
+  "name": "BAX"
+ },
+ {
+  "cik": 764478,
+  "ticker": "BBY",
+  "name": "BBY"
+ },
+ {
+  "cik": 10795,
+  "ticker": "BDX",
+  "name": "BDX"
+ },
+ {
+  "cik": 1664703,
+  "ticker": "BE",
+  "name": "BE"
+ },
+ {
+  "cik": 38777,
+  "ticker": "BEN",
+  "name": "BEN"
+ },
+ {
+  "cik": 14693,
+  "ticker": "BF-B",
+  "name": "BF-B"
+ },
+ {
+  "cik": 1996862,
+  "ticker": "BG",
+  "name": "BG"
+ },
+ {
+  "cik": 875045,
+  "ticker": "BIIB",
+  "name": "BIIB"
+ },
+ {
+  "cik": 1075531,
+  "ticker": "BKNG",
+  "name": "BKNG"
+ },
+ {
+  "cik": 1701605,
+  "ticker": "BKR",
+  "name": "BKR"
+ },
+ {
+  "cik": 2012383,
+  "ticker": "BLK",
+  "name": "BLK"
+ },
+ {
+  "cik": 14272,
+  "ticker": "BMY",
+  "name": "BMY"
+ },
+ {
+  "cik": 1390777,
+  "ticker": "BNY",
+  "name": "BNY"
+ },
+ {
+  "cik": 1383312,
+  "ticker": "BR",
+  "name": "BR"
+ },
+ {
+  "cik": 1067983,
+  "ticker": "BRK-B",
+  "name": "BRK-B"
+ },
+ {
+  "cik": 79282,
+  "ticker": "BRO",
+  "name": "BRO"
+ },
+ {
+  "cik": 885725,
+  "ticker": "BSX",
+  "name": "BSX"
+ },
+ {
+  "cik": 1393818,
+  "ticker": "BX",
+  "name": "BX"
+ },
+ {
+  "cik": 1037540,
+  "ticker": "BXP",
+  "name": "BXP"
+ },
+ {
+  "cik": 831001,
+  "ticker": "C",
+  "name": "C"
+ },
+ {
+  "cik": 721371,
+  "ticker": "CAH",
+  "name": "CAH"
+ },
+ {
+  "cik": 1783180,
+  "ticker": "CARR",
+  "name": "CARR"
+ },
+ {
+  "cik": 726958,
+  "ticker": "CASY",
+  "name": "CASY"
+ },
+ {
+  "cik": 18230,
+  "ticker": "CAT",
+  "name": "CAT"
+ },
+ {
+  "cik": 896159,
+  "ticker": "CB",
+  "name": "CB"
+ },
+ {
+  "cik": 1374310,
+  "ticker": "CBOE",
+  "name": "CBOE"
+ },
+ {
+  "cik": 1138118,
+  "ticker": "CBRE",
+  "name": "CBRE"
+ },
+ {
+  "cik": 1051470,
+  "ticker": "CCI",
+  "name": "CCI"
+ },
+ {
+  "cik": 815097,
+  "ticker": "CCL",
+  "name": "CCL"
+ },
+ {
+  "cik": 813672,
+  "ticker": "CDNS",
+  "name": "CDNS"
+ },
+ {
+  "cik": 1402057,
+  "ticker": "CDW",
+  "name": "CDW"
+ },
+ {
+  "cik": 1868275,
+  "ticker": "CEG",
+  "name": "CEG"
+ },
+ {
+  "cik": 1324404,
+  "ticker": "CF",
+  "name": "CF"
+ },
+ {
+  "cik": 759944,
+  "ticker": "CFG",
+  "name": "CFG"
+ },
+ {
+  "cik": 313927,
+  "ticker": "CHD",
+  "name": "CHD"
+ },
+ {
+  "cik": 1043277,
+  "ticker": "CHRW",
+  "name": "CHRW"
+ },
+ {
+  "cik": 1091667,
+  "ticker": "CHTR",
+  "name": "CHTR"
+ },
+ {
+  "cik": 1739940,
+  "ticker": "CI",
+  "name": "CI"
+ },
+ {
+  "cik": 936395,
+  "ticker": "CIEN",
+  "name": "CIEN"
+ },
+ {
+  "cik": 20286,
+  "ticker": "CINF",
+  "name": "CINF"
+ },
+ {
+  "cik": 21665,
+  "ticker": "CL",
+  "name": "CL"
+ },
+ {
+  "cik": 21076,
+  "ticker": "CLX",
+  "name": "CLX"
+ },
+ {
+  "cik": 1166691,
+  "ticker": "CMCSA",
+  "name": "CMCSA"
+ },
+ {
+  "cik": 1156375,
+  "ticker": "CME",
+  "name": "CME"
+ },
+ {
+  "cik": 1058090,
+  "ticker": "CMG",
+  "name": "CMG"
+ },
+ {
+  "cik": 26172,
+  "ticker": "CMI",
+  "name": "CMI"
+ },
+ {
+  "cik": 811156,
+  "ticker": "CMS",
+  "name": "CMS"
+ },
+ {
+  "cik": 1071739,
+  "ticker": "CNC",
+  "name": "CNC"
+ },
+ {
+  "cik": 1130310,
+  "ticker": "CNP",
+  "name": "CNP"
+ },
+ {
+  "cik": 927628,
+  "ticker": "COF",
+  "name": "COF"
+ },
+ {
+  "cik": 820318,
+  "ticker": "COHR",
+  "name": "COHR"
+ },
+ {
+  "cik": 1679788,
+  "ticker": "COIN",
+  "name": "COIN"
+ },
+ {
+  "cik": 711404,
+  "ticker": "COO",
+  "name": "COO"
+ },
+ {
+  "cik": 1163165,
+  "ticker": "COP",
+  "name": "COP"
+ },
+ {
+  "cik": 1140859,
+  "ticker": "COR",
+  "name": "COR"
+ },
+ {
+  "cik": 909832,
+  "ticker": "COST",
+  "name": "COST"
+ },
+ {
+  "cik": 1175454,
+  "ticker": "CPAY",
+  "name": "CPAY"
+ },
+ {
+  "cik": 900075,
+  "ticker": "CPRT",
+  "name": "CPRT"
+ },
+ {
+  "cik": 906345,
+  "ticker": "CPT",
+  "name": "CPT"
+ },
+ {
+  "cik": 849395,
+  "ticker": "CRH",
+  "name": "CRH"
+ },
+ {
+  "cik": 1100682,
+  "ticker": "CRL",
+  "name": "CRL"
+ },
+ {
+  "cik": 1108524,
+  "ticker": "CRM",
+  "name": "CRM"
+ },
+ {
+  "cik": 1535527,
+  "ticker": "CRWD",
+  "name": "CRWD"
+ },
+ {
+  "cik": 858877,
+  "ticker": "CSCO",
+  "name": "CSCO"
+ },
+ {
+  "cik": 1057352,
+  "ticker": "CSGP",
+  "name": "CSGP"
+ },
+ {
+  "cik": 277948,
+  "ticker": "CSX",
+  "name": "CSX"
+ },
+ {
+  "cik": 723254,
+  "ticker": "CTAS",
+  "name": "CTAS"
+ },
+ {
+  "cik": 1058290,
+  "ticker": "CTSH",
+  "name": "CTSH"
+ },
+ {
+  "cik": 1690820,
+  "ticker": "CVNA",
+  "name": "CVNA"
+ },
+ {
+  "cik": 64803,
+  "ticker": "CVS",
+  "name": "CVS"
+ },
+ {
+  "cik": 93410,
+  "ticker": "CVX",
+  "name": "CVX"
+ },
+ {
+  "cik": 715957,
+  "ticker": "D",
+  "name": "D"
+ },
+ {
+  "cik": 27904,
+  "ticker": "DAL",
+  "name": "DAL"
+ },
+ {
+  "cik": 1792789,
+  "ticker": "DASH",
+  "name": "DASH"
+ },
+ {
+  "cik": 1666700,
+  "ticker": "DD",
+  "name": "DD"
+ },
+ {
+  "cik": 1561550,
+  "ticker": "DDOG",
+  "name": "DDOG"
+ },
+ {
+  "cik": 315189,
+  "ticker": "DE",
+  "name": "DE"
+ },
+ {
+  "cik": 910521,
+  "ticker": "DECK",
+  "name": "DECK"
+ },
+ {
+  "cik": 1571996,
+  "ticker": "DELL",
+  "name": "DELL"
+ },
+ {
+  "cik": 29534,
+  "ticker": "DG",
+  "name": "DG"
+ },
+ {
+  "cik": 1022079,
+  "ticker": "DGX",
+  "name": "DGX"
+ },
+ {
+  "cik": 882184,
+  "ticker": "DHI",
+  "name": "DHI"
+ },
+ {
+  "cik": 313616,
+  "ticker": "DHR",
+  "name": "DHR"
+ },
+ {
+  "cik": 1744489,
+  "ticker": "DIS",
+  "name": "DIS"
+ },
+ {
+  "cik": 1297996,
+  "ticker": "DLR",
+  "name": "DLR"
+ },
+ {
+  "cik": 935703,
+  "ticker": "DLTR",
+  "name": "DLTR"
+ },
+ {
+  "cik": 765880,
+  "ticker": "DOC",
+  "name": "DOC"
+ },
+ {
+  "cik": 29905,
+  "ticker": "DOV",
+  "name": "DOV"
+ },
+ {
+  "cik": 1751788,
+  "ticker": "DOW",
+  "name": "DOW"
+ },
+ {
+  "cik": 1286681,
+  "ticker": "DPZ",
+  "name": "DPZ"
+ },
+ {
+  "cik": 940944,
+  "ticker": "DRI",
+  "name": "DRI"
+ },
+ {
+  "cik": 936340,
+  "ticker": "DTE",
+  "name": "DTE"
+ },
+ {
+  "cik": 1326160,
+  "ticker": "DUK",
+  "name": "DUK"
+ },
+ {
+  "cik": 927066,
+  "ticker": "DVA",
+  "name": "DVA"
+ },
+ {
+  "cik": 1090012,
+  "ticker": "DVN",
+  "name": "DVN"
+ },
+ {
+  "cik": 1093557,
+  "ticker": "DXCM",
+  "name": "DXCM"
+ },
+ {
+  "cik": 1065088,
+  "ticker": "EBAY",
+  "name": "EBAY"
+ },
+ {
+  "cik": 1415404,
+  "ticker": "ECHO",
+  "name": "ECHO"
+ },
+ {
+  "cik": 31462,
+  "ticker": "ECL",
+  "name": "ECL"
+ },
+ {
+  "cik": 1047862,
+  "ticker": "ED",
+  "name": "ED"
+ },
+ {
+  "cik": 33185,
+  "ticker": "EFX",
+  "name": "EFX"
+ },
+ {
+  "cik": 1095073,
+  "ticker": "EG",
+  "name": "EG"
+ },
+ {
+  "cik": 827052,
+  "ticker": "EIX",
+  "name": "EIX"
+ },
+ {
+  "cik": 1001250,
+  "ticker": "EL",
+  "name": "EL"
+ },
+ {
+  "cik": 1156039,
+  "ticker": "ELV",
+  "name": "ELV"
+ },
+ {
+  "cik": 105634,
+  "ticker": "EME",
+  "name": "EME"
+ },
+ {
+  "cik": 32604,
+  "ticker": "EMR",
+  "name": "EMR"
+ },
+ {
+  "cik": 821189,
+  "ticker": "EOG",
+  "name": "EOG"
+ },
+ {
+  "cik": 1101239,
+  "ticker": "EQIX",
+  "name": "EQIX"
+ },
+ {
+  "cik": 33213,
+  "ticker": "EQT",
+  "name": "EQT"
+ },
+ {
+  "cik": 922621,
+  "ticker": "ERIE",
+  "name": "ERIE"
+ },
+ {
+  "cik": 72741,
+  "ticker": "ES",
+  "name": "ES"
+ },
+ {
+  "cik": 920522,
+  "ticker": "ESS",
+  "name": "ESS"
+ },
+ {
+  "cik": 1551182,
+  "ticker": "ETN",
+  "name": "ETN"
+ },
+ {
+  "cik": 65984,
+  "ticker": "ETR",
+  "name": "ETR"
+ },
+ {
+  "cik": 1711269,
+  "ticker": "EVRG",
+  "name": "EVRG"
+ },
+ {
+  "cik": 1099800,
+  "ticker": "EW",
+  "name": "EW"
+ },
+ {
+  "cik": 1109357,
+  "ticker": "EXC",
+  "name": "EXC"
+ },
+ {
+  "cik": 895126,
+  "ticker": "EXE",
+  "name": "EXE"
+ },
+ {
+  "cik": 746515,
+  "ticker": "EXPD",
+  "name": "EXPD"
+ },
+ {
+  "cik": 1324424,
+  "ticker": "EXPE",
+  "name": "EXPE"
+ },
+ {
+  "cik": 1289490,
+  "ticker": "EXR",
+  "name": "EXR"
+ },
+ {
+  "cik": 37996,
+  "ticker": "F",
+  "name": "F"
+ },
+ {
+  "cik": 1539838,
+  "ticker": "FANG",
+  "name": "FANG"
+ },
+ {
+  "cik": 815556,
+  "ticker": "FAST",
+  "name": "FAST"
+ },
+ {
+  "cik": 831259,
+  "ticker": "FCX",
+  "name": "FCX"
+ },
+ {
+  "cik": 1013237,
+  "ticker": "FDS",
+  "name": "FDS"
+ },
+ {
+  "cik": 1048911,
+  "ticker": "FDX",
+  "name": "FDX"
+ },
+ {
+  "cik": 2082247,
+  "ticker": "FDXF",
+  "name": "FDXF"
+ },
+ {
+  "cik": 1031296,
+  "ticker": "FE",
+  "name": "FE"
+ },
+ {
+  "cik": 2011641,
+  "ticker": "FERG",
+  "name": "FERG"
+ },
+ {
+  "cik": 1048695,
+  "ticker": "FFIV",
+  "name": "FFIV"
+ },
+ {
+  "cik": 814547,
+  "ticker": "FICO",
+  "name": "FICO"
+ },
+ {
+  "cik": 1136893,
+  "ticker": "FIS",
+  "name": "FIS"
+ },
+ {
+  "cik": 798354,
+  "ticker": "FISV",
+  "name": "FISV"
+ },
+ {
+  "cik": 35527,
+  "ticker": "FITB",
+  "name": "FITB"
+ },
+ {
+  "cik": 1035983,
+  "ticker": "FIX",
+  "name": "FIX"
+ },
+ {
+  "cik": 866374,
+  "ticker": "FLEX",
+  "name": "FLEX"
+ },
+ {
+  "cik": 1754301,
+  "ticker": "FOX",
+  "name": "FOX"
+ },
+ {
+  "cik": 1754301,
+  "ticker": "FOXA",
+  "name": "FOXA"
+ },
+ {
+  "cik": 34903,
+  "ticker": "FRT",
+  "name": "FRT"
+ },
+ {
+  "cik": 1274494,
+  "ticker": "FSLR",
+  "name": "FSLR"
+ },
+ {
+  "cik": 1262039,
+  "ticker": "FTNT",
+  "name": "FTNT"
+ },
+ {
+  "cik": 1659166,
+  "ticker": "FTV",
+  "name": "FTV"
+ },
+ {
+  "cik": 40533,
+  "ticker": "GD",
+  "name": "GD"
+ },
+ {
+  "cik": 1609711,
+  "ticker": "GDDY",
+  "name": "GDDY"
+ },
+ {
+  "cik": 40545,
+  "ticker": "GE",
+  "name": "GE"
+ },
+ {
+  "cik": 1932393,
+  "ticker": "GEHC",
+  "name": "GEHC"
+ },
+ {
+  "cik": 849399,
+  "ticker": "GEN",
+  "name": "GEN"
+ },
+ {
+  "cik": 1996810,
+  "ticker": "GEV",
+  "name": "GEV"
+ },
+ {
+  "cik": 882095,
+  "ticker": "GILD",
+  "name": "GILD"
+ },
+ {
+  "cik": 40704,
+  "ticker": "GIS",
+  "name": "GIS"
+ },
+ {
+  "cik": 320335,
+  "ticker": "GL",
+  "name": "GL"
+ },
+ {
+  "cik": 24741,
+  "ticker": "GLW",
+  "name": "GLW"
+ },
+ {
+  "cik": 1467858,
+  "ticker": "GM",
+  "name": "GM"
+ },
+ {
+  "cik": 1474735,
+  "ticker": "GNRC",
+  "name": "GNRC"
+ },
+ {
+  "cik": 1652044,
+  "ticker": "GOOG",
+  "name": "GOOG"
+ },
+ {
+  "cik": 1652044,
+  "ticker": "GOOGL",
+  "name": "GOOGL"
+ },
+ {
+  "cik": 40987,
+  "ticker": "GPC",
+  "name": "GPC"
+ },
+ {
+  "cik": 1123360,
+  "ticker": "GPN",
+  "name": "GPN"
+ },
+ {
+  "cik": 1121788,
+  "ticker": "GRMN",
+  "name": "GRMN"
+ },
+ {
+  "cik": 886982,
+  "ticker": "GS",
+  "name": "GS"
+ },
+ {
+  "cik": 277135,
+  "ticker": "GWW",
+  "name": "GWW"
+ },
+ {
+  "cik": 45012,
+  "ticker": "HAL",
+  "name": "HAL"
+ },
+ {
+  "cik": 49280,
+  "ticker": "HAS",
+  "name": "HAS"
+ },
+ {
+  "cik": 49196,
+  "ticker": "HBAN",
+  "name": "HBAN"
+ },
+ {
+  "cik": 860730,
+  "ticker": "HCA",
+  "name": "HCA"
+ },
+ {
+  "cik": 354950,
+  "ticker": "HD",
+  "name": "HD"
+ },
+ {
+  "cik": 874766,
+  "ticker": "HIG",
+  "name": "HIG"
+ },
+ {
+  "cik": 1501585,
+  "ticker": "HII",
+  "name": "HII"
+ },
+ {
+  "cik": 1585689,
+  "ticker": "HLT",
+  "name": "HLT"
+ },
+ {
+  "cik": 773840,
+  "ticker": "HON",
+  "name": "HON"
+ },
+ {
+  "cik": 2089271,
+  "ticker": "HONA",
+  "name": "HONA"
+ },
+ {
+  "cik": 1783879,
+  "ticker": "HOOD",
+  "name": "HOOD"
+ },
+ {
+  "cik": 1645590,
+  "ticker": "HPE",
+  "name": "HPE"
+ },
+ {
+  "cik": 47217,
+  "ticker": "HPQ",
+  "name": "HPQ"
+ },
+ {
+  "cik": 48465,
+  "ticker": "HRL",
+  "name": "HRL"
+ },
+ {
+  "cik": 1000228,
+  "ticker": "HSIC",
+  "name": "HSIC"
+ },
+ {
+  "cik": 1070750,
+  "ticker": "HST",
+  "name": "HST"
+ },
+ {
+  "cik": 47111,
+  "ticker": "HSY",
+  "name": "HSY"
+ },
+ {
+  "cik": 48898,
+  "ticker": "HUBB",
+  "name": "HUBB"
+ },
+ {
+  "cik": 49071,
+  "ticker": "HUM",
+  "name": "HUM"
+ },
+ {
+  "cik": 4281,
+  "ticker": "HWM",
+  "name": "HWM"
+ },
+ {
+  "cik": 1381197,
+  "ticker": "IBKR",
+  "name": "IBKR"
+ },
+ {
+  "cik": 1571949,
+  "ticker": "ICE",
+  "name": "ICE"
+ },
+ {
+  "cik": 874716,
+  "ticker": "IDXX",
+  "name": "IDXX"
+ },
+ {
+  "cik": 832101,
+  "ticker": "IEX",
+  "name": "IEX"
+ },
+ {
+  "cik": 51253,
+  "ticker": "IFF",
+  "name": "IFF"
+ },
+ {
+  "cik": 1110803,
+  "ticker": "ILMN",
+  "name": "ILMN"
+ },
+ {
+  "cik": 879169,
+  "ticker": "INCY",
+  "name": "INCY"
+ },
+ {
+  "cik": 50863,
+  "ticker": "INTC",
+  "name": "INTC"
+ },
+ {
+  "cik": 896878,
+  "ticker": "INTU",
+  "name": "INTU"
+ },
+ {
+  "cik": 1687229,
+  "ticker": "INVH",
+  "name": "INVH"
+ },
+ {
+  "cik": 51434,
+  "ticker": "IP",
+  "name": "IP"
+ },
+ {
+  "cik": 1478242,
+  "ticker": "IQV",
+  "name": "IQV"
+ },
+ {
+  "cik": 1699150,
+  "ticker": "IR",
+  "name": "IR"
+ },
+ {
+  "cik": 1020569,
+  "ticker": "IRM",
+  "name": "IRM"
+ },
+ {
+  "cik": 1035267,
+  "ticker": "ISRG",
+  "name": "ISRG"
+ },
+ {
+  "cik": 749251,
+  "ticker": "IT",
+  "name": "IT"
+ },
+ {
+  "cik": 49826,
+  "ticker": "ITW",
+  "name": "ITW"
+ },
+ {
+  "cik": 914208,
+  "ticker": "IVZ",
+  "name": "IVZ"
+ },
+ {
+  "cik": 52988,
+  "ticker": "J",
+  "name": "J"
+ },
+ {
+  "cik": 728535,
+  "ticker": "JBHT",
+  "name": "JBHT"
+ },
+ {
+  "cik": 898293,
+  "ticker": "JBL",
+  "name": "JBL"
+ },
+ {
+  "cik": 833444,
+  "ticker": "JCI",
+  "name": "JCI"
+ },
+ {
+  "cik": 779152,
+  "ticker": "JKHY",
+  "name": "JKHY"
+ },
+ {
+  "cik": 200406,
+  "ticker": "JNJ",
+  "name": "JNJ"
+ },
+ {
+  "cik": 19617,
+  "ticker": "JPM",
+  "name": "JPM"
+ },
+ {
+  "cik": 1418135,
+  "ticker": "KDP",
+  "name": "KDP"
+ },
+ {
+  "cik": 91576,
+  "ticker": "KEY",
+  "name": "KEY"
+ },
+ {
+  "cik": 1601046,
+  "ticker": "KEYS",
+  "name": "KEYS"
+ },
+ {
+  "cik": 1637459,
+  "ticker": "KHC",
+  "name": "KHC"
+ },
+ {
+  "cik": 879101,
+  "ticker": "KIM",
+  "name": "KIM"
+ },
+ {
+  "cik": 1404912,
+  "ticker": "KKR",
+  "name": "KKR"
+ },
+ {
+  "cik": 319201,
+  "ticker": "KLAC",
+  "name": "KLAC"
+ },
+ {
+  "cik": 55785,
+  "ticker": "KMB",
+  "name": "KMB"
+ },
+ {
+  "cik": 1506307,
+  "ticker": "KMI",
+  "name": "KMI"
+ },
+ {
+  "cik": 21344,
+  "ticker": "KO",
+  "name": "KO"
+ },
+ {
+  "cik": 56873,
+  "ticker": "KR",
+  "name": "KR"
+ },
+ {
+  "cik": 1944048,
+  "ticker": "KVUE",
+  "name": "KVUE"
+ },
+ {
+  "cik": 60086,
+  "ticker": "L",
+  "name": "L"
+ },
+ {
+  "cik": 1336920,
+  "ticker": "LDOS",
+  "name": "LDOS"
+ },
+ {
+  "cik": 920760,
+  "ticker": "LEN",
+  "name": "LEN"
+ },
+ {
+  "cik": 920148,
+  "ticker": "LH",
+  "name": "LH"
+ },
+ {
+  "cik": 202058,
+  "ticker": "LHX",
+  "name": "LHX"
+ },
+ {
+  "cik": 1069202,
+  "ticker": "LII",
+  "name": "LII"
+ },
+ {
+  "cik": 1707925,
+  "ticker": "LIN",
+  "name": "LIN"
+ },
+ {
+  "cik": 1633978,
+  "ticker": "LITE",
+  "name": "LITE"
+ },
+ {
+  "cik": 59478,
+  "ticker": "LLY",
+  "name": "LLY"
+ },
+ {
+  "cik": 352541,
+  "ticker": "LNT",
+  "name": "LNT"
+ },
+ {
+  "cik": 60667,
+  "ticker": "LOW",
+  "name": "LOW"
+ },
+ {
+  "cik": 707549,
+  "ticker": "LRCX",
+  "name": "LRCX"
+ },
+ {
+  "cik": 1397187,
+  "ticker": "LULU",
+  "name": "LULU"
+ },
+ {
+  "cik": 92380,
+  "ticker": "LUV",
+  "name": "LUV"
+ },
+ {
+  "cik": 1300514,
+  "ticker": "LVS",
+  "name": "LVS"
+ },
+ {
+  "cik": 1489393,
+  "ticker": "LYB",
+  "name": "LYB"
+ },
+ {
+  "cik": 1335258,
+  "ticker": "LYV",
+  "name": "LYV"
+ },
+ {
+  "cik": 1141391,
+  "ticker": "MA",
+  "name": "MA"
+ },
+ {
+  "cik": 912595,
+  "ticker": "MAA",
+  "name": "MAA"
+ },
+ {
+  "cik": 1048286,
+  "ticker": "MAR",
+  "name": "MAR"
+ },
+ {
+  "cik": 62996,
+  "ticker": "MAS",
+  "name": "MAS"
+ },
+ {
+  "cik": 63908,
+  "ticker": "MCD",
+  "name": "MCD"
+ },
+ {
+  "cik": 827054,
+  "ticker": "MCHP",
+  "name": "MCHP"
+ },
+ {
+  "cik": 927653,
+  "ticker": "MCK",
+  "name": "MCK"
+ },
+ {
+  "cik": 1059556,
+  "ticker": "MCO",
+  "name": "MCO"
+ },
+ {
+  "cik": 1103982,
+  "ticker": "MDLZ",
+  "name": "MDLZ"
+ },
+ {
+  "cik": 1613103,
+  "ticker": "MDT",
+  "name": "MDT"
+ },
+ {
+  "cik": 1099219,
+  "ticker": "MET",
+  "name": "MET"
+ },
+ {
+  "cik": 789570,
+  "ticker": "MGM",
+  "name": "MGM"
+ },
+ {
+  "cik": 63754,
+  "ticker": "MKC",
+  "name": "MKC"
+ },
+ {
+  "cik": 916076,
+  "ticker": "MLM",
+  "name": "MLM"
+ },
+ {
+  "cik": 66740,
+  "ticker": "MMM",
+  "name": "MMM"
+ },
+ {
+  "cik": 865752,
+  "ticker": "MNST",
+  "name": "MNST"
+ },
+ {
+  "cik": 764180,
+  "ticker": "MO",
+  "name": "MO"
+ },
+ {
+  "cik": 1285785,
+  "ticker": "MOS",
+  "name": "MOS"
+ },
+ {
+  "cik": 1510295,
+  "ticker": "MPC",
+  "name": "MPC"
+ },
+ {
+  "cik": 1280452,
+  "ticker": "MPWR",
+  "name": "MPWR"
+ },
+ {
+  "cik": 310158,
+  "ticker": "MRK",
+  "name": "MRK"
+ },
+ {
+  "cik": 1682852,
+  "ticker": "MRNA",
+  "name": "MRNA"
+ },
+ {
+  "cik": 62709,
+  "ticker": "MRSH",
+  "name": "MRSH"
+ },
+ {
+  "cik": 1835632,
+  "ticker": "MRVL",
+  "name": "MRVL"
+ },
+ {
+  "cik": 895421,
+  "ticker": "MS",
+  "name": "MS"
+ },
+ {
+  "cik": 1408198,
+  "ticker": "MSCI",
+  "name": "MSCI"
+ },
+ {
+  "cik": 789019,
+  "ticker": "MSFT",
+  "name": "MSFT"
+ },
+ {
+  "cik": 68505,
+  "ticker": "MSI",
+  "name": "MSI"
+ },
+ {
+  "cik": 36270,
+  "ticker": "MTB",
+  "name": "MTB"
+ },
+ {
+  "cik": 1037646,
+  "ticker": "MTD",
+  "name": "MTD"
+ },
+ {
+  "cik": 723125,
+  "ticker": "MU",
+  "name": "MU"
+ },
+ {
+  "cik": 1513761,
+  "ticker": "NCLH",
+  "name": "NCLH"
+ },
+ {
+  "cik": 1120193,
+  "ticker": "NDAQ",
+  "name": "NDAQ"
+ },
+ {
+  "cik": 72331,
+  "ticker": "NDSN",
+  "name": "NDSN"
+ },
+ {
+  "cik": 753308,
+  "ticker": "NEE",
+  "name": "NEE"
+ },
+ {
+  "cik": 1164727,
+  "ticker": "NEM",
+  "name": "NEM"
+ },
+ {
+  "cik": 1065280,
+  "ticker": "NFLX",
+  "name": "NFLX"
+ },
+ {
+  "cik": 1111711,
+  "ticker": "NI",
+  "name": "NI"
+ },
+ {
+  "cik": 320187,
+  "ticker": "NKE",
+  "name": "NKE"
+ },
+ {
+  "cik": 1133421,
+  "ticker": "NOC",
+  "name": "NOC"
+ },
+ {
+  "cik": 1373715,
+  "ticker": "NOW",
+  "name": "NOW"
+ },
+ {
+  "cik": 1013871,
+  "ticker": "NRG",
+  "name": "NRG"
+ },
+ {
+  "cik": 702165,
+  "ticker": "NSC",
+  "name": "NSC"
+ },
+ {
+  "cik": 1002047,
+  "ticker": "NTAP",
+  "name": "NTAP"
+ },
+ {
+  "cik": 73124,
+  "ticker": "NTRS",
+  "name": "NTRS"
+ },
+ {
+  "cik": 73309,
+  "ticker": "NUE",
+  "name": "NUE"
+ },
+ {
+  "cik": 906163,
+  "ticker": "NVR",
+  "name": "NVR"
+ },
+ {
+  "cik": 1564708,
+  "ticker": "NWS",
+  "name": "NWS"
+ },
+ {
+  "cik": 1564708,
+  "ticker": "NWSA",
+  "name": "NWSA"
+ },
+ {
+  "cik": 1413447,
+  "ticker": "NXPI",
+  "name": "NXPI"
+ },
+ {
+  "cik": 726728,
+  "ticker": "O",
+  "name": "O"
+ },
+ {
+  "cik": 878927,
+  "ticker": "ODFL",
+  "name": "ODFL"
+ },
+ {
+  "cik": 1039684,
+  "ticker": "OKE",
+  "name": "OKE"
+ },
+ {
+  "cik": 29989,
+  "ticker": "OMC",
+  "name": "OMC"
+ },
+ {
+  "cik": 1097864,
+  "ticker": "ON",
+  "name": "ON"
+ },
+ {
+  "cik": 1341439,
+  "ticker": "ORCL",
+  "name": "ORCL"
+ },
+ {
+  "cik": 898173,
+  "ticker": "ORLY",
+  "name": "ORLY"
+ },
+ {
+  "cik": 1781335,
+  "ticker": "OTIS",
+  "name": "OTIS"
+ },
+ {
+  "cik": 797468,
+  "ticker": "OXY",
+  "name": "OXY"
+ },
+ {
+  "cik": 1327567,
+  "ticker": "PANW",
+  "name": "PANW"
+ },
+ {
+  "cik": 723531,
+  "ticker": "PAYX",
+  "name": "PAYX"
+ },
+ {
+  "cik": 75362,
+  "ticker": "PCAR",
+  "name": "PCAR"
+ },
+ {
+  "cik": 1004980,
+  "ticker": "PCG",
+  "name": "PCG"
+ },
+ {
+  "cik": 788784,
+  "ticker": "PEG",
+  "name": "PEG"
+ },
+ {
+  "cik": 77476,
+  "ticker": "PEP",
+  "name": "PEP"
+ },
+ {
+  "cik": 78003,
+  "ticker": "PFE",
+  "name": "PFE"
+ },
+ {
+  "cik": 1126328,
+  "ticker": "PFG",
+  "name": "PFG"
+ },
+ {
+  "cik": 80424,
+  "ticker": "PG",
+  "name": "PG"
+ },
+ {
+  "cik": 80661,
+  "ticker": "PGR",
+  "name": "PGR"
+ },
+ {
+  "cik": 773634,
+  "ticker": "PH",
+  "name": "PH"
+ },
+ {
+  "cik": 822416,
+  "ticker": "PHM",
+  "name": "PHM"
+ },
+ {
+  "cik": 75677,
+  "ticker": "PKG",
+  "name": "PKG"
+ },
+ {
+  "cik": 1321655,
+  "ticker": "PLTR",
+  "name": "PLTR"
+ },
+ {
+  "cik": 1413329,
+  "ticker": "PM",
+  "name": "PM"
+ },
+ {
+  "cik": 713676,
+  "ticker": "PNC",
+  "name": "PNC"
+ },
+ {
+  "cik": 77360,
+  "ticker": "PNR",
+  "name": "PNR"
+ },
+ {
+  "cik": 764622,
+  "ticker": "PNW",
+  "name": "PNW"
+ },
+ {
+  "cik": 1145197,
+  "ticker": "PODD",
+  "name": "PODD"
+ },
+ {
+  "cik": 79879,
+  "ticker": "PPG",
+  "name": "PPG"
+ },
+ {
+  "cik": 922224,
+  "ticker": "PPL",
+  "name": "PPL"
+ },
+ {
+  "cik": 1137774,
+  "ticker": "PRU",
+  "name": "PRU"
+ },
+ {
+  "cik": 1393311,
+  "ticker": "PSA",
+  "name": "PSA"
+ },
+ {
+  "cik": 1534701,
+  "ticker": "PSX",
+  "name": "PSX"
+ },
+ {
+  "cik": 857005,
+  "ticker": "PTC",
+  "name": "PTC"
+ },
+ {
+  "cik": 1050915,
+  "ticker": "PWR",
+  "name": "PWR"
+ },
+ {
+  "cik": 1633917,
+  "ticker": "PYPL",
+  "name": "PYPL"
+ },
+ {
+  "cik": 2058873,
+  "ticker": "Q",
+  "name": "Q"
+ },
+ {
+  "cik": 804328,
+  "ticker": "QCOM",
+  "name": "QCOM"
+ },
+ {
+  "cik": 884887,
+  "ticker": "RCL",
+  "name": "RCL"
+ },
+ {
+  "cik": 1713445,
+  "ticker": "RDDT",
+  "name": "RDDT"
+ },
+ {
+  "cik": 910606,
+  "ticker": "REG",
+  "name": "REG"
+ },
+ {
+  "cik": 872589,
+  "ticker": "REGN",
+  "name": "REGN"
+ },
+ {
+  "cik": 1281761,
+  "ticker": "RF",
+  "name": "RF"
+ },
+ {
+  "cik": 720005,
+  "ticker": "RJF",
+  "name": "RJF"
+ },
+ {
+  "cik": 1037038,
+  "ticker": "RL",
+  "name": "RL"
+ },
+ {
+  "cik": 943819,
+  "ticker": "RMD",
+  "name": "RMD"
+ },
+ {
+  "cik": 1024478,
+  "ticker": "ROK",
+  "name": "ROK"
+ },
+ {
+  "cik": 84839,
+  "ticker": "ROL",
+  "name": "ROL"
+ },
+ {
+  "cik": 882835,
+  "ticker": "ROP",
+  "name": "ROP"
+ },
+ {
+  "cik": 745732,
+  "ticker": "ROST",
+  "name": "ROST"
+ },
+ {
+  "cik": 1060391,
+  "ticker": "RSG",
+  "name": "RSG"
+ },
+ {
+  "cik": 101829,
+  "ticker": "RTX",
+  "name": "RTX"
+ },
+ {
+  "cik": 31791,
+  "ticker": "RVTY",
+  "name": "RVTY"
+ },
+ {
+  "cik": 1034054,
+  "ticker": "SBAC",
+  "name": "SBAC"
+ },
+ {
+  "cik": 829224,
+  "ticker": "SBUX",
+  "name": "SBUX"
+ },
+ {
+  "cik": 316709,
+  "ticker": "SCHW",
+  "name": "SCHW"
+ },
+ {
+  "cik": 89800,
+  "ticker": "SHW",
+  "name": "SHW"
+ },
+ {
+  "cik": 91419,
+  "ticker": "SJM",
+  "name": "SJM"
+ },
+ {
+  "cik": 2041610,
+  "ticker": "SKYD",
+  "name": "SKYD"
+ },
+ {
+  "cik": 87347,
+  "ticker": "SLB",
+  "name": "SLB"
+ },
+ {
+  "cik": 1375365,
+  "ticker": "SMCI",
+  "name": "SMCI"
+ },
+ {
+  "cik": 91440,
+  "ticker": "SNA",
+  "name": "SNA"
+ },
+ {
+  "cik": 2023554,
+  "ticker": "SNDK",
+  "name": "SNDK"
+ },
+ {
+  "cik": 883241,
+  "ticker": "SNPS",
+  "name": "SNPS"
+ },
+ {
+  "cik": 92122,
+  "ticker": "SO",
+  "name": "SO"
+ },
+ {
+  "cik": 1964738,
+  "ticker": "SOLV",
+  "name": "SOLV"
+ },
+ {
+  "cik": 1063761,
+  "ticker": "SPG",
+  "name": "SPG"
+ },
+ {
+  "cik": 64040,
+  "ticker": "SPGI",
+  "name": "SPGI"
+ },
+ {
+  "cik": 1032208,
+  "ticker": "SRE",
+  "name": "SRE"
+ },
+ {
+  "cik": 1757898,
+  "ticker": "STE",
+  "name": "STE"
+ },
+ {
+  "cik": 1022671,
+  "ticker": "STLD",
+  "name": "STLD"
+ },
+ {
+  "cik": 93751,
+  "ticker": "STT",
+  "name": "STT"
+ },
+ {
+  "cik": 1137789,
+  "ticker": "STX",
+  "name": "STX"
+ },
+ {
+  "cik": 16918,
+  "ticker": "STZ",
+  "name": "STZ"
+ },
+ {
+  "cik": 2005951,
+  "ticker": "SW",
+  "name": "SW"
+ },
+ {
+  "cik": 93556,
+  "ticker": "SWK",
+  "name": "SWK"
+ },
+ {
+  "cik": 4127,
+  "ticker": "SWKS",
+  "name": "SWKS"
+ },
+ {
+  "cik": 1601712,
+  "ticker": "SYF",
+  "name": "SYF"
+ },
+ {
+  "cik": 310764,
+  "ticker": "SYK",
+  "name": "SYK"
+ },
+ {
+  "cik": 96021,
+  "ticker": "SYY",
+  "name": "SYY"
+ },
+ {
+  "cik": 732717,
+  "ticker": "T",
+  "name": "T"
+ },
+ {
+  "cik": 1260221,
+  "ticker": "TDG",
+  "name": "TDG"
+ },
+ {
+  "cik": 1094285,
+  "ticker": "TDY",
+  "name": "TDY"
+ },
+ {
+  "cik": 842023,
+  "ticker": "TECH",
+  "name": "TECH"
+ },
+ {
+  "cik": 1385157,
+  "ticker": "TEL",
+  "name": "TEL"
+ },
+ {
+  "cik": 97210,
+  "ticker": "TER",
+  "name": "TER"
+ },
+ {
+  "cik": 92230,
+  "ticker": "TFC",
+  "name": "TFC"
+ },
+ {
+  "cik": 27474,
+  "ticker": "TGT",
+  "name": "TGT"
+ },
+ {
+  "cik": 109198,
+  "ticker": "TJX",
+  "name": "TJX"
+ },
+ {
+  "cik": 1973266,
+  "ticker": "TKO",
+  "name": "TKO"
+ },
+ {
+  "cik": 97745,
+  "ticker": "TMO",
+  "name": "TMO"
+ },
+ {
+  "cik": 1283699,
+  "ticker": "TMUS",
+  "name": "TMUS"
+ },
+ {
+  "cik": 1811074,
+  "ticker": "TPL",
+  "name": "TPL"
+ },
+ {
+  "cik": 1077205,
+  "ticker": "TPR",
+  "name": "TPR"
+ },
+ {
+  "cik": 1389170,
+  "ticker": "TRGP",
+  "name": "TRGP"
+ },
+ {
+  "cik": 864749,
+  "ticker": "TRMB",
+  "name": "TRMB"
+ },
+ {
+  "cik": 1006367,
+  "ticker": "TROW",
+  "name": "TROW"
+ },
+ {
+  "cik": 86312,
+  "ticker": "TRV",
+  "name": "TRV"
+ },
+ {
+  "cik": 916365,
+  "ticker": "TSCO",
+  "name": "TSCO"
+ },
+ {
+  "cik": 1318605,
+  "ticker": "TSLA",
+  "name": "TSLA"
+ },
+ {
+  "cik": 100493,
+  "ticker": "TSN",
+  "name": "TSN"
+ },
+ {
+  "cik": 1466258,
+  "ticker": "TT",
+  "name": "TT"
+ },
+ {
+  "cik": 946581,
+  "ticker": "TTWO",
+  "name": "TTWO"
+ },
+ {
+  "cik": 1447669,
+  "ticker": "TWLO",
+  "name": "TWLO"
+ },
+ {
+  "cik": 97476,
+  "ticker": "TXN",
+  "name": "TXN"
+ },
+ {
+  "cik": 217346,
+  "ticker": "TXT",
+  "name": "TXT"
+ },
+ {
+  "cik": 860731,
+  "ticker": "TYL",
+  "name": "TYL"
+ },
+ {
+  "cik": 100517,
+  "ticker": "UAL",
+  "name": "UAL"
+ },
+ {
+  "cik": 1543151,
+  "ticker": "UBER",
+  "name": "UBER"
+ },
+ {
+  "cik": 74208,
+  "ticker": "UDR",
+  "name": "UDR"
+ },
+ {
+  "cik": 352915,
+  "ticker": "UHS",
+  "name": "UHS"
+ },
+ {
+  "cik": 1403568,
+  "ticker": "ULTA",
+  "name": "ULTA"
+ },
+ {
+  "cik": 731766,
+  "ticker": "UNH",
+  "name": "UNH"
+ },
+ {
+  "cik": 100885,
+  "ticker": "UNP",
+  "name": "UNP"
+ },
+ {
+  "cik": 1090727,
+  "ticker": "UPS",
+  "name": "UPS"
+ },
+ {
+  "cik": 1067701,
+  "ticker": "URI",
+  "name": "URI"
+ },
+ {
+  "cik": 36104,
+  "ticker": "USB",
+  "name": "USB"
+ },
+ {
+  "cik": 1403161,
+  "ticker": "V",
+  "name": "V"
+ },
+ {
+  "cik": 1393052,
+  "ticker": "VEEV",
+  "name": "VEEV"
+ },
+ {
+  "cik": 1705696,
+  "ticker": "VICI",
+  "name": "VICI"
+ },
+ {
+  "cik": 1035002,
+  "ticker": "VLO",
+  "name": "VLO"
+ },
+ {
+  "cik": 1967680,
+  "ticker": "VLTO",
+  "name": "VLTO"
+ },
+ {
+  "cik": 1396009,
+  "ticker": "VMC",
+  "name": "VMC"
+ },
+ {
+  "cik": 906107,
+  "ticker": "VMRK",
+  "name": "VMRK"
+ },
+ {
+  "cik": 1442145,
+  "ticker": "VRSK",
+  "name": "VRSK"
+ },
+ {
+  "cik": 1014473,
+  "ticker": "VRSN",
+  "name": "VRSN"
+ },
+ {
+  "cik": 1674101,
+  "ticker": "VRT",
+  "name": "VRT"
+ },
+ {
+  "cik": 875320,
+  "ticker": "VRTX",
+  "name": "VRTX"
+ },
+ {
+  "cik": 1692819,
+  "ticker": "VST",
+  "name": "VST"
+ },
+ {
+  "cik": 740260,
+  "ticker": "VTR",
+  "name": "VTR"
+ },
+ {
+  "cik": 1792044,
+  "ticker": "VTRS",
+  "name": "VTRS"
+ },
+ {
+  "cik": 2128626,
+  "ticker": "VYLR",
+  "name": "VYLR"
+ },
+ {
+  "cik": 732712,
+  "ticker": "VZ",
+  "name": "VZ"
+ },
+ {
+  "cik": 943452,
+  "ticker": "WAB",
+  "name": "WAB"
+ },
+ {
+  "cik": 1000697,
+  "ticker": "WAT",
+  "name": "WAT"
+ },
+ {
+  "cik": 1327811,
+  "ticker": "WDAY",
+  "name": "WDAY"
+ },
+ {
+  "cik": 106040,
+  "ticker": "WDC",
+  "name": "WDC"
+ },
+ {
+  "cik": 783325,
+  "ticker": "WEC",
+  "name": "WEC"
+ },
+ {
+  "cik": 704808,
+  "ticker": "WELL",
+  "name": "WELL"
+ },
+ {
+  "cik": 72971,
+  "ticker": "WFC",
+  "name": "WFC"
+ },
+ {
+  "cik": 823768,
+  "ticker": "WM",
+  "name": "WM"
+ },
+ {
+  "cik": 107263,
+  "ticker": "WMB",
+  "name": "WMB"
+ },
+ {
+  "cik": 104169,
+  "ticker": "WMT",
+  "name": "WMT"
+ },
+ {
+  "cik": 11544,
+  "ticker": "WRB",
+  "name": "WRB"
+ },
+ {
+  "cik": 719955,
+  "ticker": "WSM",
+  "name": "WSM"
+ },
+ {
+  "cik": 105770,
+  "ticker": "WST",
+  "name": "WST"
+ },
+ {
+  "cik": 1140536,
+  "ticker": "WTW",
+  "name": "WTW"
+ },
+ {
+  "cik": 106535,
+  "ticker": "WY",
+  "name": "WY"
+ },
+ {
+  "cik": 1174922,
+  "ticker": "WYNN",
+  "name": "WYNN"
+ },
+ {
+  "cik": 72903,
+  "ticker": "XEL",
+  "name": "XEL"
+ },
+ {
+  "cik": 2115436,
+  "ticker": "XOM",
+  "name": "XOM"
+ },
+ {
+  "cik": 1524472,
+  "ticker": "XYL",
+  "name": "XYL"
+ },
+ {
+  "cik": 1512673,
+  "ticker": "XYZ",
+  "name": "XYZ"
+ },
+ {
+  "cik": 1041061,
+  "ticker": "YUM",
+  "name": "YUM"
+ },
+ {
+  "cik": 1136869,
+  "ticker": "ZBH",
+  "name": "ZBH"
+ },
+ {
+  "cik": 877212,
+  "ticker": "ZBRA",
+  "name": "ZBRA"
+ },
+ {
+  "cik": 1555280,
+  "ticker": "ZTS",
+  "name": "ZTS"
+ }
 ]
