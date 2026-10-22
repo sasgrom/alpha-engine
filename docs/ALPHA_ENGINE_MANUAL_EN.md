@@ -1030,6 +1030,17 @@ edge of 40-year history; documented, not fabricated away.
 
 142/142 unit tests, tsc zero.
 
+### 4.30 Iteration 4o: home worker pack #1 — GDELT + Stocktwits (D48)
+
+**Context.** 4j/4k proved GDELT/Stocktwits/Reddit unreachable from datacenter IPs. Variant C: cloud = control plane + prod, home machine = collector worker + coding with Kimi Code. Data flows home→cloud only via `POST /api/worker/ingest` (Bearer key, zod validation, server-stamped ingestedAt, INSERT IGNORE).
+
+**Built.**
+- `worker/` — DB-free package: `gdelt.mts` (hourly ArtList volume + ToneChart weighted tone, 6s pacing), `stocktwits.mts` (30-message stream → buzz + bullish/bearish label; payloadKey = newest message id + count → natural dedupe), `lib/http.ts` (timeout + backoff, 4xx fatal), `lib/ingest.ts` (≤500-row chunks), `universe.json` (committed universe snapshot; regenerate via `scripts/export-worker-universe.mts`).
+- Home dev environment from scratch: Node 24, MySQL 8 (local DB = read-only prod snapshot via mariadb-dump; users/worker_keys/logs excluded), local admin/user via `scripts/seed-local-users.mts`, Kimi Code CLI + VS Code extension.
+- Bridge: GitHub repo sasgrom/alpha-engine, write deploy key for the cloud agent. Code flows home→cloud via git; data flows prod→home as snapshots only.
+- Dev-server fix: the @hono/vite-dev-server exclude must list REAL file extensions — tRPC paths contain dots (`auth.login`), a generic `/\.\w+$/` misroutes them to Vite → empty response.
+- 155/155 tests (13 new), tsc zero. Scheduling: Windows Task Scheduler (commands in worker/README.md).
+
 ## 5. Cloud panel (UI)
 
 > Current as of 2026-10-19 (iteration 4h). Auth is local (username/password,
@@ -1127,6 +1138,7 @@ edge of 40-year history; documented, not fabricated away.
 | D45 | The home worker writes into the app over HTTP (POST /api/worker/ingest, Bearer key hashed in worker_keys via SHA-256, server-stamped ingestedAt, INSERT IGNORE ≤500 rows); the DB is unreachable from outside (privatelink) — no direct writes by construction; the worker template is alpha_engine/worker (Python) | the privatelink DB is unreachable externally; D6 (DB-row queue, interchangeable executor) gets an honest transport; no client keys — hashes only |
 | D46 | Short interest settlement-dated (yahoo_gw now, FINRA primary for the worker); insider_cluster = ≥3 distinct insiders, P only, no 10b5-1, 30d window, filingDate = max filed; FRED macro_points carry realtimeStart/End per row | SI is an overlay, never standalone (Boehmer et al. 2010); clusters follow Cohen–Malloy–Pomorski discipline; macro vintages get the same D2 discipline as XBRL |
 | D47 | Quote-grid metric history is pre-computed (metric_history, month-ends), tiles click through to a chart dialog; splits normalize EXACTLY (Yahoo stock actions) with the sourceFiled guard against restatement double-counting; EPS scales the other way (÷) | "pre-calculate and store as a static table so display is immediate" — owner's directive; lesson: nominal share counts × adjusted prices are incompatible by construction |
+| D48 | Datacenter-blocked collectors live in worker/ on the home machine; transport is the ingest endpoint only; prod→home data as read-only snapshots, code home→cloud via git + deploy key | network reality proven in 4j (hard-429/403); honesty: ingestedAt is server-stamped only, payloadKey dedupe makes redeliveries free |
 
 ## 7. Glossary
 

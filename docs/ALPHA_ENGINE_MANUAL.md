@@ -1027,6 +1027,17 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 142/142 юнит-теста, tsc ноль.
 
+### 4.30 Итерация 4o: домашний воркер-пакет №1 — GDELT + Stocktwits (D48)
+
+**Контекст.** В 4j/4k доказано: GDELT/Stocktwits/Reddit недоступны с датацентровых IP. Архитектура «Вариант C»: облако = control plane + прод, домашняя машина = воркер коллекторов, код пишется дома с Kimi Code. Данные: дом → облако только через `POST /api/worker/ingest` (Bearer-ключ, zod-валидация, серверный ingestedAt, INSERT IGNORE).
+
+**Что построено.**
+- `worker/` — изолированный пакет без доступа к БД: `gdelt.mts` (ArtList-объём + ToneChart-средний тон за час; pacing 6 с), `stocktwits.mts` (стрим 30 сообщений → buzz + метка bullish/bearish; payloadKey = id новейшего сообщения + счётчик → естественная дедупликация), `lib/http.ts` (таймаут + backoff; 4xx фатальны), `lib/ingest.ts` (чанки ≤500), `universe.json` (коммит-снимок вселенной; регенерация `scripts/export-worker-universe.mts`).
+- Домашняя dev-среда поднята с нуля: Node 24, MySQL 8 (локальная база = снимок прода только на чтение через mariadb-dump; исключены users/worker_keys/логи), локальные admin/user через `scripts/seed-local-users.mts`, Kimi Code CLI + расширение VS Code.
+- Мост: GitHub-репозиторий sasgrom/alpha-engine, deploy key (write) для облачного агента. Код течёт дом→облако через git, данные — только прод→дом снимками.
+- Фикс dev-сервера: exclude в @hono/vite-dev-server обязан перечислять РЕАЛЬНЫЕ расширения файлов — tRPC-пути содержат точку (`auth.login`), общий `/\.\w+$/` уводит их в Vite → пустой ответ.
+- 155/155 тестов (13 новых), tsc zero. Расписание: Планировщик задач Windows (команды в worker/README.md).
+
 ## 5. Облачная панель (UI)
 
 > Актуально на 2026-10-19 (итерация 4h). Авторизация — локальная
@@ -1123,6 +1134,7 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 | D45 | Домашний воркер пишет в приложение по HTTP (POST /api/worker/ingest, Bearer-ключ в worker_keys по SHA-256, ingestedAt штампует сервер, INSERT IGNORE ≤500 строк); БД снаружи недостижима (privatelink) — прямой записи нет по построению; шаблон воркера — alpha_engine/worker (Python) | БД за privatelink недоступна извне; D6 (очередь в БД, сменяемый исполнитель) получает честный транспорт; «нет ключей у клиента» — только хеши |
 | D46 | Short interest settlement-датированный (yahoo_gw сейчас, FINRA — первичный для воркера); insider_cluster = ≥3 разных инсайдера, только P, без 10b5-1, 30д окно, filingDate = max filed; FRED macro_points несут realtimeStart/End на строке | SI — overlay, не standalone (Boehmer et al. 2010); кластеры — Cohen–Malloy–Pomorski дисциплина; макро винтажность — та же D2-дисциплина, что и для XBRL |
 | D47 | История метрик котировочной сетки — предрасчётная (metric_history, месяц-концы), тайлы кликабельны → диалог с графиком; сплиты нормализуются ТОЧНО (Yahoo stock actions) с guard'ом sourceFiled против двойного счёта рестейтментов; EPS — в обратную сторону | «предрасчитать и хранить статической таблицей, чтобы отображение мгновенное» — директива владельца; урок: номинальные счётчики акций × скорректированные цены несовместимы по построению |
+| D48 | Датацентр-блокированные коллекторы живут в worker/ на домашней машине; транспорт — только ingest-эндпоинт; данные прод→дом только снимками (read-only), код дом→облако через git + deploy key | сетевая реальность 4j (hard-429/403); честность: ingestedAt только серверный, payloadKey-дедупликация делает повторы бесплатными |
 
 ## 7. Глоссарий
 

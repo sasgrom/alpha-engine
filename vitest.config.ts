@@ -18,6 +18,6 @@ export default defineConfig({
     // environment: "node" by default; React component tests are marked with
     // the `// @vitest-environment jsdom` pragma on the first line of the file
     environment: "node",
-    include: ["api/**/*.test.ts", "api/**/*.spec.ts", "src/**/*.test.tsx"],
+    include: ["api/**/*.test.ts", "api/**/*.spec.ts", "src/**/*.test.tsx", "worker/**/*.test.ts"],
   },
 });
