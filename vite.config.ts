@@ -19,6 +19,10 @@ export default defineConfig({
     inspectAttr(), react()],
   server: {
     port: 3000,
+    // Windows: default "localhost" binds IPv6 ::1 ONLY — browsers dual-stack
+    // fine, but local worker POSTs to literal 127.0.0.1 get ECONNREFUSED.
+    // Pin the loopback IPv4 bind; the page stays reachable at localhost too.
+    host: "127.0.0.1",
   },
   resolve: {
     alias: {
