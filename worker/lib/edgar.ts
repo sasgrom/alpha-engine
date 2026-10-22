@@ -181,29 +181,51 @@ function decodeEntities(s: string): string {
 }
 
 // --- section extraction (simplified port of api/services/sections.ts) ---------
-/** TOC lines look like "Item 7. Management's Discussion ..... 42" — dot leaders or a bare page number. */
+/** TOC lines: dot leaders, a trailing page number, or a bare page-number line (nbsp tolerated). */
 function isTocLine(line: string): boolean {
-  return /\.{4,}\s*\d*\s*$/.test(line) || /\s\d{1,3}\s*$/.test(line);
+  const l = line.replace(/\u00a0/g, " ");
+  return /\.{4,}\s*\d*\s*$/.test(l) || /\s\d{1,4}\s*$/.test(l) || /^\s*\d{1,4}\s*$/.test(l);
 }
 
+/** A bare label line: "Item 2." alone — the title lives on the NEXT line. */
+const BARE_LABEL_RE = /^\s*item\s+\d+[a-z]?[\.\:]?\s*$/i;
+
 /**
- * Line-start offset of a heading, skipping TOC occurrences; last non-TOC wins
- * (the body always follows the TOC). Regexes are anchored at line start so
- * prose mentions ("as discussed in Item 3.") never match.
+ * Line-start offset of a heading. TOC-vs-body resolution, proven against real
+ * NVDA filings (10-Q accn …-26-000075, 10-K 2026-02-25):
+ *  - TOC entries appear as a bare label ("Item 2.") with the title + page on
+ *    the NEXT line (10-Q: "Management's Discussion… 25") or with the page as
+ *    a standalone nbsp-line TWO lines down (10-K: "\u00a0 36");
+ *  - a 10-Q has TWO body headings with the same number (Part I Item 2 = MD&A,
+ *    Part II Item 2 = unregistered sales), so "last wins" is wrong — the body
+ *    anchor is the FIRST non-TOC hit AFTER the last TOC hit.
  */
 function findHeading(text: string, re: RegExp): number | null {
   const lines = text.split("\n");
+  const hits: { offset: number; toc: boolean }[] = [];
   let offset = 0;
-  let last: number | null = null;
-  let fallback: number | null = null;
-  for (const line of lines) {
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     if (re.test(line)) {
-      if (isTocLine(line)) fallback ??= offset;
-      else last = offset;
+      let toc = isTocLine(line);
+      if (!toc && BARE_LABEL_RE.test(line.replace(/\u00a0/g, " "))) {
+        const next = lines.slice(i + 1).filter((l) => l.trim() !== "").slice(0, 3).map((l) => l.replace(/\u00a0/g, " "));
+        if (
+          next.length > 0 &&
+          (/\s\d{1,4}\s*$/.test(next[0]) || /\.{4,}/.test(next[0]) || next.slice(0, 2).some((l) => /^\d{1,4}$/.test(l.trim())))
+        ) {
+          toc = true; // title+page (next line) or standalone page line (2 lines down) = TOC entry
+        }
+      }
+      hits.push({ offset, toc });
     }
     offset += line.length + 1;
   }
-  return last ?? fallback;
+  if (hits.length === 0) return null;
+  const lastTocIdx = hits.reduce((acc, h, i) => (h.toc ? i : acc), -1);
+  const body = hits.find((h, i) => !h.toc && i > lastTocIdx) ?? hits.find((h) => !h.toc);
+  if (body) return body.offset;
+  return hits[0].offset; // every occurrence TOC-like: take the first, honestly
 }
 
 /**
@@ -213,7 +235,11 @@ function findHeading(text: string, re: RegExp): number | null {
  * Returns null when no section anchor is found (caller falls back to body head).
  */
 export function extractScorableText(plain: string, form: string): string {
-  const sigIdx = plain.search(/^\s*SIGNATURES?\s*$/im);
+  // The TOC has its own bare "Signatures" entry line — truncating at the
+  // FIRST match cuts the document at the TOC. The real signature block is
+  // the LAST occurrence.
+  const sigMatches = [...plain.matchAll(/^\s*SIGNATURES?\s*$/gim)];
+  const sigIdx = sigMatches.length > 0 ? sigMatches[sigMatches.length - 1].index! : -1;
   const body = sigIdx > 0 ? plain.slice(0, sigIdx) : plain;
   if (form === "8-K") {
     // 5c fix: the cover page + TABLE OF CONTENTS flooded the window and the

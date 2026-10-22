@@ -216,6 +216,57 @@ const TEN_K = [
 ].join("\n");
 
 describe("edgar extractScorableText", () => {
+  it("10-Q regression: NVDA real TOC shape — bare label line, title+page on the NEXT line", () => {
+    // proven against nvda-20260726.htm (10-Q, accn 0001045810-26-000075):
+    // TOC lines are "Item 2." ALONE with the title and page number on the
+    // following line; without next-line detection the Part-II TOC occurrence
+    // ("Unregistered Sales… 39") won as 'last non-TOC' and MD&A was lost.
+    const q = [
+      "PART I. Financial Information",
+      "Item 2.",
+      "Management's Discussion and Analysis of Financial Condition and Results of Operations 25",
+      "Item 3.",
+      "Quantitative and Qualitative Disclosures About Market Risk 33",
+      "Part II. Other Information",
+      "Item 2.",
+      "Unregistered Sales of Equity Securities and Use of Proceeds 39",
+      "Item 2. Management's Discussion and Analysis of Financial Condition and Results of Operations",
+      "Revenue of $46.7 billion, up 56% year over year.",
+      "Data Center demand exceeded supply.",
+      "Item 3. Quantitative and Qualitative Disclosures About Market Risk",
+      "We are exposed to interest rate risk.",
+    ].join("\n");
+    const out = extractScorableText(q, "10-Q");
+    expect(out).toContain("Revenue of $46.7 billion");
+    expect(out).not.toContain("Unregistered Sales");
+    expect(out).not.toContain("interest rate risk");
+  });
+  it("10-K regression: real NVDA shape — TOC page numbers as standalone nbsp lines + TOC 'Signatures' entry", () => {
+    // proven against the 2026-02-25 10-K: TOC entry = bare "Item 7." / title /
+    // "  36" page line; and the TOC's own "Signatures" line must NOT truncate.
+    const k = [
+      "Item 7.",
+      "Management's Discussion and Analysis of Financial Condition and Results of Operations",
+      "  36",
+      "Item 8.",
+      "Financial Statements and Supplementary Data",
+      "  45",
+      "Signatures",
+      "  47",
+      "PART II",
+      "Item 7. Management's Discussion and Analysis of Financial Condition and Results of Operations",
+      "The following discussion and analysis covers fiscal 2026 results.",
+      "Item 7A. Quantitative and Qualitative Disclosures About Market Risk",
+      "Rate exposure.",
+      "SIGNATURES",
+      "signed",
+    ].join("\n");
+    const out = extractScorableText(k, "10-K");
+    expect(out).toContain("fiscal 2026 results");
+    expect(out).not.toContain("Supplementary Data");
+    expect(out).not.toContain("Rate exposure");
+    expect(out).not.toContain("signed");
+  });
   it("10-K: skips the TOC occurrence, takes the body Item 7, ends at Item 7A, drops SIGNATURES", () => {
     const out = extractScorableText(TEN_K, "10-K");
     expect(out).toContain("Revenue increased driven by services.");
