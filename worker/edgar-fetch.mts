@@ -30,6 +30,7 @@ function assertDiskSpace() {
   }
 }
 import { fetchDoc, fetchFilingDocument, listFilingDocs, listFilings, loadEdgarUniverse, type EdgarFiling } from "./lib/edgar";
+import { startProgress } from "./lib/progress";
 
 export interface ManifestEntry extends EdgarFiling {
   docName: string | null;
@@ -60,18 +61,23 @@ const from = fromIdx > -1 ? process.argv[fromIdx + 1] : null; // YYYY-MM-DD lowe
 const universe = loadEdgarUniverse().filter((c) => !only || c.ticker === only);
 if (only && universe.length === 0) { console.error(`[edgar-fetch] unknown ticker ${only}`); process.exit(1); }
 
+const prog = startProgress("edgar-fetch", `${universe.length} companies${only ? ` (only ${only})` : ""}${from ? `, from ${from}` : ""}`);
+const totalCompanies = universe.length;
+let companyIdx = 0;
+
 for (const co of universe) {
+  companyIdx++;
   // one bad CIK (stale snapshot row, delisted entity) must NEVER kill a
   // 500-company overnight crawl — log and move on (proven by AIG: the GICS
   // snapshot carried CIK 5271, real is 5272; 404 crashed the whole run)
   let filingsAll: EdgarFiling[];
   try { filingsAll = await listFilings(co.cik); }
-  catch (err) { console.error(`[edgar-fetch] ${co.ticker} (CIK ${co.cik}): company-level error, SKIPPED — ${String(err).slice(0, 150)}`); continue; }
+  catch (err) { prog.log(`✗ ${co.ticker} (CIK ${co.cik}): company-level error, SKIPPED — ${String(err).slice(0, 150)}`); continue; }
   const filings = filingsAll.filter((f) => !from || f.filingDate >= from);
   const manifest = loadManifest(co.cik);
   const known = new Map(manifest.map((m) => [m.accessionNo, m]));
   let fresh = 0, fetched = 0, failed = 0;
-  console.log(`[edgar-fetch] ${co.ticker}: ${filings.length} filings (10-K/10-Q/8-K${from ? `, from ${from}` : ""})`);
+  prog.stage(`${co.ticker} [${companyIdx}/${totalCompanies}]: ${filings.length} filings (10-K/10-Q/8-K)`);
   for (let i = 0; i < filings.length; i++) {
     const f = filings[i];
     let entry = known.get(f.accessionNo);
@@ -117,10 +123,10 @@ for (const co of universe) {
     if ((i + 1) % 25 === 0) {
       assertDiskSpace();
       saveManifest(co.cik, manifest);
-      console.log(`[edgar-fetch] ${co.ticker}: ${i + 1}/${filings.length} (${fetched} downloaded, ${failed} failed)`);
+      prog.item(i + 1, filings.length, `${fetched} downloaded, ${failed} failed`);
     }
   }
   saveManifest(co.cik, manifest);
-  console.log(`[edgar-fetch] ${co.ticker} DONE: ${filings.length} filings, ${fresh} new in manifest, ${fetched} downloaded this run, ${failed} failed`);
+  prog.stageDone(`${co.ticker}: ${filings.length} filings, ${fresh} new, ${fetched} downloaded, ${failed} failed`);
 }
-console.log("[edgar-fetch] all done");
+prog.done(`all done — ${totalCompanies} companies`);

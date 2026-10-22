@@ -22,6 +22,7 @@ import path from "node:path";
 import { derivePlaintext, extractScorableText, isThinContent, loadEdgarUniverse, mdaWindows } from "./lib/edgar";
 import { extractVerdict, generate, LLM_MODEL, status, tonePrompt } from "./lib/ollama";
 import { postSignals, type SignalRow } from "./lib/ingest";
+import { startProgress } from "./lib/progress";
 import type { ManifestEntry } from "./edgar-fetch.mts";
 
 const cacheDir = (cik: number) => path.resolve(import.meta.dirname, "cache", "edgar", String(cik));
@@ -40,7 +41,7 @@ if (!st.models.some((m) => m === LLM_MODEL || m.startsWith(`${LLM_MODEL.split(":
   console.error(`[edgar-tone] model "${LLM_MODEL}" not pulled. Models present: ${st.models.join(", ") || "(none)"}`);
   process.exit(1);
 }
-console.log(`[edgar-tone] model: ${LLM_MODEL}`);
+const prog = startProgress("edgar-tone", `model ${LLM_MODEL}`);
 
 const universe = loadEdgarUniverse().filter((c) => !only || c.ticker === only);
 if (only && universe.length === 0) { console.error(`[edgar-tone] unknown ticker ${only}`); process.exit(1); }
@@ -49,7 +50,7 @@ for (const co of universe) {
   const mPath = path.join(cacheDir(co.cik), "manifest.json");
   let manifest: ManifestEntry[];
   try { manifest = JSON.parse(readFileSync(mPath, "utf8")); }
-  catch { console.log(`[edgar-tone] ${co.ticker}: no manifest (run edgar-fetch first)`); continue; }
+  catch { prog.log(`${co.ticker}: no manifest (run edgar-fetch first)`); continue; }
 
   if (rescore) for (const m of manifest) if (m.fetched) { m.scored = false; delete m.error; }
   const pending = manifest.filter((m) => m.fetched && !m.scored);
@@ -61,7 +62,7 @@ for (const co of universe) {
   const deliver = async (box: Outbox): Promise<boolean> => {
     if (box.rows.length === 0) return true;
     const rep = await postSignals(box.rows); // throws on transport failure
-    console.log(`[edgar-tone] ${co.ticker}: ingested: ${rep.accepted} new, ${rep.skippedDupes} dupes (${rep.batches} batches)`);
+    prog.log(`ingested: ${rep.accepted} new, ${rep.skippedDupes} dupes (${rep.batches} batches)`);
     const done = new Set(box.accessions);
     for (const m of manifest) if (done.has(m.accessionNo)) { m.scored = true; delete m.error; }
     writeFileSync(mPath, JSON.stringify(manifest, null, 1));
@@ -73,7 +74,7 @@ for (const co of universe) {
   try {
     const leftover = JSON.parse(readFileSync(outboxPath, "utf8")) as Outbox;
     if (leftover.rows?.length) {
-      console.log(`[edgar-tone] ${co.ticker}: delivering leftover outbox (${leftover.rows.length} rows from a previous run)`);
+      prog.log(`delivering leftover outbox (${leftover.rows.length} rows from a previous run)`);
       await deliver(leftover);
     }
   } catch (err: any) {
@@ -83,7 +84,7 @@ for (const co of universe) {
   // 2) score what's still pending — recompute AFTER the leftover delivery,
   //    its accessions are now scored=true and must not be re-scored
   const stillPending = manifest.filter((m) => m.fetched && !m.scored);
-  console.log(`[edgar-tone] ${co.ticker}: ${stillPending.length} filings to score (${manifest.length} total)`);
+  prog.stage(`${co.ticker}: ${stillPending.length} filings to score (${manifest.length} total)`);
   const box: Outbox = { accessions: [], rows: [] };
   let skipped = 0, done = 0;
   for (const m of stillPending) {
@@ -113,7 +114,7 @@ for (const co of universe) {
           if (v.why) whys.push(v.why);
         }
       } catch (err) {
-        console.warn(`[edgar-tone] ${co.ticker} ${m.accessionNo}: LLM error ${String(err).slice(0, 120)}`);
+        prog.log(`! ${m.accessionNo}: LLM error ${String(err).slice(0, 120)}`);
       }
     }
     if (scores.length === 0) { skipped++; m.error = "no parseable/substantive score"; continue; } // honesty: skip, never guess
@@ -134,14 +135,15 @@ for (const co of universe) {
     if (done % 20 === 0) {
       mkdirSync(cacheDir(co.cik), { recursive: true });
       writeFileSync(outboxPath, JSON.stringify(box)); // persist GPU work as we go
-      console.log(`[edgar-tone] ${co.ticker}: ${done}/${stillPending.length} scored, ${skipped} skipped`);
+      prog.item(done, stillPending.length, `${skipped} skipped`);
     }
   }
   if (box.rows.length > 0) {
     writeFileSync(outboxPath, JSON.stringify(box));
     await deliver(box); // marks scored + removes the outbox on success
+    prog.stageDone(`${co.ticker}: ${done} scored, ${skipped} skipped, delivered`);
   } else {
-    console.log(`[edgar-tone] ${co.ticker}: nothing to ingest (${skipped} skipped)`);
+    prog.stageDone(`${co.ticker}: nothing to ingest (${skipped} skipped)`);
   }
 }
-console.log("[edgar-tone] all done");
+prog.done("all done");
