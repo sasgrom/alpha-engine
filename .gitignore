@@ -1,5 +1,8 @@
 node_modules/
 dist/
 .env
+.env.example
 .backend-features.json
 worker/cache/
+worker/.runs/
+worker/stocktwits.log
