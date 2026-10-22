@@ -57,3 +57,14 @@ Per company per UTC day, ONE ToneChart call yields both tone and exact
 article count. Rows are `src:"backfill"` with day-bucket payloadKeys —
 resumable by rerunning the same range. A year × 5 companies ≈ 3 h at the
 GDELT fair-use pace (6 s/call). Defaults: from = 2 years ago, to = yesterday.
+
+## Plan B: manual GDELT exports (when the IP is throttled)
+
+Download per company per ≤3-month window (browser, human pace):
+- buzz:  `.../doc?query=%22Microsoft%22&mode=ArtList&maxrecords=250&format=csv&startdatetime=20241001000000&enddatetime=20241231235959`
+- tone:  same with `mode=TimelineTone`
+
+Then: `npx tsx worker/import-gdelt-csv.mts --file <path> --ticker MSFT`
+Auto-detects ArtList (per-day buzz) vs Timeline (per-day tone); gdeltcsv:*
+payloadKeys make reimports free. Note: ArtList tops out at 250 articles per
+window — for heavy tickers use monthly windows for honest volume.

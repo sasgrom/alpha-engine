@@ -5,6 +5,43 @@
 import { describe, expect, it } from "vitest";
 import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } from "./gdelt";
 import { aggregateStream, buildStocktwitsRows } from "./stocktwits";
+import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
+
+describe("gdelt-csv: plan B importer parsers", () => {
+  const artlist = [
+    "url,url_mobile,title,seendate,socialimage,domain,language,sourcecountry",
+    "https://a.com/1,,Microsoft beats,20261015083000,,a.com,English,US",
+    "https://a.com/2,,More MSFT,20261015170000,,b.com,English,US",
+    "https://a.com/3,,Next day,2026-10-16T09:00:00Z,,c.com,English,US",
+  ].join("\n");
+  it("detects ArtList and aggregates per-day buzz", () => {
+    const rows = splitCsv(artlist);
+    expect(detectKind(rows)).toBe("artlist");
+    const sig = artlistToBuzz(789019, rows);
+    expect(sig).toHaveLength(2);
+    expect(sig[0]).toMatchObject({ payloadKey: "gdeltcsv:buzz:789019:20261015", magnitude: 2, eventTs: "2026-10-15 00:00:00", src: "backfill" });
+    expect(sig[1].magnitude).toBe(1);
+  });
+  const timeline = [
+    "datetime,value",
+    "20261015000000,-3.5",
+    "20261015120000,-4.5",
+    "20261016000000,8",
+  ].join("\n");
+  it("detects Timeline and averages tone per day (÷10, clamped)", () => {
+    const rows = splitCsv(timeline);
+    expect(detectKind(rows)).toBe("timeline");
+    const sig = timelineToTone(789019, rows);
+    expect(sig).toHaveLength(2);
+    expect(sig[0]).toMatchObject({ payloadKey: "gdeltcsv:tone:789019:20261015", score: -0.4, magnitude: 2 });
+    expect(sig[1].score).toBe(0.8);
+  });
+  it("handles quoted fields and rejects junk", () => {
+    expect(splitCsv('a,"b,c",d\n1,2,3')[0]).toEqual(["a", "b,c", "d"]);
+    expect(detectKind(splitCsv("foo,bar\n1,2"))).toBe("unknown");
+    expect(artlistToBuzz(1, splitCsv("seendate\nnotadate"))).toEqual([]);
+  });
+});
 
 describe("gdelt: toneFromBins", () => {
   it("computes weighted average normalized to [-1,1]", () => {
