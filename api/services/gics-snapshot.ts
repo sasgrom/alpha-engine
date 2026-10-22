@@ -46,7 +46,7 @@ AMCR|1748790|Materials|Paper & Plastic Packaging Products & Materials
 AEE|1002910|Utilities|Multi-Utilities
 AEP|4904|Utilities|Electric Utilities
 AXP|4962|Financials|Consumer Finance
-AIG|5271|Financials|Multi-line Insurance
+AIG|5272|Financials|Multi-line Insurance
 AMT|1053507|Real Estate|Telecom Tower REITs
 AWK|1410636|Utilities|Water Utilities
 AMP|820027|Financials|Asset Management & Custody Banks

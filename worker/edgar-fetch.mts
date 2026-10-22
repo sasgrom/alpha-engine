@@ -61,7 +61,13 @@ const universe = loadEdgarUniverse().filter((c) => !only || c.ticker === only);
 if (only && universe.length === 0) { console.error(`[edgar-fetch] unknown ticker ${only}`); process.exit(1); }
 
 for (const co of universe) {
-  const filings = (await listFilings(co.cik)).filter((f) => !from || f.filingDate >= from);
+  // one bad CIK (stale snapshot row, delisted entity) must NEVER kill a
+  // 500-company overnight crawl — log and move on (proven by AIG: the GICS
+  // snapshot carried CIK 5271, real is 5272; 404 crashed the whole run)
+  let filingsAll: EdgarFiling[];
+  try { filingsAll = await listFilings(co.cik); }
+  catch (err) { console.error(`[edgar-fetch] ${co.ticker} (CIK ${co.cik}): company-level error, SKIPPED — ${String(err).slice(0, 150)}`); continue; }
+  const filings = filingsAll.filter((f) => !from || f.filingDate >= from);
   const manifest = loadManifest(co.cik);
   const known = new Map(manifest.map((m) => [m.accessionNo, m]));
   let fresh = 0, fetched = 0, failed = 0;
