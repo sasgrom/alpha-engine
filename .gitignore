@@ -3,3 +3,4 @@ dist/
 .env
 .backend-features.json
 worker/cache/
+worker/.runs/
