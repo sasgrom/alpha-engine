@@ -4,7 +4,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } from "./gdelt";
-import { aggregateStream, buildStocktwitsRows } from "./stocktwits";
+import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from "./stocktwits";
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
 import { extractScore, extractVerdict, sanitizeWhy, tonePrompt } from "./ollama";
 import { isThinContent } from "./edgar";
@@ -188,6 +188,24 @@ describe("stocktwits: aggregateStream + rows", () => {
   });
   it("empty stream yields no rows", () => {
     expect(buildStocktwitsRows(1, aggregateStream([]))).toEqual([]);
+  });
+  it("crowdPrompt dumps numbered messages with a cap; buildCrowdRow carries llm provenance", () => {
+    const stream = [
+      { id: 100, created_at: "2026-10-22T10:00:00Z", body: "Blackwell demand insane, adding more $NVDA", entities: { sentiment: { basic: "Bullish" } } },
+      { id: 101, created_at: "2026-10-22T11:00:00Z", body: "valuation scares me ngl", entities: null },
+    ];
+    const p = crowdPrompt("NVDA", stream);
+    expect(p).toContain("1. Blackwell demand insane");
+    expect(p).toContain("2. valuation scares me");
+    expect(p).toContain('"score"');
+    expect(crowdPrompt("NVDA", Array.from({ length: 50 }, (_, i) => ({ id: i, created_at: "x", body: "y".repeat(400) }))).length).toBeLessThan(14000);
+    const agg = aggregateStream(stream);
+    const row = buildCrowdRow(1045810, agg, "qwen3.5:9b", 0.6, "Blackwell hype dominates; some valuation worry.");
+    expect(row?.payloadKey).toBe("llm:qwen3.5:9b:stocktwits:1045810:101");
+    expect(row?.source).toBe("stocktwits");
+    expect(row?.signalType).toBe("tone");
+    expect(row?.note).toContain("Blackwell hype");
+    expect(buildCrowdRow(1, aggregateStream([]), "m", 0, null)).toBeNull();
   });
 });
 

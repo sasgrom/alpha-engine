@@ -15,6 +15,7 @@ import type { SignalRow } from "./ingest";
 export interface StMessage {
   id: number | string;
   created_at: string;
+  body?: string;
   entities?: { sentiment?: { basic?: string | null } | null } | null;
 }
 
@@ -64,4 +65,42 @@ export function buildStocktwitsRows(cik: number, agg: StAggregate): SignalRow[] 
     });
   }
   return rows;
+}
+
+// ---------------------------------------------------------------------------
+// 5d — LLM crowd read (owner's idea): the same 30-message stream gets a local
+// model verdict — WHAT the crowd discusses (why) + mood score that INCLUDES
+// the unlabeled majority (the deterministic label row covers only self-taggers).
+// Provenance stays separate: llm:<model>:stocktwits:… keys never mix with
+// human-label rows; blending happens at digest time, not in the store.
+// ---------------------------------------------------------------------------
+
+/** Prompt for one company's stream dump. Messages truncated, numbered. */
+export function crowdPrompt(ticker: string, messages: StMessage[]): string {
+  const dump = messages
+    .slice(0, 30)
+    .map((m, i) => `${i + 1}. ${(m.body ?? "").replace(/\s+/g, " ").slice(0, 280)}`)
+    .filter((l) => l.length > 4)
+    .join("\n");
+  return `You are reading the latest Stocktwits messages about $${ticker}. Rate the crowd's mood and summarize what they are talking about.
+
+Reply with ONLY a JSON object, no other text:
+{"score": <number from -1.0 to 1.0, the crowd's mood>, "why": "<3-4 short sentences for a human: the main topics, notable claims, and the mood driver>"}
+-1.0 = panic/very bearish, 0 = mixed or idle chatter, +1.0 = euphoria/very bullish.
+Read ALL messages, including unlabeled ones. Start "why" with the topic itself — never "The messages", "The posts".
+
+MESSAGES:
+"""
+${dump.slice(0, 12000)}
+"""`;
+}
+
+/** The LLM row for a stream (caller fills score/note from the model verdict). */
+export function buildCrowdRow(cik: number, agg: StAggregate, model: string, score: number, note: string | null): SignalRow | null {
+  if (!agg.newestTs || !agg.newestId) return null;
+  return {
+    cik, source: "stocktwits", signalType: "tone", eventTs: agg.newestTs,
+    score, magnitude: agg.total, note,
+    payloadKey: `llm:${model}:stocktwits:${cik}:${agg.newestId}`, src: "live",
+  };
 }

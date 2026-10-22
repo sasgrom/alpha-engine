@@ -12,10 +12,17 @@ dns.setDefaultResultOrder("ipv4first");
 import "dotenv/config";
 import { fetchJson } from "./lib/http";
 import { postSignals, type SignalRow } from "./lib/ingest";
-import { aggregateStream, buildStocktwitsRows } from "./lib/stocktwits";
+import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from "./lib/stocktwits";
 import { loadUniverse } from "./lib/universe";
+import { extractVerdict, generate, LLM_MODEL, status as ollamaStatus } from "./lib/ollama";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+// 5d: LLM crowd read is OPTIONAL — the GPU is never a point of failure for
+// the deterministic rows. Daemon down/model missing → crowd rows skipped.
+const llm = await ollamaStatus();
+const llmReady = llm.ok && llm.models.some((m) => m === LLM_MODEL || m.startsWith(`${LLM_MODEL.split(":")[0]}:`));
+console.log(`[stocktwits] LLM crowd read: ${llmReady ? LLM_MODEL : "OFF (daemon/model unavailable — deterministic rows only)"}`);
 
 const universe = loadUniverse();
 const rows: SignalRow[] = [];
@@ -25,9 +32,23 @@ for (const co of universe) {
       `https://api.stocktwits.com/api/2/streams/symbol/${encodeURIComponent(co.ticker)}.json`,
       { headers: { "user-agent": "alpha-engine-worker/1.0" } }
     );
-    const r = buildStocktwitsRows(co.cik, aggregateStream(data.messages ?? []));
+    const messages = data.messages ?? [];
+    const agg = aggregateStream(messages);
+    const r = buildStocktwitsRows(co.cik, agg);
     rows.push(...r);
-    console.log(`[stocktwits] ${co.ticker}: +${r.length} rows`);
+    let crowd = "";
+    if (llmReady && agg.newestId) {
+      try {
+        const v = extractVerdict((await generate(crowdPrompt(co.ticker, messages))).text);
+        if (v) {
+          const row = buildCrowdRow(co.cik, agg, LLM_MODEL, v.score, v.why);
+          if (row) { rows.push(row); crowd = ` +crowd ${v.score >= 0 ? "+" : ""}${v.score.toFixed(2)}`; }
+        }
+      } catch (e: any) {
+        console.warn(`[stocktwits] ${co.ticker}: LLM crowd read failed — ${String(e?.message ?? e).slice(0, 120)}`);
+      }
+    }
+    console.log(`[stocktwits] ${co.ticker}: +${r.length} rows${crowd}`);
   } catch (e: any) {
     console.warn(`[stocktwits] ${co.ticker}: FAILED — ${e?.message ?? e}`);
   }
