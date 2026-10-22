@@ -25,6 +25,8 @@ export const WORKERS = {
   gdelt: { file: "worker/gdelt.mts", label: "GDELT live (hourly)" },
   "gdelt-backfill": { file: "worker/gdelt-backfill.mts", label: "GDELT backfill" },
   stocktwits: { file: "worker/stocktwits.mts", label: "Stocktwits live (hourly)" },
+  "edgar-fetch": { file: "worker/edgar-fetch.mts", label: "EDGAR fetch (network only)" },
+  "edgar-tone": { file: "worker/edgar-tone.mts", label: "EDGAR LLM tone scoring" },
 } as const;
 export type WorkerName = keyof typeof WORKERS;
 
@@ -99,7 +101,7 @@ export const workersLocalRouter = createRouter({
   run: adminQuery
     .input(
       z.object({
-        worker: z.enum(["gdelt", "gdelt-backfill", "stocktwits"]),
+        worker: z.enum(["gdelt", "gdelt-backfill", "stocktwits", "edgar-fetch", "edgar-tone"]),
         from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
         to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
         only: z.string().max(8).optional(),

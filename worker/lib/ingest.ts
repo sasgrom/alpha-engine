@@ -8,7 +8,7 @@ import { fetchJson } from "./http";
 
 export interface SignalRow {
   cik: number;
-  source: "gdelt" | "stocktwits" | "reddit" | "youtube" | "trends";
+  source: "gdelt" | "stocktwits" | "reddit" | "youtube" | "trends" | "edgar";
   signalType: "tone" | "buzz" | "label";
   eventTs: string; // "YYYY-MM-DD HH:MM:SS" — content time (client-side)
   score?: number | null;

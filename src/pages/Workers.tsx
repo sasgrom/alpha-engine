@@ -15,6 +15,8 @@ const WORKER_DEFS = [
   { key: "stocktwits", title: "Stocktwits live", hint: "30-message stream → buzz + sentiment label, per ticker" },
   { key: "gdelt", title: "GDELT live", hint: "hourly tone + article volume per company" },
   { key: "gdelt-backfill", title: "GDELT backfill", hint: "historical day buckets, resumable; uses from/to below" },
+  { key: "edgar-fetch", title: "EDGAR fetch", hint: "download 10-K/10-Q/8-K docs to local cache; network only, no GPU" },
+  { key: "edgar-tone", title: "EDGAR tone", hint: "local LLM scores cached filings → ingest (local or prod by INGEST_URL)" },
 ] as const;
 
 function StatusChip({ status }: { status: string }) {
@@ -64,7 +66,7 @@ export default function Workers() {
                   <CardContent className="space-y-2">
                     <p className="text-xs text-muted-foreground">{w.hint}</p>
                     <Button size="sm" disabled={running || runMut.isPending}
-                      onClick={() => runMut.mutate({ worker: w.key, from: w.key === "gdelt-backfill" ? from : undefined, to: w.key === "gdelt-backfill" ? to : undefined, only: only || undefined })}>
+                      onClick={() => runMut.mutate({ worker: w.key, from: w.key === "gdelt-backfill" || w.key === "edgar-fetch" ? from : undefined, to: w.key === "gdelt-backfill" ? to : undefined, only: only || undefined })}>
                       <Play className="h-3.5 w-3.5 mr-1" /> Run
                     </Button>
                   </CardContent>

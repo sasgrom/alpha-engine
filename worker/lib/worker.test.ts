@@ -161,3 +161,82 @@ describe("stocktwits: aggregateStream + rows", () => {
     expect(buildStocktwitsRows(1, aggregateStream([]))).toEqual([]);
   });
 });
+
+// ---------------------------------------------------------------------------
+// 5b — EDGAR lib: plaintext port, section extraction, windowing
+// ---------------------------------------------------------------------------
+import { derivePlaintext, extractScorableText, mdaWindows, loadEdgarUniverse } from "./edgar";
+
+describe("edgar derivePlaintext", () => {
+  it("strips tags, decodes entities, collapses whitespace", () => {
+    const html = "<html><head><title>x</title></head><body><p>Revenue&nbsp;grew 5&#37; &amp; profit</p><script>bad()</script><div>Outlook</div></body></html>";
+    const out = derivePlaintext(html);
+    expect(out).toContain("Revenue grew 5% & profit");
+    expect(out).toContain("Outlook");
+    expect(out).not.toContain("bad()");
+    expect(out).not.toContain("<p>");
+  });
+});
+
+const TEN_K = [
+  "TABLE OF CONTENTS",
+  "Item 7. Management's Discussion and Analysis ......... 42",
+  "Item 8. Financial Statements ......... 60",
+  "PART II",
+  "Item 7. Management's Discussion and Analysis of Financial Condition",
+  "Revenue increased driven by services.",
+  "Margins expanded.",
+  "Item 7A. Quantitative and Qualitative Disclosures About Market Risk",
+  "We are exposed to rates.",
+  "SIGNATURES",
+  "Pursuant to the requirements...",
+].join("\n");
+
+describe("edgar extractScorableText", () => {
+  it("10-K: skips the TOC occurrence, takes the body Item 7, ends at Item 7A, drops SIGNATURES", () => {
+    const out = extractScorableText(TEN_K, "10-K");
+    expect(out).toContain("Revenue increased driven by services.");
+    expect(out).not.toContain("TABLE OF CONTENTS");
+    expect(out).not.toContain("exposed to rates");
+    expect(out).not.toContain("Pursuant");
+  });
+  it("10-Q: Item 2 .. Item 3", () => {
+    const q = ["Item 2. Management's Discussion and Analysis", "Solid quarter.", "Item 3. Quantitative disclosures", "Risk table."].join("\n");
+    const out = extractScorableText(q, "10-Q");
+    expect(out).toContain("Solid quarter.");
+    expect(out).not.toContain("Risk table.");
+  });
+  it("8-K: whole body without SIGNATURES", () => {
+    const k = ["Item 2.02 Results of Operations", "EPS beat.", "SIGNATURES", "signed"].join("\n");
+    const out = extractScorableText(k, "8-K");
+    expect(out).toContain("EPS beat.");
+    expect(out).not.toContain("signed");
+  });
+  it("anchor miss on 10-K falls back to the head of the document", () => {
+    const out = extractScorableText("No items here at all, just prose.", "10-K");
+    expect(out).toContain("just prose.");
+  });
+});
+
+describe("edgar mdaWindows", () => {
+  it("short text → single window", () => {
+    expect(mdaWindows("hello")).toEqual(["hello"]);
+  });
+  it("long text → evenly spaced windows covering start and end", () => {
+    const text = "x".repeat(10_000);
+    const w = mdaWindows(text, 3000, 3);
+    expect(w).toHaveLength(3);
+    expect(w[0]).toBe(text.slice(0, 3000));
+    expect(w[2]).toBe(text.slice(7000));
+  });
+});
+
+describe("edgar universe", () => {
+  it("carries the 6 EDGAR companies with CIKs", () => {
+    const u = loadEdgarUniverse();
+    expect(u.map((c) => c.ticker).sort()).toEqual(["AAPL", "IBM", "LMT", "META", "NVDA", "PLD"]);
+    expect(u.find((c) => c.ticker === "IBM")?.cik).toBe(51143);
+    expect(u.find((c) => c.ticker === "META")?.cik).toBe(1326801);
+    expect(u.find((c) => c.ticker === "LMT")?.cik).toBe(936468);
+  });
+});

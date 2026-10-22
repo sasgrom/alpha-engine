@@ -2,3 +2,4 @@ node_modules/
 dist/
 .env
 .backend-features.json
+worker/cache/

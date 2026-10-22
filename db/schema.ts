@@ -592,7 +592,7 @@ export const signals = mysqlTable(
   {
     id: serial("id").primaryKey(),
     cik: int("cik").notNull(),
-    /** gdelt | stocktwits | reddit | youtube | trends */
+    /** gdelt | stocktwits | reddit | youtube | trends | edgar */
     source: varchar("source", { length: 24 }).notNull(),
     /** tone | buzz | label */
     signalType: varchar("signalType", { length: 24 }).notNull(),
@@ -608,7 +608,11 @@ export const signals = mysqlTable(
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (t) => [
-    uniqueIndex("uq_signals").on(t.cik, t.source, t.signalType, t.eventTs),
+    // 5b: payloadKey joins the UQ so the same event can be RE-scored by a new
+    // model ("llm:qwen3.5:..." vs "llm:gpt-oss:...") without being eaten by
+    // INSERT IGNORE. All producers set payloadKey; NULLs stay non-deduped by
+    // MySQL semantics, which is acceptable (and unchanged from before).
+    uniqueIndex("uq_signals").on(t.cik, t.source, t.signalType, t.eventTs, t.payloadKey),
     index("idx_signals_cik_ingested").on(t.cik, t.ingestedAt),
     index("idx_signals_eventts").on(t.eventTs),
   ]

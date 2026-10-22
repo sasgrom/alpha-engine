@@ -1050,6 +1050,16 @@ edge of 40-year history; documented, not fabricated away.
 - Cloud `workersMonitor.intake` on `/admin` (prod and home alike): per-source rows (live/backfill, last event/receipt), worker_keys liveness, latest 10 rows — terminal-free delivery verification.
 - Transport hardening: forced IPv4-first DNS (broken IPv6 egress hung fetch), 429 retryable with Retry-After, UA, 12s pacing, single-term GDELT queries (OR needs parens and gets throttled), --only diagnostic flag. 161/161 tests.
 
+### 4.32 Iterations 5a/5b: local LLM (Ollama) and the EDGAR local-first pipeline (D50)
+
+**Problem.** News signals are frozen (GDELT rate-limits even manual browser visits — owner-declared moratorium 2026-10-22); the next signal source is SEC EDGAR, and filing tone must be scored by a LOCAL model on the home GPU (free; the cloud LLM bills the owner — billing honesty).
+
+**Solution.**
+- **Ollama at home** (RTX 4070 Ti SUPER 16GB): worker/lib/ollama.ts (temperature 0, `think:false` — Qwen3.x reasoning mode would break strict JSON), defensive score extraction (no JSON → the row is SKIPPED, never guessed). Default model **qwen3.5:9b** (owner's find; newer generation, ~6.6 GB, 256K context); bench worker/llm-test.mts: 5 canonical sign cases + tok/s — models are compared by numbers, not marketing (switch via OLLAMA_MODEL).
+- **EDGAR pipeline, two decoupled stages:** `edgar-fetch.mts` (network only: full 10-K/10-Q/8-K history since the 1990s via the submissions API, fair access ~3 req/s, disk cache + manifest.json — reruns are free) → `edgar-tone.mts` (GPU only: MD&A cut from 10-K/10-Q and 8-K bodies via a simplified port of the server section parser, up to 3 windows of 3000 chars on long sections, mean = score, window count = magnitude).
+- **Provenance in the key:** payloadKey = `llm:<model>:edgar:<cik>:<accn>` — LLM scores NEVER mix with human Stocktwits labels or GDELT tone; the signals unique index gained payloadKey so re-scoring with a new model lands alongside instead of being eaten by dedupe.
+- **Local-first:** rows land in the LOCAL database first (INGEST_URL → 127.0.0.1:3000; seed scripts/seed-local-edgar.mts: new companies META/IBM/LMT + the worker key into local worker_keys) — visual check via local /admin or MySQL Workbench; pushing to prod = remove the INGEST_URL override and rerun (dedupe is free). The /workers console gained edgar-fetch and edgar-tone cards.
+
 ## 5. Cloud panel (UI)
 
 > Current as of 2026-10-19 (iteration 4h). Auth is local (username/password,
@@ -1149,6 +1159,7 @@ edge of 40-year history; documented, not fabricated away.
 | D47 | Quote-grid metric history is pre-computed (metric_history, month-ends), tiles click through to a chart dialog; splits normalize EXACTLY (Yahoo stock actions) with the sourceFiled guard against restatement double-counting; EPS scales the other way (÷) | "pre-calculate and store as a static table so display is immediate" — owner's directive; lesson: nominal share counts × adjusted prices are incompatible by construction |
 | D48 | Datacenter-blocked collectors live in worker/ on the home machine; transport is the ingest endpoint only; prod→home data as read-only snapshots, code home→cloud via git + deploy key | network reality proven in 4j (hard-429/403); honesty: ingestedAt is server-stamped only, payloadKey dedupe makes redeliveries free |
 | D49 | Home workers are operated from the local /workers page (LOCAL_WORKER_UI=1 gate), delivery is verified via workersMonitor on /admin; machine-changing actions live on the home console only, never in prod | owner's terminal blindness; billing honesty: a spawn surface has no right to exist in the cloud |
+| D50 | Filing tone is scored by a local model (Ollama, qwen3.5:9b default) on the home GPU; the pipeline is local-first: local DB + visual check, then the same worker pushes to prod; model provenance rides in payloadKey, the signals UQ gained the key | cloud LLM bills the owner, local is free; dev mode demands verifiability before prod; re-scoring with a different model must not be eaten by dedupe |
 
 ## 7. Glossary
 
