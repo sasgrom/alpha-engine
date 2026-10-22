@@ -19,6 +19,7 @@ import { buildGdeltRows, dayBucket } from "./lib/gdelt";
 import { loadUniverse } from "./lib/universe";
 
 const BASE = "https://api.gdeltproject.org/api/v2/doc/doc";
+const UA = { "user-agent": "alpha-engine-research/1.0 (contact: owner@alphadelta-2.kimi.pro)" };
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 function argDate(name: string, fallback: Date): Date {
@@ -53,13 +54,13 @@ for (const day of days) {
     try {
       const q = encodeURIComponent(co.gdeltQuery);
       const url = `${BASE}?query=${q}&mode=ToneChart&format=json&startdatetime=${ymd(day)}000000&enddatetime=${ymd(day)}235959`;
-      const tonechart = await fetchJson(url);
+      const tonechart = await fetchJson(url, { headers: UA, retries: 4 });
       rows.push(...buildGdeltRows(co.cik, bucket, (tonechart as any)?.tonechart ?? [], null, "backfill"));
     } catch (e: any) {
       failures++;
       console.warn(`[gdelt-backfill] ${co.ticker} ${bucket.key}: FAILED — ${e?.message ?? e}`);
     }
-    await sleep(6000);
+    await sleep(12000);
   }
   if (rows.length > 0) {
     const res = await postSignals(rows);

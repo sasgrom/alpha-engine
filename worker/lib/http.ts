@@ -14,6 +14,16 @@ export async function fetchJson<T = unknown>(
     const timer = setTimeout(() => ctrl.abort(), timeoutMs);
     try {
       const res = await fetch(url, { method, body, headers, signal: ctrl.signal });
+      if (res.status === 429) {
+        // Rate-limited: not fatal — honor Retry-After, else back off long.
+        const ra = Number(res.headers.get("retry-after"));
+        const wait = Number.isFinite(ra) && ra > 0 ? ra * 1000 : 30_000 * (attempt + 1);
+        if (attempt < retries) {
+          await new Promise((r) => setTimeout(r, wait));
+          continue;
+        }
+        throw new Error("HTTP 429 after retries — upstream is throttling this IP");
+      }
       if (res.status >= 400 && res.status < 500) {
         const text = await res.text().catch(() => "");
         throw Object.assign(new Error(`HTTP ${res.status} (fatal): ${text.slice(0, 300)}`), { fatal: true });
