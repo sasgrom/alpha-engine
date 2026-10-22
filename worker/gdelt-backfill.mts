@@ -44,7 +44,9 @@ for (let d = new Date(from); d <= to; d = new Date(d.getTime() + 86_400_000)) da
 console.log(`[gdelt-backfill] ${days.length} day(s): ${days[0].toISOString().slice(0, 10)} → ${days[days.length - 1].toISOString().slice(0, 10)}`);
 
 const ymd = (d: Date) => d.toISOString().slice(0, 10).replaceAll("-", "");
-const universe = loadUniverse();
+const onlyIdx = process.argv.indexOf("--only"); // diagnostics: --only MSFT
+const universe = loadUniverse().filter((c) => onlyIdx < 0 || c.ticker === process.argv[onlyIdx + 1]?.toUpperCase());
+if (universe.length === 0) throw new Error("--only: no such ticker in universe.json");
 let totalAccepted = 0, totalDupes = 0, failures = 0;
 
 for (const day of days) {

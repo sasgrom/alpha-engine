@@ -25,7 +25,9 @@ async function collectOne(cik: number, query: string, bucket: { eventTs: string;
   return buildGdeltRows(cik, bucket, bins, artlist);
 }
 
-const universe = loadUniverse();
+const onlyIdx = process.argv.indexOf("--only"); // diagnostics: npx tsx worker/gdelt.mts --only MSFT
+const universe = loadUniverse().filter((c) => onlyIdx < 0 || c.ticker === process.argv[onlyIdx + 1]?.toUpperCase());
+if (universe.length === 0) throw new Error("--only: no such ticker in universe.json");
 const bucket = hourBucket();
 const rows: SignalRow[] = [];
 for (const co of universe) {
