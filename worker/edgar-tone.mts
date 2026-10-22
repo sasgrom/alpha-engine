@@ -80,11 +80,13 @@ for (const co of universe) {
     if (err?.code !== "ENOENT") throw err; // delivery error surfaces, outbox kept
   }
 
-  // 2) score what's still pending
-  console.log(`[edgar-tone] ${co.ticker}: ${pending.length} filings to score (${manifest.length} total)`);
+  // 2) score what's still pending — recompute AFTER the leftover delivery,
+  //    its accessions are now scored=true and must not be re-scored
+  const stillPending = manifest.filter((m) => m.fetched && !m.scored);
+  console.log(`[edgar-tone] ${co.ticker}: ${stillPending.length} filings to score (${manifest.length} total)`);
   const box: Outbox = { accessions: [], rows: [] };
   let skipped = 0, done = 0;
-  for (const m of pending) {
+  for (const m of stillPending) {
     const file = path.join(cacheDir(co.cik), `${m.accessionNo.replace(/-/g, "")}.htm`);
     let plain: string;
     try { plain = derivePlaintext(readFileSync(file, "utf8")); }
@@ -118,7 +120,7 @@ for (const co of universe) {
     if (done % 20 === 0) {
       mkdirSync(cacheDir(co.cik), { recursive: true });
       writeFileSync(outboxPath, JSON.stringify(box)); // persist GPU work as we go
-      console.log(`[edgar-tone] ${co.ticker}: ${done}/${pending.length} scored, ${skipped} skipped`);
+      console.log(`[edgar-tone] ${co.ticker}: ${done}/${stillPending.length} scored, ${skipped} skipped`);
     }
   }
   if (box.rows.length > 0) {
