@@ -6,7 +6,8 @@ import { describe, expect, it } from "vitest";
 import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } from "./gdelt";
 import { aggregateStream, buildStocktwitsRows } from "./stocktwits";
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
-import { extractScore, extractVerdict, tonePrompt } from "./ollama";
+import { extractScore, extractVerdict, sanitizeWhy, tonePrompt } from "./ollama";
+import { isThinContent } from "./edgar";
 
 describe("ollama: extractScore", () => {
   it("parses clean JSON", () => {
@@ -25,9 +26,21 @@ describe("ollama: extractScore", () => {
     const v = extractVerdict('{"score": 0.6, "why": "Record revenue and raised guidance."}');
     expect(v).toEqual({ score: 0.6, why: "Record revenue and raised guidance." });
     expect(extractVerdict('{"score": -0.5}')?.why).toBeNull();           // why optional
-    expect(extractVerdict('{"score": 0.1, "why": "line1\nline2"}')?.why).toBe("line1 line2"); // single line
+    expect(extractVerdict('{"score": 0.1, "why": "line1\nline2"}')?.why).toBe("Line1 line2"); // single line
     expect(extractVerdict('{"score": 0.1, "why": 42}')?.why).toBeNull(); // wrong type dropped
     expect(extractVerdict("garbage")).toBeNull();                        // still honest-null
+  });
+  it("sanitizeWhy strips template openers and re-capitalizes", () => {
+    expect(sanitizeWhy("The text presents new regulatory hurdles for chips.")).toBe("New regulatory hurdles for chips.");
+    expect(sanitizeWhy("The filing is a standard Form 8-K header containing only metadata.")).toBe("A standard Form 8-K header containing only metadata.");
+    expect(sanitizeWhy("NVIDIA reported record revenue of $68.1B.")).toBe("NVIDIA reported record revenue of $68.1B."); // real content untouched
+  });
+  it("isThinContent gates cover pages and TOC dumps before the LLM", () => {
+    expect(isThinContent("FORM 8-K\nItem 1.01 ..... 2\nItem 9.01 ..... 3")).toBe(true); // tiny
+    const tocDump = Array.from({ length: 40 }, (_, i) => `Item ${i}. Section ..... ${i}`).join("\n") + "\n" + "x".repeat(1500);
+    expect(isThinContent(tocDump)).toBe(true); // TOC-dominated
+    const prose = Array.from({ length: 30 }, () => "Revenue grew 40% year over year with strong margins.").join("\n");
+    expect(isThinContent(prose)).toBe(false); // real multi-line prose passes
   });
   it("tonePrompt asks for the why and caps the input length", () => {
     expect(tonePrompt("q")).toContain('"why"');

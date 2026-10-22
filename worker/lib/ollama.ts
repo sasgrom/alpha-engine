@@ -75,6 +75,18 @@ export async function status(): Promise<{ ok: boolean; models: string[] }> {
 }
 
 /**
+ * Human-facing cleanup of the model's "why": models keep opening with
+ * "The text is/contains…" despite the prompt ban — strip the template
+ * opener and re-capitalize. The substance that follows is kept verbatim.
+ */
+export function sanitizeWhy(why: string): string {
+  let s = why.trim();
+  s = s.replace(/^(the|this)\s+(text|filing|document|current report|report|form\s+\S+)\s+(is|contains|reports?|presents?|details?|merely|only|consists?\s+of|outlines?|describes?)\s+/i, "");
+  s = s.replace(/^(the|this)\s+(text|filing|document|current report|report)\s+/i, "");
+  return s ? s[0].toUpperCase() + s.slice(1) : why;
+}
+
+/**
  * A scored verdict: score {-1..1} plus a one-line human-facing rationale.
  * 5c: the "why" doubles as validation (we can SEE what the model concluded)
  * and as UI content for the signals stream.
@@ -100,7 +112,7 @@ export function extractVerdict(reply: string): Verdict | null {
     if (!Number.isFinite(v)) return null;
     const score = Math.max(-1, Math.min(1, Math.round(v * 1000) / 1000));
     const why = typeof j.why === "string" && j.why.trim()
-      ? j.why.replace(/[\x00-\x1f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 480)
+      ? sanitizeWhy(j.why.replace(/[\x00-\x1f]+/g, " ").replace(/\s+/g, " ").trim()).slice(0, 480)
       : null;
     return { score, why: why ? why.slice(0, 480) : why };
   } catch {

@@ -244,6 +244,20 @@ export function extractScorableText(plain: string, form: string): string {
 }
 
 /**
+ * 5c: deterministic substance gate — runs BEFORE the LLM, no tokens spent.
+ * A cover page / TOC / XBRL header has no tone to score: scoring it produced
+ * garbage like -1.00 for "only administrative metadata". Thin = very short
+ * OR dominated by TOC-style lines (dot leaders / bare page numbers).
+ */
+export function isThinContent(text: string): boolean {
+  if (text.length < 1200) return true;
+  const lines = text.split("\n").filter((l) => l.trim()).slice(0, 80);
+  if (lines.length === 0) return true;
+  const tocish = lines.filter((l) => isTocLine(l)).length;
+  return tocish / lines.length > 0.5;
+}
+
+/**
  * 5c: whole-section scoring — with NUM_CTX at 32K the model reads the ENTIRE
  * section in one pass; windows remain only as the guard for texts longer
  * than the prompt cap (rare: >100K chars), evenly spaced as before.

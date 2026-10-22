@@ -19,7 +19,7 @@ dns.setDefaultResultOrder("ipv4first");
 import "dotenv/config";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { derivePlaintext, extractScorableText, loadEdgarUniverse, mdaWindows } from "./lib/edgar";
+import { derivePlaintext, extractScorableText, isThinContent, loadEdgarUniverse, mdaWindows } from "./lib/edgar";
 import { extractVerdict, generate, LLM_MODEL, status, tonePrompt } from "./lib/ollama";
 import { postSignals, type SignalRow } from "./lib/ingest";
 import type { ManifestEntry } from "./edgar-fetch.mts";
@@ -95,21 +95,28 @@ for (const co of universe) {
     try { plain = derivePlaintext(readFileSync(file, "utf8")); }
     catch { m.error = "cache file unreadable"; skipped++; continue; }
     const scorable = extractScorableText(plain, m.form);
+    if (isThinContent(scorable)) { skipped++; m.error = "thin content (cover/TOC/XBRL header)"; continue; }
     const windows = mdaWindows(scorable);
     const scores: number[] = [];
     const whys: string[] = [];
+    // The model sometimes SCORES boilerplate (−1.0 for "only a table of
+    // contents") instead of declaring no substance — the why leaks the truth.
+    // Such a window is noise: drop its score, keep the filing if others survive.
+    const BOILER = /no substantive|only (a )?(table of contents|administrative|xbrl|cover)|cover page|boilerplate/i;
     for (const w of windows) {
       try {
         const r = await generate(tonePrompt(w));
         const v = extractVerdict(r.text);
-        if (v != null) { scores.push(v.score); if (v.why) whys.push(v.why); }
+        if (v != null) {
+          if (v.why && BOILER.test(v.why)) continue; // window was boilerplate — no tone to score
+          scores.push(v.score);
+          if (v.why) whys.push(v.why);
+        }
       } catch (err) {
         console.warn(`[edgar-tone] ${co.ticker} ${m.accessionNo}: LLM error ${String(err).slice(0, 120)}`);
       }
     }
-    if (scores.length === 0) { skipped++; m.error = "no parseable score"; continue; } // honesty: skip, never guess
-    // a TOC/cover-only filing is noise, not a signal — the model says so verbatim; skip the row
-    if (whys.length > 0 && whys.every((w) => /no substantive content/i.test(w))) { skipped++; m.error = "no substantive content"; continue; }
+    if (scores.length === 0) { skipped++; m.error = "no parseable/substantive score"; continue; } // honesty: skip, never guess
     const avg = Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 1000) / 1000;
     box.rows.push({
       cik: co.cik,
