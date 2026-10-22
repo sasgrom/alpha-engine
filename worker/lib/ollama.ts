@@ -10,7 +10,9 @@ import dns from "node:dns";
 dns.setDefaultResultOrder("ipv4first");
 
 const BASE = process.env.OLLAMA_URL ?? "http://127.0.0.1:11434";
-export const LLM_MODEL = process.env.OLLAMA_MODEL ?? "qwen2.5:14b-instruct-q4_k_m";
+// Default: qwen3.5:9b (Feb 2026 gen, ~6.6GB Q4, 256K ctx, fits 16GB VRAM
+// with KV-cache headroom). Override via OLLAMA_MODEL env.
+export const LLM_MODEL = process.env.OLLAMA_MODEL ?? "qwen3.5:9b";
 
 export interface GenerateResult {
   text: string;
@@ -32,6 +34,9 @@ export async function generate(prompt: string, opts: { model?: string; timeoutMs
       signal: ctrl.signal,
       body: JSON.stringify({
         model, prompt, stream: false,
+        // Qwen3.x supports a "thinking" mode; disable it so the reply is
+        // pure JSON and extractScore never has to dig through chain-of-thought.
+        think: false,
         options: { temperature: opts.temperature ?? 0, num_predict: opts.numPredict ?? 256 },
       }),
     });
