@@ -605,6 +605,8 @@ export const signals = mysqlTable(
     payloadKey: varchar("payloadKey", { length: 255 }),
     /** live | backfill */
     src: varchar("src", { length: 24 }).default("live").notNull(),
+    /** 5c: one-line model rationale for LLM-scored rows (the "why"); NULL for collectors */
+    note: varchar("note", { length: 512 }),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (t) => [

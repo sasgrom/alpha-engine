@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } from "./gdelt";
 import { aggregateStream, buildStocktwitsRows } from "./stocktwits";
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
-import { extractScore, tonePrompt } from "./ollama";
+import { extractScore, extractVerdict, tonePrompt } from "./ollama";
 
 describe("ollama: extractScore", () => {
   it("parses clean JSON", () => {
@@ -21,7 +21,16 @@ describe("ollama: extractScore", () => {
     expect(extractScore("no json here")).toBeNull();
     expect(extractScore('{"score": "banana"}')).toBeNull();
   });
-  it("tonePrompt caps the input length", () => {
+  it("extractVerdict parses score + why, sanitizes the note", () => {
+    const v = extractVerdict('{"score": 0.6, "why": "Record revenue and raised guidance."}');
+    expect(v).toEqual({ score: 0.6, why: "Record revenue and raised guidance." });
+    expect(extractVerdict('{"score": -0.5}')?.why).toBeNull();           // why optional
+    expect(extractVerdict('{"score": 0.1, "why": "line1\nline2"}')?.why).toBe("line1 line2"); // single line
+    expect(extractVerdict('{"score": 0.1, "why": 42}')?.why).toBeNull(); // wrong type dropped
+    expect(extractVerdict("garbage")).toBeNull();                        // still honest-null
+  });
+  it("tonePrompt asks for the why and caps the input length", () => {
+    expect(tonePrompt("q")).toContain('"why"');
     expect(tonePrompt("x".repeat(10000)).length).toBeLessThan(4000);
     expect(tonePrompt("test")).toContain('"score"');
   });

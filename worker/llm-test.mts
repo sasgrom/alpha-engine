@@ -6,7 +6,7 @@
  * a speed/quality report. Nothing is sent anywhere — pure local check.
  */
 import "dotenv/config";
-import { generate, status, extractScore, tonePrompt, LLM_MODEL } from "./lib/ollama";
+import { generate, status, extractVerdict, tonePrompt, LLM_MODEL } from "./lib/ollama";
 
 const CASES: { text: string; want: "pos" | "neg" | "zero" }[] = [
   { want: "pos", text: "Microsoft beats expectations: Azure revenue up 29%, operating margin expands to 44%, guidance raised for the fiscal year." },
@@ -35,11 +35,13 @@ await generate("Say ok.", { numPredict: 8 });
 let pass = 0, totTok = 0, totMs = 0;
 for (const c of CASES) {
   const r = await generate(tonePrompt(c.text));
-  const score = extractScore(r.text);
+  const v = extractVerdict(r.text);
+  const score = v?.score ?? null;
   const got = signOf(score);
   const ok = got === c.want;
   if (ok) pass++;
   totTok += r.evalCount; totMs += r.totalMs;
   console.log(`[llm-test] want=${c.want.padEnd(4)} got=${got.padEnd(4)} score=${score ?? "—"}\t${ok ? "OK " : "MISS"}  (${r.evalPerSec} tok/s)  ${c.text.slice(0, 70)}…`);
+  if (v?.why) console.log(`           why: ${v.why}`);
 }
 console.log(`[llm-test] DONE: ${pass}/${CASES.length} sign-correct, model ${LLM_MODEL}, avg ${Math.round(totMs / CASES.length)} ms/case, ${totTok} tokens total`);

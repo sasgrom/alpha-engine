@@ -20,7 +20,7 @@ import "dotenv/config";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { derivePlaintext, extractScorableText, loadEdgarUniverse, mdaWindows } from "./lib/edgar";
-import { extractScore, generate, LLM_MODEL, status, tonePrompt } from "./lib/ollama";
+import { extractVerdict, generate, LLM_MODEL, status, tonePrompt } from "./lib/ollama";
 import { postSignals, type SignalRow } from "./lib/ingest";
 import type { ManifestEntry } from "./edgar-fetch.mts";
 
@@ -94,11 +94,12 @@ for (const co of universe) {
     const scorable = extractScorableText(plain, m.form);
     const windows = mdaWindows(scorable);
     const scores: number[] = [];
+    const whys: string[] = [];
     for (const w of windows) {
       try {
         const r = await generate(tonePrompt(w));
-        const s = extractScore(r.text);
-        if (s != null) scores.push(s);
+        const v = extractVerdict(r.text);
+        if (v != null) { scores.push(v.score); if (v.why) whys.push(v.why); }
       } catch (err) {
         console.warn(`[edgar-tone] ${co.ticker} ${m.accessionNo}: LLM error ${String(err).slice(0, 120)}`);
       }
@@ -114,6 +115,7 @@ for (const co of universe) {
       magnitude: scores.length, // windows actually scored (1..3)
       payloadKey: `llm:${LLM_MODEL}:edgar:${co.cik}:${m.accessionNo}`,
       src: "backfill",
+      note: whys.length ? whys.join(" | ").slice(0, 500) : null, // per-window rationales, human-facing
     });
     box.accessions.push(m.accessionNo);
     done++;

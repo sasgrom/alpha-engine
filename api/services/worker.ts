@@ -56,6 +56,8 @@ export const workerSignalRowZ = z.object({
   magnitude: z.number().nullish(),
   payloadKey: z.string().max(255).nullish(),
   src: z.enum(["live", "backfill"]).default("live"),
+  /** 5c: optional one-line model rationale ("why") — human-facing, shown in the UI */
+  note: z.string().max(512).nullish(),
 });
 export type WorkerSignalRow = z.infer<typeof workerSignalRowZ>;
 
@@ -77,11 +79,11 @@ export async function ingestSignals(rows: WorkerSignalRow[]): Promise<{ accepted
   const CHUNK = 500;
   for (let i = 0; i < rows.length; i += CHUNK) {
     const res: any = await db.execute(sql`INSERT IGNORE INTO signals
-      (cik, source, signalType, eventTs, ingestedAt, score, magnitude, payloadKey, src)
+      (cik, source, signalType, eventTs, ingestedAt, score, magnitude, payloadKey, src, note)
       VALUES ${sql.join(
         rows.slice(i, i + CHUNK).map(
           (r) =>
-            sql`(${r.cik}, ${r.source}, ${r.signalType}, ${r.eventTs.replace("T", " ")}, ${ingestedAt}, ${r.score ?? null}, ${r.magnitude ?? null}, ${r.payloadKey ?? null}, ${r.src})`
+            sql`(${r.cik}, ${r.source}, ${r.signalType}, ${r.eventTs.replace("T", " ")}, ${ingestedAt}, ${r.score ?? null}, ${r.magnitude ?? null}, ${r.payloadKey ?? null}, ${r.src}, ${r.note ?? null})`
         ),
         sql`, `
       )}`);

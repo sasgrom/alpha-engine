@@ -15,6 +15,7 @@ export interface SignalRow {
   magnitude?: number | null;
   payloadKey?: string | null;
   src?: "live" | "backfill";
+  note?: string | null; // one-line model rationale (5c), human-facing
 }
 
 export interface IngestResult {

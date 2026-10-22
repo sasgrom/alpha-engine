@@ -89,7 +89,7 @@ export function WorkersIntakeCard() {
         <thead>
           <tr>
             <th className={TH}>ticker</th><th className={TH}>source</th><th className={TH}>signal</th>
-            <th className={TH}>event (local)</th><th className={TH}>score</th><th className={TH}>mag</th><th className={TH}>src</th>
+            <th className={TH}>event (local)</th><th className={TH}>score</th><th className={TH}>mag</th><th className={TH}>src</th><th className={TH}>why (model note)</th>
           </tr>
         </thead>
         <tbody>
@@ -104,6 +104,7 @@ export function WorkersIntakeCard() {
               </td>
               <td className={TD}>{r.magnitude === null ? "—" : Number(r.magnitude)}</td>
               <td className={`${TD} text-muted-foreground`}>{r.src}</td>
+              <td className={`${TD} max-w-[380px] truncate text-muted-foreground`} title={r.note ?? undefined}>{r.note ?? "—"}</td>
             </tr>
           ))}
         </tbody>

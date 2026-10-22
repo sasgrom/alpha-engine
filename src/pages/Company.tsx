@@ -744,17 +744,20 @@ function SignalsPanel({ cik }: { cik: number }) {
         <div className="t-label mb-3">Signal stream</div>
         <div className="divide-y divide-[hsl(var(--border)/0.5)] max-h-96 overflow-y-auto">
           {rows.map((r) => (
-            <div key={r.id} className="py-1.5 flex items-center gap-3 t-mono text-[10px]">
-              <span className="text-muted-foreground shrink-0">{String(r.eventTs).slice(0, 16).replace("T", " ")}</span>
-              <span className="px-1.5 py-0.5 border rounded-sm text-[9px] border-[hsl(var(--live)/0.4)] text-[hsl(var(--live))] uppercase">{r.source}</span>
-              <span className="text-muted-foreground uppercase">{r.signalType}</span>
-              {r.score !== null && (
-                <span className={r.score >= 0 ? "text-[hsl(var(--live))]" : "text-[hsl(var(--crit))]"}>
-                  {r.score >= 0 ? "+" : ""}{r.score.toFixed(2)}
-                </span>
-              )}
-              {r.magnitude !== null && r.signalType === "buzz" && <span className="text-muted-foreground">×{r.magnitude}</span>}
-              {r.src === "backfill" && <span className="text-[9px] text-[hsl(var(--warn))]">BACKFILL</span>}
+            <div key={r.id} className="py-1.5">
+              <div className="flex items-center gap-3 t-mono text-[10px]">
+                <span className="text-muted-foreground shrink-0">{String(r.eventTs).slice(0, 16).replace("T", " ")}</span>
+                <span className="px-1.5 py-0.5 border rounded-sm text-[9px] border-[hsl(var(--live)/0.4)] text-[hsl(var(--live))] uppercase">{r.source}</span>
+                <span className="text-muted-foreground uppercase">{r.signalType}</span>
+                {r.score !== null && (
+                  <span className={r.score >= 0 ? "text-[hsl(var(--live))]" : "text-[hsl(var(--crit))]"}>
+                    {r.score >= 0 ? "+" : ""}{r.score.toFixed(2)}
+                  </span>
+                )}
+                {r.magnitude !== null && r.signalType === "buzz" && <span className="text-muted-foreground">×{r.magnitude}</span>}
+                {r.src === "backfill" && <span className="text-[9px] text-[hsl(var(--warn))]">BACKFILL</span>}
+              </div>
+              {r.note && <div className="mt-0.5 pl-1 text-[10px] text-muted-foreground">{r.note}</div>}
             </div>
           ))}
         </div>

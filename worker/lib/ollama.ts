@@ -37,7 +37,7 @@ export async function generate(prompt: string, opts: { model?: string; timeoutMs
         // Qwen3.x supports a "thinking" mode; disable it so the reply is
         // pure JSON and extractScore never has to dig through chain-of-thought.
         think: false,
-        options: { temperature: opts.temperature ?? 0, num_predict: opts.numPredict ?? 256 },
+        options: { temperature: opts.temperature ?? 0, num_predict: opts.numPredict ?? 320 },
       }),
     });
     if (!res.ok) throw new Error(`ollama HTTP ${res.status}: ${(await res.text()).slice(0, 200)}`);
@@ -64,28 +64,50 @@ export async function status(): Promise<{ ok: boolean; models: string[] }> {
 }
 
 /**
- * Extract a {-1..1} sentiment score from the model's reply. The prompt
- * demands strict JSON {"score": x}; we parse defensively: first JSON object
- * anywhere in the reply, score clamped. Returns null when unparsable —
- * the caller SKIPS the row rather than storing a guess (honesty).
+ * A scored verdict: score {-1..1} plus a one-line human-facing rationale.
+ * 5c: the "why" doubles as validation (we can SEE what the model concluded)
+ * and as UI content for the signals stream.
  */
-export function extractScore(reply: string): number | null {
+export interface Verdict { score: number; why: string | null }
+
+/**
+ * Extract a verdict from the model's reply. The prompt demands strict JSON
+ * {"score": x, "why": "…"}; we parse defensively: first JSON object anywhere
+ * in the reply, score clamped, why sanitized (single line, ≤400 chars).
+ * Returns null when unparsable — the caller SKIPS the row rather than
+ * storing a guess (honesty).
+ */
+export function extractVerdict(reply: string): Verdict | null {
   const m = reply.match(/\{[^{}]*"score"[^{}]*\}/s) ?? reply.match(/\{[^{}]*\}/s);
   if (!m) return null;
   try {
-    const v = Number(JSON.parse(m[0]).score);
+    // models sometimes emit literal newlines inside string values — that is
+    // invalid JSON; collapsing control whitespace makes the blob parseable
+    // (and single-lines the note content as a side effect, which we want)
+    const j = JSON.parse(m[0].replace(/[\r\n\t]+/g, " "));
+    const v = Number(j.score);
     if (!Number.isFinite(v)) return null;
-    return Math.max(-1, Math.min(1, Math.round(v * 1000) / 1000));
+    const score = Math.max(-1, Math.min(1, Math.round(v * 1000) / 1000));
+    const why = typeof j.why === "string" && j.why.trim()
+      ? j.why.replace(/[\x00-\x1f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 400)
+      : null;
+    return { score, why };
   } catch {
     return null;
   }
 }
 
-/** Prompt for financial-text tone scoring (headline or short paragraph). */
+/** Back-compat wrapper: score only. */
+export function extractScore(reply: string): number | null {
+  return extractVerdict(reply)?.score ?? null;
+}
+
+/** Prompt for financial-text tone scoring (filing section or paragraph). */
 export function tonePrompt(text: string): string {
   return `You are a financial sentiment rater. Rate the tone of the text below about the company it mentions, from the perspective of a long-term investor.
 
-Reply with ONLY a JSON object, no other text: {"score": <number from -1.0 to 1.0>}
+Reply with ONLY a JSON object, no other text:
+{"score": <number from -1.0 to 1.0>, "why": "<one short sentence naming the key fact behind the score>"}
 -1.0 = very negative, 0 = neutral or mixed, +1.0 = very positive.
 Judge the facts and outlook, not the writing style.
 
