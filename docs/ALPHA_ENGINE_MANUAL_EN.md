@@ -1050,6 +1050,10 @@ edge of 40-year history; documented, not fabricated away.
 - Cloud `workersMonitor.intake` on `/admin` (prod and home alike): per-source rows (live/backfill, last event/receipt), worker_keys liveness, latest 10 rows — terminal-free delivery verification.
 - Transport hardening: forced IPv4-first DNS (broken IPv6 egress hung fetch), 429 retryable with Retry-After, UA, 12s pacing, single-term GDELT queries (OR needs parens and gets throttled), --only diagnostic flag. 161/161 tests.
 
+### 4.33 Iteration 5c: scoring quality and the S&P 500
+
+From the first NVDA runs (owner eyeballing via why): (1) MD&A extraction verified against REAL NVDA documents — three TOC shapes fixed (bare label line, nbsp page-number line) plus the duplicate Item 2 in a 10-Q (Part I vs Part II); SIGNATURES truncates at the LAST occurrence (the TOC lists "Signatures" too); (2) 8-Ks pull the largest textual exhibit EX-99.x — where press releases live; (3) a deterministic isThinContent gate before the LLM + boilerplate-window drops via why markers — a score exists only when there is content (models fill a vacuum with negativity: −1.0 for "only a table of contents" is not analysis); (4) why = 3–4 factual sentences, template openings stripped in code, full text via a dialog from the intake card with an SEC link. **The EDGAR universe grew to the full S&P 500** (scripts/export-edgar-universe.mts from the D14 GICS snapshot, 502 companies, our 6 lead the list — an interrupted run covers them first); full history per company; overnight runs resume via manifest, with a free-disk guard (stops below 15 GiB).
+
 ### 4.32 Iterations 5a/5b: local LLM (Ollama) and the EDGAR local-first pipeline (D50)
 
 **Problem.** News signals are frozen (GDELT rate-limits even manual browser visits — owner-declared moratorium 2026-10-22); the next signal source is SEC EDGAR, and filing tone must be scored by a LOCAL model on the home GPU (free; the cloud LLM bills the owner — billing honesty).
