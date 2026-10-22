@@ -8,10 +8,14 @@ import { inspectAttr } from 'kimi-plugin-inspect-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-        // Exclude from Hono: everything not under /api/, plus module/asset requests
-    // (frontend imports shared code from api/services/*.ts — those URLs DO start
-    // with /api/ but carry a file extension, so they must reach Vite, not Hono).
-    devServer({ entry: "api/boot.ts", exclude: [/^\/(?!api\/).*$/, /\.[a-z0-9]+(\?.*)?$/i] }),
+    // Exclude from Hono: everything not under /api/, plus module/asset requests
+    // with REAL file extensions (frontend imports shared code from
+    // api/services/*.ts). NB: tRPC procedure names contain dots
+    // (/api/trpc/auth.login) — a generic /\.\w+$/ would eat them.
+    devServer({
+      entry: "api/boot.ts",
+      exclude: [/^\/(?!api\/).*$/, /\.(ts|tsx|js|jsx|mjs|cjs|css|map|json|png|jpe?g|gif|svg|ico|webp|woff2?|ttf)(\?.*)?$/i],
+    }),
     inspectAttr(), react()],
   server: {
     port: 3000,
