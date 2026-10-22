@@ -14,6 +14,17 @@ const BASE = process.env.OLLAMA_URL ?? "http://127.0.0.1:11434";
 // with KV-cache headroom). Override via OLLAMA_MODEL env.
 export const LLM_MODEL = process.env.OLLAMA_MODEL ?? "qwen3.5:9b";
 
+/**
+ * Effective context window. The MODEL advertises 256K, but Ollama silently
+ * defaults num_ctx to 4096 — long prompts would be truncated without this.
+ * 32K tokens ≈ 128K chars covers any MD&A section whole; the KV cache still
+ * fits a 16GB card alongside the 6.6GB weights. Raise via OLLAMA_NUM_CTX if
+ * needed (watch `ollama ps` for the CPU/GPU split).
+ */
+export const NUM_CTX = Number(process.env.OLLAMA_NUM_CTX ?? 32768);
+/** ~80% of NUM_CTX in chars (English ≈ 4 chars/token), minus the template. */
+export const MAX_INPUT_CHARS = Math.floor(NUM_CTX * 0.8 * 4); // 32768 → ~104k
+
 export interface GenerateResult {
   text: string;
   model: string;
@@ -37,7 +48,7 @@ export async function generate(prompt: string, opts: { model?: string; timeoutMs
         // Qwen3.x supports a "thinking" mode; disable it so the reply is
         // pure JSON and extractScore never has to dig through chain-of-thought.
         think: false,
-        options: { temperature: opts.temperature ?? 0, num_predict: opts.numPredict ?? 320 },
+        options: { temperature: opts.temperature ?? 0, num_predict: opts.numPredict ?? 320, num_ctx: NUM_CTX },
       }),
     });
     if (!res.ok) throw new Error(`ollama HTTP ${res.status}: ${(await res.text()).slice(0, 200)}`);
@@ -113,6 +124,6 @@ Judge the facts and outlook, not the writing style.
 
 TEXT:
 """
-${text.slice(0, 3000)}
+${text.slice(0, MAX_INPUT_CHARS)}
 """`;
 }

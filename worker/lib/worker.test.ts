@@ -31,7 +31,8 @@ describe("ollama: extractScore", () => {
   });
   it("tonePrompt asks for the why and caps the input length", () => {
     expect(tonePrompt("q")).toContain('"why"');
-    expect(tonePrompt("x".repeat(10000)).length).toBeLessThan(4000);
+    expect(tonePrompt("x".repeat(200_000)).length).toBeLessThan(106_000); // 80% of num_ctx 32768 ≈ 104k chars
+    expect(tonePrompt("x".repeat(10_000)).length).toBeGreaterThan(10_000); // mid-size texts pass through whole
     expect(tonePrompt("test")).toContain('"score"');
   });
 });

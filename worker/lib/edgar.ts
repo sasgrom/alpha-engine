@@ -213,11 +213,11 @@ export function extractScorableText(plain: string, form: string): string {
 }
 
 /**
- * MD&A can be 40k+ chars while the LLM prompt takes 3000 — split into up to
- * `max` evenly spaced windows (beginning / middle / end) so the score isn't
- * just the intro paragraph. Short texts come back as a single window.
+ * 5c: whole-section scoring — with NUM_CTX at 32K the model reads the ENTIRE
+ * section in one pass; windows remain only as the guard for texts longer
+ * than the prompt cap (rare: >100K chars), evenly spaced as before.
  */
-export function mdaWindows(text: string, windowSize = 3000, max = 3): string[] {
+export function mdaWindows(text: string, windowSize = 100_000, max = 3): string[] {
   if (text.length <= windowSize) return [text];
   const count = Math.min(max, Math.ceil(text.length / windowSize));
   const out: string[] = [];
