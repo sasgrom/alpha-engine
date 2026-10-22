@@ -328,8 +328,9 @@ export default function Admin() {
             </Link>
             {/* Stage 1.7 (3g): chunked upload of the Stooq bulk zip + import launch */}
             <PriceImportCard />
-            <WorkersIntakeCard />
           </div>
+          {/* 4p: intake monitor is a full-width table, not a tools tile */}
+          <WorkersIntakeCard />
         </TabsContent>
       </Tabs>
     </div>

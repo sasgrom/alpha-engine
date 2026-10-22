@@ -22,7 +22,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 async function collectOne(cik: number, query: string, bucket: { eventTs: string; key: string }): Promise<SignalRow[]> {
   const q = encodeURIComponent(query);
   const artlist = await fetchJson(`${BASE}?query=${q}&mode=ArtList&maxrecords=250&format=json&timespan=1h`, { headers: UA, retries: 4 });
-  await sleep(12000); // GDELT fair-use pacing
+  await sleep(7000); // GDELT fair-use pacing
   const tonechart = await fetchJson(`${BASE}?query=${q}&mode=ToneChart&format=json&timespan=1h`, { headers: UA, retries: 4 });
   const bins = (tonechart as any)?.tonechart ?? [];
   return buildGdeltRows(cik, bucket, bins, artlist);
@@ -41,7 +41,7 @@ for (const co of universe) {
   } catch (e: any) {
     console.warn(`[gdelt] ${co.ticker}: FAILED — ${e?.message ?? e}`); // one company down must not kill the batch
   }
-  await sleep(12000);
+  await sleep(7000);
 }
 if (rows.length === 0) {
   console.log("[gdelt] nothing collected, exiting");

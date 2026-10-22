@@ -17,7 +17,7 @@ export async function fetchJson<T = unknown>(
       if (res.status === 429) {
         // Rate-limited: not fatal — honor Retry-After, else back off long.
         const ra = Number(res.headers.get("retry-after"));
-        const wait = Number.isFinite(ra) && ra > 0 ? ra * 1000 : 30_000 * (attempt + 1);
+        const wait = Number.isFinite(ra) && ra > 0 ? ra * 1000 : 15_000 * (attempt + 1);
         if (attempt < retries) {
           await new Promise((r) => setTimeout(r, wait));
           continue;

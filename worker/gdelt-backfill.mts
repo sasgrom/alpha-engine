@@ -65,7 +65,7 @@ for (const day of days) {
       failures++;
       console.warn(`[gdelt-backfill] ${co.ticker} ${bucket.key}: FAILED — ${e?.message ?? e}`);
     }
-    await sleep(12000);
+    await sleep(7000);
   }
   if (rows.length > 0) {
     const res = await postSignals(rows);
