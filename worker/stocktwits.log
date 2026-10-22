@@ -64,3 +64,24 @@
 [stocktwits] PLD: +2 rows
 [stocktwits] NVDA: +2 rows
 [stocktwits] ingested: 8 new, 2 dupes (1 batch(es))
+[stocktwits] AAPL: +2 rows
+[stocktwits] T: +2 rows
+[stocktwits] MSFT: +2 rows
+[stocktwits] PLD: +2 rows
+[stocktwits] NVDA: +2 rows
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+[TypeError: fetch failed] {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:3000
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:2017:16) {
+    errno: -4078,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3000
+  }
+}
+
+Node.js v24.20.0
