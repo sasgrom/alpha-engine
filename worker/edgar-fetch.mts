@@ -14,12 +14,15 @@ dns.setDefaultResultOrder("ipv4first");
 import "dotenv/config";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { fetchFilingDocument, listFilings, loadEdgarUniverse, type EdgarFiling } from "./lib/edgar";
+import { fetchDoc, fetchFilingDocument, listFilingDocs, listFilings, loadEdgarUniverse, type EdgarFiling } from "./lib/edgar";
 
 export interface ManifestEntry extends EdgarFiling {
   docName: string | null;
   fetched: boolean;
   scored: boolean;
+  /** 8-K meat lives in EX-99.x — largest textual exhibit cached as <accn>.ex.htm */
+  exFile?: string | null;
+  exChecked?: boolean;
   error?: string;
 }
 
@@ -56,6 +59,26 @@ for (const co of universe) {
       manifest.push(entry);
       known.set(f.accessionNo, entry);
       fresh++;
+    }
+    // 8-K exhibit pass (5c): even when the primary doc is cached, grab the
+    // largest textual exhibit — earnings 8-Ks carry the press release in
+    // EX-99.x while the primary doc is cover + one sentence.
+    if (entry.fetched && !(entry.form === "8-K" && !entry.exChecked)) continue;
+    if (entry.fetched && entry.form === "8-K" && !entry.exChecked) {
+      try {
+        const textual = (await listFilingDocs(co.cik, entry.accessionNo))
+          .filter((d) => /\.(htm|txt)$/i.test(d.name) && !/^index/i.test(d.name) && d.name !== entry.docName);
+        const largest = textual.sort((a, b) => b.size - a.size)[0];
+        if (largest && largest.size > 20_000) {
+          writeFileSync(path.join(cacheDir(co.cik), `${entry.accessionNo.replace(/-/g, "")}.ex.htm`), await fetchDoc(co.cik, entry.accessionNo, largest.name));
+          entry.exFile = largest.name;
+          fetched++;
+        }
+        entry.exChecked = true;
+      } catch (err) {
+        entry.error = String(err).slice(0, 200);
+      }
+      continue;
     }
     if (entry.fetched) continue;
     try {

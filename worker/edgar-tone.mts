@@ -17,7 +17,7 @@ dns.setDefaultResultOrder("ipv4first");
  * marked in the manifest so reruns are incremental and free.
  */
 import "dotenv/config";
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { derivePlaintext, extractScorableText, loadEdgarUniverse, mdaWindows } from "./lib/edgar";
 import { extractVerdict, generate, LLM_MODEL, status, tonePrompt } from "./lib/ollama";
@@ -87,7 +87,10 @@ for (const co of universe) {
   const box: Outbox = { accessions: [], rows: [] };
   let skipped = 0, done = 0;
   for (const m of stillPending) {
-    const file = path.join(cacheDir(co.cik), `${m.accessionNo.replace(/-/g, "")}.htm`);
+    const base = m.accessionNo.replace(/-/g, "");
+    // 5c: for 8-K the substance usually sits in the EX-99.x exhibit, not the cover-like primary doc
+    const exPath = path.join(cacheDir(co.cik), `${base}.ex.htm`);
+    const file = m.form === "8-K" && m.exFile && existsSync(exPath) ? exPath : path.join(cacheDir(co.cik), `${base}.htm`);
     let plain: string;
     try { plain = derivePlaintext(readFileSync(file, "utf8")); }
     catch { m.error = "cache file unreadable"; skipped++; continue; }
@@ -105,6 +108,8 @@ for (const co of universe) {
       }
     }
     if (scores.length === 0) { skipped++; m.error = "no parseable score"; continue; } // honesty: skip, never guess
+    // a TOC/cover-only filing is noise, not a signal — the model says so verbatim; skip the row
+    if (whys.length > 0 && whys.every((w) => /no substantive content/i.test(w))) { skipped++; m.error = "no substantive content"; continue; }
     const avg = Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 1000) / 1000;
     box.rows.push({
       cik: co.cik,

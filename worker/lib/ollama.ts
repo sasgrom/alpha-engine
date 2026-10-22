@@ -48,7 +48,7 @@ export async function generate(prompt: string, opts: { model?: string; timeoutMs
         // Qwen3.x supports a "thinking" mode; disable it so the reply is
         // pure JSON and extractScore never has to dig through chain-of-thought.
         think: false,
-        options: { temperature: opts.temperature ?? 0, num_predict: opts.numPredict ?? 320, num_ctx: NUM_CTX },
+        options: { temperature: opts.temperature ?? 0, num_predict: opts.numPredict ?? 512, num_ctx: NUM_CTX },
       }),
     });
     if (!res.ok) throw new Error(`ollama HTTP ${res.status}: ${(await res.text()).slice(0, 200)}`);
@@ -100,9 +100,9 @@ export function extractVerdict(reply: string): Verdict | null {
     if (!Number.isFinite(v)) return null;
     const score = Math.max(-1, Math.min(1, Math.round(v * 1000) / 1000));
     const why = typeof j.why === "string" && j.why.trim()
-      ? j.why.replace(/[\x00-\x1f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 400)
+      ? j.why.replace(/[\x00-\x1f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 480)
       : null;
-    return { score, why };
+    return { score, why: why ? why.slice(0, 480) : why };
   } catch {
     return null;
   }
@@ -118,9 +118,10 @@ export function tonePrompt(text: string): string {
   return `You are a financial sentiment rater. Rate the tone of the text below about the company it mentions, from the perspective of a long-term investor.
 
 Reply with ONLY a JSON object, no other text:
-{"score": <number from -1.0 to 1.0>, "why": "<one short sentence naming the key fact behind the score>"}
+{"score": <number from -1.0 to 1.0>, "why": "<3-4 short sentences for a human reader: what the company reported or announced, the key numbers/facts, and why it matters to investors>"}
 -1.0 = very negative, 0 = neutral or mixed, +1.0 = very positive.
 Judge the facts and outlook, not the writing style.
+Rules for "why": start with the fact itself — NEVER begin with "The text", "The filing", "This document"; name concrete figures and events; if the content carries no substance (cover page, table of contents), write "no substantive content" as the whole why.
 
 TEXT:
 """

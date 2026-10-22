@@ -126,6 +126,21 @@ export function filingDocUrl(cik: number, accessionNo: string, doc: string): str
   return `${SEC_BASE}/Archives/edgar/data/${cik}/${accessionNo.replace(/-/g, "")}/${doc}`;
 }
 
+export interface FilingDocItem { name: string; size: number }
+
+/** Documents of one filing from its index.json (name + byte size). */
+export async function listFilingDocs(cik: number, accessionNo: string): Promise<FilingDocItem[]> {
+  const idx = await (await secGet(`${SEC_BASE}/Archives/edgar/data/${cik}/${accessionNo.replace(/-/g, "")}/index.json`)).json() as any;
+  return (idx?.directory?.item ?? [])
+    .map((i: any) => ({ name: String(i.name ?? ""), size: Number(String(i.size ?? "0").replace(/[^\d]/g, "")) || 0 }))
+    .filter((d: FilingDocItem) => d.name);
+}
+
+/** Download one specific document of a filing. */
+export async function fetchDoc(cik: number, accessionNo: string, doc: string): Promise<string> {
+  return (await secGet(filingDocUrl(cik, accessionNo, doc))).text();
+}
+
 /** Resolve + download the primary document; falls back to first .htm/.txt in the index. */
 export async function fetchFilingDocument(cik: number, f: EdgarFiling): Promise<{ docName: string; html: string }> {
   let doc = f.primaryDoc;
