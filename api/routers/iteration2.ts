@@ -12,7 +12,11 @@ import { companies, documents, documentSections, seriesPoints, seriesHealth, com
 import { storage } from "../lib/storage";
 import { createJob } from "../services/runner";
 import { DOCUMENT_FORM_SCOPE, derivePlaintext } from "../services/documents";
-import { TRPCError } from "@trpc/server";
+
+/** Direct SEC Archives URL for a document — always public, no storage needed. */
+function secArchivesDocUrl(cik: number, accessionNo: string, docName: string): string {
+  return `https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNo.replace(/-/g, "")}/${docName}`;
+}
 import { computeCompanyFactors } from "../services/factors";
 import { computeCompanyValue } from "../services/valuation";
 import { cachedExternal } from "../services/ext-cache";
@@ -117,10 +121,13 @@ export const documentsRouter = createRouter({
             source: "local-cache" as const,
           };
         }
-        throw new TRPCError({
-          code: "PRECONDITION_FAILED",
-          message: "Document text is not available on this copy: object storage is not provisioned here. Open it on the prod site or via the SEC link.",
-        });
+        // default fallback: the filing lives on SEC EDGAR anyway — hand the UI
+        // a real link instead of a dead-end error message
+        return {
+          docName: doc.docName, form: doc.form, length: 0,
+          excerpt: "", truncated: false, source: "sec" as const,
+          secUrl: secArchivesDocUrl(doc.cik, doc.accessionNo, doc.docName),
+        };
       }
     }),
 
@@ -135,10 +142,8 @@ export const documentsRouter = createRouter({
         const { url } = await storage.getPresignedUrl({ key: doc.storageKey });
         return { url };
       } catch {
-        throw new TRPCError({
-          code: "PRECONDITION_FAILED",
-          message: "Raw download is not available on this copy: object storage is not provisioned here. Use the prod site or the SEC link.",
-        });
+        // the raw document is public on SEC EDGAR — the fallback IS the data
+        return { url: secArchivesDocUrl(doc.cik, doc.accessionNo, doc.docName) };
       }
     }),
 });

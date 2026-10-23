@@ -400,9 +400,17 @@ function FilingsAndDocuments({ cik }: { cik: number }) {
           <div className="console rounded-md max-h-[60vh] overflow-y-auto p-3">
             {text.isLoading && <div className="lv-ts">loading plaintext from storage…</div>}
             {text.error && <div className="lv-error">{String(text.error)}</div>}
-            {text.data && (
+            {text.data?.source === "sec" && (
+              <div className="lv-info">
+                Plaintext is not stored on this copy. The original document is public on SEC EDGAR:{" "}
+                <a href={text.data.secUrl} target="_blank" rel="noreferrer" className="text-[hsl(var(--live))] underline underline-offset-2">
+                  OPEN ON SEC EDGAR ↗
+                </a>
+              </div>
+            )}
+            {text.data && text.data.source !== "sec" && (
               <>
-                <div className="lv-ts mb-2">{text.data.length.toLocaleString()} chars{text.data.truncated ? " (excerpt)" : ""}</div>
+                <div className="lv-ts mb-2">{text.data.length.toLocaleString()} chars{text.data.truncated ? " (excerpt)" : ""}{text.data.source === "local-cache" ? " · local cache" : ""}</div>
                 <div className="lv-info whitespace-pre-wrap">{text.data.excerpt}</div>
               </>
             )}
