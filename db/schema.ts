@@ -685,6 +685,20 @@ export const cusipMap = mysqlTable(
 );
 export type CusipMapRow = typeof cusipMap.$inferSelect;
 
+/** 5g fix: the fund's FULL 13F book per quarter (before universe filtering). */
+export const fundQuarters = mysqlTable(
+  "fund_quarters",
+  {
+    fundCik: int("fundCik").notNull(),
+    quarterDate: date("quarterDate", { mode: "string" }).notNull(),
+    totalValueUsd: bigint("totalValueUsd", { mode: "number" }),
+    positions: int("positions"),
+    accessionNo: varchar("accessionNo", { length: 25 }),
+  },
+  (t) => [uniqueIndex("uq_fund_quarters").on(t.fundCik, t.quarterDate)]
+);
+export type FundQuarter = typeof fundQuarters.$inferSelect;
+
 // ---------------------------------------------------------------------------
 // Iteration 4i (D42) — insider trades from Form 4 XML. Schema only; the
 // worker/ETL populates it (4j). filingDate is the point-in-time anchor.

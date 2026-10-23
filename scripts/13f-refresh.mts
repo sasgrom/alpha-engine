@@ -127,9 +127,10 @@ if (REBUILD) {
         return m;
       };
       const prev = await load(prevQ), cur = await load(curQ);
-      const [tot]: any = await db.execute(sql`SELECT SUM(valueUsd) s FROM fund_holdings WHERE fundCik=${fund.cik} AND quarterDate=${curQ}`);
+      // "% of fund" divides by the REAL book (fund_quarters), never the mapped subset
+      const [tot]: any = await db.execute(sql`SELECT totalValueUsd s FROM fund_quarters WHERE fundCik=${fund.cik} AND quarterDate=${curQ}`);
       const fundTotal = Number(tot[0]?.s ?? 0) || null;
-      const [pTot]: any = await db.execute(sql`SELECT SUM(valueUsd) s FROM fund_holdings WHERE fundCik=${fund.cik} AND quarterDate=${prevQ}`);
+      const [pTot]: any = await db.execute(sql`SELECT totalValueUsd s FROM fund_quarters WHERE fundCik=${fund.cik} AND quarterDate=${prevQ}`);
       const prevTotal = Number(pTot[0]?.s ?? 0) || fundTotal;
       const filing = { accessionNo: cur.values().next().value?.accn ?? "", form: "13F-HR", filingDate: curQ, reportDate: curQ };
       const ctxFor = async (cik: number, shares: number | null, valueUsd: number | null, totalUsd: number | null) => ({
@@ -165,6 +166,38 @@ if (REBUILD) {
   process.exit(0);
 }
 
+// --totals-only: backfill fund_quarters (full-book totals) for fund+quarters
+// already in fund_holdings — network pass, no events touched.
+const TOTALS_ONLY = process.argv.includes("--totals-only");
+if (TOTALS_ONLY) {
+  let done = 0, written = 0;
+  for (const fund of funds) {
+    let filings;
+    try { filings = await listFilings(fund.cik, FORMS_13F); } catch { continue; }
+    const quarters = latestPerQuarter(filings.map((f) => ({ accessionNo: f.accessionNo, form: f.form, filingDate: f.filingDate, reportDate: f.reportDate || f.filingDate })));
+    for (const q of quarters) {
+      const [have]: any = await db.execute(sql`SELECT COUNT(*) h FROM fund_holdings WHERE fundCik=${fund.cik} AND quarterDate=${q.reportDate}`);
+      const [got]: any = await db.execute(sql`SELECT COUNT(*) g FROM fund_quarters WHERE fundCik=${fund.cik} AND quarterDate=${q.reportDate}`);
+      if (Number(have[0].h) === 0 || Number(got[0].g) > 0) continue;
+      try {
+        const docs = (await listFilingDocs(fund.cik, q.accessionNo)).filter((d) => /\.xml$/i.test(d.name));
+        const biggest = docs.sort((a, b) => b.size - a.size)[0];
+        if (!biggest) continue;
+        const holdings = parseInfoTable(await fetchDoc(fund.cik, q.accessionNo, biggest.name));
+        autoScale13F(holdings);
+        await db.execute(sql`INSERT INTO fund_quarters (fundCik, quarterDate, totalValueUsd, positions, accessionNo)
+          VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${q.accessionNo})
+          ON DUPLICATE KEY UPDATE totalValueUsd=VALUES(totalValueUsd), positions=VALUES(positions), accessionNo=VALUES(accessionNo)`);
+        written++;
+      } catch { /* single filing failure is non-fatal */ }
+      if (++done % 50 === 0) prog.item(done, 4000, `${written} totals written`);
+    }
+    prog.log(`${fund.name}: totals written so far ${written}`);
+  }
+  prog.done(`totals-only: ${written} fund_quarters rows`);
+  process.exit(0);
+}
+
 let totalRows = 0, totalEvents = 0;
 for (const fund of funds) {
   prog.stage(`${fund.name} [${fund.tier}]`);
@@ -187,7 +220,7 @@ for (const fund of funds) {
       prevValues.set(`${r.heldCik}:${r.secClass ?? "COM"}`, { valueUsd: r.valueUsd !== null ? Number(r.valueUsd) : null });
     }
   }
-  const [tot]: any = await db.execute(sql`SELECT SUM(valueUsd) s FROM fund_holdings WHERE fundCik = ${fund.cik} AND quarterDate = (SELECT MAX(quarterDate) FROM fund_holdings WHERE fundCik = ${fund.cik})`);
+  const [tot]: any = await db.execute(sql`SELECT totalValueUsd s FROM fund_quarters WHERE fundCik = ${fund.cik} ORDER BY quarterDate DESC LIMIT 1`);
   prevTotalUsd = Number(tot[0]?.s ?? 0) || null;
 
   let fundRows = 0, fundEvents = 0;
@@ -200,6 +233,10 @@ for (const fund of funds) {
       const holdings = parseInfoTable(await fetchDoc(fund.cik, q.accessionNo, biggest.name));
       const sc = autoScale13F(holdings); // some filers report dollars, not thousands
       if (sc.scale !== 1) prog.log(`! ${fund.name} ${q.reportDate}: value field is in DOLLARS (median implied $${Math.round(sc.medianImplied!).toLocaleString("en-US")}) — scaled ÷1000`);
+      // full-book total BEFORE universe filtering — the honest "% of fund" basis
+      await db.execute(sql`INSERT INTO fund_quarters (fundCik, quarterDate, totalValueUsd, positions, accessionNo)
+        VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${q.accessionNo})
+        ON DUPLICATE KEY UPDATE totalValueUsd=VALUES(totalValueUsd), positions=VALUES(positions), accessionNo=VALUES(accessionNo)`);
       const map = await mapCusips([...new Set(holdings.map((h) => h.cusip))]);
       const curShares = new Map<string, { cik: number; cls: string; shares: number }>();
       for (const h of holdings) {
