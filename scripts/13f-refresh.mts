@@ -39,16 +39,18 @@ async function mapCusips(cusips: string[]): Promise<Map<string, { cik: number | 
     if (r.length > 0) out.set(c, { cik: r[0].cik, ticker: r[0].ticker });
     else missing.push(c);
   }
-  // OpenFIGI: ≤100 jobs/request, anonymous pacing
-  for (let i = 0; i < missing.length; i += 100) {
-    const chunk = missing.slice(i, i + 100);
+  // OpenFIGI anonymous: ≤25 jobs/request (100 → HTTP 413, proven on Berkshire),
+  // pace inside the minute budget; 429 backs off and retries the same chunk
+  const FIGI_CHUNK = 25;
+  for (let i = 0; i < missing.length; i += FIGI_CHUNK) {
+    const chunk = missing.slice(i, i + FIGI_CHUNK);
     try {
       const res = await fetch("https://api.openfigi.com/v3/mapping", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(chunk.map((c) => ({ idType: "ID_CUSIP", idValue: c }))),
       });
-      if (res.status === 429) { await SLEEP(15_000); i -= 100; continue; }
+      if (res.status === 429) { await SLEEP(15_000); i -= FIGI_CHUNK; continue; }
       if (!res.ok) throw new Error(`figi HTTP ${res.status}`);
       const data = (await res.json()) as any[];
       for (let j = 0; j < chunk.length; j++) {
