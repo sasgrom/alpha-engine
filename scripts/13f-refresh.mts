@@ -15,13 +15,16 @@ import "dotenv/config";
 import { sql } from "drizzle-orm";
 import { getDb } from "../api/queries/connection";
 import { listFilings, listFilingDocs, fetchDoc } from "../worker/lib/edgar";
-import { loadFundUniverse, latestPerQuarter, parseInfoTable, positionEvent, eventNote, buildPositionRow } from "../worker/lib/thirteenf";
+import { loadFundUniverse, latestPerQuarter, parseInfoTable, positionEvent, eventNote, buildPositionRow, SIGNAL_TIERS } from "../worker/lib/thirteenf";
 import { startProgress } from "../worker/lib/progress";
 
 const FORMS_13F = new Set(["13F-HR", "13F-HR/A"]);
 const arg = (n: string) => { const i = process.argv.indexOf(n); return i > -1 ? process.argv[i + 1] : null; };
 const QUARTERS = Number(arg("--quarters") ?? 12);
 const ONLY = arg("--only")?.toLowerCase() ?? null;
+// --universe funds-13f-top300.json (5g): events only for SIGNAL_TIERS, the
+// rest are aggregates-only holdings rows
+const UNIVERSE_FILE = arg("--universe") ?? "funds-13f.json";
 const SLEEP = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const db = getDb();
@@ -78,7 +81,7 @@ async function mapCusips(cusips: string[]): Promise<Map<string, { cik: number | 
   return out;
 }
 
-const funds = loadFundUniverse().filter((f) => !ONLY || f.name.toLowerCase().includes(ONLY));
+const funds = loadFundUniverse(UNIVERSE_FILE).filter((f) => !ONLY || f.name.toLowerCase().includes(ONLY));
 let totalRows = 0, totalEvents = 0;
 for (const fund of funds) {
   prog.stage(`${fund.name} [${fund.tier}]`);
@@ -118,17 +121,21 @@ for (const fund of funds) {
         curShares.set(k, cur);
         fundRows++;
       }
-      // events vs previous quarter (per heldCik:secClass — a PUT is not the stock)
+      // events vs previous quarter (per heldCik:secClass — a PUT is not the
+      // stock). 5g: only SIGNAL_TIERS generate events; "institutional" funds
+      // feed the aggregates (ownership %, crowding, flows), not the stream.
       const rows: any[] = [];
-      for (const [k, cur] of curShares) {
-        const ev = positionEvent(prevShares.get(k) ?? null, cur.shares, null);
-        if (ev) rows.push(buildPositionRow(fund.cik, cur.cik, q, ev, eventNote(fund.name, ev, cur.cls), cur.cls));
-      }
-      for (const [k, prev] of prevShares) {
-        if (prev > 0 && !curShares.has(k)) {
-          const [cikStr, cls] = k.split(":");
-          const ev = positionEvent(prev, 0, null);
-          if (ev) rows.push(buildPositionRow(fund.cik, Number(cikStr), q, ev, eventNote(fund.name, ev, cls), cls));
+      if (SIGNAL_TIERS.has(fund.tier)) {
+        for (const [k, cur] of curShares) {
+          const ev = positionEvent(prevShares.get(k) ?? null, cur.shares, null);
+          if (ev) rows.push(buildPositionRow(fund.cik, cur.cik, q, ev, eventNote(fund.name, ev, cur.cls), cur.cls));
+        }
+        for (const [k, prev] of prevShares) {
+          if (prev > 0 && !curShares.has(k)) {
+            const [cikStr, cls] = k.split(":");
+            const ev = positionEvent(prev, 0, null);
+            if (ev) rows.push(buildPositionRow(fund.cik, Number(cikStr), q, ev, eventNote(fund.name, ev, cls), cls));
+          }
         }
       }
       for (const r of rows) {

@@ -12,9 +12,13 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-export interface FundEntry { cik: number; name: string; tier: string }
-export function loadFundUniverse(): FundEntry[] {
-  return JSON.parse(readFileSync(path.resolve(import.meta.dirname, "..", "funds-13f.json"), "utf8"));
+export interface FundEntry { cik: number; name: string; tier: string; aumUsd?: number }
+
+/** Tiers that generate position EVENTS; "institutional" is aggregates-only (5g). */
+export const SIGNAL_TIERS = new Set(["activist", "quant", "fundamental"]);
+
+export function loadFundUniverse(file = "funds-13f.json"): FundEntry[] {
+  return JSON.parse(readFileSync(path.resolve(import.meta.dirname, "..", file), "utf8"));
 }
 
 export interface Holding13F {

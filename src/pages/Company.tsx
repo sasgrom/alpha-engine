@@ -726,6 +726,42 @@ function InsiderPanel({ cik }: { cik: number }) {
 }
 
 // ---------------------------------------------------------------------------
+// Institutional panel (5g) — 13F aggregates: ownership, holders, QoQ flow,
+// top holders. Aggregates are deterministic (no LLM).
+// ---------------------------------------------------------------------------
+function InstitutionalPanel({ cik }: { cik: number }) {
+  const q = trpc.company.institutional.useQuery({ cik });
+  if (q.isLoading) return <div className="t-mono text-[11px] text-muted-foreground">loading institutional…</div>;
+  const d = q.data;
+  if (!d?.quarterDate) return null;
+  const money = (v: number | null) => v === null ? "—" : v >= 1e12 ? `$${(v / 1e12).toFixed(2)}T` : v >= 1e9 ? `$${(v / 1e9).toFixed(1)}B` : `$${(v / 1e6).toFixed(0)}M`;
+  const shr = (v: number | null) => v === null ? "—" : v >= 1e9 ? `${(v / 1e9).toFixed(2)}B` : v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v.toLocaleString("en-US");
+  return (
+    <div className="t-panel px-5 py-4">
+      <div className="t-label mb-3">Institutional ownership (13F) — quarter {d.quarterDate}</div>
+      <div className="flex flex-wrap gap-x-8 gap-y-2 t-mono text-[12px] mb-3">
+        <span>holders: <b>{d.holders}</b></span>
+        <span>held: <b>{shr(d.sharesHeld)} sh</b> ({money(d.valueUsd)})</span>
+        <span>of shares out: <b>{d.ownershipPct === null ? "—" : `${d.ownershipPct}%`}</b></span>
+        <span className={d.qoqSharesDeltaPct === null ? "text-muted-foreground" : d.qoqSharesDeltaPct >= 0 ? "text-emerald-400" : "text-crit-red"}>
+          QoQ: {d.qoqSharesDeltaPct === null ? "—" : `${d.qoqSharesDeltaPct >= 0 ? "+" : ""}${d.qoqSharesDeltaPct}%`}
+        </span>
+      </div>
+      <div className="divide-y divide-[hsl(var(--border)/0.5)]">
+        {d.top.map((t) => (
+          <div key={t.fundName} className="py-1 flex items-center gap-3 t-mono text-[11px]">
+            <span className="flex-1 truncate">{t.fundName}</span>
+            <span className="text-muted-foreground uppercase text-[9px]">{t.tier}</span>
+            <span>{shr(t.shares)} sh</span>
+            <span className="text-muted-foreground">{money(t.valueUsd)}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Signals panel (4j/4k, D43) — the signals encyclopedia surface: 7-day
 // aggregates per source (mean tone, total buzz) + the recent signal stream.
 // Every row carries the no-lookahead pair (eventTs / ingestedAt).
@@ -886,7 +922,8 @@ export default function Company() {
             </div>
           )}
           {cik && (
-            <div className="mt-4">
+            <div className="mt-4 space-y-4">
+              <InstitutionalPanel cik={cik} />
               <ShortInterestPanel cik={cik} />
             </div>
           )}
