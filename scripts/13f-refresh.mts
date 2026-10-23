@@ -217,9 +217,10 @@ for (const fund of funds) {
       // feed the aggregates (ownership %, crowding, flows), not the stream.
       // Notes carry honest computed context: $, % of fund book, % of company,
       // crowding (holders count from what's stored — full after --rebuild-events).
+      // fundTotalUsd is computed for EVERY tier (prevTotalUsd tracking needs it)
+      const fundTotalUsd = holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0);
       const rows: any[] = [];
       if (SIGNAL_TIERS.has(fund.tier)) {
-        const fundTotalUsd = holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0);
         const ctxFor = async (cik: number, shares: number | null, valueUsd: number | null, totalUsd: number | null) => ({
           valueUsd,
           pctFund: valueUsd && totalUsd ? (valueUsd / totalUsd) * 100 : null,
@@ -255,5 +256,5 @@ for (const fund of funds) {
   totalRows += fundRows; totalEvents += fundEvents;
   prog.stageDone(`${fund.name}: ${quarters.length} quarters, ${fundRows} holdings, ${fundEvents} events`);
 }
-prog.done(`all done — ${totalRows} holdings rows, ${totalEvents} signal events`);
+prog.done(`all done - ${totalRows} holdings rows, ${totalEvents} signal events`);
 process.exit(0);
