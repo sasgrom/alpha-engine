@@ -29,6 +29,7 @@ export interface IngestResult {
 /** 5e: one digest row (morning brief). */
 export interface DigestRow {
   kind?: string;
+  scope?: string; // ticker for company-quarter briefs (5e)
   forDate: string; // YYYY-MM-DD
   body: string;
   model?: string | null;

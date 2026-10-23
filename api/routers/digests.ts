@@ -21,4 +21,14 @@ export const digestsRouter = createRouter({
   list: authedQuery.input(z.object({ limit: z.number().int().min(1).max(30).default(14) }).optional()).query(async ({ input }) => {
     return getDb().select().from(digests).orderBy(desc(digests.forDate)).limit(input?.limit ?? 14);
   }),
+
+  /** 5e: company-quarter briefs for one ticker (scope = ticker), newest first */
+  byCompany: authedQuery
+    .input(z.object({ ticker: z.string().max(12), limit: z.number().int().min(1).max(40).default(12) }))
+    .query(async ({ input }) => {
+      const { and } = await import("drizzle-orm");
+      return getDb().select().from(digests)
+        .where(and(eq(digests.kind, "company-quarter"), eq(digests.scope, input.ticker.toUpperCase())))
+        .orderBy(desc(digests.forDate)).limit(input.limit);
+    }),
 });

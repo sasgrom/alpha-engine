@@ -722,13 +722,33 @@ function InsiderPanel({ cik }: { cik: number }) {
 // aggregates per source (mean tone, total buzz) + the recent signal stream.
 // Every row carries the no-lookahead pair (eventTs / ingestedAt).
 // ---------------------------------------------------------------------------
-function SignalsPanel({ cik }: { cik: number }) {
+function SignalsPanel({ cik, ticker }: { cik: number; ticker?: string }) {
   const q = trpc.company.signals.useQuery({ cik });
+  // 5e: quarterly briefs (home-LLM, derived from this company's filing notes)
+  const briefs = trpc.digests.byCompany.useQuery({ ticker: ticker ?? "" }, { enabled: !!ticker });
   if (q.isLoading) return <div className="t-mono text-[11px] text-muted-foreground">loading signals…</div>;
   const rows = q.data?.recent ?? [];
   const aggs = q.data?.aggregates ?? [];
+  const briefList = briefs.data ?? [];
   return (
     <div className="space-y-4">
+      {briefList.length > 0 && (
+        <div className="t-panel px-5 py-4">
+          <div className="t-label mb-3">Quarterly briefs — home LLM, derived from filing notes (verify against sources)</div>
+          <div className="space-y-3">
+            {briefList.map((b) => (
+              <details key={b.id} className="group">
+                <summary className="t-mono text-[11px] cursor-pointer text-[hsl(var(--live))] select-none">
+                  quarter ending {b.forDate} <span className="text-muted-foreground group-open:hidden">— open</span>
+                </summary>
+                <div className="mt-2 whitespace-pre-wrap text-[12px] leading-relaxed text-foreground/90 border-l-2 border-[hsl(var(--live)/0.3)] pl-3">
+                  {b.body}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      )}
       <div className="t-panel px-5 py-4">
         <div className="t-label mb-3">7-day aggregates by source</div>
         <div className="flex flex-wrap gap-2">
@@ -868,7 +888,7 @@ export default function Company() {
         <TabsContent value="value">{cik ? <ValuePanel cik={cik} /> : null}</TabsContent>
         <TabsContent value="documents">{cik ? <FilingsAndDocuments cik={cik} /> : null}</TabsContent>
         {hasScores && <TabsContent value="sentiment">{cik ? <SentimentPanel cik={cik} /> : null}</TabsContent>}
-        {hasSignals && <TabsContent value="signals">{cik ? <SignalsPanel cik={cik} /> : null}</TabsContent>}
+        {hasSignals && <TabsContent value="signals">{cik ? <SignalsPanel cik={cik} ticker={ticker} /> : null}</TabsContent>}
       </Tabs>
     </AppLayout>
   );

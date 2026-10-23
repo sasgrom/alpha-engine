@@ -64,6 +64,7 @@ export type WorkerSignalRow = z.infer<typeof workerSignalRowZ>;
 /** 5e: one digest row (morning brief) from the worker. */
 export const workerDigestRowZ = z.object({
   kind: z.string().max(24).default("morning"),
+  scope: z.string().max(32).default(""), // ticker for company-quarter briefs
   forDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   body: z.string().min(1).max(8000),
   model: z.string().max(64).nullish(),
@@ -92,8 +93,8 @@ export async function ingestDigests(rows: WorkerDigestRow[]): Promise<{ upserted
   const now = new Date().toISOString().slice(0, 19).replace("T", " ");
   let upserted = 0;
   for (const r of rows) {
-    const res: any = await db.execute(sql`INSERT INTO digests (kind, forDate, body, model, meta, createdAt)
-      VALUES (${r.kind}, ${r.forDate}, ${r.body}, ${r.model ?? null}, ${r.meta ?? null}, ${now})
+    const res: any = await db.execute(sql`INSERT INTO digests (kind, scope, forDate, body, model, meta, createdAt)
+      VALUES (${r.kind}, ${r.scope ?? ""}, ${r.forDate}, ${r.body}, ${r.model ?? null}, ${r.meta ?? null}, ${now})
       ON DUPLICATE KEY UPDATE body = VALUES(body), model = VALUES(model), meta = VALUES(meta), createdAt = VALUES(createdAt)`);
     upserted += Number(res[0]?.affectedRows ?? 0) > 0 ? 1 : 0;
   }

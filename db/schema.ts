@@ -630,13 +630,15 @@ export const digests = mysqlTable(
   {
     id: serial("id").primaryKey(),
     kind: varchar("kind", { length: 24 }).notNull().default("morning"),
+    /** universe-wide kinds: ''; company kinds: the ticker (DDL 021) */
+    scope: varchar("scope", { length: 32 }).notNull().default(""),
     forDate: date("forDate", { mode: "string" }).notNull(),
     body: text("body").notNull(),
     model: varchar("model", { length: 64 }),
     meta: text("meta"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
-  (t) => [uniqueIndex("uq_digests").on(t.kind, t.forDate)]
+  (t) => [uniqueIndex("uq_digests").on(t.kind, t.scope, t.forDate)]
 );
 export type Digest = typeof digests.$inferSelect;
 
