@@ -3,6 +3,11 @@
  * Holdings are DETERMINISTIC data: parsed from the filing's XML information
  * table, mapped CUSIP→company via the cached crosswalk, events derived by
  * quarter-over-quarter deltas. No LLM anywhere in this module.
+ *
+ * KNOWN LIMITATION (documented honestly): option positions (PUT/CALL rows in
+ * the information table) carry OCC option CUSIPs that OpenFIGI does not
+ * resolve to the underlying's ticker — they are currently dropped at mapping.
+ * Capturing hedges needs OCC symbology (strike/expiry parsing) — future work.
  */
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -34,10 +39,13 @@ export function parseInfoTable(xml: string): Holding13F[] {
     if (!cusip) continue;
     const v = pick("value");
     const sh = pick("sshPrnamt");
+    // class normalization (prod QA): only PUT/CALL are special; share-class
+    // labels ("COM CL A", "CAP STK CL A"…) are COM for pairing and notes
+    const rawCls = (pick("titleOfClass") ?? "COM").toUpperCase();
     out.push({
       issuer: pick("nameOfIssuer") ?? "",
       cusip,
-      secClass: (pick("titleOfClass") ?? "COM").toUpperCase(),
+      secClass: rawCls === "PUT" || rawCls === "CALL" ? rawCls : "COM",
       valueUsd: v !== null && Number.isFinite(Number(v)) ? Math.round(Number(v) * 1000) : null,
       shares: sh !== null && Number.isFinite(Number(sh)) ? Number(sh) : null,
     });
