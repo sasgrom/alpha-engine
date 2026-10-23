@@ -421,9 +421,23 @@ describe("13f: parseInfoTable", () => {
   it("parses namespace-agnostic infoTable blocks, value thousands → usd", () => {
     const rows = parseInfoTable(xml);
     expect(rows).toHaveLength(2);
-    expect(rows[0]).toEqual({ issuer: "APPLE INC", cusip: "037833100", valueUsd: 174_000_000, shares: 1000 });
+    expect(rows[0]).toEqual({ issuer: "APPLE INC", cusip: "037833100", secClass: "COM", valueUsd: 174_000_000, shares: 1000 });
     expect(rows[1].cusip).toBe("67066G104");
     expect(rows[1].valueUsd).toBe(2_500_000);
+  });
+  it("captures option classes (PUT/CALL) and scores them at half weight with sign", () => {
+    const optXml = `<informationTable><infoTable><nameOfIssuer>NVIDIA CORP</nameOfIssuer>
+      <titleOfClass>PUT</titleOfClass><cusip>67066G104</cusip><value>800000</value>
+      <shrsOrPrnAmt><sshPrnamt>2000000</sshPrnamt></shrsOrPrnAmt></infoTable></informationTable>`;
+    const rows = parseInfoTable(optXml);
+    expect(rows[0].secClass).toBe("PUT");
+    const ev = positionEvent(null, 2_000_000, 8e8)!;
+    expect(eventNote("Citadel Advisors", ev, "PUT")).toContain("new PUT position");
+    const row = buildPositionRow(1423053, 1045810, { accessionNo: "a1", form: "13F-HR", filingDate: "2026-02-14", reportDate: "2025-12-31" }, ev, "n", "PUT");
+    expect(row.score).toBe(-0.5); // bearish direction, half weight (hedge ambiguity)
+    expect(row.payloadKey).toBe("13f:pos:1423053:1045810:PUT:a1");
+    const callRow = buildPositionRow(1423053, 1045810, { accessionNo: "a1", form: "13F-HR", filingDate: "2026-02-14", reportDate: "2025-12-31" }, ev, "n", "CALL");
+    expect(callRow.score).toBe(0.5);
   });
 });
 
@@ -445,7 +459,7 @@ describe("13f: latestPerQuarter + events", () => {
     const ev = positionEvent(1000, 1400, 1.4e9);
     expect(eventNote("Citadel Advisors", ev!)).toBe("Citadel Advisors: +40% to 1,400 sh ($1.4B)");
     expect(buildPositionRow(1423053, 320193, { accessionNo: "acc1", form: "13F-HR", filingDate: "2026-02-14", reportDate: "2025-12-31" }, ev!, "n").payloadKey)
-      .toBe("13f:pos:1423053:320193:acc1");
+      .toBe("13f:pos:1423053:320193:COM:acc1");
   });
   it("fund universe carries verified CIKs", () => {
     const f = loadFundUniverse();

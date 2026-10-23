@@ -64,7 +64,9 @@ async function mapCusips(cusips: string[]): Promise<Map<string, { cik: number | 
           const [r]: any = await db.execute(sql`SELECT cik FROM companies WHERE ticker = ${ticker} LIMIT 1`);
           cik = r.length ? Number(r[0].cik) : null;
         }
-        await db.execute(sql`INSERT IGNORE INTO cusip_map (cusip, cik, ticker) VALUES (${chunk[j]}, ${cik}, ${ticker})`);
+        // 5f+: metadata rides the SAME response — free enrichment
+        await db.execute(sql`INSERT IGNORE INTO cusip_map (cusip, cik, ticker, exchCode, secType)
+          VALUES (${chunk[j]}, ${cik}, ${ticker}, ${hit?.exchCode ?? null}, ${hit?.securityType ?? hit?.securityType2 ?? null})`);
         out.set(chunk[j], { cik, ticker });
       }
       await SLEEP(3000);
@@ -86,11 +88,14 @@ for (const fund of funds) {
   const quarters = latestPerQuarter(filings.map((f) => ({ accessionNo: f.accessionNo, form: f.form, filingDate: f.filingDate, reportDate: f.reportDate || f.filingDate }))).slice(-QUARTERS);
   if (quarters.length === 0) { prog.stageDone(`${fund.name}: no 13F filings`); continue; }
 
-  // previous-quarter shares per heldCik, seeded from what the DB already has
-  const prevShares = new Map<number, number>();
-  const [seed]: any = await db.execute(sql`SELECT heldCik, shares, quarterDate FROM fund_holdings WHERE fundCik = ${fund.cik} AND heldCik IS NOT NULL ORDER BY quarterDate`);
+  // previous-quarter shares per heldCik:secClass, seeded from the DB
+  const prevShares = new Map<string, number>();
+  const [seed]: any = await db.execute(sql`SELECT heldCik, secClass, shares, quarterDate FROM fund_holdings WHERE fundCik = ${fund.cik} AND heldCik IS NOT NULL ORDER BY quarterDate`);
   const seenQuarter = new Set<string>();
-  for (const r of seed) { seenQuarter.add(String(r.quarterDate)); if (r.shares != null) prevShares.set(Number(r.heldCik), Number(r.shares)); }
+  for (const r of seed) {
+    seenQuarter.add(String(r.quarterDate));
+    if (r.shares != null) prevShares.set(`${r.heldCik}:${r.secClass ?? "COM"}`, Number(r.shares));
+  }
 
   let fundRows = 0, fundEvents = 0;
   for (const q of quarters) {
@@ -101,25 +106,29 @@ for (const fund of funds) {
       if (!biggest) { prog.log(`! ${fund.name} ${q.reportDate}: no xml info table`); continue; }
       const holdings = parseInfoTable(await fetchDoc(fund.cik, q.accessionNo, biggest.name));
       const map = await mapCusips([...new Set(holdings.map((h) => h.cusip))]);
-      const curShares = new Map<number, number>();
+      const curShares = new Map<string, { cik: number; cls: string; shares: number }>();
       for (const h of holdings) {
         const m = map.get(h.cusip);
         if (!m?.cik || !ourCiks.has(m.cik)) continue; // outside our universe
-        await db.execute(sql`INSERT IGNORE INTO fund_holdings (fundCik, fundName, cusip, heldCik, issuer, shares, valueUsd, quarterDate, accessionNo, tier)
-          VALUES (${fund.cik}, ${fund.name}, ${h.cusip}, ${m.cik}, ${h.issuer}, ${h.shares}, ${h.valueUsd}, ${q.reportDate}, ${q.accessionNo}, ${fund.tier})`);
-        curShares.set(m.cik, (curShares.get(m.cik) ?? 0) + (h.shares ?? 0));
+        await db.execute(sql`INSERT IGNORE INTO fund_holdings (fundCik, fundName, cusip, secClass, heldCik, issuer, shares, valueUsd, quarterDate, accessionNo, tier)
+          VALUES (${fund.cik}, ${fund.name}, ${h.cusip}, ${h.secClass}, ${m.cik}, ${h.issuer}, ${h.shares}, ${h.valueUsd}, ${q.reportDate}, ${q.accessionNo}, ${fund.tier})`);
+        const k = `${m.cik}:${h.secClass}`;
+        const cur = curShares.get(k) ?? { cik: m.cik, cls: h.secClass, shares: 0 };
+        cur.shares += h.shares ?? 0;
+        curShares.set(k, cur);
         fundRows++;
       }
-      // events vs previous quarter
+      // events vs previous quarter (per heldCik:secClass — a PUT is not the stock)
       const rows: any[] = [];
-      for (const [heldCik, shares] of curShares) {
-        const ev = positionEvent(prevShares.get(heldCik) ?? null, shares, null);
-        if (ev) rows.push(buildPositionRow(fund.cik, heldCik, q, ev, eventNote(fund.name, ev)));
+      for (const [k, cur] of curShares) {
+        const ev = positionEvent(prevShares.get(k) ?? null, cur.shares, null);
+        if (ev) rows.push(buildPositionRow(fund.cik, cur.cik, q, ev, eventNote(fund.name, ev, cur.cls), cur.cls));
       }
-      for (const [heldCik, prev] of prevShares) {
-        if (prev > 0 && !curShares.has(heldCik)) {
+      for (const [k, prev] of prevShares) {
+        if (prev > 0 && !curShares.has(k)) {
+          const [cikStr, cls] = k.split(":");
           const ev = positionEvent(prev, 0, null);
-          if (ev) rows.push(buildPositionRow(fund.cik, heldCik, q, ev, eventNote(fund.name, ev)));
+          if (ev) rows.push(buildPositionRow(fund.cik, Number(cikStr), q, ev, eventNote(fund.name, ev, cls), cls));
         }
       }
       for (const r of rows) {
@@ -127,7 +136,7 @@ for (const fund of funds) {
           VALUES (${r.cik}, ${r.source}, ${r.signalType}, ${r.eventTs}, NOW(), ${r.score}, ${r.magnitude}, ${r.payloadKey}, ${r.src}, ${r.note})`);
         fundEvents += Number(res[0]?.affectedRows ?? 0) > 0 ? 1 : 0;
       }
-      for (const [k, v] of curShares) prevShares.set(k, v);
+      for (const [k, v] of curShares) prevShares.set(k, v.shares);
       prog.item(quarters.indexOf(q) + 1, quarters.length, `${fundRows} rows, ${fundEvents} events`);
     } catch (err) {
       prog.log(`! ${fund.name} ${q.reportDate}: ${String(err).slice(0, 120)}`);

@@ -15,6 +15,8 @@ export function loadFundUniverse(): FundEntry[] {
 export interface Holding13F {
   issuer: string;
   cusip: string;
+  /** titleOfClass: COM (default), PUT, CALL, PRN… — options are signals too */
+  secClass: string;
   valueUsd: number | null; // filed in thousands → ×1000
   shares: number | null;
 }
@@ -35,6 +37,7 @@ export function parseInfoTable(xml: string): Holding13F[] {
     out.push({
       issuer: pick("nameOfIssuer") ?? "",
       cusip,
+      secClass: (pick("titleOfClass") ?? "COM").toUpperCase(),
       valueUsd: v !== null && Number.isFinite(Number(v)) ? Math.round(Number(v) * 1000) : null,
       shares: sh !== null && Number.isFinite(Number(sh)) ? Number(sh) : null,
     });
@@ -80,17 +83,26 @@ const usd = (v: number | null) =>
 const sh = (v: number | null) => (v === null ? "?" : v.toLocaleString("en-US"));
 
 /** Deterministic note for a position event (no LLM). */
-export function eventNote(fundName: string, ev: PositionEvent): string {
+export function eventNote(fundName: string, ev: PositionEvent, secClass = "COM"): string {
+  const cls = secClass === "COM" ? "" : `${secClass} `;
   switch (ev.kind) {
-    case "new": return `${fundName}: new position ${sh(ev.shares)} sh${usd(ev.valueUsd)}`;
-    case "exit": return `${fundName}: exited position (was ${sh(ev.shares)} sh)`;
-    case "change": return `${fundName}: ${ev.deltaPct > 0 ? "+" : ""}${ev.deltaPct}% to ${sh(ev.shares)} sh${usd(ev.valueUsd)}`;
+    case "new": return `${fundName}: new ${cls}position ${sh(ev.shares)} sh${usd(ev.valueUsd)}`;
+    case "exit": return `${fundName}: exited ${cls}position (was ${sh(ev.shares)} sh)`;
+    case "change": return `${fundName}: ${cls}${ev.deltaPct > 0 ? "+" : ""}${ev.deltaPct}% to ${sh(ev.shares)} sh${usd(ev.valueUsd)}`;
   }
 }
 
-/** Event → signals row shape (source "13f", signalType "position"). */
-export function buildPositionRow(fundCik: number, heldCik: number, filing: Filing13F, ev: PositionEvent, note: string) {
-  const score = ev.kind === "new" ? 1 : ev.kind === "exit" ? -1 : Math.max(-1, Math.min(1, Math.round((ev.deltaPct / 100) * 1000) / 1000));
+/**
+ * Event → signals row shape (source "13f", signalType "position").
+ * Options convention (documented, honest): a PUT position reads bearish and a
+ * CALL bullish on the underlying, but at HALF weight — funds hedge, and a put
+ * against a big long book is insurance, not a bet. Commons score full.
+ */
+export function buildPositionRow(fundCik: number, heldCik: number, filing: Filing13F, ev: PositionEvent, note: string, secClass = "COM") {
+  const dir = ev.kind === "new" ? 1 : ev.kind === "exit" ? -1 : Math.max(-1, Math.min(1, ev.deltaPct / 100));
+  const clsSign = secClass === "PUT" ? -1 : 1;
+  const weight = secClass === "COM" ? 1 : 0.5;
+  const score = Math.round(dir * clsSign * weight * 1000) / 1000;
   const magnitude = ev.kind === "change" ? Math.abs(ev.deltaPct) : null;
   return {
     cik: heldCik,
@@ -100,7 +112,7 @@ export function buildPositionRow(fundCik: number, heldCik: number, filing: Filin
     score,
     magnitude,
     note,
-    payloadKey: `13f:pos:${fundCik}:${heldCik}:${filing.accessionNo}`,
+    payloadKey: `13f:pos:${fundCik}:${heldCik}:${secClass}:${filing.accessionNo}`,
     src: "backfill" as const,
   };
 }

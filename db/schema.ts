@@ -653,6 +653,8 @@ export const fundHoldings = mysqlTable(
     fundCik: int("fundCik").notNull(),
     fundName: varchar("fundName", { length: 128 }).notNull(),
     cusip: varchar("cusip", { length: 12 }).notNull(),
+    /** titleOfClass: COM | PUT | CALL | PRN… (DDL 023 — options are signals) */
+    secClass: varchar("secClass", { length: 12 }).notNull().default("COM"),
     heldCik: int("heldCik"),
     issuer: varchar("issuer", { length: 255 }),
     shares: bigint("shares", { mode: "number" }),
@@ -663,7 +665,7 @@ export const fundHoldings = mysqlTable(
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (t) => [
-    uniqueIndex("uq_fund_holding").on(t.fundCik, t.cusip, t.quarterDate),
+    uniqueIndex("uq_fund_holding").on(t.fundCik, t.cusip, t.secClass, t.quarterDate),
     index("idx_fh_held").on(t.heldCik, t.quarterDate),
     index("idx_fh_fund").on(t.fundCik, t.quarterDate),
   ]
@@ -676,6 +678,8 @@ export const cusipMap = mysqlTable(
     cusip: varchar("cusip", { length: 12 }).primaryKey(),
     cik: int("cik"),
     ticker: varchar("ticker", { length: 20 }),
+    exchCode: varchar("exchCode", { length: 16 }),
+    secType: varchar("secType", { length: 48 }),
     mappedAt: timestamp("mappedAt").defaultNow().notNull(),
   }
 );
