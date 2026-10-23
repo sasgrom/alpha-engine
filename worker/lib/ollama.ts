@@ -135,6 +135,7 @@ Reply with ONLY a JSON object, no other text:
 Judge the facts and outlook, not the writing style.
 Rules for "why": start with the fact itself — NEVER begin with "The text", "The filing", "This document"; name concrete figures and events; describe ONLY what the document states — never infer investigations, fraud, or admissions it does not explicitly make.
 ROUTINE PROCEDURAL CONTENT IS NOT NEGATIVE: sworn statements/certifications, exhibit-only filings, cover pages, tables of contents carry no investment signal — score exactly 0 and write "no substantive content" as the whole why. Absence of content is not bad news.
+A document that merely REFERENCES other documents ("see the attached press release", "as described in the exhibit") without containing their substance is also "no substantive content" — never score the absence of data.
 
 TEXT:
 """

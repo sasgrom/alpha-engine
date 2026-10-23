@@ -119,7 +119,11 @@ for (const co of universe) {
     // Widened after prod QA (5d): the model phrases "nothing here" in many
     // dialects ("zero substantive information", "empty procedural document"),
     // and routine SOX sworn statements were misread as investigations.
-    const BOILER = /no substantive|zero substantive|procedural|sworn statements?|under oath|sarbanes|compliance (filing|certification)|only (a )?(table of contents|administrative|xbrl|cover)|cover page|boilerplate|no financial (data|results)|no operational (updates?|data)|empty (procedural )?document/i;
+    // Dialects of "empty doc" keep appearing (prod QA rounds): the doc merely
+    // REFERENCES other documents ("references an attached press release…
+    // rather than substantive operational data… cannot assess") — that is the
+    // same vacuum, not negative content.
+    const BOILER = /no substantive|zero substantive|procedural|sworn statements?|under oath|sarbanes|compliance (filing|certification)|only (a )?(table of contents|administrative|xbrl|cover)|cover page|boilerplate|no financial (data|results)|no operational (updates?|data)|empty (procedural )?document|cannot assess|can't assess|without (including|containing) (the )?(actual|key|financial)|rather than substantive|standard legal disclaimers|does not (include|contain) (the )?(actual|key|financial)/i;
     let parsed = 0, droppedBoiler = 0;
     for (const w of windows) {
       try {
