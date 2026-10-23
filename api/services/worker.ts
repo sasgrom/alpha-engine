@@ -81,7 +81,47 @@ export const workerIngestBodyZ = z.discriminatedUnion("kind", [
     kind: z.literal("digests"),
     rows: z.array(workerDigestRowZ).min(1).max(10),
   }),
+  z.object({
+    kind: z.literal("holdings"),
+    rows: z.array(workerHoldingRowZ).min(1).max(500),
+  }),
 ]);
+/** 5g: one 13F holding row (positions go through ingest like signals do). */
+export const workerHoldingRowZ = z.object({
+  fundCik: z.number().int(),
+  fundName: z.string().max(128),
+  cusip: z.string().max(12),
+  secClass: z.string().max(12).default("COM"),
+  heldCik: z.number().int().nullish(),
+  issuer: z.string().max(255).nullish(),
+  shares: z.number().nullish(),
+  valueUsd: z.number().nullish(),
+  quarterDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  accessionNo: z.string().max(25),
+  tier: z.string().max(16).nullish(),
+});
+export type WorkerHoldingRow = z.infer<typeof workerHoldingRowZ>;
+
+/** Upsert-free insert (INSERT IGNORE on the uq) — redeliveries are free. */
+export async function ingestHoldings(rows: WorkerHoldingRow[]): Promise<{ accepted: number; skippedDupes: number }> {
+  const db = getDb();
+  let accepted = 0;
+  const CHUNK = 500;
+  for (let i = 0; i < rows.length; i += CHUNK) {
+    const res: any = await db.execute(sql`INSERT IGNORE INTO fund_holdings
+      (fundCik, fundName, cusip, secClass, heldCik, issuer, shares, valueUsd, quarterDate, accessionNo, tier)
+      VALUES ${sql.join(
+        rows.slice(i, i + CHUNK).map(
+          (r) =>
+            sql`(${r.fundCik}, ${r.fundName}, ${r.cusip}, ${r.secClass}, ${r.heldCik ?? null}, ${r.issuer ?? null}, ${r.shares ?? null}, ${r.valueUsd ?? null}, ${r.quarterDate}, ${r.accessionNo}, ${r.tier ?? null})`
+        ),
+        sql`, `
+      )}`);
+    accepted += Number(res[0]?.affectedRows ?? 0);
+  }
+  return { accepted, skippedDupes: rows.length - accepted };
+}
+
 export type WorkerIngestBody = z.infer<typeof workerIngestBodyZ>;
 
 /**
