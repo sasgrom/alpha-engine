@@ -592,7 +592,7 @@ export const signals = mysqlTable(
   {
     id: serial("id").primaryKey(),
     cik: int("cik").notNull(),
-    /** gdelt | stocktwits | reddit | youtube | trends | edgar */
+    /** gdelt | stocktwits | reddit | youtube | trends | edgar | 13f */
     source: varchar("source", { length: 24 }).notNull(),
     /** tone | buzz | label */
     signalType: varchar("signalType", { length: 24 }).notNull(),
@@ -641,6 +641,45 @@ export const digests = mysqlTable(
   (t) => [uniqueIndex("uq_digests").on(t.kind, t.scope, t.forDate)]
 );
 export type Digest = typeof digests.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// Iteration 5f — 13F institutional holdings (curated manager universe) and
+// the CUSIP crosswalk cache. Positions are deterministic data, never LLM.
+// ---------------------------------------------------------------------------
+export const fundHoldings = mysqlTable(
+  "fund_holdings",
+  {
+    id: serial("id").primaryKey(),
+    fundCik: int("fundCik").notNull(),
+    fundName: varchar("fundName", { length: 128 }).notNull(),
+    cusip: varchar("cusip", { length: 12 }).notNull(),
+    heldCik: int("heldCik"),
+    issuer: varchar("issuer", { length: 255 }),
+    shares: bigint("shares", { mode: "number" }),
+    valueUsd: bigint("valueUsd", { mode: "number" }),
+    quarterDate: date("quarterDate", { mode: "string" }).notNull(),
+    accessionNo: varchar("accessionNo", { length: 25 }).notNull(),
+    tier: varchar("tier", { length: 16 }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex("uq_fund_holding").on(t.fundCik, t.cusip, t.quarterDate),
+    index("idx_fh_held").on(t.heldCik, t.quarterDate),
+    index("idx_fh_fund").on(t.fundCik, t.quarterDate),
+  ]
+);
+export type FundHolding = typeof fundHoldings.$inferSelect;
+
+export const cusipMap = mysqlTable(
+  "cusip_map",
+  {
+    cusip: varchar("cusip", { length: 12 }).primaryKey(),
+    cik: int("cik"),
+    ticker: varchar("ticker", { length: 20 }),
+    mappedAt: timestamp("mappedAt").defaultNow().notNull(),
+  }
+);
+export type CusipMapRow = typeof cusipMap.$inferSelect;
 
 // ---------------------------------------------------------------------------
 // Iteration 4i (D42) — insider trades from Form 4 XML. Schema only; the

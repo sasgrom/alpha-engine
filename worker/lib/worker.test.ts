@@ -403,3 +403,54 @@ describe("digest: buildDigestPrompt", () => {
     expect(big.length).toBeLessThan(65000);
   });
 });
+
+// ---------------------------------------------------------------------------
+// 5f — 13F: info table parser, quarter dedupe, position events
+// ---------------------------------------------------------------------------
+import { parseInfoTable, latestPerQuarter, positionEvent, eventNote, buildPositionRow, loadFundUniverse } from "./thirteenf";
+
+describe("13f: parseInfoTable", () => {
+  const xml = `<?xml version="1.0"?><n1:informationTable xmlns:n1="http://www.sec.gov/edgar/document/thirteenf/informationtable">
+    <n1:infoTable><n1:nameOfIssuer>APPLE INC</n1:nameOfIssuer><n1:titleOfClass>COM</n1:titleOfClass>
+      <n1:cusip>037833100</n1:cusip><n1:value>174000</n1:value>
+      <n1:shrsOrPrnAmt><n1:sshPrnamt>1000</n1:sshPrnamt><n1:sshPrnamtType>SH</n1:sshPrnamtType></n1:shrsOrPrnAmt>
+    </n1:infoTable>
+    <n1:infoTable><n1:nameOfIssuer>NVIDIA CORP</n1:nameOfIssuer><n1:cusip>67066G104</n1:cusip>
+      <n1:value>2500</n1:value><n1:shrsOrPrnAmt><n1:sshPrnamt>500</n1:sshPrnamt></n1:shrsOrPrnAmt>
+    </n1:infoTable></n1:informationTable>`;
+  it("parses namespace-agnostic infoTable blocks, value thousands → usd", () => {
+    const rows = parseInfoTable(xml);
+    expect(rows).toHaveLength(2);
+    expect(rows[0]).toEqual({ issuer: "APPLE INC", cusip: "037833100", valueUsd: 174_000_000, shares: 1000 });
+    expect(rows[1].cusip).toBe("67066G104");
+    expect(rows[1].valueUsd).toBe(2_500_000);
+  });
+});
+
+describe("13f: latestPerQuarter + events", () => {
+  it("amendment supersedes the original for the same quarter", () => {
+    const fs = [
+      { accessionNo: "a1", form: "13F-HR", filingDate: "2026-02-10", reportDate: "2025-12-31" },
+      { accessionNo: "a2", form: "13F-HR/A", filingDate: "2026-03-01", reportDate: "2025-12-31" },
+      { accessionNo: "a3", form: "13F-HR", filingDate: "2026-05-10", reportDate: "2026-03-31" },
+    ];
+    const out = latestPerQuarter(fs);
+    expect(out.map((f) => f.accessionNo)).toEqual(["a2", "a3"]);
+  });
+  it("events fire only on new/exit/±30%", () => {
+    expect(positionEvent(null, 1000, 5e6)).toEqual({ kind: "new", shares: 1000, valueUsd: 5e6 });
+    expect(positionEvent(1000, 0, null)).toEqual({ kind: "exit", shares: 1000, valueUsd: null });
+    expect(positionEvent(1000, 1400, null)?.kind).toBe("change");
+    expect(positionEvent(1000, 1200, null)).toBeNull(); // +20% — noise
+    const ev = positionEvent(1000, 1400, 1.4e9);
+    expect(eventNote("Citadel Advisors", ev!)).toBe("Citadel Advisors: +40% to 1,400 sh ($1.4B)");
+    expect(buildPositionRow(1423053, 320193, { accessionNo: "acc1", form: "13F-HR", filingDate: "2026-02-14", reportDate: "2025-12-31" }, ev!, "n").payloadKey)
+      .toBe("13f:pos:1423053:320193:acc1");
+  });
+  it("fund universe carries verified CIKs", () => {
+    const f = loadFundUniverse();
+    expect(f.length).toBeGreaterThanOrEqual(28);
+    expect(f.find((x) => x.name === "Berkshire Hathaway")?.cik).toBe(1067983);
+    expect(f.find((x) => x.name === "Citadel Advisors")?.cik).toBe(1423053);
+  });
+});

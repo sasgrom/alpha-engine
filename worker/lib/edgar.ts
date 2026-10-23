@@ -71,8 +71,9 @@ export function loadEdgarUniverse(): EdgarCompany[] {
 // --- submissions API ----------------------------------------------------------
 export interface EdgarFiling {
   accessionNo: string;   // "0000320193-24-000123"
-  form: string;          // 10-K | 10-Q | 8-K (amendments filtered out)
+  form: string;          // 10-K | 10-Q | 8-K | /A | 13F-HR | SC 13D…
   filingDate: string;    // YYYY-MM-DD
+  reportDate: string;    // period of report (quarter for 13F); "" when absent
   primaryDoc: string;    // "aapl-20240928.htm"
   /** "YYYY-MM-DD HH:MM:SS" UTC from acceptanceDateTime; filingDate 00:00:00 fallback */
   eventTs: string;
@@ -99,17 +100,18 @@ function acceptanceToTs(raw: string | undefined, filingDate: string): string {
   return `${filingDate} 00:00:00`;
 }
 
-function rowsFromBlock(block: any): EdgarFiling[] {
+function rowsFromBlock(block: any, forms: Set<string>): EdgarFiling[] {
   const n = block?.accessionNumber?.length ?? 0;
   const out: EdgarFiling[] = [];
   for (let i = 0; i < n; i++) {
     const form = String(block.form?.[i] ?? "");
-    if (!EDGAR_FORMS.has(form)) continue; // amendments end in "/A" — excluded
+    if (!forms.has(form)) continue;
     const filingDate = String(block.filingDate?.[i] ?? "");
     out.push({
       accessionNo: String(block.accessionNumber[i]),
       form,
       filingDate,
+      reportDate: String(block.reportDate?.[i] ?? ""),
       primaryDoc: String(block.primaryDocument?.[i] ?? ""),
       eventTs: acceptanceToTs(block.acceptanceDateTime?.[i], filingDate),
     });
@@ -118,13 +120,13 @@ function rowsFromBlock(block: any): EdgarFiling[] {
 }
 
 /** Full filing history for a CIK: recent block + every archived files[] page. */
-export async function listFilings(cik: number): Promise<EdgarFiling[]> {
+export async function listFilings(cik: number, forms: Set<string> = EDGAR_FORMS): Promise<EdgarFiling[]> {
   const padded = String(cik).padStart(10, "0");
   const sub = await (await secGet(`${SEC_DATA_BASE}/submissions/CIK${padded}.json`)).json() as any;
-  const all = rowsFromBlock(sub?.filings?.recent);
+  const all = rowsFromBlock(sub?.filings?.recent, forms);
   for (const f of sub?.filings?.files ?? []) {
     const page = await (await secGet(`${SEC_DATA_BASE}/submissions/${f.name}`)).json() as any;
-    all.push(...rowsFromBlock(page));
+    all.push(...rowsFromBlock(page, forms));
   }
   // dedupe by accession (recent overlaps first archive page on busy filers)
   const seen = new Set<string>();
