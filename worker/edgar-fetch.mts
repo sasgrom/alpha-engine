@@ -72,7 +72,7 @@ for (const co of universe) {
   // snapshot carried CIK 5271, real is 5272; 404 crashed the whole run)
   let filingsAll: EdgarFiling[];
   try { filingsAll = await listFilings(co.cik); }
-  catch (err) { prog.log(`✗ ${co.ticker} (CIK ${co.cik}): company-level error, SKIPPED — ${String(err).slice(0, 150)}`); continue; }
+  catch (err) { prog.log(`x ${co.ticker} (CIK ${co.cik}): company-level error, SKIPPED — ${String(err).slice(0, 150)}`); continue; }
   const filings = filingsAll.filter((f) => !from || f.filingDate >= from);
   const manifest = loadManifest(co.cik);
   const known = new Map(manifest.map((m) => [m.accessionNo, m]));

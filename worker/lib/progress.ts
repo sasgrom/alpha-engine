@@ -35,16 +35,16 @@ export function startProgress(label: string, config?: string): Progress {
   let stageT0 = runT0;
   const p: Progress = {
     log: (msg) => console.log(`[${label} ${hhmmss()}] ${msg}`),
-    stage: (msg) => { stageT0 = Date.now(); p.log(`▸ ${msg}`); },
+    stage: (msg) => { stageT0 = Date.now(); p.log(`>> ${msg}`); },
     item: (done, total, extra) => {
       const el = Date.now() - stageT0;
       const rate = done > 0 && el > 0 ? done / (el / 60000) : 0;
       const eta = rate > 0 ? ` | ETA ${dur((total - done) / rate * 60000)}` : "";
       p.log(`${done}/${total}${extra ? ` (${extra})` : ""} | ${rate.toFixed(1)}/min${eta} | elapsed ${dur(el)}`);
     },
-    stageDone: (msg) => p.log(`✓ ${msg} | stage ${dur(Date.now() - stageT0)}`),
-    done: (msg) => p.log(`■ ${msg} | TOTAL ${dur(Date.now() - runT0)} (started ${new Date(runT0).toLocaleString("en-GB")})`),
+    stageDone: (msg) => p.log(`OK ${msg} | stage ${dur(Date.now() - stageT0)}`),
+    done: (msg) => p.log(`== ${msg} | TOTAL ${dur(Date.now() - runT0)} (started ${new Date(runT0).toLocaleString("en-GB")})`),
   };
-  p.log(`■ started ${new Date(runT0).toLocaleString("en-GB")}${config ? ` | ${config}` : ""}`);
+  p.log(`== started ${new Date(runT0).toLocaleString("en-GB")}${config ? ` | ${config}` : ""}`);
   return p;
 }
