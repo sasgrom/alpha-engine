@@ -11,7 +11,8 @@ import { getDb } from "../queries/connection";
 import { companies, documents, documentSections, seriesPoints, seriesHealth, companyDataHealth, filings, sentimentScores, insiderTrades, signals, externalCache } from "@db/schema";
 import { storage } from "../lib/storage";
 import { createJob } from "../services/runner";
-import { DOCUMENT_FORM_SCOPE } from "../services/documents";
+import { DOCUMENT_FORM_SCOPE, derivePlaintext } from "../services/documents";
+import { TRPCError } from "@trpc/server";
 import { computeCompanyFactors } from "../services/factors";
 import { computeCompanyValue } from "../services/valuation";
 import { cachedExternal } from "../services/ext-cache";
@@ -86,6 +87,10 @@ export const documentsRouter = createRouter({
   /**
    * Plaintext excerpt for in-browser viewing. The text is read server-side
    * from object storage by key (keys persist, URLs never do).
+   * LOCAL fallback (5f): a home dev box has no object storage (api/lib throws
+   * a raw platform error — never leak it to the UI); instead we serve from
+   * the worker EDGAR cache (worker/cache/edgar/<cik>/<accn>[.ex].htm) when
+   * the cached document matches the manifest. UI copy stays ENGLISH-only.
    */
   text: authedQuery
     .input(z.object({ id: z.number(), maxChars: z.number().default(30000) }))
@@ -94,15 +99,29 @@ export const documentsRouter = createRouter({
       const [doc] = await db.select().from(documents).where(eq(documents.id, input.id)).limit(1);
       if (!doc) throw new Error("document not found");
       if (!doc.textKey) throw new Error("no derived text available");
-      const bytes = await storage.readFile({ fileKey: doc.textKey });
-      const text = Buffer.from(bytes).toString("utf-8");
-      return {
-        docName: doc.docName,
-        form: doc.form,
-        length: text.length,
-        excerpt: text.slice(0, input.maxChars),
-        truncated: text.length > input.maxChars,
-      };
+      try {
+        const bytes = await storage.readFile({ fileKey: doc.textKey });
+        const text = Buffer.from(bytes).toString("utf-8");
+        return {
+          docName: doc.docName, form: doc.form, length: text.length,
+          excerpt: text.slice(0, input.maxChars), truncated: text.length > input.maxChars,
+          source: "storage" as const,
+        };
+      } catch {
+        const cached = readWorkerCacheDoc(doc.cik, doc.accessionNo, doc.docName);
+        if (cached) {
+          const text = derivePlaintext(cached);
+          return {
+            docName: doc.docName, form: doc.form, length: text.length,
+            excerpt: text.slice(0, input.maxChars), truncated: text.length > input.maxChars,
+            source: "local-cache" as const,
+          };
+        }
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Document text is not available on this copy: object storage is not provisioned here. Open it on the prod site or via the SEC link.",
+        });
+      }
     }),
 
   /** Short-lived URL to the immutable raw document (for iframe/download). */
@@ -112,10 +131,41 @@ export const documentsRouter = createRouter({
       const db = getDb();
       const [doc] = await db.select().from(documents).where(eq(documents.id, input.id)).limit(1);
       if (!doc?.storageKey) throw new Error("raw document not in cloud storage");
-      const { url } = await storage.getPresignedUrl({ key: doc.storageKey });
-      return { url };
+      try {
+        const { url } = await storage.getPresignedUrl({ key: doc.storageKey });
+        return { url };
+      } catch {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Raw download is not available on this copy: object storage is not provisioned here. Use the prod site or the SEC link.",
+        });
+      }
     }),
 });
+
+// ---------------------------------------------------------------------------
+// 5f local document fallback helpers — read the worker EDGAR cache on the
+// home box. Kept here (not api/lib) per the read-only api/lib rule.
+// ---------------------------------------------------------------------------
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+
+/** Match a documents row to a cached worker file via the cache manifest. */
+function readWorkerCacheDoc(cik: number, accessionNo: string, docName: string): string | null {
+  try {
+    const dir = path.resolve(process.cwd(), "worker", "cache", "edgar", String(cik));
+    const manifest = JSON.parse(readFileSync(path.join(dir, "manifest.json"), "utf8")) as any[];
+    const entry = manifest.find((m) => m.accessionNo === accessionNo);
+    const base = accessionNo.replace(/-/g, "");
+    let file: string | null = null;
+    if (entry?.docName === docName) file = path.join(dir, `${base}.htm`);
+    else if (entry?.exFile === docName) file = path.join(dir, `${base}.ex.htm`);
+    if (file && existsSync(file)) return readFileSync(file, "utf8");
+    return null;
+  } catch {
+    return null;
+  }
+}
 
 // ---------------------------------------------------------------------------
 // series — canonical quarterly time series
