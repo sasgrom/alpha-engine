@@ -47,6 +47,8 @@ export default function Dashboard() {
   const s = stats.data;
   // 4m: the FRED regime pack card (Stage 4 seed)
   const macro = trpc.dashboard.macro.useQuery(undefined, { refetchInterval: 60000 });
+  // 5e: morning brief written by the home LLM from yesterday's signals
+  const digest = trpc.digests.latest.useQuery(undefined, { refetchInterval: 120000 });
 
   return (
     <AppLayout title="Mission Control">
@@ -92,6 +94,19 @@ export default function Dashboard() {
           </Button>
         </Link>
       </div>
+      )}
+
+      {/* 5e: morning brief — home-LLM digest of yesterday's signals */}
+      {digest.data && (
+        <div className="t-panel px-4 py-3 mt-5">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="t-label">Morning brief — {digest.data.forDate}</span>
+            <span className="t-mono text-[9px] text-muted-foreground/70 ml-auto">
+              {digest.data.model ?? "llm"} · derived from signals, verify against sources
+            </span>
+          </div>
+          <div className="whitespace-pre-wrap text-[12.5px] leading-relaxed text-foreground/90">{digest.data.body}</div>
+        </div>
       )}
 
       {/* 4m (D46): the FRED regime pack — Stage 4 seed. Latest value per

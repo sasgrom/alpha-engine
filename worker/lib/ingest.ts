@@ -23,6 +23,31 @@ export interface IngestResult {
   worker?: string;
   accepted?: number;
   skippedDupes?: number;
+  upserted?: number;
+}
+
+/** 5e: one digest row (morning brief). */
+export interface DigestRow {
+  kind?: string;
+  forDate: string; // YYYY-MM-DD
+  body: string;
+  model?: string | null;
+  meta?: string | null;
+}
+
+/** Post digest rows (upsert semantics server-side). Same transport + key. */
+export async function postDigests(rows: DigestRow[]): Promise<{ upserted: number }> {
+  const key = process.env.WORKER_KEY;
+  if (!key) throw new Error("WORKER_KEY missing from environment (.env)");
+  const url = process.env.INGEST_URL ?? PROD_INGEST_URL;
+  const res = await fetchJson<IngestResult>(url, {
+    method: "POST",
+    headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
+    body: JSON.stringify({ kind: "digests", rows }),
+    retries: 3,
+  });
+  if (!res.ok) throw new Error(`ingest failed: ${JSON.stringify(res)}`);
+  return { upserted: res.upserted ?? 0 };
 }
 
 const CHUNK = 500; // hosted-MySQL packet rule, enforced server-side too

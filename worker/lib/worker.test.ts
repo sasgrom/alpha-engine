@@ -7,6 +7,7 @@ import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } fr
 import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from "./stocktwits";
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
 import { extractScore, extractVerdict, sanitizeWhy, tonePrompt } from "./ollama";
+import { buildDigestPrompt } from "./digest";
 import { isThinContent } from "./edgar";
 
 describe("ollama: extractScore", () => {
@@ -353,5 +354,31 @@ describe("edgar universe", () => {
     expect(u.find((c) => c.ticker === "IBM")?.cik).toBe(51143);
     expect(u.find((c) => c.ticker === "META")?.cik).toBe(1326801);
     expect(u.find((c) => c.ticker === "LMT")?.cik).toBe(936468);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 5e — digest prompt builder
+// ---------------------------------------------------------------------------
+describe("digest: buildDigestPrompt", () => {
+  const rows = [
+    { ticker: "NVDA", source: "edgar", signalType: "tone", eventTs: "2026-10-22 16:00:00", score: 0.95, magnitude: 1, note: "Record Q2 revenue of $96.2B driven by Blackwell." },
+    { ticker: "NVDA", source: "stocktwits", signalType: "tone", eventTs: "2026-10-22 18:00:00", score: 0.7, magnitude: 30, note: "Crowd hyped on data center demand, some valuation worry." },
+    { ticker: "PLD", source: "stocktwits", signalType: "label", eventTs: "2026-10-22 15:00:00", score: 1, magnitude: 5, note: null },
+  ];
+  it("groups by ticker, keeps SEC facts and crowd chatter as separate items", () => {
+    const p = buildDigestPrompt("2026-10-23", rows);
+    expect(p).toContain("NVDA:");
+    expect(p).toContain("[edgar/tone] mood +0.95");
+    expect(p).toContain("Record Q2 revenue of $96.2B");
+    expect(p).toContain("[stocktwits/label] mood +1.00");
+    expect(p).toContain("never blend them");
+    expect(p).toContain("2026-10-23");
+  });
+  it("marks scoreless rows n/a and caps input", () => {
+    const p = buildDigestPrompt("2026-10-23", [{ ticker: "T", source: "stocktwits", signalType: "buzz", eventTs: "x", score: null, magnitude: 30, note: null }]);
+    expect(p).toContain("mood n/a, 30 msgs");
+    const big = buildDigestPrompt("2026-10-23", Array.from({ length: 300 }, () => ({ ...rows[0], note: "x".repeat(300) })));
+    expect(big.length).toBeLessThan(65000);
   });
 });

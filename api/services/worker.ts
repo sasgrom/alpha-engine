@@ -19,7 +19,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import { and, eq, isNull, sql } from "drizzle-orm";
 import { getDb } from "../queries/connection";
-import { signals, workerKeys } from "@db/schema";
+import { digests, signals, workerKeys } from "@db/schema";
 
 const keyHashOf = (key: string) => createHash("sha256").update(key).digest("hex");
 
@@ -61,11 +61,44 @@ export const workerSignalRowZ = z.object({
 });
 export type WorkerSignalRow = z.infer<typeof workerSignalRowZ>;
 
-export const workerIngestBodyZ = z.object({
-  kind: z.literal("signals"), // forward-compatible: prices/macro join later
-  rows: z.array(workerSignalRowZ).min(1).max(500), // packet rule (D23 lineage)
+/** 5e: one digest row (morning brief) from the worker. */
+export const workerDigestRowZ = z.object({
+  kind: z.string().max(24).default("morning"),
+  forDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  body: z.string().min(1).max(8000),
+  model: z.string().max(64).nullish(),
+  meta: z.string().max(2000).nullish(), // JSON string: inputs used (row count, window)
 });
+export type WorkerDigestRow = z.infer<typeof workerDigestRowZ>;
+
+export const workerIngestBodyZ = z.discriminatedUnion("kind", [
+  z.object({
+    kind: z.literal("signals"),
+    rows: z.array(workerSignalRowZ).min(1).max(500), // packet rule (D23 lineage)
+  }),
+  z.object({
+    kind: z.literal("digests"),
+    rows: z.array(workerDigestRowZ).min(1).max(10),
+  }),
+]);
 export type WorkerIngestBody = z.infer<typeof workerIngestBodyZ>;
+
+/**
+ * Upsert digests by (kind, forDate): a redigest of the same date REFRESHES the
+ * body (derived content, honest to recompute); inputs keep their own lineage.
+ */
+export async function ingestDigests(rows: WorkerDigestRow[]): Promise<{ upserted: number }> {
+  const db = getDb();
+  const now = new Date().toISOString().slice(0, 19).replace("T", " ");
+  let upserted = 0;
+  for (const r of rows) {
+    const res: any = await db.execute(sql`INSERT INTO digests (kind, forDate, body, model, meta, createdAt)
+      VALUES (${r.kind}, ${r.forDate}, ${r.body}, ${r.model ?? null}, ${r.meta ?? null}, ${now})
+      ON DUPLICATE KEY UPDATE body = VALUES(body), model = VALUES(model), meta = VALUES(meta), createdAt = VALUES(createdAt)`);
+    upserted += Number(res[0]?.affectedRows ?? 0) > 0 ? 1 : 0;
+  }
+  return { upserted };
+}
 
 /**
  * Ingest a validated signals batch. Returns honest counts: accepted (newly

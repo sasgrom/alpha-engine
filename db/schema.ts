@@ -622,6 +622,25 @@ export const signals = mysqlTable(
 export type Signal = typeof signals.$inferSelect;
 
 // ---------------------------------------------------------------------------
+// Iteration 5e — digests: LLM morning briefs derived from the signals store.
+// Upsert by (kind, forDate) — a redigest refreshes, never duplicates.
+// ---------------------------------------------------------------------------
+export const digests = mysqlTable(
+  "digests",
+  {
+    id: serial("id").primaryKey(),
+    kind: varchar("kind", { length: 24 }).notNull().default("morning"),
+    forDate: date("forDate", { mode: "string" }).notNull(),
+    body: text("body").notNull(),
+    model: varchar("model", { length: 64 }),
+    meta: text("meta"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("uq_digests").on(t.kind, t.forDate)]
+);
+export type Digest = typeof digests.$inferSelect;
+
+// ---------------------------------------------------------------------------
 // Iteration 4i (D42) — insider trades from Form 4 XML. Schema only; the
 // worker/ETL populates it (4j). filingDate is the point-in-time anchor.
 // ---------------------------------------------------------------------------

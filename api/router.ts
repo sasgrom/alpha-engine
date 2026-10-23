@@ -10,6 +10,7 @@ import { screenerRouter, eventsRouter } from "./routers/screener";
 import { messagesRouter } from "./routers/messages";
 import { activityRouter } from "./routers/activity";
 import { workersLocalRouter } from "./routers/workers-local";
+import { digestsRouter } from "./routers/digests";
 import { workersMonitorRouter } from "./routers/workers-monitor";
 
 export const appRouter = createRouter({
@@ -34,6 +35,7 @@ export const appRouter = createRouter({
   admin: adminRouter,
   workersLocal: workersLocalRouter,
   workersMonitor: workersMonitorRouter,
+  digests: digestsRouter,
 });
 
 export type AppRouter = typeof appRouter;
