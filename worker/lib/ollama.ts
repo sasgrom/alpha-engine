@@ -133,7 +133,8 @@ Reply with ONLY a JSON object, no other text:
 {"score": <number from -1.0 to 1.0>, "why": "<3-4 short sentences for a human reader: what the company reported or announced, the key numbers/facts, and why it matters to investors>"}
 -1.0 = very negative, 0 = neutral or mixed, +1.0 = very positive.
 Judge the facts and outlook, not the writing style.
-Rules for "why": start with the fact itself — NEVER begin with "The text", "The filing", "This document"; name concrete figures and events; if the content carries no substance (cover page, table of contents), write "no substantive content" as the whole why.
+Rules for "why": start with the fact itself — NEVER begin with "The text", "The filing", "This document"; name concrete figures and events; describe ONLY what the document states — never infer investigations, fraud, or admissions it does not explicitly make.
+ROUTINE PROCEDURAL CONTENT IS NOT NEGATIVE: sworn statements/certifications, exhibit-only filings, cover pages, tables of contents carry no investment signal — score exactly 0 and write "no substantive content" as the whole why. Absence of content is not bad news.
 
 TEXT:
 """

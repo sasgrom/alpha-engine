@@ -116,7 +116,10 @@ for (const co of universe) {
     // The model sometimes SCORES boilerplate (−1.0 for "only a table of
     // contents") instead of declaring no substance — the why leaks the truth.
     // Such a window is noise: drop its score, keep the filing if others survive.
-    const BOILER = /no substantive|only (a )?(table of contents|administrative|xbrl|cover)|cover page|boilerplate/i;
+    // Widened after prod QA (5d): the model phrases "nothing here" in many
+    // dialects ("zero substantive information", "empty procedural document"),
+    // and routine SOX sworn statements were misread as investigations.
+    const BOILER = /no substantive|zero substantive|procedural|sworn statements?|under oath|sarbanes|compliance (filing|certification)|only (a )?(table of contents|administrative|xbrl|cover)|cover page|boilerplate|no financial (data|results)|no operational (updates?|data)|empty (procedural )?document/i;
     let parsed = 0, droppedBoiler = 0;
     for (const w of windows) {
       try {
