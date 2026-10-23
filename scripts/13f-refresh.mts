@@ -30,6 +30,25 @@ const SLEEP = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const db = getDb();
 const prog = startProgress("13f", `quarters=${QUARTERS}`);
 
+// --- honest-context caches (5g) -------------------------------------------------
+const sharesOutCache = new Map<number, number | null>();
+async function pctOfCompany(cik: number, shares: number): Promise<number | null> {
+  if (!sharesOutCache.has(cik)) {
+    const [r]: any = await db.execute(sql`SELECT val FROM facts WHERE cik=${cik} AND concept='EntityCommonStockSharesOutstanding' ORDER BY endDate DESC LIMIT 1`);
+    sharesOutCache.set(cik, Number(r[0]?.val ?? 0) || null);
+  }
+  const out = sharesOutCache.get(cik);
+  return out ? (shares / out) * 100 : null;
+}
+const holdersCache = new Map<string, Map<number, number>>();
+async function holdersOf(cik: number, quarterDate: string): Promise<number | null> {
+  if (!holdersCache.has(quarterDate)) {
+    const [r]: any = await db.execute(sql`SELECT heldCik, COUNT(DISTINCT fundCik) n FROM fund_holdings WHERE quarterDate=${quarterDate} AND secClass='COM' GROUP BY heldCik`);
+    holdersCache.set(quarterDate, new Map(r.map((x: any) => [Number(x.heldCik), Number(x.n)])));
+  }
+  return holdersCache.get(quarterDate)?.get(cik) ?? null;
+}
+
 // company registry (only mapped-to-our-companies holdings are stored)
 const [companies]: any = await db.execute(sql`SELECT cik FROM companies`);
 const ourCiks = new Set<number>(companies.map((c: any) => Number(c.cik)));
@@ -82,6 +101,70 @@ async function mapCusips(cusips: string[]): Promise<Map<string, { cik: number | 
 }
 
 const funds = loadFundUniverse(UNIVERSE_FILE).filter((f) => !ONLY || f.name.toLowerCase().includes(ONLY));
+
+// --rebuild-events: recompute event rows PURELY from stored fund_holdings
+// (no fetching). Needed after note-format upgrades — the seen-quarter guard
+// otherwise never regenerates notes. Run with DELETE FROM signals WHERE
+// source='13f' first (keys are stable: 13f:pos:fund:cik:class:accn).
+const REBUILD = process.argv.includes("--rebuild-events");
+if (REBUILD) {
+  let rebuilt = 0;
+  for (const fund of funds.filter((f) => SIGNAL_TIERS.has(f.tier))) {
+    const [qs]: any = await db.execute(sql`SELECT DISTINCT quarterDate FROM fund_holdings WHERE fundCik=${fund.cik} ORDER BY quarterDate`);
+    const quarters = qs.map((r: any) => String(r.quarterDate).slice(0, 10));
+    for (let i = 1; i < quarters.length; i++) {
+      const [prevQ, curQ] = [quarters[i - 1], quarters[i]];
+      const load = async (q: string) => {
+        const [rows]: any = await db.execute(sql`SELECT heldCik, secClass, shares, valueUsd, accessionNo FROM fund_holdings WHERE fundCik=${fund.cik} AND quarterDate=${q} AND heldCik IS NOT NULL`);
+        const m = new Map<string, { cik: number; cls: string; shares: number; valueUsd: number | null; accn: string }>();
+        for (const r of rows) {
+          const k = `${r.heldCik}:${r.secClass ?? "COM"}`;
+          const cur = m.get(k) ?? { cik: Number(r.heldCik), cls: r.secClass ?? "COM", shares: 0, valueUsd: 0, accn: String(r.accessionNo) };
+          cur.shares += Number(r.shares ?? 0);
+          cur.valueUsd = (cur.valueUsd ?? 0) + Number(r.valueUsd ?? 0);
+          m.set(k, cur);
+        }
+        return m;
+      };
+      const prev = await load(prevQ), cur = await load(curQ);
+      const [tot]: any = await db.execute(sql`SELECT SUM(valueUsd) s FROM fund_holdings WHERE fundCik=${fund.cik} AND quarterDate=${curQ}`);
+      const fundTotal = Number(tot[0]?.s ?? 0) || null;
+      const [pTot]: any = await db.execute(sql`SELECT SUM(valueUsd) s FROM fund_holdings WHERE fundCik=${fund.cik} AND quarterDate=${prevQ}`);
+      const prevTotal = Number(pTot[0]?.s ?? 0) || fundTotal;
+      const filing = { accessionNo: cur.values().next().value?.accn ?? "", form: "13F-HR", filingDate: curQ, reportDate: curQ };
+      const ctxFor = async (cik: number, shares: number | null, valueUsd: number | null, totalUsd: number | null) => ({
+        valueUsd,
+        pctFund: valueUsd && totalUsd ? (valueUsd / totalUsd) * 100 : null,
+        pctCo: shares ? await pctOfCompany(cik, shares) : null,
+        holders: await holdersOf(cik, curQ),
+      });
+      for (const [k, c] of cur) {
+        const ev = positionEvent(prev.get(k)?.shares ?? null, c.shares, null);
+        if (!ev) continue;
+        const note = eventNote(fund.name, ev, c.cls, await ctxFor(c.cik, c.shares, c.valueUsd || null, fundTotal));
+        const row = buildPositionRow(fund.cik, c.cik, filing, ev, note, c.cls);
+        const res: any = await db.execute(sql`INSERT IGNORE INTO signals (cik, source, signalType, eventTs, ingestedAt, score, magnitude, payloadKey, src, note)
+          VALUES (${row.cik}, ${row.source}, ${row.signalType}, ${row.eventTs}, NOW(), ${row.score}, ${row.magnitude}, ${row.payloadKey}, ${row.src}, ${row.note})`);
+        rebuilt += Number(res[0]?.affectedRows ?? 0) > 0 ? 1 : 0;
+      }
+      for (const [k, p] of prev) {
+        if (p.shares > 0 && !cur.has(k)) {
+          const ev = positionEvent(p.shares, 0, null);
+          if (!ev) continue;
+          const note = eventNote(fund.name, ev, p.cls, await ctxFor(p.cik, p.shares, p.valueUsd || null, prevTotal));
+          const row = buildPositionRow(fund.cik, p.cik, filing, ev, note, p.cls);
+          const res: any = await db.execute(sql`INSERT IGNORE INTO signals (cik, source, signalType, eventTs, ingestedAt, score, magnitude, payloadKey, src, note)
+            VALUES (${row.cik}, ${row.source}, ${row.signalType}, ${row.eventTs}, NOW(), ${row.score}, ${row.magnitude}, ${row.payloadKey}, ${row.src}, ${row.note})`);
+          rebuilt += Number(res[0]?.affectedRows ?? 0) > 0 ? 1 : 0;
+        }
+      }
+    }
+    prog.log(`${fund.name}: events rebuilt so far ${rebuilt}`);
+  }
+  prog.done(`rebuild-events: ${rebuilt} rows inserted`);
+  process.exit(0);
+}
+
 let totalRows = 0, totalEvents = 0;
 for (const fund of funds) {
   prog.stage(`${fund.name} [${fund.tier}]`);
@@ -91,14 +174,21 @@ for (const fund of funds) {
   const quarters = latestPerQuarter(filings.map((f) => ({ accessionNo: f.accessionNo, form: f.form, filingDate: f.filingDate, reportDate: f.reportDate || f.filingDate }))).slice(-QUARTERS);
   if (quarters.length === 0) { prog.stageDone(`${fund.name}: no 13F filings`); continue; }
 
-  // previous-quarter shares per heldCik:secClass, seeded from the DB
-  const prevShares = new Map<string, number>();
-  const [seed]: any = await db.execute(sql`SELECT heldCik, secClass, shares, quarterDate FROM fund_holdings WHERE fundCik = ${fund.cik} AND heldCik IS NOT NULL ORDER BY quarterDate`);
+  // previous-quarter shares/values per heldCik:secClass, seeded from the DB
+  const prevShares = new Map<string, { shares: number }>();
+  const prevValues = new Map<string, { valueUsd: number | null }>();
+  let prevTotalUsd: number | null = null;
+  const [seed]: any = await db.execute(sql`SELECT heldCik, secClass, shares, valueUsd, quarterDate FROM fund_holdings WHERE fundCik = ${fund.cik} AND heldCik IS NOT NULL ORDER BY quarterDate`);
   const seenQuarter = new Set<string>();
   for (const r of seed) {
     seenQuarter.add(String(r.quarterDate));
-    if (r.shares != null) prevShares.set(`${r.heldCik}:${r.secClass ?? "COM"}`, Number(r.shares));
+    if (r.shares != null) {
+      prevShares.set(`${r.heldCik}:${r.secClass ?? "COM"}`, { shares: Number(r.shares) });
+      prevValues.set(`${r.heldCik}:${r.secClass ?? "COM"}`, { valueUsd: r.valueUsd !== null ? Number(r.valueUsd) : null });
+    }
   }
+  const [tot]: any = await db.execute(sql`SELECT SUM(valueUsd) s FROM fund_holdings WHERE fundCik = ${fund.cik} AND quarterDate = (SELECT MAX(quarterDate) FROM fund_holdings WHERE fundCik = ${fund.cik})`);
+  prevTotalUsd = Number(tot[0]?.s ?? 0) || null;
 
   let fundRows = 0, fundEvents = 0;
   for (const q of quarters) {
@@ -116,25 +206,37 @@ for (const fund of funds) {
         await db.execute(sql`INSERT IGNORE INTO fund_holdings (fundCik, fundName, cusip, secClass, heldCik, issuer, shares, valueUsd, quarterDate, accessionNo, tier)
           VALUES (${fund.cik}, ${fund.name}, ${h.cusip}, ${h.secClass}, ${m.cik}, ${h.issuer}, ${h.shares}, ${h.valueUsd}, ${q.reportDate}, ${q.accessionNo}, ${fund.tier})`);
         const k = `${m.cik}:${h.secClass}`;
-        const cur = curShares.get(k) ?? { cik: m.cik, cls: h.secClass, shares: 0 };
+        const cur = curShares.get(k) ?? { cik: m.cik, cls: h.secClass, shares: 0, valueUsd: 0 };
         cur.shares += h.shares ?? 0;
+        cur.valueUsd += h.valueUsd ?? 0;
         curShares.set(k, cur);
         fundRows++;
       }
       // events vs previous quarter (per heldCik:secClass — a PUT is not the
       // stock). 5g: only SIGNAL_TIERS generate events; "institutional" funds
       // feed the aggregates (ownership %, crowding, flows), not the stream.
+      // Notes carry honest computed context: $, % of fund book, % of company,
+      // crowding (holders count from what's stored — full after --rebuild-events).
       const rows: any[] = [];
       if (SIGNAL_TIERS.has(fund.tier)) {
+        const fundTotalUsd = holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0);
+        const ctxFor = async (cik: number, shares: number | null, valueUsd: number | null, totalUsd: number | null) => ({
+          valueUsd,
+          pctFund: valueUsd && totalUsd ? (valueUsd / totalUsd) * 100 : null,
+          pctCo: shares ? await pctOfCompany(cik, shares) : null,
+          holders: await holdersOf(cik, q.reportDate),
+        });
         for (const [k, cur] of curShares) {
-          const ev = positionEvent(prevShares.get(k) ?? null, cur.shares, null);
-          if (ev) rows.push(buildPositionRow(fund.cik, cur.cik, q, ev, eventNote(fund.name, ev, cur.cls), cur.cls));
+          const prev = prevShares.get(k)?.shares ?? null;
+          const ev = positionEvent(prev, cur.shares, null);
+          if (ev) rows.push(buildPositionRow(fund.cik, cur.cik, q, ev, eventNote(fund.name, ev, cur.cls, await ctxFor(cur.cik, cur.shares, cur.valueUsd || null, fundTotalUsd)), cur.cls));
         }
         for (const [k, prev] of prevShares) {
-          if (prev > 0 && !curShares.has(k)) {
+          if (prev.shares > 0 && !curShares.has(k)) {
             const [cikStr, cls] = k.split(":");
-            const ev = positionEvent(prev, 0, null);
-            if (ev) rows.push(buildPositionRow(fund.cik, Number(cikStr), q, ev, eventNote(fund.name, ev, cls), cls));
+            const ev = positionEvent(prev.shares, 0, null);
+            const prevVal = prevValues.get(k)?.valueUsd ?? null;
+            if (ev) rows.push(buildPositionRow(fund.cik, Number(cikStr), q, ev, eventNote(fund.name, ev, cls, await ctxFor(Number(cikStr), prev.shares, prevVal, prevTotalUsd ?? fundTotalUsd)), cls));
           }
         }
       }
@@ -143,7 +245,8 @@ for (const fund of funds) {
           VALUES (${r.cik}, ${r.source}, ${r.signalType}, ${r.eventTs}, NOW(), ${r.score}, ${r.magnitude}, ${r.payloadKey}, ${r.src}, ${r.note})`);
         fundEvents += Number(res[0]?.affectedRows ?? 0) > 0 ? 1 : 0;
       }
-      for (const [k, v] of curShares) prevShares.set(k, v.shares);
+      for (const [k, v] of curShares) { prevShares.set(k, { shares: v.shares }); prevValues.set(k, { valueUsd: v.valueUsd || null }); }
+      prevTotalUsd = fundTotalUsd || prevTotalUsd;
       prog.item(quarters.indexOf(q) + 1, quarters.length, `${fundRows} rows, ${fundEvents} events`);
     } catch (err) {
       prog.log(`! ${fund.name} ${q.reportDate}: ${String(err).slice(0, 120)}`);

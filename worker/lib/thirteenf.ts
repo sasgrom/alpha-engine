@@ -94,13 +94,30 @@ const usd = (v: number | null) =>
   v === null ? "" : v >= 1e9 ? ` ($${(v / 1e9).toFixed(1)}B)` : v >= 1e6 ? ` ($${(v / 1e6).toFixed(0)}M)` : "";
 const sh = (v: number | null) => (v === null ? "?" : v.toLocaleString("en-US"));
 
+/** Enrichment context for a richer (still deterministic) event note. */
+export interface NoteCtx {
+  valueUsd?: number | null;   // current quarter value (exit: previous quarter)
+  pctFund?: number | null;    // position value / fund quarter total, %
+  pctCo?: number | null;      // position shares / shares outstanding, %
+  holders?: number | null;    // tracked funds holding this name that quarter
+}
+
+const pct = (v: number | null | undefined) => (v === null || v === undefined ? null : `${Math.round(v * 10) / 10}%`);
+
 /** Deterministic note for a position event (no LLM). */
-export function eventNote(fundName: string, ev: PositionEvent, secClass = "COM"): string {
+export function eventNote(fundName: string, ev: PositionEvent, secClass = "COM", ctx: NoteCtx = {}): string {
   const cls = secClass === "COM" ? "" : `${secClass} `;
+  const valueUsd = ctx.valueUsd ?? (ev.kind === "change" || ev.kind === "new" ? ev.valueUsd : null);
+  const parts: string[] = [];
+  if (valueUsd) parts.push(usd(valueUsd).replace(/^ \((.*)\)$/, "$1"));
+  const pf = pct(ctx.pctFund); if (pf) parts.push(`${pf} of fund`);
+  const pc = pct(ctx.pctCo); if (pc) parts.push(`${pc} of co`);
+  if (ctx.holders) parts.push(`held by ${ctx.holders} funds`);
+  const tail = parts.length ? ` (${parts.join(" · ")})` : "";
   switch (ev.kind) {
-    case "new": return `${fundName}: new ${cls}position ${sh(ev.shares)} sh${usd(ev.valueUsd)}`;
-    case "exit": return `${fundName}: exited ${cls}position (was ${sh(ev.shares)} sh)`;
-    case "change": return `${fundName}: ${cls}${ev.deltaPct > 0 ? "+" : ""}${ev.deltaPct}% to ${sh(ev.shares)} sh${usd(ev.valueUsd)}`;
+    case "new": return `${fundName}: new ${cls}position ${sh(ev.shares)} sh${tail}`;
+    case "exit": return `${fundName}: exited ${cls}position (was ${sh(ev.shares)} sh${parts.length ? ", " + parts.join(" · ") : ""})`;
+    case "change": return `${fundName}: ${cls}${ev.deltaPct > 0 ? "+" : ""}${ev.deltaPct}% to ${sh(ev.shares)} sh${tail}`;
   }
 }
 
