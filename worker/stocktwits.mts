@@ -11,7 +11,7 @@ dns.setDefaultResultOrder("ipv4first");
  */
 import "dotenv/config";
 import { fetchJson } from "./lib/http";
-import { postSignals, type SignalRow } from "./lib/ingest";
+import { postSignals, PROD_INGEST_URL, type SignalRow } from "./lib/ingest";
 import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from "./lib/stocktwits";
 import { loadUniverse } from "./lib/universe";
 import { extractVerdict, generate, LLM_MODEL, status as ollamaStatus } from "./lib/ollama";
@@ -58,5 +58,16 @@ if (rows.length === 0) {
   console.log("[stocktwits] nothing collected, exiting");
   process.exit(0);
 }
-const res = await postSignals(rows);
-console.log(`[stocktwits] ingested: ${res.accepted} new, ${res.skippedDupes} dupes (${res.batches} batch(es))`);
+// 5d doctrine: deterministic rows (buzz/label — proven in 4o) go STRAIGHT to
+// prod even in dev mode; LLM-generated crowd rows (llm: keys) follow the
+// local-first probation switch (INGEST_URL) until their quality is eyeballed.
+const det = rows.filter((r) => !r.payloadKey?.startsWith("llm:"));
+const llmRows = rows.filter((r) => r.payloadKey?.startsWith("llm:"));
+if (det.length > 0) {
+  const res = await postSignals(det, { url: PROD_INGEST_URL });
+  console.log(`[stocktwits] deterministic → prod: ${res.accepted} new, ${res.skippedDupes} dupes (${res.batches} batch(es))`);
+}
+if (llmRows.length > 0) {
+  const res = await postSignals(llmRows);
+  console.log(`[stocktwits] llm crowd → ${process.env.INGEST_URL ? "local (probation)" : "prod"}: ${res.accepted} new, ${res.skippedDupes} dupes`);
+}

@@ -27,10 +27,12 @@ export interface IngestResult {
 
 const CHUNK = 500; // hosted-MySQL packet rule, enforced server-side too
 
-export async function postSignals(rows: SignalRow[]): Promise<{ accepted: number; skippedDupes: number; batches: number }> {
+export const PROD_INGEST_URL = "https://alphadelta-2.kimi.pro/api/worker/ingest";
+
+export async function postSignals(rows: SignalRow[], opts: { url?: string } = {}): Promise<{ accepted: number; skippedDupes: number; batches: number }> {
   const key = process.env.WORKER_KEY;
   if (!key) throw new Error("WORKER_KEY missing from environment (.env)");
-  const url = process.env.INGEST_URL ?? "https://alphadelta-2.kimi.pro/api/worker/ingest";
+  const url = opts.url ?? process.env.INGEST_URL ?? PROD_INGEST_URL;
   let accepted = 0, skippedDupes = 0, batches = 0;
   for (let i = 0; i < rows.length; i += CHUNK) {
     const slice = rows.slice(i, i + CHUNK);
