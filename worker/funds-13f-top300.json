@@ -1,0 +1,1802 @@
+[
+ {
+  "cik": 2012383,
+  "name": "BlackRock, Inc. (BLK) (CIK 0002012383)",
+  "tier": "institutional",
+  "aumUsd": 6729538649155000
+ },
+ {
+  "cik": 2100119,
+  "name": "VANGUARD CAPITAL MANAGEMENT LLC (CIK 0002100119)",
+  "tier": "institutional",
+  "aumUsd": 4680129845935000
+ },
+ {
+  "cik": 93751,
+  "name": "STATE STREET CORP (STT, STT-PG) (CIK 0000093751)",
+  "tier": "passive",
+  "aumUsd": 3383260349220000
+ },
+ {
+  "cik": 315066,
+  "name": "FMR LLC (CIK 0000315066)",
+  "tier": "passive",
+  "aumUsd": 2303878429723000
+ },
+ {
+  "cik": 2100121,
+  "name": "VANGUARD PORTFOLIO MANAGEMENT LLC (CIK 0002100121)",
+  "tier": "institutional",
+  "aumUsd": 2219148474929000
+ },
+ {
+  "cik": 895421,
+  "name": "MORGAN STANLEY (MS, MS-PA, MS-PE, MS-PF, MS-PI, MS-PK, MS-PL, MS-PO, MS-PP, MS-P",
+  "tier": "institutional",
+  "aumUsd": 1890805575974000
+ },
+ {
+  "cik": 1214717,
+  "name": "GEODE CAPITAL MANAGEMENT, LLC (CIK 0001214717)",
+  "tier": "passive",
+  "aumUsd": 1875315674155000
+ },
+ {
+  "cik": 19617,
+  "name": "JPMORGAN CHASE & CO (JPM, AMJB, VYLD, JPM-PC, JPM-PD, JPM-PJ, JPM-PK, JPM-PL, JP",
+  "tier": "institutional",
+  "aumUsd": 1807041234839000
+ },
+ {
+  "cik": 70858,
+  "name": "BANK OF AMERICA CORP /DE/ (BAC, BAC-PB, BAC-PE, BAC-PK, BAC-PL, BAC-PM, BAC-PN, ",
+  "tier": "institutional",
+  "aumUsd": 1552074225223000
+ },
+ {
+  "cik": 1446194,
+  "name": "SUSQUEHANNA INTERNATIONAL GROUP, LLP (CIK 0001446194)",
+  "tier": "institutional",
+  "aumUsd": 1283997737803000
+ },
+ {
+  "cik": 914208,
+  "name": "Invesco Ltd. (IVZ) (CIK 0000914208)",
+  "tier": "institutional",
+  "aumUsd": 1264255606212000
+ },
+ {
+  "cik": 1595888,
+  "name": "JANE STREET GROUP, LLC (CIK 0001595888)",
+  "tier": "institutional",
+  "aumUsd": 1205633745715000
+ },
+ {
+  "cik": 886982,
+  "name": "GOLDMAN SACHS GROUP INC (GS, GSCE, GS-PA, GS-PC, GS-PD) (CIK 0000886982)",
+  "tier": "institutional",
+  "aumUsd": 1151631766592000
+ },
+ {
+  "cik": 1374170,
+  "name": "NORGES BANK (CIK 0001374170)",
+  "tier": "passive",
+  "aumUsd": 1003234964718000
+ },
+ {
+  "cik": 1423053,
+  "name": "CITADEL ADVISORS LLC (CIK 0001423053)",
+  "tier": "quant",
+  "aumUsd": 875011794337000
+ },
+ {
+  "cik": 73124,
+  "name": "NORTHERN TRUST CORP (NTRS, NTRSO) (CIK 0000073124)",
+  "tier": "institutional",
+  "aumUsd": 859788523480000
+ },
+ {
+  "cik": 1422849,
+  "name": "Capital World Investors (CIK 0001422849)",
+  "tier": "institutional",
+  "aumUsd": 846430378138000
+ },
+ {
+  "cik": 1610520,
+  "name": "UBS Group AG (UBS) (CIK 0001610520)",
+  "tier": "institutional",
+  "aumUsd": 786018117990000
+ },
+ {
+  "cik": 884546,
+  "name": "CHARLES SCHWAB INVESTMENT MANAGEMENT INC (CIK 0000884546)",
+  "tier": "institutional",
+  "aumUsd": 751324855440000
+ },
+ {
+  "cik": 1422848,
+  "name": "Capital Research Global Investors (CIK 0001422848)",
+  "tier": "institutional",
+  "aumUsd": 716871733902000
+ },
+ {
+  "cik": 1000275,
+  "name": "ROYAL BANK OF CANADA (RY, RYLBF) (CIK 0001000275)",
+  "tier": "institutional",
+  "aumUsd": 671509061000000
+ },
+ {
+  "cik": 72971,
+  "name": "WELLS FARGO & COMPANY/MN (WFC, WFCNP, WFC-PA, WFC-PC, WFC-PD, WFC-PL, WFC-PY, WF",
+  "tier": "institutional",
+  "aumUsd": 617421595284000
+ },
+ {
+  "cik": 1390777,
+  "name": "Bank of New York Mellon Corp (BNY, BNY-PK) (CIK 0001390777)",
+  "tier": "institutional",
+  "aumUsd": 609434404889000
+ },
+ {
+  "cik": 902219,
+  "name": "WELLINGTON MANAGEMENT GROUP LLP (CIK 0000902219)",
+  "tier": "passive",
+  "aumUsd": 580172687615000
+ },
+ {
+  "cik": 354204,
+  "name": "DIMENSIONAL FUND ADVISORS LP (CIK 0000354204)",
+  "tier": "institutional",
+  "aumUsd": 551839629706000
+ },
+ {
+  "cik": 861177,
+  "name": "UBS AM, a distinct business unit of UBS ASSET MANAGEMENT AMERICAS LLC (CIK 00008",
+  "tier": "institutional",
+  "aumUsd": 550090665605000
+ },
+ {
+  "cik": 312069,
+  "name": "BARCLAYS PLC (BCS, BCLYF) (CIK 0000312069)",
+  "tier": "institutional",
+  "aumUsd": 520821776462000
+ },
+ {
+  "cik": 820027,
+  "name": "AMERIPRISE FINANCIAL INC (AMP) (CIK 0000820027)",
+  "tier": "institutional",
+  "aumUsd": 494693380028000
+ },
+ {
+  "cik": 1562230,
+  "name": "Capital International Investors (CIK 0001562230)",
+  "tier": "institutional",
+  "aumUsd": 483607539077000
+ },
+ {
+  "cik": 764068,
+  "name": "Legal & General Group Plc (CIK 0000764068)",
+  "tier": "institutional",
+  "aumUsd": 479545526763000
+ },
+ {
+  "cik": 38777,
+  "name": "FRANKLIN RESOURCES INC (BEN) (CIK 0000038777)",
+  "tier": "institutional",
+  "aumUsd": 461883707115000
+ },
+ {
+  "cik": 933478,
+  "name": "VANGUARD FIDUCIARY TRUST CO (CIK 0000933478)",
+  "tier": "institutional",
+  "aumUsd": 454359797136000
+ },
+ {
+  "cik": 1403438,
+  "name": "LPL Financial LLC (CIK 0001403438)",
+  "tier": "institutional",
+  "aumUsd": 445103712153000
+ },
+ {
+  "cik": 1407543,
+  "name": "ENVESTNET ASSET MANAGEMENT INC (CIK 0001407543)",
+  "tier": "institutional",
+  "aumUsd": 424244879241000
+ },
+ {
+  "cik": 1871926,
+  "name": "Nuveen, LLC (CIK 0001871926)",
+  "tier": "institutional",
+  "aumUsd": 419167842629000
+ },
+ {
+  "cik": 1452861,
+  "name": "IMC-Chicago, LLC (CIK 0001452861)",
+  "tier": "institutional",
+  "aumUsd": 418679398719000
+ },
+ {
+  "cik": 1859606,
+  "name": "Optiver Holding B.V. (CIK 0001859606)",
+  "tier": "institutional",
+  "aumUsd": 370667754666000
+ },
+ {
+  "cik": 720005,
+  "name": "RAYMOND JAMES FINANCIAL INC (RJF) (CIK 0000720005)",
+  "tier": "institutional",
+  "aumUsd": 368944058282000
+ },
+ {
+  "cik": 948046,
+  "name": "DEUTSCHE BANK AG\\ (CIK 0000948046)",
+  "tier": "institutional",
+  "aumUsd": 344425960259000
+ },
+ {
+  "cik": 850529,
+  "name": "Fisher Asset Management, LLC (CIK 0000850529)",
+  "tier": "institutional",
+  "aumUsd": 335827609549000
+ },
+ {
+  "cik": 1445893,
+  "name": "CTC LLC (CIK 0001445893)",
+  "tier": "institutional",
+  "aumUsd": 316243305320000
+ },
+ {
+  "cik": 912938,
+  "name": "MASSACHUSETTS FINANCIAL SERVICES CO /MA/ (CIK 0000912938)",
+  "tier": "institutional",
+  "aumUsd": 315170492568000
+ },
+ {
+  "cik": 927971,
+  "name": "BANK OF MONTREAL /CAN/ (BMO, AIQD, AIQU, BERZ, BNKD, BNKU, BULZ, CARD, CARU, DUL",
+  "tier": "institutional",
+  "aumUsd": 303651028288000
+ },
+ {
+  "cik": 831001,
+  "name": "CITIGROUP INC (C, C-PN, C-PR) (CIK 0000831001)",
+  "tier": "institutional",
+  "aumUsd": 302702686068000
+ },
+ {
+  "cik": 1109448,
+  "name": "ALLIANCEBERNSTEIN L.P. (CIK 0001109448)",
+  "tier": "institutional",
+  "aumUsd": 302332491855000
+ },
+ {
+  "cik": 1067983,
+  "name": "BERKSHIRE HATHAWAY INC (BRK-A, BRK-B) (CIK 0001067983)",
+  "tier": "fundamental",
+  "aumUsd": 299253556246000
+ },
+ {
+  "cik": 1166588,
+  "name": "BNP PARIBAS FINANCIAL MARKETS (CIK 0001166588)",
+  "tier": "institutional",
+  "aumUsd": 288870396178000
+ },
+ {
+  "cik": 1167557,
+  "name": "AQR CAPITAL MANAGEMENT LLC (CIK 0001167557)",
+  "tier": "institutional",
+  "aumUsd": 286847511937000
+ },
+ {
+  "cik": 1273087,
+  "name": "MILLENNIUM MANAGEMENT LLC (CIK 0001273087)",
+  "tier": "quant",
+  "aumUsd": 276293649404000
+ },
+ {
+  "cik": 815917,
+  "name": "JONES FINANCIAL COMPANIES LLLP (CIK 0000815917)",
+  "tier": "institutional",
+  "aumUsd": 249837406497000
+ },
+ {
+  "cik": 2146052,
+  "name": "Jupiter Topco LLC (CIK 0002146052)",
+  "tier": "institutional",
+  "aumUsd": 245375381802000
+ },
+ {
+  "cik": 873630,
+  "name": "HSBC HOLDINGS PLC (CIK 0000873630)",
+  "tier": "institutional",
+  "aumUsd": 239485973785000
+ },
+ {
+  "cik": 748054,
+  "name": "AMERICAN CENTURY COMPANIES INC (CIK 0000748054)",
+  "tier": "institutional",
+  "aumUsd": 226281255256000
+ },
+ {
+  "cik": 1164508,
+  "name": "ARROWSTREET CAPITAL, LIMITED PARTNERSHIP (CIK 0001164508)",
+  "tier": "institutional",
+  "aumUsd": 225366645888000
+ },
+ {
+  "cik": 1811242,
+  "name": "Vanguard Global Advisers, LLC (CIK 0001811242)",
+  "tier": "institutional",
+  "aumUsd": 214603824175000
+ },
+ {
+  "cik": 1009207,
+  "name": "D. E. Shaw & Co., Inc. (CIK 0001009207)",
+  "tier": "institutional",
+  "aumUsd": 210202510998000
+ },
+ {
+  "cik": 1126328,
+  "name": "PRINCIPAL FINANCIAL GROUP INC (PFG) (CIK 0001126328)",
+  "tier": "institutional",
+  "aumUsd": 203639295719000
+ },
+ {
+  "cik": 713676,
+  "name": "PNC FINANCIAL SERVICES GROUP, INC. (PNC) (CIK 0000713676)",
+  "tier": "institutional",
+  "aumUsd": 201763781278000
+ },
+ {
+  "cik": 944388,
+  "name": "1832 Asset Management L.P. (CIK 0000944388)",
+  "tier": "institutional",
+  "aumUsd": 199405872053000
+ },
+ {
+  "cik": 1582202,
+  "name": "Swiss National Bank (CIK 0001582202)",
+  "tier": "institutional",
+  "aumUsd": 191389544938000
+ },
+ {
+  "cik": 200217,
+  "name": "DODGE & COX (CIK 0000200217)",
+  "tier": "institutional",
+  "aumUsd": 191008088994000
+ },
+ {
+  "cik": 1141802,
+  "name": "NORTHWESTERN MUTUAL WEALTH MANAGEMENT CO (CIK 0001141802)",
+  "tier": "institutional",
+  "aumUsd": 187224674884000
+ },
+ {
+  "cik": 1283718,
+  "name": "CANADA PENSION PLAN INVESTMENT BOARD (CIK 0001283718)",
+  "tier": "institutional",
+  "aumUsd": 180776675190000
+ },
+ {
+  "cik": 1466546,
+  "name": "Mitsubishi UFJ Asset Management Co., Ltd. (CIK 0001466546)",
+  "tier": "institutional",
+  "aumUsd": 180424966527000
+ },
+ {
+  "cik": 1040188,
+  "name": "VICTORY CAPITAL MANAGEMENT INC (CIK 0001040188)",
+  "tier": "institutional",
+  "aumUsd": 178339975812000
+ },
+ {
+  "cik": 919079,
+  "name": "CALIFORNIA PUBLIC EMPLOYEES RETIREMENT SYSTEM (CIK 0000919079)",
+  "tier": "institutional",
+  "aumUsd": 177384494361000
+ },
+ {
+  "cik": 1475365,
+  "name": "Sumitomo Mitsui Trust Group, Inc. (CIK 0001475365)",
+  "tier": "institutional",
+  "aumUsd": 175059245023000
+ },
+ {
+  "cik": 1540235,
+  "name": "Creative Planning (CIK 0001540235)",
+  "tier": "institutional",
+  "aumUsd": 171094726620000
+ },
+ {
+  "cik": 1488542,
+  "name": "SIMPLEX TRADING, LLC (CIK 0001488542)",
+  "tier": "institutional",
+  "aumUsd": 170565031585000
+ },
+ {
+  "cik": 1125816,
+  "name": "FIRST TRUST ADVISORS LP (CIK 0001125816)",
+  "tier": "institutional",
+  "aumUsd": 170014832747000
+ },
+ {
+  "cik": 763212,
+  "name": "PRIMECAP MANAGEMENT CO/CA/ (CIK 0000763212)",
+  "tier": "institutional",
+  "aumUsd": 169112441771000
+ },
+ {
+  "cik": 53417,
+  "name": "JENNISON ASSOCIATES LLC (CIK 0000053417)",
+  "tier": "institutional",
+  "aumUsd": 166723724865000
+ },
+ {
+  "cik": 869178,
+  "name": "VAN ECK ASSOCIATES CORP (CIK 0000869178)",
+  "tier": "institutional",
+  "aumUsd": 164097610141000
+ },
+ {
+  "cik": 1608046,
+  "name": "National Pension Service (CIK 0001608046)",
+  "tier": "institutional",
+  "aumUsd": 155079663358000
+ },
+ {
+  "cik": 1465109,
+  "name": "Neuberger Berman Group LLC (CIK 0001465109)",
+  "tier": "institutional",
+  "aumUsd": 150352222133000
+ },
+ {
+  "cik": 1680208,
+  "name": "VANGUARD ASSET MANAGEMENT, Ltd (CIK 0001680208)",
+  "tier": "institutional",
+  "aumUsd": 148033179402000
+ },
+ {
+  "cik": 315032,
+  "name": "STATE FARM MUTUAL AUTOMOBILE INSURANCE CO (CIK 0000315032)",
+  "tier": "institutional",
+  "aumUsd": 146141560914000
+ },
+ {
+  "cik": 1086619,
+  "name": "SCHRODER INVESTMENT MANAGEMENT GROUP (CIK 0001086619)",
+  "tier": "institutional",
+  "aumUsd": 141095888409000
+ },
+ {
+  "cik": 926171,
+  "name": "NATIONAL BANK OF CANADA /FI/ (CIK 0000926171)",
+  "tier": "institutional",
+  "aumUsd": 139832084690000
+ },
+ {
+  "cik": 318989,
+  "name": "FIL Ltd (CIK 0000318989)",
+  "tier": "institutional",
+  "aumUsd": 139266289839000
+ },
+ {
+  "cik": 1179392,
+  "name": "TWO SIGMA INVESTMENTS, LP (CIK 0001179392)",
+  "tier": "quant",
+  "aumUsd": 138117670065000
+ },
+ {
+  "cik": 2113507,
+  "name": "PeakShares LLC (CIK 0002113507)",
+  "tier": "institutional",
+  "aumUsd": 134381603000000
+ },
+ {
+  "cik": 1115418,
+  "name": "RHUMBLINE ADVISERS (CIK 0001115418)",
+  "tier": "institutional",
+  "aumUsd": 132555314060000
+ },
+ {
+  "cik": 1694217,
+  "name": "DZ BANK AG Deutsche Zentral Genossenschafts Bank, Frankfurt am Main (CIK 0001694",
+  "tier": "institutional",
+  "aumUsd": 130375293771000
+ },
+ {
+  "cik": 928047,
+  "name": "MANUFACTURERS LIFE INSURANCE COMPANY, THE (CIK 0000928047)",
+  "tier": "institutional",
+  "aumUsd": 128149151527000
+ },
+ {
+  "cik": 1318757,
+  "name": "MARSHALL WACE, LLP (CIK 0001318757)",
+  "tier": "institutional",
+  "aumUsd": 126697578778000
+ },
+ {
+  "cik": 1535323,
+  "name": "Allianz Asset Management GmbH (CIK 0001535323)",
+  "tier": "institutional",
+  "aumUsd": 123126284393000
+ },
+ {
+  "cik": 1218210,
+  "name": "NORDEA INVESTMENT MANAGEMENT AB (CIK 0001218210)",
+  "tier": "institutional",
+  "aumUsd": 122634822748000
+ },
+ {
+  "cik": 1348883,
+  "name": "Clearbridge Investments, LLC (CIK 0001348883)",
+  "tier": "institutional",
+  "aumUsd": 120861574559000
+ },
+ {
+  "cik": 720672,
+  "name": "STIFEL FINANCIAL CORP (SF, SFB, SF-PB, SF-PC, SF-PD) (CIK 0000720672)",
+  "tier": "institutional",
+  "aumUsd": 120206320448000
+ },
+ {
+  "cik": 1068837,
+  "name": "VOYA INVESTMENT MANAGEMENT LLC (CIK 0001068837)",
+  "tier": "institutional",
+  "aumUsd": 115634187321000
+ },
+ {
+  "cik": 1056053,
+  "name": "TD ASSET MANAGEMENT INC (CIK 0001056053)",
+  "tier": "institutional",
+  "aumUsd": 115429605512000
+ },
+ {
+  "cik": 1692234,
+  "name": "Russell Investments Group, Ltd. (CIK 0001692234)",
+  "tier": "institutional",
+  "aumUsd": 113965996278000
+ },
+ {
+  "cik": 350894,
+  "name": "SEI INVESTMENTS CO (SEIC) (CIK 0000350894)",
+  "tier": "institutional",
+  "aumUsd": 113347285164000
+ },
+ {
+  "cik": 1386060,
+  "name": "Boston Partners (CIK 0001386060)",
+  "tier": "institutional",
+  "aumUsd": 112566449804000
+ },
+ {
+  "cik": 1088875,
+  "name": "BAILLIE GIFFORD & CO (CIK 0001088875)",
+  "tier": "institutional",
+  "aumUsd": 110225053010000
+ },
+ {
+  "cik": 1666741,
+  "name": "Cetera Investment Advisers (CIK 0001666741)",
+  "tier": "institutional",
+  "aumUsd": 109760704100000
+ },
+ {
+  "cik": 1081019,
+  "name": "CALIFORNIA STATE TEACHERS RETIREMENT SYSTEM (CIK 0001081019)",
+  "tier": "institutional",
+  "aumUsd": 108615536242000
+ },
+ {
+  "cik": 1729829,
+  "name": "Qube Research & Technologies Ltd (CIK 0001729829)",
+  "tier": "institutional",
+  "aumUsd": 107645323163000
+ },
+ {
+  "cik": 1993888,
+  "name": "Pictet Asset Management Holding SA (CIK 0001993888)",
+  "tier": "institutional",
+  "aumUsd": 104659704239000
+ },
+ {
+  "cik": 1546007,
+  "name": "Assenagon Asset Management S.A. (CIK 0001546007)",
+  "tier": "institutional",
+  "aumUsd": 103349959282000
+ },
+ {
+  "cik": 919859,
+  "name": "MACKENZIE FINANCIAL CORP (CIK 0000919859)",
+  "tier": "institutional",
+  "aumUsd": 99957099502000
+ },
+ {
+  "cik": 1508097,
+  "name": "Sanders Capital, LLC (CIK 0001508097)",
+  "tier": "institutional",
+  "aumUsd": 99830442199000
+ },
+ {
+  "cik": 1652044,
+  "name": "Alphabet Inc. (GOOG, GOOGL, GOOGM, GOOGN) (CIK 0001652044)",
+  "tier": "institutional",
+  "aumUsd": 99082057675000
+ },
+ {
+  "cik": 1542153,
+  "name": "Focus Partners Wealth (CIK 0001542153)",
+  "tier": "institutional",
+  "aumUsd": 97628781867000
+ },
+ {
+  "cik": 1373442,
+  "name": "Mariner, LLC (CIK 0001373442)",
+  "tier": "institutional",
+  "aumUsd": 95189224745000
+ },
+ {
+  "cik": 1137774,
+  "name": "PRUDENTIAL FINANCIAL INC (PFH, PRH, PRS, PRU) (CIK 0001137774)",
+  "tier": "institutional",
+  "aumUsd": 91808139264000
+ },
+ {
+  "cik": 36104,
+  "name": "US BANCORP \\DE\\ (USB, USB-PA, USB-PH, USB-PP, USB-PQ, USB-PR, USB-PS) (CIK 00000",
+  "tier": "institutional",
+  "aumUsd": 91580792831000
+ },
+ {
+  "cik": 1603466,
+  "name": "Point72 Asset Management, L.P. (CIK 0001603466)",
+  "tier": "quant",
+  "aumUsd": 90675333456000
+ },
+ {
+  "cik": 1642575,
+  "name": "Squarepoint Ops LLC (CIK 0001642575)",
+  "tier": "institutional",
+  "aumUsd": 90523840704000
+ },
+ {
+  "cik": 1632341,
+  "name": "Belvedere Trading LLC (CIK 0001632341)",
+  "tier": "institutional",
+  "aumUsd": 87612631382000
+ },
+ {
+  "cik": 1388391,
+  "name": "Walleye Trading LLC (CIK 0001388391)",
+  "tier": "institutional",
+  "aumUsd": 87592208607000
+ },
+ {
+  "cik": 947263,
+  "name": "TORONTO DOMINION BANK (TD, TDBCP) (CIK 0000947263)",
+  "tier": "institutional",
+  "aumUsd": 86445893703000
+ },
+ {
+  "cik": 1846237,
+  "name": "Valor Management LLC (CIK 0001846237)",
+  "tier": "institutional",
+  "aumUsd": 86190896517000
+ },
+ {
+  "cik": 1163653,
+  "name": "NOMURA HOLDINGS INC (NMR, NRSCF) (CIK 0001163653)",
+  "tier": "institutional",
+  "aumUsd": 85358323156000
+ },
+ {
+  "cik": 1677044,
+  "name": "OSAIC HOLDINGS, INC. (CIK 0001677044)",
+  "tier": "institutional",
+  "aumUsd": 85097352182000
+ },
+ {
+  "cik": 1705339,
+  "name": "MIRAE ASSET GLOBAL ETFS HOLDINGS Ltd. (CIK 0001705339)",
+  "tier": "institutional",
+  "aumUsd": 83850400741000
+ },
+ {
+  "cik": 92230,
+  "name": "TRUIST FINANCIAL CORP (TFC, TFC-PI, TFC-PO, TFC-PR) (CIK 0000092230)",
+  "tier": "institutional",
+  "aumUsd": 83671196505000
+ },
+ {
+  "cik": 1759654,
+  "name": "Quantinno Capital Management LP (CIK 0001759654)",
+  "tier": "institutional",
+  "aumUsd": 83346745250000
+ },
+ {
+  "cik": 1418773,
+  "name": "Robeco Institutional Asset Management B.V. (CIK 0001418773)",
+  "tier": "institutional",
+  "aumUsd": 83244782305000
+ },
+ {
+  "cik": 1566475,
+  "name": "Cerity Partners LLC (CIK 0001566475)",
+  "tier": "institutional",
+  "aumUsd": 82729443290000
+ },
+ {
+  "cik": 1711924,
+  "name": "CIBC Bancorp USA Inc. (CIK 0001711924)",
+  "tier": "institutional",
+  "aumUsd": 82254904316000
+ },
+ {
+  "cik": 853758,
+  "name": "MERCER GLOBAL ADVISORS INC /ADV (CIK 0000853758)",
+  "tier": "institutional",
+  "aumUsd": 80931989213000
+ },
+ {
+  "cik": 1218710,
+  "name": "BALYASNY ASSET MANAGEMENT L.P. (CIK 0001218710)",
+  "tier": "institutional",
+  "aumUsd": 80215403914000
+ },
+ {
+  "cik": 312348,
+  "name": "LOOMIS SAYLES & CO L P (CIK 0000312348)",
+  "tier": "institutional",
+  "aumUsd": 79785245869000
+ },
+ {
+  "cik": 312272,
+  "name": "COMMONWEALTH EQUITY SERVICES, LLC (CIK 0000312272)",
+  "tier": "institutional",
+  "aumUsd": 79521552340000
+ },
+ {
+  "cik": 810265,
+  "name": "NEW YORK STATE COMMON RETIREMENT FUND (CIK 0000810265)",
+  "tier": "institutional",
+  "aumUsd": 79301033019000
+ },
+ {
+  "cik": 1001085,
+  "name": "BROOKFIELD Corp /ON/ (BN, BNH, BNJ, BKPA, BAMGF, BAMKF, BKAMF, BKFAF, BKFDF, BKF",
+  "tier": "institutional",
+  "aumUsd": 76987645805000
+ },
+ {
+  "cik": 813917,
+  "name": "HARRIS ASSOCIATES L P (CIK 0000813917)",
+  "tier": "institutional",
+  "aumUsd": 75422839842000
+ },
+ {
+  "cik": 1230239,
+  "name": "ALKEON CAPITAL MANAGEMENT LLC (CIK 0001230239)",
+  "tier": "institutional",
+  "aumUsd": 74068637843000
+ },
+ {
+  "cik": 1648711,
+  "name": "Baird Financial Group, Inc. (CIK 0001648711)",
+  "tier": "institutional",
+  "aumUsd": 72726013994000
+ },
+ {
+  "cik": 1037389,
+  "name": "RENAISSANCE TECHNOLOGIES LLC (CIK 0001037389)",
+  "tier": "quant",
+  "aumUsd": 72617871974000
+ },
+ {
+  "cik": 1948780,
+  "name": "Corient Private Wealth LP (CIK 0001948780)",
+  "tier": "institutional",
+  "aumUsd": 72240830016000
+ },
+ {
+  "cik": 923093,
+  "name": "TUDOR INVESTMENT CORP ET AL (CIK 0000923093)",
+  "tier": "institutional",
+  "aumUsd": 71912518398000
+ },
+ {
+  "cik": 1165408,
+  "name": "ADAGE CAPITAL PARTNERS GP, L.L.C. (CIK 0001165408)",
+  "tier": "institutional",
+  "aumUsd": 71317440046000
+ },
+ {
+  "cik": 1716774,
+  "name": "Aberdeen Group plc (CIK 0001716774)",
+  "tier": "institutional",
+  "aumUsd": 71221282651000
+ },
+ {
+  "cik": 1535845,
+  "name": "HEALTHCARE OF ONTARIO PENSION PLAN TRUST FUND (CIK 0001535845)",
+  "tier": "institutional",
+  "aumUsd": 71183495697000
+ },
+ {
+  "cik": 932540,
+  "name": "GROUP ONE TRADING LLC (CIK 0000932540)",
+  "tier": "institutional",
+  "aumUsd": 71081488890000
+ },
+ {
+  "cik": 898286,
+  "name": "CAISSE DE DEPOT ET PLACEMENT DU QUEBEC (CIK 0000898286)",
+  "tier": "institutional",
+  "aumUsd": 70188386128000
+ },
+ {
+  "cik": 1056288,
+  "name": "FEDERATED HERMES, INC. (FHI) (CIK 0001056288)",
+  "tier": "institutional",
+  "aumUsd": 69552481118000
+ },
+ {
+  "cik": 1357955,
+  "name": "ProShare Advisors LLC (CIK 0001357955)",
+  "tier": "institutional",
+  "aumUsd": 69150291478000
+ },
+ {
+  "cik": 1140022,
+  "name": "AVIVA PLC (CIK 0001140022)",
+  "tier": "institutional",
+  "aumUsd": 67921992515000
+ },
+ {
+  "cik": 1632972,
+  "name": "WEALTH ENHANCEMENT ADVISORY SERVICES, LLC (CIK 0001632972)",
+  "tier": "institutional",
+  "aumUsd": 67306915212000
+ },
+ {
+  "cik": 1017918,
+  "name": "BAMCO INC /NY/ (CIK 0001017918)",
+  "tier": "institutional",
+  "aumUsd": 66640911675000
+ },
+ {
+  "cik": 921739,
+  "name": "NOMURA ASSET MANAGEMENT INTERNATIONAL INC. (CIK 0000921739)",
+  "tier": "institutional",
+  "aumUsd": 66602458000000
+ },
+ {
+  "cik": 9631,
+  "name": "BANK OF NOVA SCOTIA (BNS) (CIK 0000009631)",
+  "tier": "institutional",
+  "aumUsd": 66183600527000
+ },
+ {
+  "cik": 1207017,
+  "name": "LAZARD ASSET MANAGEMENT LLC (CIK 0001207017)",
+  "tier": "institutional",
+  "aumUsd": 66060305912000
+ },
+ {
+  "cik": 1512024,
+  "name": "CAPTRUST FINANCIAL ADVISORS (CIK 0001512024)",
+  "tier": "institutional",
+  "aumUsd": 65477943713000
+ },
+ {
+  "cik": 2057170,
+  "name": "Universal- Beteiligungs- und Servicegesellschaft mbH (CIK 0002057170)",
+  "tier": "institutional",
+  "aumUsd": 65416032169000
+ },
+ {
+  "cik": 1739439,
+  "name": "Rockefeller Capital Management L.P. (CIK 0001739439)",
+  "tier": "institutional",
+  "aumUsd": 65222136691000
+ },
+ {
+  "cik": 1890906,
+  "name": "Allspring Global Investments Holdings, LLC (CIK 0001890906)",
+  "tier": "institutional",
+  "aumUsd": 65190322473000
+ },
+ {
+  "cik": 1345929,
+  "name": "BROWN ADVISORY INC (CIK 0001345929)",
+  "tier": "institutional",
+  "aumUsd": 64569189630000
+ },
+ {
+  "cik": 1045810,
+  "name": "NVIDIA CORP (NVDA) (CIK 0001045810)",
+  "tier": "institutional",
+  "aumUsd": 63439974569000
+ },
+ {
+  "cik": 1466153,
+  "name": "Artisan Partners Limited Partnership (CIK 0001466153)",
+  "tier": "institutional",
+  "aumUsd": 63075327393000
+ },
+ {
+  "cik": 1637460,
+  "name": "Man Group plc (CIK 0001637460)",
+  "tier": "institutional",
+  "aumUsd": 62701561678000
+ },
+ {
+  "cik": 1421224,
+  "name": "CIBC WORLD MARKET INC. (CIK 0001421224)",
+  "tier": "institutional",
+  "aumUsd": 62345776316000
+ },
+ {
+  "cik": 35527,
+  "name": "FIFTH THIRD BANCORP (FITB, FITB-PA, FITB-PI, FITB-PK, FITB-PM) (CIK 0000035527)",
+  "tier": "institutional",
+  "aumUsd": 61667248852000
+ },
+ {
+  "cik": 1325447,
+  "name": "First Eagle Investment Management, LLC (CIK 0001325447)",
+  "tier": "institutional",
+  "aumUsd": 60750982695000
+ },
+ {
+  "cik": 938076,
+  "name": "STATE BOARD OF ADMINISTRATION OF FLORIDA RETIREMENT SYSTEM (CIK 0000938076)",
+  "tier": "institutional",
+  "aumUsd": 60293970449000
+ },
+ {
+  "cik": 1344551,
+  "name": "ASSETMARK, INC (CIK 0001344551)",
+  "tier": "institutional",
+  "aumUsd": 59480088721000
+ },
+ {
+  "cik": 1521001,
+  "name": "Parallax Volatility Advisers, L.P. (CIK 0001521001)",
+  "tier": "institutional",
+  "aumUsd": 58866296771000
+ },
+ {
+  "cik": 1600064,
+  "name": "Tidal Investments LLC (CIK 0001600064)",
+  "tier": "institutional",
+  "aumUsd": 57770875607000
+ },
+ {
+  "cik": 1420473,
+  "name": "Financial Engines Advisors L.L.C. (CIK 0001420473)",
+  "tier": "institutional",
+  "aumUsd": 56314611769000
+ },
+ {
+  "cik": 1061186,
+  "name": "WCM INVESTMENT MANAGEMENT, LLC (CIK 0001061186)",
+  "tier": "institutional",
+  "aumUsd": 55159073519000
+ },
+ {
+  "cik": 863748,
+  "name": "ROYAL LONDON ASSET MANAGEMENT LTD (CIK 0000863748)",
+  "tier": "institutional",
+  "aumUsd": 54279897982000
+ },
+ {
+  "cik": 1426196,
+  "name": "CAPSTONE INVESTMENT ADVISORS, LLC (CIK 0001426196)",
+  "tier": "institutional",
+  "aumUsd": 54040010271000
+ },
+ {
+  "cik": 1697233,
+  "name": "GQG Partners LLC (CIK 0001697233)",
+  "tier": "institutional",
+  "aumUsd": 53757403317000
+ },
+ {
+  "cik": 1454984,
+  "name": "Ensign Peak Advisors, Inc (CIK 0001454984)",
+  "tier": "institutional",
+  "aumUsd": 53670207280000
+ },
+ {
+  "cik": 1596800,
+  "name": "Connor, Clark & Lunn Investment Management Ltd. (CIK 0001596800)",
+  "tier": "institutional",
+  "aumUsd": 52791606263000
+ },
+ {
+  "cik": 1647251,
+  "name": "TCI Fund Management Ltd (CIK 0001647251)",
+  "tier": "activist",
+  "aumUsd": 52769884406000
+ },
+ {
+  "cik": 1441689,
+  "name": "Korea Investment CORP (CIK 0001441689)",
+  "tier": "institutional",
+  "aumUsd": 52659999903000
+ },
+ {
+  "cik": 1368163,
+  "name": "Zurcher Kantonalbank (Zurich Cantonalbank) (CIK 0001368163)",
+  "tier": "institutional",
+  "aumUsd": 52197440954000
+ },
+ {
+  "cik": 1763921,
+  "name": "Wealthfront Advisers LLC (CIK 0001763921)",
+  "tier": "institutional",
+  "aumUsd": 52041851798000
+ },
+ {
+  "cik": 1481045,
+  "name": "Daiwa Securities Group Inc. (DSECF, DSEEY) (CIK 0001481045)",
+  "tier": "institutional",
+  "aumUsd": 51140635144000
+ },
+ {
+  "cik": 800177,
+  "name": "DANSKE BANK A/S (CIK 0000800177)",
+  "tier": "institutional",
+  "aumUsd": 50580693093000
+ },
+ {
+  "cik": 854157,
+  "name": "STATE OF WISCONSIN INVESTMENT BOARD (CIK 0000854157)",
+  "tier": "institutional",
+  "aumUsd": 49553548104000
+ },
+ {
+  "cik": 1191672,
+  "name": "CREDIT AGRICOLE S A (CIK 0001191672)",
+  "tier": "institutional",
+  "aumUsd": 49290427200000
+ },
+ {
+  "cik": 701059,
+  "name": "MML INVESTORS SERVICES, LLC (CIK 0000701059)",
+  "tier": "institutional",
+  "aumUsd": 49005751614000
+ },
+ {
+  "cik": 1135730,
+  "name": "COATUE MANAGEMENT LLC (CIK 0001135730)",
+  "tier": "fundamental",
+  "aumUsd": 48629053706000
+ },
+ {
+  "cik": 1389958,
+  "name": "PEAK6 LLC (CIK 0001389958)",
+  "tier": "institutional",
+  "aumUsd": 48617587981000
+ },
+ {
+  "cik": 1517857,
+  "name": "Soroban Capital Partners LP (CIK 0001517857)",
+  "tier": "institutional",
+  "aumUsd": 47802407971000
+ },
+ {
+  "cik": 860644,
+  "name": "Aristotle Capital Management, LLC (CIK 0000860644)",
+  "tier": "institutional",
+  "aumUsd": 47678713514000
+ },
+ {
+  "cik": 2146944,
+  "name": "Evelyn Partners Group Ltd (CIK 0002146944)",
+  "tier": "institutional",
+  "aumUsd": 46864985054000
+ },
+ {
+  "cik": 1055964,
+  "name": "NOMURA ASSET MANAGEMENT CO LTD (CIK 0001055964)",
+  "tier": "institutional",
+  "aumUsd": 46723763092000
+ },
+ {
+  "cik": 1462160,
+  "name": "Mitsubishi UFJ Trust & Banking Corp (CIK 0001462160)",
+  "tier": "institutional",
+  "aumUsd": 45715749599000
+ },
+ {
+  "cik": 1021926,
+  "name": "CIBC Asset Management Inc (CIK 0001021926)",
+  "tier": "institutional",
+  "aumUsd": 45611900368000
+ },
+ {
+  "cik": 1418329,
+  "name": "Ninety One UK Ltd (CIK 0001418329)",
+  "tier": "institutional",
+  "aumUsd": 45471908955000
+ },
+ {
+  "cik": 1352662,
+  "name": "Grantham, Mayo, Van Otterloo & Co. LLC (CIK 0001352662)",
+  "tier": "institutional",
+  "aumUsd": 44399773809000
+ },
+ {
+  "cik": 1700574,
+  "name": "Holocene Advisors, LP (CIK 0001700574)",
+  "tier": "institutional",
+  "aumUsd": 44376442531000
+ },
+ {
+  "cik": 1389426,
+  "name": "Rafferty Asset Management, LLC (CIK 0001389426)",
+  "tier": "institutional",
+  "aumUsd": 43915729091000
+ },
+ {
+  "cik": 1510387,
+  "name": "Gotham Asset Management, LLC (CIK 0001510387)",
+  "tier": "institutional",
+  "aumUsd": 42963515885000
+ },
+ {
+  "cik": 937729,
+  "name": "FAYEZ SAROFIM & CO (CIK 0000937729)",
+  "tier": "institutional",
+  "aumUsd": 42539907325000
+ },
+ {
+  "cik": 1837309,
+  "name": "Polar Capital Holdings Plc (CIK 0001837309)",
+  "tier": "institutional",
+  "aumUsd": 42350042345000
+ },
+ {
+  "cik": 1978885,
+  "name": "Empower Advisory Group, LLC (CIK 0001978885)",
+  "tier": "institutional",
+  "aumUsd": 41915229042000
+ },
+ {
+  "cik": 1722329,
+  "name": "Newport Trust Company, LLC (CIK 0001722329)",
+  "tier": "institutional",
+  "aumUsd": 41477423632000
+ },
+ {
+  "cik": 1434819,
+  "name": "APG Asset Management N.V. (CIK 0001434819)",
+  "tier": "institutional",
+  "aumUsd": 40715237548000
+ },
+ {
+  "cik": 1685676,
+  "name": "STOREBRAND ASSET MANAGEMENT AS (CIK 0001685676)",
+  "tier": "institutional",
+  "aumUsd": 40610725605000
+ },
+ {
+  "cik": 1550100,
+  "name": "Vanguard Investments Australia, Ltd. (CIK 0001550100)",
+  "tier": "institutional",
+  "aumUsd": 40152955318000
+ },
+ {
+  "cik": 1963565,
+  "name": "Value Aligned Research Advisors, LLC (CIK 0001963565)",
+  "tier": "institutional",
+  "aumUsd": 40111386090000
+ },
+ {
+  "cik": 1881567,
+  "name": "Clear Street Group Inc. (CIK 0001881567)",
+  "tier": "institutional",
+  "aumUsd": 39519464006000
+ },
+ {
+  "cik": 1730073,
+  "name": "PFA Pension, Forsikringsaktieselskab (CIK 0001730073)",
+  "tier": "institutional",
+  "aumUsd": 39395307459000
+ },
+ {
+  "cik": 728083,
+  "name": "FIRST MANHATTAN CO. LLC. (CIK 0000728083)",
+  "tier": "institutional",
+  "aumUsd": 39239503148000
+ },
+ {
+  "cik": 1068855,
+  "name": "Asset Management One Co., Ltd. (CIK 0001068855)",
+  "tier": "institutional",
+  "aumUsd": 38970286493000
+ },
+ {
+  "cik": 1453072,
+  "name": "Alyeska Investment Group, L.P. (CIK 0001453072)",
+  "tier": "institutional",
+  "aumUsd": 38859514149000
+ },
+ {
+  "cik": 1462020,
+  "name": "Chevy Chase Trust Holdings, LLC (CIK 0001462020)",
+  "tier": "institutional",
+  "aumUsd": 38782815791000
+ },
+ {
+  "cik": 1396318,
+  "name": "PUBLIC SECTOR PENSION INVESTMENT BOARD (CIK 0001396318)",
+  "tier": "institutional",
+  "aumUsd": 38669816283000
+ },
+ {
+  "cik": 1544599,
+  "name": "Bank Julius Baer & Co. Ltd, Zurich (CIK 0001544599)",
+  "tier": "institutional",
+  "aumUsd": 38590625478000
+ },
+ {
+  "cik": 1999606,
+  "name": "TD Waterhouse Canada Inc. (CIK 0001999606)",
+  "tier": "institutional",
+  "aumUsd": 38398246191000
+ },
+ {
+  "cik": 902367,
+  "name": "BLAIR WILLIAM & CO/IL (CIK 0000902367)",
+  "tier": "institutional",
+  "aumUsd": 38388159607000
+ },
+ {
+  "cik": 1767640,
+  "name": "PUBLIC INVESTMENT FUND (CIK 0001767640)",
+  "tier": "institutional",
+  "aumUsd": 37908748002000
+ },
+ {
+  "cik": 2107286,
+  "name": "Eurizon Capital SGR S.p.A. (CIK 0002107286)",
+  "tier": "institutional",
+  "aumUsd": 37279044451000
+ },
+ {
+  "cik": 796848,
+  "name": "TEACHER RETIREMENT SYSTEM OF TEXAS (CIK 0000796848)",
+  "tier": "institutional",
+  "aumUsd": 37258770938000
+ },
+ {
+  "cik": 1021944,
+  "name": "Temasek Holdings (Private) Ltd (CIK 0001021944)",
+  "tier": "institutional",
+  "aumUsd": 37253810301000
+ },
+ {
+  "cik": 1650150,
+  "name": "Lido Advisors, LLC (CIK 0001650150)",
+  "tier": "institutional",
+  "aumUsd": 36830824297000
+ },
+ {
+  "cik": 1393825,
+  "name": "Hudson Bay Capital Management LP (CIK 0001393825)",
+  "tier": "institutional",
+  "aumUsd": 36828777039000
+ },
+ {
+  "cik": 1082327,
+  "name": "FULLER & THALER ASSET MANAGEMENT, INC. (CIK 0001082327)",
+  "tier": "institutional",
+  "aumUsd": 36697482851000
+ },
+ {
+  "cik": 1529090,
+  "name": "AKUNA SECURITIES LLC (CIK 0001529090)",
+  "tier": "institutional",
+  "aumUsd": 35826792644000
+ },
+ {
+  "cik": 1456670,
+  "name": "DnB Asset Management AS (CIK 0001456670)",
+  "tier": "institutional",
+  "aumUsd": 35716696814000
+ },
+ {
+  "cik": 1103804,
+  "name": "VIKING GLOBAL INVESTORS LP (CIK 0001103804)",
+  "tier": "fundamental",
+  "aumUsd": 35079228595000
+ },
+ {
+  "cik": 1569395,
+  "name": "Mirae Asset Global Investments Co., Ltd. (CIK 0001569395)",
+  "tier": "institutional",
+  "aumUsd": 34907366571000
+ },
+ {
+  "cik": 1747057,
+  "name": "D1 Capital Partners L.P. (CIK 0001747057)",
+  "tier": "institutional",
+  "aumUsd": 34783267943000
+ },
+ {
+  "cik": 1704268,
+  "name": "Mubadala Investment Co PJSC (CIK 0001704268)",
+  "tier": "institutional",
+  "aumUsd": 34771171317000
+ },
+ {
+  "cik": 937615,
+  "name": "NISA INVESTMENT ADVISORS, LLC (CIK 0000937615)",
+  "tier": "institutional",
+  "aumUsd": 34685069579000
+ },
+ {
+  "cik": 2062680,
+  "name": "Rakuten Investment Management, Inc. (CIK 0002062680)",
+  "tier": "institutional",
+  "aumUsd": 34638722665000
+ },
+ {
+  "cik": 1166559,
+  "name": "GATES FOUNDATION TRUST (CIK 0001166559)",
+  "tier": "institutional",
+  "aumUsd": 34424791932000
+ },
+ {
+  "cik": 2011612,
+  "name": "Pathstone Holdings, LLC (CIK 0002011612)",
+  "tier": "institutional",
+  "aumUsd": 34332928551000
+ },
+ {
+  "cik": 1164833,
+  "name": "HOTCHKIS & WILEY CAPITAL MANAGEMENT LLC (CIK 0001164833)",
+  "tier": "institutional",
+  "aumUsd": 34313644596000
+ },
+ {
+  "cik": 1027796,
+  "name": "PZENA INVESTMENT MANAGEMENT LLC (CIK 0001027796)",
+  "tier": "institutional",
+  "aumUsd": 34066282976000
+ },
+ {
+  "cik": 1482880,
+  "name": "Savant Capital, LLC (CIK 0001482880)",
+  "tier": "institutional",
+  "aumUsd": 34051890295000
+ },
+ {
+  "cik": 1007280,
+  "name": "PUBLIC EMPLOYEES RETIREMENT SYSTEM OF OHIO (CIK 0001007280)",
+  "tier": "institutional",
+  "aumUsd": 34019512382000
+ },
+ {
+  "cik": 948669,
+  "name": "PARNASSUS INVESTMENTS, LLC (CIK 0000948669)",
+  "tier": "institutional",
+  "aumUsd": 33795828132000
+ },
+ {
+  "cik": 1587973,
+  "name": "State of Tennessee, Department of Treasury (CIK 0001587973)",
+  "tier": "institutional",
+  "aumUsd": 33657722149000
+ },
+ {
+  "cik": 1633516,
+  "name": "NewEdge Advisors, LLC (CIK 0001633516)",
+  "tier": "institutional",
+  "aumUsd": 33571266895000
+ },
+ {
+  "cik": 1644956,
+  "name": "WILLIAM BLAIR INVESTMENT MANAGEMENT, LLC (CIK 0001644956)",
+  "tier": "institutional",
+  "aumUsd": 33254908063000
+ },
+ {
+  "cik": 1593051,
+  "name": "Retirement Systems of Alabama (CIK 0001593051)",
+  "tier": "institutional",
+  "aumUsd": 33212400755000
+ },
+ {
+  "cik": 313028,
+  "name": "BARROW HANLEY MEWHINNEY & STRAUSS LLC (CIK 0000313028)",
+  "tier": "institutional",
+  "aumUsd": 32979900942000
+ },
+ {
+  "cik": 945631,
+  "name": "EAGLE CAPITAL MANAGEMENT LLC (CIK 0000945631)",
+  "tier": "institutional",
+  "aumUsd": 32747808496000
+ },
+ {
+  "cik": 2022297,
+  "name": "Federation des caisses Desjardins du Quebec (CIK 0002022297)",
+  "tier": "institutional",
+  "aumUsd": 32728731605000
+ },
+ {
+  "cik": 883677,
+  "name": "PANAGORA ASSET MANAGEMENT INC (CIK 0000883677)",
+  "tier": "institutional",
+  "aumUsd": 32604826811000
+ },
+ {
+  "cik": 1784547,
+  "name": "Woodline Partners LP (CIK 0001784547)",
+  "tier": "institutional",
+  "aumUsd": 32353047814000
+ },
+ {
+  "cik": 1021223,
+  "name": "KAYNE ANDERSON RUDNICK INVESTMENT MANAGEMENT LLC (CIK 0001021223)",
+  "tier": "institutional",
+  "aumUsd": 32196664406000
+ },
+ {
+  "cik": 1607841,
+  "name": "SC US (TTGP), LTD. (CIK 0001607841)",
+  "tier": "institutional",
+  "aumUsd": 31889988253000
+ },
+ {
+  "cik": 1163648,
+  "name": "CI INVESTMENTS INC. (CIK 0001163648)",
+  "tier": "institutional",
+  "aumUsd": 31150684520000
+ },
+ {
+  "cik": 1717443,
+  "name": "KLP KAPITALFORVALTNING AS (CIK 0001717443)",
+  "tier": "institutional",
+  "aumUsd": 31006136262000
+ },
+ {
+  "cik": 1830819,
+  "name": "Kestra Advisory Services, LLC (CIK 0001830819)",
+  "tier": "institutional",
+  "aumUsd": 30995423606000
+ },
+ {
+  "cik": 1177719,
+  "name": "WESTFIELD CAPITAL MANAGEMENT CO LP (CIK 0001177719)",
+  "tier": "institutional",
+  "aumUsd": 30614527190000
+ },
+ {
+  "cik": 36270,
+  "name": "M&T BANK CORP (MTB, MTBPL, MTB-PH, MTB-PJ, MTB-PK) (CIK 0000036270)",
+  "tier": "institutional",
+  "aumUsd": 30531814034000
+ },
+ {
+  "cik": 1089877,
+  "name": "KEYBANK NATIONAL ASSOCIATION/OH (CIK 0001089877)",
+  "tier": "institutional",
+  "aumUsd": 30406085796000
+ },
+ {
+  "cik": 1316507,
+  "name": "Calamos Advisors LLC (CIK 0001316507)",
+  "tier": "institutional",
+  "aumUsd": 30069138419000
+ },
+ {
+  "cik": 3520,
+  "name": "FRED ALGER MANAGEMENT, LLC (CIK 0000003520)",
+  "tier": "institutional",
+  "aumUsd": 30008624473000
+ },
+ {
+  "cik": 947529,
+  "name": "VANGUARD ADVISERS INC (CIK 0000947529)",
+  "tier": "institutional",
+  "aumUsd": 29391405985000
+ },
+ {
+  "cik": 1483066,
+  "name": "State of New Jersey Common Pension Fund D (CIK 0001483066)",
+  "tier": "institutional",
+  "aumUsd": 29298557991000
+ },
+ {
+  "cik": 1745981,
+  "name": "WORLDQUANT MILLENNIUM ADVISORS LLC (CIK 0001745981)",
+  "tier": "institutional",
+  "aumUsd": 29127542560000
+ },
+ {
+  "cik": 1663865,
+  "name": "Orbis Allan Gray Ltd (CIK 0001663865)",
+  "tier": "institutional",
+  "aumUsd": 29098622771000
+ },
+ {
+  "cik": 900973,
+  "name": "Winslow Capital Management, LLC (CIK 0000900973)",
+  "tier": "institutional",
+  "aumUsd": 29059630524000
+ },
+ {
+  "cik": 882928,
+  "name": "TIAA-CREF INDIVIDUAL & INSTITUTIONAL SERVICES, LLC (CIK 0000882928)",
+  "tier": "institutional",
+  "aumUsd": 29050783668000
+ },
+ {
+  "cik": 1557017,
+  "name": "Capula Management Ltd (CIK 0001557017)",
+  "tier": "institutional",
+  "aumUsd": 27981981492000
+ },
+ {
+  "cik": 1758720,
+  "name": "Walleye Capital LLC (CIK 0001758720)",
+  "tier": "institutional",
+  "aumUsd": 27979180065000
+ },
+ {
+  "cik": 1665241,
+  "name": "Schonfeld Strategic Advisors LLC (CIK 0001665241)",
+  "tier": "institutional",
+  "aumUsd": 27887721978000
+ },
+ {
+  "cik": 1587381,
+  "name": "USS Investment Management Ltd (CIK 0001587381)",
+  "tier": "institutional",
+  "aumUsd": 27836604346000
+ },
+ {
+  "cik": 884414,
+  "name": "JACOBS LEVY EQUITY MANAGEMENT, INC (CIK 0000884414)",
+  "tier": "institutional",
+  "aumUsd": 27806872141000
+ },
+ {
+  "cik": 1102578,
+  "name": "EARNEST PARTNERS LLC (CIK 0001102578)",
+  "tier": "institutional",
+  "aumUsd": 27728480151000
+ },
+ {
+  "cik": 1588340,
+  "name": "Vontobel Holding Ltd. (CIK 0001588340)",
+  "tier": "institutional",
+  "aumUsd": 27667431789000
+ },
+ {
+  "cik": 1761013,
+  "name": "Cresset Asset Management, LLC (CIK 0001761013)",
+  "tier": "institutional",
+  "aumUsd": 27637957988000
+ },
+ {
+  "cik": 1505817,
+  "name": "Fiera Capital Corp (CIK 0001505817)",
+  "tier": "institutional",
+  "aumUsd": 27560616518000
+ },
+ {
+  "cik": 1177206,
+  "name": "LOS ANGELES CAPITAL MANAGEMENT LLC (CIK 0001177206)",
+  "tier": "institutional",
+  "aumUsd": 27202516133000
+ },
+ {
+  "cik": 2001019,
+  "name": "NEOS Investment Management LLC (CIK 0002001019)",
+  "tier": "institutional",
+  "aumUsd": 27133838080000
+ },
+ {
+  "cik": 1020066,
+  "name": "SANDS CAPITAL MANAGEMENT, LLC (CIK 0001020066)",
+  "tier": "institutional",
+  "aumUsd": 26928187141000
+ },
+ {
+  "cik": 1578621,
+  "name": "LMR Partners LLP (CIK 0001578621)",
+  "tier": "institutional",
+  "aumUsd": 26804884194000
+ },
+ {
+  "cik": 1666335,
+  "name": "Rokos Capital Management LLP (CIK 0001666335)",
+  "tier": "institutional",
+  "aumUsd": 26794348269000
+ },
+ {
+  "cik": 1335644,
+  "name": "SCOTIA CAPITAL INC. (CIK 0001335644)",
+  "tier": "institutional",
+  "aumUsd": 26757019507000
+ },
+ {
+  "cik": 820478,
+  "name": "STRS OHIO (CIK 0000820478)",
+  "tier": "institutional",
+  "aumUsd": 26685498139000
+ },
+ {
+  "cik": 1040197,
+  "name": "MAI Capital Management (CIK 0001040197)",
+  "tier": "institutional",
+  "aumUsd": 26599956695000
+ },
+ {
+  "cik": 2127509,
+  "name": "SEB Asset Management AB (CIK 0002127509)",
+  "tier": "institutional",
+  "aumUsd": 26560029968000
+ },
+ {
+  "cik": 1847328,
+  "name": "Nykredit A/S (CIK 0001847328)",
+  "tier": "institutional",
+  "aumUsd": 26237355897000
+ },
+ {
+  "cik": 1540569,
+  "name": "EP Wealth Advisors, LLC (CIK 0001540569)",
+  "tier": "institutional",
+  "aumUsd": 26169320775000
+ },
+ {
+  "cik": 1003518,
+  "name": "AGF MANAGEMENT LTD (CIK 0001003518)",
+  "tier": "institutional",
+  "aumUsd": 25769369519000
+ },
+ {
+  "cik": 1351917,
+  "name": "MENORA MIVTACHIM HOLDINGS LTD. (CIK 0001351917)",
+  "tier": "institutional",
+  "aumUsd": 25625632580000
+ },
+ {
+  "cik": 2024579,
+  "name": "Jain Global LLC (CIK 0002024579)",
+  "tier": "institutional",
+  "aumUsd": 25441194613000
+ },
+ {
+  "cik": 1397960,
+  "name": "Woodbridge CO LTD (CIK 0001397960)",
+  "tier": "institutional",
+  "aumUsd": 25249014258000
+ },
+ {
+  "cik": 1274981,
+  "name": "NATIXIS (CIK 0001274981)",
+  "tier": "institutional",
+  "aumUsd": 24842310347000
+ },
+ {
+  "cik": 310051,
+  "name": "KING LUTHER CAPITAL MANAGEMENT CORP (CIK 0000310051)",
+  "tier": "institutional",
+  "aumUsd": 24424838874000
+ },
+ {
+  "cik": 1350694,
+  "name": "Bridgewater Associates, LP (CIK 0001350694)",
+  "tier": "fundamental",
+  "aumUsd": 24376086530000
+ },
+ {
+  "cik": 107136,
+  "name": "&PARTNERS (CIK 0000107136)",
+  "tier": "institutional",
+  "aumUsd": 24366839693000
+ },
+ {
+  "cik": 1637689,
+  "name": "Swiss Life Asset Management Ltd (CIK 0001637689)",
+  "tier": "institutional",
+  "aumUsd": 24149117309000
+ },
+ {
+  "cik": 1167483,
+  "name": "TIGER GLOBAL MANAGEMENT LLC (CIK 0001167483)",
+  "tier": "fundamental",
+  "aumUsd": 23981506027000
+ },
+ {
+  "cik": 869589,
+  "name": "NISSAY ASSET MANAGEMENT CORP /JAPAN (CIK 0000869589)",
+  "tier": "institutional",
+  "aumUsd": 23665284316000
+ },
+ {
+  "cik": 1997464,
+  "name": "Marex Group Ltd (MRX) (CIK 0001997464)",
+  "tier": "institutional",
+  "aumUsd": 23571190877000
+ },
+ {
+  "cik": 1555170,
+  "name": "Allworth Financial LP (CIK 0001555170)",
+  "tier": "institutional",
+  "aumUsd": 23556908152000
+ },
+ {
+  "cik": 1556921,
+  "name": "VOLORIDGE INVESTMENT MANAGEMENT, LLC (CIK 0001556921)",
+  "tier": "institutional",
+  "aumUsd": 23507845488000
+ },
+ {
+  "cik": 1036325,
+  "name": "DAVIS SELECTED ADVISERS (CIK 0001036325)",
+  "tier": "institutional",
+  "aumUsd": 23289545492000
+ },
+ {
+  "cik": 1418333,
+  "name": "MACQUARIE GROUP LTD (CIK 0001418333)",
+  "tier": "institutional",
+  "aumUsd": 23153246013000
+ },
+ {
+  "cik": 1694164,
+  "name": "AustralianSuper Pty Ltd (CIK 0001694164)",
+  "tier": "institutional",
+  "aumUsd": 23094895408000
+ },
+ {
+  "cik": 2094379,
+  "name": "CAPITOLIS LIQUID GLOBAL MARKETS LLC (CIK 0002094379)",
+  "tier": "institutional",
+  "aumUsd": 22983862576000
+ },
+ {
+  "cik": 14661,
+  "name": "BROWN BROTHERS HARRIMAN & CO (CIK 0000014661)",
+  "tier": "institutional",
+  "aumUsd": 22805018172000
+ },
+ {
+  "cik": 1009076,
+  "name": "COMMERCE BANK (CIK 0001009076)",
+  "tier": "institutional",
+  "aumUsd": 22782984905000
+ },
+ {
+  "cik": 1323645,
+  "name": "CAPITAL FUND MANAGEMENT S.A. (CIK 0001323645)",
+  "tier": "institutional",
+  "aumUsd": 22701784787000
+ },
+ {
+  "cik": 1791786,
+  "name": "Elliott Investment Management L.P. (CIK 0001791786)",
+  "tier": "institutional",
+  "aumUsd": 22669814953000
+ },
+ {
+  "cik": 314949,
+  "name": "GLENMEDE TRUST CO NA (CIK 0000314949)",
+  "tier": "institutional",
+  "aumUsd": 22656072328000
+ },
+ {
+  "cik": 762152,
+  "name": "STATE OF MICHIGAN RETIREMENT SYSTEM (CIK 0000762152)",
+  "tier": "institutional",
+  "aumUsd": 22589246390000
+ }
+]
