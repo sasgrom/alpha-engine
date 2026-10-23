@@ -78,7 +78,17 @@ export interface EdgarFiling {
   eventTs: string;
 }
 
-export const EDGAR_FORMS = new Set(["10-K", "10-Q", "8-K"]);
+// 5e expansion (owner pick): + amendments (10-K/A, 10-Q/A, 8-K/A — restatement
+// content lives there) and activist-ownership schedules in both SEC spellings.
+// DEF 14A skipped (neutral boilerplate by design), S-1/424B skipped (no IPO
+// flow in the S&P 500), Form 4 = the cloud insiders pipeline, 13F = its own
+// iteration (fund-side universe + CUSIP map, not a tone row).
+export const EDGAR_FORMS = new Set([
+  "10-K", "10-Q", "8-K",
+  "10-K/A", "10-Q/A", "8-K/A",
+  "SC 13D", "SC 13D/A", "SC 13G", "SC 13G/A",
+  "SCHEDULE 13D", "SCHEDULE 13D/A", "SCHEDULE 13G", "SCHEDULE 13G/A",
+]);
 
 function acceptanceToTs(raw: string | undefined, filingDate: string): string {
   // acceptanceDateTime comes as "20240101235959" (ET wall clock, no zone) —
@@ -251,7 +261,11 @@ export function extractScorableText(plain: string, form: string): string {
   const sigMatches = [...plain.matchAll(/^\s*SIGNATURES?\s*$/gim)];
   const sigIdx = sigMatches.length > 0 ? sigMatches[sigMatches.length - 1].index! : -1;
   const body = sigIdx > 0 ? plain.slice(0, sigIdx) : plain;
-  if (form === "8-K") {
+  // Amendments keep the base form's structure (10-K/A → item 7 MD&A);
+  // 13D/G schedules read like 8-Ks (Item 1-7, Item 4 "Purpose" is the meat).
+  const base = form.replace("/A", "");
+  const is13DG = /^(SC 13|SC 13G|SCHEDULE 13)/i.test(form);
+  if (base === "8-K" || is13DG) {
     // 5c fix: the cover page + TABLE OF CONTENTS flooded the window and the
     // model rightly reported "only TOC entries" (score 0). Skip the TOC block
     // when present, then start at the first real Item heading; pre-2005
@@ -268,8 +282,8 @@ export function extractScorableText(plain: string, form: string): string {
     const firstItem = rest.match(/^\s*item\s+\d/im);
     return (firstItem ? rest.slice(firstItem.index) : body).trim();
   }
-  const startRe = form === "10-K" ? /^\s*item\s+7[\.\:\s]/i : /^\s*item\s+2[\.\:\s]/i;
-  const endRe = form === "10-K" ? /^\s*item\s+(7a|8)[\.\:\s]/i : /^\s*item\s+3[\.\:\s]/i;
+  const startRe = base === "10-K" ? /^\s*item\s+7[\.\:\s]/i : /^\s*item\s+2[\.\:\s]/i;
+  const endRe = base === "10-K" ? /^\s*item\s+(7a|8)[\.\:\s]/i : /^\s*item\s+3[\.\:\s]/i;
   const start = findHeading(body, startRe);
   if (start == null) return body.slice(0, 12_000); // anchor miss: honest fallback, head of doc
   const lineEnd = body.indexOf("\n", start);

@@ -331,6 +331,27 @@ describe("edgar extractScorableText", () => {
     const out = extractScorableText("No items here at all, just prose.", "10-K");
     expect(out).toContain("just prose.");
   });
+  it("amendments reuse the base form's anchors (10-K/A → Item 7 MD&A; 8-K/A → body)", () => {
+    const out = extractScorableText(TEN_K, "10-K/A");
+    expect(out).toContain("Revenue increased driven by services.");
+    const k = ["Item 2.02 Results of Operations (amended)", "Restated EPS lower.", "SIGNATURES", "signed"].join("\n");
+    expect(extractScorableText(k, "8-K/A")).toContain("Restated EPS lower.");
+  });
+  it("13D/G schedules: cover skipped, starts at the first Item (Item 4 Purpose is the meat)", () => {
+    const d = [
+      "SCHEDULE 13D",
+      "CUSIP 037833100",
+      "Item 1. Security and Issuer",
+      "Class A common stock of Apple Inc.",
+      "Item 4. Purpose of Transaction",
+      "The reporting person intends to engage with management on capital allocation.",
+      "Item 7. Material to be Filed as Exhibits",
+    ].join("\n");
+    const out = extractScorableText(d, "SC 13D");
+    expect(out).toContain("intends to engage with management");
+    expect(out).not.toContain("CUSIP 037833100");
+    expect(extractScorableText(d, "SCHEDULE 13G/A")).toContain("intends to engage with management");
+  });
 });
 
 describe("edgar mdaWindows", () => {
