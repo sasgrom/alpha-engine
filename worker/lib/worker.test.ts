@@ -468,3 +468,32 @@ describe("13f: latestPerQuarter + events", () => {
     expect(f.find((x) => x.name === "Citadel Advisors")?.cik).toBe(1423053);
   });
 });
+
+// ---------------------------------------------------------------------------
+// 13f scale auto-calibration
+// ---------------------------------------------------------------------------
+import { autoScale13F } from "./thirteenf";
+
+describe("13f autoScale13F", () => {
+  it("dollar-reported filing (median implied > $5,000) is divided by 1000", () => {
+    // Point72-style: SPY value already in dollars → implied ~$747 × 1000
+    const hs = Array.from({ length: 10 }, (_, i) => ({
+      issuer: "X", cusip: "c" + i, secClass: "COM",
+      valueUsd: 746_770 * (100 + i), shares: 100 + i,
+    }));
+    const r = autoScale13F(hs);
+    expect(r.scale).toBe(0.001);
+    expect(hs[0].valueUsd).toBe(Math.round(746_770 * 100 / 1000));
+  });
+  it("spec-compliant filing (thousands) is untouched", () => {
+    const hs = Array.from({ length: 10 }, (_, i) => ({
+      issuer: "X", cusip: "c" + i, secClass: "COM",
+      valueUsd: 250 * (100 + i), shares: 100 + i, // implied $250
+    }));
+    expect(autoScale13F(hs).scale).toBe(1);
+  });
+  it("tiny books (<5 priced rows) are never rescaled", () => {
+    const hs = [{ issuer: "X", cusip: "c", secClass: "COM", valueUsd: 10_000_000, shares: 1 }];
+    expect(autoScale13F(hs).scale).toBe(1);
+  });
+});

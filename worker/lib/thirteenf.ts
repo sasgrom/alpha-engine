@@ -57,6 +57,28 @@ export function parseInfoTable(xml: string): Holding13F[] {
   return out;
 }
 
+/**
+ * Scale auto-calibration (proven on Point72 2026-08-14): the 13F spec says
+ * value is in THOUSANDS of USD, but some filers report actual DOLLARS. Detect
+ * per FILING: median implied price (value/shares) over the book; a median
+ * above $5,000 is impossible for a broad equity book (S&P 500 prices run
+ * $1–$1,000; even BRK.A can't dominate a median) → the filing was dollars,
+ * values are divided by 1000. Deterministic, logged by the caller.
+ */
+export function autoScale13F(holdings: Holding13F[]): { scale: number; medianImplied: number | null } {
+  const implied = holdings
+    .filter((h) => h.valueUsd !== null && h.shares !== null && h.shares > 0)
+    .map((h) => (h.valueUsd as number) / (h.shares as number))
+    .sort((a, b) => a - b);
+  if (implied.length < 5) return { scale: 1, medianImplied: implied.length ? implied[Math.floor(implied.length / 2)] : null };
+  const medianImplied = implied[Math.floor(implied.length / 2)];
+  if (medianImplied > 5000) {
+    for (const h of holdings) if (h.valueUsd !== null) h.valueUsd = Math.round(h.valueUsd / 1000);
+    return { scale: 0.001, medianImplied };
+  }
+  return { scale: 1, medianImplied };
+}
+
 /** One filings-list row as we shape it from the submissions API. */
 export interface Filing13F { accessionNo: string; form: string; filingDate: string; reportDate: string }
 
@@ -102,7 +124,8 @@ export interface NoteCtx {
   holders?: number | null;    // tracked funds holding this name that quarter
 }
 
-const pct = (v: number | null | undefined) => (v === null || v === undefined ? null : `${Math.round(v * 10) / 10}%`);
+const pct = (v: number | null | undefined) =>
+  v === null || v === undefined ? null : v > 0 && v < 0.05 ? "<0.1%" : `${Math.round(v * 10) / 10}%`;
 
 /** Deterministic note for a position event (no LLM). */
 export function eventNote(fundName: string, ev: PositionEvent, secClass = "COM", ctx: NoteCtx = {}): string {

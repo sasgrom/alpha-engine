@@ -15,7 +15,7 @@ import "dotenv/config";
 import { sql } from "drizzle-orm";
 import { getDb } from "../api/queries/connection";
 import { listFilings, listFilingDocs, fetchDoc } from "../worker/lib/edgar";
-import { loadFundUniverse, latestPerQuarter, parseInfoTable, positionEvent, eventNote, buildPositionRow, SIGNAL_TIERS } from "../worker/lib/thirteenf";
+import { loadFundUniverse, latestPerQuarter, parseInfoTable, positionEvent, eventNote, buildPositionRow, SIGNAL_TIERS, autoScale13F } from "../worker/lib/thirteenf";
 import { startProgress } from "../worker/lib/progress";
 
 const FORMS_13F = new Set(["13F-HR", "13F-HR/A"]);
@@ -198,6 +198,8 @@ for (const fund of funds) {
       const biggest = docs.sort((a, b) => b.size - a.size)[0];
       if (!biggest) { prog.log(`! ${fund.name} ${q.reportDate}: no xml info table`); continue; }
       const holdings = parseInfoTable(await fetchDoc(fund.cik, q.accessionNo, biggest.name));
+      const sc = autoScale13F(holdings); // some filers report dollars, not thousands
+      if (sc.scale !== 1) prog.log(`! ${fund.name} ${q.reportDate}: value field is in DOLLARS (median implied $${Math.round(sc.medianImplied!).toLocaleString("en-US")}) — scaled ÷1000`);
       const map = await mapCusips([...new Set(holdings.map((h) => h.cusip))]);
       const curShares = new Map<string, { cik: number; cls: string; shares: number }>();
       for (const h of holdings) {
