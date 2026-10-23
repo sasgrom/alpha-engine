@@ -50,7 +50,7 @@ export async function verifyWorkerKey(authHeader: string | null): Promise<string
 export const workerSignalRowZ = z.object({
   cik: z.number().int(),
   source: z.enum(["gdelt", "stocktwits", "reddit", "youtube", "trends", "edgar", "13f"]),
-  signalType: z.enum(["tone", "buzz", "label"]),
+  signalType: z.enum(["tone", "buzz", "label", "position"]),
   eventTs: z.string().regex(/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(:\d{2})?/), // datetime
   score: z.number().min(-1).max(1).nullish(),
   magnitude: z.number().nullish(),
