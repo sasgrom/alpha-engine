@@ -48,7 +48,7 @@ function saveWatermark(id: number) {
 const lastId = loadWatermark();
 const db = getDb();
 const [rows]: any = await db.execute(
-  sql`SELECT id, cik, source, signalType, eventTs, score, magnitude, payloadKey, src
+  sql`SELECT id, cik, source, signalType, eventTs, score, magnitude, payloadKey, src, note
       FROM signals WHERE source = ${source} AND id > ${lastId} ORDER BY id`
 );
 console.log(`[push] source=${source}: ${rows.length} local rows after watermark id>${lastId}`);
