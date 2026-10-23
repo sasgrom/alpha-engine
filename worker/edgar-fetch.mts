@@ -40,7 +40,15 @@ export interface ManifestEntry extends EdgarFiling {
   exFile?: string | null;
   exChecked?: boolean;
   error?: string;
+  /** consecutive fetch failures; ≥ MAX_FAILURES → dead (SEC link is truly gone) */
+  failCount?: number;
+  dead?: boolean;
 }
+
+/** A doc failing 3 times across runs is declared dead — old Archives links
+ *  rot permanently; retrying costs 62s of backoff per doc per run (the 3.5h
+ *  "empty pass" the owner measured). --retry-failed resurrects deliberately. */
+const MAX_FAILURES = 3;
 
 const cacheDir = (cik: number) => path.resolve(import.meta.dirname, "cache", "edgar", String(cik));
 const manifestPath = (cik: number) => path.join(cacheDir(cik), "manifest.json");
@@ -57,8 +65,20 @@ const onlyIdx = process.argv.indexOf("--only");
 const only = onlyIdx > -1 ? process.argv[onlyIdx + 1]?.toUpperCase() : null;
 const fromIdx = process.argv.indexOf("--from");
 const from = fromIdx > -1 ? process.argv[fromIdx + 1] : null; // YYYY-MM-DD lower bound
+// --from-ticker TICKER: skip companies BEFORE this one in the universe order
+// (owner: resume mid-index without re-walking finished companies)
+const fromTickerIdx = process.argv.indexOf("--from-ticker");
+const fromTicker = fromTickerIdx > -1 ? process.argv[fromTickerIdx + 1]?.toUpperCase() : null;
+// --retry-failed: also retry entries declared dead after MAX_FAILURES
+const retryFailed = process.argv.includes("--retry-failed");
 
-const universe = loadEdgarUniverse().filter((c) => !only || c.ticker === only);
+const universeAll = loadEdgarUniverse().filter((c) => !only || c.ticker === only);
+let universe = universeAll;
+if (fromTicker) {
+  const idx = universeAll.findIndex((c) => c.ticker === fromTicker);
+  if (idx === -1) { console.error(`[edgar-fetch] unknown --from-ticker ${fromTicker}`); process.exit(1); }
+  universe = universeAll.slice(idx);
+}
 if (only && universe.length === 0) { console.error(`[edgar-fetch] unknown ticker ${only}`); process.exit(1); }
 
 const prog = startProgress("edgar-fetch", `${universe.length} companies${only ? ` (only ${only})` : ""}${from ? `, from ${from}` : ""}`);
@@ -87,6 +107,8 @@ for (const co of universe) {
       known.set(f.accessionNo, entry);
       fresh++;
     }
+    // legacy errors (pre-dead-flag runs) get two last chances, not infinity
+    if (!entry.fetched && entry.error && entry.failCount === undefined) entry.failCount = 1;
     // 8-K exhibit pass (5c): even when the primary doc is cached, grab the
     // largest textual exhibit — earnings 8-Ks carry the press release in
     // EX-99.x while the primary doc is cover + one sentence.
@@ -107,6 +129,7 @@ for (const co of universe) {
       }
       continue;
     }
+    if (entry.dead && !retryFailed) continue; // dead links stay dead (62s backoff each)
     if (entry.fetched) continue;
     try {
       const { docName, html } = await fetchFilingDocument(co.cik, f);
@@ -115,9 +138,13 @@ for (const co of universe) {
       entry.docName = docName;
       entry.fetched = true;
       delete entry.error;
+      delete entry.dead;
+      entry.failCount = 0;
       fetched++;
     } catch (err) {
       entry.error = String(err).slice(0, 200);
+      entry.failCount = (entry.failCount ?? 0) + 1;
+      if (entry.failCount >= MAX_FAILURES) entry.dead = true;
       failed++;
     }
     if ((i + 1) % 25 === 0) {
