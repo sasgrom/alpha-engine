@@ -19,7 +19,10 @@ import path from "node:path";
 const SEC_BASE = "https://www.sec.gov";
 const SEC_DATA_BASE = "https://data.sec.gov";
 const UA = "alpha-engine-research/1.0 (contact: owner@alphadelta-2.kimi.pro)";
-const RPS = 3;
+// SEC fair access: 10 req/s per IP — shared with everything else on the box
+// (browser, 13f, second worker). Default conservative 3; SEC_RPS env overrides
+// for a deliberate burst (owner asked for 7 during the 13F rebuild). Capped.
+const RPS = Math.min(Math.max(Number(process.env.SEC_RPS ?? 3) || 3, 1), 8);
 
 // --- tiny serialized rate limiter (same shape as the server's) -------------
 let nextAllowed = 0;
