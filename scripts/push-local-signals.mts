@@ -30,6 +30,9 @@ const arg = (name: string) => {
 };
 const source = arg("--source") ?? "edgar";
 const dry = process.argv.includes("--dry");
+// --reset: ignore the watermark (re-send everything local has for the source;
+// prod dedupes) — used after healing prod (e.g. rows pushed without notes).
+if (process.argv.includes("--reset")) saveWatermark(0);
 
 function loadWatermark(): number {
   try { return Number(JSON.parse(readFileSync(WM_FILE, "utf8"))[source] ?? 0); } catch { return 0; }
@@ -60,6 +63,7 @@ const mapped: SignalRow[] = rows.map((r: any) => ({
   magnitude: r.magnitude,
   payloadKey: r.payloadKey,
   src: r.src ?? "backfill",
+  note: r.note ?? null, // 5c: model rationale rides along (5b forgot it — found on first push)
 }));
 const maxId = Number(rows[rows.length - 1].id);
 
