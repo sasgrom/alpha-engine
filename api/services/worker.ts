@@ -72,20 +72,6 @@ export const workerDigestRowZ = z.object({
 });
 export type WorkerDigestRow = z.infer<typeof workerDigestRowZ>;
 
-export const workerIngestBodyZ = z.discriminatedUnion("kind", [
-  z.object({
-    kind: z.literal("signals"),
-    rows: z.array(workerSignalRowZ).min(1).max(500), // packet rule (D23 lineage)
-  }),
-  z.object({
-    kind: z.literal("digests"),
-    rows: z.array(workerDigestRowZ).min(1).max(10),
-  }),
-  z.object({
-    kind: z.literal("holdings"),
-    rows: z.array(workerHoldingRowZ).min(1).max(500),
-  }),
-]);
 /** 5g: one 13F holding row (positions go through ingest like signals do). */
 export const workerHoldingRowZ = z.object({
   fundCik: z.number().int(),
@@ -101,6 +87,21 @@ export const workerHoldingRowZ = z.object({
   tier: z.string().max(16).nullish(),
 });
 export type WorkerHoldingRow = z.infer<typeof workerHoldingRowZ>;
+
+export const workerIngestBodyZ = z.discriminatedUnion("kind", [
+  z.object({
+    kind: z.literal("signals"),
+    rows: z.array(workerSignalRowZ).min(1).max(500), // packet rule (D23 lineage)
+  }),
+  z.object({
+    kind: z.literal("digests"),
+    rows: z.array(workerDigestRowZ).min(1).max(10),
+  }),
+  z.object({
+    kind: z.literal("holdings"),
+    rows: z.array(workerHoldingRowZ).min(1).max(500),
+  }),
+]);
 
 /** Upsert-free insert (INSERT IGNORE on the uq) — redeliveries are free. */
 export async function ingestHoldings(rows: WorkerHoldingRow[]): Promise<{ accepted: number; skippedDupes: number }> {
