@@ -56,8 +56,19 @@ const ourCiks = new Set<number>(companies.map((c: any) => Number(c.cik)));
 async function mapCusips(cusips: string[]): Promise<Map<string, { cik: number | null; ticker: string | null }>> {
   // repair pass first: cached rows whose ticker never resolved to a cik (the
   // local companies registry was empty on the first runs — 32k cusips mapped
-  // to tickers but only 11 resolved) re-resolve against companies for free
-  await db.execute(sql`UPDATE cusip_map m JOIN companies c ON c.ticker = m.ticker SET m.cik = c.cik WHERE m.cik IS NULL AND m.ticker IS NOT NULL`);
+  // to tickers but only 11 resolved) re-resolve against companies for free.
+  // JS-side join: UPDATE...JOIN hit a collation mismatch between the tables.
+  try {
+    const [pending]: any = await db.execute(sql`SELECT cusip, ticker FROM cusip_map WHERE cik IS NULL AND ticker IS NOT NULL`);
+    if (pending.length > 0) {
+      const [comp]: any = await db.execute(sql`SELECT cik, ticker FROM companies`);
+      const byTicker = new Map(comp.map((c: any) => [String(c.ticker), Number(c.cik)]));
+      for (const row of pending) {
+        const cik = byTicker.get(String(row.ticker));
+        if (cik) await db.execute(sql`UPDATE cusip_map SET cik = ${cik} WHERE cusip = ${row.cusip}`);
+      }
+    }
+  } catch { /* repair is best-effort, never blocks the run */ }
   const out = new Map<string, { cik: number | null; ticker: string | null }>();
   const missing: string[] = [];
   for (const c of cusips) {
