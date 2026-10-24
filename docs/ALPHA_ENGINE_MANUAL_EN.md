@@ -1121,6 +1121,15 @@ From the first NVDA runs (owner eyeballing via why): (1) MD&A extraction verifie
   vintage latest/first/as-of, "tag ended …" markers, health/partial behind
   the debug toggle; the series explorer below) · Documents · **Sentiment** —
   CONDITIONAL, shown when scores exist;
+- **Company Overview additions (5f/6b):** Institutional ownership card (13F:
+  holders, $held, % of shares outstanding, QoQ delta, top holders) and the
+  Next-quarter up-probability card (walk-forward Bayes with macro prior,
+  hit rates, factors used with |IC|, calibration bins). VALUE tab also carries
+  the Factor IC card (6a). Signals tab: 7d aggregates, signal stream,
+  quarterly briefs;
+- **Fund flows** (5g-3D, owner-only) — 3D fund×company graph: outer ring of
+  funds by tier, inner ring of companies by GICS sector, QoQ position edges
+  (green inflow/red outflow), hover details, click-to-focus;
 - **Jobs & Logs** — a user sees their own queue (auto-ingests); the admin
   gets the launcher and everyone's jobs with launcher names; live console;
   cancel: own jobs (user) / any (admin); acceptance/completion/error toasts;
@@ -1133,6 +1142,10 @@ From the first NVDA runs (owner eyeballing via why): (1) MD&A extraction verifie
   version, billed-token counter, pre-registered validation protocol with the
   sample-readiness traffic light, quality gates, academic grounding;
 - **Admin** (owner-only) — Manuals (EN/RU + LLM context, disk/bundled source
+  of truth), Job Logs (full log up to 2000 lines), **Users** (4d: list with
+  summaries, create/delete/reset password/role, view-as button, D36), Tools
+  (Database, Lab, Bulk price archive import), **Factor IC monitor (6a)** next
+  to the workers intake card;
   shown), Job Logs (full log up to 2000 lines), **Users** (4d: list with
   summaries, create/delete/reset-password/role, view-as button, D36), Tools
   (Database, Lab, Bulk price archive import).

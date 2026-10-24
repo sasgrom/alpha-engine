@@ -1099,7 +1099,30 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 - **Dashboard** — счётчики (universe = мой активный watchlist; jobs =
   running+queued), последние филинги МОЕЙ выборки, задачи; кнопки-лаунчеры
   джобов — только админу (D31);
-- **Universe** — МОЯ выборка (4c): таблица membership'ов (свитч active =
+- - **Universe** — МОЯ выборка (4c): таблица membership'ов (свитч active =
+  скрыть/показать у меня; корзина = удалить из моего списка, логируется
+  micro-job'ом, re-add = как новая); добавление тикера — автоподсказка по
+  справочнику SEC (тикер И название), компании вне БД получают бейдж
+  INGESTING (авто-ингест); admin-дополнительно: Scope Builder (чипы индексов,
+  GICS-селекторы, пресеты — пресеты per-user), Bootstrap S&P 500, GICS-кнопка;
+- **Company /:ticker** — вкладки: Overview (ценовой блок 4f: честная подпись
+  дневного изменения с датой свежести, Δ%/Δ$ выбранного диапазона, Brush
+  произвольного периода, earnings-маркеры из 8-K; ниже карточка компании,
+  счётчики корпуса, data-health rollup + flagged series, плюс карточки
+  **Institutional ownership (13F)** и **Next-quarter up-probability (6b)**) · Fundamentals
+  (единая statements-сетка 4f: 20 кварталов / 10 лет, quarterly/annual как
+  плотность одной сетки, vintage latest/first/as-of, маркеры «tag ended …»,
+  health/partial — за debug-переключателем; ниже series explorer) ·
+  Documents · **Sentiment** — УСЛОВНАЯ, видна при наличии скоров;
+  **Signals** — агрегаты 7д + Signal stream + Quarterly briefs + Factor IC (6a);
+- **Fund flows** (5g-3D, owner-only) — 3D-граф фондов×компаний: внешнее кольцо
+  фонды по ярусам, внутреннее — компании по секторам, рёбра QoQ позиций,
+  зелёные притоки/красные оттоки; hover-подсказки, клик-фокус;
+- **Admin** (owner-only) — Manuals (EN/RU + LLM context, источник
+  disk/bundled), Job Logs (полный лог до 2000 строк), **Users** (4d:
+  список со сводками, создание/удаление/сброс пароля/роль, кнопка view-as,
+  D36), Tools (Database, Lab, Bulk price archive import), **Factor IC
+  monitor (6a, кросс-секционный)**, Workers intake;
   скрыть/показать у меня; корзина = удалить из моего списка, логируется
   micro-job'ом, re-add = как новая); добавление тикера — автоподсказка по
   справочнику SEC (тикер И название), компании вне БД получают бейдж
