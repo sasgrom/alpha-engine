@@ -49,6 +49,8 @@ export default function Dashboard() {
   const macro = trpc.dashboard.macro.useQuery(undefined, { refetchInterval: 60000 });
   // 5e: morning brief written by the home LLM from yesterday's signals
   const digest = trpc.digests.latest.useQuery(undefined, { refetchInterval: 120000 });
+  // 5g: sector-level 13F net flows (tracked top-300 funds)
+  const flows = trpc.dashboard.sectorFlows.useQuery(undefined, { refetchInterval: 300000 });
 
   return (
     <AppLayout title="Mission Control">
@@ -94,6 +96,23 @@ export default function Dashboard() {
           </Button>
         </Link>
       </div>
+      )}
+
+      {/* 5g: 13F sector flows — where tracked funds' money moved QoQ */}
+      {flows.data && flows.data.length > 0 && (
+        <div className="t-panel px-4 py-3 mt-5">
+          <div className="t-label mb-2.5">13F sector flows — tracked top-300 funds, QoQ by reported value</div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-x-6 gap-y-2">
+            {flows.data.map((f: any) => (
+              <div key={f.sector}>
+                <div className="t-label !text-[8px]" title={f.sector}>{f.sector}</div>
+                <div className={`t-mono text-[13px] mt-0.5 ${f.deltaUsd >= 0 ? "text-emerald-400" : "text-crit-red"}`}>
+                  {f.deltaUsd >= 0 ? "+" : "−"}{f.deltaUsd >= 1e12 || f.deltaUsd <= -1e12 ? `$${(Math.abs(f.deltaUsd) / 1e12).toFixed(1)}T` : `$${(Math.abs(f.deltaUsd) / 1e9).toFixed(1)}B`}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {/* 5e: morning brief — home-LLM digest of yesterday's signals */}

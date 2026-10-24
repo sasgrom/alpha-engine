@@ -7,6 +7,7 @@ import { companies, filings, facts, jobs, jobLogs, users, userUniverse } from "@
 import { createJob, recordUniverseAction, requestCancel } from "../services/runner";
 import { companyInDb, invalidateScreenerCache } from "../services/membership";
 import { latestMacro } from "../services/macro";
+import { sectorFlows } from "../services/institutional";
 import * as edgar from "../services/edgar";
 
 // ---------------------------------------------------------------------------
@@ -70,6 +71,9 @@ export const dashboardRouter = createRouter({
 
   /** 4m (D46): the FRED regime pack's latest values — the Stage 4 seed card. */
   macro: authedQuery.query(() => latestMacro()),
+
+  /** 5g: net QoQ 13F value flows by GICS sector (tracked top-300 funds). */
+  sectorFlows: authedQuery.query(() => sectorFlows()),
 });
 
 // ---------------------------------------------------------------------------
