@@ -60,7 +60,41 @@ export async function institutionalSummary(cik: number): Promise<InstitutionalSu
   };
 }
 
-/** Net QoQ value flow by GICS sector for the latest quarter (dashboard). */
+/** 5g-3D: fund×company flow graph for the latest quarter (top |delta| edges). */
+export async function fundFlowsGraph(limit = 400): Promise<{
+  funds: { cik: number; name: string; tier: string | null }[];
+  companies: { cik: number; ticker: string; sector: string | null }[];
+  edges: { fundCik: number; cik: number; curUsd: number; deltaUsd: number }[];
+}> {
+  const db = getDb();
+  const [qs]: any = await db.execute(sql`SELECT DISTINCT quarterDate FROM fund_holdings ORDER BY quarterDate DESC LIMIT 2`);
+  if (qs.length === 0) return { funds: [], companies: [], edges: [] };
+  const cur = String(qs[0].quarterDate).slice(0, 10);
+  const prev = qs.length > 1 ? String(qs[1].quarterDate).slice(0, 10) : null;
+
+  const [companies]: any = await db.execute(sql`SELECT cik, ticker, sector FROM companies`);
+  if (!prev) return { funds: [], companies: companies.map((c: any) => ({ cik: Number(c.cik), ticker: String(c.ticker), sector: c.sector ?? null })), edges: [] };
+
+  const [rows]: any = await db.execute(sql`
+    SELECT h.fundCik, h.heldCik AS cik,
+           SUM(CASE WHEN h.quarterDate=${cur} THEN h.valueUsd ELSE 0 END) curUsd,
+           SUM(CASE WHEN h.quarterDate=${prev} THEN h.valueUsd ELSE 0 END) prevUsd
+    FROM fund_holdings h
+    WHERE h.quarterDate IN (${cur}, ${prev}) AND h.secClass='COM' AND h.heldCik IS NOT NULL
+    GROUP BY h.fundCik, h.heldCik
+    HAVING ABS(curUsd - prevUsd) > 0
+    ORDER BY ABS(curUsd - prevUsd) DESC
+    LIMIT ${limit}`);
+  const fundCiks = [...new Set(rows.map((r: any) => Number(r.fundCik)))];
+  const funds = (await db.execute(sql`SELECT DISTINCT fundCik, fundName, tier FROM fund_holdings WHERE fundCik IN (${sql.join(fundCiks.map((c) => sql`${c}`), sql`, `)})`))[0]
+    .map((f: any) => ({ cik: Number(f.fundCik), name: String(f.fundName), tier: f.tier ?? null }));
+  return {
+    funds,
+    companies: companies.map((c: any) => ({ cik: Number(c.cik), ticker: String(c.ticker), sector: c.sector ?? null })),
+    edges: rows.map((r: any) => ({ fundCik: Number(r.fundCik), cik: Number(r.cik), curUsd: Number(r.curUsd ?? 0), deltaUsd: Number(r.curUsd ?? 0) - Number(r.prevUsd ?? 0) })),
+  };
+}
+
 export async function sectorFlows(): Promise<{ sector: string; deltaUsd: number; curUsd: number }[]> {
   const db = getDb();
   const [qs]: any = await db.execute(sql`SELECT DISTINCT quarterDate FROM fund_holdings ORDER BY quarterDate DESC LIMIT 2`);

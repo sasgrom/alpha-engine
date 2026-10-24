@@ -719,6 +719,18 @@ export const factorPoints = mysqlTable(
 );
 export type FactorPoint = typeof factorPoints.$inferSelect;
 
+/** 5g fix: per-fund-quarter completion marker (sparse-quarter repair). */
+export const fundJobs = mysqlTable(
+  "fund_jobs",
+  {
+    fundCik: int("fundCik").notNull(),
+    quarterDate: date("quarterDate", { mode: "string" }).notNull(),
+    doneAt: timestamp("doneAt").defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("uq_fund_jobs").on(t.fundCik, t.quarterDate)]
+);
+export type FundJob = typeof fundJobs.$inferSelect;
+
 // ---------------------------------------------------------------------------
 // Iteration 4i (D42) — insider trades from Form 4 XML. Schema only; the
 // worker/ETL populates it (4j). filingDate is the point-in-time anchor.

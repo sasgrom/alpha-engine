@@ -278,14 +278,17 @@ for (const fund of funds) {
   const quarters = latestPerQuarter(filings.map((f) => ({ accessionNo: f.accessionNo, form: f.form, filingDate: f.filingDate, reportDate: f.reportDate || f.filingDate }))).slice(-QUARTERS);
   if (quarters.length === 0) { prog.stageDone(`${fund.name}: no 13F filings`); continue; }
 
-  // previous-quarter positions per heldCik:secClass, seeded from the DB
+  // previous-quarter positions per heldCik:secClass, seeded from the DB.
+  // Completion comes from fund_jobs (a quarter is seen ONLY if its block
+  // completed) — never from "some rows exist": a crashed quarter used to be
+  // skipped forever, which is how 2026-09-30 ended up 30x under-filled.
   const prevShares = new Map<string, { shares: number; valueUsd: number | null }>();
   const [seed]: any = await db.execute(sql`SELECT heldCik, secClass, shares, valueUsd, quarterDate FROM fund_holdings WHERE fundCik = ${fund.cik} AND heldCik IS NOT NULL ORDER BY quarterDate`);
-  const seenQuarter = new Set<string>();
   for (const r of seed) {
-    seenQuarter.add(String(r.quarterDate));
     prevShares.set(`${r.heldCik}:${r.secClass ?? "COM"}`, { shares: Number(r.shares ?? 0), valueUsd: r.valueUsd !== null ? Number(r.valueUsd) : null });
   }
+  const [doneRows]: any = await db.execute(sql`SELECT quarterDate FROM fund_jobs WHERE fundCik = ${fund.cik}`);
+  const seenQuarter = new Set(doneRows.map((r: any) => String(r.quarterDate)));
 
   let fundRows = 0, fundEvents = 0;
   for (const q of quarters) {
@@ -326,6 +329,8 @@ for (const fund of funds) {
         fundEvents += await eventsForQuarter(fund, prevShares, curShares, q.reportDate, quarters[quarters.indexOf(q) - 1]?.reportDate ?? null);
       }
       for (const [k, v] of curShares) prevShares.set(k, { shares: v.shares, valueUsd: v.valueUsd });
+      // completion is recorded ONLY here — after holdings AND events landed
+      await db.execute(sql`INSERT IGNORE INTO fund_jobs (fundCik, quarterDate) VALUES (${fund.cik}, ${q.reportDate})`);
       prog.item(quarters.indexOf(q) + 1, quarters.length, `${fundRows} rows, ${fundEvents} events`);
     } catch (err) {
       prog.log(`! ${fund.name} ${q.reportDate}: ${String(err).slice(0, 150)}`);

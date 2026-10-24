@@ -10,6 +10,7 @@ import DatabasePage from './pages/Database'
 import Lab from './pages/Lab'
 import Admin from './pages/Admin'
 import Workers from './pages/Workers'
+import FundFlows from './pages/FundFlows'
 import Messages from './pages/Messages'
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
@@ -62,6 +63,7 @@ export default function App() {
       <Route path="/lab" element={<AdminOnly><Lab /></AdminOnly>} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/workers" element={<AdminOnly><Workers /></AdminOnly>} />
+      <Route path="/fundflows" element={<AdminOnly><FundFlows /></AdminOnly>} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="*" element={<NotFound />} />

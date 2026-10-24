@@ -24,6 +24,7 @@ import { desc, eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { createRouter, adminQuery } from "../middleware";
 import { crossSectionFactorIc } from "../services/factor-ic";
+import { fundFlowsGraph } from "../services/institutional";
 import { getDb } from "../queries/connection";
 import { jobs, jobLogs, users } from "@db/schema";
 import { sql } from "drizzle-orm";
@@ -78,6 +79,9 @@ async function readManualFromDisk(file: string): Promise<{ content: string; upda
 export const adminRouter = createRouter({
   /** 6a: cross-sectional factor IC by quarter (owner's factor monitor). */
   factorIc: adminQuery.query(async () => crossSectionFactorIc()),
+
+  /** 5g-3D: fund×company flow graph for the 3D visualization. */
+  fundFlows: adminQuery.input(z.object({ limit: z.number().int().min(50).max(1000).default(400) })).query(({ input }) => fundFlowsGraph(input.limit)),
 
   /**
    * Manual list with metadata. `source` tells the UI whether the text came
