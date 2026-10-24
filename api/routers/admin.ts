@@ -23,6 +23,7 @@ import { z } from "zod";
 import { desc, eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { createRouter, adminQuery } from "../middleware";
+import { crossSectionFactorIc } from "../services/factor-ic";
 import { getDb } from "../queries/connection";
 import { jobs, jobLogs, users } from "@db/schema";
 import { sql } from "drizzle-orm";
@@ -75,6 +76,9 @@ async function readManualFromDisk(file: string): Promise<{ content: string; upda
 }
 
 export const adminRouter = createRouter({
+  /** 6a: cross-sectional factor IC by quarter (owner's factor monitor). */
+  factorIc: adminQuery.query(async () => crossSectionFactorIc()),
+
   /**
    * Manual list with metadata. `source` tells the UI whether the text came
    * from live disk or from the bundled snapshot (honesty about staleness).

@@ -30,6 +30,7 @@ import { describeJob } from "@/lib/job-describe";
 import { jobToast } from "@/lib/job-toast";
 import { PriceImportCard } from "@/components/PriceImportCard";
 import { WorkersIntakeCard } from "@/components/WorkersIntakeCard";
+import { FactorIcMonitor } from "@/components/FactorIcMonitor";
 
 type ManualId = "engine-manual-en" | "engine-manual-ru" | "llm-context" | "design-value-signals";
 
@@ -331,6 +332,7 @@ export default function Admin() {
           </div>
           {/* 4p: intake monitor is a full-width table, not a tools tile */}
           <WorkersIntakeCard />
+          <FactorIcMonitor />
         </TabsContent>
       </Tabs>
     </div>
