@@ -699,6 +699,26 @@ export const fundQuarters = mysqlTable(
 );
 export type FundQuarter = typeof fundQuarters.$inferSelect;
 
+/** 6a: factor values per period with a sourceFiled availability anchor. */
+export const factorPoints = mysqlTable(
+  "factor_points",
+  {
+    id: serial("id").primaryKey(),
+    cik: int("cik").notNull(),
+    factor: varchar("factor", { length: 40 }).notNull(),
+    periodEnd: date("periodEnd", { mode: "string" }).notNull(),
+    filedAt: datetime("filedAt", { mode: "string" }).notNull(),
+    value: double("value"),
+    computedAt: timestamp("computedAt").defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex("uq_factor_points").on(t.cik, t.factor, t.periodEnd),
+    index("idx_fp_factor").on(t.factor, t.periodEnd),
+    index("idx_fp_cik").on(t.cik, t.periodEnd),
+  ]
+);
+export type FactorPoint = typeof factorPoints.$inferSelect;
+
 // ---------------------------------------------------------------------------
 // Iteration 4i (D42) — insider trades from Form 4 XML. Schema only; the
 // worker/ETL populates it (4j). filingDate is the point-in-time anchor.

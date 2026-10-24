@@ -68,7 +68,6 @@ export default function ValuePanel({ cik }: { cik: number }) {
   const val = v.data;
 
   const beneishFlag = fac.beneishM !== null && fac.beneishM > -1.78;
-
   return (
     <div className="space-y-4">
       {/* intrinsic value */}
@@ -182,6 +181,47 @@ export default function ValuePanel({ cik }: { cik: number }) {
             All factors computed in-house from our series + prices (D22). Sector medians arrive with the full registry — finals-phase TODO.
           </div>
         </div>
+      </div>
+
+      <FactorIcCard cik={cik} />
+    </div>
+  );
+}
+
+/** 6a — factor IC vs forward 1Q/2Q returns. The factor-evaluation layer:
+ *  NOT a trading signal (no cost model yet), and n is shown always. */
+function FactorIcCard({ cik }: { cik: number }) {
+  const q = trpc.company.factorIc.useQuery({ cik });
+  if (q.isLoading) return <div className="t-mono text-[11px] text-muted-foreground">computing factor IC…</div>;
+  const rows = q.data ?? [];
+  if (rows.length === 0) return null;
+  const oneQ = rows.filter((r) => r.horizon === 63 && r.n >= 5);
+  const twoQ = rows.filter((r) => r.horizon === 126 && r.n >= 5);
+  if (oneQ.length === 0 && twoQ.length === 0) return null;
+  return (
+    <div className="t-panel px-5 py-4">
+      <div className="t-label mb-1 flex items-center justify-between">
+        <span>Factor IC vs forward returns (sourceFiled-anchored)</span>
+        <span className="t-mono text-[9px] text-muted-foreground/70">evaluation layer — not a trading signal</span>
+      </div>
+      <div className="grid md:grid-cols-2 gap-x-8 gap-y-2">
+        {oneQ.map((r) => (
+          <div key={r.factor} className="flex items-center gap-3 t-mono text-[11px]">
+            <span className="flex-1 truncate">{r.factor}</span>
+            <span className="text-muted-foreground">n={r.n}</span>
+            <span className={r.spearman !== null && r.spearman >= 0 ? "text-emerald-400" : "text-crit-red"}>
+              1Q r {r.pearson?.toFixed(2) ?? "—"} / rho {r.spearman?.toFixed(2) ?? "—"}
+            </span>
+            {twoQ.find((t) => t.factor === r.factor) && (
+              <span className="text-muted-foreground">
+                2Q rho {twoQ.find((t) => t.factor === r.factor)!.spearman?.toFixed(2) ?? "—"}
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="t-mono text-[9px] text-muted-foreground/70 mt-3 uppercase tracking-[0.06em]">
+        IC = correlation of factor value at filing time with forward 63/126-day return. Costs & turnover not modeled yet.
       </div>
     </div>
   );

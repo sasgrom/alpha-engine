@@ -22,6 +22,7 @@ import { computeCompanyValue } from "../services/valuation";
 import { cachedExternal } from "../services/ext-cache";
 import { latestShortInterest } from "../services/short-interest";
 import { institutionalSummary } from "../services/institutional";
+import { companyFactorIc } from "../services/factor-ic";
 import { sectionText } from "../services/sections";
 import { buildStatements, STATEMENT_CONCEPTS } from "../services/statements";
 
@@ -400,6 +401,9 @@ export const companyRouter = createRouter({
 
   /** 5g: institutional ownership aggregates from 13F holdings (fund_holdings). */
   institutional: authedQuery.input(z.object({ cik: z.number() })).query(({ input }) => institutionalSummary(input.cik)),
+
+  /** 6a: factor IC vs forward 1Q/2Q returns (availability-anchored). */
+  factorIc: authedQuery.input(z.object({ cik: z.number() })).query(({ input }) => companyFactorIc(input.cik)),
 });
 
 // ---------------------------------------------------------------------------
