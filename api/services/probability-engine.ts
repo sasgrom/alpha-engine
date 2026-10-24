@@ -40,6 +40,7 @@ export interface ProbabilityReport {
   macroPrior: number;
   backtest: {
     n: number;
+    baselineUpRate: number; // trivial "always up" baseline — model must beat it
     hitRateAt60: number | null; // fraction up realized among anchors with p ≥ 0.6
     hitRateBelow60: number | null;
     ePlus: number | null;  // lost-money rate among down-predictions
@@ -151,6 +152,7 @@ export async function evaluateCompany(cik: number): Promise<ProbabilityReport | 
     macroPrior: prior,
     backtest: {
       n: points.length,
+      baselineUpRate: points.filter((p) => p.realizedUp).length / points.length,
       hitRateAt60: at60.length ? at60.filter((p) => p.realizedUp).length / at60.length : null,
       hitRateBelow60: below60.length ? below60.filter((p) => p.realizedUp).length / below60.length : null,
       ePlus: below60.length ? below60.filter((p) => p.realizedUp).length / below60.length : null,

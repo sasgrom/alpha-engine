@@ -211,6 +211,7 @@ function ProbabilityCard({ cik }: { cik: number }) {
       </div>
       <div className="grid md:grid-cols-2 gap-x-8 gap-y-2 mt-3">
         <div className="t-mono text-[11px]">
+          baseline (always up): {(d.backtest.baselineUpRate * 100).toFixed(0)}% ·&nbsp;
           {d.backtest.hitRateAt60 === null ? "no anchors at p≥0.6" : `hit rate at p≥0.6: ${(d.backtest.hitRateAt60 * 100).toFixed(0)}%`}
           {d.backtest.hitRateBelow60 !== null && <span className="text-muted-foreground"> · below 0.6: {(d.backtest.hitRateBelow60 * 100).toFixed(0)}%</span>}
         </div>
