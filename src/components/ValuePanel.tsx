@@ -184,6 +184,57 @@ export default function ValuePanel({ cik }: { cik: number }) {
       </div>
 
       <FactorIcCard cik={cik} />
+      <ProbabilityCard cik={cik} />
+    </div>
+  );
+}
+
+/** 6b — next-quarter up-probability with walk-forward backtest + calibration. */
+function ProbabilityCard({ cik }: { cik: number }) {
+  const q = trpc.company.probability.useQuery({ cik });
+  if (q.isLoading) return <div className="t-mono text-[11px] text-muted-foreground">evaluating probability…</div>;
+  const d = q.data;
+  if (!d) return null;
+  return (
+    <div className="t-panel px-5 py-4">
+      <div className="t-label mb-1 flex items-center justify-between">
+        <span>Next-quarter up-probability — walk-forward Bayes</span>
+        <span className="t-mono text-[9px] text-muted-foreground/70">prior from FRED regime · not a trading instruction</span>
+      </div>
+      <div className="flex flex-wrap items-end gap-x-8 gap-y-2">
+        <div className="t-mono text-[26px] font-semibold">
+          {d.currentP === null ? "—" : `${Math.round(d.currentP * 100)}%`}
+        </div>
+        <div className="t-mono text-[11px] text-muted-foreground">
+          anchor {d.currentAnchor} · macro prior {(d.macroPrior * 100).toFixed(0)}% · {d.anchors} walk-forward anchors
+        </div>
+      </div>
+      <div className="grid md:grid-cols-2 gap-x-8 gap-y-2 mt-3">
+        <div className="t-mono text-[11px]">
+          {d.backtest.hitRateAt60 === null ? "no anchors at p≥0.6" : `hit rate at p≥0.6: ${(d.backtest.hitRateAt60 * 100).toFixed(0)}%`}
+          {d.backtest.hitRateBelow60 !== null && <span className="text-muted-foreground"> · below 0.6: {(d.backtest.hitRateBelow60 * 100).toFixed(0)}%</span>}
+        </div>
+        <div className="t-mono text-[11px] text-muted-foreground">
+          {d.backtest.ePlus !== null && <>lost-money rate (down calls): {(d.backtest.ePlus * 100).toFixed(0)}% · </>}
+          {d.backtest.eMinus !== null && <>unrealized profit (up calls): {(d.backtest.eMinus * 100).toFixed(0)}%</>}
+        </div>
+      </div>
+      <div className="mt-3">
+        <div className="t-label !text-[9px] mb-1">factors used (deduped by correlation)</div>
+        <div className="flex flex-wrap gap-x-4 gap-y-1 t-mono text-[10px] text-muted-foreground">
+          {d.factorsUsed.map((f) => <span key={f.factor}>{f.factor} (|IC| {f.meanAbsIc.toFixed(2)})</span>)}
+        </div>
+      </div>
+      {d.calibration.length > 0 && (
+        <div className="mt-3">
+          <div className="t-label !text-[9px] mb-1">calibration (predicted vs realized up-frequency)</div>
+          <div className="flex flex-wrap gap-x-4 gap-y-1 t-mono text-[10px] text-muted-foreground">
+            {d.calibration.map((b) => (
+              <span key={b.from}>{(b.meanP * 100).toFixed(0)}% → {(b.observedUp * 100).toFixed(0)}% (n={b.n})</span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

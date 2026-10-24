@@ -23,6 +23,7 @@ import { cachedExternal } from "../services/ext-cache";
 import { latestShortInterest } from "../services/short-interest";
 import { institutionalSummary } from "../services/institutional";
 import { companyFactorIc } from "../services/factor-ic";
+import { evaluateCompany } from "../services/probability-engine";
 import { sectionText } from "../services/sections";
 import { buildStatements, STATEMENT_CONCEPTS } from "../services/statements";
 
@@ -404,6 +405,9 @@ export const companyRouter = createRouter({
 
   /** 6a: factor IC vs forward 1Q/2Q returns (availability-anchored). */
   factorIc: authedQuery.input(z.object({ cik: z.number() })).query(({ input }) => companyFactorIc(input.cik)),
+
+  /** 6b: walk-forward next-quarter up-probability + backtest + calibration. */
+  probability: authedQuery.input(z.object({ cik: z.number() })).query(({ input }) => evaluateCompany(input.cik)),
 });
 
 // ---------------------------------------------------------------------------
