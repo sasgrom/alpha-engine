@@ -23,7 +23,7 @@ for (;;) {
   const st = r[0]?.status;
   if (st !== "running" && st !== "queued") { console.log(`job ${jobId} finished with status ${st}`); break; }
   if (Date.now() - t0 > 6 * 3600_000) { console.log("timeout waiting for bootstrap — materializing anyway"); break; }
-  await new Promise((r) => setTimeout(r, 60_000);
+  await new Promise((r) => setTimeout(r, 60_000));
 }
 
 // materialize only companies that actually got factor data
