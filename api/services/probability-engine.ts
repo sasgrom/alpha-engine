@@ -10,6 +10,27 @@ import { getBars } from "./prices";
 import { forwardReturn, spearman } from "./ic";
 import { naiveBayesPUp, dedupFactors, reliabilityFromCalls, macroPrior, calibrationBins, type Reliability } from "./probability";
 
+// Extra factor streams beyond fundamentals (6b+): filing tone and 13F flow.
+// edgarTone = LLM tone score per filing (availability = eventTs = filing time).
+// smartMoneyFlow = QoQ position value change for the company (USD, normalized
+// later by IC, so scale-invariant).
+async function signalSeries(cik: number): Promise<Pt[]> {
+  const db = getDb();
+  const [tone]: any = await db.execute(sql`SELECT eventTs, score FROM signals WHERE cik=${cik} AND source='edgar' AND signalType='tone' AND score IS NOT NULL ORDER BY eventTs`);
+  const [flows]: any = await db.execute(sql`
+    SELECT quarterDate, SUM(valueUsd) v FROM fund_holdings
+    WHERE heldCik=${cik} AND secClass='COM' GROUP BY quarterDate ORDER BY quarterDate`);
+  const out: Pt[] = [];
+  for (const t of tone) {
+    out.push({ factor: "edgarTone", filedAt: String(t.eventTs).slice(0, 10), value: Number(t.score) });
+  }
+  for (let i = 1; i < flows.length; i++) {
+    const cur = Number(flows[i].v ?? 0), prev = Number(flows[i - 1].v ?? 0);
+    out.push({ factor: "smartMoneyFlow", filedAt: String(flows[i].quarterDate).slice(0, 10), value: prev === 0 ? 0 : (cur - prev) / prev });
+  }
+  return out;
+}
+
 export interface ProbabilityReport {
   cik: number;
   anchors: number;
@@ -33,7 +54,9 @@ interface Pt { factor: string; filedAt: string; value: number }
 
 export async function evaluateCompany(cik: number): Promise<ProbabilityReport | null> {
   const db = getDb();
-  const [pts]: any = await db.execute(sql`SELECT factor, filedAt, value FROM factor_points WHERE cik=${cik} AND value IS NOT NULL ORDER BY filedAt`);
+  const [pts0]: any = await db.execute(sql`SELECT factor, filedAt, value FROM factor_points WHERE cik=${cik} AND value IS NOT NULL ORDER BY filedAt`);
+  const extra = await signalSeries(cik);
+  const pts = [...pts0, ...extra].sort((a, b) => String(a.filedAt).localeCompare(String(b.filedAt)));
   if (pts.length === 0) return null;
   const from = new Date(Date.now() - 7 * 365 * 86400_000).toISOString().slice(0, 10);
   const bars = (await getBars(cik, from)).filter((b) => (b.adjClose ?? b.close) !== null)
