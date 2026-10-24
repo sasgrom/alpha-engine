@@ -117,7 +117,7 @@ export async function evaluateCompany(cik: number): Promise<ProbabilityReport | 
     }
     const rel = reliabilityFromCalls(familyCalls);
     if (!rel) continue;
-    used.push({ factor: fam, meanAbsIc: Math.max(...members.map((m) => m.meanAbsIc)), rel });
+    used.push({ factor: fam, meanAbsIc: Math.max(...members.map((m) => m.meanAbsIc)), rel, calls: familyCalls });
   }
 
   // macro prior at the latest anchor
@@ -125,17 +125,27 @@ export async function evaluateCompany(cik: number): Promise<ProbabilityReport | 
   const vix = mac.find((m: any) => m.seriesId === "VIXCLS")?.value ?? null;
   const hy = mac.find((m: any) => m.seriesId === "BAMLH0A0HYM2")?.value ?? null;
   const t = mac.find((m: any) => m.seriesId === "T10Y2Y")?.value ?? null;
-  const prior = macroPrior({ vix, hySpread: hy, t10y2y: t });
+  const prior0 = macroPrior({ vix, hySpread: hy, t10y2y: t });
 
-  // walk-forward P per anchor
+  // SEQUENTIAL Bayes (owner: Bayes must use itself): prior of the next anchor
+  // = posterior of the previous one. Reliability per family uses ONLY past
+  // calls (last 8 anchors) — no look-ahead into future outcomes.
   const points: { p: number; realizedUp: boolean; anchor: string }[] = [];
-  for (const p of pts as Pt[]) {
-    const a = p.filedAt.slice(0, 10);
+  let prior = prior0;
+  if (!prior0) prior = 0.5;
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i].filedAt.slice(0, 10);
     const y = forwardReturn(bars, a, 63);
     if (y === null) continue;
-    const rels: Reliability[] = used.map((u) => u.rel);
+    // reliability from the LAST 8 calls before this anchor only (no lookahead)
+    const rels: Reliability[] = used.map((u) => reliabilityFromCalls(u.calls.slice(Math.max(0, i - 8), i)) ?? u.rel);
     const pUp = naiveBayesPUp(rels, prior);
-    if (pUp !== null) points.push({ p: pUp, realizedUp: y > 0, anchor: a });
+    if (pUp !== null) {
+      points.push({ p: pUp, realizedUp: y > 0, anchor: a });
+      // posterior of this anchor becomes next prior — BLENDED with base to
+      // avoid absorbing extremes (0/1 lock-in), not a fixed 0.5 forever
+      prior = Math.max(0.05, Math.min(0.95, 0.85 * pUp + 0.15 * prior0));
+    }
   }
   if (points.length === 0) return null;
 
@@ -149,7 +159,7 @@ export async function evaluateCompany(cik: number): Promise<ProbabilityReport | 
     factorsUsed: used.map((u) => ({ factor: u.factor, meanAbsIc: u.meanAbsIc, lpp: u.rel.lpp, lmm: u.rel.lmm })),
     currentP: current.p,
     currentAnchor: current.anchor,
-    macroPrior: prior,
+    macroPrior: prior0,
     backtest: {
       n: points.length,
       baselineUpRate: points.filter((p) => p.realizedUp).length / points.length,

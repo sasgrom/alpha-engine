@@ -54,11 +54,28 @@ export function entryCloseAfter(bars: { date: string; close: number }[], anchorD
   return after ?? null;
 }
 
-/** Forward return between the entry bar and the bar closest to entry+h trading days. */
+/** Median close of the last `w` bars of the horizon (endpoint-noise smoothing). */
+function medianClose(bars: { date: string; close: number }[], fromIdx: number, toIdx: number): number | null {
+  const w = bars.slice(Math.max(0, fromIdx), toIdx + 1).map((b) => b.close);
+  if (w.length === 0) return null;
+  const s = [...w].sort((a, b) => a - b);
+  return s[Math.floor(s.length / 2)];
+}
+
+/**
+ * Forward return: entry = first close STRICTLY after the anchor; exit = MEDIAN
+ * of the last ~10 trading days of the horizon (entry+h−9 … entry+h), NOT a
+ * single end-of-period price. A local end-of-period minimum must not decide
+ * the factor's fate (owner's volatility-noise point).
+ */
 export function forwardReturn(bars: { date: string; close: number }[], anchorDate: string, hTradingDays: number): number | null {
   const entry = entryCloseAfter(bars, anchorDate);
   if (!entry) return null;
-  const exit = bars.filter((b) => b.date >= entry.date).sort((a, b) => a.date.localeCompare(b.date))[hTradingDays];
-  if (!exit || exit.close === 0) return null;
-  return exit.close / entry.close - 1;
+  const startIdx = bars.findIndex((b) => b.date === entry.date);
+  if (startIdx < 0) return null;
+  const exitIdx = startIdx + hTradingDays;
+  if (exitIdx >= bars.length) return null;
+  const exit = medianClose(bars, Math.max(startIdx, exitIdx - 9), exitIdx);
+  if (exit === null || exit === 0) return null;
+  return exit / entry.close - 1;
 }
