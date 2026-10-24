@@ -54,6 +54,10 @@ const [companies]: any = await db.execute(sql`SELECT cik FROM companies`);
 const ourCiks = new Set<number>(companies.map((c: any) => Number(c.cik)));
 
 async function mapCusips(cusips: string[]): Promise<Map<string, { cik: number | null; ticker: string | null }>> {
+  // repair pass first: cached rows whose ticker never resolved to a cik (the
+  // local companies registry was empty on the first runs — 32k cusips mapped
+  // to tickers but only 11 resolved) re-resolve against companies for free
+  await db.execute(sql`UPDATE cusip_map m JOIN companies c ON c.ticker = m.ticker SET m.cik = c.cik WHERE m.cik IS NULL AND m.ticker IS NOT NULL`);
   const out = new Map<string, { cik: number | null; ticker: string | null }>();
   const missing: string[] = [];
   for (const c of cusips) {
