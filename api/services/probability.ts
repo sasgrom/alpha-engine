@@ -105,6 +105,59 @@ export const FACTOR_FAMILIES: Record<string, string> = {
   edgarTone: "sentiment",
 };
 
+/**
+ * Linear-identity grouping (owner's correction to hand-labeled families):
+ * cluster factors ONLY when one is a linear derivative of another
+ * (marketCap = price × shares). Criterion per pair on trailing anchors:
+ * OLS y = a + b·x with R² ≥ threshold AND a stable slope (same sign, no
+ * wild drift). Historical correlation alone is NOT an identity — price and
+ * volume can share ρ>0.7 by coincidence and stay separate.
+ */
+export interface LinearGroup { representative: string; members: string[]; slope: number; r2: number }
+
+export function linearIdentityGroups(
+  series: { factor: string; values: number[] }[],
+  opts: { r2?: number; maxSlopeDrift?: number } = {}
+): LinearGroup[] {
+  const r2Min = opts.r2 ?? 0.85;
+  const driftMax = opts.maxSlopeDrift ?? 0.5;
+  const fit = (xs: number[], ys: number[]) => {
+    const n = Math.min(xs.length, ys.length);
+    if (n < 6) return null;
+    const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+    let sxy = 0, sxx = 0, syy = 0;
+    for (let i = 0; i < n; i++) { const a = xs[i] - mx, b = ys[i] - my; sxy += a * b; sxx += a * a; syy += b * b; }
+    if (sxx === 0 || syy === 0) return null;
+    const slope = sxy / sxx;
+    const intercept = my - slope * mx;
+    let ssRes = 0;
+    for (let i = 0; i < n; i++) ssRes += (ys[i] - (intercept + slope * xs[i])) ** 2;
+    const r2 = 1 - ssRes / syy;
+    return { slope, r2 };
+  };
+  const unused = series.map((s) => ({ factor: s.factor, values: s.values }));
+  const groups: LinearGroup[] = [];
+  for (const item of unused) {
+    let assigned = false;
+    for (const g of groups) {
+      const rep = unused.find((u) => u.factor === g.representative)!;
+      const f = fit(rep.values, item.values);
+      if (!f || f.r2 < r2Min) continue;
+      const h1 = fit(rep.values.slice(0, Math.floor(rep.values.length / 2)), item.values.slice(0, Math.floor(item.values.length / 2)));
+      const h2 = fit(rep.values.slice(Math.floor(rep.values.length / 2)), item.values.slice(Math.floor(item.values.length / 2)));
+      if (!h1 || !h2 || Math.sign(h1.slope) !== Math.sign(h2.slope) || h2.slope === 0) continue;
+      const drift = Math.abs(h2.slope - h1.slope) / Math.max(Math.abs(h1.slope), 1e-9);
+      if (drift > driftMax) continue;
+      g.members.push(item.factor);
+      g.r2 = Math.max(g.r2, f.r2);
+      assigned = true;
+      break;
+    }
+    if (!assigned) groups.push({ representative: item.factor, members: [item.factor], slope: 1, r2: 1 });
+  }
+  return groups;
+}
+
 /** z = (x − median) / IQR per factor per company. Robust to fat tails. */
 export function zScores(values: number[]): (number | null)[] {
   const sorted = [...values].sort((a, b) => a - b);
