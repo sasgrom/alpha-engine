@@ -84,6 +84,45 @@ export function calibrationBins(points: { p: number; realizedUp: boolean }[], bi
   return out;
 }
 
+/**
+ * Economic factor families (6b+): grouping by FINANCIAL LOGIC, not by
+ * statistical correlation. Price and market cap move together mechanically,
+ * yet price and volume are different concepts even when ρ>0.7 historically.
+ * A family casts ONE vote; its value is the z-average of its members, so no
+ * economically distinct stream is dropped just for co-moving.
+ */
+export const FACTOR_FAMILIES: Record<string, string> = {
+  accruals: "quality",
+  sue: "quality",
+  altmanZ: "quality",
+  fScore: "quality",
+  grossProfitability: "profitability",
+  assetGrowth: "growth",
+  buybackYield: "capital_return",
+  momentum122: "price_momentum",
+  high52: "price_momentum",
+  smartMoneyFlow: "smart_money",
+  edgarTone: "sentiment",
+};
+
+/** z = (x − median) / IQR per factor per company. Robust to fat tails. */
+export function zScores(values: number[]): (number | null)[] {
+  const sorted = [...values].sort((a, b) => a - b);
+  if (sorted.length < 4) return values.map(() => null);
+  const med = sorted[Math.floor(sorted.length / 2)];
+  const q1 = sorted[Math.floor(sorted.length * 0.25)];
+  const q3 = sorted[Math.floor(sorted.length * 0.75)];
+  const iqr = q3 - q1;
+  if (iqr === 0) return values.map(() => null);
+  return values.map((v) => (v - med) / iqr);
+}
+
+/** Average available z-values at an anchor; null when nothing computable. */
+export function familyZ(zs: (number | null)[]): number | null {
+  const valid = zs.filter((z): z is number => z !== null && Number.isFinite(z));
+  return valid.length ? valid.reduce((a, b) => a + b, 0) / valid.length : null;
+}
+
 /** Macro prior from the FRED regime pack (D46). Deterministic, documented. */
 export function macroPrior(inp: { vix: number | null; hySpread: number | null; t10y2y: number | null }): number {
   const { vix, hySpread, t10y2y } = inp;

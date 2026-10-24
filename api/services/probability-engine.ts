@@ -8,7 +8,7 @@ import { sql } from "drizzle-orm";
 import { getDb } from "../queries/connection";
 import { getBars } from "./prices";
 import { forwardReturn, spearman } from "./ic";
-import { naiveBayesPUp, dedupFactors, reliabilityFromCalls, macroPrior, calibrationBins, type Reliability } from "./probability";
+import { naiveBayesPUp, reliabilityFromCalls, macroPrior, calibrationBins, FACTOR_FAMILIES, zScores, familyZ, type Reliability } from "./probability";
 
 // Extra factor streams beyond fundamentals (6b+): filing tone and 13F flow.
 // edgarTone = LLM tone score per filing (availability = eventTs = filing time).
@@ -92,17 +92,32 @@ export async function evaluateCompany(cik: number): Promise<ProbabilityReport | 
   }
   if (candidates.length === 0) return null;
 
-  const kept = dedupFactors(
-    candidates.map((c) => ({ factor: c.factor, meanAbsIc: c.meanAbsIc })),
-    (a, b) => {
-      const xa = (byFactor.get(a) ?? []).map((p) => Number(p.value));
-      const xb = (byFactor.get(b) ?? []).map((p) => Number(p.value));
-      const n = Math.min(xa.length, xb.length);
-      return spearman(xa.slice(0, n), xb.slice(0, n)) ?? 0;
+  // 6b+ — economic families, NOT statistical dedup: one vote per family,
+  // value = z-average of members (Gauss by median/IQR per factor per company).
+  const byFamily = new Map<string, { factor: string; meanAbsIc: number; rel: Reliability }[]>();
+  for (const c of candidates) {
+    const fam = FACTOR_FAMILIES[c.factor] ?? c.factor;
+    if (!byFamily.has(fam)) byFamily.set(fam, []);
+    byFamily.get(fam)!.push(c);
+  }
+  const used: { factor: string; meanAbsIc: number; lpp: number; lmm: number }[] = [];
+  for (const [fam, members] of byFamily) {
+    // z-normalized family series: average member z at each anchor
+    const zPerFactor = members.map((m) => ({ factor: m.factor, z: zScores((byFactor.get(m.factor) ?? []).map((p) => Number(p.value))) }));
+    const anchors = members[0] ? (byFactor.get(members[0].factor) ?? []) : [];
+    const familyCalls: { predictUp: boolean; realizedUp: boolean }[] = [];
+    for (let i = 0; i < anchors.length; i++) {
+      const a = anchors[i].filedAt.slice(0, 10);
+      const z = familyZ(zPerFactor.map((f) => f.z[i] ?? null));
+      if (z === null) continue;
+      const y = forwardReturn(bars, a, 63);
+      if (y === null) continue;
+      familyCalls.push({ predictUp: LOWER_BETTER.has(fam) ? z < 0 : z > 0, realizedUp: y > 0 });
     }
-  );
-  const keptNames = new Set(kept.map((k) => k.factor));
-  const used = candidates.filter((c) => keptNames.has(c.factor));
+    const rel = reliabilityFromCalls(familyCalls);
+    if (!rel) continue;
+    used.push({ factor: fam, meanAbsIc: Math.max(...members.map((m) => m.meanAbsIc)), rel });
+  }
 
   // macro prior at the latest anchor
   const [mac]: any = await db.execute(sql`SELECT seriesId, value, date FROM macro_points WHERE seriesId IN ('VIXCLS','BAMLH0A0HYM2','T10Y2Y') ORDER BY date DESC LIMIT 3`);
