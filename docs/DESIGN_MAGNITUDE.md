@@ -144,4 +144,4 @@ Shipped exactly the scoped kernel:
 - No model was selected, no coefficients were tuned, no production data was written, and no magnitude UI was promoted.
 - Final verification: 252/252 tests, full-project typecheck, direct smoke-script type/bundle checks, and production build. Real Chromium QA on Dashboard, Company Institutional, and 3D Fund Flows confirmed the correct quarter pair and `stable funds 285` with zero failed requests and zero page errors.
 
-Remaining work is deliberately unchanged: repair the full 13F history, persist accession filing dates, build a ≥30-company technical panel, then a ≥300-company evaluation panel before any feature-based magnitude model or portfolio conclusion.
+Remaining work is deliberately unchanged: complete the 13F filingDate backfill and repaired-history delivery (5j code is ready), build a ≥30-company technical panel, then a ≥300-company evaluation panel before any feature-based magnitude model or portfolio conclusion.

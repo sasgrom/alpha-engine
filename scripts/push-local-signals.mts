@@ -28,11 +28,12 @@ const arg = (name: string) => {
   const i = process.argv.indexOf(name);
   return i > -1 ? process.argv[i + 1] : null;
 };
-// --table fund_holdings: push 13F holdings rows (ingest kind "holdings")
+// --table fund_holdings: holdings; --table fund_quarters: full-book snapshots
 const table = arg("--table") ?? "signals";
 const dry = process.argv.includes("--dry");
+const fullSnapshot = process.argv.includes("--full");
 // holdings get their own watermark key — never collide with signal sources
-const source = table === "fund_holdings" ? "holdings" : (arg("--source") ?? "edgar");
+const source = table === "fund_holdings" ? "holdings" : table === "fund_quarters" ? "fund_quarters" : (arg("--source") ?? "edgar");
 // --reset: ignore the watermark (re-send everything local has for the source;
 // prod dedupes) — used after healing prod (e.g. rows pushed without notes).
 if (process.argv.includes("--reset")) saveWatermark(0);
@@ -48,7 +49,7 @@ function saveWatermark(id: number) {
   writeFileSync(WM_FILE, JSON.stringify(all, null, 1));
 }
 
-const lastId = loadWatermark();
+const lastId = table === "fund_holdings" && fullSnapshot ? 0 : loadWatermark();
 const db = getDb();
 
 // 5g: holdings push path (13F positions) — same watermark discipline
@@ -57,7 +58,9 @@ if (table === "fund_holdings") {
     sql`SELECT id, fundCik, fundName, cusip, secClass, heldCik, issuer, shares, valueUsd, quarterDate, accessionNo, tier
         FROM fund_holdings WHERE id > ${lastId} ORDER BY id`
   );
-  console.log(`[push] fund_holdings: ${rows.length} local rows after watermark id>${lastId}`);
+  console.log(fullSnapshot
+    ? `[push] fund_holdings: FULL snapshot of ${rows.length} rows (upsert, no deletes)`
+    : `[push] fund_holdings: ${rows.length} local rows after watermark id>${lastId}`);
   if (rows.length === 0) { console.log("[push] nothing to do"); process.exit(0); }
   const mapped = rows.map((r: any) => ({
     fundCik: Number(r.fundCik), fundName: String(r.fundName), cusip: String(r.cusip),
@@ -68,22 +71,57 @@ if (table === "fund_holdings") {
     accessionNo: String(r.accessionNo), tier: r.tier ?? null,
   }));
   const maxId = Number(rows[rows.length - 1].id);
-  if (dry) { console.log(`[push] DRY: would push ${mapped.length} holdings (ids up to ${maxId})`); process.exit(0); }
+  if (dry) { console.log(`[push] DRY: would ${fullSnapshot ? "upsert FULL snapshot" : "push"} ${mapped.length} holdings (ids up to ${maxId})`); process.exit(0); }
   const key = process.env.WORKER_KEY;
   if (!key) throw new Error("WORKER_KEY missing");
-  let accepted = 0, dupes = 0, batches = 0;
+  let accepted = 0, dupes = 0, batches = 0, upserted = 0;
   for (let i = 0; i < mapped.length; i += 500) {
     const res = await fetch(PROD_INGEST, {
       method: "POST",
       headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
-      body: JSON.stringify({ kind: "holdings", rows: mapped.slice(i, i + 500) }),
+      body: JSON.stringify({ kind: fullSnapshot ? "holdingsSnapshot" : "holdings", rows: mapped.slice(i, i + 500) }),
     });
     const j: any = await res.json();
     if (!res.ok || !j.ok) throw new Error(`ingest failed: HTTP ${res.status} ${JSON.stringify(j).slice(0, 200)}`);
-    accepted += j.accepted ?? 0; dupes += j.skippedDupes ?? 0; batches++;
+    if (fullSnapshot) upserted += j.upserted ?? 0;
+    else { accepted += j.accepted ?? 0; dupes += j.skippedDupes ?? 0; }
+    batches++;
   }
   saveWatermark(maxId);
-  console.log(`[push] holdings ingested: ${accepted} new, ${dupes} dupes (${batches} batches); watermark → ${maxId}`);
+  console.log(fullSnapshot
+    ? `[push] holdings snapshot upserted: ${upserted} (${batches} batches); watermark → ${maxId}`
+    : `[push] holdings ingested: ${accepted} new, ${dupes} dupes (${batches} batches); watermark → ${maxId}`);
+  process.exit(0);
+}
+
+// fund_quarters is small (funds × quarters) and repaired rows may change.
+// Push a full snapshot with idempotent upserts; an id watermark would hide fixes.
+if (table === "fund_quarters") {
+  const [rows]: any = await db.execute(sql`SELECT fundCik, quarterDate, totalValueUsd, positions, accessionNo, filingDate FROM fund_quarters ORDER BY quarterDate, fundCik`);
+  console.log(`[push] fund_quarters: full snapshot of ${rows.length} rows`);
+  if (rows.length === 0) { console.log("[push] nothing to do"); process.exit(0); }
+  const date = (v: unknown) => typeof v === "string" ? v.slice(0, 10) : new Date(v as string).toISOString().slice(0, 10);
+  const mapped = rows.map((r: any) => ({
+    fundCik: Number(r.fundCik), quarterDate: date(r.quarterDate),
+    totalValueUsd: r.totalValueUsd !== null ? Number(r.totalValueUsd) : null,
+    positions: r.positions !== null ? Number(r.positions) : null,
+    accessionNo: String(r.accessionNo), filingDate: r.filingDate ? date(r.filingDate) : null,
+  }));
+  if (dry) { console.log(`[push] DRY: would upsert ${mapped.length} fund_quarters; sample: ${JSON.stringify(mapped[0])}`); process.exit(0); }
+  const key = process.env.WORKER_KEY;
+  if (!key) throw new Error("WORKER_KEY missing");
+  let upserted = 0, batches = 0;
+  for (let i = 0; i < mapped.length; i += 500) {
+    const res = await fetch(PROD_INGEST, {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
+      body: JSON.stringify({ kind: "fundQuarters", rows: mapped.slice(i, i + 500) }),
+    });
+    const j: any = await res.json();
+    if (!res.ok || !j.ok) throw new Error(`ingest failed: HTTP ${res.status} ${JSON.stringify(j).slice(0, 200)}`);
+    upserted += j.upserted ?? 0; batches++;
+  }
+  console.log(`[push] fund_quarters upserted: ${upserted} (${batches} batches)`);
   process.exit(0);
 }
 

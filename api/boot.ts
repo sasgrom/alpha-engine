@@ -32,7 +32,7 @@ app.get("/api/prices-import/parts", async (c) => {
 // worker_keys; ingestedAt is stamped SERVER-side (the no-lookahead anchor,
 // D43). Raw route, not tRPC — worker payloads are not superjson.
 app.post("/api/worker/ingest", async (c) => {
-  const { verifyWorkerKey, workerIngestBodyZ, ingestSignals, ingestDigests, ingestHoldings } = await import("./services/worker");
+  const { verifyWorkerKey, workerIngestBodyZ, ingestSignals, ingestDigests, ingestHoldings, ingestHoldingsSnapshot, ingestFundQuarters } = await import("./services/worker");
   const label = await verifyWorkerKey(c.req.header("authorization") ?? null);
   if (!label) return c.json({ error: "unknown or revoked worker key" }, 401);
   let body: unknown;
@@ -55,6 +55,14 @@ app.post("/api/worker/ingest", async (c) => {
   }
   if (parsed.data.kind === "holdings") {
     const r = await ingestHoldings(parsed.data.rows);
+    return c.json({ ok: true, worker: label, ...r });
+  }
+  if (parsed.data.kind === "holdingsSnapshot") {
+    const r = await ingestHoldingsSnapshot(parsed.data.rows);
+    return c.json({ ok: true, worker: label, ...r });
+  }
+  if (parsed.data.kind === "fundQuarters") {
+    const r = await ingestFundQuarters(parsed.data.rows);
     return c.json({ ok: true, worker: label, ...r });
   }
   return c.json({ error: "unsupported kind" }, 400);

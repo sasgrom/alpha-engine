@@ -691,6 +691,8 @@ export const fundQuarters = mysqlTable(
   {
     fundCik: int("fundCik").notNull(),
     quarterDate: date("quarterDate", { mode: "string" }).notNull(),
+    /** Latest original/amendment filing date: merged-book availability. */
+    filingDate: datetime("filingDate", { mode: "string" }),
     totalValueUsd: bigint("totalValueUsd", { mode: "number" }),
     positions: int("positions"),
     accessionNo: varchar("accessionNo", { length: 25 }),

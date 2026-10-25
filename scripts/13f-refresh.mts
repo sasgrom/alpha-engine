@@ -244,9 +244,9 @@ async function insertEvents(rows: any[]): Promise<number> {
 }
 
 /** Events for one fund-quarter pair from holdings maps (shared by both modes). */
-async function eventsForQuarter(fund: { cik: number; name: string }, prev: Map<string, { shares: number; valueUsd: number | null }>, cur: Map<string, { cik: number; cls: string; shares: number; valueUsd: number | null; accn: string }>, curQ: string, prevQ: string | null, filingDate = curQ): Promise<number> {
+async function eventsForQuarter(fund: { cik: number; name: string }, prev: Map<string, { shares: number; valueUsd: number | null }>, cur: Map<string, { cik: number; cls: string; shares: number; valueUsd: number | null; accn: string }>, curQ: string, prevQ: string | null, filingDate = curQ, accessionNo?: string): Promise<number> {
   const rows: any[] = [];
-  const filing = { accessionNo: cur.values().next().value?.accn ?? "", form: "13F-HR", filingDate, reportDate: curQ };
+  const filing = { accessionNo: accessionNo ?? cur.values().next().value?.accn ?? "", form: "13F-HR", filingDate, reportDate: curQ };
   const totalUsd = await fundTotal(fund.cik, curQ);
   const prevTotalUsd = prevQ ? await fundTotal(fund.cik, prevQ) : totalUsd;
   for (const [k, c] of cur) {
@@ -300,7 +300,10 @@ if (REBUILD) {
         c.valueUsd = (c.valueUsd ?? 0) + Number(r.valueUsd ?? 0);
         cur.set(k, c);
       }
-      if (prev) rebuilt += await eventsForQuarter(fund, prev, cur, curQ, quarters[quarters.indexOf(curQ) - 1]);
+      const [meta]: any = await db.execute(sql`SELECT accessionNo, filingDate FROM fund_quarters WHERE fundCik=${fund.cik} AND quarterDate=${curQ}`);
+      const eventDate = meta[0]?.filingDate ? String(meta[0].filingDate).slice(0, 10) : curQ;
+      if (!meta[0]?.filingDate) prog.log(`! ${fund.name} ${curQ}: filingDate missing, quarter-end fallback`);
+      if (prev) rebuilt += await eventsForQuarter(fund, prev, cur, curQ, quarters[quarters.indexOf(curQ) - 1], eventDate, meta[0]?.accessionNo ? String(meta[0].accessionNo) : undefined);
       prev = new Map([...cur].map(([k, v]) => [k, { shares: v.shares, valueUsd: v.valueUsd }]));
     }
     prog.log(`${fund.name}: events rebuilt so far ${rebuilt}`);
@@ -318,14 +321,14 @@ if (TOTALS_ONLY) {
     const quarters = quarterPacks(filings.map((f) => ({ accessionNo: f.accessionNo, form: f.form, filingDate: f.filingDate, reportDate: f.reportDate || f.filingDate })));
     for (const q of quarters) {
       const [have]: any = await db.execute(sql`SELECT COUNT(*) h FROM fund_holdings WHERE fundCik=${fund.cik} AND quarterDate=${q.reportDate}`);
-      const [got]: any = await db.execute(sql`SELECT COUNT(*) g FROM fund_quarters WHERE fundCik=${fund.cik} AND quarterDate=${q.reportDate}`);
-      if (Number(have[0].h) === 0 || Number(got[0].g) > 0) continue;
+      const [got]: any = await db.execute(sql`SELECT COUNT(*) g, MAX(filingDate) fd FROM fund_quarters WHERE fundCik=${fund.cik} AND quarterDate=${q.reportDate}`);
+      if (Number(have[0].h) === 0 || (Number(got[0].g) > 0 && got[0].fd)) continue;
       const resolved = await loadQuarterBook(fund, q);
       if (!resolved) continue;
-      const { holdings, latestAccessionNo } = resolved;
-      await db.execute(sql`INSERT INTO fund_quarters (fundCik, quarterDate, totalValueUsd, positions, accessionNo)
-        VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${latestAccessionNo})
-        ON DUPLICATE KEY UPDATE totalValueUsd=VALUES(totalValueUsd), positions=VALUES(positions), accessionNo=VALUES(accessionNo)`);
+      const { holdings, latestAccessionNo, latestFilingDate } = resolved;
+      await db.execute(sql`INSERT INTO fund_quarters (fundCik, quarterDate, totalValueUsd, positions, accessionNo, filingDate)
+        VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${latestAccessionNo}, ${latestFilingDate})
+        ON DUPLICATE KEY UPDATE totalValueUsd=VALUES(totalValueUsd), positions=VALUES(positions), accessionNo=VALUES(accessionNo), filingDate=VALUES(filingDate)`);
       written++;
     }
     prog.log(`${fund.name}: totals written so far ${written}`);
@@ -364,9 +367,9 @@ for (const fund of funds) {
       if (!resolved) continue;
       const { holdings, latestAccessionNo, latestFilingDate } = resolved;
       // full-book total BEFORE universe filtering, with partial amendments merged
-      await db.execute(sql`INSERT INTO fund_quarters (fundCik, quarterDate, totalValueUsd, positions, accessionNo)
-        VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${latestAccessionNo})
-        ON DUPLICATE KEY UPDATE totalValueUsd=VALUES(totalValueUsd), positions=VALUES(positions), accessionNo=VALUES(accessionNo)`);
+      await db.execute(sql`INSERT INTO fund_quarters (fundCik, quarterDate, totalValueUsd, positions, accessionNo, filingDate)
+        VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${latestAccessionNo}, ${latestFilingDate})
+        ON DUPLICATE KEY UPDATE totalValueUsd=VALUES(totalValueUsd), positions=VALUES(positions), accessionNo=VALUES(accessionNo), filingDate=VALUES(filingDate)`);
 
       const { map, failed: mappingFailed } = await mapCusips([...new Set(holdings.map((h) => h.cusip))]);
       // batched holdings insert
@@ -397,7 +400,7 @@ for (const fund of funds) {
       // Repair is holdings-only: events are rebuilt from the repaired history
       // in one explicit second pass, never from partially mapped quarters.
       if (!REPAIR && SIGNAL_TIERS.has(fund.tier)) {
-        fundEvents += await eventsForQuarter(fund, prevShares, curShares, q.reportDate, quarters[quarters.indexOf(q) - 1]?.reportDate ?? null, latestFilingDate);
+        fundEvents += await eventsForQuarter(fund, prevShares, curShares, q.reportDate, quarters[quarters.indexOf(q) - 1]?.reportDate ?? null, latestFilingDate, latestAccessionNo);
       }
       for (const [k, v] of curShares) prevShares.set(k, { shares: v.shares, valueUsd: v.valueUsd });
       // completion is recorded ONLY here — after holdings (and events in normal mode) landed

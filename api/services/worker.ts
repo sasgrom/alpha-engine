@@ -88,6 +88,17 @@ export const workerHoldingRowZ = z.object({
 });
 export type WorkerHoldingRow = z.infer<typeof workerHoldingRowZ>;
 
+/** One complete 13F book summary per fund-quarter, including availability. */
+export const workerQuarterRowZ = z.object({
+  fundCik: z.number().int(),
+  quarterDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  totalValueUsd: z.number().nonnegative().nullish(),
+  positions: z.number().int().nonnegative().nullish(),
+  accessionNo: z.string().max(25),
+  filingDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullish(),
+});
+export type WorkerQuarterRow = z.infer<typeof workerQuarterRowZ>;
+
 export const workerIngestBodyZ = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("signals"),
@@ -100,6 +111,14 @@ export const workerIngestBodyZ = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("holdings"),
     rows: z.array(workerHoldingRowZ).min(1).max(500),
+  }),
+  z.object({
+    kind: z.literal("holdingsSnapshot"),
+    rows: z.array(workerHoldingRowZ).min(1).max(500),
+  }),
+  z.object({
+    kind: z.literal("fundQuarters"),
+    rows: z.array(workerQuarterRowZ).min(1).max(500),
   }),
 ]);
 
@@ -121,6 +140,38 @@ export async function ingestHoldings(rows: WorkerHoldingRow[]): Promise<{ accept
     accepted += Number(res[0]?.affectedRows ?? 0);
   }
   return { accepted, skippedDupes: rows.length - accepted };
+}
+
+/** Full-repair snapshot: updates changed holdings without deleting prod rows. */
+export async function ingestHoldingsSnapshot(rows: WorkerHoldingRow[]): Promise<{ upserted: number }> {
+  const db = getDb();
+  let upserted = 0;
+  const CHUNK = 500;
+  for (let i = 0; i < rows.length; i += CHUNK) {
+    const chunk = rows.slice(i, i + CHUNK);
+    await db.execute(sql`INSERT INTO fund_holdings
+      (fundCik, fundName, cusip, secClass, heldCik, issuer, shares, valueUsd, quarterDate, accessionNo, tier)
+      VALUES ${sql.join(chunk.map((r) => sql`(${r.fundCik}, ${r.fundName}, ${r.cusip}, ${r.secClass}, ${r.heldCik ?? null}, ${r.issuer ?? null}, ${r.shares ?? null}, ${r.valueUsd ?? null}, ${r.quarterDate}, ${r.accessionNo}, ${r.tier ?? null})`), sql`, `)}
+      ON DUPLICATE KEY UPDATE fundName=VALUES(fundName), heldCik=VALUES(heldCik), issuer=VALUES(issuer), shares=VALUES(shares), valueUsd=VALUES(valueUsd), accessionNo=VALUES(accessionNo), tier=VALUES(tier)`);
+    upserted += chunk.length;
+  }
+  return { upserted };
+}
+
+/** Full-snapshot upsert: repaired books may change existing quarter rows. */
+export async function ingestFundQuarters(rows: WorkerQuarterRow[]): Promise<{ upserted: number }> {
+  const db = getDb();
+  let upserted = 0;
+  const CHUNK = 500;
+  for (let i = 0; i < rows.length; i += CHUNK) {
+    const chunk = rows.slice(i, i + CHUNK);
+    await db.execute(sql`INSERT INTO fund_quarters
+      (fundCik, quarterDate, totalValueUsd, positions, accessionNo, filingDate)
+      VALUES ${sql.join(chunk.map((r) => sql`(${r.fundCik}, ${r.quarterDate}, ${r.totalValueUsd ?? null}, ${r.positions ?? null}, ${r.accessionNo}, ${r.filingDate ?? null})`), sql`, `)}
+      ON DUPLICATE KEY UPDATE totalValueUsd=VALUES(totalValueUsd), positions=VALUES(positions), accessionNo=VALUES(accessionNo), filingDate=VALUES(filingDate)`);
+    upserted += chunk.length;
+  }
+  return { upserted };
 }
 
 export type WorkerIngestBody = z.infer<typeof workerIngestBodyZ>;
