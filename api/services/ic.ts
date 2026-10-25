@@ -79,3 +79,16 @@ export function forwardReturn(bars: { date: string; close: number }[], anchorDat
   if (exit === null || exit === 0) return null;
   return exit / entry.close - 1;
 }
+
+/** Excess return of the stock over SPY for the same horizon (beta removed). */
+export function excessForwardReturn(
+  stockBars: { date: string; close: number }[],
+  spyBars: { date: string; close: number }[],
+  anchorDate: string,
+  hTradingDays: number
+): number | null {
+  const rStock = forwardReturn(stockBars, anchorDate, hTradingDays);
+  const rSpy = forwardReturn(spyBars, anchorDate, hTradingDays);
+  if (rStock === null || rSpy === null) return null;
+  return rStock - rSpy;
+}

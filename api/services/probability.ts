@@ -82,14 +82,18 @@ export function dedupFactors<T extends { factor: string; meanAbsIc: number }>(
   return kept;
 }
 
-/** e_plus / e_minus from walk-forward calls vs realized direction. */
+/** e_plus / e_minus from walk-forward calls vs realized direction.
+ * Beta(1,1) posterior smoothing instead of a hard clamp: with 8 anchors the
+ * raw rates swing wildly, so shrink toward 0.5 (documented, not a guess).
+ */
 export function reliabilityFromCalls(calls: { predictUp: boolean; realizedUp: boolean }[]): Reliability | null {
   const ups = calls.filter((c) => c.predictUp);
   const downs = calls.filter((c) => !c.predictUp);
   if (ups.length === 0 && downs.length === 0) return null;
-  const eMinus = ups.length ? ups.filter((c) => !c.realizedUp).length / ups.length : 0.5; // wrong down among ups (unrealized profit)
-  const ePlus = downs.length ? downs.filter((c) => c.realizedUp).length / downs.length : 0.5; // wrong up among downs (lost money)
-  return { lpp: clampReliability(1 - eMinus), lmm: clampReliability(1 - ePlus) };
+  // posterior means with a uniform Beta(1,1) prior per side
+  const lppRaw = ups.length ? (ups.filter((c) => c.realizedUp).length + 1) / (ups.length + 2) : 0.5;
+  const lmmRaw = downs.length ? (downs.filter((c) => !c.realizedUp).length + 1) / (downs.length + 2) : 0.5;
+  return { lpp: Math.max(0.05, Math.min(0.95, lppRaw)), lmm: Math.max(0.05, Math.min(0.95, lmmRaw)) };
 }
 
 /** Reliability calibration bins: predicted p vs realized up-frequency. */
