@@ -51,7 +51,7 @@ export async function institutionalSummary(cik: number): Promise<InstitutionalSu
   const top = (await db.execute(sql`
     SELECT fundName, tier, SUM(shares) shares, SUM(valueUsd) valueUsd
     FROM fund_holdings WHERE heldCik=${cik} AND quarterDate=${cur} AND secClass='COM'
-    GROUP BY fundName, tier ORDER BY valueUsd DESC LIMIT 5`))[0] as any[];
+    GROUP BY fundName, tier ORDER BY valueUsd DESC LIMIT 5`))[0] as unknown as any[];
 
   return {
     quarterDate: cur, holders, sharesHeld: curShares, valueUsd: curValue,
@@ -86,7 +86,7 @@ export async function fundFlowsGraph(limit = 400): Promise<{
     ORDER BY ABS(curUsd - prevUsd) DESC
     LIMIT ${limit}`);
   const fundCiks = [...new Set(rows.map((r: any) => Number(r.fundCik)))];
-  const funds = (await db.execute(sql`SELECT DISTINCT fundCik, fundName, tier FROM fund_holdings WHERE fundCik IN (${sql.join(fundCiks.map((c) => sql`${c}`), sql`, `)})`))[0]
+  const funds = ((await db.execute(sql`SELECT DISTINCT fundCik, fundName, tier FROM fund_holdings WHERE fundCik IN (${sql.join(fundCiks.map((c) => sql`${c}`), sql`, `)})`))[0] as unknown as any[])
     .map((f: any) => ({ cik: Number(f.fundCik), name: String(f.fundName), tier: f.tier ?? null }));
   return {
     funds,
@@ -101,13 +101,13 @@ export async function sectorFlows(): Promise<{ sector: string; deltaUsd: number;
   if (qs.length < 2) return [];
   const cur = String(qs[0].quarterDate).slice(0, 10);
   const prev = String(qs[1].quarterDate).slice(0, 10);
-  return (await db.execute(sql`
+  return ((await db.execute(sql`
     SELECT c.sector,
            SUM(CASE WHEN h.quarterDate=${cur} THEN h.valueUsd ELSE 0 END) curUsd,
            SUM(CASE WHEN h.quarterDate=${prev} THEN h.valueUsd ELSE 0 END) prevUsd
     FROM fund_holdings h JOIN companies c ON c.cik = h.heldCik
     WHERE h.quarterDate IN (${cur}, ${prev}) AND h.secClass='COM' AND c.sector IS NOT NULL
-    GROUP BY c.sector`))[0].map((r: any) => ({
+    GROUP BY c.sector`))[0] as unknown as any[]).map((r: any) => ({
     sector: r.sector,
     curUsd: Number(r.curUsd ?? 0),
     deltaUsd: Number(r.curUsd ?? 0) - Number(r.prevUsd ?? 0),

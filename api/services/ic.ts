@@ -62,13 +62,25 @@ function medianClose(bars: { date: string; close: number }[], fromIdx: number, t
   return s[Math.floor(s.length / 2)];
 }
 
+export interface ForwardReturnInfo {
+  ret: number;
+  entryDate: string;
+  /** Date on which the last price used by the exit window became available. */
+  exitDate: string;
+}
+
 /**
- * Forward return: entry = first close STRICTLY after the anchor; exit = MEDIAN
- * of the last ~10 trading days of the horizon (entry+h−9 … entry+h), NOT a
- * single end-of-period price. A local end-of-period minimum must not decide
- * the factor's fate (owner's volatility-noise point).
+ * Forward return with its information-availability dates. Entry is the first
+ * close STRICTLY after the anchor; exit is the MEDIAN of the last ~10 trading
+ * days of the horizon. `exitDate` is essential for walk-forward training: a
+ * past anchor whose exit is later than the prediction date is not a known
+ * training label yet and must be excluded.
  */
-export function forwardReturn(bars: { date: string; close: number }[], anchorDate: string, hTradingDays: number): number | null {
+export function forwardReturnInfo(
+  bars: { date: string; close: number }[],
+  anchorDate: string,
+  hTradingDays: number
+): ForwardReturnInfo | null {
   const entry = entryCloseAfter(bars, anchorDate);
   if (!entry) return null;
   const startIdx = bars.findIndex((b) => b.date === entry.date);
@@ -77,18 +89,35 @@ export function forwardReturn(bars: { date: string; close: number }[], anchorDat
   if (exitIdx >= bars.length) return null;
   const exit = medianClose(bars, Math.max(startIdx, exitIdx - 9), exitIdx);
   if (exit === null || exit === 0) return null;
-  return exit / entry.close - 1;
+  return { ret: exit / entry.close - 1, entryDate: entry.date, exitDate: bars[exitIdx].date };
 }
 
-/** Excess return of the stock over SPY for the same horizon (beta removed). */
+export function forwardReturn(bars: { date: string; close: number }[], anchorDate: string, hTradingDays: number): number | null {
+  return forwardReturnInfo(bars, anchorDate, hTradingDays)?.ret ?? null;
+}
+
+/** Excess return of the stock over SPY, including the label availability date. */
+export function excessForwardReturnInfo(
+  stockBars: { date: string; close: number }[],
+  spyBars: { date: string; close: number }[],
+  anchorDate: string,
+  hTradingDays: number
+): ForwardReturnInfo | null {
+  const stock = forwardReturnInfo(stockBars, anchorDate, hTradingDays);
+  const spy = forwardReturnInfo(spyBars, anchorDate, hTradingDays);
+  if (!stock || !spy) return null;
+  return {
+    ret: stock.ret - spy.ret,
+    entryDate: stock.entryDate > spy.entryDate ? stock.entryDate : spy.entryDate,
+    exitDate: stock.exitDate > spy.exitDate ? stock.exitDate : spy.exitDate,
+  };
+}
+
 export function excessForwardReturn(
   stockBars: { date: string; close: number }[],
   spyBars: { date: string; close: number }[],
   anchorDate: string,
   hTradingDays: number
 ): number | null {
-  const rStock = forwardReturn(stockBars, anchorDate, hTradingDays);
-  const rSpy = forwardReturn(spyBars, anchorDate, hTradingDays);
-  if (rStock === null || rSpy === null) return null;
-  return rStock - rSpy;
+  return excessForwardReturnInfo(stockBars, spyBars, anchorDate, hTradingDays)?.ret ?? null;
 }

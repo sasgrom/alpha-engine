@@ -74,7 +74,7 @@ export default function FundFlows() {
     });
 
     // nodes (instanced spheres, two meshes)
-    const mkNodes = (ciks: number[], r: number, colorOf: (cik: number) => number, sizeOf: (cik: number) => number) => {
+    const mkNodes = (ciks: number[], colorOf: (cik: number) => number, sizeOf: (cik: number) => number) => {
       const geo = new THREE.SphereGeometry(1, 12, 12);
       const mat = new THREE.MeshBasicMaterial({ vertexColors: true });
       const mesh = new THREE.InstancedMesh(geo, mat, ciks.length);
@@ -94,8 +94,8 @@ export default function FundFlows() {
       scene.add(mesh);
       return mesh;
     };
-    mkNodes(fundsSorted.map((f) => f.cik), 0.85, (cik) => TIER_COLOR[byCikFund.get(cik)?.tier ?? "institutional"] ?? 0x9ca3af, () => 0.85);
-    mkNodes(companies.map((c) => c.cik), 0.45, (cik) => SECTOR_COLOR[byCikCo.get(cik)?.sector ?? ""] ?? 0x60a5fa, () => 0.45);
+    mkNodes(fundsSorted.map((f) => f.cik), (cik) => TIER_COLOR[byCikFund.get(cik)?.tier ?? "institutional"] ?? 0x9ca3af, () => 0.85);
+    mkNodes(companies.map((c) => c.cik), (cik) => SECTOR_COLOR[byCikCo.get(cik)?.sector ?? ""] ?? 0x60a5fa, () => 0.45);
 
     // edges
     const verts: number[] = [], colors: number[] = [];

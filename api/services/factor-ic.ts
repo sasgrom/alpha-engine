@@ -19,10 +19,14 @@ export async function materializeFactorPoints(cik: number): Promise<number> {
   let n = 0;
   for (const [factor, det] of Object.entries(f.detail)) {
     for (const pt of det.history) {
-      // availability = latest filed of any concept for that period (honest fallback +45d)
-      const [fr]: any = await db.execute(sql`SELECT MAX(filed) m FROM facts WHERE cik=${cik} AND endDate=${pt.t}`);
+      // Market data is observable on its own date; the EDGAR lag applies only
+      // to fundamentals. For fundamentals use the FIRST filing containing the
+      // period, not a later comparative/restatement filing (which would move
+      // old observations forward in time and corrupt historical backtests).
+      const isMarketFactor = factor === "momentum122" || factor === "high52";
+      const [fr]: any = isMarketFactor ? [[{ m: null }]] : await db.execute(sql`SELECT MIN(filed) m FROM facts WHERE cik=${cik} AND endDate=${pt.t}`);
       const filed = fr[0]?.m ? String(fr[0].m).slice(0, 19) : `${pt.t} 00:00:00`;
-      const filedAt = fr[0]?.m ? filed : `${new Date(Date.parse(pt.t + "T00:00:00Z") + 45 * 86400_000).toISOString().slice(0, 19).replace("T", " ")}`;
+      const filedAt = isMarketFactor || fr[0]?.m ? filed : `${new Date(Date.parse(pt.t + "T00:00:00Z") + 45 * 86400_000).toISOString().slice(0, 19).replace("T", " ")}`;
       await db.execute(sql`INSERT INTO factor_points (cik, factor, periodEnd, filedAt, value)
         VALUES (${cik}, ${factor}, ${pt.t}, ${filedAt}, ${pt.v})
         ON DUPLICATE KEY UPDATE value=VALUES(value), filedAt=VALUES(filedAt), computedAt=NOW()`);
@@ -43,16 +47,17 @@ export interface FactorIcRow {
 /** Per-company, per-factor IC vs forward 1Q/2Q returns (availability-anchored). */
 export async function companyFactorIc(cik: number): Promise<FactorIcRow[]> {
   const db = getDb();
-  const [points]: any = await db.execute(sql`SELECT factor, filedAt, value FROM factor_points WHERE cik=${cik} AND value IS NOT NULL ORDER BY filedAt`);
+  const [pointsRaw]: any = await db.execute(sql`SELECT factor, filedAt, value FROM factor_points WHERE cik=${cik} AND value IS NOT NULL ORDER BY filedAt`);
+  const points = pointsRaw as { factor: string; filedAt: string; value: number }[];
   if (points.length === 0) return [];
   const from = new Date(Date.now() - 7 * 365 * 86400_000).toISOString().slice(0, 10);
   const bars = (await getBars(cik, from)).filter((b) => (b.adjClose ?? b.close) !== null)
     .map((b) => ({ date: b.date, close: (b.adjClose ?? b.close) as number }))
     .sort((a, b) => a.date.localeCompare(b.date));
   const out: FactorIcRow[] = [];
-  const factors = [...new Set(points.map((p: any) => String(p.factor)))].sort();
+  const factors: string[] = [...new Set<string>(points.map((p) => String(p.factor)))].sort();
   for (const factor of factors) {
-    const pts = points.filter((p: any) => p.factor === factor);
+    const pts = points.filter((p) => p.factor === factor);
     for (const h of HORIZONS) {
       const pairs: IcPair[] = [];
       for (const p of pts) {
@@ -70,11 +75,13 @@ export async function companyFactorIc(cik: number): Promise<FactorIcRow[]> {
 /** Cross-sectional IC per quarter across all materialized companies. */
 export async function crossSectionFactorIc(): Promise<(FactorIcRow & { quarter: string })[]> {
   const db = getDb();
-  const [ciks]: any = await db.execute(sql`SELECT DISTINCT cik FROM factor_points`);
-  const perQuarter = new Map<string, Map<string, { x: number; y: number }[]>>();
-  for (const { cik } of ciks as { cik: number }[]) {
+  const [ciksRaw]: any = await db.execute(sql`SELECT DISTINCT cik FROM factor_points`);
+  const ciks = ciksRaw as { cik: number }[];
+  const perQuarter = new Map<string, Map<string, IcPair>>();
+  for (const { cik } of ciks) {
     // rebuild per-quarter pairs from the same anchors (cheap second pass)
-    const [pts]: any = await db.execute(sql`SELECT factor, filedAt, value FROM factor_points WHERE cik=${cik} AND value IS NOT NULL ORDER BY filedAt`);
+    const [ptsRaw]: any = await db.execute(sql`SELECT factor, filedAt, value FROM factor_points WHERE cik=${cik} AND value IS NOT NULL ORDER BY filedAt`);
+    const pts = ptsRaw as { factor: string; filedAt: string; value: number }[];
     const from = new Date(Date.now() - 7 * 365 * 86400_000).toISOString().slice(0, 10);
     const bars = (await getBars(cik, from)).filter((b) => (b.adjClose ?? b.close) !== null)
       .map((b) => ({ date: b.date, close: (b.adjClose ?? b.close) as number }))

@@ -144,13 +144,19 @@ export const FACTOR_FAMILIES: Record<string, string> = {
 export interface LinearGroup { representative: string; members: string[]; slope: number; r2: number }
 
 export function linearIdentityGroups(
-  series: { factor: string; values: number[] }[],
+  series: { factor: string; values: (number | null)[] }[],
   opts: { r2?: number; maxSlopeDrift?: number } = {}
 ): LinearGroup[] {
   const r2Min = opts.r2 ?? 0.85;
   const driftMax = opts.maxSlopeDrift ?? 0.5;
-  const fit = (xs: number[], ys: number[]) => {
-    const n = Math.min(xs.length, ys.length);
+  // Arrays share the same anchor calendar. Fit each pair only on dates where
+  // BOTH factors were available; slicing independent per-factor arrays would
+  // compare unrelated dates and could manufacture a linear identity.
+  const fit = (xs0: (number | null)[], ys0: (number | null)[]) => {
+    const pairs = xs0.map((x, i) => ({ x, y: ys0[i] }))
+      .filter((p): p is { x: number; y: number } => p.x !== null && p.y !== null && Number.isFinite(p.x) && Number.isFinite(p.y));
+    const xs = pairs.map((p) => p.x), ys = pairs.map((p) => p.y);
+    const n = pairs.length;
     if (n < 6) return null;
     const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
     let sxy = 0, sxx = 0, syy = 0;

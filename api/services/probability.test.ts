@@ -45,9 +45,10 @@ describe("reliabilityFromCalls", () => {
     expect(clampReliability(0)).toBe(0.1);
     expect(clampReliability(1)).toBe(0.9);
   });
-  it("all-wrong-down predicts → lpp = 0.1 floor", () => {
+  it("one wrong down call is Beta(1,1)-smoothed, not hard-clamped", () => {
     const r = reliabilityFromCalls([{ predictUp: false, realizedUp: true }])!;
-    expect(r.lmm).toBe(0.1);
+    expect(r.lmm).toBeCloseTo(1 / 3); // (0 correct + 1) / (1 call + 2)
+    expect(r.lpp).toBe(0.5); // no up calls → neutral side reliability
   });
 });
 

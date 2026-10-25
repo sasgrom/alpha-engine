@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AppLayout from "@/components/AppLayout";
-import { Play, Square, RefreshCw, Activity, CalendarClock, Satellite } from "lucide-react";
+import { Play, Square, RefreshCw, CalendarClock, Satellite } from "lucide-react";
 
 const WORKER_DEFS = [
   { key: "stocktwits", title: "Stocktwits live", hint: "30-message stream → buzz + sentiment label, per ticker" },

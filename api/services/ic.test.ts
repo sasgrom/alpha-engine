@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { pearson, spearman, ranks, icStats, forwardReturn, entryCloseAfter } from "./ic";
+import { pearson, spearman, ranks, icStats, forwardReturn, forwardReturnInfo, entryCloseAfter } from "./ic";
 
 describe("ic stats", () => {
   it("pearson basic + degenerate guards", () => {
@@ -32,9 +32,12 @@ describe("forwardReturn (no lookahead)", () => {
     expect(entryCloseAfter(bars, "2026-01-01")?.date).toBe("2026-01-05");
     expect(entryCloseAfter(bars, "2026-01-20")).toBeNull();
   });
-  it("forward return uses entry+h trading days, entry is post-filing", () => {
+  it("forward return uses entry+h and the median exit window", () => {
     const r = forwardReturn(bars, "2026-01-01", 2);
-    expect(r).toBeCloseTo(132 / 110 - 1);
+    expect(r).toBeCloseTo(120 / 110 - 1); // median(110, 120, 132) = 120
+    const info = forwardReturnInfo(bars, "2026-01-01", 2)!;
+    expect(info.entryDate).toBe("2026-01-05");
+    expect(info.exitDate).toBe("2026-01-20");
   });
   it("no exit bar → honest null", () => {
     expect(forwardReturn(bars, "2026-01-01", 99)).toBeNull();
