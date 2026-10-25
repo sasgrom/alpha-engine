@@ -322,7 +322,10 @@ if (TOTALS_ONLY) {
     for (const q of quarters) {
       const [have]: any = await db.execute(sql`SELECT COUNT(*) h FROM fund_holdings WHERE fundCik=${fund.cik} AND quarterDate=${q.reportDate}`);
       const [got]: any = await db.execute(sql`SELECT COUNT(*) g, MAX(filingDate) fd FROM fund_quarters WHERE fundCik=${fund.cik} AND quarterDate=${q.reportDate}`);
-      if (Number(have[0].h) === 0 || (Number(got[0].g) > 0 && got[0].fd)) continue;
+      // Backfill existing summaries even when zero positions map into our
+      // universe. Only brand-new empty books are skipped; filingDate is useful
+      // independently of mapped-holdings coverage.
+      if ((Number(got[0].g) === 0 && Number(have[0].h) === 0) || (Number(got[0].g) > 0 && got[0].fd)) continue;
       const resolved = await loadQuarterBook(fund, q);
       if (!resolved) continue;
       const { holdings, latestAccessionNo, latestFilingDate } = resolved;
