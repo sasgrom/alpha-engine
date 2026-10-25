@@ -738,7 +738,13 @@ function InstitutionalPanel({ cik }: { cik: number }) {
   const shr = (v: number | null) => v === null ? "—" : v >= 1e9 ? `${(v / 1e9).toFixed(2)}B` : v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v.toLocaleString("en-US");
   return (
     <div className="t-panel px-5 py-4">
-      <div className="t-label mb-3">Institutional ownership (13F) — quarter {d.quarterDate}</div>
+      <div className="t-label mb-2">Institutional ownership (13F) — quarter {d.quarterDate} · QoQ vs {d.previousQuarterDate ?? "n/a"}</div>
+      {d.guard && (
+        <div className="t-mono text-[10px] text-muted-foreground mb-2" title={d.guard.warnings.join("\n")}>
+          stable funds {d.guard.stableFunds} · coverage {d.guard.curFunds}/{d.guard.expectedFunds} · excluded {d.guard.missingFunds + d.guard.suspectFunds}{d.guard.partial ? " · partial" : ""}
+          {d.guard.warnings.length > 0 && <span className="text-amber-400"> — {d.guard.warnings[0]}</span>}
+        </div>
+      )}
       <div className="flex flex-wrap gap-x-8 gap-y-2 t-mono text-[12px] mb-3">
         <span>holders: <b>{d.holders}</b></span>
         <span>held: <b>{shr(d.sharesHeld)} sh</b> ({money(d.valueUsd)})</span>

@@ -170,7 +170,12 @@ export default function FundFlows() {
   return (
     <AppLayout title="Fund flows — 3D">
       <div className="panel relative" style={{ height: "calc(100vh - 150px)", minHeight: 480 }}>
-        <div className="absolute top-3 left-3 z-10 t-mono text-[11px] text-muted-foreground">
+        {q.data?.guard && (
+          <div className="absolute top-3 left-3 z-10 t-mono text-[11px] text-muted-foreground max-w-[95%]" title={q.data.guard.warnings.join("\n")}>
+            {q.data.guard.cur} vs {q.data.guard.prev ?? "n/a"} · stable funds {q.data.guard.stableFunds} · coverage {q.data.guard.curFunds}/{q.data.guard.expectedFunds} · excluded {q.data.guard.missingFunds + q.data.guard.suspectFunds}{q.data.guard.partial ? " · partial" : ""}
+          </div>
+        )}
+        <div className="absolute top-10 left-3 z-10 t-mono text-[11px] text-muted-foreground max-w-[95%]">
           outer ring = funds by tier · inner ring = companies by sector · green inflow / red outflow · hover for names, click to focus
         </div>
         <div ref={hostRef} className="w-full h-full" />

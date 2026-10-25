@@ -49,8 +49,10 @@ export default function Dashboard() {
   const macro = trpc.dashboard.macro.useQuery(undefined, { refetchInterval: 60000 });
   // 5e: morning brief written by the home LLM from yesterday's signals
   const digest = trpc.digests.latest.useQuery(undefined, { refetchInterval: 120000 });
-  // 5g: sector-level 13F net flows (tracked top-300 funds)
-  const flows = trpc.dashboard.sectorFlows.useQuery(undefined, { refetchInterval: 300000 });
+  // 13F flows include quarter-pair and comparable-fund coverage metadata.
+  const flows = trpc.dashboard.sectorFlowsDetailed.useQuery(undefined, { refetchInterval: 300000 });
+  const flowRows = flows.data?.rows ?? [];
+  const flowGuard = flows.data?.guard ?? null;
 
   return (
     <AppLayout title="Mission Control">
@@ -98,20 +100,26 @@ export default function Dashboard() {
       </div>
       )}
 
-      {/* 5g: 13F sector flows — where tracked funds' money moved QoQ */}
-      {flows.data && flows.data.length > 0 && (
+      {/* Guarded 13F flows: the pair and exclusions are visible, never implicit. */}
+      {flows.data && flowGuard && (
         <div className="t-panel px-4 py-3 mt-5">
-          <div className="t-label mb-2.5">13F sector flows — tracked top-300 funds, QoQ by reported value</div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-x-6 gap-y-2">
-            {flows.data.map((f: any) => (
-              <div key={f.sector}>
-                <div className="t-label !text-[8px]" title={f.sector}>{f.sector}</div>
-                <div className={`t-mono text-[13px] mt-0.5 ${f.deltaUsd >= 0 ? "text-emerald-400" : "text-crit-red"}`}>
-                  {f.deltaUsd >= 0 ? "+" : "−"}{f.deltaUsd >= 1e12 || f.deltaUsd <= -1e12 ? `$${(Math.abs(f.deltaUsd) / 1e12).toFixed(1)}T` : `$${(Math.abs(f.deltaUsd) / 1e9).toFixed(1)}B`}
-                </div>
-              </div>
-            ))}
+          <div className="t-label mb-2.5">13F sector flows — {flowGuard.cur} vs {flowGuard.prev ?? "n/a"} · stable funds {flowGuard.stableFunds}</div>
+          <div className="t-mono text-[10px] text-muted-foreground mb-2" title={flowGuard.warnings.join("\n")}>
+            coverage {flowGuard.curFunds}/{flowGuard.expectedFunds} · excluded {flowGuard.missingFunds} missing + {flowGuard.suspectFunds} suspect{flowGuard.partial ? " · partial" : ""}
           </div>
+          {flowGuard.warnings.length > 0 && <div className="t-mono text-[10px] text-amber-400 mb-2">{flowGuard.warnings[0]}</div>}
+          {flowRows.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-x-6 gap-y-2">
+              {flowRows.map((f) => (
+                <div key={f.sector}>
+                  <div className="t-label !text-[8px]" title={f.sector}>{f.sector}</div>
+                  <div className={`t-mono text-[13px] mt-0.5 ${f.deltaUsd >= 0 ? "text-emerald-400" : "text-crit-red"}`}>
+                    {f.deltaUsd >= 0 ? "+" : "−"}{f.deltaUsd >= 1e12 || f.deltaUsd <= -1e12 ? `$${(Math.abs(f.deltaUsd) / 1e12).toFixed(1)}T` : `$${(Math.abs(f.deltaUsd) / 1e9).toFixed(1)}B`}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : <div className="t-mono text-[11px] text-muted-foreground">No comparable flow panel for this quarter pair.</div>}
         </div>
       )}
 

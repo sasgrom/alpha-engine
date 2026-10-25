@@ -19,6 +19,7 @@ const DOCS = [
   { id: "engine-manual-ru", title: "Engine Manual (RU)", file: "docs/ALPHA_ENGINE_MANUAL.md", lang: "ru" },
   { id: "llm-context", title: "LLM Context", file: "docs/LLM_CONTEXT.md", lang: "en" },
   { id: "design-value-signals", title: "Design: Value & Signals", file: "docs/DESIGN_VALUE_SIGNALS.md", lang: "en" },
+  { id: "design-magnitude", title: "Design: Magnitude Engine", file: "docs/DESIGN_MAGNITUDE.md", lang: "en" },
 ];
 
 const entries = DOCS.map((d) => {

@@ -37,7 +37,7 @@ export interface AnchorDataset {
 
 export type DatasetCache = Map<number, Promise<AnchorDataset>>;
 
-async function buildAnchorDataset(cik: number): Promise<AnchorDataset> {
+export async function buildAnchorDataset(cik: number): Promise<AnchorDataset> {
   const data: EngineData = await engineData(cik);
   const points: AnchorPoint[] = [];
   for (let i = COOL_OFF; i < data.anchors.length; i++) {
@@ -138,7 +138,7 @@ export function splitNested(points: AnchorPoint[]): Split | null {
   return { fit, cal, evaluation, holdout };
 }
 
-function knownBefore(points: AnchorPoint[], cutoff: string): AnchorPoint[] {
+export function knownBefore(points: AnchorPoint[], cutoff: string): AnchorPoint[] {
   return points.filter((p) => p.exitDate < cutoff);
 }
 
