@@ -407,7 +407,7 @@ describe("digest: buildDigestPrompt", () => {
 // ---------------------------------------------------------------------------
 // 5f — 13F: info table parser, quarter dedupe, position events
 // ---------------------------------------------------------------------------
-import { parseInfoTable, latestPerQuarter, positionEvent, eventNote, buildPositionRow, loadFundUniverse, shouldRequestCusip } from "./thirteenf";
+import { parseInfoTable, latestPerQuarter, positionEvent, eventNote, buildPositionRow, loadFundUniverse, shouldRequestCusip, mergeQuarterFilings, amendmentKindFromPrimary } from "./thirteenf";
 
 describe("13f: parseInfoTable", () => {
   const xml = `<?xml version="1.0"?><n1:informationTable xmlns:n1="http://www.sec.gov/edgar/document/thirteenf/informationtable">
@@ -480,6 +480,32 @@ describe("13f negative-cache repair policy", () => {
   it("does not resend ticker-only or resolved cache rows to FIGI", () => {
     expect(shouldRequestCusip({ cik: null, ticker: "AAPL" }, true, false)).toBe(false);
     expect(shouldRequestCusip({ cik: 320193, ticker: "AAPL" }, true, false)).toBe(false);
+  });
+});
+
+describe("13f semantic amendment merge", () => {
+  const h = (cusip: string, valueUsd: number) => ({ issuer: cusip, cusip, secClass: "COM", valueUsd, shares: 1 });
+  it("replaces on RESTATEMENT and adds NEW HOLDINGS without dropping the book", () => {
+    const out = mergeQuarterFilings([
+      { accessionNo: "003", filingDate: "2026-05-15", form: "13F-HR/A", amendment: "NEW HOLDINGS", holdings: [h("D", 400), h("A", 120)] },
+      { accessionNo: "001", filingDate: "2026-05-08", form: "13F-HR", amendment: "ORIGINAL", holdings: [h("A", 100), h("B", 200)] },
+      { accessionNo: "002", filingDate: "2026-05-15", form: "13F-HR/A", amendment: "RESTATEMENT", holdings: [h("A", 110), h("C", 300)] },
+    ]);
+    expect(out.holdings.map((x) => [x.cusip, x.valueUsd])).toEqual([["A", 120], ["C", 300], ["D", 400]]);
+    expect(out.holdings.find((x) => x.cusip === "A")?.sourceAccessionNo).toBe("003");
+    expect(out.latestAccessionNo).toBe("003");
+  });
+  it("adds a partial amendment to the original and fails closed on unknown types", () => {
+    const original = { accessionNo: "orig", filingDate: "2026-05-08", form: "13F-HR", amendment: "ORIGINAL" as const, holdings: [h("A", 100)] };
+    const addition = { accessionNo: "add", filingDate: "2026-05-15", form: "13F-HR/A", amendment: "NEW HOLDINGS" as const, holdings: [h("B", 200)] };
+    expect(mergeQuarterFilings([original, addition]).holdings).toHaveLength(2);
+    expect(() => mergeQuarterFilings([{ ...addition, amendment: "UNKNOWN" }])).toThrow("Unknown 13F amendment type");
+  });
+  it("reads amendment semantics from primary_doc.xml", () => {
+    expect(amendmentKindFromPrimary("<amendmentType>RESTATEMENT</amendmentType>", "13F-HR/A")).toBe("RESTATEMENT");
+    expect(amendmentKindFromPrimary("<amendmentType>NEW HOLDINGS</amendmentType>", "13F-HR/A")).toBe("NEW HOLDINGS");
+    expect(amendmentKindFromPrimary("<amendmentType>OTHER</amendmentType>", "13F-HR/A")).toBe("UNKNOWN");
+    expect(amendmentKindFromPrimary("", "13F-HR")).toBe("ORIGINAL");
   });
 });
 

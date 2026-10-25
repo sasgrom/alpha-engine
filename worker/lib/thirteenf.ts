@@ -92,7 +92,53 @@ export function autoScale13F(holdings: Holding13F[]): { scale: number; medianImp
 /** One filings-list row as we shape it from the submissions API. */
 export interface Filing13F { accessionNo: string; form: string; filingDate: string; reportDate: string }
 
-/** Keep only the LATEST filing per quarter (amendments supersede originals). */
+export type AmendmentKind = "ORIGINAL" | "RESTATEMENT" | "NEW HOLDINGS" | "UNKNOWN";
+export interface QuarterFilingPart {
+  accessionNo: string;
+  filingDate: string;
+  form: string;
+  amendment: AmendmentKind;
+  holdings: Holding13F[];
+}
+export interface ResolvedHolding extends Holding13F { sourceAccessionNo: string }
+
+/** Read amendment semantics, not just the form suffix. Unknown amendments must
+ * fail closed: treating one as a full book can erase 99% of a quarter. */
+export function amendmentKindFromPrimary(primaryXml: string, form: string): AmendmentKind {
+  if (form === "13F-HR") return "ORIGINAL";
+  const m = primaryXml.match(/<(?:\w+:)?amendmentType>\s*([^<]+?)\s*<\/(?:\w+:)?amendmentType>/i);
+  const kind = m?.[1]?.trim().toUpperCase();
+  return kind === "RESTATEMENT" || kind === "NEW HOLDINGS" ? kind : "UNKNOWN";
+}
+
+/** Merge one quarter chronologically: a restatement replaces the current book;
+ * NEW HOLDINGS adds rows to it. Duplicate cusip:class keys use the latest row. */
+export function mergeQuarterFilings(parts: QuarterFilingPart[]): {
+  holdings: ResolvedHolding[];
+  latestAccessionNo: string;
+  latestFilingDate: string;
+} {
+  const ordered = [...parts].sort((a, b) =>
+    a.filingDate.localeCompare(b.filingDate) ||
+    Number(a.form.endsWith("/A")) - Number(b.form.endsWith("/A")) ||
+    a.accessionNo.localeCompare(b.accessionNo)
+  );
+  const book = new Map<string, ResolvedHolding>();
+  for (const part of ordered) {
+    if (part.amendment === "UNKNOWN") throw new Error(`Unknown 13F amendment type: ${part.accessionNo}`);
+    if (part.amendment === "RESTATEMENT") book.clear();
+    for (const h of part.holdings) book.set(`${h.cusip}:${h.secClass}`, { ...h, sourceAccessionNo: part.accessionNo });
+  }
+  return {
+    holdings: [...book.values()],
+    latestAccessionNo: ordered.at(-1)?.accessionNo ?? "",
+    latestFilingDate: ordered.at(-1)?.filingDate ?? "",
+  };
+}
+
+/** Legacy single-filing selector for callers that explicitly need one accession.
+ * Do NOT use it to reconstruct a book: NEW HOLDINGS amendments are partial and
+ * must be merged with mergeQuarterFilings instead. */
 export function latestPerQuarter(filings: Filing13F[]): Filing13F[] {
   const byQ = new Map<string, Filing13F>();
   for (const f of filings) {

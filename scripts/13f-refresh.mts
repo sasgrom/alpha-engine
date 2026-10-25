@@ -4,10 +4,10 @@
  *     [--quarters 12] [--only "Berkshire"] [--totals-only] [--rebuild-events]
  *     [--repair]  // retry negative CUSIP cache + reopen completed quarters; no events
  *
- * Per fund (universe JSON): latest 13F-HR(/A) per quarter → info-table XML
- * (CACHED on disk: worker/cache/13f/<fundCik>/<accn>.xml — reruns never
- * refetch) → autoscale value units (dollars-vs-thousands per filing) →
- * fund_quarters full-book total → fund_holdings rows (BATCHED inserts, only
+ * Per fund (universe JSON): original 13F-HR + semantic amendments per quarter
+ * (RESTATEMENT replaces, NEW HOLDINGS adds) → info-table XML (CACHED on disk:
+ * worker/cache/13f/<fundCik>/<accn>.xml — reruns never refetch) → autoscale
+ * value units per filing → fund_quarters full-book total → fund_holdings rows (BATCHED inserts, only
  * securities mapping to our companies via cached CUSIP map + OpenFIGI) →
  * QoQ events (new/exit/±30%) as signals rows for SIGNAL_TIERS only.
  * Deterministic everywhere — no LLM. Local-first: run against the LOCAL db.
@@ -25,8 +25,9 @@ import { sql } from "drizzle-orm";
 import { getDb } from "../api/queries/connection";
 import { listFilings, listFilingDocs, fetchDoc } from "../worker/lib/edgar";
 import {
-  loadFundUniverse, latestPerQuarter, parseInfoTable, autoScale13F,
-  positionEvent, eventNote, buildPositionRow, shouldRequestCusip, SIGNAL_TIERS, type Holding13F,
+  loadFundUniverse, parseInfoTable, autoScale13F, amendmentKindFromPrimary, mergeQuarterFilings,
+  positionEvent, eventNote, buildPositionRow, shouldRequestCusip, SIGNAL_TIERS,
+  type Filing13F, type QuarterFilingPart,
 } from "../worker/lib/thirteenf";
 import { startProgress } from "../worker/lib/progress";
 
@@ -56,6 +57,49 @@ async function infoTableXml(fundCik: number, accessionNo: string): Promise<strin
   mkdirSync(cacheDir(fundCik), { recursive: true });
   writeFileSync(file, xml);
   return xml;
+}
+
+type QuarterPack = { reportDate: string; filings: Filing13F[] };
+
+/** Keep ALL filings per quarter; amendment semantics are resolved only after
+ * reading primary_doc.xml. Choosing the latest accession alone is unsafe. */
+function quarterPacks(filings: Filing13F[]): QuarterPack[] {
+  const byQ = new Map<string, Filing13F[]>();
+  for (const f of filings) {
+    const q = f.reportDate || f.filingDate;
+    if (!byQ.has(q)) byQ.set(q, []);
+    byQ.get(q)!.push(f);
+  }
+  return [...byQ.entries()].map(([reportDate, rows]) => ({
+    reportDate,
+    filings: rows.sort((a, b) => a.filingDate.localeCompare(b.filingDate) || a.accessionNo.localeCompare(b.accessionNo)),
+  })).sort((a, b) => a.reportDate.localeCompare(b.reportDate));
+}
+
+async function primaryDocXml(fundCik: number, accessionNo: string): Promise<string> {
+  const file = path.join(cacheDir(fundCik), `${accessionNo.replace(/-/g, "")}.primary.xml`);
+  if (existsSync(file)) return readFileSync(file, "utf8");
+  const xml = await fetchDoc(fundCik, accessionNo, "primary_doc.xml");
+  mkdirSync(cacheDir(fundCik), { recursive: true });
+  writeFileSync(file, xml);
+  return xml;
+}
+
+async function loadQuarterBook(fund: { cik: number; name: string }, q: QuarterPack) {
+  const parts: QuarterFilingPart[] = [];
+  for (const f of q.filings) {
+    const primary = await primaryDocXml(fund.cik, f.accessionNo);
+    const amendment = amendmentKindFromPrimary(primary, f.form);
+    if (amendment === "UNKNOWN") throw new Error(`unknown amendment type in ${f.accessionNo}`);
+    const xml = await infoTableXml(fund.cik, f.accessionNo);
+    if (!xml) throw new Error(`no xml info table in ${f.accessionNo}`);
+    const holdings = parseInfoTable(xml);
+    const sc = autoScale13F(holdings);
+    if (sc.scale !== 1) prog.log(`! ${fund.name} ${q.reportDate} ${f.accessionNo}: value field in DOLLARS (median implied $${Math.round(sc.medianImplied!).toLocaleString("en-US")}) — scaled ÷1000`);
+    parts.push({ accessionNo: f.accessionNo, filingDate: f.filingDate, form: f.form, amendment, holdings });
+  }
+  if (parts.length === 0) throw new Error("no usable 13F information tables");
+  return mergeQuarterFilings(parts);
 }
 
 // ---------------------------------------------------------------------------
@@ -190,9 +234,9 @@ async function insertEvents(rows: any[]): Promise<number> {
 }
 
 /** Events for one fund-quarter pair from holdings maps (shared by both modes). */
-async function eventsForQuarter(fund: { cik: number; name: string }, prev: Map<string, { shares: number; valueUsd: number | null }>, cur: Map<string, { cik: number; cls: string; shares: number; valueUsd: number | null; accn: string }>, curQ: string, prevQ: string | null): Promise<number> {
+async function eventsForQuarter(fund: { cik: number; name: string }, prev: Map<string, { shares: number; valueUsd: number | null }>, cur: Map<string, { cik: number; cls: string; shares: number; valueUsd: number | null; accn: string }>, curQ: string, prevQ: string | null, filingDate = curQ): Promise<number> {
   const rows: any[] = [];
-  const filing = { accessionNo: cur.values().next().value?.accn ?? "", form: "13F-HR", filingDate: curQ, reportDate: curQ };
+  const filing = { accessionNo: cur.values().next().value?.accn ?? "", form: "13F-HR", filingDate, reportDate: curQ };
   const totalUsd = await fundTotal(fund.cik, curQ);
   const prevTotalUsd = prevQ ? await fundTotal(fund.cik, prevQ) : totalUsd;
   for (const [k, c] of cur) {
@@ -261,17 +305,14 @@ if (TOTALS_ONLY) {
   for (const fund of funds) {
     let filings;
     try { filings = await listFilings(fund.cik, FORMS_13F); } catch { continue; }
-    const quarters = latestPerQuarter(filings.map((f) => ({ accessionNo: f.accessionNo, form: f.form, filingDate: f.filingDate, reportDate: f.reportDate || f.filingDate })));
+    const quarters = quarterPacks(filings.map((f) => ({ accessionNo: f.accessionNo, form: f.form, filingDate: f.filingDate, reportDate: f.reportDate || f.filingDate })));
     for (const q of quarters) {
       const [have]: any = await db.execute(sql`SELECT COUNT(*) h FROM fund_holdings WHERE fundCik=${fund.cik} AND quarterDate=${q.reportDate}`);
       const [got]: any = await db.execute(sql`SELECT COUNT(*) g FROM fund_quarters WHERE fundCik=${fund.cik} AND quarterDate=${q.reportDate}`);
       if (Number(have[0].h) === 0 || Number(got[0].g) > 0) continue;
-      const xml = await infoTableXml(fund.cik, q.accessionNo);
-      if (!xml) continue;
-      const holdings = parseInfoTable(xml);
-      autoScale13F(holdings);
+      const { holdings, latestAccessionNo } = await loadQuarterBook(fund, q);
       await db.execute(sql`INSERT INTO fund_quarters (fundCik, quarterDate, totalValueUsd, positions, accessionNo)
-        VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${q.accessionNo})
+        VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${latestAccessionNo})
         ON DUPLICATE KEY UPDATE totalValueUsd=VALUES(totalValueUsd), positions=VALUES(positions), accessionNo=VALUES(accessionNo)`);
       written++;
     }
@@ -288,7 +329,7 @@ for (const fund of funds) {
   let filings;
   try { filings = await listFilings(fund.cik, FORMS_13F); }
   catch (err) { prog.log(`x ${fund.name}: submissions failed — ${String(err).slice(0, 100)}`); continue; }
-  const quarters = latestPerQuarter(filings.map((f) => ({ accessionNo: f.accessionNo, form: f.form, filingDate: f.filingDate, reportDate: f.reportDate || f.filingDate }))).slice(-QUARTERS);
+  const quarters = quarterPacks(filings.map((f) => ({ accessionNo: f.accessionNo, form: f.form, filingDate: f.filingDate, reportDate: f.reportDate || f.filingDate }))).slice(-QUARTERS);
   if (quarters.length === 0) { prog.stageDone(`${fund.name}: no 13F filings`); continue; }
 
   // previous-quarter positions per heldCik:secClass, seeded from the DB.
@@ -307,14 +348,10 @@ for (const fund of funds) {
   for (const q of quarters) {
     if (!REPAIR && seenQuarter.has(q.reportDate)) continue; // idempotent reruns; repair deliberately reopens them
     try {
-      const xml = await infoTableXml(fund.cik, q.accessionNo);
-      if (!xml) { prog.log(`! ${fund.name} ${q.reportDate}: no xml info table`); continue; }
-      const holdings = parseInfoTable(xml);
-      const sc = autoScale13F(holdings);
-      if (sc.scale !== 1) prog.log(`! ${fund.name} ${q.reportDate}: value field in DOLLARS (median implied $${Math.round(sc.medianImplied!).toLocaleString("en-US")}) — scaled ÷1000`);
-      // full-book total BEFORE universe filtering
+      const { holdings, latestAccessionNo, latestFilingDate } = await loadQuarterBook(fund, q);
+      // full-book total BEFORE universe filtering, with partial amendments merged
       await db.execute(sql`INSERT INTO fund_quarters (fundCik, quarterDate, totalValueUsd, positions, accessionNo)
-        VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${q.accessionNo})
+        VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${latestAccessionNo})
         ON DUPLICATE KEY UPDATE totalValueUsd=VALUES(totalValueUsd), positions=VALUES(positions), accessionNo=VALUES(accessionNo)`);
 
       const { map, failed: mappingFailed } = await mapCusips([...new Set(holdings.map((h) => h.cusip))]);
@@ -324,9 +361,9 @@ for (const fund of funds) {
       for (const h of holdings) {
         const m = map.get(h.cusip);
         if (!m?.cik || !ourCiks.has(m.cik)) continue;
-        values.push({ fundCik: fund.cik, fundName: fund.name, cusip: h.cusip, secClass: h.secClass, heldCik: m.cik, issuer: h.issuer, shares: h.shares, valueUsd: h.valueUsd, quarterDate: q.reportDate, accessionNo: q.accessionNo, tier: fund.tier });
+        values.push({ fundCik: fund.cik, fundName: fund.name, cusip: h.cusip, secClass: h.secClass, heldCik: m.cik, issuer: h.issuer, shares: h.shares, valueUsd: h.valueUsd, quarterDate: q.reportDate, accessionNo: h.sourceAccessionNo, tier: fund.tier });
         const k = `${m.cik}:${h.secClass}`;
-        const c = curShares.get(k) ?? { cik: m.cik, cls: h.secClass, shares: 0, valueUsd: 0, accn: q.accessionNo };
+        const c = curShares.get(k) ?? { cik: m.cik, cls: h.secClass, shares: 0, valueUsd: 0, accn: latestAccessionNo };
         c.shares += h.shares ?? 0;
         c.valueUsd = (c.valueUsd ?? 0) + (h.valueUsd ?? 0);
         curShares.set(k, c);
@@ -346,7 +383,7 @@ for (const fund of funds) {
       // Repair is holdings-only: events are rebuilt from the repaired history
       // in one explicit second pass, never from partially mapped quarters.
       if (!REPAIR && SIGNAL_TIERS.has(fund.tier)) {
-        fundEvents += await eventsForQuarter(fund, prevShares, curShares, q.reportDate, quarters[quarters.indexOf(q) - 1]?.reportDate ?? null);
+        fundEvents += await eventsForQuarter(fund, prevShares, curShares, q.reportDate, quarters[quarters.indexOf(q) - 1]?.reportDate ?? null, latestFilingDate);
       }
       for (const [k, v] of curShares) prevShares.set(k, { shares: v.shares, valueUsd: v.valueUsd });
       // completion is recorded ONLY here — after holdings (and events in normal mode) landed
