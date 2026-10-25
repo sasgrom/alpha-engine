@@ -32,6 +32,7 @@ const arg = (name: string) => {
 const table = arg("--table") ?? "signals";
 const dry = process.argv.includes("--dry");
 const fullSnapshot = process.argv.includes("--full");
+const resumeSnapshot = process.argv.includes("--resume");
 // holdings get their own watermark key — never collide with signal sources
 const source = table === "fund_holdings" ? "holdings" : table === "fund_quarters" ? "fund_quarters" : (arg("--source") ?? "edgar");
 // --reset: ignore the watermark (re-send everything local has for the source;
@@ -49,7 +50,7 @@ function saveWatermark(id: number) {
   writeFileSync(WM_FILE, JSON.stringify(all, null, 1));
 }
 
-const lastId = table === "fund_holdings" && fullSnapshot ? 0 : loadWatermark();
+const lastId = table === "fund_holdings" && fullSnapshot && !resumeSnapshot ? 0 : loadWatermark();
 const db = getDb();
 
 // 5g: holdings push path (13F positions) — same watermark discipline
@@ -59,7 +60,7 @@ if (table === "fund_holdings") {
         FROM fund_holdings WHERE id > ${lastId} ORDER BY id`
   );
   console.log(fullSnapshot
-    ? `[push] fund_holdings: FULL snapshot of ${rows.length} rows (upsert, no deletes)`
+    ? `[push] fund_holdings: ${resumeSnapshot ? "RESUME " : ""}FULL snapshot of ${rows.length} rows after id>${lastId} (upsert, no deletes)`
     : `[push] fund_holdings: ${rows.length} local rows after watermark id>${lastId}`);
   if (rows.length === 0) { console.log("[push] nothing to do"); process.exit(0); }
   const mapped = rows.map((r: any) => ({
@@ -86,6 +87,10 @@ if (table === "fund_holdings") {
     if (fullSnapshot) upserted += j.upserted ?? 0;
     else { accepted += j.accepted ?? 0; dupes += j.skippedDupes ?? 0; }
     batches++;
+    if (fullSnapshot) {
+      saveWatermark(Number(rows[Math.min(i + 499, rows.length - 1)].id));
+      if (batches % 25 === 0) console.log(`[push] holdings snapshot: ${batches} batches, ${Math.min(i + 500, mapped.length)}/${mapped.length} rows, checkpoint saved`);
+    }
   }
   saveWatermark(maxId);
   console.log(fullSnapshot
