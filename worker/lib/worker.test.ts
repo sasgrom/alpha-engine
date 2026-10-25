@@ -407,7 +407,7 @@ describe("digest: buildDigestPrompt", () => {
 // ---------------------------------------------------------------------------
 // 5f — 13F: info table parser, quarter dedupe, position events
 // ---------------------------------------------------------------------------
-import { parseInfoTable, latestPerQuarter, positionEvent, eventNote, buildPositionRow, loadFundUniverse } from "./thirteenf";
+import { parseInfoTable, latestPerQuarter, positionEvent, eventNote, buildPositionRow, loadFundUniverse, shouldRequestCusip } from "./thirteenf";
 
 describe("13f: parseInfoTable", () => {
   const xml = `<?xml version="1.0"?><n1:informationTable xmlns:n1="http://www.sec.gov/edgar/document/thirteenf/informationtable">
@@ -466,6 +466,20 @@ describe("13f: latestPerQuarter + events", () => {
     expect(f.length).toBeGreaterThanOrEqual(28);
     expect(f.find((x) => x.name === "Berkshire Hathaway")?.cik).toBe(1067983);
     expect(f.find((x) => x.name === "Citadel Advisors")?.cik).toBe(1423053);
+  });
+});
+
+describe("13f negative-cache repair policy", () => {
+  it("requests unknown CUSIPs and retries negative cache only in repair mode", () => {
+    expect(shouldRequestCusip(undefined, false, false)).toBe(true);
+    const negative = { cik: null, ticker: null };
+    expect(shouldRequestCusip(negative, false, false)).toBe(false);
+    expect(shouldRequestCusip(negative, true, false)).toBe(true);
+    expect(shouldRequestCusip(negative, true, true)).toBe(false);
+  });
+  it("does not resend ticker-only or resolved cache rows to FIGI", () => {
+    expect(shouldRequestCusip({ cik: null, ticker: "AAPL" }, true, false)).toBe(false);
+    expect(shouldRequestCusip({ cik: 320193, ticker: "AAPL" }, true, false)).toBe(false);
   });
 });
 

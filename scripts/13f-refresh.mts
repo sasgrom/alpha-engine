@@ -2,6 +2,7 @@
  * 13F refresh v2 (rewritten 5g, after the hang diagnosis):
  *   npx tsx scripts/13f-refresh.mts [--universe funds-13f-top300.json]
  *     [--quarters 12] [--only "Berkshire"] [--totals-only] [--rebuild-events]
+ *     [--repair]  // retry negative CUSIP cache + reopen completed quarters; no events
  *
  * Per fund (universe JSON): latest 13F-HR(/A) per quarter → info-table XML
  * (CACHED on disk: worker/cache/13f/<fundCik>/<accn>.xml — reruns never
@@ -25,7 +26,7 @@ import { getDb } from "../api/queries/connection";
 import { listFilings, listFilingDocs, fetchDoc } from "../worker/lib/edgar";
 import {
   loadFundUniverse, latestPerQuarter, parseInfoTable, autoScale13F,
-  positionEvent, eventNote, buildPositionRow, SIGNAL_TIERS, type Holding13F,
+  positionEvent, eventNote, buildPositionRow, shouldRequestCusip, SIGNAL_TIERS, type Holding13F,
 } from "../worker/lib/thirteenf";
 import { startProgress } from "../worker/lib/progress";
 
@@ -37,6 +38,7 @@ const ONLY = arg("--only")?.toLowerCase() ?? null;
 const UNIVERSE_FILE = arg("--universe") ?? "funds-13f.json";
 const TOTALS_ONLY = process.argv.includes("--totals-only");
 const REBUILD = process.argv.includes("--rebuild-events");
+const REPAIR = process.argv.includes("--repair");
 const SLEEP = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const db = getDb();
@@ -61,15 +63,17 @@ async function infoTableXml(fundCik: number, accessionNo: string): Promise<strin
 // ---------------------------------------------------------------------------
 const FIGI_KEY = process.env.OPENFIGI_API_KEY ?? null;
 const FIGI_CHUNK = FIGI_KEY ? 100 : 25;
+const retriedNegativeCache = new Set<string>();
 
-async function mapCusips(cusips: string[]): Promise<Map<number, { cik: number | null; ticker: string | null }>> {
+async function mapCusips(cusips: string[]): Promise<{ map: Map<string, { cik: number | null; ticker: string | null }>; failed: boolean }> {
+  let failed = false;
   // 1) repair cached rows whose ticker never resolved (JS-side join — the
   //    UPDATE..JOIN hit a collation mismatch; chunked by cik, one UPDATE each)
   try {
     const [pending]: any = await db.execute(sql`SELECT cusip, ticker FROM cusip_map WHERE cik IS NULL AND ticker IS NOT NULL`);
     if (pending.length > 0) {
       const [comp]: any = await db.execute(sql`SELECT cik, ticker FROM companies`);
-      const byTicker = new Map(comp.map((c: any) => [String(c.ticker), Number(c.cik)]));
+      const byTicker = new Map<string, number>(comp.map((c: any): [string, number] => [String(c.ticker), Number(c.cik)]));
       const byCik = new Map<number, string[]>();
       for (const row of pending) {
         const cik = byTicker.get(String(row.ticker));
@@ -83,7 +87,7 @@ async function mapCusips(cusips: string[]): Promise<Map<number, { cik: number | 
       }
       if (byCik.size > 0) prog.log(`cusip_map repaired: ${pending.length} re-resolved`);
     }
-  } catch { /* repair is best-effort */ }
+  } catch { failed = true; /* a failed repair must not complete the quarter */ }
 
   // 2) read cache in one batched pass
   const out = new Map<string, { cik: number | null; ticker: string | null }>();
@@ -93,7 +97,14 @@ async function mapCusips(cusips: string[]): Promise<Map<number, { cik: number | 
     const [rows]: any = await db.execute(sql`SELECT cusip, cik, ticker FROM cusip_map WHERE cusip IN (${sql.join(chunk.map((c) => sql`${c}`), sql`, `)})`);
     for (const r of rows) out.set(String(r.cusip), { cik: r.cik !== null ? Number(r.cik) : null, ticker: r.ticker });
   }
-  for (const c of cusips) if (!out.has(c)) missing.push(c);
+  for (const c of cusips) {
+    const cached = out.get(c);
+    if (!shouldRequestCusip(cached, REPAIR, retriedNegativeCache.has(c))) continue;
+    missing.push(c);
+    // Negative cache used to be permanent: a transient FIGI failure or an
+    // exhausted key could never heal. Retry it once per repair run.
+    if (cached) retriedNegativeCache.add(c);
+  }
 
   // 3) OpenFIGI only for the unknown
   for (let i = 0; i < missing.length; i += FIGI_CHUNK) {
@@ -115,15 +126,16 @@ async function mapCusips(cusips: string[]): Promise<Map<number, { cik: number | 
       }
       for (let k = 0; k < values.length; k += 500) {
         const vc = values.slice(k, k + 500);
-        await db.execute(sql`INSERT IGNORE INTO cusip_map (cusip, cik, ticker, exchCode, secType) VALUES ${sql.join(
+        await db.execute(sql`INSERT INTO cusip_map (cusip, cik, ticker, exchCode, secType) VALUES ${sql.join(
           vc.map((v) => sql`(${v.cusip}, ${null}, ${v.ticker}, ${v.exchCode}, ${v.secType})`), sql`, `
-        )}`);
+        )}
+        ON DUPLICATE KEY UPDATE ticker=VALUES(ticker), exchCode=VALUES(exchCode), secType=VALUES(secType)`);
       }
       // resolve the fresh tickers against companies in one go
       const tickers = values.map((v) => v.ticker).filter(Boolean);
       if (tickers.length > 0) {
         const [comp]: any = await db.execute(sql`SELECT cik, ticker FROM companies WHERE ticker IN (${sql.join(tickers.map((t) => sql`${t}`), sql`, `)})`);
-        const byTicker = new Map(comp.map((c: any) => [String(c.ticker), Number(c.cik)]));
+        const byTicker = new Map<string, number>(comp.map((c: any): [string, number] => [String(c.ticker), Number(c.cik)]));
         for (const v of values) {
           const cik = v.ticker ? byTicker.get(v.ticker) ?? null : null;
           if (cik) await db.execute(sql`UPDATE cusip_map SET cik = ${cik} WHERE cusip = ${v.cusip}`);
@@ -132,11 +144,12 @@ async function mapCusips(cusips: string[]): Promise<Map<number, { cik: number | 
       }
       await SLEEP(3000);
     } catch (err) {
+      failed = true;
       prog.log(`! figi chunk failed: ${String(err).slice(0, 120)} — those cusips stay unmapped this run`);
       for (const c of chunk) out.set(c, { cik: null, ticker: null });
     }
   }
-  return out;
+  return { map: out, failed };
 }
 
 // ---------------------------------------------------------------------------
@@ -269,7 +282,7 @@ if (TOTALS_ONLY) {
 }
 
 // ---- main pass -------------------------------------------------------------
-let totalRows = 0, totalEvents = 0;
+let totalRows = 0, totalEvents = 0, openQuarters = 0;
 for (const fund of funds) {
   prog.stage(`${fund.name} [${fund.tier}]`);
   let filings;
@@ -292,7 +305,7 @@ for (const fund of funds) {
 
   let fundRows = 0, fundEvents = 0;
   for (const q of quarters) {
-    if (seenQuarter.has(q.reportDate)) continue; // idempotent reruns
+    if (!REPAIR && seenQuarter.has(q.reportDate)) continue; // idempotent reruns; repair deliberately reopens them
     try {
       const xml = await infoTableXml(fund.cik, q.accessionNo);
       if (!xml) { prog.log(`! ${fund.name} ${q.reportDate}: no xml info table`); continue; }
@@ -304,7 +317,7 @@ for (const fund of funds) {
         VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${q.accessionNo})
         ON DUPLICATE KEY UPDATE totalValueUsd=VALUES(totalValueUsd), positions=VALUES(positions), accessionNo=VALUES(accessionNo)`);
 
-      const map = await mapCusips([...new Set(holdings.map((h) => h.cusip))]);
+      const { map, failed: mappingFailed } = await mapCusips([...new Set(holdings.map((h) => h.cusip))]);
       // batched holdings insert
       const values: any[] = [];
       const curShares = new Map<string, { cik: number; cls: string; shares: number; valueUsd: number | null; accn: string }>();
@@ -320,24 +333,32 @@ for (const fund of funds) {
       }
       for (let i = 0; i < values.length; i += 500) {
         const vc = values.slice(i, i + 500);
-        await db.execute(sql`INSERT IGNORE INTO fund_holdings (fundCik, fundName, cusip, secClass, heldCik, issuer, shares, valueUsd, quarterDate, accessionNo, tier)
-          VALUES ${sql.join(vc.map((v) => sql`(${v.fundCik}, ${v.fundName}, ${v.cusip}, ${v.secClass}, ${v.heldCik}, ${v.issuer}, ${v.shares}, ${v.valueUsd}, ${v.quarterDate}, ${v.accessionNo}, ${v.tier})`), sql`, `)}`);
+        await db.execute(sql`INSERT INTO fund_holdings (fundCik, fundName, cusip, secClass, heldCik, issuer, shares, valueUsd, quarterDate, accessionNo, tier)
+          VALUES ${sql.join(vc.map((v) => sql`(${v.fundCik}, ${v.fundName}, ${v.cusip}, ${v.secClass}, ${v.heldCik}, ${v.issuer}, ${v.shares}, ${v.valueUsd}, ${v.quarterDate}, ${v.accessionNo}, ${v.tier})`), sql`, `)}
+          ON DUPLICATE KEY UPDATE fundName=VALUES(fundName), heldCik=VALUES(heldCik), issuer=VALUES(issuer), shares=VALUES(shares), valueUsd=VALUES(valueUsd), accessionNo=VALUES(accessionNo), tier=VALUES(tier)`);
       }
       fundRows += values.length;
-      // events for signal tiers only
-      if (SIGNAL_TIERS.has(fund.tier)) {
+      if (mappingFailed) {
+        openQuarters++;
+        prog.log(`! ${fund.name} ${q.reportDate}: mapping incomplete — quarter left OPEN for the next run`);
+        continue;
+      }
+      // Repair is holdings-only: events are rebuilt from the repaired history
+      // in one explicit second pass, never from partially mapped quarters.
+      if (!REPAIR && SIGNAL_TIERS.has(fund.tier)) {
         fundEvents += await eventsForQuarter(fund, prevShares, curShares, q.reportDate, quarters[quarters.indexOf(q) - 1]?.reportDate ?? null);
       }
       for (const [k, v] of curShares) prevShares.set(k, { shares: v.shares, valueUsd: v.valueUsd });
-      // completion is recorded ONLY here — after holdings AND events landed
+      // completion is recorded ONLY here — after holdings (and events in normal mode) landed
       await db.execute(sql`INSERT IGNORE INTO fund_jobs (fundCik, quarterDate) VALUES (${fund.cik}, ${q.reportDate})`);
       prog.item(quarters.indexOf(q) + 1, quarters.length, `${fundRows} rows, ${fundEvents} events`);
     } catch (err) {
+      openQuarters++;
       prog.log(`! ${fund.name} ${q.reportDate}: ${String(err).slice(0, 150)}`);
     }
   }
   totalRows += fundRows; totalEvents += fundEvents;
   prog.stageDone(`${fund.name}: ${quarters.length} quarters, ${fundRows} holdings, ${fundEvents} events`);
 }
-prog.done(`all done - ${totalRows} holdings rows, ${totalEvents} signal events`);
+prog.done(`all done - ${totalRows} holdings rows, ${totalEvents} signal events; ${openQuarters} quarters left open`);
 process.exit(0);

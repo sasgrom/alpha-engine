@@ -14,6 +14,16 @@ import path from "node:path";
 
 export interface FundEntry { cik: number; name: string; tier: string; aumUsd?: number }
 
+export interface CusipCacheState { cik: number | null; ticker: string | null }
+
+/** Unknown CUSIPs always need FIGI. A cached negative result is retried only
+ * in explicit repair mode and at most once per run; ticker-only rows are left
+ * to the local companies-registry repair, not sent back to FIGI. */
+export function shouldRequestCusip(cached: CusipCacheState | undefined, repair: boolean, alreadyRetried: boolean): boolean {
+  if (!cached) return true;
+  return repair && cached.cik === null && !cached.ticker && !alreadyRetried;
+}
+
 /** Tiers that generate position EVENTS; "institutional" is aggregates-only (5g). */
 export const SIGNAL_TIERS = new Set(["activist", "quant", "fundamental"]);
 
@@ -151,7 +161,7 @@ export function eventNote(fundName: string, ev: PositionEvent, secClass = "COM",
  * against a big long book is insurance, not a bet. Commons score full.
  */
 export function buildPositionRow(fundCik: number, heldCik: number, filing: Filing13F, ev: PositionEvent, note: string, secClass = "COM") {
-  const dir = ev.kind === "new" ? 1 : ev.kind === "exit" ? -1 : Math.max(-1, Math.min(1, ev.deltaPct / 100));
+  const dir = ev.kind === "change" ? Math.max(-1, Math.min(1, ev.deltaPct / 100)) : ev.kind === "new" ? 1 : -1;
   const clsSign = secClass === "PUT" ? -1 : 1;
   const weight = secClass === "COM" ? 1 : 0.5;
   const score = Math.round(dir * clsSign * weight * 1000) / 1000;
