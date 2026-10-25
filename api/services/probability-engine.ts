@@ -8,7 +8,7 @@ import { sql } from "drizzle-orm";
 import { getDb } from "../queries/connection";
 import { getBars } from "./prices";
 import { forwardReturn, spearman } from "./ic";
-import { naiveBayesPUp, reliabilityFromCalls, macroPrior, calibrationBins, zScores, familyZ, linearIdentityGroups, type Reliability } from "./probability";
+import { bayesPosterior, reliabilityFromCalls, macroPrior, calibrationBins, zScores, familyZ, linearIdentityGroups, type Reliability } from "./probability";
 
 // Extra factor streams beyond fundamentals (6b+): filing tone and 13F flow.
 // edgarTone = LLM tone score per filing (availability = eventTs = filing time).
@@ -117,7 +117,7 @@ export async function evaluateCompany(cik: number): Promise<ProbabilityReport | 
     if (!rel) continue;
     const label = members.length > 1 ? members.join("+") : g.representative;
     const meanAbsIc = Math.max(...members.map((m) => candidates.find((c) => c.factor === m)?.meanAbsIc ?? 0));
-    used.push({ factor: label, meanAbsIc, rel, calls: familyCalls });
+    used.push({ factor: label, meanAbsIc, rel, calls: familyCalls, members, representative: g.representative });
   }
 
   // macro prior at the latest anchor
@@ -127,25 +127,25 @@ export async function evaluateCompany(cik: number): Promise<ProbabilityReport | 
   const t = mac.find((m: any) => m.seriesId === "T10Y2Y")?.value ?? null;
   const prior0 = macroPrior({ vix, hySpread: hy, t10y2y: t });
 
-  // SEQUENTIAL Bayes (owner: Bayes must use itself): prior of the next anchor
-  // = posterior of the previous one. Reliability per family uses ONLY past
-  // calls (last 8 anchors) — no look-ahead into future outcomes.
+  // Sign-aware posterior per anchor (PDF formula), reliability from trailing
+  // 8 calls only. No chained prior: each anchor is evaluated independently
+  // with the macro prior, because the doc's Bayes is per-quarter, not a
+  // self-absorbing posterior chain (that chain collapsed to 0 earlier).
   const points: { p: number; realizedUp: boolean; anchor: string }[] = [];
-  let prior = prior0;
-  if (!prior0) prior = 0.5;
   for (let i = 0; i < pts.length; i++) {
     const a = pts[i].filedAt.slice(0, 10);
     const y = forwardReturn(bars, a, 63);
     if (y === null) continue;
-    // reliability from the LAST 8 calls before this anchor only (no lookahead)
-    const rels: Reliability[] = used.map((u) => reliabilityFromCalls(u.calls.slice(Math.max(0, i - 8), i)) ?? u.rel);
-    const pUp = naiveBayesPUp(rels, prior);
-    if (pUp !== null) {
-      points.push({ p: pUp, realizedUp: y > 0, anchor: a });
-      // posterior of this anchor becomes next prior — BLENDED with base to
-      // avoid absorbing extremes (0/1 lock-in), not a fixed 0.5 forever
-      prior = Math.max(0.05, Math.min(0.95, 0.85 * pUp + 0.15 * prior0));
-    }
+    const items = used.map((u) => {
+      const lower = LOWER_BETTER.has(u.representative);
+      const zPerFactor = u.members.map((m) => zScores((byFactor.get(m) ?? []).map((p) => Number(p.value))));
+      const z = familyZ(zPerFactor.map((f) => f[i] ?? null));
+      const x = (lower ? (z ?? 0) < 0 : (z ?? 0) > 0) ? 1 : -1;
+      const rel = reliabilityFromCalls(u.calls.slice(Math.max(0, i - 8), i)) ?? u.rel;
+      return { x: x as 1 | -1, lpp: rel.lpp, lmm: rel.lmm };
+    });
+    const pUp = bayesPosterior(items, prior0);
+    if (pUp !== null) points.push({ p: pUp, realizedUp: y > 0, anchor: a });
   }
   if (points.length === 0) return null;
 

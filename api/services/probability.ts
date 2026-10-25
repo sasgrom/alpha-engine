@@ -21,6 +21,30 @@ export function clampReliability(v: number): number {
 }
 
 /**
+ * Sign-aware Bayes per the owner's PDF (Вероятностный подход):
+ *   x_i = +1: up = 1 − e_i− = lpp, down = e_i+ = 1 − lmm
+ *   x_i = −1: up = e_i− = 1 − lpp, down = 1 − e_i+ = lmm
+ * where e_i+ = P(wrong up | down market) and e_i- = P(wrong down | up market).
+ * p(+) = Π up_i·prior / (Π up_i·prior + Π down_i·(1−prior).
+ * The old formula ignored the forecast sign entirely (and chained priors to 0).
+ */
+export function bayesPosterior(items: { x: 1 | -1; lpp: number; lmm: number }[], prior = 0.5, k = 2): number | null {
+  if (items.length === 0) return null;
+  let up = prior, down = 1 - prior;
+  for (const it of items) {
+    const lpp = clampReliability(it.lpp), lmm = clampReliability(it.lmm);
+    if (it.x === 1) { up *= lpp; down *= 1 - lmm; }
+    else { up *= 1 - lpp; down *= lmm; }
+  }
+  // k-dependence correction from the PDF: take the k-th root of each side,
+  // so correlated factors do not produce overconfident posteriors.
+  up = Math.pow(up, 1 / k);
+  down = Math.pow(down, 1 / k);
+  if (up + down === 0) return null;
+  return up / (up + down);
+}
+
+/**
  * Naive Bayes with geometric-mean normalization (old cbai formula):
  *   p = (Π l+·p0)^(1/n) / ((Π l+·p0)^(1/n) + (Π l−·(1−p0))^(1/n)
  * where l+ = P(correct up) per factor, l− = P(correct down) per factor.

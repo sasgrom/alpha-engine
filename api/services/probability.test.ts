@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { naiveBayesPUp, dedupFactors, reliabilityFromCalls, calibrationBins, macroPrior, clampReliability } from "./probability";
+import { bayesPosterior, naiveBayesPUp, dedupFactors, reliabilityFromCalls, calibrationBins, macroPrior, clampReliability } from "./probability";
 
 describe("naiveBayesPUp", () => {
   it("all reliable-up → high p", () => {
@@ -72,5 +72,23 @@ describe("macroPrior", () => {
     expect(macroPrior({ vix: 12, hySpread: 250, t10y2y: 1.2 })).toBeGreaterThan(0.5);
     expect(macroPrior({ vix: 200, hySpread: 2000, t10y2y: -5 })).toBe(0.35);
     expect(macroPrior({ vix: 1, hySpread: 1, t10y2y: 5 })).toBe(0.54);
+  });
+});
+
+describe("bayesPosterior (PDF sign-aware + k-dependence)", () => {
+  it("single up factor with reliable up: p = lpp (k=1)", () => {
+    const p = bayesPosterior([{ x: 1, lpp: 0.9, lmm: 0.9 }], 0.5, 1)!;
+    expect(p).toBeCloseTo(0.9);
+  });
+  it("single down factor with reliable down: p = 1 − lmm (k=1)", () => {
+    const p = bayesPosterior([{ x: -1, lpp: 0.9, lmm: 0.9 }], 0.5, 1)!;
+    expect(p).toBeCloseTo(0.1);
+  });
+  it("k=2 tempers confidence (sqrt of each side)", () => {
+    const p = bayesPosterior([{ x: 1, lpp: 0.9, lmm: 0.9 }], 0.5, 2)!;
+    expect(p).toBeCloseTo(Math.sqrt(0.45) / (Math.sqrt(0.45) + Math.sqrt(0.05)));
+  });
+  it("empty → null", () => {
+    expect(bayesPosterior([])).toBeNull();
   });
 });
