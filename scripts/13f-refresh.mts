@@ -88,17 +88,27 @@ async function primaryDocXml(fundCik: number, accessionNo: string): Promise<stri
 async function loadQuarterBook(fund: { cik: number; name: string }, q: QuarterPack) {
   const parts: QuarterFilingPart[] = [];
   for (const f of q.filings) {
-    const primary = await primaryDocXml(fund.cik, f.accessionNo);
+    // Legacy filings often have no XML at all. Check this BEFORE requesting
+    // primary_doc.xml, which 404s with long retries on pre-XML filings.
+    const xml = await infoTableXml(fund.cik, f.accessionNo);
+    if (!xml) {
+      prog.log(`! ${fund.name} ${q.reportDate} ${f.accessionNo}: no xml info table — quarter skipped`);
+      return null;
+    }
+    let primary = "";
+    try { primary = await primaryDocXml(fund.cik, f.accessionNo); }
+    catch (err) {
+      if (f.form !== "13F-HR") throw err;
+      prog.log(`! ${fund.name} ${q.reportDate} ${f.accessionNo}: primary_doc unavailable, ORIGINAL inferred from form`);
+    }
     const amendment = amendmentKindFromPrimary(primary, f.form);
     if (amendment === "UNKNOWN") throw new Error(`unknown amendment type in ${f.accessionNo}`);
-    const xml = await infoTableXml(fund.cik, f.accessionNo);
-    if (!xml) throw new Error(`no xml info table in ${f.accessionNo}`);
     const holdings = parseInfoTable(xml);
     const sc = autoScale13F(holdings);
     if (sc.scale !== 1) prog.log(`! ${fund.name} ${q.reportDate} ${f.accessionNo}: value field in DOLLARS (median implied $${Math.round(sc.medianImplied!).toLocaleString("en-US")}) — scaled ÷1000`);
     parts.push({ accessionNo: f.accessionNo, filingDate: f.filingDate, form: f.form, amendment, holdings });
   }
-  if (parts.length === 0) throw new Error("no usable 13F information tables");
+  if (parts.length === 0) return null;
   return mergeQuarterFilings(parts);
 }
 
@@ -310,7 +320,9 @@ if (TOTALS_ONLY) {
       const [have]: any = await db.execute(sql`SELECT COUNT(*) h FROM fund_holdings WHERE fundCik=${fund.cik} AND quarterDate=${q.reportDate}`);
       const [got]: any = await db.execute(sql`SELECT COUNT(*) g FROM fund_quarters WHERE fundCik=${fund.cik} AND quarterDate=${q.reportDate}`);
       if (Number(have[0].h) === 0 || Number(got[0].g) > 0) continue;
-      const { holdings, latestAccessionNo } = await loadQuarterBook(fund, q);
+      const resolved = await loadQuarterBook(fund, q);
+      if (!resolved) continue;
+      const { holdings, latestAccessionNo } = resolved;
       await db.execute(sql`INSERT INTO fund_quarters (fundCik, quarterDate, totalValueUsd, positions, accessionNo)
         VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${latestAccessionNo})
         ON DUPLICATE KEY UPDATE totalValueUsd=VALUES(totalValueUsd), positions=VALUES(positions), accessionNo=VALUES(accessionNo)`);
@@ -348,7 +360,9 @@ for (const fund of funds) {
   for (const q of quarters) {
     if (!REPAIR && seenQuarter.has(q.reportDate)) continue; // idempotent reruns; repair deliberately reopens them
     try {
-      const { holdings, latestAccessionNo, latestFilingDate } = await loadQuarterBook(fund, q);
+      const resolved = await loadQuarterBook(fund, q);
+      if (!resolved) continue;
+      const { holdings, latestAccessionNo, latestFilingDate } = resolved;
       // full-book total BEFORE universe filtering, with partial amendments merged
       await db.execute(sql`INSERT INTO fund_quarters (fundCik, quarterDate, totalValueUsd, positions, accessionNo)
         VALUES (${fund.cik}, ${q.reportDate}, ${holdings.reduce((a, h) => a + (h.valueUsd ?? 0), 0)}, ${holdings.length}, ${latestAccessionNo})
