@@ -1062,6 +1062,16 @@ Local script `scripts/daily-digest.mts` (home, scheduled): reads the last 36h of
 
 Two layers: curated 30 funds (CIKs verified against the SEC cik-lookup) + an auto-built top-300 by AUM (EDGAR full-text search, ~8,200 filers). Tables `fund_holdings` (DDL 022/023: COM/PUT/CALL classes) and `fund_quarters` (FULL book total — % of fund must use it, else it inflates). Value scale autocalibration: median implied price >$5,000 ⇒ the filing reported dollars, not thousands (proven on Point72; other books violate the spec the same way). OpenFIGI with optional `OPENFIGI_API_KEY` (25/100 per request) + `cusip_map` with per-run ticker re-resolution (an empty local companies registry once cost a rebuild). `scripts/13f-refresh.mts` v2: batched inserts, disk-cached XML, idempotent seen-quarter guard; `--totals-only` (book-total backfill) and `--rebuild-events` (DB-only event regeneration). Events only for activist/quant/fundamental: new/exit/±30% per cik:class; deterministic notes with $, % of fund, % of company, held by N funds. Transport `ingest kind=holdings` + `push-local-signals --table fund_holdings` (own watermark). Prod: 866,659 positions, 300 funds, 371 companies, 16,771 events. UI: Institutional card on the company page and "13F sector flows" on the Dashboard.
 
+### 4.45 Iteration 5k: EDGAR — permanent 404s skip immediately, 7 requests/sec
+
+**Problem.** The comment promised “other 4xx fatal”, but `secGet` actually retried every HTTP status five times with exponential waits. Nonexistent old Archive links consumed time on every run, and the manifest declared a document dead only after three runs.
+
+**Fix.** `SecHttpError` carries status and URL: 404/410 immediately classify as permanently missing (`isPermanentSecMissing`); other 4xx except 429 are not retried either. 429/5xx/network failures retain up to five attempts with backoff and `Retry-After`. `fetchFilingDocument` still rescues through index.json; if the index is also absent, the manifest marks `dead` immediately instead of after three nights. Missing EX-99 sets `exChecked` so it is not retried forever. `--retry-failed` remains the explicit resurrection path.
+
+**Rate and timeouts.** Owner-requested default `SEC_RPS=7` (cap 8; SEC fair access is up to 10/sec per IP). Parallel SEC clients must share the budget manually via `SEC_RPS`, not run two 7/sec processes. `SEC_TIMEOUT_MS` defaults to 30,000 ms with a 5–120 second allowed range. Real throttling still backs off; this is not a block bypass.
+
+**Verification.** The real legacy `primary_doc.xml` that previously caused long retries returned one 404 in **764 ms**, with `permanentMissing=true` and no second request. New tests cover 404/410 classification and exactly one secGet call on 404. `edgar-fetch` also passes a standalone bundle check.
+
 ### 4.44 Iteration 5j: 13F filingDate and safe delivery of repaired history
 
 **Status: code complete; local backfill, events, and prod synchronization follow QA.** The owner's full repair finished with 0 open quarters and 0 FIGI/amendment errors; 875,860 is the number of processed upsert rows, not newly inserted rows or the final table size. Vanguard control: 4,062 full-book and 367 mapped positions in Q1.

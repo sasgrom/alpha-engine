@@ -10,7 +10,8 @@
  * p1_item2_mda (10-Q), body (8-K). TECH DEBT: unify with the server parser in
  * the shared/-contracts refactor iteration.
  *
- * Fair access: declared User-Agent, ~3 req/s serialized, retryable 429/5xx.
+ * Fair access: declared User-Agent, default 7 req/s serialized (cap 8),
+ * retryable 429/5xx/network failures; 404/410 and other 4xx are not retried.
  * Amendments (10-K/A etc.) are skipped in v1.
  */
 import { readFileSync } from "node:fs";
@@ -19,10 +20,10 @@ import path from "node:path";
 const SEC_BASE = "https://www.sec.gov";
 const SEC_DATA_BASE = "https://data.sec.gov";
 const UA = "alpha-engine-research/1.0 (contact: owner@alphadelta-2.kimi.pro)";
-// SEC fair access: 10 req/s per IP — shared with everything else on the box
-// (browser, 13f, second worker). Default conservative 3; SEC_RPS env overrides
-// for a deliberate burst (owner asked for 7 during the 13F rebuild). Capped.
-const RPS = Math.min(Math.max(Number(process.env.SEC_RPS ?? 3) || 3, 1), 8);
+// SEC fair access: 10 req/s per IP — shared with everything else on the box.
+// Default 7 leaves headroom; SEC_RPS may lower it for parallel workers. Cap 8.
+const RPS = Math.min(Math.max(Number(process.env.SEC_RPS ?? 7) || 7, 1), 8);
+const DEFAULT_TIMEOUT_MS = Math.min(Math.max(Number(process.env.SEC_TIMEOUT_MS ?? 30_000) || 30_000, 5_000), 120_000);
 
 // --- tiny serialized rate limiter (same shape as the server's) -------------
 let nextAllowed = 0;
@@ -37,8 +38,24 @@ function throttle(): Promise<void> {
   return run;
 }
 
-/** GET with fair-access pacing; 429/5xx retried with backoff, other 4xx fatal. */
-export async function secGet(url: string, timeoutMs = 60_000): Promise<Response> {
+export class SecHttpError extends Error {
+  constructor(public status: number, public url: string) {
+    super(`HTTP ${status} for ${url}`);
+    this.name = "SecHttpError";
+  }
+}
+
+export function isPermanentSecMissing(err: unknown): boolean {
+  return err instanceof SecHttpError && (err.status === 404 || err.status === 410);
+}
+
+function isFatalSecStatus(err: unknown): boolean {
+  return err instanceof SecHttpError && err.status >= 400 && err.status < 500 && err.status !== 429;
+}
+
+/** GET with fair-access pacing; 429/5xx/network retried with backoff.
+ * HTTP 4xx (including 404/410) fail immediately, as documented. */
+export async function secGet(url: string, timeoutMs = DEFAULT_TIMEOUT_MS): Promise<Response> {
   let lastErr: unknown = null;
   for (let attempt = 0; attempt < 5; attempt++) {
     await throttle();
@@ -49,13 +66,15 @@ export async function secGet(url: string, timeoutMs = 60_000): Promise<Response>
       });
       if (res.ok) return res;
       if (res.status === 429 || res.status >= 500) {
+        lastErr = new SecHttpError(res.status, url);
         const ra = Number(res.headers.get("retry-after"));
         const wait = Number.isFinite(ra) && ra > 0 ? ra * 1000 : 2000 * 2 ** attempt;
         await new Promise((r) => setTimeout(r, wait));
         continue;
       }
-      throw new Error(`HTTP ${res.status} for ${url}`);
+      throw new SecHttpError(res.status, url);
     } catch (err) {
+      if (isFatalSecStatus(err)) throw err;
       lastErr = err;
       await new Promise((r) => setTimeout(r, 2000 * 2 ** attempt));
     }

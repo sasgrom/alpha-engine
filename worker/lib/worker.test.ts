@@ -8,7 +8,7 @@ import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
 import { extractScore, extractVerdict, sanitizeWhy, tonePrompt } from "./ollama";
 import { buildDigestPrompt } from "./digest";
-import { isThinContent } from "./edgar";
+import { isThinContent, isPermanentSecMissing, secGet, SecHttpError } from "./edgar";
 
 describe("ollama: extractScore", () => {
   it("parses clean JSON", () => {
@@ -535,5 +535,27 @@ describe("13f autoScale13F", () => {
   it("tiny books (<5 priced rows) are never rescaled", () => {
     const hs = [{ issuer: "X", cusip: "c", secClass: "COM", valueUsd: 10_000_000, shares: 1 }];
     expect(autoScale13F(hs).scale).toBe(1);
+  });
+});
+
+
+describe("edgar: fair-access failures", () => {
+  it("classifies only 404/410 as permanently missing", () => {
+    expect(isPermanentSecMissing(new SecHttpError(404, "https://sec.test"))).toBe(true);
+    expect(isPermanentSecMissing(new SecHttpError(410, "https://sec.test"))).toBe(true);
+    expect(isPermanentSecMissing(new SecHttpError(403, "https://sec.test"))).toBe(false);
+    expect(isPermanentSecMissing(new SecHttpError(500, "https://sec.test"))).toBe(false);
+  });
+
+  it("secGet does not retry a permanent 404", async () => {
+    const original = globalThis.fetch;
+    let calls = 0;
+    globalThis.fetch = async () => { calls++; return new Response("missing", { status: 404 }); };
+    try {
+      await expect(secGet("https://sec.test/missing")).rejects.toMatchObject({ status: 404 });
+      expect(calls).toBe(1);
+    } finally {
+      globalThis.fetch = original;
+    }
   });
 });

@@ -9,7 +9,7 @@ dns.setDefaultResultOrder("ipv4first");
  * universe (worker/edgar-universe.json) into worker/cache/edgar/<cik>/<accn>.htm
  * plus a per-company manifest.json (filing list + fetched/scored flags).
  * The scoring stage (edgar-tone.mts) reads ONLY this cache — refetches and
- * re-scores never touch the network twice. Fair access: ~3 req/s serialized.
+ * re-scores never touch the network twice. Fair access: default 7 req/s serialized.
  */
 import "dotenv/config";
 import { existsSync, mkdirSync, readFileSync, statfsSync, writeFileSync } from "node:fs";
@@ -29,7 +29,7 @@ function assertDiskSpace() {
     // statfs unavailable → don't block the run on a failed check
   }
 }
-import { fetchDoc, fetchFilingDocument, listFilingDocs, listFilings, loadEdgarUniverse, type EdgarFiling } from "./lib/edgar";
+import { fetchDoc, fetchFilingDocument, isPermanentSecMissing, listFilingDocs, listFilings, loadEdgarUniverse, type EdgarFiling } from "./lib/edgar";
 import { startProgress } from "./lib/progress";
 
 export interface ManifestEntry extends EdgarFiling {
@@ -45,9 +45,9 @@ export interface ManifestEntry extends EdgarFiling {
   dead?: boolean;
 }
 
-/** A doc failing 3 times across runs is declared dead — old Archives links
- *  rot permanently; retrying costs 62s of backoff per doc per run (the 3.5h
- *  "empty pass" the owner measured). --retry-failed resurrects deliberately. */
+/** 404/410 marks a document dead immediately; other failures get three runs.
+ * --retry-failed resurrects deliberately. No repeated exponential backoff for
+ * links that SEC has already told us do not exist. */
 const MAX_FAILURES = 3;
 
 const cacheDir = (cik: number) => path.resolve(import.meta.dirname, "cache", "edgar", String(cik));
@@ -126,6 +126,7 @@ for (const co of universe) {
         entry.exChecked = true;
       } catch (err) {
         entry.error = String(err).slice(0, 200);
+        if (isPermanentSecMissing(err)) entry.exChecked = true; // no exhibit to retry
       }
       continue;
     }
@@ -143,8 +144,13 @@ for (const co of universe) {
       fetched++;
     } catch (err) {
       entry.error = String(err).slice(0, 200);
-      entry.failCount = (entry.failCount ?? 0) + 1;
-      if (entry.failCount >= MAX_FAILURES) entry.dead = true;
+      if (isPermanentSecMissing(err)) {
+        entry.dead = true;
+        entry.failCount = MAX_FAILURES;
+      } else {
+        entry.failCount = (entry.failCount ?? 0) + 1;
+        if (entry.failCount >= MAX_FAILURES) entry.dead = true;
+      }
       failed++;
     }
     if ((i + 1) % 25 === 0) {
