@@ -8,7 +8,7 @@ import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
 import { extractScore, extractVerdict, sanitizeWhy, tonePrompt } from "./ollama";
 import { buildDigestPrompt } from "./digest";
-import { isThinContent, isPermanentSecMissing, secGet, SecHttpError } from "./edgar";
+import { isThinContent, isPermanentSecMissing, secGet, SecHttpError, shouldScoreManifestEntry } from "./edgar";
 
 describe("ollama: extractScore", () => {
   it("parses clean JSON", () => {
@@ -574,5 +574,21 @@ describe("edgar: fair-access failures", () => {
     } finally {
       globalThis.fetch = original;
     }
+  });
+});
+
+
+describe("edgar tone: manifest rerun filter", () => {
+  const base = { fetched: true, scored: false, filingDate: "2024-01-01" };
+  it("does not reprocess thin or boilerplate skips unless explicitly requested", () => {
+    expect(shouldScoreManifestEntry({ ...base, error: "thin content (cover/TOC/XBRL header)" }, null, false)).toBe(false);
+    expect(shouldScoreManifestEntry({ ...base, error: "boilerplate-only content" }, null, false)).toBe(false);
+    expect(shouldScoreManifestEntry({ ...base, error: "thin content (cover/TOC/XBRL header)" }, null, true)).toBe(true);
+  });
+  it("keeps parse failures retryable and honors scored/fetched/from", () => {
+    expect(shouldScoreManifestEntry({ ...base, error: "no parseable score" }, null, false)).toBe(true);
+    expect(shouldScoreManifestEntry({ ...base, error: "no parseable score" }, "2025-01-01", false)).toBe(false);
+    expect(shouldScoreManifestEntry({ ...base, scored: true }, null, false)).toBe(false);
+    expect(shouldScoreManifestEntry({ ...base, fetched: false }, null, false)).toBe(false);
   });
 });

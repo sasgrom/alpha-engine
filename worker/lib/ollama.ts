@@ -29,7 +29,11 @@ export interface GenerateResult {
   text: string;
   model: string;
   totalMs: number;
+  loadMs: number;
+  promptEvalCount: number;
+  promptEvalMs: number;
   evalCount: number; // tokens generated
+  evalMs: number;
   evalPerSec: number;
 }
 
@@ -54,9 +58,13 @@ export async function generate(prompt: string, opts: { model?: string; timeoutMs
     if (!res.ok) throw new Error(`ollama HTTP ${res.status}: ${(await res.text()).slice(0, 200)}`);
     const j = (await res.json()) as any;
     const totalMs = Math.round((j.total_duration ?? 0) / 1e6);
+    const loadMs = Math.round((j.load_duration ?? 0) / 1e6);
+    const promptEvalCount = j.prompt_eval_count ?? 0;
+    const promptEvalMs = Math.round((j.prompt_eval_duration ?? 0) / 1e6);
     const evalCount = j.eval_count ?? 0;
+    const evalMs = Math.round((j.eval_duration ?? 0) / 1e6);
     const evalPerSec = j.eval_duration ? Math.round((evalCount / (j.eval_duration / 1e9)) * 10) / 10 : 0;
-    return { text: j.response ?? "", model, totalMs, evalCount, evalPerSec };
+    return { text: j.response ?? "", model, totalMs, loadMs, promptEvalCount, promptEvalMs, evalCount, evalMs, evalPerSec };
   } finally {
     clearTimeout(timer);
   }

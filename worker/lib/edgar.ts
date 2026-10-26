@@ -90,6 +90,20 @@ export function loadEdgarUniverse(file = "edgar-universe.json"): EdgarCompany[] 
   return (JSON.parse(readFileSync(filePath, "utf8")) as EdgarCompany[]).filter((r) => r.cik && r.ticker);
 }
 
+const SKIP_ERRORS = /^(thin content|boilerplate-only|no substantive)/;
+
+/** Single source of truth for tone reruns: thin/boilerplate never re-burns GPU
+ * by default; parse failures remain retryable as a real quality signal. */
+export function shouldScoreManifestEntry(
+  m: { fetched: boolean; scored: boolean; filingDate: string; error?: string },
+  from: string | null,
+  includeSkipped: boolean
+): boolean {
+  if (!m.fetched || m.scored) return false;
+  if (from && m.filingDate < from) return false;
+  return includeSkipped || !m.error || !SKIP_ERRORS.test(m.error);
+}
+
 // --- submissions API ----------------------------------------------------------
 export interface EdgarFiling {
   accessionNo: string;   // "0000320193-24-000123"
