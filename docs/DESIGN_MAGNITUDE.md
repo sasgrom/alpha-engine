@@ -138,10 +138,10 @@ G8. Git is restored after snapshot stripping, work is committed/pushed, and vers
 
 Shipped exactly the scoped kernel:
 - 5 guard tests + 11 magnitude tests cover eligibility, fallback, anomalies, missing classes, pooling, formulas, deduplication, rank/bucket insufficiency, and calibration.
-- Live read-side check selects 2026Q2 vs 2026Q1, skips 2026Q3, reports 285 stable / 7 missing / 7 suspect funds. Graph signs are 326 positive / 74 negative instead of the former artifactual 0 / 400. Sector signs are 10 positive / 1 negative, with partial-coverage warnings visible.
+- Live read-side check after repair and full snapshot selects 2026Q2 vs 2026Q1, skips 2026Q3, reports 294 stable / 5 missing / 0 suspect funds. Graph signs are 274 positive / 126 negative instead of the former artifactual 0 / 400. Sector signs are 8 positive / 3 negative, with partial-coverage warnings visible.
 - AAPL Institutional uses the same quarter pair and stable-panel QoQ calculation.
 - Smoke fits only fit-known labels and prints no holdout values. AAPL/MSFT/NVDA/PLD produce baseline diagnostics only; both cross-sectional metrics return `insufficient`, exactly as required for a four-company panel.
 - No model was selected, no coefficients were tuned, no production data was written, and no magnitude UI was promoted.
 - Final verification: 252/252 tests, full-project typecheck, direct smoke-script type/bundle checks, and production build. Real Chromium QA on Dashboard, Company Institutional, and 3D Fund Flows confirmed the correct quarter pair and `stable funds 285` with zero failed requests and zero page errors.
 
-Remaining work is deliberately unchanged: complete the 13F filingDate backfill and repaired-history delivery (5j code is ready), build a ≥30-company technical panel, then a ≥300-company evaluation panel before any feature-based magnitude model or portfolio conclusion.
+Remaining work is deliberately unchanged: the 13F filingDate backfill and repaired-history delivery are complete and verified; build a ≥30-company technical panel, then a ≥300-company evaluation panel before any feature-based magnitude model or portfolio conclusion.
