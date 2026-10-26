@@ -85,9 +85,9 @@ export async function secGet(url: string, timeoutMs = DEFAULT_TIMEOUT_MS): Promi
 // --- universe ---------------------------------------------------------------
 export interface EdgarCompany { cik: number; ticker: string; name: string }
 
-export function loadEdgarUniverse(): EdgarCompany[] {
-  const file = path.resolve(import.meta.dirname, "..", "edgar-universe.json");
-  return (JSON.parse(readFileSync(file, "utf8")) as EdgarCompany[]).filter((r) => r.cik && r.ticker);
+export function loadEdgarUniverse(file = "edgar-universe.json"): EdgarCompany[] {
+  const filePath = path.resolve(import.meta.dirname, "..", file);
+  return (JSON.parse(readFileSync(filePath, "utf8")) as EdgarCompany[]).filter((r) => r.cik && r.ticker);
 }
 
 // --- submissions API ----------------------------------------------------------

@@ -376,6 +376,14 @@ describe("edgar universe", () => {
     expect(u.find((c) => c.ticker === "META")?.cik).toBe(1326801);
     expect(u.find((c) => c.ticker === "LMT")?.cik).toBe(936468);
   });
+  it("loads the dynamic 20-company universe without AAPL", () => {
+    const u = loadEdgarUniverse("edgar-universe-20.json");
+    expect(u).toHaveLength(20);
+    expect(u.some((c) => c.ticker === "AAPL")).toBe(false);
+    expect(u.find((c) => c.ticker === "PLTR")?.cik).toBe(1321655);
+    expect(u.find((c) => c.ticker === "RCL")?.cik).toBe(884887);
+    expect(u.find((c) => c.ticker === "NEE")?.cik).toBe(753308);
+  });
 });
 
 // ---------------------------------------------------------------------------

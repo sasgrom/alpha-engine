@@ -71,8 +71,10 @@ const fromTickerIdx = process.argv.indexOf("--from-ticker");
 const fromTicker = fromTickerIdx > -1 ? process.argv[fromTickerIdx + 1]?.toUpperCase() : null;
 // --retry-failed: also retry entries declared dead after MAX_FAILURES
 const retryFailed = process.argv.includes("--retry-failed");
+const universeIdx = process.argv.indexOf("--universe");
+const universeFile = universeIdx > -1 ? process.argv[universeIdx + 1] : "edgar-universe.json";
 
-const universeAll = loadEdgarUniverse().filter((c) => !only || c.ticker === only);
+const universeAll = loadEdgarUniverse(universeFile).filter((c) => !only || c.ticker === only);
 let universe = universeAll;
 if (fromTicker) {
   const idx = universeAll.findIndex((c) => c.ticker === fromTicker);
@@ -81,7 +83,7 @@ if (fromTicker) {
 }
 if (only && universe.length === 0) { console.error(`[edgar-fetch] unknown ticker ${only}`); process.exit(1); }
 
-const prog = startProgress("edgar-fetch", `${universe.length} companies${only ? ` (only ${only})` : ""}${from ? `, from ${from}` : ""}`);
+const prog = startProgress("edgar-fetch", `${universe.length} companies${only ? ` (only ${only})` : ""}${from ? `, from ${from}` : ""}, universe=${universeFile}`);
 const totalCompanies = universe.length;
 let companyIdx = 0;
 

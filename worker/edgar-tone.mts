@@ -41,6 +41,8 @@ const from = fromIdx > -1 ? process.argv[fromIdx + 1] : null;
 // DEFAULT is to NOT retry them — re-spending LLM tokens on known boilerplate
 // on every incremental run is pure waste (owner caught this).
 const includeSkipped = process.argv.includes("--include-skipped");
+const universeIdx = process.argv.indexOf("--universe");
+const universeFile = universeIdx > -1 ? process.argv[universeIdx + 1] : "edgar-universe.json";
 const SKIP_ERRORS = /^(thin content|boilerplate-only|no substantive)/;
 
 // --- preflight: daemon + model present (same contract as llm-test) ----------
@@ -52,7 +54,7 @@ if (!st.models.some((m) => m === LLM_MODEL || m.startsWith(`${LLM_MODEL.split(":
 }
 const prog = startProgress("edgar-tone", `model ${LLM_MODEL}`);
 
-const universe = loadEdgarUniverse().filter((c) => !only || c.ticker === only);
+const universe = loadEdgarUniverse(universeFile).filter((c) => !only || c.ticker === only);
 if (only && universe.length === 0) { console.error(`[edgar-tone] unknown ticker ${only}`); process.exit(1); }
 
 for (const co of universe) {
