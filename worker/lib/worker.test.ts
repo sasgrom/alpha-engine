@@ -384,6 +384,15 @@ describe("edgar universe", () => {
     expect(u.find((c) => c.ticker === "RCL")?.cik).toBe(884887);
     expect(u.find((c) => c.ticker === "NEE")?.cik).toBe(753308);
   });
+  it("loads the expanded 35-company universe with unique tickers and KMI", () => {
+    const u = loadEdgarUniverse("edgar-universe-35.json");
+    expect(u).toHaveLength(35);
+    expect(new Set(u.map((c) => c.ticker)).size).toBe(35);
+    expect(u.some((c) => c.ticker === "AAPL")).toBe(false);
+    expect(u.find((c) => c.ticker === "KMI")?.cik).toBe(1506307);
+    expect(u.find((c) => c.ticker === "FSLR")?.cik).toBe(1274494);
+    expect(u.find((c) => c.ticker === "SMCI")?.cik).toBe(1375365);
+  });
 });
 
 // ---------------------------------------------------------------------------
