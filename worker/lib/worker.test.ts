@@ -8,7 +8,7 @@ import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
 import { extractScore, extractVerdict, sanitizeWhy, tonePrompt } from "./ollama";
 import { buildDigestPrompt } from "./digest";
-import { isThinContent, isPermanentSecMissing, secGet, SecHttpError, shouldScoreManifestEntry } from "./edgar";
+import { isThinContent, isPermanentSecMissing, secGet, SecHttpError, shouldScoreManifestEntry, shouldDownloadExhibit } from "./edgar";
 
 describe("ollama: extractScore", () => {
   it("parses clean JSON", () => {
@@ -590,5 +590,18 @@ describe("edgar tone: manifest rerun filter", () => {
     expect(shouldScoreManifestEntry({ ...base, error: "no parseable score" }, "2025-01-01", false)).toBe(false);
     expect(shouldScoreManifestEntry({ ...base, scored: true }, null, false)).toBe(false);
     expect(shouldScoreManifestEntry({ ...base, fetched: false }, null, false)).toBe(false);
+  });
+});
+
+
+describe("edgar fetch: EX-99 idempotency", () => {
+  it("does not redownload an exhibit that already exists on disk", () => {
+    expect(shouldDownloadExhibit({ form: "8-K", exChecked: false, exFile: "ex99.htm" }, true)).toBe(false);
+    expect(shouldDownloadExhibit({ form: "8-K", exChecked: true, exFile: "ex99.htm" }, false)).toBe(false);
+  });
+  it("fetches missing exhibits and leaves other forms alone", () => {
+    expect(shouldDownloadExhibit({ form: "8-K", exChecked: false, exFile: null }, false)).toBe(true);
+    expect(shouldDownloadExhibit({ form: "8-K", exChecked: false, exFile: "ex99.htm" }, false)).toBe(true);
+    expect(shouldDownloadExhibit({ form: "10-K", exChecked: false, exFile: null }, false)).toBe(false);
   });
 });

@@ -29,7 +29,7 @@ function assertDiskSpace() {
     // statfs unavailable → don't block the run on a failed check
   }
 }
-import { fetchDoc, fetchFilingDocument, isPermanentSecMissing, listFilingDocs, listFilings, loadEdgarUniverse, type EdgarFiling } from "./lib/edgar";
+import { fetchDoc, fetchFilingDocument, isPermanentSecMissing, listFilingDocs, listFilings, loadEdgarUniverse, shouldDownloadExhibit, type EdgarFiling } from "./lib/edgar";
 import { startProgress } from "./lib/progress";
 
 export interface ManifestEntry extends EdgarFiling {
@@ -98,7 +98,7 @@ for (const co of universe) {
   const filings = filingsAll.filter((f) => !from || f.filingDate >= from);
   const manifest = loadManifest(co.cik);
   const known = new Map(manifest.map((m) => [m.accessionNo, m]));
-  let fresh = 0, fetched = 0, failed = 0;
+  let fresh = 0, fetched = 0, failed = 0, exhibitFetched = 0;
   prog.stage(`${co.ticker} [${companyIdx}/${totalCompanies}]: ${filings.length} filings (10-K/10-Q/8-K)`);
   for (let i = 0; i < filings.length; i++) {
     const f = filings[i];
@@ -114,8 +114,14 @@ for (const co of universe) {
     // 8-K exhibit pass (5c): even when the primary doc is cached, grab the
     // largest textual exhibit — earnings 8-Ks carry the press release in
     // EX-99.x while the primary doc is cover + one sentence.
-    if (entry.fetched && !(entry.form === "8-K" && !entry.exChecked)) continue;
-    if (entry.fetched && entry.form === "8-K" && !entry.exChecked) {
+    const base = entry.accessionNo.replace(/-/g, "");
+    const exPath = path.join(cacheDir(co.cik), `${base}.ex.htm`);
+    const needsExhibit = shouldDownloadExhibit(entry, existsSync(exPath));
+    if (entry.fetched && !needsExhibit) {
+      if (entry.form === "8-K" && !entry.exChecked && entry.exFile && existsSync(exPath)) entry.exChecked = true;
+      continue;
+    }
+    if (entry.fetched && needsExhibit) {
       try {
         const textual = (await listFilingDocs(co.cik, entry.accessionNo))
           .filter((d) => /\.(htm|txt)$/i.test(d.name) && !/^index/i.test(d.name) && d.name !== entry.docName);
@@ -123,7 +129,7 @@ for (const co of universe) {
         if (largest && largest.size > 20_000) {
           writeFileSync(path.join(cacheDir(co.cik), `${entry.accessionNo.replace(/-/g, "")}.ex.htm`), await fetchDoc(co.cik, entry.accessionNo, largest.name));
           entry.exFile = largest.name;
-          fetched++;
+          exhibitFetched++;
         }
         entry.exChecked = true;
       } catch (err) {
@@ -158,10 +164,10 @@ for (const co of universe) {
     if ((i + 1) % 25 === 0) {
       assertDiskSpace();
       saveManifest(co.cik, manifest);
-      prog.item(i + 1, filings.length, `${fetched} downloaded, ${failed} failed`);
+      prog.item(i + 1, filings.length, `${fetched} primary + ${exhibitFetched} EX-99, ${failed} failed`);
     }
   }
   saveManifest(co.cik, manifest);
-  prog.stageDone(`${co.ticker}: ${filings.length} filings, ${fresh} new, ${fetched} downloaded, ${failed} failed`);
+  prog.stageDone(`${co.ticker}: ${filings.length} filings, ${fresh} new, ${fetched} primary, ${exhibitFetched} EX-99, ${failed} failed`);
 }
 prog.done(`all done — ${totalCompanies} companies`);

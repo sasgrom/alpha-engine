@@ -104,6 +104,15 @@ export function shouldScoreManifestEntry(
   return includeSkipped || !m.error || !SKIP_ERRORS.test(m.error);
 }
 
+/** EX-99 is needed only for 8-K with no checked exhibit yet. If the file is
+ * already on disk but exChecked was lost in a crash, do not download it again. */
+export function shouldDownloadExhibit(
+  m: { form: string; exChecked?: boolean; exFile?: string | null },
+  exFileExists: boolean
+): boolean {
+  return m.form === "8-K" && !m.exChecked && !(m.exFile && exFileExists);
+}
+
 // --- submissions API ----------------------------------------------------------
 export interface EdgarFiling {
   accessionNo: string;   // "0000320193-24-000123"
