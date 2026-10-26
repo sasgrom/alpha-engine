@@ -1062,6 +1062,33 @@ Local script `scripts/daily-digest.mts` (home, scheduled): reads the last 36h of
 
 Two layers: curated 30 funds (CIKs verified against the SEC cik-lookup) + an auto-built top-300 by AUM (EDGAR full-text search, ~8,200 filers). Tables `fund_holdings` (DDL 022/023: COM/PUT/CALL classes) and `fund_quarters` (FULL book total — % of fund must use it, else it inflates). Value scale autocalibration: median implied price >$5,000 ⇒ the filing reported dollars, not thousands (proven on Point72; other books violate the spec the same way). OpenFIGI with optional `OPENFIGI_API_KEY` (25/100 per request) + `cusip_map` with per-run ticker re-resolution (an empty local companies registry once cost a rebuild). `scripts/13f-refresh.mts` v2: batched inserts, disk-cached XML, idempotent seen-quarter guard; `--totals-only` (book-total backfill) and `--rebuild-events` (DB-only event regeneration). Events only for activist/quant/fundamental: new/exit/±30% per cik:class; deterministic notes with $, % of fund, % of company, held by N funds. Transport `ingest kind=holdings` + `push-local-signals --table fund_holdings` (own watermark). Prod after the full repair and synchronization: 875,860 positions, 300 funds, 371 companies, 3,372 fund_quarters with filingDate, and 16,422 events (all with notes). UI: Institutional card on the company page and "13F sector flows" on the Dashboard.
 
+### 4.50 Iteration 5p: options data foundation — accumulation, not on-demand calls
+
+**Status: the first dataset is downloaded, normalized, and verified.** This is the start of an accumulating store, not an API to call during future calculations. Raw payloads are immutable, normalized chains are versioned by `snapshotId`, and all future features are computed offline. Full ORATS backfill and WRDS are not blockers.
+
+**Sources and actual coverage:**
+
+| Source | Result | Limits |
+|---|---|---|
+| Cboe delayed quotes | 36 snapshots across 35 tickers, **95,330 contracts**, 0 invalid, 0 crossed | Current/future daily chains, not long history |
+| ORATS near-EOD sample 2024-01-03 | Full market 716,822 rows; our 35 have 30,064 underlying-strike rows = **60,128 call/put contracts**, 0 invalid, 0 crossed | One day, not the full archive; backfill is ~500 GB and belongs on D: |
+| ORATS intraday sample | 5 one-minute AAPL snapshots, **9,200 contracts** | Five minutes, not five days; separate `orats_intraday` provider |
+| Alpha Vantage `HISTORICAL_OPTIONS` | IBM 2017-11-15: **998 contracts, 14 expirations** | Demo sample; premium is required for a full backfill |
+| EODHD demo | **62 daily chains, 11,000 rows / 9,515 unique contracts** | Demo stopped at page 12 (HTTP 422), warning retained; repeated rows remain visible |
+
+Raw data is 190.6 MB, normalized data 72.6 MB. EODHD repeated rows (1,485) remain in quality as-is: this is a time series, not duplicate files. Zero-bid is never silently nulled or dropped.
+
+**Files:** `worker/lib/options.ts` (OSI + adapters + quality), `worker/options-fetch.mts` (Cboe/EODHD/Alpha Vantage), `worker/options-orats.mts` (streaming 223 MB CSV without loading it into memory), `worker/options-orats-intraday.mts` (minute snapshots). Raw and normalized caches are separate; the manifest stores `snapshotId`, `availableAt`, `ingestedAt`, rows/contracts/calls/puts/expirations/duplicates/invalid/zeroBid/crossed, and warnings. Atomic `.tmp → rename` prevents half-written JSON.
+
+**Next stages, strictly in order:**
+1. Scheduled snapshots: `npx tsx worker/options-fetch.mts --source cboe`. Each run creates a new snapshotId; a retry with the same ID resumes without duplicates. Example Task Scheduler: `schtasks /Create /TN "AlphaEngine-Options-CBOE" /SC HOURLY /MO 1 /TR "cmd /c cd /d C:\dev\alpha-engine && if not exist worker\.runs mkdir worker\.runs && npx tsx worker\options-fetch.mts --source cboe >> worker\.runs\options-cboe.log 2>&1"`.
+2. Offline `option_features` by DTE bucket: ATM IV + delta, term slope, 25-delta skew/risk reversal, put/call volume and OI, volume/OI, relative spread, earnings IV crush. No invented GEX or dealer direction.
+3. QA: compare IV/Greeks across ORATS, Cboe, EODHD, and Alpha Vantage; timestamp/OI availability; corporate actions/delistings; locked/crossed/zero-bid reports without hidden filtering.
+4. Paid ORATS near-EOD backfill only after schema validation and a large drive. No professor/WRDS dependency. Tick/OPRA (Databento/ThetaData) is a separate stage only if EOD proves value.
+5. Prod receives aggregated features only. Raw ZIP/JSON is never mirrored, which is the storage safeguard.
+
+Seven new unit tests cover OSI, Cboe, EODHD per-day grouping, Alpha mark, ORATS near-EOD/intraday, generated contract IDs, and quality metrics.
+
 ### 4.49 Iteration 5o: EDGAR EX-99 idempotency and separate counters
 
 **Owner's question:** why is `new = 0` while `downloaded` is large — are we duplicating? In code, `new` means new accessions in the manifest, while downloads may be previously failed primary documents or EX-99 exhibits for known 8-Ks. `fetched=true` primary documents are not downloaded again; `new=0` does not prove that EX-99 exists.

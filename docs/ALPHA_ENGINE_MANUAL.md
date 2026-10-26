@@ -1059,6 +1059,33 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 Два слоя: курируемые 30 фондов (CIK сверены по cik-lookup SEC) + автопостроенный топ-300 по AUM (EDGAR full-text search, ~8 200 филеров). Таблицы `fund_holdings` (DDL 022/023: классы COM/PUT/CALL) и `fund_quarters` (итог ПОЛНОЙ книги — % of fund только от неё, иначе вздутие). Калибровка масштаба value: медиана implied-цены >$5 000 → филинг в долларах, не в тысячах (доказано на Point72; часть книг подаёт не по спеке). OpenFIGI с ключом `OPENFIGI_API_KEY` (25/100 за запрос) + `cusip_map` с до-резолвом тикеров на каждом прогоне (локальный пустой справочник companies — частая причина дыр). `scripts/13f-refresh.mts` v2: пакетные вставки, дисковый кэш XML, seen-quarter идемпотентность; `--totals-only` (добор итогов) и `--rebuild-events` (пересчёт событий из базы без сети). События только для activist/quant/fundamental: new/exit/±30% per cik:class; заметки детерминированные с $, % of fund, % of company, held by N funds. Транспорт `ingest kind=holdings` + `push-local-signals --table fund_holdings` (своя водяная метка). В проде после полного repair и синхронизации: 875 860 позиций, 300 фондов, 371 компания, 3 372 fund_quarters с filingDate, 16 422 события (все с заметками). UI: карточка Institutional на странице компании и «13F sector flows» на Dashboard.
 
+### 4.50 Итерация 5p: options data foundation — накопление, а не запросы по требованию
+
+**Статус: первый пакет данных уже скачан, нормализован и проверен.** Это не заготовка API для будущих вычислений, а начало накопительного хранилища. Сырые ответы неизменны, нормализованные цепочки версионируются по `snapshotId`, итоговые признаки будут строиться только офлайн. Полный ORATS backfill и WRDS не нужны для старта и не блокируют работу.
+
+**Источники и фактическое покрытие:**
+
+| Источник | Результат | Ограничения |
+|---|---|---|
+| Cboe delayed quotes | 36 снапшотов по 35 тикерам, **95 330 контрактов**, 0 invalid, 0 crossed | Это текущие/будущие дневные снимки, не длинная история |
+| ORATS near-EOD sample 2024-01-03 | Весь рынок 716 822 строки; наши 35 — 30 064 underlying-strike rows = **60 128 call/put contracts**, 0 invalid, 0 crossed | Один день, а не весь архив; полный backfill ~500 ГБ позже на D: |
+| ORATS intraday sample | 5 минутных снимков AAPL, **9 200 контрактов** | Это 5 минут, а не 5 дней; отдельный provider `orats_intraday` |
+| Alpha Vantage `HISTORICAL_OPTIONS` | IBM 2017-11-15: **998 контрактов, 14 expirations** | Demo-сэмпл, premium нужен для полного backfill |
+| EODHD demo | **62 дневные цепочки, 11 000 rows / 9 515 unique contracts** | Demo остановился на page 12 (HTTP 422), warning сохранён; repeated rows не скрываются |
+
+Сырые данные 190,6 МБ, нормализованные 72,6 МБ. EODHD repeated rows (1 485) остаются в качестве как есть: это time series, а не «дублирующиеся файлы». Zero-bid не заменяется нулём и не выбрасывается молча.
+
+**Файлы:** `worker/lib/options.ts` (OSI + адаптеры + quality), `worker/options-fetch.mts` (Cboe/EODHD/Alpha Vantage), `worker/options-orats.mts` (streaming 223 МБ CSV без загрузки в память), `worker/options-orats-intraday.mts` (minute snapshots). Raw cache и normalized cache разделены; manifest хранит `snapshotId`, `availableAt`, `ingestedAt`, rows/contracts/calls/puts/expirations/duplicates/invalid/zeroBid/crossed и warnings. Атомарная запись `.tmp → rename` не оставляет половинчатых JSON.
+
+**Следующие этапы строго по порядку:**
+1. Регулярные снимки: `npx tsx worker/options-fetch.mts --source cboe` по расписанию. Каждый запуск создаёт новый snapshotId; при сбое повтор с тем же ID продолжает без дублей. Пример Task Scheduler: `schtasks /Create /TN "AlphaEngine-Options-CBOE" /SC HOURLY /MO 1 /TR "cmd /c cd /d C:\dev\alpha-engine && if not exist worker\.runs mkdir worker\.runs && npx tsx worker\options-fetch.mts --source cboe >> worker\.runs\options-cboe.log 2>&1"`.
+2. Offline `option_features` по DTE buckets: ATM IV + Δ, term slope, 25Δ skew/risk reversal, put/call volume и OI, volume/OI, относительный spread, earnings IV crush. GEX и направление дилеров не выдумываем.
+3. QA: сравнение IV/Greeks между ORATS, Cboe, EODHD и Alpha Vantage; timestamp/OI availability; corporate actions/delisted; locked/crossed/zero-bid отчёты, не скрытая фильтрация.
+4. Платный ORATS near-EOD backfill только после валидации схемы и большого диска. Профессор/WRDS не требуется. Tick/OPRA (Databento/ThetaData) — отдельный этап, только если EOD докажет ценность.
+5. В прод уходят только агрегированные признаки. Сырые ZIP/JSON не зеркалим — это и есть наша защита хранилища.
+
+Добавлены 7 unit-тестов адаптеров: OSI, Cboe, EODHD per-day, Alpha mark, ORATS near-EOD/intraday, generated contract IDs и quality metrics.
+
 ### 4.49 Итерация 5o: EDGAR EX-99 — идемпотентность и раздельные счётчики
 
 **Вопрос владельца:** почему `new = 0`, а `downloaded` большое, не дублируем ли мы? Ответ по коду: `new` означает новые accession в manifest, а скачивание могло идти по ранее несостоявшимся primary и по EX-99 для уже известных 8-K. При `fetched=true` primary не перекачивается; `new=0` сам по себе не означает, что EX-99 уже есть.

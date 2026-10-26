@@ -68,3 +68,28 @@ Then: `npx tsx worker/import-gdelt-csv.mts --file <path> --ticker MSFT`
 Auto-detects ArtList (per-day buzz) vs Timeline (per-day tone); gdeltcsv:*
 payloadKeys make reimports free. Note: ArtList tops out at 250 articles per
 window — for heavy tickers use monthly windows for honest volume.
+
+## Options data: snapshots, cache and normalization
+
+Collectors keep raw provider payloads in `worker/cache/options/` and normalized chains in `worker/cache/options-normalized/`. The manifest at `worker/cache/options/manifest.json` records provider, ticker, tradeDate, snapshotId, availability and quality metrics. Every run uses a new timestamped snapshotId by default, so history is never overwritten; rerun a crashed batch with the same `--snapshot-id` to skip completed files.
+
+```powershell
+# All 35 underlyings from edgar-universe-35.json, current Cboe chain
+npx tsx worker/options-fetch.mts --source cboe
+
+# EODHD demo time series (AAPL only, with coverage warning if pagination stops)
+npx tsx worker/options-fetch.mts --source eodhd
+
+# Alpha Vantage historical IBM sample (demo endpoint)
+npx tsx worker/options-fetch.mts --source alphavantage --date 2017-11-15
+
+# ORATS near-EOD full-market sample (2024-01-03)
+npx tsx worker/options-orats.mts
+
+# ORATS five one-minute AAPL samples (2022-08-08)
+npx tsx worker/options-orats-intraday.mts
+```
+
+Useful flags: `--only NVDA`, `--force` (refetch only the current snapshot ID), `--snapshot-id <id>` (resume a crashed batch), and `OPTIONS_RPS=2` (default request pacing). Do not raise concurrency before checking provider terms. Raw cache must stay on the large home drive; production receives derived features only.
+
+Data quality contract: OSI contract IDs, per-side bid/ask/sizes, volume, OI, IV and Greeks are normalized separately from last/midpoint/theoretical prices. Quality metrics distinguish rows, unique contracts, duplicate rows, invalid rows, zero-bid and crossed quotes. EODHD is grouped per `tradeDate`, never mixed into one chain. ORATS put delta is call delta minus one.
