@@ -95,7 +95,9 @@ filing; two consecutive errors atomically checkpoint the manifest/outbox and
 abort the run. `LLM request failed` is retryable next run, not a terminal
 content skip. `thin`, `boilerplate-only` and parse-cap outcomes are separate.
 Per-filing timings and outcomes land in `worker/.runs/edgar-tone-audit.jsonl`;
-invalid model replies remain in `llm-failures.jsonl`.
+invalid model replies remain in `llm-failures.jsonl`. The final process summary
+includes total prompt/generated tokens, duration-weighted prefill/decode tok/s,
+and effective decode tok/s over the full process wall time (pauses included).
 
 Manifest/outbox checkpoints are atomic and are written every 20 completed
 filings and at company end, including all-skip companies. `keep_alive=30m`

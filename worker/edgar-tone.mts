@@ -19,9 +19,10 @@ import { postSignals, type SignalRow } from "./lib/ingest";
 import { startProgress } from "./lib/progress";
 import { prepareToneFiling } from "./lib/tone-prep";
 import { writeJsonAtomic } from "./lib/json-file";
-import { unionDurationMs, type RequestInterval } from "./lib/tone-metrics";
+import { tokensPerSecond, unionDurationMs, type RequestInterval } from "./lib/tone-metrics";
 import type { ManifestEntry } from "./edgar-fetch.mts";
 
+const processT0 = Date.now();
 const cacheDir = (cik: number) => path.resolve(import.meta.dirname, "cache", "edgar", String(cik));
 const onlyIdx = process.argv.indexOf("--only");
 const only = onlyIdx > -1 ? process.argv[onlyIdx + 1]?.toUpperCase() : null;
@@ -53,7 +54,7 @@ const failureLog = path.resolve(import.meta.dirname, ".runs", "llm-failures.json
 mkdirSync(path.dirname(auditLog), { recursive: true });
 const run = {
   companies: 0, scored: 0, skipped: 0, requests: 0, calls: 0, errors: 0,
-  promptTokens: 0, evalCount: 0, chars: 0, wallMs: 0, busyMs: 0,
+  promptTokens: 0, evalCount: 0, promptMs: 0, evalMs: 0, chars: 0, wallMs: 0, busyMs: 0,
   skipReasons: new Map<string, number>(),
 };
 const bump = (map: Map<string, number>, key: string, n = 1) => map.set(key, (map.get(key) ?? 0) + n);
@@ -275,10 +276,18 @@ for (const co of universe) {
   run.errors += llm.errors;
   run.promptTokens += llm.promptTokens;
   run.evalCount += llm.evalCount;
+  run.promptMs += llm.promptMs;
+  run.evalMs += llm.evalMs;
   run.chars += llm.chars;
   run.wallMs += wallMs;
   run.busyMs += busyMs;
   for (const [reason, n] of skipReasons) bump(run.skipReasons, reason, n);
 }
 const runSkips = [...run.skipReasons.entries()].sort((a, b) => b[1] - a[1]).map(([reason, n]) => `${reason}: ${n}`).join(" · ") || "none";
-prog.done(`all done · ${run.scored} scored · ${run.skipped} skipped · ${run.calls}/${run.requests} LLM ok · ${run.errors} request errors · request gaps ${seconds(Math.max(0, run.wallMs - run.busyMs))}s · skips ${runSkips}`);
+const processWallMs = Date.now() - processT0;
+const prefillRate = tokensPerSecond(run.promptTokens, run.promptMs);
+const decodeRate = tokensPerSecond(run.evalCount, run.evalMs);
+const effectiveDecodeRate = tokensPerSecond(run.evalCount, processWallMs);
+const wholeTokens = (n: number) => Math.round(n).toLocaleString("en-US");
+const tokenSummary = `prompt ${wholeTokens(run.promptTokens)} tok · generated ${wholeTokens(run.evalCount)} tok · prefill ${prefillRate.toFixed(1)} tok/s · decode ${decodeRate.toFixed(1)} tok/s · effective decode ${effectiveDecodeRate.toFixed(1)} tok/s (process wall)`;
+prog.done(`all done · ${run.scored} scored · ${run.skipped} skipped · ${run.calls}/${run.requests} LLM ok · ${run.errors} request errors · ${tokenSummary} · request gaps ${seconds(Math.max(0, run.wallMs - run.busyMs))}s · skips ${runSkips}`);

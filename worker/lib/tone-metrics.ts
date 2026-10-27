@@ -17,3 +17,7 @@ export function unionDurationMs(intervals: RequestInterval[]): number {
   }
   return total + end - start;
 }
+
+export function tokensPerSecond(tokens: number, durationMs: number): number {
+  return durationMs > 0 ? tokens / (durationMs / 1000) : 0;
+}

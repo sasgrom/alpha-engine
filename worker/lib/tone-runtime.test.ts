@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "n
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { writeJsonAtomic } from "./json-file";
-import { unionDurationMs } from "./tone-metrics";
+import { tokensPerSecond, unionDurationMs } from "./tone-metrics";
 import { CACHE_SKIP, prepareToneFiling } from "./tone-prep";
 import type { ManifestEntry } from "../edgar-fetch.mts";
 
@@ -13,6 +13,11 @@ describe("tone runtime safety", () => {
       { start: 0, end: 10 }, { start: 5, end: 15 }, { start: 20, end: 25 },
     ])).toBe(20);
     expect(unionDurationMs([])).toBe(0);
+  });
+
+  it("computes token rates from total durations and handles zero safely", () => {
+    expect(tokensPerSecond(120, 2000)).toBe(60);
+    expect(tokensPerSecond(120, 0)).toBe(0);
   });
 
   it("atomically replaces JSON without leaving temporary files", () => {
