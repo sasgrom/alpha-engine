@@ -17,7 +17,7 @@ dns.setDefaultResultOrder("ipv4first");
  * marked in the manifest so reruns are incremental and free.
  */
 import "dotenv/config";
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { derivePlaintext, extractScorableText, isThinContent, loadEdgarUniverse, mdaWindows, shouldScoreManifestEntry } from "./lib/edgar";
 import { extractVerdict, generate, LLM_MODEL, status, tonePrompt } from "./lib/ollama";
@@ -62,7 +62,7 @@ for (const co of universe) {
   try { manifest = JSON.parse(readFileSync(mPath, "utf8")); }
   catch { prog.log(`${co.ticker}: no manifest (run edgar-fetch first)`); continue; }
 
-  if (rescore) for (const m of manifest) if (m.fetched) { m.scored = false; delete m.error; }
+  if (rescore) for (const m of manifest) if (m.fetched) { m.scored = false; delete m.error; delete m.llmErrorCount; delete m.llmErrorModel; }
   // Outbox: scored rows land on disk BEFORE delivery. If ingest fails (server
   // down etc.), the next run delivers the outbox first — GPU work is never
   // redone, and `scored` is set ONLY after the server confirms receipt.
@@ -73,7 +73,7 @@ for (const co of universe) {
     const rep = await postSignals(box.rows); // throws on transport failure
     prog.log(`ingested: ${rep.accepted} new, ${rep.skippedDupes} dupes (${rep.batches} batches)`);
     const done = new Set(box.accessions);
-    for (const m of manifest) if (done.has(m.accessionNo)) { m.scored = true; delete m.error; }
+    for (const m of manifest) if (done.has(m.accessionNo)) { m.scored = true; delete m.error; delete m.llmErrorCount; delete m.llmErrorModel; }
     writeFileSync(mPath, JSON.stringify(manifest, null, 1));
     rmSync(outboxPath, { force: true });
     return true;
@@ -92,7 +92,7 @@ for (const co of universe) {
 
   // 2) score what's still pending — recompute AFTER the leftover delivery,
   //    its accessions are now scored=true and must not be re-scored
-  const stillPending = manifest.filter((m) => shouldScoreManifestEntry(m, from, includeSkipped));
+  const stillPending = manifest.filter((m) => shouldScoreManifestEntry(m, from, includeSkipped, LLM_MODEL));
   prog.stage(`${co.ticker}: ${stillPending.length} filings to score (${manifest.length} total)`);
   const box: Outbox = { accessions: [], rows: [] };
   let skipped = 0, done = 0, processed = 0;
@@ -105,6 +105,15 @@ for (const co of universe) {
   const llm = { calls: 0, promptTokens: 0, promptMs: 0, evalMs: 0, loadMs: 0, chars: 0 };
   const llmSummary = () => `llm ${llm.calls} calls · ${(llm.chars / 1e6).toFixed(1)}M chars · ${(llm.promptTokens / 1000).toFixed(1)}k prompt tok · prefill ${(llm.promptMs / 1000).toFixed(1)}s · decode ${(llm.evalMs / 1000).toFixed(1)}s · load ${(llm.loadMs / 1000).toFixed(1)}s`;
   const skipSummary = () => [...skipReasons.entries()].sort((a, b) => b[1] - a[1]).map(([reason, n]) => `${reason}: ${n}`).join(" · ");
+  const failureLog = path.resolve(import.meta.dirname, ".runs", "llm-failures.jsonl");
+  const recordLlmFailure = (m: ManifestEntry, w: string, r: { text: string; totalMs: number; evalCount: number }) => {
+    mkdirSync(path.dirname(failureLog), { recursive: true });
+    appendFileSync(failureLog, JSON.stringify({
+      ts: new Date().toISOString(), accessionNo: m.accessionNo, model: LLM_MODEL,
+      promptChars: w.length, responseChars: r.text.length, totalMs: r.totalMs,
+      evalCount: r.evalCount, reason: "no parseable score", response: r.text.slice(0, 1000),
+    }) + "\n");
+  };
   for (const m of stillPending) {
     processed++;
     const base = m.accessionNo.replace(/-/g, "");
@@ -141,6 +150,7 @@ for (const co of universe) {
         llm.loadMs += r.loadMs;
         llm.chars += w.length;
         const v = extractVerdict(r.text);
+        if (v == null) recordLlmFailure(m, w, r);
         if (v != null) {
           parsed++;
           if (v.why && BOILER.test(v.why)) { droppedBoiler++; continue; } // window was boilerplate — no tone to score
@@ -155,6 +165,10 @@ for (const co of universe) {
     // "boilerplate-only" = model parsed fine but saw no content worth a score
     // "no parseable score" = reply garbage / LLM errors — a REAL quality signal
     if (scores.length === 0) {
+      if (parsed === 0) {
+        if (m.llmErrorModel !== LLM_MODEL) { m.llmErrorModel = LLM_MODEL; m.llmErrorCount = 1; }
+        else m.llmErrorCount = (m.llmErrorCount ?? 0) + 1;
+      }
       skip(m, parsed > 0 ? "boilerplate-only content" : "no parseable score");
       continue;
     }

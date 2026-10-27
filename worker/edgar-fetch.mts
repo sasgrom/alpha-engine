@@ -43,6 +43,9 @@ export interface ManifestEntry extends EdgarFiling {
   /** consecutive fetch failures; ≥ MAX_FAILURES → dead (SEC link is truly gone) */
   failCount?: number;
   dead?: boolean;
+  /** Tone-only parse failures, capped per model to avoid endless GPU retries. */
+  llmErrorCount?: number;
+  llmErrorModel?: string;
 }
 
 /** 404/410 marks a document dead immediately; other failures get three runs.

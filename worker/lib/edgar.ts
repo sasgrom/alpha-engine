@@ -95,13 +95,21 @@ const SKIP_ERRORS = /^(thin content|boilerplate-only|no substantive)/;
 /** Single source of truth for tone reruns: thin/boilerplate never re-burns GPU
  * by default; parse failures remain retryable as a real quality signal. */
 export function shouldScoreManifestEntry(
-  m: { fetched: boolean; scored: boolean; filingDate: string; error?: string },
+  m: { fetched: boolean; scored: boolean; filingDate: string; error?: string; llmErrorCount?: number; llmErrorModel?: string },
   from: string | null,
-  includeSkipped: boolean
+  includeSkipped: boolean,
+  model?: string
 ): boolean {
   if (!m.fetched || m.scored) return false;
   if (from && m.filingDate < from) return false;
-  return includeSkipped || !m.error || !SKIP_ERRORS.test(m.error);
+  if (includeSkipped || !m.error) return true;
+  if (SKIP_ERRORS.test(m.error)) return false;
+  if (m.error === "no parseable score") {
+    // A new model gets a fresh chance; the same model is capped at two attempts.
+    if (model && m.llmErrorModel && m.llmErrorModel !== model) return true;
+    return (m.llmErrorCount ?? 0) < 2;
+  }
+  return true;
 }
 
 /** EX-99 is needed only for 8-K with no checked exhibit yet. If the file is

@@ -585,8 +585,12 @@ describe("edgar tone: manifest rerun filter", () => {
     expect(shouldScoreManifestEntry({ ...base, error: "boilerplate-only content" }, null, false)).toBe(false);
     expect(shouldScoreManifestEntry({ ...base, error: "thin content (cover/TOC/XBRL header)" }, null, true)).toBe(true);
   });
-  it("keeps parse failures retryable and honors scored/fetched/from", () => {
+  it("keeps parse failures retryable only within the per-model cap and honors scored/fetched/from", () => {
     expect(shouldScoreManifestEntry({ ...base, error: "no parseable score" }, null, false)).toBe(true);
+    expect(shouldScoreManifestEntry({ ...base, error: "no parseable score", llmErrorCount: 1, llmErrorModel: "qwen" }, null, false, "qwen")).toBe(true);
+    expect(shouldScoreManifestEntry({ ...base, error: "no parseable score", llmErrorCount: 2, llmErrorModel: "qwen" }, null, false, "qwen")).toBe(false);
+    expect(shouldScoreManifestEntry({ ...base, error: "no parseable score", llmErrorCount: 2, llmErrorModel: "qwen" }, null, true, "qwen")).toBe(true);
+    expect(shouldScoreManifestEntry({ ...base, error: "no parseable score", llmErrorCount: 2, llmErrorModel: "qwen" }, null, false, "other-model")).toBe(true);
     expect(shouldScoreManifestEntry({ ...base, error: "no parseable score" }, "2025-01-01", false)).toBe(false);
     expect(shouldScoreManifestEntry({ ...base, scored: true }, null, false)).toBe(false);
     expect(shouldScoreManifestEntry({ ...base, fetched: false }, null, false)).toBe(false);
