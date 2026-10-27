@@ -1059,6 +1059,16 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 Два слоя: курируемые 30 фондов (CIK сверены по cik-lookup SEC) + автопостроенный топ-300 по AUM (EDGAR full-text search, ~8 200 филеров). Таблицы `fund_holdings` (DDL 022/023: классы COM/PUT/CALL) и `fund_quarters` (итог ПОЛНОЙ книги — % of fund только от неё, иначе вздутие). Калибровка масштаба value: медиана implied-цены >$5 000 → филинг в долларах, не в тысячах (доказано на Point72; часть книг подаёт не по спеке). OpenFIGI с ключом `OPENFIGI_API_KEY` (25/100 за запрос) + `cusip_map` с до-резолвом тикеров на каждом прогоне (локальный пустой справочник companies — частая причина дыр). `scripts/13f-refresh.mts` v2: пакетные вставки, дисковый кэш XML, seen-quarter идемпотентность; `--totals-only` (добор итогов) и `--rebuild-events` (пересчёт событий из базы без сети). События только для activist/quant/fundamental: new/exit/±30% per cik:class; заметки детерминированные с $, % of fund, % of company, held by N funds. Транспорт `ingest kind=holdings` + `push-local-signals --table fund_holdings` (своя водяная метка). В проде после полного repair и синхронизации: 875 860 позиций, 300 фондов, 371 компания, 3 372 fund_quarters с filingDate, 16 422 события (все с заметками). UI: карточка Institutional на странице компании и «13F sector flows» на Dashboard.
 
+### 4.54 Итерация 5t: еженедельный English visual analytics report
+
+**Что добавлено.** `/analytics` — owner-only English dashboard для еженедельной оценки проекта. Содержит: verdict banner, live-метрики реестра, `actual` network текущего состояния и `target` network пути к настоящей альфе, фильтры по статусу/поиску/критическому пути, detail card узла, weekly history и ссылки на полный English review и metrics JSON. Публикация строго на английском.
+
+**Данные.** `scripts/build-analytics-snapshot.mts` читает живую БД и `worker/cache/options/manifest.json`, формирует `src/data/analytics-snapshot.ts` и `public/reports/weekly-metrics.json`. История хранится до 12 недель, без выдуманных трендов: первая неделя обозначена как baseline. Генератор использует реальные `fund_holdings`, `fund_quarters`, `factor_points`, `signals`, `macro_points`, `prices`, `facts` и options manifest. Схема БД не меняется.
+
+**Проверка.** Actual/target переключатели, поиск, статусы, critical path, zoom by layout, detail node and weekly history работают в реальном Chromium. Mobile 390px не имеет page-level horizontal overflow; graph прокручивается только внутри панели. Добавлен `public/favicon.svg`, чтобы не было 404 на favicon. Добавлены 2 unit-теста: рендер и клик узлов, актуальность snapshot. Всего 274 теста.
+
+**Еженедельный процесс.** Запускать `npx tsx scripts/build-analytics-snapshot.mts`, проверять diff, затем `npm test`, `npm run build`, commit/publish. Полный текстовый отчет доступен по `/reports/project-strength-review.md`; сырые данные — `/reports/weekly-metrics.json`.
+
 ### 4.53 Итерация 5s: disk guard следует за junction
 
 **Проблема.** После переноса `worker\cache` на D: скрипт остановился с `free disk space below 15 GiB` на C:. Причина была не в реальных файлах, а в проверке места: `statfsSync` вызывался для директории скрипта, а не для фактического cache target.

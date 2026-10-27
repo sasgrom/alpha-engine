@@ -1062,6 +1062,16 @@ Local script `scripts/daily-digest.mts` (home, scheduled): reads the last 36h of
 
 Two layers: curated 30 funds (CIKs verified against the SEC cik-lookup) + an auto-built top-300 by AUM (EDGAR full-text search, ~8,200 filers). Tables `fund_holdings` (DDL 022/023: COM/PUT/CALL classes) and `fund_quarters` (FULL book total — % of fund must use it, else it inflates). Value scale autocalibration: median implied price >$5,000 ⇒ the filing reported dollars, not thousands (proven on Point72; other books violate the spec the same way). OpenFIGI with optional `OPENFIGI_API_KEY` (25/100 per request) + `cusip_map` with per-run ticker re-resolution (an empty local companies registry once cost a rebuild). `scripts/13f-refresh.mts` v2: batched inserts, disk-cached XML, idempotent seen-quarter guard; `--totals-only` (book-total backfill) and `--rebuild-events` (DB-only event regeneration). Events only for activist/quant/fundamental: new/exit/±30% per cik:class; deterministic notes with $, % of fund, % of company, held by N funds. Transport `ingest kind=holdings` + `push-local-signals --table fund_holdings` (own watermark). Prod after the full repair and synchronization: 875,860 positions, 300 funds, 371 companies, 3,372 fund_quarters with filingDate, and 16,422 events (all with notes). UI: Institutional card on the company page and "13F sector flows" on the Dashboard.
 
+### 4.54 Iteration 5t: weekly English visual analytics report
+
+**What was added.** `/analytics` is an owner-only English dashboard for weekly project-strength review. It includes a verdict banner, live registry metrics, an `actual` network of the current state and a `target` network for genuine alpha, status/search/critical-path filters, node detail cards, weekly history, and links to the full English review and metrics JSON. Publishing is strictly in English.
+
+**Data.** `scripts/build-analytics-snapshot.mts` reads the live DB and `worker/cache/options/manifest.json`, then writes `src/data/analytics-snapshot.ts` and `public/reports/weekly-metrics.json`. Up to 12 weekly snapshots are retained, with no fabricated trends: the first week is marked as the baseline. Real `fund_holdings`, `fund_quarters`, `factor_points`, `signals`, `macro_points`, `prices`, `facts` and options manifest drive the report. No schema changes.
+
+**Verification.** Actual/target switching, search, statuses, critical path, node details and weekly history were checked in real Chromium. Mobile at 390px has no page-level horizontal overflow; only the graph panel scrolls. Added `public/favicon.svg` to eliminate favicon 404s. Two new unit tests cover node rendering/clicking and snapshot freshness. Total: 274 tests.
+
+**Weekly protocol.** Run `npx tsx scripts/build-analytics-snapshot.mts`, review the diff, then `npm test`, `npm run build`, commit and publish. Full English text is at `/reports/project-strength-review.md`; raw metrics are at `/reports/weekly-metrics.json`.
+
 ### 4.53 Iteration 5s: disk guard follows the junction
 
 **Problem.** After moving `worker\cache` to D:, the fetcher stopped with `free disk space below 15 GiB` on C:. The actual files were fine; the guard called `statfsSync` on the script directory instead of the real cache target.
