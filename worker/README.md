@@ -106,27 +106,32 @@ are deliberate repair modes, never defaults for an incremental full run.
 
 ## Companyfacts fundamentals: local-first snapshots
 
-`facts-universe-25.json` contains the 24 target-35 companies missing from prod
-plus XOM (only 280 existing facts, so it needs a full repair). Restart the local
-dev server after pulling so it registers the new `factsSnapshot` route.
+Restart the local dev server after pulling so it registers the `factsSnapshot`
+route. For the full target-35 refresh use
+`facts-universe-35-plus-predecessor.json`: 35 current tickers plus Exxon's
+historical CIK 34088. Current XOM (2115436, ExxonMobil Holdings Corp) and the
+predecessor remain separate; no silent entity merge.
 
 ```powershell
-# SEC companyfacts → D: cache → LOCAL MySQL (never prod)
-npx tsx worker/facts-fetch.mts --universe facts-universe-25.json
+# If only XOM needs repair after the initial 34-company run:
+npx tsx worker/facts-fetch.mts --universe facts-universe-xom.json
+
+# SEC companyfacts → D: cache → LOCAL MySQL for the full 36-CIK set:
+npx tsx worker/facts-fetch.mts --universe facts-universe-35-plus-predecessor.json
 
 # Review exactly what the local DB will send (no network to prod)
-npx tsx scripts/push-local-facts.mts --universe facts-universe-25.json --dry
+npx tsx scripts/push-local-facts.mts --universe facts-universe-35-plus-predecessor.json --dry
 
 # After the prod route is published and local coverage is reviewed:
-npx tsx scripts/push-local-facts.mts --universe facts-universe-25.json
+npx tsx scripts/push-local-facts.mts --universe facts-universe-35-plus-predecessor.json
 ```
 
 Each CIK travels as one complete snapshot. The server validates every row and
 replaces only that company in one transaction, with inserts chunked at 500.
 A failed snapshot rolls back its delete and all inserts; other companies are
-untouched. Reruns are idempotent by full replacement. Use `--cached` on
-`facts-fetch` to replay an existing D: payload without another SEC request, and
-`edgar-universe-35.json` later for a full target-35 refresh.
+untouched. Reruns are idempotent by full replacement. SEC's zero-padded string
+`cik` is normalized to a number before validation. Use `--cached` on
+`facts-fetch` to replay an existing D: payload without another SEC request.
 
 ## Strata 125B A/B: identical 100-document EDGAR benchmark
 

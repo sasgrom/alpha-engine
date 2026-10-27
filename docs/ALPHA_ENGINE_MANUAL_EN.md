@@ -1062,6 +1062,14 @@ Local script `scripts/daily-digest.mts` (home, scheduled): reads the last 36h of
 
 Two layers: curated 30 funds (CIKs verified against the SEC cik-lookup) + an auto-built top-300 by AUM (EDGAR full-text search, ~8,200 filers). Tables `fund_holdings` (DDL 022/023: COM/PUT/CALL classes) and `fund_quarters` (FULL book total — % of fund must use it, else it inflates). Value scale autocalibration: median implied price >$5,000 ⇒ the filing reported dollars, not thousands (proven on Point72; other books violate the spec the same way). OpenFIGI with optional `OPENFIGI_API_KEY` (25/100 per request) + `cusip_map` with per-run ticker re-resolution (an empty local companies registry once cost a rebuild). `scripts/13f-refresh.mts` v2: batched inserts, disk-cached XML, idempotent seen-quarter guard; `--totals-only` (book-total backfill) and `--rebuild-events` (DB-only event regeneration). Events only for activist/quant/fundamental: new/exit/±30% per cik:class; deterministic notes with $, % of fund, % of company, held by N funds. Transport `ingest kind=holdings` + `push-local-signals --table fund_holdings` (own watermark). Prod after the full repair and synchronization: 875,860 positions, 300 funds, 371 companies, 3,372 fund_quarters with filingDate, and 16,422 events (all with notes). UI: Institutional card on the company page and "13F sector flows" on the Dashboard.
 
+### 4.59 Iteration 5y: XOM string CIK and Exxon entity continuity
+
+**Root causes.** The current SEC ticker map does associate XOM with `2115436` (`ExxonMobil Holdings Corp`), so the universe entry is not a typo. It is a new holding CIK with few filings and 280 companyfacts. Historical `EXXON MOBIL CORP` is `34088`, with 1,002 recent filings and 20,629 facts. The new holding's companyfacts also returns `cik` as the string `"0002115436"`, which zod correctly rejected.
+
+**Fix.** Server/worker `factsToRows` normalize CIK with Number and fail closed when it is missing or invalid. `facts-universe-xom.json` contains current XOM plus the predecessor for a targeted repair. `facts-universe-35-plus-predecessor.json` contains 35 current tickers plus `XOM_PRE` (`34088`) = 36 CIKs and is the full fundamentals dry/push universe. Entities are not merged silently: the predecessor is separate evidence, while entity continuity for the factor engine remains an explicit follow-up rule.
+
+**Verification.** Server/worker string-CIK tests were added; the full suite is **291 tests**. The backend containing this fix must be published before prod push, not merely the earlier `factsSnapshot` version.
+
 ### 4.58 Iteration 5x: target-35 companyfacts fundamentals, local-first
 
 **Detected gap.** Checking the target `edgar-universe-35.json` against the live DB found only 11 covered companies, 24 entirely missing and XOM with an anomalous 280 facts. `push-local-signals` cannot fix this: tone and XBRL are separate pipelines.

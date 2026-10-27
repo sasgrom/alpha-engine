@@ -1059,6 +1059,14 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 Два слоя: курируемые 30 фондов (CIK сверены по cik-lookup SEC) + автопостроенный топ-300 по AUM (EDGAR full-text search, ~8 200 филеров). Таблицы `fund_holdings` (DDL 022/023: классы COM/PUT/CALL) и `fund_quarters` (итог ПОЛНОЙ книги — % of fund только от неё, иначе вздутие). Калибровка масштаба value: медиана implied-цены >$5 000 → филинг в долларах, не в тысячах (доказано на Point72; часть книг подаёт не по спеке). OpenFIGI с ключом `OPENFIGI_API_KEY` (25/100 за запрос) + `cusip_map` с до-резолвом тикеров на каждом прогоне (локальный пустой справочник companies — частая причина дыр). `scripts/13f-refresh.mts` v2: пакетные вставки, дисковый кэш XML, seen-quarter идемпотентность; `--totals-only` (добор итогов) и `--rebuild-events` (пересчёт событий из базы без сети). События только для activist/quant/fundamental: new/exit/±30% per cik:class; заметки детерминированные с $, % of fund, % of company, held by N funds. Транспорт `ingest kind=holdings` + `push-local-signals --table fund_holdings` (своя водяная метка). В проде после полного repair и синхронизации: 875 860 позиций, 300 фондов, 371 компания, 3 372 fund_quarters с filingDate, 16 422 события (все с заметками). UI: карточка Institutional на странице компании и «13F sector flows» на Dashboard.
 
+### 4.59 Итерация 5y: XOM — string CIK и преемственность Exxon
+
+**Причины ошибки.** Текущий SEC ticker map действительно связывает XOM с `2115436` (`ExxonMobil Holdings Corp`), поэтому это не опечатка в universe. Но это новый holding CIK: у него мало filings и 280 companyfacts. Историческая `EXXON MOBIL CORP` — `34088`, с 1 002 recent filings и 20 629 facts. Дополнительно companyfacts нового holding отдаёт `cik` как строку `"0002115436"`, которую zod справедливо отклонял.
+
+**Исправление.** Server/worker `factsToRows` нормализуют CIK через Number и fail-closed при отсутствии/невалидности. `facts-universe-xom.json` содержит текущий XOM + predecessor для точечного ремонта. `facts-universe-35-plus-predecessor.json` содержит 35 текущих тикеров + `XOM_PRE` (`34088`) = 36 CIK; именно он используется для полной fundamentals dry/push. CIK не смешиваются в одну сущность автоматически: predecessor — отдельный поток доказательств, а entity-continuity для factor engine остаётся отдельным явным правилом.
+
+**Проверка.** Добавлены server/worker тесты string CIK; полный набор — **291 тест**. Перед prod-push требуется опубликовать backend с этим исправлением, а не только прежнюю версию `factsSnapshot`.
+
 ### 4.58 Итерация 5x: фундаментальные companyfacts для целевых 35 — local-first
 
 **Найденный gap.** Проверка целевого `edgar-universe-35.json` по живой БД показала только 11 покрытых компаний, 24 полностью отсутствующие и XOM с аномально малыми 280 facts. Это не исправляется `push-local-signals`: tone и XBRL — разные потоки.

@@ -241,7 +241,8 @@ export async function companyFacts(cik: number): Promise<any> {
 
 export function factsToRows(payload: any): CompanyFactRow[] {
   const rows: CompanyFactRow[] = [];
-  const cik = payload?.cik;
+  const cik = Number(payload?.cik);
+  if (!Number.isInteger(cik) || cik <= 0) return rows;
   for (const [taxonomy, concepts] of Object.entries<any>(payload?.facts ?? {})) {
     for (const [concept, body] of Object.entries<any>(concepts)) {
       for (const [unit, records] of Object.entries<any>(body?.units ?? {})) {

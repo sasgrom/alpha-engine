@@ -79,6 +79,12 @@ describe("worker companyfacts normalization", () => {
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ cik: 320193, taxonomy: "us-gaap", concept: "Assets", unit: "USD", val: 123, form: "10-Q", filed: "2024-04-30", accn: "0000320193-24-000001" });
   });
+
+  it("normalizes SEC's zero-padded string CIK and rejects a missing CIK", () => {
+    const payload = { cik: "0002115436", facts: { "us-gaap": { Assets: { units: { USD: [{ val: 1 }] } } } } };
+    expect(factsToRows(payload)[0].cik).toBe(2115436);
+    expect(factsToRows({ facts: payload.facts })).toEqual([]);
+  });
 });
 
 describe("gdelt-csv: plan B importer parsers", () => {
