@@ -5,6 +5,7 @@
  * so resending the same batch is safe and free.
  */
 import { fetchJson } from "./http";
+import type { CompanyFactRow } from "./edgar";
 
 export interface SignalRow {
   cik: number;
@@ -24,6 +25,7 @@ export interface IngestResult {
   accepted?: number;
   skippedDupes?: number;
   upserted?: number;
+  replaced?: number;
 }
 
 /** 5e: one digest row (morning brief). */
@@ -73,4 +75,26 @@ export async function postSignals(rows: SignalRow[], opts: { url?: string } = {}
     batches++;
   }
   return { accepted, skippedDupes, batches };
+}
+
+/** One complete per-CIK facts snapshot. The server validates and replaces that
+ * company in one transaction, with DB inserts chunked at 500 rows. */
+export async function postFactsSnapshot(
+  cik: number,
+  rows: CompanyFactRow[],
+  opts: { url?: string } = {},
+): Promise<{ replaced: number }> {
+  const key = process.env.WORKER_KEY;
+  if (!key) throw new Error("WORKER_KEY missing from environment (.env)");
+  if (rows.length === 0) throw new Error(`empty facts snapshot for CIK ${cik}`);
+  const url = opts.url ?? process.env.INGEST_URL ?? PROD_INGEST_URL;
+  const res = await fetchJson<IngestResult>(url, {
+    method: "POST",
+    headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
+    body: JSON.stringify({ kind: "factsSnapshot", cik, rows }),
+    timeoutMs: 120_000,
+    retries: 2,
+  });
+  if (!res.ok) throw new Error(`facts ingest failed for CIK ${cik}: ${JSON.stringify(res)}`);
+  return { replaced: res.replaced ?? 0 };
 }

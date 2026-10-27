@@ -8,7 +8,7 @@ import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
 import { extractScore, extractVerdict, isBoilerplateRationale, sanitizeWhy, tonePrompt, generate } from "./ollama";
 import { buildDigestPrompt } from "./digest";
-import { isThinContent, isPermanentSecMissing, secGet, SecHttpError, shouldScoreManifestEntry, shouldDownloadExhibit } from "./edgar";
+import { factsToRows, isThinContent, isPermanentSecMissing, secGet, SecHttpError, shouldScoreManifestEntry, shouldDownloadExhibit } from "./edgar";
 
 describe("ollama: extractScore", () => {
   it("parses clean JSON", () => {
@@ -65,6 +65,19 @@ describe("ollama: extractScore", () => {
     expect(tonePrompt("x".repeat(200_000)).length).toBeLessThan(108_000); // 80% of num_ctx 32768 ≈ 104k chars
     expect(tonePrompt("x".repeat(10_000)).length).toBeGreaterThan(10_000); // mid-size texts pass through whole
     expect(tonePrompt("test")).toContain('"score"');
+  });
+});
+
+describe("worker companyfacts normalization", () => {
+  it("flattens concepts and preserves period/form/accession provenance", () => {
+    const rows = factsToRows({
+      cik: 320193,
+      facts: { "us-gaap": { Assets: { units: { USD: [
+        { start: "2024-01-01", end: "2024-03-31", val: 123, fy: 2024, fp: "Q1", form: "10-Q", filed: "2024-04-30", accn: "0000320193-24-000001" },
+      ] } } } },
+    });
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ cik: 320193, taxonomy: "us-gaap", concept: "Assets", unit: "USD", val: 123, form: "10-Q", filed: "2024-04-30", accn: "0000320193-24-000001" });
   });
 });
 

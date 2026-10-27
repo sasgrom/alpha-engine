@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { workerIngestBodyZ, workerQuarterRowZ } from "./worker";
+import { workerFactRowZ, workerIngestBodyZ, workerQuarterRowZ } from "./worker";
 
 describe("worker fund_quarters ingest contract", () => {
   it("accepts a complete book summary with availability", () => {
@@ -30,5 +30,23 @@ describe("worker fund_quarters ingest contract", () => {
     };
     const body = workerIngestBodyZ.parse({ kind: "holdingsSnapshot", rows: [holding] });
     expect(body.kind).toBe("holdingsSnapshot");
+  });
+});
+
+describe("worker companyfacts snapshot contract", () => {
+  it("accepts one complete per-CIK snapshot with filing provenance", () => {
+    const row = {
+      cik: 320193, taxonomy: "us-gaap", concept: "RevenueFromContractWithCustomerExcludingAssessedTax",
+      unit: "USD", startDate: "2025-01-01", endDate: "2025-03-31", val: 1000,
+      fy: 2025, fp: "Q1", form: "10-Q", filed: "2025-04-30", accn: "0000320193-25-000001",
+    };
+    expect(workerFactRowZ.parse(row)).toEqual(row);
+    const body = workerIngestBodyZ.parse({ kind: "factsSnapshot", cik: 320193, rows: [row] });
+    expect(body.kind).toBe("factsSnapshot");
+  });
+
+  it("rejects malformed dates", () => {
+    const row = { cik: 1, taxonomy: "us-gaap", concept: "Assets", unit: "USD", filed: "2025" };
+    expect(() => workerFactRowZ.parse(row)).toThrow();
   });
 });

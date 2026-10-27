@@ -219,6 +219,47 @@ export async function fetchDoc(cik: number, accessionNo: string, doc: string): P
   return (await secGet(filingDocUrl(cik, accessionNo, doc))).text();
 }
 
+export interface CompanyFactRow {
+  cik: number;
+  taxonomy: string;
+  concept: string;
+  unit: string;
+  startDate: string | null;
+  endDate: string | null;
+  val: number | null;
+  fy: number | null;
+  fp: string | null;
+  form: string | null;
+  filed: string | null;
+  accn: string | null;
+}
+
+/** SEC's cumulative companyfacts payload, cached by the caller before ingest. */
+export async function companyFacts(cik: number): Promise<any> {
+  return (await secGet(`${SEC_DATA_BASE}/api/xbrl/companyfacts/CIK${String(cik).padStart(10, "0")}.json`)).json();
+}
+
+export function factsToRows(payload: any): CompanyFactRow[] {
+  const rows: CompanyFactRow[] = [];
+  const cik = payload?.cik;
+  for (const [taxonomy, concepts] of Object.entries<any>(payload?.facts ?? {})) {
+    for (const [concept, body] of Object.entries<any>(concepts)) {
+      for (const [unit, records] of Object.entries<any>(body?.units ?? {})) {
+        for (const rec of records as any[]) {
+          rows.push({
+            cik, taxonomy, concept, unit,
+            startDate: rec.start ?? null, endDate: rec.end ?? null,
+            val: typeof rec.val === "number" ? rec.val : null,
+            fy: rec.fy ?? null, fp: rec.fp ?? null, form: rec.form ?? null,
+            filed: rec.filed ?? null, accn: rec.accn ?? null,
+          });
+        }
+      }
+    }
+  }
+  return rows;
+}
+
 /**
  * Resolve + download the primary document. Old filings (pre-2005) often name
  * a primaryDoc that no longer exists in Archives ("0001.txt" → 404): on ANY

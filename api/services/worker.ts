@@ -19,7 +19,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import { and, eq, isNull, sql } from "drizzle-orm";
 import { getDb } from "../queries/connection";
-import { digests, signals, workerKeys } from "@db/schema";
+import { digests, facts, signals, workerKeys } from "@db/schema";
 
 const keyHashOf = (key: string) => createHash("sha256").update(key).digest("hex");
 
@@ -99,6 +99,23 @@ export const workerQuarterRowZ = z.object({
 });
 export type WorkerQuarterRow = z.infer<typeof workerQuarterRowZ>;
 
+const factDateZ = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullish();
+export const workerFactRowZ = z.object({
+  cik: z.number().int(),
+  taxonomy: z.string().min(1).max(20),
+  concept: z.string().min(1).max(200),
+  unit: z.string().min(1).max(40),
+  startDate: factDateZ,
+  endDate: factDateZ,
+  val: z.number().nullish(),
+  fy: z.number().int().nullish(),
+  fp: z.string().max(8).nullish(),
+  form: z.string().max(12).nullish(),
+  filed: factDateZ,
+  accn: z.string().max(25).nullish(),
+});
+export type WorkerFactRow = z.infer<typeof workerFactRowZ>;
+
 export const workerIngestBodyZ = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("signals"),
@@ -119,6 +136,11 @@ export const workerIngestBodyZ = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("fundQuarters"),
     rows: z.array(workerQuarterRowZ).min(1).max(500),
+  }),
+  z.object({
+    kind: z.literal("factsSnapshot"),
+    cik: z.number().int(),
+    rows: z.array(workerFactRowZ).min(1).max(100_000),
   }),
 ]);
 
@@ -172,6 +194,20 @@ export async function ingestFundQuarters(rows: WorkerQuarterRow[]): Promise<{ up
     upserted += chunk.length;
   }
   return { upserted };
+}
+
+/** Full companyfacts replacement for one CIK. Validation happens before the
+ * transaction; any insert failure rolls back both the delete and all chunks. */
+export async function ingestFactsSnapshot(cik: number, rows: WorkerFactRow[]): Promise<{ replaced: number }> {
+  if (rows.some((r) => r.cik !== cik)) throw new Error("factsSnapshot contains a mismatched CIK");
+  const db = getDb();
+  await db.transaction(async (tx) => {
+    await tx.delete(facts).where(eq(facts.cik, cik));
+    for (let i = 0; i < rows.length; i += 500) {
+      await tx.insert(facts).values(rows.slice(i, i + 500));
+    }
+  });
+  return { replaced: rows.length };
 }
 
 export type WorkerIngestBody = z.infer<typeof workerIngestBodyZ>;
