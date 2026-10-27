@@ -14,7 +14,7 @@
  * retryable 429/5xx/network failures; 404/410 and other 4xx are not retried.
  * Amendments (10-K/A etc.) are skipped in v1.
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
 
 const SEC_BASE = "https://www.sec.gov";
@@ -88,6 +88,11 @@ export interface EdgarCompany { cik: number; ticker: string; name: string }
 export function loadEdgarUniverse(file = "edgar-universe.json"): EdgarCompany[] {
   const filePath = path.resolve(import.meta.dirname, "..", file);
   return (JSON.parse(readFileSync(filePath, "utf8")) as EdgarCompany[]).filter((r) => r.cik && r.ticker);
+}
+
+/** Resolve junctions/symlinks so the disk guard measures the real cache volume. */
+export function realCacheRoot(cacheRoot: string): string {
+  return realpathSync(cacheRoot);
 }
 
 const SKIP_ERRORS = /^(thin content|boilerplate-only|no substantive)/;

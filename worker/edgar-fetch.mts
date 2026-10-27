@@ -19,7 +19,7 @@ import path from "node:path";
 const MIN_FREE_BYTES = 15 * 2 ** 30; // 15 GiB
 function assertDiskSpace() {
   try {
-    const s = statfsSync(path.resolve(import.meta.dirname));
+    const s = statfsSync(realCacheRoot(path.resolve(import.meta.dirname, "cache")));
     if (s.bavail * s.bsize < MIN_FREE_BYTES) {
       console.error(`[edgar-fetch] STOP: free disk space below 15 GiB — clear space and rerun (manifest resumes)`);
       process.exit(2);
@@ -29,7 +29,7 @@ function assertDiskSpace() {
     // statfs unavailable → don't block the run on a failed check
   }
 }
-import { fetchDoc, fetchFilingDocument, isPermanentSecMissing, listFilingDocs, listFilings, loadEdgarUniverse, shouldDownloadExhibit, type EdgarFiling } from "./lib/edgar";
+import { fetchDoc, fetchFilingDocument, isPermanentSecMissing, listFilingDocs, listFilings, loadEdgarUniverse, realCacheRoot, shouldDownloadExhibit, type EdgarFiling } from "./lib/edgar";
 import { startProgress } from "./lib/progress";
 
 export interface ManifestEntry extends EdgarFiling {

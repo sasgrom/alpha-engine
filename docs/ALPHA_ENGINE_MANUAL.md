@@ -1059,6 +1059,12 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 Два слоя: курируемые 30 фондов (CIK сверены по cik-lookup SEC) + автопостроенный топ-300 по AUM (EDGAR full-text search, ~8 200 филеров). Таблицы `fund_holdings` (DDL 022/023: классы COM/PUT/CALL) и `fund_quarters` (итог ПОЛНОЙ книги — % of fund только от неё, иначе вздутие). Калибровка масштаба value: медиана implied-цены >$5 000 → филинг в долларах, не в тысячах (доказано на Point72; часть книг подаёт не по спеке). OpenFIGI с ключом `OPENFIGI_API_KEY` (25/100 за запрос) + `cusip_map` с до-резолвом тикеров на каждом прогоне (локальный пустой справочник companies — частая причина дыр). `scripts/13f-refresh.mts` v2: пакетные вставки, дисковый кэш XML, seen-quarter идемпотентность; `--totals-only` (добор итогов) и `--rebuild-events` (пересчёт событий из базы без сети). События только для activist/quant/fundamental: new/exit/±30% per cik:class; заметки детерминированные с $, % of fund, % of company, held by N funds. Транспорт `ingest kind=holdings` + `push-local-signals --table fund_holdings` (своя водяная метка). В проде после полного repair и синхронизации: 875 860 позиций, 300 фондов, 371 компания, 3 372 fund_quarters с filingDate, 16 422 события (все с заметками). UI: карточка Institutional на странице компании и «13F sector flows» на Dashboard.
 
+### 4.53 Итерация 5s: disk guard следует за junction
+
+**Проблема.** После переноса `worker\cache` на D: скрипт остановился с `free disk space below 15 GiB` на C:. Причина была не в реальных файлах, а в проверке места: `statfsSync` вызывался для директории скрипта, а не для фактического cache target.
+
+**Исправление.** `realCacheRoot()` теперь вызывает `realpathSync` перед `statfsSync`. Поэтому disk guard проверяет именно тот диск, куда указывает junction. Старый путь `worker\cache` остаётся рабочим, но guard больше не считает C: своим объёмом. Это не повторная миграция: junction, backup и manifest/outbox не меняются. Для обычного пути без junction `realpathSync` возвращает исходный путь, поэтому обратной совместимости не теряется. Полный typecheck и 272 теста проходят.
+
 ### 4.52 Итерация 5r: EDGAR tone — JSON schema и окна, совместимые с моделью
 
 **Диагноз по llm-failures.jsonl:** большинство `no parseable score` имело `promptChars=100000`. Модель игнорировала требование JSON и писала длинный markdown-анализ; `evalCount=512` обрывал ответ до валидного JSON. Это не проблема ретрая, а сочетание слишком длинного входа и неограниченного выхода.

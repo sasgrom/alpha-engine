@@ -1062,6 +1062,12 @@ Local script `scripts/daily-digest.mts` (home, scheduled): reads the last 36h of
 
 Two layers: curated 30 funds (CIKs verified against the SEC cik-lookup) + an auto-built top-300 by AUM (EDGAR full-text search, ~8,200 filers). Tables `fund_holdings` (DDL 022/023: COM/PUT/CALL classes) and `fund_quarters` (FULL book total — % of fund must use it, else it inflates). Value scale autocalibration: median implied price >$5,000 ⇒ the filing reported dollars, not thousands (proven on Point72; other books violate the spec the same way). OpenFIGI with optional `OPENFIGI_API_KEY` (25/100 per request) + `cusip_map` with per-run ticker re-resolution (an empty local companies registry once cost a rebuild). `scripts/13f-refresh.mts` v2: batched inserts, disk-cached XML, idempotent seen-quarter guard; `--totals-only` (book-total backfill) and `--rebuild-events` (DB-only event regeneration). Events only for activist/quant/fundamental: new/exit/±30% per cik:class; deterministic notes with $, % of fund, % of company, held by N funds. Transport `ingest kind=holdings` + `push-local-signals --table fund_holdings` (own watermark). Prod after the full repair and synchronization: 875,860 positions, 300 funds, 371 companies, 3,372 fund_quarters with filingDate, and 16,422 events (all with notes). UI: Institutional card on the company page and "13F sector flows" on the Dashboard.
 
+### 4.53 Iteration 5s: disk guard follows the junction
+
+**Problem.** After moving `worker\cache` to D:, the fetcher stopped with `free disk space below 15 GiB` on C:. The actual files were fine; the guard called `statfsSync` on the script directory instead of the real cache target.
+
+**Fix.** `realCacheRoot()` now calls `realpathSync` before `statfsSync`, so the disk guard checks the volume to which the junction actually points. The old `worker\cache` path remains valid, but the guard no longer treats C: as its volume. This is not another migration: junction, backups, and manifest/outbox are unchanged. Without a junction, `realpathSync` returns the original path, preserving compatibility. Full typecheck and 272 tests pass.
+
 ### 4.52 Iteration 5r: EDGAR tone — JSON schema and model-compatible windows
 
 **Diagnosis from llm-failures.jsonl:** most `no parseable score` rows had `promptChars=100000`. The model ignored the JSON instruction and produced a long markdown analysis; `evalCount=512` truncated the reply before valid JSON. This was not a retry problem but a combination of oversized prompts and unbounded output.
