@@ -127,6 +127,22 @@ npx tsx scripts/push-local-facts.mts --universe research-universe-53.json
 Use `research-universe-50.json` for current-S&P factor/evaluation panels and
 `research-universe-53.json` for complete-data ingestion only.
 
+After facts are synced, build the derived layers on the server (no local run):
+
+```powershell
+# Atomic per-CIK canonical series; resumes only missing companies
+npx tsx scripts/build-research-series.mts --universe research-universe-53.json --skip-built
+
+# One grouped facts query + atomic factor replacement per company
+npx tsx scripts/materialize-research-factors.mts --universe research-universe-53.json
+```
+
+Verified baseline: 1,348,866 facts, 1,093,785 series_points and 10,734
+factor_points across all 53 CIKs, with no stale factor history. Current XOM has
+only two points because it is a new holding; use XOM_PRE for predecessor history.
+ENLT currently has one point because its underlying series is sparse. Price-based
+factors still require the separate full-price-history backfill.
+
 ## Companyfacts fundamentals: local-first snapshots
 
 Restart the local dev server after pulling so it registers the `factsSnapshot`

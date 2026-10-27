@@ -337,10 +337,8 @@ export async function buildCompanySeries(cik: number): Promise<SeriesBuildResult
     }
   }
 
-  // --- clear previous derived output (full replace) ----------------------
-  await db.delete(seriesPoints).where(eq(seriesPoints.cik, cik));
-  await db.delete(seriesHealth).where(eq(seriesHealth.cik, cik));
-
+  // Previous derived output is replaced only after the new output has been
+  // fully computed, inside the same transaction as the inserts below.
   const outPoints: (typeof seriesPoints.$inferInsert)[] = [];
   const outHealth: (typeof seriesHealth.$inferInsert)[] = [];
 
@@ -524,14 +522,18 @@ export async function buildCompanySeries(cik: number): Promise<SeriesBuildResult
     });
   }
 
-  // --- chunked insert (hosted MySQL packet limits: <= 500 rows) -----------
-  const CHUNK = 500;
-  for (let i = 0; i < outPoints.length; i += CHUNK) {
-    await db.insert(seriesPoints).values(outPoints.slice(i, i + CHUNK));
-  }
-  for (let i = 0; i < outHealth.length; i += CHUNK) {
-    await db.insert(seriesHealth).values(outHealth.slice(i, i + CHUNK));
-  }
+  // Atomic per-CIK replacement (hosted MySQL packet limits: <= 500 rows).
+  // A failed build or insert can no longer leave a company with empty series.
+  await db.transaction(async (tx) => {
+    await tx.delete(seriesPoints).where(eq(seriesPoints.cik, cik));
+    await tx.delete(seriesHealth).where(eq(seriesHealth.cik, cik));
+    for (let i = 0; i < outPoints.length; i += 500) {
+      await tx.insert(seriesPoints).values(outPoints.slice(i, i + 500));
+    }
+    for (let i = 0; i < outHealth.length; i += 500) {
+      await tx.insert(seriesHealth).values(outHealth.slice(i, i + 500));
+    }
+  });
 
   // --- company-level rollup (Stage 4 features) ----------------------------
   const avg = (xs: (number | null | undefined)[]) => {

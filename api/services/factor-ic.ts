@@ -4,7 +4,8 @@
  * max(sourceFiled of the period's concepts; fallback = periodEnd + 45d, the
  * EDGAR lag, flagged in the payload as estimated).
  */
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
+import { factorPoints } from "@db/schema";
 import { getDb } from "../queries/connection";
 import { computeCompanyFactors } from "./factors";
 import { getBars } from "./prices";
@@ -12,28 +13,53 @@ import { forwardReturn, icStats, type IcPair } from "./ic";
 
 const HORIZONS = [63, 126] as const; // ~1Q, ~2Q in trading days
 
-/** Recompute one company's factor points (idempotent upsert). */
-export async function materializeFactorPoints(cik: number): Promise<number> {
-  const db = getDb();
-  const f = await computeCompanyFactors(cik);
-  let n = 0;
-  for (const [factor, det] of Object.entries(f.detail)) {
+export interface FactorPointWriteRow {
+  cik: number;
+  factor: string;
+  periodEnd: string;
+  filedAt: string;
+  value: number | null;
+}
+
+/** Pure availability mapping, shared by tests and the batched writer. */
+export function buildFactorPointRows(
+  cik: number,
+  detail: Record<string, { history: { t: string; v: number | null }[] }>,
+  firstFiledByPeriod: ReadonlyMap<string, string>,
+): FactorPointWriteRow[] {
+  const out: FactorPointWriteRow[] = [];
+  for (const [factor, det] of Object.entries(detail)) {
+    const isMarketFactor = factor === "momentum122" || factor === "high52";
     for (const pt of det.history) {
-      // Market data is observable on its own date; the EDGAR lag applies only
-      // to fundamentals. For fundamentals use the FIRST filing containing the
-      // period, not a later comparative/restatement filing (which would move
-      // old observations forward in time and corrupt historical backtests).
-      const isMarketFactor = factor === "momentum122" || factor === "high52";
-      const [fr]: any = isMarketFactor ? [[{ m: null }]] : await db.execute(sql`SELECT MIN(filed) m FROM facts WHERE cik=${cik} AND endDate=${pt.t}`);
-      const filed = fr[0]?.m ? String(fr[0].m).slice(0, 19) : `${pt.t} 00:00:00`;
-      const filedAt = isMarketFactor || fr[0]?.m ? filed : `${new Date(Date.parse(pt.t + "T00:00:00Z") + 45 * 86400_000).toISOString().slice(0, 19).replace("T", " ")}`;
-      await db.execute(sql`INSERT INTO factor_points (cik, factor, periodEnd, filedAt, value)
-        VALUES (${cik}, ${factor}, ${pt.t}, ${filedAt}, ${pt.v})
-        ON DUPLICATE KEY UPDATE value=VALUES(value), filedAt=VALUES(filedAt), computedAt=NOW()`);
-      n++;
+      const firstFiled = firstFiledByPeriod.get(pt.t);
+      const filedAt = isMarketFactor
+        ? `${pt.t} 00:00:00`
+        : firstFiled
+          ? firstFiled.slice(0, 19)
+          : `${new Date(Date.parse(pt.t + "T00:00:00Z") + 45 * 86400_000).toISOString().slice(0, 19).replace("T", " ")}`;
+      out.push({ cik, factor, periodEnd: pt.t, filedAt, value: pt.v });
     }
   }
-  return n;
+  return out;
+}
+
+/** Recompute one company's factor points with one grouped facts query and an
+ * atomic per-CIK replacement, so stale histories cannot survive a rebuild. */
+export async function materializeFactorPoints(cik: number): Promise<number> {
+  const db = getDb();
+  const [f, factDatesRaw]: [any, any] = await Promise.all([
+    computeCompanyFactors(cik),
+    db.execute(sql`SELECT endDate, MIN(filed) m FROM facts WHERE cik=${cik} GROUP BY endDate`),
+  ]);
+  const firstFiled = new Map<string, string>((factDatesRaw[0] ?? []).map((r: any) => [String(r.endDate).slice(0, 10), String(r.m).slice(0, 19)]));
+  const rows = buildFactorPointRows(cik, f.detail, firstFiled);
+  await db.transaction(async (tx) => {
+    await tx.delete(factorPoints).where(eq(factorPoints.cik, cik));
+    for (let i = 0; i < rows.length; i += 500) {
+      await tx.insert(factorPoints).values(rows.slice(i, i + 500));
+    }
+  });
+  return rows.length;
 }
 
 export interface FactorIcRow {
