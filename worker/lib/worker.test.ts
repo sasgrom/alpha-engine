@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } from "./gdelt";
 import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from "./stocktwits";
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
-import { extractScore, extractVerdict, sanitizeWhy, tonePrompt } from "./ollama";
+import { extractScore, extractVerdict, sanitizeWhy, tonePrompt, generate } from "./ollama";
 import { buildDigestPrompt } from "./digest";
 import { isThinContent, isPermanentSecMissing, secGet, SecHttpError, shouldScoreManifestEntry, shouldDownloadExhibit } from "./edgar";
 
@@ -607,5 +607,35 @@ describe("edgar fetch: EX-99 idempotency", () => {
     expect(shouldDownloadExhibit({ form: "8-K", exChecked: false, exFile: null }, false)).toBe(true);
     expect(shouldDownloadExhibit({ form: "8-K", exChecked: false, exFile: "ex99.htm" }, false)).toBe(true);
     expect(shouldDownloadExhibit({ form: "10-K", exChecked: false, exFile: null }, false)).toBe(false);
+  });
+});
+
+
+describe("ollama structured tone output", () => {
+  it("requests score/why schema and a capped response", async () => {
+    const original = globalThis.fetch;
+    let body: any;
+    globalThis.fetch = async (_url, init) => {
+      body = JSON.parse(String(init?.body));
+      return new Response(JSON.stringify({ response: "{\"score\":0.2,\"why\":\"ok\"}", total_duration: 1000000000, eval_count: 1, eval_duration: 1000000000 }), { status: 200 });
+    };
+    try {
+      await generate("test", { jsonMode: true, numPredict: 256 });
+      expect(body.format.type).toBe("object");
+      expect(body.format.required).toEqual(["score", "why"]);
+      expect(body.options.num_predict).toBe(256);
+    } finally {
+      globalThis.fetch = original;
+    }
+  });
+
+  it("caps default tone windows without discarding document text", () => {
+    const text = "x".repeat(100_000);
+    const windows = mdaWindows(text);
+    expect(windows.length).toBeLessThanOrEqual(8);
+    expect(windows.every((w) => w.length <= 16_000)).toBe(true);
+    expect(windows[0].startsWith("x")).toBe(true);
+    expect(windows.at(-1)!.endsWith("x")).toBe(true);
+    expect(windows.at(-1)!.length).toBe(16_000);
   });
 });

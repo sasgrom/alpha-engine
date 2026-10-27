@@ -38,7 +38,7 @@ export interface GenerateResult {
 }
 
 /** Raw generate call (non-streaming). Throws on daemon errors. */
-export async function generate(prompt: string, opts: { model?: string; timeoutMs?: number; numPredict?: number; temperature?: number } = {}): Promise<GenerateResult> {
+export async function generate(prompt: string, opts: { model?: string; timeoutMs?: number; numPredict?: number; temperature?: number; jsonMode?: boolean } = {}): Promise<GenerateResult> {
   const model = opts.model ?? LLM_MODEL;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 120_000);
@@ -52,6 +52,11 @@ export async function generate(prompt: string, opts: { model?: string; timeoutMs
         // Qwen3.x supports a "thinking" mode; disable it so the reply is
         // pure JSON and extractScore never has to dig through chain-of-thought.
         think: false,
+        ...(opts.jsonMode ? { format: {
+          type: "object",
+          properties: { score: { type: "number" }, why: { type: "string" } },
+          required: ["score", "why"],
+        } } : {}),
         options: { temperature: opts.temperature ?? 0, num_predict: opts.numPredict ?? 512, num_ctx: NUM_CTX },
       }),
     });
@@ -138,7 +143,7 @@ export function tonePrompt(text: string): string {
   return `You are a financial sentiment rater. Rate the tone of the text below about the company it mentions, from the perspective of a long-term investor.
 
 Reply with ONLY a JSON object, no other text:
-{"score": <number from -1.0 to 1.0>, "why": "<3-4 short sentences for a human reader: what the company reported or announced, the key numbers/facts, and why it matters to investors>"}
+{"score": <number from -1.0 to 1.0>, "why": "<2 short factual sentences for a human reader, maximum 60 words: what the company reported and why it matters to investors>"}
 -1.0 = very negative, 0 = neutral or mixed, +1.0 = very positive.
 Judge the facts and outlook, not the writing style.
 Rules for "why": start with the fact itself — NEVER begin with "The text", "The filing", "This document"; name concrete figures and events; describe ONLY what the document states — never infer investigations, fraud, or admissions it does not explicitly make.

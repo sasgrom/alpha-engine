@@ -142,7 +142,7 @@ for (const co of universe) {
     let parsed = 0, droppedBoiler = 0;
     for (const w of windows) {
       try {
-        const r = await generate(tonePrompt(w));
+        const r = await generate(tonePrompt(w), { jsonMode: true, numPredict: 256 });
         llm.calls++;
         llm.promptTokens += r.promptEvalCount;
         llm.promptMs += r.promptEvalMs;

@@ -373,7 +373,7 @@ export function isThinContent(text: string): boolean {
  * section in one pass; windows remain only as the guard for texts longer
  * than the prompt cap (rare: >100K chars), evenly spaced as before.
  */
-export function mdaWindows(text: string, windowSize = 100_000, max = 3): string[] {
+export function mdaWindows(text: string, windowSize = 16_000, max = 8): string[] {
   if (text.length <= windowSize) return [text];
   const count = Math.min(max, Math.ceil(text.length / windowSize));
   const out: string[] = [];
