@@ -82,6 +82,9 @@ npx tsx worker/edgar-tone-audit.mts --universe edgar-universe.json --manifest-on
 # Full CPU scan: exact deterministic skips, planned windows and prompt chars
 npx tsx worker/edgar-tone-audit.mts --universe edgar-universe.json
 
+# Repair 8-K/8-K/A EX-99 from existing manifests only (no submissions crawl)
+npx tsx worker/edgar-fetch.mts --universe edgar-universe.json --exhibits-only
+
 # Score with two bounded lanes (default); use 1 only for memory diagnosis
 npx tsx worker/edgar-tone.mts --universe edgar-universe.json --concurrency 2
 ```

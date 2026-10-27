@@ -31,6 +31,7 @@ function assertDiskSpace() {
 }
 import { fetchDoc, fetchFilingDocument, isEightKForm, isPermanentSecMissing, listFilingDocs, listFilings, loadEdgarUniverse, realCacheRoot, shouldDownloadExhibit, type EdgarFiling } from "./lib/edgar";
 import { startProgress } from "./lib/progress";
+import { writeJsonAtomic } from "./lib/json-file";
 
 export interface ManifestEntry extends EdgarFiling {
   docName: string | null;
@@ -61,7 +62,7 @@ export function loadManifest(cik: number): ManifestEntry[] {
 }
 function saveManifest(cik: number, rows: ManifestEntry[]) {
   mkdirSync(cacheDir(cik), { recursive: true });
-  writeFileSync(manifestPath(cik), JSON.stringify(rows, null, 1));
+  writeJsonAtomic(manifestPath(cik), rows, true);
 }
 
 const onlyIdx = process.argv.indexOf("--only");
@@ -74,6 +75,9 @@ const fromTickerIdx = process.argv.indexOf("--from-ticker");
 const fromTicker = fromTickerIdx > -1 ? process.argv[fromTickerIdx + 1]?.toUpperCase() : null;
 // --retry-failed: also retry entries declared dead after MAX_FAILURES
 const retryFailed = process.argv.includes("--retry-failed");
+// --exhibits-only: repair EX-99 from existing manifests without another
+// submissions-API crawl or any primary-document downloads.
+const exhibitsOnly = process.argv.includes("--exhibits-only");
 const universeIdx = process.argv.indexOf("--universe");
 const universeFile = universeIdx > -1 ? process.argv[universeIdx + 1] : "edgar-universe.json";
 
@@ -86,23 +90,28 @@ if (fromTicker) {
 }
 if (only && universe.length === 0) { console.error(`[edgar-fetch] unknown ticker ${only}`); process.exit(1); }
 
-const prog = startProgress("edgar-fetch", `${universe.length} companies${only ? ` (only ${only})` : ""}${from ? `, from ${from}` : ""}, universe=${universeFile}`);
+const prog = startProgress("edgar-fetch", `${universe.length} companies${only ? ` (only ${only})` : ""}${from ? `, from ${from}` : ""}${exhibitsOnly ? ", exhibits-only" : ""}, universe=${universeFile}`);
 const totalCompanies = universe.length;
 let companyIdx = 0;
 
 for (const co of universe) {
   companyIdx++;
-  // one bad CIK (stale snapshot row, delisted entity) must NEVER kill a
-  // 500-company overnight crawl — log and move on (proven by AIG: the GICS
-  // snapshot carried CIK 5271, real is 5272; 404 crashed the whole run)
-  let filingsAll: EdgarFiling[];
-  try { filingsAll = await listFilings(co.cik); }
-  catch (err) { prog.log(`x ${co.ticker} (CIK ${co.cik}): company-level error, SKIPPED — ${String(err).slice(0, 150)}`); continue; }
-  const filings = filingsAll.filter((f) => !from || f.filingDate >= from);
   const manifest = loadManifest(co.cik);
+  if (exhibitsOnly && manifest.length === 0) continue;
+  let filings: EdgarFiling[];
+  if (exhibitsOnly) {
+    filings = manifest;
+  } else {
+    // One bad CIK must never kill the full crawl.
+    let filingsAll: EdgarFiling[];
+    try { filingsAll = await listFilings(co.cik); }
+    catch (err) { prog.log(`x ${co.ticker} (CIK ${co.cik}): company-level error, SKIPPED — ${String(err).slice(0, 150)}`); continue; }
+    filings = filingsAll;
+  }
+  filings = filings.filter((f) => !from || f.filingDate >= from);
   const known = new Map(manifest.map((m) => [m.accessionNo, m]));
   let fresh = 0, fetched = 0, failed = 0, exhibitFetched = 0;
-  prog.stage(`${co.ticker} [${companyIdx}/${totalCompanies}]: ${filings.length} filings (10-K/10-Q/8-K)`);
+  prog.stage(`${co.ticker} [${companyIdx}/${totalCompanies}]: ${filings.length} filings${exhibitsOnly ? " (existing manifests, EX-99 only)" : " (10-K/10-Q/8-K)"}`);
   for (let i = 0; i < filings.length; i++) {
     const f = filings[i];
     let entry = known.get(f.accessionNo);
@@ -112,6 +121,7 @@ for (const co of universe) {
       known.set(f.accessionNo, entry);
       fresh++;
     }
+    if (exhibitsOnly && !entry.fetched) continue;
     // legacy errors (pre-dead-flag runs) get two last chances, not infinity
     if (!entry.fetched && entry.error && entry.failCount === undefined) entry.failCount = 1;
     // 8-K exhibit pass (5c): even when the primary doc is cached, grab the
