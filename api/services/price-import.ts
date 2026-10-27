@@ -103,6 +103,10 @@ export function entryToTicker(entryPath: string, wanted: Set<string>): string | 
   return null;
 }
 
+export function archiveTargets(sourceTicker: string, wanted: Map<string, number>, aliases: Record<string, string[]> = {}): string[] {
+  return [sourceTicker, ...(aliases[sourceTicker] ?? [])].filter((t) => wanted.has(t));
+}
+
 // ---------------------------------------------------------------------------
 // chunk upload (raw HTTP, admin-only — wired in boot.ts)
 // ---------------------------------------------------------------------------
@@ -175,6 +179,12 @@ export interface ImportReport {
   missing: string[];
 }
 
+export interface PriceImportOverride {
+  wanted?: Map<string, number>;
+  /** One archive ticker may map to multiple evidence CIKs (XOM → XOM_PRE). */
+  aliases?: Record<string, string[]>;
+}
+
 type Logger = (level: "info" | "warn" | "error", message: string) => Promise<void>;
 
 /**
@@ -189,19 +199,25 @@ export async function importPricesFromStorage(
   batch: string,
   logger: Logger,
   onProgress?: (matched: number, bars: number, total: number) => Promise<void>,
-  isCancelled?: () => boolean
+  isCancelled?: () => boolean,
+  override: PriceImportOverride = {},
 ): Promise<ImportReport> {
   const db = getDb();
-  // wanted set = union of ALL users' active memberships + SPY benchmark
-  // (4c, D30 — shared accumulation serves everyone; the CRUTCH filter stays:
-  // TODO import everything once storage is unconstrained)
-  const rows = await db
-    .selectDistinct({ cik: userUniverse.cik, ticker: userUniverse.ticker })
-    .from(userUniverse)
-    .where(eq(userUniverse.active, true))
-    .limit(5000);
-  const wanted = new Map<string, number>(rows.map((r) => [r.ticker.toUpperCase(), r.cik]));
-  wanted.set("SPY", 0);
+  // Default: union of active memberships + SPY. Research imports pass an
+  // explicit universe and optional archive-ticker aliases (XOM → XOM_PRE).
+  let wanted: Map<string, number>;
+  if (override.wanted) {
+    wanted = override.wanted;
+  } else {
+    const rows = await db
+      .selectDistinct({ cik: userUniverse.cik, ticker: userUniverse.ticker })
+      .from(userUniverse)
+      .where(eq(userUniverse.active, true))
+      .limit(5000);
+    wanted = new Map<string, number>(rows.map((r) => [r.ticker.toUpperCase(), r.cik]));
+  }
+  if (!wanted.has("SPY")) wanted.set("SPY", 0);
+  const aliases = override.aliases ?? {};
 
   // archive parts, in upload order — listing the prefix doubles as the
   // "did all chunks actually persist" check
@@ -244,23 +260,31 @@ export async function importPricesFromStorage(
   feeder.catch(() => {});
 
   try {
+    const sourceTickers = new Set([...wanted.keys(), ...Object.keys(aliases)]);
     for await (const entry of entries as AsyncIterable<{ path: string; autodrain: () => void } & Readable>) {
       if (isCancelled?.()) throw new Error("cancelled by user");
-      const ticker = entryToTicker(entry.path, new Set(wanted.keys()));
-      if (!ticker) {
+      const sourceTicker = entryToTicker(entry.path, sourceTickers);
+      if (!sourceTicker) {
+        entry.autodrain();
+        continue;
+      }
+      const targets = archiveTargets(sourceTicker, wanted, aliases);
+      if (targets.length === 0) {
         entry.autodrain();
         continue;
       }
       const chunks: Buffer[] = [];
       for await (const chunk of entry) chunks.push(chunk as Buffer);
       const bars = parseMetastockDaily(Buffer.concat(chunks).toString("utf8"));
-      const cik = wanted.get(ticker)!;
-      const written = await upsertBars(cik, ticker, bars, "stooq");
-      report.filesMatched++;
-      report.barsWritten += written;
-      report.tickers.push(ticker);
-      await logger("info", `${ticker} (cik ${cik}): ${bars.length} bars imported from archive`);
-      await onProgress?.(report.filesMatched, report.barsWritten, report.filesWanted);
+      for (const ticker of targets) {
+        const cik = wanted.get(ticker)!;
+        const written = await upsertBars(cik, ticker, bars, "stooq");
+        report.filesMatched++;
+        report.barsWritten += written;
+        report.tickers.push(ticker);
+        await logger("info", `${ticker} (cik ${cik}): ${bars.length} bars imported from archive${ticker === sourceTicker ? "" : ` via ${sourceTicker}`}`);
+        await onProgress?.(report.filesMatched, report.barsWritten, report.filesWanted);
+      }
     }
     await feeder; // surface feeder errors (part fetch failures)
   } catch (err) {

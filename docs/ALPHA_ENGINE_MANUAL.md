@@ -1059,6 +1059,14 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 Два слоя: курируемые 30 фондов (CIK сверены по cik-lookup SEC) + автопостроенный топ-300 по AUM (EDGAR full-text search, ~8 200 филеров). Таблицы `fund_holdings` (DDL 022/023: классы COM/PUT/CALL) и `fund_quarters` (итог ПОЛНОЙ книги — % of fund только от неё, иначе вздутие). Калибровка масштаба value: медиана implied-цены >$5 000 → филинг в долларах, не в тысячах (доказано на Point72; часть книг подаёт не по спеке). OpenFIGI с ключом `OPENFIGI_API_KEY` (25/100 за запрос) + `cusip_map` с до-резолвом тикеров на каждом прогоне (локальный пустой справочник companies — частая причина дыр). `scripts/13f-refresh.mts` v2: пакетные вставки, дисковый кэш XML, seen-quarter идемпотентность; `--totals-only` (добор итогов) и `--rebuild-events` (пересчёт событий из базы без сети). События только для activist/quant/fundamental: new/exit/±30% per cik:class; заметки детерминированные с $, % of fund, % of company, held by N funds. Транспорт `ingest kind=holdings` + `push-local-signals --table fund_holdings` (своя водяная метка). В проде после полного repair и синхронизации: 875 860 позиций, 300 фондов, 371 компания, 3 372 fund_quarters с filingDate, 16 422 события (все с заметками). UI: карточка Institutional на странице компании и «13F sector flows» на Dashboard.
 
+### 4.62 Итерация 5ab: price backfill для research-universe-53
+
+**Метод сохранён.** Как и в Stage 1.7, используется Stooq bulk daily `d_us_txt.zip` из `https://stooq.com/db/h/`: браузерная загрузка через Admin → Prices Import целиком или частями с resume, потоковый unzipper, Metastock daily bars, `source='stooq'` и idempotent upsert. Облачный runtime по-прежнему не должен скачивать Stooq/Yahoo напрямую.
+
+**Research-вариант.** `importPricesFromStorage` теперь принимает optional wanted/aliases override, сохраняя прежнее поведение по умолчанию. `scripts/import-research-prices.mts --batch <uuid>` использует `research-universe-53.json` вместо активного user universe, добавляет SPY и маппит `xom.us.txt` одновременно в XOM (2115436) и XOM_PRE (34088). Это намеренное дублирование evidence для преемственности, не ошибка. RIVN и ENLT идут тем же потоком; отсутствие тикера в архиве выводится как missing, а не маскируется.
+
+**Проверка.** Добавлены unit-тесты alias mapping и обычных targets; полный набор — **295 тестов**. После фактического import нужно пересчитать factor_points и coverage: до него `high52/momentum122` остаются только у 5 компаний.
+
 ### 4.61 Итерация 5aa: canonical series + factor_points для всех 53 CIK
 
 **Зависимости исправлены.** После синхронизации 1 348 866 facts выяснилось, что `computeCompanyFactors` работает не прямо с facts, а требует canonical `series_points`. `build-research-series.mts` строит серию для 53 CIK, `--skip-built` возобновляет только отсутствующие компании. Per-CIK series replacement теперь атомарен: delete+inserts в одной транзакции, сбой не оставляет пустую серию.

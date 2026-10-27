@@ -1,6 +1,6 @@
 // Unit tests for the Stage 1.7 bulk archive import helpers (iteration 3g/3k).
 import { describe, it, expect } from "vitest";
-import { parseMetastockDaily, entryToTicker, partIndexFromKey } from "./price-import";
+import { parseMetastockDaily, entryToTicker, archiveTargets, partIndexFromKey } from "./price-import";
 
 describe("parseMetastockDaily", () => {
   const sample = [
@@ -79,5 +79,18 @@ describe("entryToTicker", () => {
     expect(entryToTicker("data/daily/us/nasdaq stocks/1/zzzz.us.txt", wanted)).toBeNull();
     expect(entryToTicker("data/daily/us/nasdaq stocks/1/aapl.us.csv", wanted)).toBeNull();
     expect(entryToTicker("data/daily/us/readme.txt", wanted)).toBeNull();
+  });
+});
+
+describe("archiveTargets (research universe and entity aliases)", () => {
+  it("maps xom.us.txt to both current XOM and XOM_PRE", () => {
+    const wanted = new Map([["XOM", 2115436], ["XOM_PRE", 34088]]);
+    expect(archiveTargets("XOM", wanted, { XOM: ["XOM_PRE"] })).toEqual(["XOM", "XOM_PRE"]);
+  });
+
+  it("keeps ordinary targets single and filters unknown aliases", () => {
+    const wanted = new Map([["AAPL", 320193]]);
+    expect(archiveTargets("AAPL", wanted, { XOM: ["XOM_PRE"] })).toEqual(["AAPL"]);
+    expect(archiveTargets("XOM", wanted, { XOM: ["XOM_PRE"] })).toEqual([]);
   });
 });

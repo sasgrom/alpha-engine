@@ -104,6 +104,25 @@ filings and at company end, including all-skip companies. `keep_alive=30m`
 prevents model unloads between companies. `--include-skipped` and `--rescore`
 are deliberate repair modes, never defaults for an incremental full run.
 
+## Price backfill for research-universe-53
+
+The original Stage 1.7 method is reused: download Stooq's bulk daily archive
+`d_us_txt.zip` from `https://stooq.com/db/h/`, upload it through Admin → Prices
+Import (whole ZIP or pre-split parts, with resume), then run the research import
+with the returned batch UUID:
+
+```powershell
+npx tsx scripts/import-research-prices.mts --batch <batch-uuid>
+```
+
+Unlike the original five-ticker import, this entrypoint uses
+`research-universe-53.json` rather than active user memberships. It includes SPY,
+imports RIVN/ENLT and maps `xom.us.txt` to both current XOM and XOM_PRE. All bars
+remain split/dividend-adjusted Metastock daily data under `source='stooq'`.
+Existing bars are upserted, never duplicated. The final report names any ticker
+missing from the archive instead of inventing coverage. After a complete import,
+rematerialize factors to add `high52` and `momentum122` across the panel.
+
 ## Research universe: 50 current S&P names + 3 evidence-only CIKs
 
 `research-universe-50.json` contains 50 current S&P tickers: the original 35,
