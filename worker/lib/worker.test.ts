@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } from "./gdelt";
 import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from "./stocktwits";
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
-import { extractScore, extractVerdict, sanitizeWhy, tonePrompt, generate } from "./ollama";
+import { extractScore, extractVerdict, isBoilerplateRationale, sanitizeWhy, tonePrompt, generate } from "./ollama";
 import { buildDigestPrompt } from "./digest";
 import { isThinContent, isPermanentSecMissing, secGet, SecHttpError, shouldScoreManifestEntry, shouldDownloadExhibit } from "./edgar";
 
@@ -45,9 +45,20 @@ describe("ollama: extractScore", () => {
   });
   it("material 8-K items pass even when short; plain covers still gated", () => {
     expect(isThinContent("Item 5.02 Departure of Officers. The CFO resigned effective immediately.")).toBe(false); // 80 chars but material
+    expect(isThinContent("Item 5.02 Departure of Officers. The CFO resigned effective 2026")).toBe(false);
     expect(isThinContent("Item 2.02 Results of Operations. See the press release.")).toBe(false);
     expect(isThinContent("FORM 8-K cover page, registrant address, date of report.".repeat(5))).toBe(true); // ~300 chars, no item
     expect(isThinContent("Item 9.01 Financial Statements and Exhibits. Exhibit index follows.".repeat(2))).toBe(true); // 9.01 is NOT material
+  });
+  it("does not mistake financial rows ending in numbers for a TOC", () => {
+    const rows = Array.from({ length: 30 }, (_, i) => `Revenue for quarter ${i} ended June 30, 2024 increased to 1,234`).join("\n");
+    expect(isThinContent(rows)).toBe(false);
+  });
+  it("drops explicit vacuum rationales without erasing investment substance", () => {
+    expect(isBoilerplateRationale("No substantive content")).toBe(true);
+    expect(isBoilerplateRationale("Routine sworn statements under oath.")).toBe(true);
+    expect(isBoilerplateRationale("Not merely procedural: revenue fell 18% and guidance was cut.")).toBe(false);
+    expect(isBoilerplateRationale("Procedural cover page announces the CFO resigned.")).toBe(false);
   });
   it("tonePrompt asks for the why and caps the input length", () => {
     expect(tonePrompt("q")).toContain('"why"');
@@ -594,6 +605,8 @@ describe("edgar tone: manifest rerun filter", () => {
     expect(shouldScoreManifestEntry({ ...base, error: "no parseable score" }, "2025-01-01", false)).toBe(false);
     expect(shouldScoreManifestEntry({ ...base, scored: true }, null, false)).toBe(false);
     expect(shouldScoreManifestEntry({ ...base, fetched: false }, null, false)).toBe(false);
+    expect(shouldScoreManifestEntry({ ...base, error: "LLM request failed" }, null, false)).toBe(true);
+    expect(shouldScoreManifestEntry({ ...base, error: "cache file unreadable" }, null, false)).toBe(true);
   });
 });
 
@@ -606,6 +619,8 @@ describe("edgar fetch: EX-99 idempotency", () => {
   it("fetches missing exhibits and leaves other forms alone", () => {
     expect(shouldDownloadExhibit({ form: "8-K", exChecked: false, exFile: null }, false)).toBe(true);
     expect(shouldDownloadExhibit({ form: "8-K", exChecked: false, exFile: "ex99.htm" }, false)).toBe(true);
+    expect(shouldDownloadExhibit({ form: "8-K/A", exChecked: false, exFile: "ex99.htm" }, false)).toBe(true);
+    expect(shouldDownloadExhibit({ form: "8-K/A", exChecked: true, exFile: "ex99.htm" }, true)).toBe(false);
     expect(shouldDownloadExhibit({ form: "10-K", exChecked: false, exFile: null }, false)).toBe(false);
   });
 });
@@ -624,6 +639,8 @@ describe("ollama structured tone output", () => {
       expect(body.format.type).toBe("object");
       expect(body.format.required).toEqual(["score", "why"]);
       expect(body.options.num_predict).toBe(256);
+      expect(body.options.num_ctx).toBe(32768);
+      expect(body.keep_alive).toBe("30m");
     } finally {
       globalThis.fetch = original;
     }
@@ -634,8 +651,28 @@ describe("ollama structured tone output", () => {
     const windows = mdaWindows(text);
     expect(windows.length).toBeLessThanOrEqual(8);
     expect(windows.every((w) => w.length <= 16_000)).toBe(true);
-    expect(windows[0].startsWith("x")).toBe(true);
-    expect(windows.at(-1)!.endsWith("x")).toBe(true);
-    expect(windows.at(-1)!.length).toBe(16_000);
+    expect(windows[0]).toBe(text.slice(0, 16_000));
+    expect(windows.at(-1)).toBe(text.slice(90_000));
+    expect(windows.at(-1)!.length).toBe(10_000);
+  });
+
+  it("avoids near-duplicate windows and tiny-overflow double scoring", () => {
+    const tinyOverflow = "x".repeat(16_001);
+    expect(mdaWindows(tinyOverflow)).toEqual([tinyOverflow]);
+    const text = "x".repeat(20_000);
+    const windows = mdaWindows(text);
+    expect(windows).toHaveLength(2);
+    expect(windows[0]).toBe(text.slice(0, 16_000));
+    expect(windows[1]).toBe(text.slice(15_000));
+    expect(windows.reduce((n, w) => n + w.length, 0)).toBe(21_000);
+  });
+
+  it("keeps full-window sampling for texts beyond the coverage cap", () => {
+    const text = "x".repeat(200_000);
+    const windows = mdaWindows(text);
+    expect(windows).toHaveLength(8);
+    expect(windows.every((w) => w.length === 16_000)).toBe(true);
+    expect(windows[0]).toBe(text.slice(0, 16_000));
+    expect(windows.at(-1)).toBe(text.slice(184_000));
   });
 });

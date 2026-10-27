@@ -97,6 +97,10 @@ export function realCacheRoot(cacheRoot: string): string {
 
 const SKIP_ERRORS = /^(thin content|boilerplate-only|no substantive)/;
 
+export function isTerminalToneSkip(error?: string): boolean {
+  return Boolean(error && SKIP_ERRORS.test(error));
+}
+
 /** Single source of truth for tone reruns: thin/boilerplate never re-burns GPU
  * by default; parse failures remain retryable as a real quality signal. */
 export function shouldScoreManifestEntry(
@@ -108,7 +112,7 @@ export function shouldScoreManifestEntry(
   if (!m.fetched || m.scored) return false;
   if (from && m.filingDate < from) return false;
   if (includeSkipped || !m.error) return true;
-  if (SKIP_ERRORS.test(m.error)) return false;
+  if (isTerminalToneSkip(m.error)) return false;
   if (m.error === "no parseable score") {
     // A new model gets a fresh chance; the same model is capped at two attempts.
     if (model && m.llmErrorModel && m.llmErrorModel !== model) return true;
@@ -117,13 +121,17 @@ export function shouldScoreManifestEntry(
   return true;
 }
 
-/** EX-99 is needed only for 8-K with no checked exhibit yet. If the file is
- * already on disk but exChecked was lost in a crash, do not download it again. */
+export function isEightKForm(form: string): boolean {
+  return form.replace("/A", "") === "8-K";
+}
+
+/** EX-99 is needed only for 8-K/8-K/A with no checked exhibit yet. If the file
+ * is already on disk but exChecked was lost in a crash, do not download it again. */
 export function shouldDownloadExhibit(
   m: { form: string; exChecked?: boolean; exFile?: string | null },
   exFileExists: boolean
 ): boolean {
-  return m.form === "8-K" && !m.exChecked && !(m.exFile && exFileExists);
+  return isEightKForm(m.form) && !m.exChecked && !(m.exFile && exFileExists);
 }
 
 // --- submissions API ----------------------------------------------------------
@@ -362,29 +370,56 @@ export function extractScorableText(plain: string, form: string): string {
 /** Material 8-K items stay substantive even in two lines (owner: "a CEO firing
  *  is a signal even at 800 chars") — they pass the gate regardless of length. */
 const SUBSTANTIVE_ITEM_RE = /item\s+(1\.01|1\.02|2\.02|3\.01|4\.01|5\.02|5\.03|5\.07|7\.01|8\.01)\b/i;
+const FINANCIAL_DATA_RE = /[$€£%]|\b\d{1,3}(?:,\d{3})+\b/;
+const SENTENCE_RE = /\b(?:announced|appointed|completed|decreased|effective|entered|filed|furnished|increased|issued|reported|resigned)\b/i;
+
+/** The thin-content gate needs stricter TOC semantics than heading detection.
+ * A substantive sentence or financial table row may also end in 1–4 digits. */
+function isTocGateLine(line: string): boolean {
+  const l = line.replace(/\u00a0/g, " ").trim();
+  if (!isTocLine(l)) return false;
+  if (/\.{4,}/.test(l) || /^\d{1,4}$/.test(l)) return true;
+  if (FINANCIAL_DATA_RE.test(l) || SENTENCE_RE.test(l)) return false;
+  const numericTokens = l.match(/\b\d+(?:\.\d+)?\b/g) ?? [];
+  return numericTokens.length < 4;
+}
 
 export function isThinContent(text: string): boolean {
   const lines = text.split("\n").filter((l) => l.trim());
-  // material item mention counts only OUTSIDE a TOC line ("Item 5.02 .... 7" is a listing, not content)
-  if (lines.some((l) => SUBSTANTIVE_ITEM_RE.test(l) && !isTocLine(l))) return false;
+  // Material item mention counts only outside a real TOC entry.
+  if (lines.some((l) => SUBSTANTIVE_ITEM_RE.test(l) && !isTocGateLine(l))) return false;
   if (text.length < 700) return true; // owner call: 1200 → 700
   if (lines.length === 0) return true;
-  const tocish = lines.slice(0, 80).filter((l) => isTocLine(l)).length;
+  const tocish = lines.slice(0, 80).filter((l) => isTocGateLine(l)).length;
   return tocish / Math.min(lines.length, 80) > 0.5;
 }
 
 /**
- * 5c: whole-section scoring — with NUM_CTX at 32K the model reads the ENTIRE
- * section in one pass; windows remain only as the guard for texts longer
- * than the prompt cap (rare: >100K chars), evenly spaced as before.
+ * NUM_CTX stays 32K; these 16K-char windows are the conservative JSON-quality
+ * guard, not a context reduction. Cover the whole section with at most 1K
+ * overlap instead of repeatedly scoring large duplicate regions. A tiny
+ * overflow rides in one window (the prompt cap is ~104K chars). Only texts
+ * beyond max*windowSize use evenly spaced samples, preserving both ends.
  */
 export function mdaWindows(text: string, windowSize = 16_000, max = 8): string[] {
-  if (text.length <= windowSize) return [text];
-  const count = Math.min(max, Math.ceil(text.length / windowSize));
+  const overlap = Math.min(1000, Math.floor(windowSize / 4));
+  if (text.length <= windowSize + overlap) return [text];
+  const needed = Math.ceil(text.length / windowSize);
+  if (needed > max) {
+    const out: string[] = [];
+    for (let i = 0; i < max; i++) {
+      const start = Math.round((i * (text.length - windowSize)) / Math.max(max - 1, 1));
+      out.push(text.slice(start, start + windowSize));
+    }
+    return out;
+  }
+  if (needed === 1) return [text];
+  const overlapTotal = Math.min((needed - 1) * overlap, needed * windowSize - text.length);
+  const stride = windowSize - overlapTotal / (needed - 1);
   const out: string[] = [];
-  for (let i = 0; i < count; i++) {
-    const start = Math.round((i * (text.length - windowSize)) / Math.max(count - 1, 1));
-    out.push(text.slice(start, start + windowSize));
+  for (let i = 0; i < needed; i++) {
+    const start = Math.round(i * stride);
+    out.push(text.slice(start, i === needed - 1 ? text.length : start + windowSize));
   }
   return out;
 }

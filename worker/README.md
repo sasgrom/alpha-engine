@@ -69,6 +69,36 @@ Auto-detects ArtList (per-day buzz) vs Timeline (per-day tone); gdeltcsv:*
 payloadKeys make reimports free. Note: ArtList tops out at 250 articles per
 window — for heavy tickers use monthly windows for honest volume.
 
+## EDGAR tone: audited full-universe run
+
+Keep `OLLAMA_NUM_CTX=32768`; the scorer does not lower context or the 16K-char
+window guard. Before a long run, use the read-only audit (no Ollama, ingest or
+manifest writes):
+
+```powershell
+# Instant manifest/skip report
+npx tsx worker/edgar-tone-audit.mts --universe edgar-universe.json --manifest-only
+
+# Full CPU scan: exact deterministic skips, planned windows and prompt chars
+npx tsx worker/edgar-tone-audit.mts --universe edgar-universe.json
+
+# Score with two bounded lanes (default); use 1 only for memory diagnosis
+npx tsx worker/edgar-tone.mts --universe edgar-universe.json --concurrency 2
+```
+
+Two lanes keep at most two Ollama requests in flight and remove CPU/disk gaps
+between requests. There are no LLM retries: one transport error ends that
+filing; two consecutive errors atomically checkpoint the manifest/outbox and
+abort the run. `LLM request failed` is retryable next run, not a terminal
+content skip. `thin`, `boilerplate-only` and parse-cap outcomes are separate.
+Per-filing timings and outcomes land in `worker/.runs/edgar-tone-audit.jsonl`;
+invalid model replies remain in `llm-failures.jsonl`.
+
+Manifest/outbox checkpoints are atomic and are written every 20 completed
+filings and at company end, including all-skip companies. `keep_alive=30m`
+prevents model unloads between companies. `--include-skipped` and `--rescore`
+are deliberate repair modes, never defaults for an incremental full run.
+
 ## Options data: snapshots, cache and normalization
 
 Collectors keep raw provider payloads in `worker/cache/options/` and normalized chains in `worker/cache/options-normalized/`. The manifest at `worker/cache/options/manifest.json` records provider, ticker, tradeDate, snapshotId, availability and quality metrics. Every run uses a new timestamped snapshotId by default, so history is never overwritten; rerun a crashed batch with the same `--snapshot-id` to skip completed files.

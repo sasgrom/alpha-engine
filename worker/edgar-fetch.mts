@@ -29,7 +29,7 @@ function assertDiskSpace() {
     // statfs unavailable → don't block the run on a failed check
   }
 }
-import { fetchDoc, fetchFilingDocument, isPermanentSecMissing, listFilingDocs, listFilings, loadEdgarUniverse, realCacheRoot, shouldDownloadExhibit, type EdgarFiling } from "./lib/edgar";
+import { fetchDoc, fetchFilingDocument, isEightKForm, isPermanentSecMissing, listFilingDocs, listFilings, loadEdgarUniverse, realCacheRoot, shouldDownloadExhibit, type EdgarFiling } from "./lib/edgar";
 import { startProgress } from "./lib/progress";
 
 export interface ManifestEntry extends EdgarFiling {
@@ -121,7 +121,7 @@ for (const co of universe) {
     const exPath = path.join(cacheDir(co.cik), `${base}.ex.htm`);
     const needsExhibit = shouldDownloadExhibit(entry, existsSync(exPath));
     if (entry.fetched && !needsExhibit) {
-      if (entry.form === "8-K" && !entry.exChecked && entry.exFile && existsSync(exPath)) entry.exChecked = true;
+      if (isEightKForm(entry.form) && !entry.exChecked && entry.exFile && existsSync(exPath)) entry.exChecked = true;
       continue;
     }
     if (entry.fetched && needsExhibit) {

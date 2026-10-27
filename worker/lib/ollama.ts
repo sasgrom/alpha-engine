@@ -38,7 +38,7 @@ export interface GenerateResult {
 }
 
 /** Raw generate call (non-streaming). Throws on daemon errors. */
-export async function generate(prompt: string, opts: { model?: string; timeoutMs?: number; numPredict?: number; temperature?: number; jsonMode?: boolean } = {}): Promise<GenerateResult> {
+export async function generate(prompt: string, opts: { model?: string; timeoutMs?: number; numPredict?: number; temperature?: number; jsonMode?: boolean; keepAlive?: string | number } = {}): Promise<GenerateResult> {
   const model = opts.model ?? LLM_MODEL;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 120_000);
@@ -49,6 +49,7 @@ export async function generate(prompt: string, opts: { model?: string; timeoutMs
       signal: ctrl.signal,
       body: JSON.stringify({
         model, prompt, stream: false,
+        keep_alive: opts.keepAlive ?? process.env.OLLAMA_KEEP_ALIVE ?? "30m",
         // Qwen3.x supports a "thinking" mode; disable it so the reply is
         // pure JSON and extractScore never has to dig through chain-of-thought.
         think: false,
@@ -105,6 +106,19 @@ export function sanitizeWhy(why: string): string {
  * and as UI content for the signals stream.
  */
 export interface Verdict { score: number; why: string | null }
+
+const HARD_VACUUM_RE = /no substantive|zero substantive|no financial (data|results)|no operational (updates?|data)|empty (procedural )?document|cannot assess|can't assess|rather than substantive|only (a )?(table of contents|administrative|xbrl|cover)|without (including|containing) (the )?(actual|key|financial)|does not (include|contain) (the )?(actual|key|financial)/i;
+const VACUUM_CONTEXT_RE = /procedural|sworn statements?|under oath|sarbanes|compliance (filing|certification)|cover page|boilerplate|standard legal disclaimers/i;
+const INVESTMENT_SUBSTANCE_RE = /\b(?:acquisition|agreement|backlog|bankruptcy|buyback|cash flow|ceo|cfo|debt|default|director|dividend|earnings|guidance|layoffs?|loss|margin|merger|officer|orders|production|profit|repurchase|resign(?:ed|ation)|revenue|sales|shipments)\b/i;
+
+/** Drop only explicit vacuum classifications. A mere word like "procedural"
+ * must not erase a window that also contains an investment-relevant event. */
+export function isBoilerplateRationale(why: string): boolean {
+  const s = why.trim();
+  if (!s) return false;
+  if (HARD_VACUUM_RE.test(s)) return true;
+  return VACUUM_CONTEXT_RE.test(s) && !INVESTMENT_SUBSTANCE_RE.test(s);
+}
 
 /**
  * Extract a verdict from the model's reply. The prompt demands strict JSON
