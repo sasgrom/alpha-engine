@@ -104,6 +104,29 @@ filings and at company end, including all-skip companies. `keep_alive=30m`
 prevents model unloads between companies. `--include-skipped` and `--rescore`
 are deliberate repair modes, never defaults for an incremental full run.
 
+## Research universe: 50 current S&P names + 3 evidence-only CIKs
+
+`research-universe-50.json` contains 50 current S&P tickers: the original 35,
+12 existing index names and AIG, COP, LIN. `research-universe-53.json` adds
+`XOM_PRE` (predecessor evidence) plus off-index legacy RIVN and ENLT. Keeping
+these files separate prevents off-index names from contaminating S&P metrics.
+
+For the three new names only:
+
+```powershell
+npx tsx worker/facts-fetch.mts --universe facts-universe-expansion-3.json
+```
+
+Then verify the complete local 53-CIK set and push after review/publication:
+
+```powershell
+npx tsx scripts/push-local-facts.mts --universe research-universe-53.json --dry
+npx tsx scripts/push-local-facts.mts --universe research-universe-53.json
+```
+
+Use `research-universe-50.json` for current-S&P factor/evaluation panels and
+`research-universe-53.json` for complete-data ingestion only.
+
 ## Companyfacts fundamentals: local-first snapshots
 
 Restart the local dev server after pulling so it registers the `factsSnapshot`

@@ -423,6 +423,18 @@ describe("edgar universe", () => {
     expect(u.find((c) => c.ticker === "FSLR")?.cik).toBe(1274494);
     expect(u.find((c) => c.ticker === "SMCI")?.cik).toBe(1375365);
   });
+  it("separates 50 current S&P tickers from predecessor and off-index legacy", () => {
+    const current = loadEdgarUniverse("research-universe-50.json");
+    const all = loadEdgarUniverse("research-universe-53.json");
+    expect(current).toHaveLength(50);
+    expect(all).toHaveLength(53);
+    expect(new Set(all.map((c) => c.cik)).size).toBe(53);
+    expect(current.map((c) => c.ticker)).toEqual(expect.arrayContaining(["AIG", "COP", "LIN"]));
+    expect(current.some((c) => ["RIVN", "ENLT", "XOM_PRE"].includes(c.ticker))).toBe(false);
+    expect(all.find((c) => c.ticker === "XOM_PRE")?.cik).toBe(34088);
+    expect(all.find((c) => c.ticker === "RIVN")?.cik).toBe(1874178);
+    expect(all.find((c) => c.ticker === "ENLT")?.cik).toBe(1922641);
+  });
 });
 
 // ---------------------------------------------------------------------------
