@@ -104,6 +104,41 @@ filings and at company end, including all-skip companies. `keep_alive=30m`
 prevents model unloads between companies. `--include-skipped` and `--rescore`
 are deliberate repair modes, never defaults for an incremental full run.
 
+## Strata 125B A/B: identical 100-document EDGAR benchmark
+
+Use the current Terminal release rather than the old source-only `START-HERE.bat`.
+Check the plan before downloading tens of GB; the selected pack must fit actual
+RAM, VRAM, disk and backend support:
+
+```powershell
+irm https://github.com/Niko1221/Strata/releases/latest/download/install.ps1 | iex
+# Open a NEW terminal, then inspect without changing the model:
+strata launch --family qwen --model IQ2_XS --context 32k --plan --output json
+# Only after the plan fits:
+strata launch --family qwen --model IQ2_XS --context 32k --yes --no-tui
+strata launch --status
+```
+
+The benchmark reuses prepared windows from the EDGAR cache. It never writes
+signals, manifests or outboxes, and never promotes Strata to production. Both
+engines run sequentially at concurrency 1 with identical prompts, temperature 0,
+256 output tokens and reasoning disabled. Warmups are excluded.
+
+```powershell
+npx tsx worker/edgar-tone-ab.mts --only AIG --limit 100 --engines ollama,strata --run-id aig-100-strata-v1
+```
+
+`STRATA_URL` defaults to `http://127.0.0.1:8080`; set `STRATA_MODEL` when more
+than one model is served and `STRATA_API_KEY` only if configured. Repeating the
+same command resumes completed engine/window keys. Use a new `--run-id` for a
+fresh independent repetition.
+
+Reports in `worker/.runs/edgar-tone-ab-<run-id>.*` include prompt input/cache/
+fresh-read/generated tokens, prefill/decode/effective tok/s, wall time, parse
+and error rates, score MAE/RMSE/Pearson/direction agreement, and the 20 largest
+score/why divergences with SEC links. Agreement is not absolute correctness;
+manual source review remains the quality gate.
+
 ## Options data: snapshots, cache and normalization
 
 Collectors keep raw provider payloads in `worker/cache/options/` and normalized chains in `worker/cache/options-normalized/`. The manifest at `worker/cache/options/manifest.json` records provider, ticker, tradeDate, snapshotId, availability and quality metrics. Every run uses a new timestamped snapshotId by default, so history is never overwritten; rerun a crashed batch with the same `--snapshot-id` to skip completed files.
