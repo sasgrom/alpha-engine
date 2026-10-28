@@ -299,6 +299,23 @@ validation from -40.6% to +25.1%, but final-holdout return falls from +84.5% to
 a universally profitable strategy. These remain synthetic sector-relative returns;
 next gate is independent-universe and macro-regime validation, not production.
 
+## Independent-universe and macro-regime results
+
+Deterministic odd/even CIK universes and leave-one-sector-out checks are mostly
+negative or near zero: AssetGrowth is not universal. Final holdout vol-target is
++0.2% in the odd universe and -1.5% in even; only Consumer Discretionary is
+positive (+2.5%), while Health Care (-3.1%), Information Technology (-1.3%) and
+Financials (-0.5%) are negative. Sector concentration remains a material risk.
+
+Pre-registered macro thresholds show a clear regime split. Vol-target mean return
+is positive with CI in risk-on regimes: VIX <20 (+3.45% [+1.96%,+4.85%]), normal
+yield curve (+2.90% [+1.51%,+4.27%]), tight HY credit (+4.24% [+1.29%,+7.64%]) and
+SPY above 200DMA (+3.35% [+1.90%,+4.75%]). VIX mid/high, inversion and SPY below
+200DMA include zero. HY mid has only one observation and is not interpreted.
+Volatility targeting reduces drawdown but does not rescue stress periods. Do not
+introduce a regime gate based on the same sample: that would be data snooping.
+A new independent universe/period is required before any regime-filtered strategy.
+
 ## Options data: snapshots, cache and normalization
 
 Collectors keep raw provider payloads in `worker/cache/options/` and normalized chains in `worker/cache/options-normalized/`. The manifest at `worker/cache/options/manifest.json` records provider, ticker, tradeDate, snapshotId, availability and quality metrics. Every run uses a new timestamped snapshotId by default, so history is never overwritten; rerun a crashed batch with the same `--snapshot-id` to skip completed files.
