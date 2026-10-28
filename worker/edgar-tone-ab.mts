@@ -99,6 +99,12 @@ const sessions = readJsonl<EngineSession>(sessionsPath);
 const completed = new Set(results.filter((r) => !r.error).map((r) => `${r.engine}|${r.accessionNo}|${r.windowIndex}`));
 const modelByEngine: Record<Engine, string> = { ollama: LLM_MODEL, strata: "" };
 
+if (process.argv.includes("--report-only")) {
+  writeReports();
+  console.log(`[tone-ab] report-only: regenerated from saved results without model calls`);
+  process.exit(0);
+}
+
 if (engines.includes("ollama")) {
   const st = await ollamaStatus();
   if (!st.ok || !st.models.some((m) => m === LLM_MODEL || m.startsWith(`${LLM_MODEL.split(":")[0]}:`))) {

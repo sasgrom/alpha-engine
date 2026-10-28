@@ -1062,6 +1062,12 @@ Local script `scripts/daily-digest.mts` (home, scheduled): reads the last 36h of
 
 Two layers: curated 30 funds (CIKs verified against the SEC cik-lookup) + an auto-built top-300 by AUM (EDGAR full-text search, ~8,200 filers). Tables `fund_holdings` (DDL 022/023: COM/PUT/CALL classes) and `fund_quarters` (FULL book total — % of fund must use it, else it inflates). Value scale autocalibration: median implied price >$5,000 ⇒ the filing reported dollars, not thousands (proven on Point72; other books violate the spec the same way). OpenFIGI with optional `OPENFIGI_API_KEY` (25/100 per request) + `cusip_map` with per-run ticker re-resolution (an empty local companies registry once cost a rebuild). `scripts/13f-refresh.mts` v2: batched inserts, disk-cached XML, idempotent seen-quarter guard; `--totals-only` (book-total backfill) and `--rebuild-events` (DB-only event regeneration). Events only for activist/quant/fundamental: new/exit/±30% per cik:class; deterministic notes with $, % of fund, % of company, held by N funds. Transport `ingest kind=holdings` + `push-local-signals --table fund_holdings` (own watermark). Prod after the full repair and synchronization: 875,860 positions, 300 funds, 371 companies, 3,372 fund_quarters with filingDate, and 16,422 events (all with notes). UI: Institutional card on the company page and "13F sector flows" on the Dashboard.
 
+### 4.70 Iteration 5aj: report-only regeneration without model calls
+
+Added `--report-only` to `worker/edgar-tone-ab.mts`. It reads saved plan/results/sessions and rebuilds the summary/Markdown with no Ollama/Strata preflight, no warmup and zero inference requests. Useful for recovering a deleted report or changing its presentation. It works with both Ollama and Strata stopped.
+
+Command: `npx tsx worker/edgar-tone-ab.mts --only AIG --limit 100 --report-only --run-id aig-100-qwen36-q4-v1`. A smoke test with both mock servers stopped confirms both engine metrics and matched scores persist with an unchanged manifest. Full suite remains **306 tests**.
+
 ### 4.69 Iteration 5ai: A/B report continuation preserves both engine summaries
 
 **Defect.** The first real `aig-100-qwen36-q4-v1.report.md` contained 37 matched documents but zero Strata metrics/model/wall time/tokens. The summary only included engines from the current process. A later `--engines ollama` run therefore replaced valid historical Strata metrics with zeros.

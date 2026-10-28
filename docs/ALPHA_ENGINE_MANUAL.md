@@ -1059,6 +1059,12 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 Два слоя: курируемые 30 фондов (CIK сверены по cik-lookup SEC) + автопостроенный топ-300 по AUM (EDGAR full-text search, ~8 200 филеров). Таблицы `fund_holdings` (DDL 022/023: классы COM/PUT/CALL) и `fund_quarters` (итог ПОЛНОЙ книги — % of fund только от неё, иначе вздутие). Калибровка масштаба value: медиана implied-цены >$5 000 → филинг в долларах, не в тысячах (доказано на Point72; часть книг подаёт не по спеке). OpenFIGI с ключом `OPENFIGI_API_KEY` (25/100 за запрос) + `cusip_map` с до-резолвом тикеров на каждом прогоне (локальный пустой справочник companies — частая причина дыр). `scripts/13f-refresh.mts` v2: пакетные вставки, дисковый кэш XML, seen-quarter идемпотентность; `--totals-only` (добор итогов) и `--rebuild-events` (пересчёт событий из базы без сети). События только для activist/quant/fundamental: new/exit/±30% per cik:class; заметки детерминированные с $, % of fund, % of company, held by N funds. Транспорт `ingest kind=holdings` + `push-local-signals --table fund_holdings` (своя водяная метка). В проде после полного repair и синхронизации: 875 860 позиций, 300 фондов, 371 компания, 3 372 fund_quarters с filingDate, 16 422 события (все с заметками). UI: карточка Institutional на странице компании и «13F sector flows» на Dashboard.
 
+### 4.70 Итерация 5aj: report-only регенерация без модельных вызовов
+
+Добавлен `--report-only` в `worker/edgar-tone-ab.mts`. Режим читает сохранённые plan/results/sessions и пересобирает summary/Markdown без preflight Ollama/Strata, без warmup и без единого inference-запроса. Подходит для восстановления удалённого отчёта или смены его форматирования. Работает даже с выключенными Ollama и Strata.
+
+Команда: `npx tsx worker/edgar-tone-ab.mts --only AIG --limit 100 --report-only --run-id aig-100-qwen36-q4-v1`. Smoke после полной остановки обоих mock-серверов подтверждает, что обе engine-метрики и matched scores сохраняются, manifest неизменен. Полный набор остаётся **306 тестов**.
+
 ### 4.69 Итерация 5ai: A/B report continuation — сохранение метрик обоих движков
 
 **Дефект.** Первый реальный `aig-100-qwen36-q4-v1.report.md` содержал 37 matched documents, но Strata metrics/model/wall time/tokens были нулями. Причина: summary собирался только для engines текущего запуска. При последующем `--engines ollama` Strata-результаты уже были в JSONL/sessions, но отчёт подставлял нули.

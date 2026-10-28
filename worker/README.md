@@ -270,7 +270,9 @@ Report continuation fix: running `--engines ollama` after a completed Strata-onl
 run now retains both engine summaries from JSONL/sessions. Model ID falls back to
 the latest result, and wall time falls back to per-request durations if a session
 file is missing. Repeating the same continuation command regenerates the report
-without re-scoring completed windows.
+without re-scoring completed windows. With both servers stopped, use
+`--report-only` instead: it rebuilds the report from saved plan/results/sessions
+with no preflight, warmup or model calls.
 
 ## Sector-neutral residuals and economic viability
 
