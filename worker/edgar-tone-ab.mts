@@ -5,7 +5,7 @@ import { createHash } from "node:crypto";
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { loadEdgarUniverse } from "./lib/edgar";
-import { extractVerdict, generate, isBoilerplateRationale, LLM_MODEL, status as ollamaStatus, tonePrompt, tonePromptV2, tonePromptV3 } from "./lib/ollama";
+import { extractVerdict, generate, isBoilerplateRationale, LLM_MODEL, status as ollamaStatus, tonePrompt, tonePromptV2, tonePromptV3, tonePromptV4 } from "./lib/ollama";
 import { generateStrata, strataStatus, type StrataGenerateResult } from "./lib/strata";
 import { prepareToneFiling, THIN_SKIP } from "./lib/tone-prep";
 import { compareScores, evenSample, REPORT_ENGINES, type AbPlanItem } from "./lib/tone-ab";
@@ -25,7 +25,7 @@ interface Normalized {
 interface WindowResult extends Normalized {
   runId: string; engine: Engine; ticker: string; accessionNo: string; form: string;
   windowIndex: number; promptChars: number; promptSha256: string; ts: string;
-  promptVersion?: "v1" | "v2" | "v3";
+  promptVersion?: "v1" | "v2" | "v3" | "v4";
 }
 interface EngineSession { engine: Engine; model: string; startedAt: string; wallMs: number; stopped: boolean }
 
@@ -42,7 +42,7 @@ const runId = arg("--run-id") ?? `${ticker.toLowerCase()}-${limit}-v1`;
 if (!/^[\w.-]+$/.test(runId)) { console.error("[tone-ab] unsafe --run-id"); process.exit(1); }
 const promptVersion = (() => {
   const v = arg("--prompt-version");
-  if (v === "v2" || v === "v3") return v;
+  if (v === "v2" || v === "v3" || v === "v4") return v;
   return "v1" as const;
 })();
 const engines = (arg("--engines") ?? "ollama,strata").split(",").map((x) => x.trim()) as Engine[];
@@ -175,7 +175,7 @@ for (const engine of engines) {
       const key = `${engine}|${item.accessionNo}|${windowIndex}`;
       if (completed.has(key)) continue;
       const w = item.windows[windowIndex];
-      const prompt = promptVersion === "v3" ? tonePromptV3(w, { ticker, form: item.form }) : promptVersion === "v2" ? tonePromptV2(w, { ticker, form: item.form }) : tonePrompt(w);
+      const prompt = promptVersion === "v4" ? tonePromptV4(w, { ticker, form: item.form }) : promptVersion === "v3" ? tonePromptV3(w, { ticker, form: item.form }) : promptVersion === "v2" ? tonePromptV2(w, { ticker, form: item.form }) : tonePrompt(w);
       const r = await request(engine, prompt);
       const row: WindowResult = {
         runId, engine, ticker, accessionNo: item.accessionNo, form: item.form,
@@ -252,8 +252,8 @@ function engineSummary(engine: Engine) {
 
 function comparisonData() {
   const promptCompare = process.argv.includes("--compare-prompts");
-  const baseVersion = arg("--base-version") === "v2" ? "v2" : "v1";
-  const candidateVersion = arg("--candidate-version") === "v3" ? "v3" : "v2";
+  const baseVersion = ["v1", "v2", "v3"].includes(arg("--base-version") ?? "") ? arg("--base-version") as "v1" | "v2" | "v3" : "v1";
+  const candidateVersion = ["v2", "v3", "v4"].includes(arg("--candidate-version") ?? "") ? arg("--candidate-version") as "v2" | "v3" | "v4" : "v2";
   const pairs: { a: number; b: number }[] = [];
   const divergences: any[] = [];
   for (const item of plan.items) {

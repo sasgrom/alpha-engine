@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } from "./gdelt";
 import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from "./stocktwits";
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
-import { extractScore, extractVerdict, isBoilerplateRationale, sanitizeWhy, tonePrompt, tonePromptV2, tonePromptV3, generate } from "./ollama";
+import { extractScore, extractVerdict, isBoilerplateRationale, sanitizeWhy, tonePrompt, tonePromptV2, tonePromptV3, tonePromptV4, generate } from "./ollama";
 import { buildDigestPrompt } from "./digest";
 import { factsToRows, isThinContent, isPermanentSecMissing, secGet, SecHttpError, shouldScoreManifestEntry, shouldDownloadExhibit } from "./edgar";
 
@@ -80,6 +80,13 @@ describe("ollama: extractScore", () => {
     expect(p).toContain("dominant deterioration in core operations");
     expect(p).toContain("Higher acquisition consideration is a direct benefit");
     expect(p).toContain("Historical events must not dominate current operating results");
+  });
+  it("tonePromptV4 evaluates full-section net effect and prevents over-scoring", () => {
+    const p = tonePromptV4("x".repeat(100), { ticker: "AIG", form: "8-K" });
+    expect(p).toContain("NET investor effect over the full section");
+    expect(p).toContain("Turnarounds, restructurings and asset sales require separate treatment");
+    expect(p).toContain("Acquisition consideration and other direct shareholder benefits must not be erased");
+    expect(p).toContain("Definitions, glossary-only content, generic risk-factor boilerplate and procedural text have no investment signal");
   });
 });
 
