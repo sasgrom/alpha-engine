@@ -301,6 +301,17 @@ boilerplate. Results carry promptVersion, so `--compare-prompts` evaluates any
 v1/v2/v3/v4 pair on identical prepared windows. Use `--base-version` and
 `--candidate-version` to choose.
 
+## v1 EDGAR tone IC (production)
+
+Run `npx tsx scripts/tone-ic.mts` (optionally `--only AIG`). It uses actual
+filing eventTs, per-company quarter means, 63/126-session excess forward returns
+versus SPY and 2,000 circular 4-quarter block bootstraps.
+
+Result: 63d weighted Spearman +0.018 [-0.013,+0.048] (no robust signal), 126d
++0.077 [+0.050,+0.105] with 61.5% positive quarters. This supports v1 as a slow
+narrative factor, not a short-term timing signal. Current 2026 YTD is +0.162 at
+126d, but only 4 quarters, so it is not enough for a regime claim.
+
 ## Sector-neutral residuals and economic viability
 
 `neutralizeBySector` subtracts both the sector-median factor and the sector-median

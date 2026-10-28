@@ -1059,6 +1059,14 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 Два слоя: курируемые 30 фондов (CIK сверены по cik-lookup SEC) + автопостроенный топ-300 по AUM (EDGAR full-text search, ~8 200 филеров). Таблицы `fund_holdings` (DDL 022/023: классы COM/PUT/CALL) и `fund_quarters` (итог ПОЛНОЙ книги — % of fund только от неё, иначе вздутие). Калибровка масштаба value: медиана implied-цены >$5 000 → филинг в долларах, не в тысячах (доказано на Point72; часть книг подаёт не по спеке). OpenFIGI с ключом `OPENFIGI_API_KEY` (25/100 за запрос) + `cusip_map` с до-резолвом тикеров на каждом прогоне (локальный пустой справочник companies — частая причина дыр). `scripts/13f-refresh.mts` v2: пакетные вставки, дисковый кэш XML, seen-quarter идемпотентность; `--totals-only` (добор итогов) и `--rebuild-events` (пересчёт событий из базы без сети). События только для activist/quant/fundamental: new/exit/±30% per cik:class; заметки детерминированные с $, % of fund, % of company, held by N funds. Транспорт `ingest kind=holdings` + `push-local-signals --table fund_holdings` (своя водяная метка). В проде после полного repair и синхронизации: 875 860 позиций, 300 фондов, 371 компания, 3 372 fund_quarters с filingDate, 16 422 события (все с заметками). UI: карточка Institutional на странице компании и «13F sector flows» на Dashboard.
 
+### 4.74 Итерация 5an: v1 EDGAR tone IC подтверждает среднесрочный narrative
+
+**Метод.** `scripts/tone-ic.mts` использует production v1 signals (`source='edgar'`, `signalType='tone'`, score IS NOT NULL), реальный eventTs каждого filing, среднее tone по компании/кварталу, 63/126-session excess forward returns против SPY и 2 000 circular 4-quarter block bootstrap. Дополнительный `--only AIG` ограничивает исследование одной компанией. Это backfill research-mode, не lookahead через ingestedAt.
+
+**Результат.** 63d weighted Spearman **+0.018 [−0.013,+0.048]** — статистически ненадёжно. 126d **+0.077 [+0.050,+0.105]**, positive quarters 61.5% — есть умеренный положительный сигнал с CI выше нуля. 2026 YTD 126d +0.162, но только 4 квартала, поэтому режимное заключение не делаем.
+
+**Решение.** Оставляем v1 в production и не делаем v5 просто ради новой версии. Использовать tone как медленный narrative/factor, а не как short-term timing. Полный набор — **309 тестов**.
+
 ### 4.73 Итерация 5am: prompt v4 — net investor effect и дисциплина покрытия
 
 **V4.** `tonePromptV4` требует оценивать NET investor effect over the full section, а не выбирать отдельные негативные абзацы. Добавляет turnaround/restructuring/asset sales: durable improvement/risk reduction отдельно от remaining legacy exposure. Acquisition consideration и strategic control/earnings/fit нельзя обнулять процедурной формой. Buybacks/dividends учитываются только при sustainable cash generation. Historical events не доминируют над текущими результатами без ongoing liability.

@@ -1062,6 +1062,14 @@ Local script `scripts/daily-digest.mts` (home, scheduled): reads the last 36h of
 
 Two layers: curated 30 funds (CIKs verified against the SEC cik-lookup) + an auto-built top-300 by AUM (EDGAR full-text search, ~8,200 filers). Tables `fund_holdings` (DDL 022/023: COM/PUT/CALL classes) and `fund_quarters` (FULL book total — % of fund must use it, else it inflates). Value scale autocalibration: median implied price >$5,000 ⇒ the filing reported dollars, not thousands (proven on Point72; other books violate the spec the same way). OpenFIGI with optional `OPENFIGI_API_KEY` (25/100 per request) + `cusip_map` with per-run ticker re-resolution (an empty local companies registry once cost a rebuild). `scripts/13f-refresh.mts` v2: batched inserts, disk-cached XML, idempotent seen-quarter guard; `--totals-only` (book-total backfill) and `--rebuild-events` (DB-only event regeneration). Events only for activist/quant/fundamental: new/exit/±30% per cik:class; deterministic notes with $, % of fund, % of company, held by N funds. Transport `ingest kind=holdings` + `push-local-signals --table fund_holdings` (own watermark). Prod after the full repair and synchronization: 875,860 positions, 300 funds, 371 companies, 3,372 fund_quarters with filingDate, and 16,422 events (all with notes). UI: Institutional card on the company page and "13F sector flows" on the Dashboard.
 
+### 4.74 Iteration 5an: v1 EDGAR tone IC confirms a medium-term narrative signal
+
+**Method.** `scripts/tone-ic.mts` uses production v1 signals (`source='edgar'`, `signalType='tone'`, non-null score), each filing's actual eventTs, per-company quarter means, 63/126-session excess forward returns versus SPY and 2,000 circular 4-quarter block bootstraps. Optional `--only AIG` limits the analysis to one company. This is backfill research mode and does not rely on ingestedAt.
+
+**Result.** 63d weighted Spearman **+0.018 [-0.013,+0.048]** — not statistically robust. 126d **+0.077 [+0.050,+0.105]**, with 61.5% positive quarters, shows a modest positive signal with CI above zero. 2026 YTD at 126d is +0.162, but only 4 quarters, so no regime claim is made.
+
+**Decision.** Keep v1 in production and do not create v5 merely for another iteration. Use tone as a slow narrative factor, not a short-term timing signal. Full suite: **309 tests**.
+
 ### 4.73 Iteration 5am: prompt v4 net investor effect and coverage discipline
 
 **V4.** `tonePromptV4` requires evaluating the NET investor effect over the full section rather than isolated negative paragraphs. It adds turnaround/restructuring/asset-sale semantics: durable improvement/risk reduction is separated from remaining legacy exposure. Acquisition consideration and strategic control/earnings/fit cannot be erased by procedural presentation. Buybacks/dividends count only with sustainable cash generation. Historical events cannot dominate current results without an ongoing liability.
