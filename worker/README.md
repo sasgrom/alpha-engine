@@ -127,6 +127,17 @@ Completed baseline (2026-10-27): all 53 CIKs + SPY have daily bars through
 2026-10-26 (447,282 rows), with zero missing tickers. `factor_points` was rebuilt
 to 15,312 rows; `high52` and `momentum122` now cover all 53 CIKs.
 
+For a home/local DB without storage provisioning, use the direct-file variant
+instead of a storage batch (no credentials required):
+
+```powershell
+npx tsx scripts/import-research-prices-file.mts --file D:\path\to\53tickers.zip
+npx tsx scripts/import-research-prices-file.mts --file D:\path\to\cop_spy.zip --tickers COP
+```
+
+It reads the ZIP directly from disk, preserves the same research universe, XOM
+predecessor alias and stooq upserts.
+
 ## Factor IC baseline (50 current S&P, excess return over SPY)
 
 Cross-sectional Spearman IC uses 63/126-session excess forward returns and a
