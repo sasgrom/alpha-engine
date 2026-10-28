@@ -274,6 +274,17 @@ without re-scoring completed windows. With both servers stopped, use
 `--report-only` instead: it rebuilds the report from saved plan/results/sessions
 with no preflight, warmup or model calls.
 
+## Prompt v2 A/B
+
+```powershell
+npx tsx worker/edgar-tone-ab.mts --only AIG --limit 100 --engines ollama --prompt-version v2 --run-id aig-100-ollama-prompt-v2
+npx tsx worker/edgar-tone-ab.mts --only AIG --limit 100 --report-only --compare-prompts
+```
+
+`--prompt-version v2` adds ticker/form context, materiality anchors, anti-hallucination
+rules and the capital-return guard. Production keeps v1. Results carry promptVersion,
+so `--compare-prompts` evaluates Ollama v1 vs v2 on identical prepared windows.
+
 ## Sector-neutral residuals and economic viability
 
 `neutralizeBySector` subtracts both the sector-median factor and the sector-median

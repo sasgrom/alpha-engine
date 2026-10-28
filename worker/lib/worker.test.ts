@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } from "./gdelt";
 import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from "./stocktwits";
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
-import { extractScore, extractVerdict, isBoilerplateRationale, sanitizeWhy, tonePrompt, generate } from "./ollama";
+import { extractScore, extractVerdict, isBoilerplateRationale, sanitizeWhy, tonePrompt, tonePromptV2, generate } from "./ollama";
 import { buildDigestPrompt } from "./digest";
 import { factsToRows, isThinContent, isPermanentSecMissing, secGet, SecHttpError, shouldScoreManifestEntry, shouldDownloadExhibit } from "./edgar";
 
@@ -65,6 +65,14 @@ describe("ollama: extractScore", () => {
     expect(tonePrompt("x".repeat(200_000)).length).toBeLessThan(108_000); // 80% of num_ctx 32768 ≈ 104k chars
     expect(tonePrompt("x".repeat(10_000)).length).toBeGreaterThan(10_000); // mid-size texts pass through whole
     expect(tonePrompt("test")).toContain('"score"');
+  });
+  it("tonePromptV2 includes company/form context and anti-hallucination rules", () => {
+    const p = tonePromptV2("x".repeat(100), { ticker: "AIG", form: "8-K" });
+    expect(p).toContain("Company ticker: AIG");
+    expect(p).toContain("Filing form: 8-K");
+    expect(p).toContain("Dividends and buybacks do not offset");
+    expect(p).toContain("Never infer fines, fraud, investigations");
+    expect(p).toContain("no substantive content");
   });
 });
 

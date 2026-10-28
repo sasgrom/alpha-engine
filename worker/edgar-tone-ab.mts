@@ -5,7 +5,7 @@ import { createHash } from "node:crypto";
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { loadEdgarUniverse } from "./lib/edgar";
-import { extractVerdict, generate, isBoilerplateRationale, LLM_MODEL, status as ollamaStatus, tonePrompt } from "./lib/ollama";
+import { extractVerdict, generate, isBoilerplateRationale, LLM_MODEL, status as ollamaStatus, tonePrompt, tonePromptV2 } from "./lib/ollama";
 import { generateStrata, strataStatus, type StrataGenerateResult } from "./lib/strata";
 import { prepareToneFiling, THIN_SKIP } from "./lib/tone-prep";
 import { compareScores, evenSample, REPORT_ENGINES, type AbPlanItem } from "./lib/tone-ab";
@@ -25,6 +25,7 @@ interface Normalized {
 interface WindowResult extends Normalized {
   runId: string; engine: Engine; ticker: string; accessionNo: string; form: string;
   windowIndex: number; promptChars: number; promptSha256: string; ts: string;
+  promptVersion?: "v1" | "v2";
 }
 interface EngineSession { engine: Engine; model: string; startedAt: string; wallMs: number; stopped: boolean }
 
@@ -39,6 +40,7 @@ if (!Number.isInteger(limit) || limit < 1 || limit > 500) { console.error("[tone
 const from = arg("--from");
 const runId = arg("--run-id") ?? `${ticker.toLowerCase()}-${limit}-v1`;
 if (!/^[\w.-]+$/.test(runId)) { console.error("[tone-ab] unsafe --run-id"); process.exit(1); }
+const promptVersion = arg("--prompt-version") === "v2" ? "v2" as const : "v1" as const;
 const engines = (arg("--engines") ?? "ollama,strata").split(",").map((x) => x.trim()) as Engine[];
 if (!engines.length || engines.some((x) => x !== "ollama" && x !== "strata")) {
   console.error("[tone-ab] --engines must be ollama,strata, ollama, or strata"); process.exit(1);
@@ -169,12 +171,13 @@ for (const engine of engines) {
       const key = `${engine}|${item.accessionNo}|${windowIndex}`;
       if (completed.has(key)) continue;
       const w = item.windows[windowIndex];
-      const r = await request(engine, tonePrompt(w));
+      const prompt = promptVersion === "v2" ? tonePromptV2(w, { ticker, form: item.form }) : tonePrompt(w);
+      const r = await request(engine, prompt);
       const row: WindowResult = {
         runId, engine, ticker, accessionNo: item.accessionNo, form: item.form,
         windowIndex, promptChars: w.length,
         promptSha256: createHash("sha256").update(w).digest("hex"),
-        ts: new Date().toISOString(), ...r,
+        ts: new Date().toISOString(), promptVersion, ...r,
       };
       appendFileSync(resultsPath, JSON.stringify(row) + "\n");
       results.push(row);
@@ -197,8 +200,8 @@ for (const engine of engines) {
   if (stopped) { console.error(`[tone-ab] ${engine}: stopped after two consecutive request errors; rerun to resume`); break; }
 }
 
-function outcome(engine: Engine, item: AbPlanItem) {
-  const rows = results.filter((r) => r.engine === engine && r.accessionNo === item.accessionNo)
+function outcome(engine: Engine, item: AbPlanItem, promptVersion?: "v1" | "v2") {
+  const rows = results.filter((r) => r.engine === engine && r.accessionNo === item.accessionNo && (!promptVersion || (r.promptVersion ?? "v1") === promptVersion))
     .sort((a, b) => a.windowIndex - b.windowIndex);
   const valid = rows.filter((r) => !r.error && r.parseOk && !r.boilerplate && r.score !== null);
   const parsed = rows.filter((r) => !r.error && r.parseOk);
@@ -244,10 +247,12 @@ function engineSummary(engine: Engine) {
 }
 
 function comparisonData() {
+  const promptCompare = process.argv.includes("--compare-prompts");
   const pairs: { a: number; b: number }[] = [];
   const divergences: any[] = [];
   for (const item of plan.items) {
-    const a = outcome("ollama", item), b = outcome("strata", item);
+    const a = promptCompare ? outcome("ollama", item, "v1") : outcome("ollama", item);
+    const b = promptCompare ? outcome("ollama", item, "v2") : outcome("strata", item);
     if (a.score === null || b.score === null) continue;
     pairs.push({ a: a.score, b: b.score });
     divergences.push({
@@ -258,7 +263,7 @@ function comparisonData() {
     });
   }
   divergences.sort((x, y) => y.absDelta - x.absDelta);
-  return { scores: compareScores(pairs), divergences: divergences.slice(0, 20) };
+  return { scores: compareScores(pairs), divergences: divergences.slice(0, 20), promptCompare, labelA: promptCompare ? "Ollama v1" : "Ollama", labelB: promptCompare ? "Ollama v2" : "Strata" };
 }
 
 function writeReports() {
@@ -279,11 +284,12 @@ function writeReports() {
   const int = (x: number) => Math.round(x).toLocaleString("en-US");
   const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
   const a = summary.engines.ollama, b = summary.engines.strata;
+  const { labelA, labelB } = summary.comparison;
   const ratio = (x?: number, y?: number) => x && y ? `${(y / x).toFixed(2)}×` : "—";
   const lines = [
-    `# EDGAR tone A/B — ${ticker} (${plan.items.length} documents)`, "",
+    `# EDGAR tone A/B — ${ticker} (${plan.items.length} documents)${summary.comparison.promptCompare ? " — prompt v1 vs v2" : ""}`, "",
     "Identical prepared windows and prompts; sequential single-request engines. No production writes.", "",
-    "| Metric | Ollama | Strata | Strata / Ollama |", "|---|---:|---:|---:|",
+    `| Metric | ${labelA} | ${labelB} | ${labelB} / ${labelA} |`, "|---|---:|---:|---:|",
     `| Model | ${a?.model ?? "—"} | ${b?.model ?? "—"} | — |`,
     `| Documents / windows | ${a?.documents ?? 0} / ${a?.windows ?? 0} | ${b?.documents ?? 0} / ${b?.windows ?? 0} | — |`,
     `| Wall time, min | ${fmt((a?.wallMs ?? 0) / 60000, 1)} | ${fmt((b?.wallMs ?? 0) / 60000, 1)} | ${ratio(a?.wallMs, b?.wallMs)} |`,
@@ -313,8 +319,8 @@ function writeReports() {
   for (const d of summary.comparison.divergences) {
     lines.push(`### ${d.accessionNo} · ${d.form} · ${d.filingDate}`);
     lines.push(`Scores: Ollama **${d.ollama.toFixed(3)}**, Strata **${d.strata.toFixed(3)}**, |Δ| **${d.absDelta.toFixed(3)}**. [SEC source](${d.secUrl})`, "");
-    lines.push(`- Ollama: ${d.ollamaWhy ?? "—"}`);
-    lines.push(`- Strata: ${d.strataWhy ?? "—"}`, "");
+    lines.push(`- ${labelA}: ${d.ollamaWhy ?? "—"}`);
+    lines.push(`- ${labelB}: ${d.strataWhy ?? "—"}`, "");
   }
   lines.push("## Limits", "", ...summary.notes.map((n) => `- ${n}`), "");
   writeFileSync(reportPath, lines.join("\n"));
