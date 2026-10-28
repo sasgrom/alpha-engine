@@ -12,7 +12,13 @@ const batch = idx > -1 ? process.argv[idx + 1] : "";
 if (!/^[0-9a-f-]{36}$/.test(batch)) { console.error("[prices] --batch must be the uploaded batch UUID"); process.exit(1); }
 const uIdx = process.argv.indexOf("--universe");
 const file = uIdx > -1 ? process.argv[uIdx + 1] : "research-universe-53.json";
-const universe = loadEdgarUniverse(file);
+const tIdx = process.argv.indexOf("--tickers");
+const onlyTickers = tIdx > -1 ? new Set(String(process.argv[tIdx + 1] ?? "").split(",").map((x) => x.trim().toUpperCase()).filter(Boolean)) : null;
+const universe = loadEdgarUniverse(file).filter((c) => !onlyTickers || onlyTickers.has(c.ticker));
+if (onlyTickers && universe.length !== onlyTickers.size) {
+  console.error(`[prices] ticker list does not match the universe: ${[...onlyTickers].join(",")}`);
+  process.exit(1);
+}
 const wanted = new Map<string, number>(universe.map((c) => [c.ticker, c.cik]));
 wanted.set("SPY", 0);
 const report = await importPricesFromStorage(

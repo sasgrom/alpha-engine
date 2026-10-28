@@ -1062,6 +1062,14 @@ Local script `scripts/daily-digest.mts` (home, scheduled): reads the last 36h of
 
 Two layers: curated 30 funds (CIKs verified against the SEC cik-lookup) + an auto-built top-300 by AUM (EDGAR full-text search, ~8,200 filers). Tables `fund_holdings` (DDL 022/023: COM/PUT/CALL classes) and `fund_quarters` (FULL book total — % of fund must use it, else it inflates). Value scale autocalibration: median implied price >$5,000 ⇒ the filing reported dollars, not thousands (proven on Point72; other books violate the spec the same way). OpenFIGI with optional `OPENFIGI_API_KEY` (25/100 per request) + `cusip_map` with per-run ticker re-resolution (an empty local companies registry once cost a rebuild). `scripts/13f-refresh.mts` v2: batched inserts, disk-cached XML, idempotent seen-quarter guard; `--totals-only` (book-total backfill) and `--rebuild-events` (DB-only event regeneration). Events only for activist/quant/fundamental: new/exit/±30% per cik:class; deterministic notes with $, % of fund, % of company, held by N funds. Transport `ingest kind=holdings` + `push-local-signals --table fund_holdings` (own watermark). Prod after the full repair and synchronization: 875,860 positions, 300 funds, 371 companies, 3,372 fund_quarters with filingDate, and 16,422 events (all with notes). UI: Institutional card on the company page and "13F sector flows" on the Dashboard.
 
+### 4.63 Iteration 5ac: full price backfill for 53 CIKs + SPY completed
+
+**Archives verified before import.** The user's main ZIP contained 51 files; only `cop.us.txt` and `spy.us.txt` were missing. The supplemental ZIP contained exactly those two files. Filenames matched internal CSV tickers, no empty or malformed rows were found, and every file reached 2026-10-26. No separate `xom_pre.us.txt` was needed: the XOM → XOM_PRE alias worked in the importer.
+
+**Import.** The main batch imported 51 archive tickers (including XOM and XOM_PRE separately), while the supplemental batch imported only COP + SPY via `--tickers COP`, avoiding a second 51-ticker pass. Final state: **447,282 bars in `prices`; all 53 CIKs + SPY have history through 2026-10-26, with zero missing tickers**. Existing bars were upserted, not duplicated.
+
+**Factors.** Rematerialization produced **15,312 factor_points**, 53 CIKs, 7 factors and 316 pairs. `high52` and `momentum122` now each have 2,529 points and cover **all 53 CIKs** (previously 5). Current XOM received 98 points, XOM_PRE 310, RIVN 199 and ENLT 67. Missing points in other factors still reflect concept coverage, not price backfill. Full suite: **295 tests**.
+
 ### 4.62 Iteration 5ab: price backfill for research-universe-53
 
 **Method retained.** Stage 1.7's Stooq bulk daily `d_us_txt.zip` from `https://stooq.com/db/h/` is reused: whole or chunked upload through Admin → Prices Import with resume, streaming unzipper, Metastock daily bars, `source='stooq'` and idempotent upsert. The cloud runtime still must not fetch Stooq/Yahoo directly.

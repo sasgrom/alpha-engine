@@ -1059,6 +1059,14 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 Два слоя: курируемые 30 фондов (CIK сверены по cik-lookup SEC) + автопостроенный топ-300 по AUM (EDGAR full-text search, ~8 200 филеров). Таблицы `fund_holdings` (DDL 022/023: классы COM/PUT/CALL) и `fund_quarters` (итог ПОЛНОЙ книги — % of fund только от неё, иначе вздутие). Калибровка масштаба value: медиана implied-цены >$5 000 → филинг в долларах, не в тысячах (доказано на Point72; часть книг подаёт не по спеке). OpenFIGI с ключом `OPENFIGI_API_KEY` (25/100 за запрос) + `cusip_map` с до-резолвом тикеров на каждом прогоне (локальный пустой справочник companies — частая причина дыр). `scripts/13f-refresh.mts` v2: пакетные вставки, дисковый кэш XML, seen-quarter идемпотентность; `--totals-only` (добор итогов) и `--rebuild-events` (пересчёт событий из базы без сети). События только для activist/quant/fundamental: new/exit/±30% per cik:class; заметки детерминированные с $, % of fund, % of company, held by N funds. Транспорт `ingest kind=holdings` + `push-local-signals --table fund_holdings` (своя водяная метка). В проде после полного repair и синхронизации: 875 860 позиций, 300 фондов, 371 компания, 3 372 fund_quarters с filingDate, 16 422 события (все с заметками). UI: карточка Institutional на странице компании и «13F sector flows» на Dashboard.
 
+### 4.63 Итерация 5ac: полный price backfill для 53 CIK + SPY завершён
+
+**Архивы проверены до импорта.** Основной пользовательский ZIP содержал 51 файл; отсутствовали только `cop.us.txt` и `spy.us.txt`. Дополнительный ZIP содержал ровно эти два файла. Все имена и внутренние тикеры CSV совпали, пустых/malformed rows нет, у всех файлов последняя дата 2026-10-26. Отдельный `xom_pre.us.txt` не потребовался: alias XOM → XOM_PRE сработал в importer.
+
+**Импорт.** Основной batch импортировал 51 архивный тикер (включая XOM и XOM_PRE отдельно), supplemental batch — только COP + SPY через `--tickers COP`, без повторного прогона 51. Итог: **447 282 бара в `prices`, все 53 CIK + SPY имеют историю до 2026-10-26, zero missing**. Старые бары обновлены upsert, не задублированы.
+
+**Факторы.** После повторной материализации: **15 312 factor_points**, 53 CIK, 7 factors, 316 pairs. `high52` и `momentum122` теперь имеют по 2 529 точек и покрывают **все 53 CIK** (было 5). Current XOM получил 98, XOM_PRE 310, RIVN 199, ENLT 67 factor points. Отсутствие части других факторов по-прежнему отражает концептуальное покрытие, а не price backfill. Полный набор — **295 тестов**.
+
 ### 4.62 Итерация 5ab: price backfill для research-universe-53
 
 **Метод сохранён.** Как и в Stage 1.7, используется Stooq bulk daily `d_us_txt.zip` из `https://stooq.com/db/h/`: браузерная загрузка через Admin → Prices Import целиком или частями с resume, потоковый unzipper, Metastock daily bars, `source='stooq'` и idempotent upsert. Облачный runtime по-прежнему не должен скачивать Stooq/Yahoo напрямую.

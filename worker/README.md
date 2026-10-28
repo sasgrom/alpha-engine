@@ -123,6 +123,10 @@ Existing bars are upserted, never duplicated. The final report names any ticker
 missing from the archive instead of inventing coverage. After a complete import,
 rematerialize factors to add `high52` and `momentum122` across the panel.
 
+Completed baseline (2026-10-27): all 53 CIKs + SPY have daily bars through
+2026-10-26 (447,282 rows), with zero missing tickers. `factor_points` was rebuilt
+to 15,312 rows; `high52` and `momentum122` now cover all 53 CIKs.
+
 ## Research universe: 50 current S&P names + 3 evidence-only CIKs
 
 `research-universe-50.json` contains 50 current S&P tickers: the original 35,
