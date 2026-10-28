@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildFactorPointRows } from "./factor-ic";
+import { factorMeta } from "./factor-meta";
 
 describe("factor point availability mapping", () => {
   it("uses first-filed fundamentals, own-date market factors and a 45-day fallback", () => {
@@ -12,5 +13,13 @@ describe("factor point availability mapping", () => {
     expect(rows.find((r) => r.factor === "momentum122")?.filedAt).toBe("2024-12-31 00:00:00");
     expect(rows.find((r) => r.factor === "quality")?.filedAt).toBe("2024-11-14 00:00:00");
     expect(rows.find((r) => r.factor === "quality")?.value).toBeNull();
+  });
+});
+
+describe("market-cap factor registry", () => {
+  it("registers all valuation factors with formulas", () => {
+    for (const key of ["earningsYield", "bookToMarket", "fcfYield", "salesYield", "ocfYield", "evEbitda", "evEbit", "netDebtToEbitda", "peRatio"]) {
+      expect(factorMeta(key)?.formula.length).toBeGreaterThan(10);
+    }
   });
 });

@@ -14,9 +14,24 @@ const only = onlyIdx > -1 ? process.argv[onlyIdx + 1]?.toUpperCase() : null;
 const universe = loadEdgarUniverse(file).filter((c) => !only || c.ticker === only);
 if (only && universe.length === 0) { console.error(`[factors] unknown ticker ${only}`); process.exit(1); }
 let companies = 0, points = 0, failed = 0;
+async function withRetry<T>(fn: () => Promise<T>, label: string): Promise<T> {
+  let last: unknown;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    try { return await fn(); }
+    catch (e) {
+      last = e;
+      if (attempt < 3) {
+        const wait = 250 * 2 ** attempt;
+        console.log(`[factors] ${label}: transient failure, retry ${attempt + 1}/3 in ${wait}ms`);
+        await new Promise((r) => setTimeout(r, wait));
+      }
+    }
+  }
+  throw last;
+}
 for (const [i, co] of universe.entries()) {
   try {
-    const n = await materializeFactorPoints(co.cik);
+    const n = await withRetry(() => materializeFactorPoints(co.cik), co.ticker);
     companies++;
     points += n;
     console.log(`[factors ${i + 1}/${universe.length}] ${co.ticker}: ${n} factor points`);

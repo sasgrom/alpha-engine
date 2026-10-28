@@ -205,6 +205,17 @@ async function conceptSeries(cik: number, concept: string, kind: "flow" | "stock
   return (rows[0] as any[]).map((r) => ({ periodEnd: String(r.periodEnd).slice(0, 10), val: r.val === null ? null : Number(r.val) }));
 }
 
+/** Bound DB concurrency as the factor registry grows (28+ concepts). */
+async function conceptSeriesBatch(cik: number, requests: { concept: string; kind: "flow" | "stock" }[]): Promise<QPt[][]> {
+  const out: QPt[][] = [];
+  for (let i = 0; i < requests.length; i += 8) {
+    const chunk = requests.slice(i, i + 8);
+    const rows = await Promise.all(chunk.map((r) => conceptSeries(cik, r.concept, r.kind)));
+    out.push(...rows);
+  }
+  return out;
+}
+
 const ttm = (pts: QPt[]): number | null => {
   const vals = pts.filter((p) => p.val !== null).slice(0, 4);
   return vals.length === 4 ? vals.reduce((s, p) => s + (p.val as number), 0) : null;
@@ -223,27 +234,38 @@ export async function computeCompanyFactors(cik: number): Promise<{
   altmanZ: number | null;
   beneishM: number | null;
   /** 4j: per-factor history + robust own-history band (wiki/reference layer) */
-  detail: Record<"accruals" | "grossProfitability" | "assetGrowth" | "buybackYield" | "momentum122" | "high52" | "sue", FactorDetail>;
+  detail: Record<"accruals" | "grossProfitability" | "assetGrowth" | "buybackYield" | "momentum122" | "high52" | "sue" | "earningsYield" | "bookToMarket" | "fcfYield" | "salesYield" | "ocfYield" | "evEbitda" | "evEbit" | "netDebtToEbitda" | "peRatio", FactorDetail>;
 }> {
-  const [ni, cfo, assets, gp, rev, liab, ca, cl, ar, ppe, da, sga, retained, ebt, shares, eps, div] =
-    await Promise.all([
-      conceptSeries(cik, "NetIncomeLoss", "flow"),
-      conceptSeries(cik, "NetCashProvidedByUsedInOperatingActivities", "flow"),
-      conceptSeries(cik, "Assets", "stock"),
-      conceptSeries(cik, "GrossProfit", "flow"),
-      conceptSeries(cik, "RevenueFromContractWithCustomerExcludingAssessedTax", "flow"),
-      conceptSeries(cik, "Liabilities", "stock"),
-      conceptSeries(cik, "AssetsCurrent", "stock"),
-      conceptSeries(cik, "LiabilitiesCurrent", "stock"),
-      conceptSeries(cik, "AccountsReceivableNetCurrent", "stock"),
-      conceptSeries(cik, "PropertyPlantAndEquipmentNet", "stock"),
-      conceptSeries(cik, "DepreciationDepletionAndAmortization", "flow"),
-      conceptSeries(cik, "SellingGeneralAndAdministrativeExpense", "flow"),
-      conceptSeries(cik, "RetainedEarningsAccumulatedDeficit", "stock"),
-      conceptSeries(cik, "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest", "flow"),
-      conceptSeries(cik, "CommonStockSharesOutstanding", "stock"),
-      conceptSeries(cik, "EarningsPerShareDiluted", "flow"),
-      conceptSeries(cik, "PaymentsOfDividendsCommonStock", "flow"),
+  const [ni, cfo, assets, gp, rev, liab, ca, cl, ar, ppe, da, sga, retained, ebt, shares, sharesWeighted, eps, div, capex, equity, opInc, cash, cashRestricted, debtCurrent, longTermDebt, longTermDebtCurrent, longTermDebtNoncurrent, longTermDebtLease] =
+    await conceptSeriesBatch(cik, [
+      { concept: "NetIncomeLoss", kind: "flow" },
+      { concept: "NetCashProvidedByUsedInOperatingActivities", kind: "flow" },
+      { concept: "Assets", kind: "stock" },
+      { concept: "GrossProfit", kind: "flow" },
+      { concept: "RevenueFromContractWithCustomerExcludingAssessedTax", kind: "flow" },
+      { concept: "Liabilities", kind: "stock" },
+      { concept: "AssetsCurrent", kind: "stock" },
+      { concept: "LiabilitiesCurrent", kind: "stock" },
+      { concept: "AccountsReceivableNetCurrent", kind: "stock" },
+      { concept: "PropertyPlantAndEquipmentNet", kind: "stock" },
+      { concept: "DepreciationDepletionAndAmortization", kind: "flow" },
+      { concept: "SellingGeneralAndAdministrativeExpense", kind: "flow" },
+      { concept: "RetainedEarningsAccumulatedDeficit", kind: "stock" },
+      { concept: "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest", kind: "flow" },
+      { concept: "CommonStockSharesOutstanding", kind: "stock" },
+      { concept: "WeightedAverageNumberOfDilutedSharesOutstanding", kind: "flow" },
+      { concept: "EarningsPerShareDiluted", kind: "flow" },
+      { concept: "PaymentsOfDividendsCommonStock", kind: "flow" },
+      { concept: "PaymentsToAcquirePropertyPlantAndEquipment", kind: "flow" },
+      { concept: "StockholdersEquity", kind: "stock" },
+      { concept: "OperatingIncomeLoss", kind: "flow" },
+      { concept: "CashAndCashEquivalentsAtCarryingValue", kind: "stock" },
+      { concept: "CashAndCashEquivalentsAtCarryingValueIncludingRestrictedCash", kind: "stock" },
+      { concept: "DebtCurrent", kind: "stock" },
+      { concept: "LongTermDebt", kind: "stock" },
+      { concept: "LongTermDebtCurrent", kind: "stock" },
+      { concept: "LongTermDebtNoncurrent", kind: "stock" },
+      { concept: "LongTermDebtAndCapitalLeaseObligations", kind: "stock" },
     ]);
 
   const niTtm = ttm(ni);
@@ -260,8 +282,20 @@ export async function computeCompanyFactors(cik: number): Promise<{
   const closes = bars.filter((b) => (b.adjClose ?? b.close) !== null).map((b) => ({ date: b.date, close: (b.adjClose ?? b.close) as number }));
   const w52 = week52(bars);
   const priceNow = closes.length ? closes[closes.length - 1].close : null;
-  const sharesNow = latest(shares);
+  const sharesNow = latest(shares) ?? latest(sharesWeighted);
   const marketCap = priceNow !== null && sharesNow !== null ? priceNow * sharesNow : null;
+  const capexTtm = ttm(capex);
+  const fcfTtm = cfoTtm !== null && capexTtm !== null ? cfoTtm - capexTtm : null;
+  const opIncTtm = ttm(opInc);
+  const daTtm = ttm(da);
+  const ebitdaTtm = opIncTtm !== null && daTtm !== null ? opIncTtm + daTtm : null;
+  const equityNow = latest(equity);
+  const cashNow = latest(cash) ?? latest(cashRestricted);
+  const longDebtNow = latest(longTermDebt) ?? latest(longTermDebtNoncurrent) ?? latest(longTermDebtLease);
+  const currentDebtNow = latest(debtCurrent) ?? latest(longTermDebtCurrent);
+  const debtNow = longDebtNow !== null || currentDebtNow !== null ? (longDebtNow ?? 0) + (currentDebtNow ?? 0) : null;
+  const netDebtNow = debtNow !== null && cashNow !== null ? debtNow - cashNow : null;
+  const enterpriseValue = marketCap !== null && netDebtNow !== null ? marketCap + netDebtNow : null;
 
   // F-score inputs (latest FY vs prior FY ends)
   const roaNow = niTtm !== null && avgAssets ? niTtm / avgAssets : null;
@@ -293,7 +327,81 @@ export async function computeCompanyFactors(cik: number): Promise<{
   const assetsM = byEndOf(assets);
   const gpM = byEndOf(gp);
   const sharesM = byEndOf(shares);
+  const sharesWeightedM = byEndOf(sharesWeighted);
   const epsM = byEndOf(eps);
+  const daM = byEndOf(da);
+  const revM = byEndOf(rev);
+  const capexM = byEndOf(capex);
+  const equityM = byEndOf(equity);
+  const opIncM = byEndOf(opInc);
+  const cashM = byEndOf(cash);
+  const cashRestrictedM = byEndOf(cashRestricted);
+  const debtCurrentM = byEndOf(debtCurrent);
+  const longTermDebtM = byEndOf(longTermDebt);
+  const longTermDebtCurrentM = byEndOf(longTermDebtCurrent);
+  const longTermDebtNoncurrentM = byEndOf(longTermDebtNoncurrent);
+  const longTermDebtLeaseM = byEndOf(longTermDebtLease);
+
+  const closeAt = (date: string): number | null => {
+    let found: number | null = null;
+    for (const b of closes) {
+      if (b.date > date) break;
+      found = b.close;
+    }
+    return found;
+  };
+  const marketCapAt = (e: string): number | null => {
+    const sh = sharesM.get(e) ?? sharesWeightedM.get(e), px = closeAt(e);
+    return sh !== undefined && px !== null ? sh * px : null;
+  };
+  const debtAt = (e: string): number | null => {
+    const long = longTermDebtM.get(e) ?? longTermDebtNoncurrentM.get(e) ?? longTermDebtLeaseM.get(e);
+    const current = debtCurrentM.get(e) ?? longTermDebtCurrentM.get(e);
+    return long !== undefined || current !== undefined ? (long ?? 0) + (current ?? 0) : null;
+  };
+  const cashAt = (e: string) => cashM.get(e) ?? cashRestrictedM.get(e);
+  const ttmAt = (map: Map<string, number>, e: string): number | null => {
+    const ends = [...map.keys()].filter((d) => d <= e).sort().reverse().slice(0, 4);
+    return ends.length === 4 ? ends.reduce((s, d) => s + map.get(d)!, 0) : null;
+  };
+  const enterpriseValueAt = (e: string): number | null => {
+    const mc = marketCapAt(e), debt = debtAt(e), cash = cashAt(e);
+    return mc !== null && debt !== null && cash !== undefined ? mc + debt - cash : null;
+  };
+  const valueAt = (e: string) => {
+    const mc = marketCapAt(e), ev = enterpriseValueAt(e);
+    const nit = ttmAt(niM, e), cfot = ttmAt(cfoM, e), revt = ttmAt(revM, e), capext = ttmAt(capexM, e);
+    const opt = ttmAt(opIncM, e), dat = ttmAt(daM, e), eq = equityM.get(e);
+    const fcf = cfot !== null && capext !== null ? cfot - capext : null;
+    const ebitda = opt !== null && dat !== null ? opt + dat : null;
+    return {
+      earningsYield: mc !== null && nit !== null ? nit / mc : null,
+      bookToMarket: mc !== null && eq !== undefined ? eq / mc : null,
+      fcfYield: mc !== null && fcf !== null ? fcf / mc : null,
+      salesYield: mc !== null && revt !== null ? revt / mc : null,
+      ocfYield: mc !== null && cfot !== null ? cfot / mc : null,
+      evEbitda: ev !== null && ebitda !== null && ebitda > 0 ? ev / ebitda : null,
+      evEbit: ev !== null && opt !== null && opt > 0 ? ev / opt : null,
+      netDebtToEbitda: ev !== null && mc !== null && ebitda !== null && ebitda > 0 ? (ev - mc) / ebitda : null,
+      peRatio: mc !== null && nit !== null && nit > 0 ? mc / nit : null,
+    };
+  };
+  const currentValueFactors = {
+    earningsYield: marketCap !== null && niTtm !== null ? niTtm / marketCap : null,
+    bookToMarket: marketCap !== null && equityNow !== null ? equityNow / marketCap : null,
+    fcfYield: marketCap !== null && fcfTtm !== null ? fcfTtm / marketCap : null,
+    salesYield: marketCap !== null && revTtm !== null ? revTtm / marketCap : null,
+    ocfYield: marketCap !== null && cfoTtm !== null ? cfoTtm / marketCap : null,
+    evEbitda: enterpriseValue !== null && ebitdaTtm !== null && ebitdaTtm > 0 ? enterpriseValue / ebitdaTtm : null,
+    evEbit: enterpriseValue !== null && opIncTtm !== null && opIncTtm > 0 ? enterpriseValue / opIncTtm : null,
+    netDebtToEbitda: enterpriseValue !== null && marketCap !== null && ebitdaTtm !== null && ebitdaTtm > 0 ? (enterpriseValue - marketCap) / ebitdaTtm : null,
+    peRatio: marketCap !== null && niTtm !== null && niTtm > 0 ? marketCap / niTtm : null,
+  };
+  const valueEnds = [...new Set([...niM.keys(), ...cfoM.keys(), ...revM.keys(), ...equityM.keys(), ...opIncM.keys(), ...capexM.keys()])].sort();
+  const valueHist = (key: keyof typeof currentValueFactors) => mkHist((e) => {
+    const v = valueAt(e)[key];
+    return v === null ? null : { t: e, v };
+  }, valueEnds);
 
   const mkHist = (fn: (e: string) => { t: string; v: number } | null, ends: string[]): { t: string; v: number }[] =>
     ends.map(fn).filter((x): x is { t: string; v: number } => x !== null && Number.isFinite(x.v));
@@ -375,6 +483,15 @@ export async function computeCompanyFactors(cik: number): Promise<{
       momentum122: detail(momentum122(closes), momentumHist),
       high52: detail(high52Proximity(priceNow, w52.high), high52Hist),
       sue: detail(sue(eps.filter((p) => p.val !== null).map((p) => p.val)), sueHist),
+      earningsYield: detail(currentValueFactors.earningsYield, valueHist("earningsYield")),
+      bookToMarket: detail(currentValueFactors.bookToMarket, valueHist("bookToMarket")),
+      fcfYield: detail(currentValueFactors.fcfYield, valueHist("fcfYield")),
+      salesYield: detail(currentValueFactors.salesYield, valueHist("salesYield")),
+      ocfYield: detail(currentValueFactors.ocfYield, valueHist("ocfYield")),
+      evEbitda: detail(currentValueFactors.evEbitda, valueHist("evEbitda")),
+      evEbit: detail(currentValueFactors.evEbit, valueHist("evEbit")),
+      netDebtToEbitda: detail(currentValueFactors.netDebtToEbitda, valueHist("netDebtToEbitda")),
+      peRatio: detail(currentValueFactors.peRatio, valueHist("peRatio")),
     },
     altmanZ: altmanZ({
       wc: latest(ca) !== null && latest(cl) !== null ? (latest(ca) as number) - (latest(cl) as number) : null,

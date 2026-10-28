@@ -147,6 +147,22 @@ AssetGrowth remains regime-dependent: 63-day weighted IC was -0.180 in 2022 and
 -0.083 in 2026 YTD, despite the strong full-sample CI. Next gate: sector-neutral
 residuals and nested holdout with costs/capacity, not probability-model promotion.
 
+## Market-cap and enterprise-value factors
+
+Added 9 availability-anchored valuation factors: earningsYield, bookToMarket,
+fcfYield, salesYield, ocfYield, evEbitda, evEbit, netDebtToEbitda and peRatio.
+Market cap uses period-end close × shares (with diluted-share fallback); EV uses
+financial debt minus cash, never total liabilities. Negative yields are preserved;
+P/E and EV multiples require positive denominators. Concept queries are capped at
+8 concurrent per company, with a short bounded retry for transient DB failures.
+
+Final registry: 16 factors, 21,894 factor_points, 672 company-factor pairs.
+New-factor IC: bookToMarket is the only additional candidate at 126 sessions,
++0.080 [+0.012,+0.144] (63d +0.035 [-0.031,+0.107]). OCF yield is only borderline
+at 126 sessions, +0.060 [-0.003,+0.121]. Earnings/FCF/sales yields, P/E, EV/EBIT,
+EV/EBITDA and netDebt/EBITDA show no robust independent signal so far. This makes
+sector-neutral residual evaluation mandatory before using valuation factors.
+
 ## Research universe: 50 current S&P names + 3 evidence-only CIKs
 
 `research-universe-50.json` contains 50 current S&P tickers: the original 35,
