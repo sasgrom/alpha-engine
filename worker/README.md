@@ -373,6 +373,17 @@ Volatility targeting reduces drawdown but does not rescue stress periods. Do not
 introduce a regime gate based on the same sample: that would be data snooping.
 A new independent universe/period is required before any regime-filtered strategy.
 
+## Share and portfolio-weight 13F flows
+
+`flowMetrics` separates share-count changes from USD value changes and from
+full-book portfolio-weight changes in percentage points. `fundFlowsGraph` and
+`sectorFlowsDetailed` now use `deltaShares` for flow direction/thickness, with
+`deltaWeightPp` computed from `fund_quarters.totalValueUsd`. `smartMoneyFlow` in
+the probability engine also uses shares, so a price rally cannot masquerade as
+institutional buying. Existing curUsd/deltaUsd fields remain for display, not for
+flow interpretation. Guard semantics are unchanged (294 stable funds, 5 missing,
+0 suspect in the verified panel).
+
 ## Options data: snapshots, cache and normalization
 
 Collectors keep raw provider payloads in `worker/cache/options/` and normalized chains in `worker/cache/options-normalized/`. The manifest at `worker/cache/options/manifest.json` records provider, ticker, tradeDate, snapshotId, availability and quality metrics. Every run uses a new timestamped snapshotId by default, so history is never overwritten; rerun a crashed batch with the same `--snapshot-id` to skip completed files.

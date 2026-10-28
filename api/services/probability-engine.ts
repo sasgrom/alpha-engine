@@ -70,13 +70,15 @@ function plusDays(date: string, days: number): string {
   return new Date(Date.parse(`${date}T00:00:00Z`) + days * 86400_000).toISOString().slice(0, 10);
 }
 
-/** Extra streams. 13F uses the legal 45-day availability lag until filingDate
- * is persisted per accession; quarter-end itself is never used as availability. */
+/** Extra streams. 13F flow is computed from share counts, not valueUsd, so a
+ * price rally cannot masquerade as institutional buying. Availability uses the
+ * legal 45-day lag until accession filingDate is persisted; quarter-end itself
+ * is never used as availability. */
 async function signalSeries(cik: number): Promise<Pt[]> {
   const db = getDb();
   const [tone]: any = await db.execute(sql`SELECT eventTs, score FROM signals WHERE cik=${cik} AND source='edgar' AND signalType='tone' AND score IS NOT NULL ORDER BY eventTs`);
   const [flows]: any = await db.execute(sql`
-    SELECT quarterDate, SUM(valueUsd) v FROM fund_holdings
+    SELECT quarterDate, SUM(shares) v FROM fund_holdings
     WHERE heldCik=${cik} AND secClass='COM' GROUP BY quarterDate ORDER BY quarterDate`);
   const out: Pt[] = [];
   for (const t of tone) {

@@ -113,9 +113,14 @@ export default function Dashboard() {
               {flowRows.map((f) => (
                 <div key={f.sector}>
                   <div className="t-label !text-[8px]" title={f.sector}>{f.sector}</div>
-                  <div className={`t-mono text-[13px] mt-0.5 ${f.deltaUsd >= 0 ? "text-emerald-400" : "text-crit-red"}`}>
-                    {f.deltaUsd >= 0 ? "+" : "−"}{f.deltaUsd >= 1e12 || f.deltaUsd <= -1e12 ? `$${(Math.abs(f.deltaUsd) / 1e12).toFixed(1)}T` : `$${(Math.abs(f.deltaUsd) / 1e9).toFixed(1)}B`}
+                  <div className={`t-mono text-[13px] mt-0.5 ${f.deltaShares >= 0 ? "text-emerald-400" : "text-crit-red"}`}>
+                    {f.deltaShares >= 0 ? "+" : "−"}{(Math.abs(f.deltaShares) / 1e6).toFixed(1)}M sh
                   </div>
+                  {f.deltaWeightPp !== null && (
+                    <div className={`t-mono text-[9px] ${f.deltaWeightPp >= 0 ? "text-emerald-400" : "text-crit-red"}`}>
+                      {f.deltaWeightPp >= 0 ? "+" : "−"}{Math.abs(f.deltaWeightPp).toFixed(2)} pp of book
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

@@ -1,8 +1,8 @@
 /**
  * /fundflows (owner-only) — 3D graph of tracked-fund flows into S&P 500 names.
  * Outer ring: funds by tier (activist/quant/fundamental/passive/institutional).
- * Inner ring: companies by GICS sector. Edge = QoQ position change; green =
- * increased, red = decreased; thickness ~ |Δvalue|. Hover = details, click = focus.
+ * Inner ring: companies by GICS sector. Edge = QoQ share-count change; green =
+ * increased, red = decreased; thickness ~ |Δshares|. Hover = details, click = focus.
  * Data: admin.fundFlows (deterministic from fund_holdings).
  */
 import { useEffect, useRef, useState } from "react";
@@ -23,7 +23,7 @@ const SECTOR_COLOR: Record<string, number> = {
 
 interface GFund { cik: number; name: string; tier: string | null }
 interface GCompany { cik: number; ticker: string; sector: string | null }
-interface GEdge { fundCik: number; cik: number; curUsd: number; deltaUsd: number }
+interface GEdge { fundCik: number; cik: number; curUsd: number; deltaUsd: number; curShares: number; deltaShares: number; deltaWeightPp: number | null }
 
 export default function FundFlows() {
   const q = trpc.admin.fundFlows.useQuery({ limit: 400 }, { retry: false });
@@ -99,12 +99,12 @@ export default function FundFlows() {
 
     // edges
     const verts: number[] = [], colors: number[] = [];
-    const maxAbs = Math.max(...edges.map((e) => Math.abs(e.deltaUsd)), 1);
+    const maxAbs = Math.max(...edges.map((e) => Math.abs(e.deltaShares)), 1);
     for (const e of edges) {
       const a = pos.get(e.fundCik)!, b = pos.get(e.cik)!;
       verts.push(a.x, a.y, a.z, b.x, b.y, b.z);
-      const up = e.deltaUsd >= 0;
-      const k = Math.min(1, Math.abs(e.deltaUsd) / maxAbs);
+      const up = e.deltaShares >= 0;
+      const k = Math.min(1, Math.abs(e.deltaShares) / maxAbs);
       const c = new THREE.Color(up ? 0x22c55e : 0xef4444).multiplyScalar(0.25 + 0.75 * k);
       colors.push(c.r, c.g, c.b, c.r, c.g, c.b);
     }

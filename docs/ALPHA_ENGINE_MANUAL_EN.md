@@ -1062,6 +1062,14 @@ Local script `scripts/daily-digest.mts` (home, scheduled): reads the last 36h of
 
 Two layers: curated 30 funds (CIKs verified against the SEC cik-lookup) + an auto-built top-300 by AUM (EDGAR full-text search, ~8,200 filers). Tables `fund_holdings` (DDL 022/023: COM/PUT/CALL classes) and `fund_quarters` (FULL book total — % of fund must use it, else it inflates). Value scale autocalibration: median implied price >$5,000 ⇒ the filing reported dollars, not thousands (proven on Point72; other books violate the spec the same way). OpenFIGI with optional `OPENFIGI_API_KEY` (25/100 per request) + `cusip_map` with per-run ticker re-resolution (an empty local companies registry once cost a rebuild). `scripts/13f-refresh.mts` v2: batched inserts, disk-cached XML, idempotent seen-quarter guard; `--totals-only` (book-total backfill) and `--rebuild-events` (DB-only event regeneration). Events only for activist/quant/fundamental: new/exit/±30% per cik:class; deterministic notes with $, % of fund, % of company, held by N funds. Transport `ingest kind=holdings` + `push-local-signals --table fund_holdings` (own watermark). Prod after the full repair and synchronization: 875,860 positions, 300 funds, 371 companies, 3,372 fund_quarters with filingDate, and 16,422 events (all with notes). UI: Institutional card on the company page and "13F sector flows" on the Dashboard.
 
+### 4.76 Iteration 5ap: 13F flow from valueUsd to shares and portfolio weight
+
+**Problem.** `fundFlowsGraph`, `sectorFlowsDetailed` and `smartMoneyFlow` used `valueUsd`, so a price rally could look like institutional buying and a decline could look like selling.
+
+**Fix.** New `flowMetrics` computes `deltaShares`, `deltaSharesPct` and `deltaWeightPp`. Graph/sector flow now uses `deltaShares` for direction and edge thickness, while `deltaWeightPp` measures the position's weight change in the full `fund_quarters.totalValueUsd` book. `smartMoneyFlow` in the probability engine also uses shares, so price moves cannot masquerade as trades. USD fields remain for display only, not for interpreting fund behavior.
+
+**UI.** 3D edge thickness and color now use `deltaShares`; sector cards show `M sh` and `pp of book`. Guard behavior is unchanged: 294 stable funds, 5 missing, 0 suspect. Two unit tests cover shares vs weight and nulls for zero previous shares/missing book. Full suite: **311 tests**.
+
 ### 4.75 Iteration 5ao: local ZIP price import without storage provisioning
 
 **Problem.** `import-research-prices.mts` requires object storage, so a home machine without `KIMI_STORAGE_RESOURCE_ID` fails with `STORAGE_NOT_PROVISIONED`. This is not a reason to request or change credentials.

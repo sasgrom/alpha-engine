@@ -13,6 +13,7 @@ import {
   type GuardMeta,
   type QuarterSelection,
 } from "./institutional-guard";
+import { flowMetrics } from "./flow-metrics";
 
 interface GuardedQuarter {
   selection: QuarterSelection;
@@ -118,7 +119,7 @@ export async function institutionalSummary(cik: number): Promise<InstitutionalSu
 export interface FundFlowsGraphResponse {
   funds: { cik: number; name: string; tier: string | null }[];
   companies: { cik: number; ticker: string; sector: string | null }[];
-  edges: { fundCik: number; cik: number; curUsd: number; deltaUsd: number }[];
+  edges: { fundCik: number; cik: number; curUsd: number; deltaUsd: number; curShares: number; deltaShares: number; deltaWeightPp: number | null }[];
   guard: GuardMeta | null;
 }
 
@@ -134,14 +135,19 @@ export async function fundFlowsGraph(limit = 400): Promise<FundFlowsGraphRespons
 
   const [rows]: any = await db.execute(sql`
     SELECT h.fundCik, h.heldCik AS cik,
+           SUM(CASE WHEN h.quarterDate=${cur} THEN h.shares ELSE 0 END) curShares,
+           SUM(CASE WHEN h.quarterDate=${prev} THEN h.shares ELSE 0 END) prevShares,
            SUM(CASE WHEN h.quarterDate=${cur} THEN h.valueUsd ELSE 0 END) curUsd,
-           SUM(CASE WHEN h.quarterDate=${prev} THEN h.valueUsd ELSE 0 END) prevUsd
+           SUM(CASE WHEN h.quarterDate=${prev} THEN h.valueUsd ELSE 0 END) prevUsd,
+           MAX(CASE WHEN q.quarterDate=${cur} THEN q.totalValueUsd END) curBook,
+           MAX(CASE WHEN q.quarterDate=${prev} THEN q.totalValueUsd END) prevBook
     FROM fund_holdings h
+    LEFT JOIN fund_quarters q ON q.fundCik=h.fundCik AND q.quarterDate=h.quarterDate
     WHERE h.quarterDate IN (${cur}, ${prev}) AND h.secClass='COM' AND h.heldCik IS NOT NULL
       AND h.fundCik IN (${sql.join(stable.map((id) => sql`${id}`), sql`, `)})
     GROUP BY h.fundCik, h.heldCik
-    HAVING ABS(curUsd - prevUsd) > 0
-    ORDER BY ABS(curUsd - prevUsd) DESC
+    HAVING ABS(curShares - prevShares) > 0
+    ORDER BY ABS(curShares - prevShares) DESC
     LIMIT ${limit}`);
   const fundCiks = [...new Set(rows.map((r: any) => Number(r.fundCik)))];
   const funds = fundCiks.length === 0 ? [] : ((await db.execute(sql`
@@ -151,15 +157,22 @@ export async function fundFlowsGraph(limit = 400): Promise<FundFlowsGraphRespons
   return {
     funds,
     companies: companyRows,
-    edges: rows.map((r: any) => ({
-      fundCik: Number(r.fundCik), cik: Number(r.cik), curUsd: Number(r.curUsd ?? 0),
-      deltaUsd: Number(r.curUsd ?? 0) - Number(r.prevUsd ?? 0),
-    })),
+    edges: rows.map((r: any) => {
+      const curShares = Number(r.curShares ?? 0), prevShares = Number(r.prevShares ?? 0);
+      const m = flowMetrics(curShares, prevShares, r.curBook === null ? null : Number(r.curBook), r.prevBook === null ? null : Number(r.prevBook));
+      return {
+        fundCik: Number(r.fundCik), cik: Number(r.cik), curUsd: Number(r.curUsd ?? 0),
+        deltaUsd: Number(r.curUsd ?? 0) - Number(r.prevUsd ?? 0),
+        curShares,
+        deltaShares: m.deltaShares,
+        deltaWeightPp: m.deltaWeightPp,
+      };
+    }),
     guard: guarded.meta,
   };
 }
 
-export interface SectorFlowRow { sector: string; deltaUsd: number; curUsd: number }
+export interface SectorFlowRow { sector: string; deltaUsd: number; curUsd: number; deltaShares: number; curShares: number; deltaWeightPp: number | null }
 export interface SectorFlowsDetailed { rows: SectorFlowRow[]; guard: GuardMeta | null }
 
 export async function sectorFlowsDetailed(): Promise<SectorFlowsDetailed> {
@@ -171,16 +184,29 @@ export async function sectorFlowsDetailed(): Promise<SectorFlowsDetailed> {
   if (!prev || stable.length < 2) return { rows: [], guard: guarded.meta };
   const rows = ((await db.execute(sql`
     SELECT c.sector,
+           SUM(CASE WHEN h.quarterDate=${cur} THEN h.shares ELSE 0 END) curShares,
+           SUM(CASE WHEN h.quarterDate=${prev} THEN h.shares ELSE 0 END) prevShares,
            SUM(CASE WHEN h.quarterDate=${cur} THEN h.valueUsd ELSE 0 END) curUsd,
-           SUM(CASE WHEN h.quarterDate=${prev} THEN h.valueUsd ELSE 0 END) prevUsd
-    FROM fund_holdings h JOIN companies c ON c.cik = h.heldCik
+           SUM(CASE WHEN h.quarterDate=${prev} THEN h.valueUsd ELSE 0 END) prevUsd,
+           SUM(CASE WHEN q.quarterDate=${cur} THEN q.totalValueUsd ELSE 0 END) curBook,
+           SUM(CASE WHEN q.quarterDate=${prev} THEN q.totalValueUsd ELSE 0 END) prevBook
+    FROM fund_holdings h
+    JOIN companies c ON c.cik = h.heldCik
+    LEFT JOIN fund_quarters q ON q.fundCik=h.fundCik AND q.quarterDate=h.quarterDate
     WHERE h.quarterDate IN (${cur}, ${prev}) AND h.secClass='COM' AND c.sector IS NOT NULL
       AND h.fundCik IN (${sql.join(stable.map((id) => sql`${id}`), sql`, `)})
-    GROUP BY c.sector`))[0] as unknown as any[]).map((r: any) => ({
-    sector: String(r.sector),
-    curUsd: Number(r.curUsd ?? 0),
-    deltaUsd: Number(r.curUsd ?? 0) - Number(r.prevUsd ?? 0),
-  })).sort((a: SectorFlowRow, b: SectorFlowRow) => b.deltaUsd - a.deltaUsd);
+    GROUP BY c.sector`))[0] as unknown as any[]).map((r: any) => {
+    const curShares = Number(r.curShares ?? 0), prevShares = Number(r.prevShares ?? 0);
+    const m = flowMetrics(curShares, prevShares, r.curBook === null ? null : Number(r.curBook), r.prevBook === null ? null : Number(r.prevBook));
+    return {
+      sector: String(r.sector),
+      curUsd: Number(r.curUsd ?? 0),
+      deltaUsd: Number(r.curUsd ?? 0) - Number(r.prevUsd ?? 0),
+      curShares,
+      deltaShares: m.deltaShares,
+      deltaWeightPp: m.deltaWeightPp,
+    };
+  }).sort((a: SectorFlowRow, b: SectorFlowRow) => b.deltaShares - a.deltaShares);
   return { rows, guard: guarded.meta };
 }
 
