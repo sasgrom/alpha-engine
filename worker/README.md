@@ -266,6 +266,22 @@ and error rates, score MAE/RMSE/Pearson/direction agreement, and the 20 largest
 score/why divergences with SEC links. Agreement is not absolute correctness;
 manual source review remains the quality gate.
 
+## Sector-neutral residuals and economic viability
+
+`neutralizeBySector` subtracts both the sector-median factor and the sector-median
+forward return (minimum 4 names per sector, global fallback otherwise). AssetGrowth
+retains positive IC: 63d +0.038 [+0.001,+0.073], 126d +0.089 [+0.036,+0.142].
+Book-to-market loses significance: +0.037/+0.023 with CI through zero, so most of
+the earlier value effect was sector-driven. BuybackYield, EV/EBIT and netDebt/EBITDA
+remain adverse; OCF yield, SUE, high52 and momentum122 show no robust signal.
+
+Economic quintile test (top/bottom 20%, 15 bps per unit turnover): high-asset-growth
+long/short has positive mean returns, 63d +3.58% [+0.82%,+6.60%] and 126d +11.15%
+[+5.13%,+17.26%], but max drawdown is 74.9% and 99.2% respectively. Opposite-direction
+portfolios lose all capital. This is statistical evidence of a signal, not an
+investable strategy: no promotion without volatility/capacity controls and nested
+holdout.
+
 ## Options data: snapshots, cache and normalization
 
 Collectors keep raw provider payloads in `worker/cache/options/` and normalized chains in `worker/cache/options-normalized/`. The manifest at `worker/cache/options/manifest.json` records provider, ticker, tradeDate, snapshotId, availability and quality metrics. Every run uses a new timestamped snapshotId by default, so history is never overwritten; rerun a crashed batch with the same `--snapshot-id` to skip completed files.
