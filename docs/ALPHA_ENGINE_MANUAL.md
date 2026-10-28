@@ -1059,6 +1059,16 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 Два слоя: курируемые 30 фондов (CIK сверены по cik-lookup SEC) + автопостроенный топ-300 по AUM (EDGAR full-text search, ~8 200 филеров). Таблицы `fund_holdings` (DDL 022/023: классы COM/PUT/CALL) и `fund_quarters` (итог ПОЛНОЙ книги — % of fund только от неё, иначе вздутие). Калибровка масштаба value: медиана implied-цены >$5 000 → филинг в долларах, не в тысячах (доказано на Point72; часть книг подаёт не по спеке). OpenFIGI с ключом `OPENFIGI_API_KEY` (25/100 за запрос) + `cusip_map` с до-резолвом тикеров на каждом прогоне (локальный пустой справочник companies — частая причина дыр). `scripts/13f-refresh.mts` v2: пакетные вставки, дисковый кэш XML, seen-quarter идемпотентность; `--totals-only` (добор итогов) и `--rebuild-events` (пересчёт событий из базы без сети). События только для activist/quant/fundamental: new/exit/±30% per cik:class; заметки детерминированные с $, % of fund, % of company, held by N funds. Транспорт `ingest kind=holdings` + `push-local-signals --table fund_holdings` (своя водяная метка). В проде после полного repair и синхронизации: 875 860 позиций, 300 фондов, 371 компания, 3 372 fund_quarters с filingDate, 16 422 события (все с заметками). UI: карточка Institutional на странице компании и «13F sector flows» на Dashboard.
 
+### 4.67 Итерация 5ag: pre-registered volatility targeting и chronological holdout
+
+**Правило без подгонки.** `applyVolTarget` использует только последние 4 квартальных strategy returns, целевую волатильность 5% на квартал и leverage 0.25–1.00 (gross ≤100% на обе ноги). Изменение leverage включается в turnover cost. Хронология: 60% development / 20% validation / 20% final holdout; никакого выбора параметров по holdout.
+
+**126 sessions.** Development maxDD снижается с 74.4% до 25.4%. Validation отрицателен для обоих: baseline −84.7% / vol-target −38.3%, то есть режимная зависимость остаётся. Final holdout: baseline −51.2% с maxDD 98.9%, vol-target **+200.8% с maxDD 31.7% и mean +5.40% [+0.62%,+9.76%]**. Risk control прошёл holdout, но это не доказательство стабильной будущей доходности.
+
+**63 sessions.** Validation улучшается с −40.6% до +25.1%; final-holdout доходность падает с +84.5% до +39.7%, зато maxDD снижается с 60.7% до 24.9%. Это подтверждает главный смысл volatility targeting: ожидаемая доходность может снижаться, адаптация риска важнее максимизации исторической доходности.
+
+**Вывод.** Есть доказанное улучшение риск-профиля AssetGrowth, но returns остаются synthetic sector-relative, validation периодически отрицателен, и live-стратегия пока не разрешена. Следующий этап — independent-universe и macro-regime validation. Полный набор — **301 тест**.
+
 ### 4.66 Итерация 5af: sector-neutral residuals и экономическая проверка AssetGrowth
 
 **Sector-neutral метод.** `neutralizeBySector` вычитает одновременно sector-median фактора и sector-median forward return на одну дату/горизонт. Для статистики сектора требуется ≥4 компаний, иначе используется глобальная медиана. Так проверяется выбор внутри отрасли, а не просто отраслевой beta. `sectorNeutralDataset` сохраняет residual points для IC и для последующего портфельного теста.

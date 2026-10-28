@@ -282,6 +282,23 @@ portfolios lose all capital. This is statistical evidence of a signal, not an
 investable strategy: no promotion without volatility/capacity controls and nested
 holdout.
 
+## Pre-registered volatility targeting and chronological holdout
+
+`applyVolTarget` uses only the trailing 4 quarterly spread returns, targets 5%
+quarterly volatility and clamps leverage to 0.25–1.00 (gross <=100% across both
+legs). Leverage changes are included in turnover costs. Evaluation is strictly
+chronological: 60% development, 20% validation, 20% final holdout, with no
+parameter selection on holdout.
+
+At 126 sessions, development maxDD falls from 74.4% to 25.4%; validation remains
+negative for both variants (baseline -84.7%, vol-target -38.3%). On final holdout,
+baseline loses 51.2% with 98.9% maxDD, while vol-target gains 200.8% with 31.7%
+maxDD and +5.40% mean return [+0.62%,+9.76%]. At 63 sessions, vol-target improves
+validation from -40.6% to +25.1%, but final-holdout return falls from +84.5% to
++39.7% while maxDD falls from 60.7% to 24.9%. This proves better risk control, not
+a universally profitable strategy. These remain synthetic sector-relative returns;
+next gate is independent-universe and macro-regime validation, not production.
+
 ## Options data: snapshots, cache and normalization
 
 Collectors keep raw provider payloads in `worker/cache/options/` and normalized chains in `worker/cache/options-normalized/`. The manifest at `worker/cache/options/manifest.json` records provider, ticker, tradeDate, snapshotId, availability and quality metrics. Every run uses a new timestamped snapshotId by default, so history is never overwritten; rerun a crashed batch with the same `--snapshot-id` to skip completed files.

@@ -1062,6 +1062,16 @@ Local script `scripts/daily-digest.mts` (home, scheduled): reads the last 36h of
 
 Two layers: curated 30 funds (CIKs verified against the SEC cik-lookup) + an auto-built top-300 by AUM (EDGAR full-text search, ~8,200 filers). Tables `fund_holdings` (DDL 022/023: COM/PUT/CALL classes) and `fund_quarters` (FULL book total — % of fund must use it, else it inflates). Value scale autocalibration: median implied price >$5,000 ⇒ the filing reported dollars, not thousands (proven on Point72; other books violate the spec the same way). OpenFIGI with optional `OPENFIGI_API_KEY` (25/100 per request) + `cusip_map` with per-run ticker re-resolution (an empty local companies registry once cost a rebuild). `scripts/13f-refresh.mts` v2: batched inserts, disk-cached XML, idempotent seen-quarter guard; `--totals-only` (book-total backfill) and `--rebuild-events` (DB-only event regeneration). Events only for activist/quant/fundamental: new/exit/±30% per cik:class; deterministic notes with $, % of fund, % of company, held by N funds. Transport `ingest kind=holdings` + `push-local-signals --table fund_holdings` (own watermark). Prod after the full repair and synchronization: 875,860 positions, 300 funds, 371 companies, 3,372 fund_quarters with filingDate, and 16,422 events (all with notes). UI: Institutional card on the company page and "13F sector flows" on the Dashboard.
 
+### 4.67 Iteration 5ag: pre-registered volatility targeting and chronological holdout
+
+**No fitted rule.** `applyVolTarget` uses only the trailing 4 quarterly strategy returns, a 5% quarterly volatility target and leverage clamped to 0.25–1.00 (gross <=100% across both legs). Leverage changes are included in turnover costs. The split is strictly chronological: 60% development, 20% validation, 20% final holdout, with no parameter selection on holdout.
+
+**126 sessions.** Development maxDD falls from 74.4% to 25.4%. Validation remains negative for both variants (baseline -84.7%, vol-target -38.3%), so regime dependence persists. On final holdout, baseline loses 51.2% with 98.9% maxDD, while vol-target gains **200.8% with 31.7% maxDD and +5.40% mean return [+0.62%,+9.76%]**. Risk control survives holdout, but future return stability is not proven.
+
+**63 sessions.** Validation improves from -40.6% to +25.1%; final-holdout return falls from +84.5% to +39.7%, while maxDD falls from 60.7% to 24.9%. This is the intended tradeoff: expected return may fall, but risk adaptation matters more than maximizing historical return.
+
+**Conclusion.** AssetGrowth's risk profile improves, but returns remain synthetic sector-relative, validation is periodically negative and live deployment is still not authorized. Next: independent-universe and macro-regime validation. Full suite: **301 tests**.
+
 ### 4.66 Iteration 5af: sector-neutral residuals and the AssetGrowth economic test
 
 **Sector-neutral method.** `neutralizeBySector` subtracts both the sector-median factor and sector-median forward return on the same date/horizon. A sector needs at least 4 companies, otherwise the global median is used. This tests selection within an industry rather than sector beta. `sectorNeutralDataset` preserves residual points for IC and portfolio evaluation.
