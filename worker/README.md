@@ -281,9 +281,17 @@ npx tsx worker/edgar-tone-ab.mts --only AIG --limit 100 --engines ollama --promp
 npx tsx worker/edgar-tone-ab.mts --only AIG --limit 100 --report-only --compare-prompts
 ```
 
+```powershell
+npx tsx worker/edgar-tone-ab.mts --only AIG --limit 100 --engines ollama --prompt-version v3 --run-id aig-100-ollama-prompt-v3
+npx tsx worker/edgar-tone-ab.mts --only AIG --limit 100 --report-only --compare-prompts --base-version v1 --candidate-version v3
+```
+
 `--prompt-version v2` adds ticker/form context, materiality anchors, anti-hallucination
-rules and the capital-return guard. Production keeps v1. Results carry promptVersion,
-so `--compare-prompts` evaluates Ollama v1 vs v2 on identical prepared windows.
+rules and the capital-return guard. `--prompt-version v3` additionally separates
+one-off charges from recurring trends, forbids pessimism flips without dominant
+deterioration and preserves direct shareholder benefits. Production keeps v1.
+Results carry promptVersion, so `--compare-prompts` evaluates any v1/v2/v3 pair on
+identical prepared windows. Use `--base-version` and `--candidate-version` to choose.
 
 ## Sector-neutral residuals and economic viability
 

@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } from "./gdelt";
 import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from "./stocktwits";
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
-import { extractScore, extractVerdict, isBoilerplateRationale, sanitizeWhy, tonePrompt, tonePromptV2, generate } from "./ollama";
+import { extractScore, extractVerdict, isBoilerplateRationale, sanitizeWhy, tonePrompt, tonePromptV2, tonePromptV3, generate } from "./ollama";
 import { buildDigestPrompt } from "./digest";
 import { factsToRows, isThinContent, isPermanentSecMissing, secGet, SecHttpError, shouldScoreManifestEntry, shouldDownloadExhibit } from "./edgar";
 
@@ -73,6 +73,13 @@ describe("ollama: extractScore", () => {
     expect(p).toContain("Dividends and buybacks do not offset");
     expect(p).toContain("Never infer fines, fraud, investigations");
     expect(p).toContain("no substantive content");
+  });
+  it("tonePromptV3 prevents pessimism flips and preserves direct shareholder benefits", () => {
+    const p = tonePromptV3("x".repeat(100), { ticker: "AIG", form: "8-K" });
+    expect(p).toContain("one-off charges");
+    expect(p).toContain("dominant deterioration in core operations");
+    expect(p).toContain("Higher acquisition consideration is a direct benefit");
+    expect(p).toContain("Historical events must not dominate current operating results");
   });
 });
 
