@@ -1059,6 +1059,21 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 Два слоя: курируемые 30 фондов (CIK сверены по cik-lookup SEC) + автопостроенный топ-300 по AUM (EDGAR full-text search, ~8 200 филеров). Таблицы `fund_holdings` (DDL 022/023: классы COM/PUT/CALL) и `fund_quarters` (итог ПОЛНОЙ книги — % of fund только от неё, иначе вздутие). Калибровка масштаба value: медиана implied-цены >$5 000 → филинг в долларах, не в тысячах (доказано на Point72; часть книг подаёт не по спеке). OpenFIGI с ключом `OPENFIGI_API_KEY` (25/100 за запрос) + `cusip_map` с до-резолвом тикеров на каждом прогоне (локальный пустой справочник companies — частая причина дыр). `scripts/13f-refresh.mts` v2: пакетные вставки, дисковый кэш XML, seen-quarter идемпотентность; `--totals-only` (добор итогов) и `--rebuild-events` (пересчёт событий из базы без сети). События только для activist/quant/fundamental: new/exit/±30% per cik:class; заметки детерминированные с $, % of fund, % of company, held by N funds. Транспорт `ingest kind=holdings` + `push-local-signals --table fund_holdings` (своя водяная метка). В проде после полного repair и синхронизации: 875 860 позиций, 300 фондов, 371 компания, 3 372 fund_quarters с filingDate, 16 422 события (все с заметками). UI: карточка Institutional на странице компании и «13F sector flows» на Dashboard.
 
+### 4.64 Итерация 5ad: baseline cross-sectional IC для 50 S&P против SPY
+
+**Методика.** `companyFactorIc` и `crossSectionFactorIc` больше не используют raw forward return: цель — 63/126-session **excess return over SPY**, с availability anchors и исключением ещё не наступивших exit windows. `crossSectionFactorIc(requestedCiks?)` позволяет ограничить S&P-панель `research-universe-50`, не смешивая XOM_PRE/RIVN/ENLT; evidence-набор идёт отдельно.
+
+**Результат.** Получено 1 929 quarterly factor-horizon rows. Для каждого фактора вычислен weighted Spearman по кварталам, median, positive-quarter share и 95% CI через 2 000 circular block-bootstrap итераций по 4 квартала (seed 42), чтобы не выдавать перекрывающиеся окна за независимые наблюдения:
+
+- `assetGrowth`: **+0.132 [+0.074,+0.191] / +0.182 [+0.115,+0.243]** — единственный сильный кандидат, positive quarters 69%/68%; однако 63d IC отрицателен в 2022 (−0.180) и 2026 YTD (−0.083), режимная нестабильность сохраняется.
+- `accruals`: −0.057 [−0.097,−0.016] / −0.047 [−0.094,−0.001] — ожидаемый отрицательный знак, на 126d граница CI почти касается нуля.
+- `buybackYield`: −0.076 [−0.145,−0.009] / −0.168 [−0.240,−0.091] — отрицательный IC значим, не продвигать.
+- `grossProfitability`: −0.088 [−0.152,−0.025] / +0.058 [−0.020,+0.137] — знак меняется.
+- `high52`: −0.059 [−0.152,+0.040] / −0.033 [−0.162,+0.105]; `momentum122`: −0.013 [−0.084,+0.052] / −0.005 [−0.096,+0.079] — устойчивого сигнала нет.
+- `sue`: −0.001 [−0.041,+0.037] / +0.043 [+0.002,+0.082] — только слабый 126d кандидат.
+
+**Вывод.** Это baseline factor research, не доказательство live alpha. Следующий gate — sector-neutral residuals, nested holdout с costs/capacity и проверка текущего режима; probability model не продвигается. Полный набор — **295 тестов**.
+
 ### 4.63 Итерация 5ac: полный price backfill для 53 CIK + SPY завершён
 
 **Архивы проверены до импорта.** Основной пользовательский ZIP содержал 51 файл; отсутствовали только `cop.us.txt` и `spy.us.txt`. Дополнительный ZIP содержал ровно эти два файла. Все имена и внутренние тикеры CSV совпали, пустых/malformed rows нет, у всех файлов последняя дата 2026-10-26. Отдельный `xom_pre.us.txt` не потребовался: alias XOM → XOM_PRE сработал в importer.

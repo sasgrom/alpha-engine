@@ -1062,6 +1062,21 @@ Local script `scripts/daily-digest.mts` (home, scheduled): reads the last 36h of
 
 Two layers: curated 30 funds (CIKs verified against the SEC cik-lookup) + an auto-built top-300 by AUM (EDGAR full-text search, ~8,200 filers). Tables `fund_holdings` (DDL 022/023: COM/PUT/CALL classes) and `fund_quarters` (FULL book total — % of fund must use it, else it inflates). Value scale autocalibration: median implied price >$5,000 ⇒ the filing reported dollars, not thousands (proven on Point72; other books violate the spec the same way). OpenFIGI with optional `OPENFIGI_API_KEY` (25/100 per request) + `cusip_map` with per-run ticker re-resolution (an empty local companies registry once cost a rebuild). `scripts/13f-refresh.mts` v2: batched inserts, disk-cached XML, idempotent seen-quarter guard; `--totals-only` (book-total backfill) and `--rebuild-events` (DB-only event regeneration). Events only for activist/quant/fundamental: new/exit/±30% per cik:class; deterministic notes with $, % of fund, % of company, held by N funds. Transport `ingest kind=holdings` + `push-local-signals --table fund_holdings` (own watermark). Prod after the full repair and synchronization: 875,860 positions, 300 funds, 371 companies, 3,372 fund_quarters with filingDate, and 16,422 events (all with notes). UI: Institutional card on the company page and "13F sector flows" on the Dashboard.
 
+### 4.64 Iteration 5ad: baseline cross-sectional IC for 50 S&P names versus SPY
+
+**Method.** `companyFactorIc` and `crossSectionFactorIc` now target 63/126-session **excess forward returns over SPY**, with availability anchors and unfinished exit windows excluded. `crossSectionFactorIc(requestedCiks?)` supports an explicit `research-universe-50` filter so XOM_PRE/RIVN/ENLT cannot silently contaminate the S&P panel; evidence CIKs remain separate.
+
+**Results.** The run produced 1,929 quarterly factor-horizon rows. Each factor reports n-weighted Spearman, median, positive-quarter share and a 95% CI from 2,000 circular block-bootstrap iterations over 4-quarter blocks (seed 42), rather than treating overlapping windows as independent observations:
+
+- `assetGrowth`: **+0.132 [+0.074,+0.191] / +0.182 [+0.115,+0.243]** — the strongest candidate, with 69%/68% positive quarters. It remains regime-dependent: 63-day IC was -0.180 in 2022 and -0.083 in 2026 YTD.
+- `accruals`: -0.057 [-0.097,-0.016] / -0.047 [-0.094,-0.001] — expected negative sign, with the 126-day CI nearly touching zero.
+- `buybackYield`: -0.076 [-0.145,-0.009] / -0.168 [-0.240,-0.091] — significantly adverse; do not promote.
+- `grossProfitability`: -0.088 [-0.152,-0.025] / +0.058 [-0.020,+0.137] — sign unstable.
+- `high52`: -0.059 [-0.152,+0.040] / -0.033 [-0.162,+0.105]; `momentum122`: -0.013 [-0.084,+0.052] / -0.005 [-0.096,+0.079] — no robust signal.
+- `sue`: -0.001 [-0.041,+0.037] / +0.043 [+0.002,+0.082] — only a weak 126-day candidate.
+
+**Conclusion.** This is a factor-research baseline, not evidence of live alpha. The next gate is sector-neutral residuals and nested holdout with costs, capacity and current-regime checks; no probability-model promotion. Full suite: **295 tests**.
+
 ### 4.63 Iteration 5ac: full price backfill for 53 CIKs + SPY completed
 
 **Archives verified before import.** The user's main ZIP contained 51 files; only `cop.us.txt` and `spy.us.txt` were missing. The supplemental ZIP contained exactly those two files. Filenames matched internal CSV tickers, no empty or malformed rows were found, and every file reached 2026-10-26. No separate `xom_pre.us.txt` was needed: the XOM → XOM_PRE alias worked in the importer.

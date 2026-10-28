@@ -9,7 +9,7 @@ import { factorPoints } from "@db/schema";
 import { getDb } from "../queries/connection";
 import { computeCompanyFactors } from "./factors";
 import { getBars } from "./prices";
-import { forwardReturn, icStats, type IcPair } from "./ic";
+import { excessForwardReturn, icStats, type IcPair } from "./ic";
 
 const HORIZONS = [63, 126] as const; // ~1Q, ~2Q in trading days
 
@@ -70,7 +70,7 @@ export interface FactorIcRow {
   spearman: number | null;
 }
 
-/** Per-company, per-factor IC vs forward 1Q/2Q returns (availability-anchored). */
+/** Per-company, per-factor IC vs forward 1Q/2Q excess returns over SPY. */
 export async function companyFactorIc(cik: number): Promise<FactorIcRow[]> {
   const db = getDb();
   const [pointsRaw]: any = await db.execute(sql`SELECT factor, filedAt, value FROM factor_points WHERE cik=${cik} AND value IS NOT NULL ORDER BY filedAt`);
@@ -78,6 +78,9 @@ export async function companyFactorIc(cik: number): Promise<FactorIcRow[]> {
   if (points.length === 0) return [];
   const from = new Date(Date.now() - 7 * 365 * 86400_000).toISOString().slice(0, 10);
   const bars = (await getBars(cik, from)).filter((b) => (b.adjClose ?? b.close) !== null)
+    .map((b) => ({ date: b.date, close: (b.adjClose ?? b.close) as number }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const spyBars = (await getBars(0, from)).filter((b) => (b.adjClose ?? b.close) !== null)
     .map((b) => ({ date: b.date, close: (b.adjClose ?? b.close) as number }))
     .sort((a, b) => a.date.localeCompare(b.date));
   const out: FactorIcRow[] = [];
@@ -88,7 +91,7 @@ export async function companyFactorIc(cik: number): Promise<FactorIcRow[]> {
       const pairs: IcPair[] = [];
       for (const p of pts) {
         const anchor = String(p.filedAt).slice(0, 10);
-        const y = forwardReturn(bars, anchor, h);
+        const y = excessForwardReturn(bars, spyBars, anchor, h);
         if (y !== null) pairs.push({ x: Number(p.value), y });
       }
       const st = icStats(pairs);
@@ -98,17 +101,25 @@ export async function companyFactorIc(cik: number): Promise<FactorIcRow[]> {
   return out;
 }
 
-/** Cross-sectional IC per quarter across all materialized companies. */
-export async function crossSectionFactorIc(): Promise<(FactorIcRow & { quarter: string })[]> {
+/** Cross-sectional IC per quarter across the requested companies (all by default). */
+export async function crossSectionFactorIc(requestedCiks?: number[]): Promise<(FactorIcRow & { quarter: string })[]> {
   const db = getDb();
-  const [ciksRaw]: any = await db.execute(sql`SELECT DISTINCT cik FROM factor_points`);
-  const ciks = ciksRaw as { cik: number }[];
+  let ciks: number[];
+  if (requestedCiks) {
+    ciks = requestedCiks;
+  } else {
+    const [rows]: any = await db.execute(sql`SELECT DISTINCT cik FROM factor_points`);
+    ciks = rows.map((r: any) => Number(r.cik));
+  }
   const perQuarter = new Map<string, Map<string, IcPair>>();
-  for (const { cik } of ciks) {
+  const from = new Date(Date.now() - 7 * 365 * 86400_000).toISOString().slice(0, 10);
+  const spyBars = (await getBars(0, from)).filter((b) => (b.adjClose ?? b.close) !== null)
+    .map((b) => ({ date: b.date, close: (b.adjClose ?? b.close) as number }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  for (const cik of ciks) {
     // rebuild per-quarter pairs from the same anchors (cheap second pass)
     const [ptsRaw]: any = await db.execute(sql`SELECT factor, filedAt, value FROM factor_points WHERE cik=${cik} AND value IS NOT NULL ORDER BY filedAt`);
     const pts = ptsRaw as { factor: string; filedAt: string; value: number }[];
-    const from = new Date(Date.now() - 7 * 365 * 86400_000).toISOString().slice(0, 10);
     const bars = (await getBars(cik, from)).filter((b) => (b.adjClose ?? b.close) !== null)
       .map((b) => ({ date: b.date, close: (b.adjClose ?? b.close) as number }))
       .sort((a, b) => a.date.localeCompare(b.date));
@@ -116,7 +127,7 @@ export async function crossSectionFactorIc(): Promise<(FactorIcRow & { quarter: 
       const anchor = String(p.filedAt).slice(0, 10);
       const quarter = anchor.slice(0, 7);
       for (const h of HORIZONS) {
-        const y = forwardReturn(bars, anchor, h);
+        const y = excessForwardReturn(bars, spyBars, anchor, h);
         if (y === null) continue;
         const key = `${p.factor}|${quarter}|${h}`;
         if (!perQuarter.has(key)) perQuarter.set(key, new Map());

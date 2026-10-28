@@ -127,6 +127,26 @@ Completed baseline (2026-10-27): all 53 CIKs + SPY have daily bars through
 2026-10-26 (447,282 rows), with zero missing tickers. `factor_points` was rebuilt
 to 15,312 rows; `high52` and `momentum122` now cover all 53 CIKs.
 
+## Factor IC baseline (50 current S&P, excess return over SPY)
+
+Cross-sectional Spearman IC uses 63/126-session excess forward returns and a
+2,000-run circular block bootstrap (4-quarter blocks, seed 42), not independent
+sample-count claims. Weighted IC [95% block CI]:
+
+| Factor | 63 sessions | 126 sessions | Reading |
+|---|---:|---:|---|
+| accruals | -0.057 [-0.097,-0.016] | -0.047 [-0.094,-0.001] | expected negative sign, borderline at 126 |
+| assetGrowth | +0.132 [+0.074,+0.191] | +0.182 [+0.115,+0.243] | strongest candidate, but regime-dependent |
+| buybackYield | -0.076 [-0.145,-0.009] | -0.168 [-0.240,-0.091] | adverse; do not promote |
+| grossProfitability | -0.088 [-0.152,-0.025] | +0.058 [-0.020,+0.137] | sign unstable |
+| high52 | -0.059 [-0.152,+0.040] | -0.033 [-0.162,+0.105] | no robust signal |
+| momentum122 | -0.013 [-0.084,+0.052] | -0.005 [-0.096,+0.079] | no signal |
+| sue | -0.001 [-0.041,+0.037] | +0.043 [+0.002,+0.082] | weak 126-day candidate only |
+
+AssetGrowth remains regime-dependent: 63-day weighted IC was -0.180 in 2022 and
+-0.083 in 2026 YTD, despite the strong full-sample CI. Next gate: sector-neutral
+residuals and nested holdout with costs/capacity, not probability-model promotion.
+
 ## Research universe: 50 current S&P names + 3 evidence-only CIKs
 
 `research-universe-50.json` contains 50 current S&P tickers: the original 35,
