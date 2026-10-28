@@ -1,8 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { compareScores, evenSample } from "./tone-ab";
+import { compareScores, evenSample, REPORT_ENGINES } from "./tone-ab";
 import { generateStrata } from "./strata";
 
 describe("tone A/B sampling and score comparison", () => {
+  it("keeps both engine summaries after a single-engine continuation", () => {
+    expect(REPORT_ENGINES).toEqual(["ollama", "strata"]);
+  });
+
   it("samples the full history deterministically with both endpoints", () => {
     const rows = Array.from({ length: 1000 }, (_, i) => i);
     const sample = evenSample(rows, 100);

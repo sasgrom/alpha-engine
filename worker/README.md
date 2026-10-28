@@ -266,6 +266,12 @@ and error rates, score MAE/RMSE/Pearson/direction agreement, and the 20 largest
 score/why divergences with SEC links. Agreement is not absolute correctness;
 manual source review remains the quality gate.
 
+Report continuation fix: running `--engines ollama` after a completed Strata-only
+run now retains both engine summaries from JSONL/sessions. Model ID falls back to
+the latest result, and wall time falls back to per-request durations if a session
+file is missing. Repeating the same continuation command regenerates the report
+without re-scoring completed windows.
+
 ## Sector-neutral residuals and economic viability
 
 `neutralizeBySector` subtracts both the sector-median factor and the sector-median

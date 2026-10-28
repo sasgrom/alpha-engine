@@ -8,7 +8,7 @@ import { loadEdgarUniverse } from "./lib/edgar";
 import { extractVerdict, generate, isBoilerplateRationale, LLM_MODEL, status as ollamaStatus, tonePrompt } from "./lib/ollama";
 import { generateStrata, strataStatus, type StrataGenerateResult } from "./lib/strata";
 import { prepareToneFiling, THIN_SKIP } from "./lib/tone-prep";
-import { compareScores, evenSample, type AbPlanItem } from "./lib/tone-ab";
+import { compareScores, evenSample, REPORT_ENGINES, type AbPlanItem } from "./lib/tone-ab";
 import { tokensPerSecond } from "./lib/tone-metrics";
 import { writeJsonAtomic } from "./lib/json-file";
 import type { GenerateResult } from "./lib/ollama";
@@ -205,9 +205,10 @@ function outcome(engine: Engine, item: AbPlanItem) {
 
 function engineSummary(engine: Engine) {
   const rows = results.filter((r) => r.engine === engine);
-  const model = sessions.filter((s) => s.engine === engine).at(-1)?.model ?? modelByEngine[engine];
+  const model = sessions.filter((s) => s.engine === engine).at(-1)?.model ?? rows.at(-1)?.model ?? modelByEngine[engine];
   const outcomes = plan.items.map((item) => outcome(engine, item));
-  const wallMs = sessions.filter((s) => s.engine === engine).reduce((n, s) => n + s.wallMs, 0);
+  const sessionWallMs = sessions.filter((s) => s.engine === engine).reduce((n, s) => n + s.wallMs, 0);
+  const wallMs = sessionWallMs > 0 ? sessionWallMs : rows.reduce((n, r) => n + r.wallMs, 0);
   const inputTokens = rows.reduce((n, r) => n + r.inputTokens, 0);
   const cachedTokens = rows.reduce((n, r) => n + r.cachedTokens, 0);
   const readTokens = rows.reduce((n, r) => n + r.readTokens, 0);
@@ -259,7 +260,7 @@ function writeReports() {
     runId, ticker, documents: plan.items.length, forms: Object.fromEntries(
       [...plan.items.reduce((m, x) => m.set(x.form, (m.get(x.form) ?? 0) + 1), new Map<string, number>()).entries()].sort(),
     ),
-    engines: Object.fromEntries(engines.map((e) => [e, engineSummary(e)])),
+    engines: Object.fromEntries(REPORT_ENGINES.map((e) => [e, engineSummary(e)])),
     comparison: comparisonData(),
     notes: [
       "Sequential single-request runs; warmups excluded; production manifests and signals are untouched.",

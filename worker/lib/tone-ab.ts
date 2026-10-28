@@ -1,3 +1,5 @@
+export const REPORT_ENGINES = ["ollama", "strata"] as const;
+
 export interface AbPlanItem {
   ticker: string;
   cik: number;
