@@ -15,6 +15,7 @@ import {
   uniqueIndex,
   index,
 } from "drizzle-orm/mysql-core";
+import { SIGNAL_NOTE_MAX_LENGTH } from "@contracts/signals";
 
 export const users = mysqlTable("users", {
   id: serial("id").primaryKey(),
@@ -606,7 +607,7 @@ export const signals = mysqlTable(
     /** live | backfill */
     src: varchar("src", { length: 24 }).default("live").notNull(),
     /** 5c: one-line model rationale for LLM-scored rows (the "why"); NULL for collectors */
-    note: varchar("note", { length: 512 }),
+    note: varchar("note", { length: SIGNAL_NOTE_MAX_LENGTH }),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (t) => [

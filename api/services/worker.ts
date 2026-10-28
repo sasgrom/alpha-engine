@@ -20,6 +20,7 @@ import { z } from "zod";
 import { and, eq, isNull, sql } from "drizzle-orm";
 import { getDb } from "../queries/connection";
 import { digests, facts, signals, workerKeys } from "@db/schema";
+import { SIGNAL_NOTE_MAX_LENGTH } from "@contracts/signals";
 
 const keyHashOf = (key: string) => createHash("sha256").update(key).digest("hex");
 
@@ -57,7 +58,7 @@ export const workerSignalRowZ = z.object({
   payloadKey: z.string().max(255).nullish(),
   src: z.enum(["live", "backfill"]).default("live"),
   /** 5c: optional one-line model rationale ("why") — human-facing, shown in the UI */
-  note: z.string().max(512).nullish(),
+  note: z.string().max(SIGNAL_NOTE_MAX_LENGTH).nullish(),
 });
 export type WorkerSignalRow = z.infer<typeof workerSignalRowZ>;
 

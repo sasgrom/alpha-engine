@@ -17,6 +17,7 @@ import { loadEdgarUniverse, shouldScoreManifestEntry } from "./lib/edgar";
 import { extractVerdict, generate, isBoilerplateRationale, LLM_MODEL, NUM_CTX, status, tonePrompt } from "./lib/ollama";
 import { postSignals, type SignalRow } from "./lib/ingest";
 import { startProgress } from "./lib/progress";
+import { joinSignalNotes } from "../contracts/signals";
 import { prepareToneFiling } from "./lib/tone-prep";
 import { writeJsonAtomic } from "./lib/json-file";
 import { tokensPerSecond, unionDurationMs, type RequestInterval } from "./lib/tone-metrics";
@@ -235,7 +236,7 @@ for (const co of universe) {
           cik: co.cik, source: "edgar", signalType: "tone", eventTs: m.eventTs,
           score: avg, magnitude: scores.length,
           payloadKey: `llm:${LLM_MODEL}:edgar:${co.cik}:${m.accessionNo}`,
-          src: "backfill", note: whys.length ? whys.join(" | ").slice(0, 500) : null,
+          src: "backfill", note: joinSignalNotes(whys),
         } }, telemetry);
       } else if (fatal) {
         audit(m, "aborted", "LLM request failed", telemetry);

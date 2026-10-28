@@ -8,6 +8,7 @@ import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
 import { extractScore, extractVerdict, isBoilerplateRationale, sanitizeWhy, tonePrompt, tonePromptV2, tonePromptV3, tonePromptV4, generate } from "./ollama";
 import { buildDigestPrompt } from "./digest";
+import { joinSignalNotes, SIGNAL_NOTE_MAX_LENGTH, SIGNAL_WHY_MAX_LENGTH, truncateSignalNote } from "../../contracts/signals";
 import { factsToRows, isThinContent, isPermanentSecMissing, secGet, SecHttpError, shouldScoreManifestEntry, shouldDownloadExhibit } from "./edgar";
 
 describe("ollama: extractScore", () => {
@@ -35,6 +36,26 @@ describe("ollama: extractScore", () => {
     expect(sanitizeWhy("The text presents new regulatory hurdles for chips.")).toBe("New regulatory hurdles for chips.");
     expect(sanitizeWhy("The filing is a standard Form 8-K header containing only metadata.")).toBe("A standard Form 8-K header containing only metadata.");
     expect(sanitizeWhy("NVIDIA reported record revenue of $68.1B.")).toBe("NVIDIA reported record revenue of $68.1B."); // real content untouched
+  });
+  it("sanitizeWhy preserves a complete sentence instead of slicing the next one", () => {
+    const first = `${"A".repeat(350)}.`;
+    const cleaned = sanitizeWhy(`${first} ${"B".repeat(200)}.`);
+    expect(cleaned).toBe(first);
+    expect(cleaned.length).toBeLessThanOrEqual(SIGNAL_WHY_MAX_LENGTH);
+  });
+  it("joinSignalNotes retains complete windows up to the shared 2000-char limit", () => {
+    const notes = Array.from({ length: 5 }, (_, i) => `${String.fromCharCode(65 + i)}`.repeat(449) + ".");
+    const joined = joinSignalNotes(notes);
+    expect(joined).toBe(notes.slice(0, 4).join(" | "));
+    expect(joined!.length).toBeGreaterThan(500);
+    expect(joined!.length).toBeLessThanOrEqual(SIGNAL_NOTE_MAX_LENGTH);
+    expect(joinSignalNotes([])).toBeNull();
+  });
+  it("truncateSignalNote falls back to a word boundary for one overlong sentence", () => {
+    const truncated = truncateSignalNote("word ".repeat(500));
+    expect(truncated.length).toBeLessThanOrEqual(SIGNAL_NOTE_MAX_LENGTH);
+    expect(truncated.endsWith("word…")).toBe(true);
+    expect(truncated).not.toContain("wor…");
   });
   it("isThinContent gates cover pages and TOC dumps before the LLM", () => {
     expect(isThinContent("FORM 8-K\nItem 1.01 ..... 2\nItem 9.01 ..... 3")).toBe(true); // tiny

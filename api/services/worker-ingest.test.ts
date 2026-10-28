@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { workerFactRowZ, workerIngestBodyZ, workerQuarterRowZ } from "./worker";
+import { workerFactRowZ, workerIngestBodyZ, workerQuarterRowZ, workerSignalRowZ } from "./worker";
+import { SIGNAL_NOTE_MAX_LENGTH } from "@contracts/signals";
 
 describe("worker fund_quarters ingest contract", () => {
   it("accepts a complete book summary with availability", () => {
@@ -30,6 +31,22 @@ describe("worker fund_quarters ingest contract", () => {
     };
     const body = workerIngestBodyZ.parse({ kind: "holdingsSnapshot", rows: [holding] });
     expect(body.kind).toBe("holdingsSnapshot");
+  });
+});
+
+describe("worker signal note contract", () => {
+  const row = {
+    cik: 320193,
+    source: "edgar" as const,
+    signalType: "tone" as const,
+    eventTs: "2026-10-28 10:00:00",
+    score: 0.2,
+  };
+
+  it("accepts a complete 2000-char note and rejects overflow", () => {
+    const note = "n".repeat(SIGNAL_NOTE_MAX_LENGTH);
+    expect(workerSignalRowZ.parse({ ...row, note }).note).toHaveLength(2000);
+    expect(() => workerSignalRowZ.parse({ ...row, note: `${note}n` })).toThrow();
   });
 });
 

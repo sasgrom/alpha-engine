@@ -7,6 +7,7 @@
  * with human labels or GDELT's own tone in downstream analytics.
  */
 import dns from "node:dns";
+import { SIGNAL_WHY_MAX_LENGTH, truncateSignalNote } from "../../contracts/signals";
 dns.setDefaultResultOrder("ipv4first");
 
 const BASE = process.env.OLLAMA_URL ?? "http://127.0.0.1:11434";
@@ -91,13 +92,15 @@ export async function status(): Promise<{ ok: boolean; models: string[] }> {
 /**
  * Human-facing cleanup of the model's "why": models keep opening with
  * "The text is/contains…" despite the prompt ban — strip the template
- * opener and re-capitalize. The substance that follows is kept verbatim.
+ * opener and re-capitalize. The substance is kept verbatim up to the
+ * per-window limit; oversized replies end at a sentence or word boundary.
  */
 export function sanitizeWhy(why: string): string {
   let s = why.trim();
   s = s.replace(/^(the|this)\s+(text|filing|document|current report|report|form\s+\S+)\s+(is|contains|reports?|presents?|details?|merely|only|consists?\s+of|outlines?|describes?)\s+/i, "");
   s = s.replace(/^(the|this)\s+(text|filing|document|current report|report)\s+/i, "");
-  return s ? s[0].toUpperCase() + s.slice(1) : why;
+  const cleaned = s ? s[0].toUpperCase() + s.slice(1) : why;
+  return truncateSignalNote(cleaned, SIGNAL_WHY_MAX_LENGTH);
 }
 
 /**
@@ -123,7 +126,7 @@ export function isBoilerplateRationale(why: string): boolean {
 /**
  * Extract a verdict from the model's reply. The prompt demands strict JSON
  * {"score": x, "why": "…"}; we parse defensively: first JSON object anywhere
- * in the reply, score clamped, why sanitized (single line, ≤400 chars).
+ * in the reply, score clamped, why sanitized and sentence-safely capped.
  * Returns null when unparsable — the caller SKIPS the row rather than
  * storing a guess (honesty).
  */
@@ -139,9 +142,9 @@ export function extractVerdict(reply: string): Verdict | null {
     if (!Number.isFinite(v)) return null;
     const score = Math.max(-1, Math.min(1, Math.round(v * 1000) / 1000));
     const why = typeof j.why === "string" && j.why.trim()
-      ? sanitizeWhy(j.why.replace(/[\x00-\x1f]+/g, " ").replace(/\s+/g, " ").trim()).slice(0, 480)
+      ? sanitizeWhy(j.why.replace(/[\x00-\x1f]+/g, " ").replace(/\s+/g, " ").trim())
       : null;
-    return { score, why: why ? why.slice(0, 480) : why };
+    return { score, why: why || null };
   } catch {
     return null;
   }
