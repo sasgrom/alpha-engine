@@ -14,6 +14,7 @@ import { startProgress } from "./lib/progress";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const SOURCE = arg("--source") ?? "all";
+const UNIVERSE_FILE = arg("--universe") ?? "edgar-universe-35.json";
 const ONLY = arg("--only")?.toUpperCase() ?? null;
 const FORCE = process.argv.includes("--force");
 const ALPHA_DATE = arg("--date") ?? "2017-11-15";
@@ -157,7 +158,7 @@ async function alphaVantage() {
 }
 
 if (SOURCE === "cboe" || SOURCE === "all") {
-  const universe = loadEdgarUniverse("edgar-universe-35.json").filter((c) => !ONLY || c.ticker === ONLY);
+  const universe = loadEdgarUniverse(UNIVERSE_FILE).filter((c) => c.ticker !== "XOM_PRE" && (!ONLY || c.ticker === ONLY));
   const date = arg("--snapshot-date") ?? new Date().toISOString().slice(0, 10);
   for (const co of universe) {
     try { await cboe(co.ticker, date, SNAPSHOT_ID); }
