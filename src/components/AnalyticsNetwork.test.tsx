@@ -1,9 +1,11 @@
 // @vitest-environment jsdom
+import { readFileSync } from "node:fs";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import AnalyticsNetwork from "./AnalyticsNetwork";
 import { analyticsSnapshot } from "@/data/analytics-snapshot";
+import { toneCarSeries, toneEventMeta } from "@/data/tone-event-study";
 
 (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -44,8 +46,30 @@ describe("AnalyticsNetwork", () => {
 
   it("keeps the snapshot evidence-based and current", () => {
     expect(analyticsSnapshot.metrics.factorCompanies).toBeLessThan(analyticsSnapshot.metrics.companies);
-    expect(analyticsSnapshot.metrics.optionsSnapshots).toBeGreaterThan(0);
+    expect(analyticsSnapshot.metrics.factorCompanies).toBe(analyticsSnapshot.metrics.factsCompanies);
+    expect(analyticsSnapshot.metrics.edgarToneCompanies).toBeGreaterThanOrEqual(50);
+    expect(analyticsSnapshot.metrics.optionsSnapshots).toBeGreaterThanOrEqual(200);
+    expect(analyticsSnapshot.metrics.latestPriceDate >= "2026-10-26").toBe(true);
+    expect(analyticsSnapshot.metrics.testCount).toBeGreaterThanOrEqual(342);
+    expect(analyticsSnapshot.actual.find((node) => node.id === "shareFlows")?.status).toBe("done");
+    expect(analyticsSnapshot.actual.find((node) => node.id === "optionFeatures")?.status).not.toBe("missing");
     expect(analyticsSnapshot.history.at(-1)?.week).toBe(analyticsSnapshot.week);
     expect(analyticsSnapshot.history.at(-1)?.metrics.factorCompanies).toBe(analyticsSnapshot.metrics.factorCompanies);
+  });
+
+  it("keeps the event-study chart tied to the measured research result", () => {
+    expect(toneCarSeries.map((point) => point.horizon)).toEqual([1, 5, 21, 63]);
+    expect(toneEventMeta.events).toBe(2515);
+    expect(toneCarSeries[3].positive).toBeLessThan(0);
+    expect(toneCarSeries[3].negative).toBeGreaterThan(0);
+  });
+
+  it("keeps the published English review synchronized with current evidence", () => {
+    const report = readFileSync("public/reports/project-strength-review.md", "utf8");
+    expect(report).toContain("2026-10-29");
+    expect(report).toContain("1,348,866 facts from 53 CIKs");
+    expect(report).toContain("250 snapshots and 310,634 normalized rows");
+    expect(report).not.toContain("factor_points only for 5");
+    expect(report).not.toContain("2026-10-09");
   });
 });

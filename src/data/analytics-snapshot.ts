@@ -4,22 +4,22 @@
  */
 export const analyticsSnapshot = {
   "week": "2026-W44",
-  "generatedAt": "2026-10-27T02:52:45.713Z",
+  "generatedAt": "2026-10-29T07:45:44.522Z",
   "metrics": {
     "companies": 495,
     "sectors": 11,
-    "factsRows": 608720,
-    "factsCompanies": 25,
-    "factorPoints": 1518,
-    "factorCompanies": 5,
-    "factorTypes": 7,
-    "priceRows": 51703,
-    "priceTickers": 6,
-    "latestPriceDate": "2026-10-09",
-    "edgarToneRows": 4671,
-    "edgarToneCompanies": 21,
-    "edgarFirstEvent": "1994-01-26 00:00:00",
-    "edgarLastEvent": "2026-10-22 00:00:00",
+    "factsRows": 1348866,
+    "factsCompanies": 53,
+    "factorPoints": 21894,
+    "factorCompanies": 53,
+    "factorTypes": 16,
+    "priceRows": 447282,
+    "priceTickers": 54,
+    "latestPriceDate": "2026-10-26",
+    "edgarToneRows": 16133,
+    "edgarToneCompanies": 53,
+    "edgarFirstEvent": "1994-01-21 00:00:00",
+    "edgarLastEvent": "2026-10-23 00:00:00",
     "fundHoldings": 875860,
     "funds": 300,
     "fundCompanies": 371,
@@ -33,9 +33,9 @@ export const analyticsSnapshot = {
     "macroSeries": 8,
     "macroLastDate": "2026-10-19",
     "jobsError": 8,
-    "testCount": 274,
-    "optionsSnapshots": 139,
-    "normalizedOptionRows": 176656
+    "testCount": 344,
+    "optionsSnapshots": 250,
+    "normalizedOptionRows": 310634
   },
   "actual": [
     {
@@ -49,8 +49,8 @@ export const analyticsSnapshot = {
       "id": "tone",
       "title": "EDGAR tone",
       "status": "partial",
-      "detail": "4,671 tone rows from 21 companies. JSON schema and retry cap exist, but economic value is unproven.",
-      "next": "Run human-labeled QA by form and error class, then measure incremental IC."
+      "detail": "16,133 tone rows from 53 CIKs. Prompt v1 has positive 126-session IC, but short-horizon and yearly evidence is unstable.",
+      "next": "Finish the remaining universe, review skip/failure/token summaries, then sync only reviewed rows."
     },
     {
       "id": "raw13f",
@@ -63,15 +63,15 @@ export const analyticsSnapshot = {
       "id": "fundamentals",
       "title": "Fundamentals / XBRL",
       "status": "partial",
-      "detail": "608,720 facts from 25 companies, but factor_points from only 5.",
-      "next": "Materialize factors for all 35 and close PG/WMT/XOM/GOOGL gaps."
+      "detail": "1,348,866 facts and 21,894 factor points from 53/53 CIKs, including XOM_PRE.",
+      "next": "Reconcile per-CIK lineage and preserve first-filed availability while expanding departed names."
     },
     {
       "id": "prices",
       "title": "Prices / corporate actions",
       "status": "partial",
-      "detail": "51,703 bars from 6 tickers; latest date 2026-10-09.",
-      "next": "Add a daily price worker and split/dividend-aware history for the full panel."
+      "detail": "447,282 bars from 54 series; latest date 2026-10-26.",
+      "next": "Automate daily updates and extend delisted and corporate-action coverage beyond the current panel."
     },
     {
       "id": "macro",
@@ -84,8 +84,8 @@ export const analyticsSnapshot = {
       "id": "optionsRaw",
       "title": "Options raw data",
       "status": "partial",
-      "detail": "139 snapshots, 176,656 normalized rows. This is a foundation, not long history.",
-      "next": "Validate the schema on free data, then backfill ORATS/Cboe on D:."
+      "detail": "250 snapshots and 310,634 normalized rows from Cboe, EODHD, ORATS and samples. Breadth is not long history.",
+      "next": "Backfill mid-DTE IV on D: via DoltHub and keep volume/OI proxies separate from full-chain evidence."
     },
     {
       "id": "cusip",
@@ -104,16 +104,16 @@ export const analyticsSnapshot = {
     {
       "id": "shareFlows",
       "title": "Share / weight flows",
-      "status": "missing",
-      "detail": "Current flow logic mostly uses ΔvalueUsd, mixing real trades and price movement.",
-      "next": "Build Δshares/sharesOut, Δ fund weight, Δ company weight and participant counts."
+      "status": "done",
+      "detail": "Direction and thickness use share-count changes; full-book portfolio-weight changes are display context, not USD-price proxies.",
+      "next": "Run the next-quarter smoke test and monitor CUSIP repair and comparable-fund guards."
     },
     {
       "id": "optionFeatures",
       "title": "Options features",
-      "status": "missing",
-      "detail": "Raw chains exist, but ATM IV, skew, term structure, OI and liquidity are not computed yet.",
-      "next": "Build offline features by DTE bucket, without invented dealer direction."
+      "status": "partial",
+      "detail": "DTE-bucket ATM IV, term slope, 25-delta skew, put/call ratios, turnover and ATM spread are computed for 52 latest underlyings.",
+      "next": "Validate predictive value only after sufficient history; keep earnings IV crush honestly null."
     },
     {
       "id": "macroPrior",
@@ -188,16 +188,16 @@ export const analyticsSnapshot = {
     {
       "id": "panel",
       "title": "Cross-section panel",
-      "status": "missing",
-      "detail": "Only four companies are currently suitable for magnitude. That is not a cross-section for proving alpha.",
-      "next": "Reach ≥30 for the prototype and ≥300 for deciles and sector analysis."
+      "status": "partial",
+      "detail": "The research panel now covers 53 CIKs with facts, canonical series and factor points, but this is not proof of alpha.",
+      "next": "Expand to 300+ with departed names and validate sector-neutral and independent universes."
     },
     {
       "id": "crossValidation",
       "title": "Cross validation",
-      "status": "missing",
-      "detail": "Limited per-company evaluation only. No out-of-company or multi-regime confirmation.",
-      "next": "Run out-of-time + out-of-company tests with block bootstrap and sector-neutral baselines."
+      "status": "partial",
+      "detail": "Odd/even CIK universes, sector-neutral residuals, macro regimes and event-study splits now exist, but results remain regime-dependent.",
+      "next": "Keep sealed holdouts and FDR control before promoting any factor."
     },
     {
       "id": "portfolio",
@@ -260,9 +260,9 @@ export const analyticsSnapshot = {
     {
       "id": "optionsHistory",
       "title": "Full options history",
-      "status": "missing",
-      "detail": "Need NBBO, OI, IV, Greeks, strikes, expirations, corporate actions and delisted names.",
-      "next": "Backfill ORATS/Cboe on D: and verify coverage and compatibility."
+      "status": "partial",
+      "detail": "DoltHub offers 40 core long-anchor and 50 recent mid-DTE panels, but no full-chain volume/OI and only four recent expirations per sampled ticker.",
+      "next": "Clone DoltHub on D:, combine independent volume/OI proxies and continue Cboe forward collection."
     },
     {
       "id": "macroPack",
@@ -281,16 +281,16 @@ export const analyticsSnapshot = {
     {
       "id": "shareFlows",
       "title": "Share / weight flows",
-      "status": "missing",
-      "detail": "Need real position changes without price effects, split by manager type.",
-      "next": "Build Δshares/sharesOut, Δ fund weight, Δ company weight and participant counts."
+      "status": "done",
+      "detail": "Share-count direction and full-book weight deltas remove price-driven false buying interpretations.",
+      "next": "Keep semantic amendments and comparable-fund guards under quarterly review."
     },
     {
       "id": "optionFeatures",
       "title": "Options features",
-      "status": "missing",
-      "detail": "Need ATM IV, slope, skew, volume/OI, spread, earnings IV crush and capacity.",
-      "next": "Start with observable features before any dealer/gamma model."
+      "status": "partial",
+      "detail": "DTE features and provider QA exist; preregistered hypotheses and evidence history now separate QA from predictive proof.",
+      "next": "Run source-specific walk-forward tests after DoltHub and volume/OI backfill."
     },
     {
       "id": "featurePanel",
@@ -302,9 +302,9 @@ export const analyticsSnapshot = {
     {
       "id": "sectorNeutral",
       "title": "Sector-neutral residuals",
-      "status": "missing",
-      "detail": "Remove market and sector beta before learning direction and magnitude.",
-      "next": "Use sector z-scores and residual forward returns, not just stock−SPY."
+      "status": "done",
+      "detail": "Sector-neutral factor and forward-return residuals use ≥4 names per sector with global fallback.",
+      "next": "Re-run on the expanded 300+ panel before treating residuals as production evidence."
     },
     {
       "id": "magnitudeModel",
@@ -323,9 +323,9 @@ export const analyticsSnapshot = {
     {
       "id": "capacityCosts",
       "title": "Capacity + costs",
-      "status": "done",
-      "detail": "Spread, slippage, borrow, turnover, capacity and drawdown constraints.",
-      "next": "Rank by net expected value after realistic costs."
+      "status": "partial",
+      "detail": "Equity impact and option spread/commission scenarios now complement turnover and drawdown checks.",
+      "next": "Add contract-level liquidity, multi-leg, assignment and borrow constraints before option-PnL claims."
     },
     {
       "id": "portfolioRisk",
@@ -337,9 +337,9 @@ export const analyticsSnapshot = {
     {
       "id": "independentValidation",
       "title": "Independent validation",
-      "status": "missing",
-      "detail": "Validate on another provider or through WRDS/OptionMetrics/Cboe.",
-      "next": "If edge disappears with the provider, it is a data artifact, not alpha."
+      "status": "partial",
+      "detail": "S&P, EODHD and Yahoo checks now document timestamp alignment and provider-specific quality limits.",
+      "next": "Repeat IV/Greeks and price checks on synchronized samples before accepting any edge."
     },
     {
       "id": "execution",
@@ -380,22 +380,22 @@ export const analyticsSnapshot = {
   "history": [
     {
       "week": "2026-W44",
-      "generatedAt": "2026-10-27T02:52:45.713Z",
+      "generatedAt": "2026-10-29T07:45:44.522Z",
       "metrics": {
         "companies": 495,
         "sectors": 11,
-        "factsRows": 608720,
-        "factsCompanies": 25,
-        "factorPoints": 1518,
-        "factorCompanies": 5,
-        "factorTypes": 7,
-        "priceRows": 51703,
-        "priceTickers": 6,
-        "latestPriceDate": "2026-10-09",
-        "edgarToneRows": 4671,
-        "edgarToneCompanies": 21,
-        "edgarFirstEvent": "1994-01-26 00:00:00",
-        "edgarLastEvent": "2026-10-22 00:00:00",
+        "factsRows": 1348866,
+        "factsCompanies": 53,
+        "factorPoints": 21894,
+        "factorCompanies": 53,
+        "factorTypes": 16,
+        "priceRows": 447282,
+        "priceTickers": 54,
+        "latestPriceDate": "2026-10-26",
+        "edgarToneRows": 16133,
+        "edgarToneCompanies": 53,
+        "edgarFirstEvent": "1994-01-21 00:00:00",
+        "edgarLastEvent": "2026-10-23 00:00:00",
         "fundHoldings": 875860,
         "funds": 300,
         "fundCompanies": 371,
@@ -409,9 +409,9 @@ export const analyticsSnapshot = {
         "macroSeries": 8,
         "macroLastDate": "2026-10-19",
         "jobsError": 8,
-        "testCount": 274,
-        "optionsSnapshots": 139,
-        "normalizedOptionRows": 176656
+        "testCount": 344,
+        "optionsSnapshots": 250,
+        "normalizedOptionRows": 310634
       }
     }
   ]

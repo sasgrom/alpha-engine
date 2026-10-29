@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import AppLayout from "@/components/AppLayout";
 import AnalyticsNetwork, { type AnalyticsMode, type AnalyticsNode, type AnalyticsStatus } from "@/components/AnalyticsNetwork";
 import OptionHypothesisLedger from "@/components/OptionHypothesisLedger";
+import ToneCarChart from "@/components/ToneCarChart";
 import { analyticsSnapshot } from "@/data/analytics-snapshot";
 import { Link } from "react-router";
 
@@ -141,6 +142,7 @@ export default function Analytics() {
           </div>
         </section>
 
+        <ToneCarChart />
         <OptionHypothesisLedger />
 
         <section className="t-panel px-5 py-4">
