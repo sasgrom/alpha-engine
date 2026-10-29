@@ -37,6 +37,7 @@ export interface OptionFeatureSet {
   availableAt: string;
   snapshotId?: string;
   spot: number | null;
+  spotDate?: string | null;
   buckets: OptionBucketFeatures[];
   quality: OptionChainSnapshot["quality"];
   warnings: string[];

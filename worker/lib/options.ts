@@ -3,7 +3,7 @@
  * these functions only normalize and measure quality, never hide bad rows.
  */
 export type OptionRight = "call" | "put";
-export type OptionProvider = "cboe" | "eodhd" | "alphavantage" | "orats" | "orats_intraday";
+export type OptionProvider = "cboe" | "eodhd" | "alphavantage" | "orats" | "orats_intraday" | "dolthub";
 
 export interface OptionContract {
   contractId: string;
