@@ -23,7 +23,10 @@ export const optionHypotheses: readonly OptionHypothesis[] = [
     formula: ["IV_ATM,b = mean(IV_call,K*, IV_put,K*)", "K* = strike nearest to spot S"],
     hypothesis: "ATM IV should forecast future realized volatility. No directional equity-return sign is assumed.",
     target: "Forward realized volatility",
-    evidence: [{ date: "2026-10-29", kind: "qa", summary: "Cross-provider AAPL near-ATM IV MAE 0.00242 across 14 pairs. This is QA, not an IC result." }],
+    evidence: [
+      { date: "2026-10-29", kind: "qa", summary: "Cross-provider AAPL near-ATM IV MAE 0.00242 across 14 pairs. This is QA, not an IC result." },
+      { date: "2026-10-29", kind: "qa", summary: "Yahoo AAPL chains rejected for IV/OI QA: two-sided quotes cover only 0.56% near and 3.45% far; OI is almost absent. EODHD/Cboe result unchanged." },
+    ],
   },
   {
     id: "expected-move", category: "Volatility", parameter: "Option-implied expected move",

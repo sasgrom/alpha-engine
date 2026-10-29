@@ -35,6 +35,7 @@ describe("OptionHypothesisLedger", () => {
   it("keeps a complete, uniquely identified evidence registry", () => {
     expect(optionHypotheses).toHaveLength(12);
     expect(new Set(optionHypotheses.map((item) => item.id)).size).toBe(12);
+    expect(optionHypotheses.find((item) => item.id === "atm-iv")?.evidence).toHaveLength(2);
     for (const hypothesis of optionHypotheses) {
       expect(hypothesis.formula.length).toBeGreaterThan(0);
       expect(hypothesis.hypothesis.length).toBeGreaterThan(20);
