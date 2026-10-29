@@ -57,7 +57,10 @@ for (const batch of batches) {
       const bucket = config.bucketPreference.map((name) => feature.buckets.find((b) => b.bucket === name)).find(Boolean);
       if (!bucket) continue;
       let x = config.select(bucket);
-      if (factor === "vrp") {
+      if (factor === "rv20") {
+        if (trailingRv === null) continue;
+        x = trailingRv;
+      } else if (factor === "vrp") {
         if (trailingRv === null || x === null) continue;
         x = x! - trailingRv;
       }

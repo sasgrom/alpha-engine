@@ -15,6 +15,7 @@ export interface FactorConfig {
   select: (bucket: OptionBucketFeatures) => number | null;
 }
 export const FACTOR_CONFIGS: Record<string, FactorConfig> = {
+  rv20: { bucketPreference: ["31-90D", "8-30D"], select: (b) => b.atmIv },
   atmIv: { bucketPreference: ["31-90D", "8-30D"], select: (b) => b.atmIv },
   termSlope: { bucketPreference: ["8-30D", "31-90D"], select: (b) => b.termSlope },
   skew25: { bucketPreference: ["31-90D", "8-30D"], select: (b) => b.skew25Delta },

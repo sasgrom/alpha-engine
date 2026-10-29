@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chooseBucket, evaluateFactorRows, type ResearchRow } from "./dolthub-research";
+import { chooseBucket, evaluateFactorRows, FACTOR_CONFIGS, type ResearchRow } from "./dolthub-research";
 import type { OptionBucketFeatures } from "./option-features";
 
 function rows(): ResearchRow[] {
@@ -18,6 +18,11 @@ function rows(): ResearchRow[] {
 }
 
 describe("DoltHub research evaluation", () => {
+  it("keeps trailing RV20 as an explicit baseline factor", () => {
+    expect(FACTOR_CONFIGS.rv20).toBeDefined();
+    expect(FACTOR_CONFIGS.rv20.bucketPreference).toEqual(["31-90D", "8-30D"]);
+  });
+
   it("selects primary buckets without searching for the best result", () => {
     const buckets = [{ bucket: "8-30D" }, { bucket: "31-90D" }] as OptionBucketFeatures[];
     expect(chooseBucket(buckets, ["31-90D", "8-30D"])?.bucket).toBe("31-90D");
