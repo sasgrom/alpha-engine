@@ -26,6 +26,7 @@ export const optionHypotheses: readonly OptionHypothesis[] = [
     evidence: [
       { date: "2026-10-29", kind: "qa", summary: "Cross-provider AAPL near-ATM IV MAE 0.00242 across 14 pairs. This is QA, not an IC result." },
       { date: "2026-10-29", kind: "qa", summary: "Yahoo AAPL chains rejected for IV/OI QA: two-sided quotes cover only 0.56% near and 3.45% far; OI is almost absent. EODHD/Cboe result unchanged." },
+      { date: "2026-10-29", kind: "supported", summary: "Strong forward-RV evidence: IC 0.737 (95% CI 0.687–0.778), sector-neutral 0.582, all 90 months positive. Volatility use only; incremental baseline test required before production." },
     ],
   },
   {
@@ -40,14 +41,20 @@ export const optionHypotheses: readonly OptionHypothesis[] = [
     formula: ["Slope_b = IV_ATM,next(b) − IV_ATM,b", "next = next available DTE bucket"],
     hypothesis: "An inversion where short IV exceeds longer IV marks event stress and higher near-term realized volatility.",
     target: "Near-term forward realized volatility",
-    evidence: [{ date: "2026-10-29", kind: "computed", summary: "Computed for 52 latest chains. No time-series or IC test has run." }],
+    evidence: [
+      { date: "2026-10-29", kind: "computed", summary: "Computed for 52 latest chains. No time-series or IC test has run." },
+      { date: "2026-10-29", kind: "refuted", summary: "Weak and regime-dependent: overall IC −0.070 (95% CI −0.096 to −0.044), but the 2026 holdout CI crosses zero. Not a production signal." },
+    ],
   },
   {
     id: "iv-rv-premium", category: "Volatility", parameter: "IV–RV premium",
     formula: ["VRP_t = IV_ATM,t − RV20,t", "RV20 = stdev(r_t−19…t) · √252"],
     hypothesis: "High IV relative to trailing RV indicates expensive insurance. Test forward RV and option risk premium separately.",
     target: "Forward RV and volatility risk premium",
-    evidence: [{ date: "2026-10-29", kind: "blocked", summary: "Requires matched daily IV and price history." }],
+    evidence: [
+      { date: "2026-10-29", kind: "blocked", summary: "Requires matched daily IV and price history." },
+      { date: "2026-10-29", kind: "refuted", summary: "No stable VRP effect: overall IC −0.029 (95% CI −0.069 to 0.009); odd/even and sector regimes flip signs. Nominal FDR rejection is insufficient." },
+    ],
   },
   {
     id: "earnings-crush", category: "Events", parameter: "Earnings IV crush",
@@ -61,7 +68,10 @@ export const optionHypotheses: readonly OptionHypothesis[] = [
     formula: ["Skew25 = IV_put,Δ≈−0.25 − IV_call,Δ≈0.25"],
     hypothesis: "Rising skew measures downside-protection demand and left-tail risk. The forward equity-return sign remains open.",
     target: "Left-tail risk and forward excess return",
-    evidence: [{ date: "2026-10-29", kind: "computed", summary: "Computed for 52 latest chains. Sign and IC are untested." }],
+    evidence: [
+      { date: "2026-10-29", kind: "computed", summary: "Computed for 52 latest chains. Sign and IC are untested." },
+      { date: "2026-10-29", kind: "refuted", summary: "No robust directional evidence: overall IC 0.041 (95% CI −0.012 to 0.084), FDR not rejected and yearly sign flips. Do not use as a crash indicator." },
+    ],
   },
   {
     id: "put-call-volume", category: "Positioning", parameter: "Put/Call volume",

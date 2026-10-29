@@ -109,6 +109,8 @@ Implemented:
 
 DoltHub coverage probe found 40 tickers present on all five historical anchor dates and 50 of 52 with recent chains. However, the sampled latest chains contain only four expirations per ticker and no volume, OI or underlying price. This is useful mid-DTE IV research data, not a complete options archive.
 
+The first 52,292-snapshot research panel now separates volatility prediction from directional alpha. ATM IV has strong forward-RV evidence: IC 0.737 with 95% moving-block CI 0.687–0.778, sector-neutral IC 0.582 and positive values across all 90 months and both independent universes. Term slope is weak and holdout-unstable at −0.070. The 25-delta skew has no robust directional evidence at 0.041 with a zero-crossing CI and no FDR rejection. The IV–RV premium is unstable at −0.029, with sign flips across universes and years. ATM IV is therefore a volatility-model candidate, not a directional trading signal; an incremental test against a simple trailing-RV baseline remains mandatory.
+
 Yahoo option chains were independently rejected for IV/Greeks/OI use because two-sided quote coverage and OI coverage are too weak. That negative QA result is preserved rather than hidden.
 
 ### 3.6. Research and evaluation protocol

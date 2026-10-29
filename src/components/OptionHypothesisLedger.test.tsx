@@ -35,7 +35,11 @@ describe("OptionHypothesisLedger", () => {
   it("keeps a complete, uniquely identified evidence registry", () => {
     expect(optionHypotheses).toHaveLength(22);
     expect(new Set(optionHypotheses.map((item) => item.id)).size).toBe(22);
-    expect(optionHypotheses.find((item) => item.id === "atm-iv")?.evidence).toHaveLength(2);
+    expect(optionHypotheses.find((item) => item.id === "atm-iv")?.evidence).toHaveLength(3);
+    expect(latestEvidence(optionHypotheses.find((item) => item.id === "atm-iv")!).kind).toBe("supported");
+    expect(latestEvidence(optionHypotheses.find((item) => item.id === "term-slope")!).kind).toBe("refuted");
+    expect(latestEvidence(optionHypotheses.find((item) => item.id === "skew-25")!).kind).toBe("refuted");
+    expect(latestEvidence(optionHypotheses.find((item) => item.id === "iv-rv-premium")!).kind).toBe("refuted");
     for (const hypothesis of optionHypotheses) {
       expect(hypothesis.formula.length).toBeGreaterThan(0);
       expect(hypothesis.hypothesis.length).toBeGreaterThan(20);
@@ -76,7 +80,7 @@ describe("OptionHypothesisLedger", () => {
       status.value = "blocked";
       status.dispatchEvent(new Event("change", { bubbles: true }));
     });
-    expect(host!.querySelectorAll("tbody tr")).toHaveLength(13);
+    expect(host!.querySelectorAll("tbody tr")).toHaveLength(12);
     const search = host!.querySelector<HTMLInputElement>('input[aria-label="Search option hypotheses"]')!;
     act(() => { setInput(search, "earnings"); });
     expect(host!.querySelectorAll("tbody tr")).toHaveLength(2);
