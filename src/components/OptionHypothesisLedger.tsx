@@ -9,7 +9,7 @@ const statusMeta: Record<OptionEvidenceKind, { label: string; color: string }> =
   supported: { label: "Supported", color: "hsl(var(--ok))" },
   refuted: { label: "Refuted", color: "hsl(var(--crit))" },
 };
-const categories: ("all" | OptionHypothesisCategory)[] = ["all", "Volatility", "Events", "Positioning", "Liquidity", "Probability engine"];
+const categories: ("all" | OptionHypothesisCategory)[] = ["all", "Volatility", "Events", "Positioning", "Liquidity", "Probability engine", "Macro"];
 const statuses: ("all" | OptionEvidenceKind)[] = ["all", "qa", "computed", "blocked", "gate", "supported", "refuted"];
 
 function StatusBadge({ kind }: { kind: OptionEvidenceKind }) {

@@ -33,8 +33,8 @@ describe("OptionHypothesisLedger", () => {
   });
 
   it("keeps a complete, uniquely identified evidence registry", () => {
-    expect(optionHypotheses).toHaveLength(20);
-    expect(new Set(optionHypotheses.map((item) => item.id)).size).toBe(20);
+    expect(optionHypotheses).toHaveLength(22);
+    expect(new Set(optionHypotheses.map((item) => item.id)).size).toBe(22);
     expect(optionHypotheses.find((item) => item.id === "atm-iv")?.evidence).toHaveLength(2);
     for (const hypothesis of optionHypotheses) {
       expect(hypothesis.formula.length).toBeGreaterThan(0);
@@ -45,7 +45,7 @@ describe("OptionHypothesisLedger", () => {
   });
 
   it("filters by category and restores the full ledger", () => {
-    expect(host!.querySelectorAll("tbody tr")).toHaveLength(20);
+    expect(host!.querySelectorAll("tbody tr")).toHaveLength(22);
     const select = host!.querySelector<HTMLSelectElement>('select[aria-label="Filter hypotheses by category"]')!;
     act(() => {
       select.value = "Positioning";
@@ -55,7 +55,19 @@ describe("OptionHypothesisLedger", () => {
     expect(host!.querySelectorAll("article")).toHaveLength(7);
     const reset = [...host!.querySelectorAll("button")].find((button) => button.textContent === "Reset filters")!;
     act(() => { reset.dispatchEvent(new MouseEvent("click", { bubbles: true })); });
-    expect(host!.querySelectorAll("tbody tr")).toHaveLength(20);
+    expect(host!.querySelectorAll("tbody tr")).toHaveLength(22);
+  });
+
+  it("keeps COT and futures term structure in the blocked macro backlog", () => {
+    const select = host!.querySelector<HTMLSelectElement>('select[aria-label="Filter hypotheses by category"]')!;
+    act(() => {
+      select.value = "Macro";
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    expect(host!.querySelectorAll("tbody tr")).toHaveLength(2);
+    expect(host!.textContent).toContain("CFTC COT positioning extreme");
+    expect(host!.textContent).toContain("Futures term-structure slope");
+    expect(host!.textContent).toContain("Awaiting history");
   });
 
   it("filters by evidence status, searches and handles an empty result", () => {
@@ -64,7 +76,7 @@ describe("OptionHypothesisLedger", () => {
       status.value = "blocked";
       status.dispatchEvent(new Event("change", { bubbles: true }));
     });
-    expect(host!.querySelectorAll("tbody tr")).toHaveLength(11);
+    expect(host!.querySelectorAll("tbody tr")).toHaveLength(13);
     const search = host!.querySelector<HTMLInputElement>('input[aria-label="Search option hypotheses"]')!;
     act(() => { setInput(search, "earnings"); });
     expect(host!.querySelectorAll("tbody tr")).toHaveLength(2);
@@ -73,6 +85,6 @@ describe("OptionHypothesisLedger", () => {
     expect(host!.textContent).toContain("No hypotheses match these filters");
     const clear = [...host!.querySelectorAll("button")].find((button) => button.textContent === "Clear filters")!;
     act(() => { clear.dispatchEvent(new MouseEvent("click", { bubbles: true })); });
-    expect(host!.querySelectorAll("tbody tr")).toHaveLength(20);
+    expect(host!.querySelectorAll("tbody tr")).toHaveLength(22);
   });
 });

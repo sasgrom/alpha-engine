@@ -179,5 +179,37 @@
       "scope": "Smoothing and tail-estimation candidate; reported incremental predictiveness is not assumed to transfer to sparse single-name chains.",
       "metadata_file": "scholar/risk_neutral_density.csv"
     }
+  ],
+  "macro_data_candidates": [
+    {
+      "source": "CFTC Commitment of Traders",
+      "linked_hypotheses": [
+        "cot-positioning"
+      ],
+      "required_fields": [
+        "report date",
+        "publication timestamp",
+        "contract",
+        "commercial long/short",
+        "large-spec long/short",
+        "open interest"
+      ],
+      "availability_rule": "Use the first public release, never the Tuesday position date as availability."
+    },
+    {
+      "source": "Point-in-time futures curves",
+      "linked_hypotheses": [
+        "futures-term-structure"
+      ],
+      "required_fields": [
+        "contract",
+        "expiration",
+        "settlement date",
+        "near/far prices",
+        "roll rule",
+        "rates/carry where applicable"
+      ],
+      "availability_rule": "Use contract-specific settlement timestamps and explicit roll mapping; no nearest-contract splices."
+    }
   ]
 }

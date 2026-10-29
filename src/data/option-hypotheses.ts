@@ -1,4 +1,4 @@
-export type OptionHypothesisCategory = "Volatility" | "Events" | "Positioning" | "Liquidity" | "Probability engine";
+export type OptionHypothesisCategory = "Volatility" | "Events" | "Positioning" | "Liquidity" | "Probability engine" | "Macro";
 export type OptionEvidenceKind = "qa" | "computed" | "blocked" | "gate" | "supported" | "refuted";
 
 export interface OptionEvidence {
@@ -153,6 +153,20 @@ export const optionHypotheses: readonly OptionHypothesis[] = [
     hypothesis: "IV changes and time decay may alter hedging pressure and intraday realized volatility around expirations.",
     target: "Intraday realized volatility around IV changes and expiry",
     evidence: [{ date: "2026-10-29", kind: "blocked", summary: "Second-order Greeks, synchronized surfaces and a dealer-position model are missing. Not testable from current data." }],
+  },
+  {
+    id: "cot-positioning", category: "Macro", parameter: "CFTC COT positioning extreme",
+    formula: ["NetComm = (Long − Short) / OpenInterest", "COTZ = (NetComm − μ_3y) / σ_3y"],
+    hypothesis: "Extreme commercial positioning may mark trend continuation or contrarian reversal. The sign is tested separately by asset and regime.",
+    target: "Multi-week futures returns and cross-asset regime",
+    evidence: [{ date: "2026-10-29", kind: "blocked", summary: "Requires CFTC COT history with actual publication dates, contract mapping and no look-ahead from the report week." }],
+  },
+  {
+    id: "futures-term-structure", category: "Macro", parameter: "Futures term-structure slope",
+    formula: ["Basis = F_near / F_far − 1", "ΔBasis = Basis_t − Basis_t−20"],
+    hypothesis: "Contango/backwardation and its changes may classify supply-demand and volatility regimes without guaranteeing spot direction.",
+    target: "Futures curve returns, spot realized volatility and macro regime",
+    evidence: [{ date: "2026-10-29", kind: "blocked", summary: "Requires point-in-time futures curves with expiry mapping, roll rules, rates/carry and no nearest-contract splicing artifacts." }],
   },
   {
     id: "engine-increment", category: "Probability engine", parameter: "Incremental engine value",
