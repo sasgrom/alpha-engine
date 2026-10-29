@@ -34,7 +34,10 @@ export const optionHypotheses: readonly OptionHypothesis[] = [
     formula: ["EM_b = S · IV_ATM,b · √(DTE_b / 365)"],
     hypothesis: "Expected move is a usable risk and strike scale. Test coverage and absolute-return error rather than assuming ideal 68% coverage.",
     target: "Absolute forward return and interval coverage",
-    evidence: [{ date: "2026-10-29", kind: "blocked", summary: "Formula candidate only. Coverage testing requires a daily options history." }],
+    evidence: [
+      { date: "2026-10-29", kind: "blocked", summary: "Formula candidate only. Coverage testing requires a daily options history." },
+      { date: "2026-10-29", kind: "supported", summary: "Calibrated: coverage 64.8% versus RV20 59.8%, MAE 13.58 versus 13.91, RMSE 26.30 versus 28.03. Better than trailing RV, but not directional alpha." },
+    ],
   },
   {
     id: "term-slope", category: "Volatility", parameter: "Term slope",

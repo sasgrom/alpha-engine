@@ -11,6 +11,12 @@ describe("forward volatility and bootstrap", () => {
     expect(forwardRealizedVolatility(bars, bars.at(-1)!.date, 20)).toBeNull();
   });
 
+  it("keeps forward and trailing RV in annualized decimal-vol units", () => {
+    const alternating = Array.from({ length: 101 }, (_, i) => ({ date: `2026-01-${String(i + 1).padStart(3, "0")}`, close: i % 2 === 0 ? 100 : Math.exp(0.1) * 100 }));
+    expect(forwardRealizedVolatility(alternating, alternating[0].date, 100)!.vol).toBeCloseTo(Math.sqrt(252 * 0.010101010101010102));
+    expect(trailingRealizedVolatility(alternating, alternating.at(-1)!.date, 100)).toBeCloseTo(Math.sqrt(252 * 0.010101010101010102));
+  });
+
   it("uses only trailing returns for VRP inputs", () => {
     expect(trailingRealizedVolatility(bars, bars[50].date, 20)).toBeGreaterThan(0);
     expect(trailingRealizedVolatility(bars, bars[5].date, 20)).toBeNull();

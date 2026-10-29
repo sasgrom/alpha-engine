@@ -4,7 +4,7 @@
  */
 export const analyticsSnapshot = {
   "week": "2026-W44",
-  "generatedAt": "2026-10-29T23:12:25.591Z",
+  "generatedAt": "2026-10-29T23:25:35.776Z",
   "metrics": {
     "companies": 495,
     "sectors": 11,
@@ -33,7 +33,7 @@ export const analyticsSnapshot = {
     "macroSeries": 8,
     "macroLastDate": "2026-10-19",
     "jobsError": 8,
-    "testCount": 368,
+    "testCount": 369,
     "optionsSnapshots": 250,
     "normalizedOptionRows": 310634
   },
@@ -380,7 +380,7 @@ export const analyticsSnapshot = {
   "history": [
     {
       "week": "2026-W44",
-      "generatedAt": "2026-10-29T23:12:25.591Z",
+      "generatedAt": "2026-10-29T23:25:35.776Z",
       "metrics": {
         "companies": 495,
         "sectors": 11,
@@ -409,7 +409,7 @@ export const analyticsSnapshot = {
         "macroSeries": 8,
         "macroLastDate": "2026-10-19",
         "jobsError": 8,
-        "testCount": 368,
+        "testCount": 369,
         "optionsSnapshots": 250,
         "normalizedOptionRows": 310634
       }
