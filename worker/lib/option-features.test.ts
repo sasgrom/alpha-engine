@@ -40,6 +40,7 @@ describe("DTE option features", () => {
       contract({ expiration: "2027-02-19", impliedVolatility: 0.3, delta: 0.5, volume: 5, openInterest: 50 }),
     ]));
     const near = s.buckets[0];
+    expect(near.dteMedian).toBe(23);
     expect(near.atmIv).toBeCloseTo(0.25);
     expect(near.skew25Delta).toBeCloseTo(0.1);
     expect(near.putCallVolumeRatio).toBe(3);

@@ -14,6 +14,7 @@ export function dteBucket(dte: number): DteBucket {
 
 export interface OptionBucketFeatures {
   bucket: DteBucket;
+  dteMedian: number | null;
   atmIv: number | null;
   termSlope: number | null;
   skew25Delta: number | null;
@@ -109,8 +110,11 @@ export function buildOptionFeatures(snapshot: OptionChainSnapshot): OptionFeatur
     if (atmIv === null) warnings.push("No ATM IV available for this bucket.");
     if (skew25Delta === null) warnings.push("Insufficient 25-delta contracts for skew.");
 
+    const dtes = rows.map((c) => daysBetween(snapshot.tradeDate, c.expiration).valueOf()).sort((a, b) => a - b);
+    const dteMedian = dtes.length ? dtes[Math.floor(dtes.length / 2)] : null;
     return {
       bucket,
+      dteMedian,
       atmIv,
       termSlope: next === undefined || atmIv === null ? null : next - atmIv,
       skew25Delta,
