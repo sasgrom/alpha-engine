@@ -20,6 +20,11 @@ export interface DoltCsvRow {
 export interface SpotBar { date: string; close: number; adjClose: number | null }
 export interface SpotInfo { price: number; date: string }
 
+export const FEATURE_SCHEMA_VERSION = 2;
+export function isFeatureManifestCurrent(manifest: { schemaVersion?: number }): boolean {
+  return manifest.schemaVersion === FEATURE_SCHEMA_VERSION;
+}
+
 export function parseDoltRow(line: string): DoltCsvRow {
   const p = line.split(",");
   if (p.length !== DOLT_COLUMNS.length) throw new Error(`Invalid Dolt CSV row with ${p.length} columns`);

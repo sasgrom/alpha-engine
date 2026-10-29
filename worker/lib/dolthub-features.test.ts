@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createSpotLookup, featureFromRows, parseDoltRow, rowToContract, type DoltCsvRow } from "./dolthub-features";
+import { createSpotLookup, featureFromRows, FEATURE_SCHEMA_VERSION, isFeatureManifestCurrent, parseDoltRow, rowToContract, type DoltCsvRow } from "./dolthub-features";
 
 function row(overrides: Partial<DoltCsvRow> = {}): DoltCsvRow {
   return {
@@ -10,6 +10,12 @@ function row(overrides: Partial<DoltCsvRow> = {}): DoltCsvRow {
 }
 
 describe("DoltHub feature materialization", () => {
+  it("invalidates legacy manifests without the current feature schema", () => {
+    expect(isFeatureManifestCurrent({})).toBe(false);
+    expect(isFeatureManifestCurrent({ schemaVersion: FEATURE_SCHEMA_VERSION })).toBe(true);
+    expect(isFeatureManifestCurrent({ schemaVersion: 1 })).toBe(false);
+  });
+
   it("parses rows and builds valid OSI contracts without inventing volume/OI", () => {
     const parsed = parseDoltRow("2026-10-28,AAPL,2026-11-20,100,call,1,1.2,0.2,0.25,0.01,-0.02,0.1,0.03");
     const contract = rowToContract(parsed);

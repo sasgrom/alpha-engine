@@ -62,6 +62,9 @@ function byYear(rows: ExpectedMoveRow[]) {
     ])
   );
 }
+if (usable === 0) {
+  throw new Error("No usable snapshots: dteMedian is missing in every feature set. Rerun worker/dolthub-features.mts with schemaVersion 2, then rerun expected move.");
+}
 const output = {
   generatedAt: new Date().toISOString(), snapshots, usable,
   scope: "Expected move = spot · IV · sqrt(actual DTE/365). No normal-68% assumption.",

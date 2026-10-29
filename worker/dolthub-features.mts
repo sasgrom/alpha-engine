@@ -8,13 +8,13 @@ import { sql } from "drizzle-orm";
 import { getDb } from "../api/queries/connection";
 import { loadEdgarUniverse } from "./lib/edgar";
 import { mergeBatches, sha256File } from "./lib/dolthub-export";
-import { createSpotLookup, featureFromRows, parseDoltRow, type DoltCsvRow } from "./lib/dolthub-features";
+import { createSpotLookup, featureFromRows, FEATURE_SCHEMA_VERSION, isFeatureManifestCurrent, parseDoltRow, type DoltCsvRow } from "./lib/dolthub-features";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
 
 interface InputBatch { ticker: string; year: number; file: string; status: string; rows: number; firstDate: string | null; lastDate: string | null }
 interface OutputBatch extends InputBatch { inputSha256: string | null; outputSha256: string | null; snapshots: number }
-interface Manifest { source: string; generatedAt: string; batches: OutputBatch[] }
+interface Manifest { source: string; schemaVersion: number; generatedAt: string; batches: OutputBatch[] }
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const only = arg("--only")?.toUpperCase() ?? null;
 const inputRoot = path.resolve(arg("--input") ?? (process.platform === "win32" ? "D:\\research\\alpha-engine\\options-iv" : "worker/cache/options-dolthub/export"));
@@ -30,7 +30,7 @@ if (only && !universe.length) throw new Error(`Unknown or non-core ticker ${only
 const cikByTicker = new Map(universe.map((c) => [c.ticker, c.cik]));
 const batches = inputManifest.batches.filter((b) => b.status === "done" && cikByTicker.has(b.ticker) && years.includes(b.year));
 const manifestPath = path.join(outRoot, "manifest.json");
-const old: Manifest = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, "utf8")) : { source: "DoltHub mid-DTE IV with reviewed spot", generatedAt: new Date().toISOString(), batches: [] };
+const old: Manifest = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, "utf8")) : { source: "DoltHub mid-DTE IV with reviewed spot", schemaVersion: FEATURE_SCHEMA_VERSION, generatedAt: new Date().toISOString(), batches: [] };
 const previousByKey = new Map(old.batches.map((b) => [`${b.ticker}|${b.year}`, b]));
 const db = getDb();
 async function spotLookup(cik: number) {
@@ -76,7 +76,7 @@ for (const batch of batches) {
   const key = `${batch.ticker}|${batch.year}`, previous = previousByKey.get(key);
   const inputFile = path.resolve(inputRoot, batch.file);
   const outputFile = path.join(outRoot, batch.ticker, `${batch.year}.jsonl`);
-  if (previous?.status === "done" && existsSync(outputFile) && previous.inputSha256 === await sha256File(inputFile) && previous.outputSha256 === await sha256File(outputFile)) {
+  if (previous?.status === "done" && isFeatureManifestCurrent(old) && existsSync(outputFile) && previous.inputSha256 === await sha256File(inputFile) && previous.outputSha256 === await sha256File(outputFile)) {
     results.push(previous); skipped++; continue;
   }
   try {
@@ -87,9 +87,9 @@ for (const batch of batches) {
     results.push({ ...batch, rows: 0, snapshots: 0, inputSha256: null, outputSha256: null, firstDate: null, lastDate: null, status: "error", error: String(error).slice(0, 600) });
     prog.log(`! ${batch.ticker} ${batch.year}: ${String(error).slice(0, 300)}`);
   }
-  writeJsonAtomic(manifestPath, { ...old, generatedAt: new Date().toISOString(), batches: mergeBatches(old.batches, results) }, true);
+  writeJsonAtomic(manifestPath, { ...old, schemaVersion: FEATURE_SCHEMA_VERSION, generatedAt: new Date().toISOString(), batches: mergeBatches(old.batches, results) }, true);
 }
 const errors = results.filter((r) => r.status === "error").length;
-writeJsonAtomic(manifestPath, { ...old, generatedAt: new Date().toISOString(), batches: mergeBatches(old.batches, results) }, true);
+writeJsonAtomic(manifestPath, { ...old, schemaVersion: FEATURE_SCHEMA_VERSION, generatedAt: new Date().toISOString(), batches: mergeBatches(old.batches, results) }, true);
 prog.done(`batches ${results.length} · skipped ${skipped} · snapshots ${results.reduce((n, r) => n + r.snapshots, 0)} · errors ${errors}`);
 process.exit(errors ? 1 : 0);
