@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { batchSql, csvStats, DOLT_CSV_HEADER, isAllowedOutputRoot, mergeBatches, sha256Text } from "./dolthub-export";
+import { batchSql, csvStats, DOLT_CSV_HEADER, inspectCsv, isAllowedOutputRoot, mergeBatches, sha256Text } from "./dolthub-export";
 
 describe("DoltHub export helpers", () => {
   it("builds bounded per-ticker/year queries and rejects invalid identifiers", () => {
@@ -17,6 +17,17 @@ describe("DoltHub export helpers", () => {
     const text = `${DOLT_CSV_HEADER}\n2024-01-02,AAPL,2024-01-19,100,call,1,2,0.3,0.5,0.01,-0.02,0.1,0.03\n2024-01-03,AAPL,2024-01-19,100,put,1,2,0.4,-0.5,0.01,-0.02,0.1,0.03\n`;
     expect(csvStats(text)).toEqual({ rows: 2, firstDate: "2024-01-02", lastDate: "2024-01-03" });
     expect(() => csvStats("wrong,header\n1,2")).toThrow();
+  });
+
+  it("detects duplicate contracts and unsorted rows during validation", () => {
+    const row = "2024-01-02,AAPL,2024-01-19,100,call,1,2,0.3,0.5,0.01,-0.02,0.1,0.03";
+    const later = "2024-01-03,AAPL,2024-01-19,100,call,1,2,0.3,0.5,0.01,-0.02,0.1,0.03";
+    const text = `${DOLT_CSV_HEADER}\n${row}\n${row}\n${later}\n${row}`;
+    const result = inspectCsv(text);
+    expect(result.rows).toBe(4);
+    expect(result.duplicates).toBe(2);
+    expect(result.invalidRows).toBe(1);
+    expect(inspectCsv(`${DOLT_CSV_HEADER}\n${row}\n${later}`).invalidRows).toBe(0);
   });
 
   it("enforces D:-only output on Windows without restricting other platforms", () => {

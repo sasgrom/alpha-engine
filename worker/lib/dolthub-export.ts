@@ -28,6 +28,27 @@ export function csvStats(text: string): CsvStats {
   return { rows: lines.length - 1, firstDate: lines[1].slice(0, 10), lastDate: lines.at(-1)!.slice(0, 10) };
 }
 
+export interface CsvInspection extends CsvStats { invalidRows: number; duplicates: number }
+export function inspectCsv(text: string): CsvInspection {
+  const normalized = text.replace(/^\uFEFF/, "");
+  if (!normalized.trim()) return { rows: 0, firstDate: null, lastDate: null, invalidRows: 0, duplicates: 0 };
+  const lines = normalized.trimEnd().split(/\r?\n/);
+  if (lines[0] !== DOLT_CSV_HEADER) throw new Error(`Unexpected Dolt CSV header: ${lines[0].slice(0, 160)}`);
+  const seen = new Set<string>();
+  let invalidRows = 0, duplicates = 0, previousDate = "";
+  for (let i = 1; i < lines.length; i++) {
+    const parts = lines[i].split(",");
+    if (parts.length !== DOLT_COLUMNS.length || !/^\d{4}-\d{2}-\d{2}$/.test(parts[0]) || (previousDate && parts[0] < previousDate)) {
+      invalidRows++;
+    }
+    previousDate = parts[0];
+    const key = `${parts[0]}|${parts[2]}|${parts[3]}|${parts[4]}`;
+    if (seen.has(key)) duplicates++;
+    seen.add(key);
+  }
+  return { ...csvStats(normalized), invalidRows, duplicates };
+}
+
 export function isAllowedOutputRoot(root: string, platform = process.platform): boolean {
   if (platform !== "win32") return true;
   const resolved = path.win32.resolve(root).toUpperCase();
