@@ -22,7 +22,7 @@ const protocolZ = z.object({
   }),
   sources: z.record(z.string(), z.object({ equivalence_grade: z.enum(["A", "B", "C", "D", "E"]) }).passthrough()),
   inference_policy: z.object({ fdr_q: z.number().min(0).max(0.05) }).passthrough(),
-  hypotheses: z.array(hypothesisZ).length(12),
+  hypotheses: z.array(hypothesisZ).length(19),
   run_policy: z.object({ all_runs_logged: z.literal(true), failed_runs_retained: z.literal(true), oos_used_for_tuning: z.literal(false) }).passthrough(),
 }).passthrough();
 

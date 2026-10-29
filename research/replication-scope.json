@@ -132,7 +132,50 @@
     {
       "file": "scholar/variance_premium_equity_returns.csv",
       "sha256": "f6e6dcd89735d013bc6e1173d8f54aa6c688473f5c60e06f220a0bb1715790f4"
+    },
+    {
+      "file": "scholar/option_pinning.csv",
+      "sha256": "809daf56114fa343671e09720f44e47794ca107948ea7530e2940f02f44fa908"
+    },
+    {
+      "file": "scholar/gamma_exposure.csv",
+      "sha256": "6126aed85893aefaced4855e766ed9f7219be9b85bb88390fadc308726559e4b"
+    },
+    {
+      "file": "scholar/risk_neutral_density.csv",
+      "sha256": "5e52a6a888a3e8ce69cba61475caf856bbf8ee8e86c15247f4d1d3113b36305b"
     }
   ],
-  "next_gate": "Run source-specific conceptual tests only after the DoltHub clone and coverage QA. Numerical paper-target reconciliation requires the exact paper specifications and equivalent data."
+  "next_gate": "Run source-specific conceptual tests only after the DoltHub clone and coverage QA. Numerical paper-target reconciliation requires the exact paper specifications and equivalent data.",
+  "literature_watch": [
+    {
+      "paper_id": "POPOVICI-2026",
+      "title": "Do Gamma-Exposure Walls Exhibit Strike-Local Effects? A Pre-Registered, Control-Matched Test of Strike-Local Dealer-Gamma Effects in SPY",
+      "linked_hypotheses": [
+        "option-pinning",
+        "gamma-squeeze"
+      ],
+      "scope": "Control-matched strike-local test; open interest alone is not sufficient evidence of pinning or dealer direction.",
+      "metadata_file": "scholar/option_pinning.csv"
+    },
+    {
+      "paper_id": "MAURER-2026",
+      "title": "Intraday 0DTE Option Order Flow and S&P 500 Downside Risk",
+      "linked_hypotheses": [
+        "gamma-squeeze",
+        "signed-call-volume"
+      ],
+      "scope": "Order-flow and dealer-hedging context; do not generalize to single-name long-horizon predictions without a separate test.",
+      "metadata_file": "scholar/gamma_exposure.csv"
+    },
+    {
+      "paper_id": "SHIUE-LEE-2025",
+      "title": "Smoothing Tail Estimation of Risk-Neutral Densities: Evidence from S&P 500 Index Options",
+      "linked_hypotheses": [
+        "rnd-tail-shift"
+      ],
+      "scope": "Smoothing and tail-estimation candidate; reported incremental predictiveness is not assumed to transfer to sparse single-name chains.",
+      "metadata_file": "scholar/risk_neutral_density.csv"
+    }
+  ]
 }

@@ -115,12 +115,26 @@
       "limitations": [
         "Base engine itself remains unproven"
       ]
+    },
+    "signed_trade_volume": {
+      "equivalence_grade": "E",
+      "role": "Aggressor-side and buy-to-open trade volume required for informed-flow tests",
+      "limitations": [
+        "Not present in Cboe delayed chains, DoltHub, Hugging Face or current normalized samples"
+      ]
+    },
+    "second_order_greeks": {
+      "equivalence_grade": "E",
+      "role": "Vanna/Charm and dealer-position inputs",
+      "limitations": [
+        "No second-order Greeks or dealer-position sign in current sources"
+      ]
     }
   },
   "inference_policy": {
     "primary_estimator": "Cross-sectional Spearman rank IC or the hypothesis-specific paired metric",
     "uncertainty": "Moving block bootstrap confidence intervals respecting time and cross-sectional dependence",
-    "multiple_testing": "Benjamini-Hochberg FDR across the 12 predeclared primary endpoints",
+    "multiple_testing": "Benjamini-Hochberg FDR across the 19 predeclared primary endpoints",
     "fdr_q": 0.05,
     "secondary_results": "Exploratory only; never promoted by selecting the best horizon, sign, universe or DTE bucket",
     "two_sided_allowed": [
@@ -299,6 +313,89 @@
         "all_option_sources",
         "base_engine_factors",
         "fred_macro"
+      ]
+    },
+    {
+      "id": "signed-call-volume",
+      "primary_metric": "cross-sectional Spearman rank IC of signed call ask volume versus SPY-excess forward return",
+      "target": "Informed aggressive call buying and forward return",
+      "primary_horizon": "1\u20135 sessions",
+      "falsifier": "Signed volume adds no value over unsigned put/call volume after realistic costs and independent universes.",
+      "data_sources": [
+        "signed_trade_volume",
+        "sec_prices"
+      ]
+    },
+    {
+      "id": "option-pinning",
+      "primary_metric": "expiration-day absolute PinDist and close clustering versus matched non-expiration sessions",
+      "target": "Expiration-day price clustering near maximum total OI strike",
+      "primary_horizon": "Expiration session",
+      "falsifier": "No excess clustering relative to matched non-expiration sessions after liquidity controls.",
+      "data_sources": [
+        "cboe_forward",
+        "historicaldata_sample",
+        "sec_prices"
+      ]
+    },
+    {
+      "id": "deep-tail-skew",
+      "primary_metric": "cross-sectional Spearman rank IC of deep-tail skew change versus downside semivariance and SPY-excess return",
+      "target": "Left-tail risk beyond standard 25-delta skew",
+      "primary_horizon": "21 sessions",
+      "falsifier": "Deep-tail skew adds no information over the existing 25-delta skew on validation.",
+      "data_sources": [
+        "dolthub_options",
+        "cboe_forward",
+        "sec_prices"
+      ]
+    },
+    {
+      "id": "event-vrp-compression",
+      "primary_metric": "paired change in IV-minus-RV compression versus event-window absolute return and realized volatility",
+      "target": "Underpriced event movement independent of direction",
+      "primary_horizon": "Matched earnings window",
+      "falsifier": "Compression adds no value after term-slope, event-type and trailing-RV controls.",
+      "data_sources": [
+        "dolthub_options",
+        "edgar_events",
+        "sec_prices"
+      ]
+    },
+    {
+      "id": "rnd-tail-shift",
+      "primary_metric": "change in risk-neutral left-tail probability versus forward tail return and trend change",
+      "target": "Tail-risk and trend information beyond skew",
+      "primary_horizon": "21 and 63 sessions",
+      "falsifier": "Density estimates are unstable across quote filters or add no information beyond skew.",
+      "data_sources": [
+        "cboe_forward",
+        "historicaldata_sample",
+        "sec_prices",
+        "fred_macro"
+      ]
+    },
+    {
+      "id": "gamma-squeeze",
+      "primary_metric": "cross-sectional Spearman rank IC of gamma-exposure proxy versus absolute return and realized volatility",
+      "target": "Volatility amplification near high-gamma strikes without a directional squeeze assumption",
+      "primary_horizon": "1\u20135 sessions",
+      "falsifier": "No effect after liquidity controls or unstable sign across dealer-position assumptions.",
+      "data_sources": [
+        "cboe_forward",
+        "historicaldata_sample",
+        "sec_prices"
+      ]
+    },
+    {
+      "id": "vanna-charm",
+      "primary_metric": "intraday realized-volatility response to IV changes and time decay around expirations",
+      "target": "Second-order hedging pressure and intraday volatility",
+      "primary_horizon": "Intraday and expiration week",
+      "falsifier": "Not testable without second-order Greeks and an explicit dealer-position model.",
+      "data_sources": [
+        "second_order_greeks",
+        "sec_prices"
       ]
     }
   ],
