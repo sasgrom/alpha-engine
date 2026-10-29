@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { benjaminiHochberg, coverageRatio, groupedLagAutocorrelation, longShortTurnover, meanTStat, quantileSpread, summarizeRobustnessRuns, weightTurnover } from "./research-metrics";
+import { benjaminiHochberg, coverageRatio, garmanKlassVolatility, groupedLagAutocorrelation, longShortTurnover, meanTStat, quantileSpread, summarizeRobustnessRuns, weightTurnover } from "./research-metrics";
 
 describe("research review metrics", () => {
   it("computes a descriptive t-stat without confusing it with bootstrap inference", () => {
@@ -37,6 +37,18 @@ describe("research review metrics", () => {
     expect(benjaminiHochberg([0.01, 0.5], 0.05)).toEqual([{ pAdjusted: 0.02, rejected: true }, { pAdjusted: 0.5, rejected: false }]);
     expect(benjaminiHochberg([0.01, 0.02, 0.03, 0.04], 0.05).every((x) => x.rejected)).toBe(true);
     expect(() => benjaminiHochberg([1.2])).toThrow();
+  });
+
+  it("computes Garman-Klass volatility and rejects invalid OHLC", () => {
+    const bars = [
+      { open: 100, high: 110, low: 90, close: 105 },
+      { open: 105, high: 108, low: 95, close: 100 },
+    ];
+    const daily = garmanKlassVolatility(bars)!;
+    expect(daily).toBeGreaterThan(0);
+    expect(garmanKlassVolatility(bars, true)).toBeCloseTo(daily * Math.sqrt(252));
+    expect(garmanKlassVolatility([{ open: 100, high: 90, low: 95, close: 100 }])).toBeNull();
+    expect(garmanKlassVolatility(bars.slice(0, 1))).toBeNull();
   });
 
   it("keeps failed robustness runs and selects the worst valid slice", () => {

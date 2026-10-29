@@ -12,5 +12,5 @@ if (errors.length) {
   console.error(errors.join("\n"));
   process.exit(1);
 }
-console.log(`Research protocol valid: 19 hypotheses · SHA256 ${actual}`);
+console.log(`Research protocol valid: 20 hypotheses · SHA256 ${actual}`);
 process.exit(0);

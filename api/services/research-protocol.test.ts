@@ -11,7 +11,7 @@ describe("preregistered option hypothesis protocol", () => {
     expect(validateResearchProtocol(protocol)).toEqual([]);
     const sidecar = readFileSync("research/option-hypotheses-protocol.sha256", "utf8").split(/\s+/)[0];
     expect(sidecar).toBe(protocolHash(text));
-    expect(protocol.hypotheses).toHaveLength(19);
+    expect(protocol.hypotheses).toHaveLength(20);
     expect(protocol.run_policy.oos_used_for_tuning).toBe(false);
   });
 

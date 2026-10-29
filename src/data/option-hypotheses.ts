@@ -134,11 +134,18 @@ export const optionHypotheses: readonly OptionHypothesis[] = [
     evidence: [{ date: "2026-10-29", kind: "blocked", summary: "Requires a complete smooth chain, rates/dividends and stable second derivatives. Sparse chains are insufficient." }],
   },
   {
-    id: "gamma-squeeze", category: "Positioning", parameter: "Gamma-exposure proxy",
-    formula: ["GEX_proxy(K) = OI_call·Γ_call − OI_put·Γ_put", "This sign convention is not a dealer-position label"],
-    hypothesis: "High gamma near the spot may amplify absolute returns and realized volatility. No directional squeeze sign is assumed.",
-    target: "Absolute return and realized volatility over 1–5 sessions",
-    evidence: [{ date: "2026-10-29", kind: "blocked", summary: "OI and gamma exist, but dealer positioning and sign are unobserved. No directional GEX inference is allowed." }],
+    id: "gamma-squeeze", category: "Positioning", parameter: "Dollar gamma exposure",
+    formula: ["GEX_K,T = Γ_K,T · OI_K,T · Multiplier · S² · 0.01", "NetGEX = Σ_calls GEX − Σ_puts GEX", "Gamma flip requires repricing Γ(S), not fixed-Γ scaling"],
+    hypothesis: "Positive GEX may dampen volatility while negative GEX may amplify it. The expected volatility IC is negative, not a direction forecast.",
+    target: "Next-day Garman-Klass volatility or absolute log return",
+    evidence: [{ date: "2026-10-29", kind: "blocked", summary: "Dollar GEX is defined, but dealer inventory is a scenario. Claimed IC ranges are not accepted without independent validation." }],
+  },
+  {
+    id: "gamma-wall-reversal", category: "Positioning", parameter: "Gamma-wall reversal",
+    formula: ["WallDist = (S − K_max|GEX|) / S", "Evaluate only |WallDist| ≤ 1%"],
+    hypothesis: "Proximity to a large gamma wall may increase reversal probability. Support/resistance direction and persistence remain open.",
+    target: "Signed return and reversal probability over 1–5 sessions",
+    evidence: [{ date: "2026-10-29", kind: "blocked", summary: "Requires historical wall paths and a dealer scenario. A fixed 1% window is preregistered and must not be tuned on results." }],
   },
   {
     id: "vanna-charm", category: "Volatility", parameter: "Vanna and Charm hedging pressure",

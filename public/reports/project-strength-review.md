@@ -35,7 +35,7 @@ The strongest parts are engineering, provenance, idempotency, recovery, availabi
 | Position events | 16,422 events with actual filing dates |
 | Macro | 47,901 observations from 8 series |
 | Options | 250 snapshots and 310,634 normalized rows |
-| Tests | 349 tests plus desktop/mobile browser checks |
+| Tests | 352 tests plus desktop/mobile browser checks |
 
 These values describe the current database and local manifests, not an invented weekly trend.
 
@@ -105,7 +105,7 @@ Implemented:
 - DTE-bucket ATM IV, term slope, 25-delta skew, put/call volume and OI, volume/OI and ATM spread;
 - offline quality reports for duplicates, zero-bid, zero-ask, crossed/locked quotes, invalid rows and timestamp coverage;
 - matched cross-provider checks with explicit time deltas and near-ATM subsets;
-- a 19-hypothesis preregistered research ledger with formulas, targets, falsifiers and dated evidence.
+- a 20-hypothesis preregistered research ledger with formulas, targets, falsifiers and dated evidence.
 
 DoltHub coverage probe found 40 tickers present on all five historical anchor dates and 50 of 52 with recent chains. However, the sampled latest chains contain only four expirations per ticker and no volume, OI or underlying price. This is useful mid-DTE IV research data, not a complete options archive.
 

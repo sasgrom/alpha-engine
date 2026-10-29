@@ -91,6 +91,20 @@ export function benjaminiHochberg(pValues: number[], q = 0.05): BhResult[] {
   return adjusted.map((pAdjusted) => ({ pAdjusted, rejected: pAdjusted <= q }));
 }
 
+export interface OhlcBar { open: number; high: number; low: number; close: number }
+/** Garman-Klass realized volatility over daily OHLC bars; null on invalid input. */
+export function garmanKlassVolatility(bars: OhlcBar[], annualized = false): number | null {
+  if (bars.length < 2) return null;
+  const terms: number[] = [];
+  for (const bar of bars) {
+    if (![bar.open, bar.high, bar.low, bar.close].every((x) => Number.isFinite(x) && x > 0) || bar.high < bar.low) return null;
+    const range = Math.log(bar.high / bar.low), closeOpen = Math.log(bar.close / bar.open);
+    terms.push(0.5 * range * range - (2 * Math.LN2 - 1) * closeOpen * closeOpen);
+  }
+  const variance = Math.max(0, terms.reduce((a, b) => a + b, 0) / terms.length);
+  return Math.sqrt(variance * (annualized ? 252 : 1));
+}
+
 export interface RobustnessRun { runId: string; metric: number | null; error?: string }
 /** Keep every run visible and select the worst valid slice, never the best. */
 export function summarizeRobustnessRuns(runs: RobustnessRun[]) {

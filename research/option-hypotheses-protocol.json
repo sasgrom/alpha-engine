@@ -134,7 +134,7 @@
   "inference_policy": {
     "primary_estimator": "Cross-sectional Spearman rank IC or the hypothesis-specific paired metric",
     "uncertainty": "Moving block bootstrap confidence intervals respecting time and cross-sectional dependence",
-    "multiple_testing": "Benjamini-Hochberg FDR across the 19 predeclared primary endpoints",
+    "multiple_testing": "Benjamini-Hochberg FDR across the 20 predeclared primary endpoints",
     "fdr_q": 0.05,
     "secondary_results": "Exploratory only; never promoted by selecting the best horizon, sign, universe or DTE bucket",
     "two_sided_allowed": [
@@ -377,10 +377,10 @@
     },
     {
       "id": "gamma-squeeze",
-      "primary_metric": "cross-sectional Spearman rank IC of gamma-exposure proxy versus absolute return and realized volatility",
-      "target": "Volatility amplification near high-gamma strikes without a directional squeeze assumption",
-      "primary_horizon": "1\u20135 sessions",
-      "falsifier": "No effect after liquidity controls or unstable sign across dealer-position assumptions.",
+      "primary_metric": "signed Spearman rank IC of dollar Net GEX versus next-day Garman-Klass volatility or absolute log return; expected negative under long-gamma dampening",
+      "target": "Volatility compression or amplification, not equity direction",
+      "primary_horizon": "1 session, with 5-session robustness",
+      "falsifier": "IC is not negative on validation or the sign is unstable across dealer scenarios and independent universes. Claimed -0.12 to -0.22 ranges are not acceptance criteria.",
       "data_sources": [
         "cboe_forward",
         "historicaldata_sample",
@@ -395,6 +395,18 @@
       "falsifier": "Not testable without second-order Greeks and an explicit dealer-position model.",
       "data_sources": [
         "second_order_greeks",
+        "sec_prices"
+      ]
+    },
+    {
+      "id": "gamma-wall-reversal",
+      "primary_metric": "conditional reversal probability and signed forward return when |WallDist| \u2264 1%",
+      "target": "Gamma-wall proximity and short-horizon reversal",
+      "primary_horizon": "1\u20135 sessions",
+      "falsifier": "No excess reversal relative to matched non-wall sessions or direction unstable across dealer scenarios.",
+      "data_sources": [
+        "cboe_forward",
+        "historicaldata_sample",
         "sec_prices"
       ]
     }

@@ -153,7 +153,8 @@
       "title": "Do Gamma-Exposure Walls Exhibit Strike-Local Effects? A Pre-Registered, Control-Matched Test of Strike-Local Dealer-Gamma Effects in SPY",
       "linked_hypotheses": [
         "option-pinning",
-        "gamma-squeeze"
+        "gamma-squeeze",
+        "gamma-wall-reversal"
       ],
       "scope": "Control-matched strike-local test; open interest alone is not sufficient evidence of pinning or dealer direction.",
       "metadata_file": "scholar/option_pinning.csv"
@@ -163,6 +164,7 @@
       "title": "Intraday 0DTE Option Order Flow and S&P 500 Downside Risk",
       "linked_hypotheses": [
         "gamma-squeeze",
+        "gamma-wall-reversal",
         "signed-call-volume"
       ],
       "scope": "Order-flow and dealer-hedging context; do not generalize to single-name long-horizon predictions without a separate test.",
