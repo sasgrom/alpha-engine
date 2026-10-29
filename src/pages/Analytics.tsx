@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import AppLayout from "@/components/AppLayout";
 import AnalyticsNetwork, { type AnalyticsMode, type AnalyticsNode, type AnalyticsStatus } from "@/components/AnalyticsNetwork";
+import OptionHypothesisLedger from "@/components/OptionHypothesisLedger";
 import { analyticsSnapshot } from "@/data/analytics-snapshot";
 import { Link } from "react-router";
 
@@ -139,6 +140,8 @@ export default function Analytics() {
             </div>
           </div>
         </section>
+
+        <OptionHypothesisLedger />
 
         <section className="t-panel px-5 py-4">
           <SectionTitle title="Weekly history" subtitle="Real snapshots only. No fabricated trend lines." />
