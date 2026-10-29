@@ -9,7 +9,7 @@ import { excessForwardReturnInfo, type ForwardReturnInfo } from "../api/services
 import { forwardRealizedVolatility, trailingRealizedVolatility } from "../api/services/forward-volatility";
 import { benjaminiHochberg } from "../api/services/research-metrics";
 import { loadEdgarUniverse } from "./lib/edgar";
-import { FACTOR_CONFIGS, evaluateFactorRows, type ResearchRow } from "./lib/dolthub-research";
+import { compareFactorRows, FACTOR_CONFIGS, evaluateFactorRows, type ResearchRow } from "./lib/dolthub-research";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
 import type { OptionFeatureSet } from "./lib/option-features";
@@ -95,6 +95,7 @@ const output = {
   generatedAt: new Date().toISOString(), protocol: "alpha-option-hypotheses-v1",
   scope: "Preregistered primary metrics with moving-block bootstrap CI; normal p-values are secondary",
   snapshots, usableSnapshots, years, factors: results,
+  comparisons: { atmIvVsRv20: compareFactorRows(factorRows.get("atmIv")!, factorRows.get("rv20")!) },
 };
 writeJsonAtomic(path.join(outRoot, "dolthub-research.json"), output, true);
 prog.done(`snapshots ${snapshots} · usable ${usableSnapshots} · factors ${factorNames.length}`);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chooseBucket, evaluateFactorRows, FACTOR_CONFIGS, type ResearchRow } from "./dolthub-research";
+import { chooseBucket, compareFactorRows, evaluateFactorRows, FACTOR_CONFIGS, type ResearchRow } from "./dolthub-research";
 import type { OptionBucketFeatures } from "./option-features";
 
 function rows(): ResearchRow[] {
@@ -41,5 +41,16 @@ describe("DoltHub research evaluation", () => {
     expect(result.byYear["2024"].weightedSpearman).toBeCloseTo(1);
     expect(result.byYear["2025"].weightedSpearman).toBeCloseTo(1);
     expect(result.byBucket["31-90D"].weightedSpearman).toBeCloseTo(1);
+  });
+
+  it("bootstraps the paired ATM IV minus RV20 IC difference", () => {
+    const a = rows(), b = rows().map((row) => ({ ...row, y: -row.y }));
+    const comparison = compareFactorRows(a, b);
+    expect(comparison.months).toBe(6);
+    expect(comparison.deltaSpearman).toBeCloseTo(2);
+    expect(comparison.betterShare).toBe(1);
+    expect(comparison.ci95.low).toBeCloseTo(2);
+    expect(comparison.ci95.high).toBeCloseTo(2);
+    expect(comparison.byYear["2024"].deltaSpearman).toBeCloseTo(2);
   });
 });

@@ -55,6 +55,47 @@ function summarize(rows: ResearchRow[]) {
   };
 }
 
+function pairedDelta(a: ResearchRow[], b: ResearchRow[]) {
+  const group = (rows: ResearchRow[]) => {
+    const out = new Map<string, { spearman: number | null; n: number }>();
+    for (const row of rows) {
+      const key = `${row.quarter}|${row.horizon}`;
+      if (!out.has(key)) out.set(key, { spearman: null, n: 0 });
+      const current = out.get(key)!;
+      current.n++;
+      const pairs = rows.filter((r) => `${r.quarter}|${r.horizon}` === key).map((r) => ({ x: r.x, y: r.y }));
+      current.spearman = icStats(pairs).spearman;
+      out.set(key, current);
+    }
+    return out;
+  };
+  const aStats = group(a), bStats = group(b);
+  const deltas: { delta: number; weight: number; year: string }[] = [];
+  for (const [key, av] of aStats) {
+    const bv = bStats.get(key);
+    if (!bv || av.spearman === null || bv.spearman === null || av.n < 5 || bv.n < 5) continue;
+    deltas.push({ delta: av.spearman - bv.spearman, weight: Math.min(av.n, bv.n), year: key.slice(0, 4) });
+  }
+  return deltas;
+}
+
+export function compareFactorRows(a: ResearchRow[], b: ResearchRow[]) {
+  const deltas = pairedDelta(a, b);
+  const weight = deltas.reduce((s, r) => s + r.weight, 0);
+  const years = [...new Set(deltas.map((r) => r.year))].sort();
+  return {
+    months: deltas.length,
+    n: weight,
+    deltaSpearman: weight ? deltas.reduce((s, r) => s + r.delta * r.weight, 0) / weight : null,
+    betterShare: deltas.length ? deltas.filter((r) => r.delta > 0).length / deltas.length : null,
+    ci95: blockBootstrapWeightedCi(deltas.map((r) => ({ value: r.delta, weight: r.weight }))),
+    byYear: Object.fromEntries(years.map((year) => {
+      const rows = deltas.filter((r) => r.year === year), w = rows.reduce((s, r) => s + r.weight, 0);
+      return [year, { months: rows.length, n: w, deltaSpearman: w ? rows.reduce((s, r) => s + r.delta * r.weight, 0) / w : null, betterShare: rows.length ? rows.filter((r) => r.delta > 0).length / rows.length : null }];
+    })),
+  };
+}
+
 export function evaluateFactorRows(rows: ResearchRow[]) {
   const byYear = [...new Set(rows.map((r) => r.date.slice(0, 4)))].sort();
   const byBucket = [...new Set(rows.map((r) => r.bucket))].sort();
