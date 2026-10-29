@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { expectedMove, summarizeExpectedMoves } from "./expected-move";
+import { absoluteForwardMove, expectedMove, summarizeExpectedMoves } from "./expected-move";
 
 describe("expected move", () => {
   it("computes spot · IV · sqrt(DTE/365) and validates inputs", () => {
@@ -7,6 +7,17 @@ describe("expected move", () => {
     expect(expectedMove(100, 0.2, 91.25)).toBeCloseTo(10);
     expect(expectedMove(0, 0.2, 30)).toBeNull();
     expect(expectedMove(100, -0.1, 30)).toBeNull();
+  });
+
+  it("computes actual move in dollars and filters zero expected values from ratios", () => {
+    const bars = [
+      { date: "2026-01-01", close: 100 },
+      { date: "2026-01-05", close: 110 },
+      { date: "2026-01-10", close: 120 },
+      { date: "2026-01-20", close: 132 },
+    ];
+    expect(absoluteForwardMove(bars, "2026-01-01", 2)?.move).toBeCloseTo(10);
+    expect(summarizeExpectedMoves([{ date: "zero", expected: 0, actual: 0 }]).meanRatio).toBeNull();
   });
 
   it("measures coverage and errors without assuming a normal 68% interval", () => {
