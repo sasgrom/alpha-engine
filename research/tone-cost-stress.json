@@ -1,0 +1,27 @@
+{
+  "generated_from": "research/tone-ic-extended-result.json",
+  "scope": "Turnover-drag sensitivity only; not a full portfolio backtest",
+  "turnover_per_quarter": 0.6043156154349424,
+  "annual_one_way_turnover": 2.4172624617397696,
+  "quantile_top_bottom_126_sessions": 0.09130717569725526,
+  "scenarios": [
+    {
+      "scenario": "low",
+      "cost_bps_per_one_way_turnover": 5,
+      "annual_drag_bps": 12.086312308698847,
+      "annual_drag_pct": 0.12086312308698847
+    },
+    {
+      "scenario": "base",
+      "cost_bps_per_one_way_turnover": 20,
+      "annual_drag_bps": 48.34524923479539,
+      "annual_drag_pct": 0.4834524923479539
+    },
+    {
+      "scenario": "high",
+      "cost_bps_per_one_way_turnover": 50,
+      "annual_drag_bps": 120.86312308698848,
+      "annual_drag_pct": 1.2086312308698848
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0",
+  "created_date": "2026-10-29",
+  "overall_mode": "conceptual",
+  "scope_status": "metadata_review_complete; two authorized full texts cached; numerical replication not started",
+  "protocol_id": "alpha-option-hypotheses-v1",
+  "papers": [
+    {
+      "paper_id": "PAN-2006",
+      "title": "The Information in Option Volume for Future Stock Prices",
+      "authors": [
+        "Jun Pan",
+        "Allen M. Poteshman"
+      ],
+      "year": 2006,
+      "publication": "Review of Financial Studies 19(3), 871\u2013908",
+      "url": "https://academic.oup.com/rfs/article-abstract/19/3/871/1646711",
+      "linked_hypotheses": [
+        "put-call-volume",
+        "volume-oi"
+      ],
+      "published_mechanism": "Buy-to-open put-call ratios predict next-day and next-week stock returns.",
+      "published_targets_pending_full_text": [
+        "More than 40 bps next day",
+        "More than 1% over next week"
+      ],
+      "data_requirement": "Buyer-initiated open-new-position option volume, not total option volume.",
+      "our_substitute": "Aggregated total put/call volume from Hugging Face; full volume only in limited samples.",
+      "equivalence_grade": "D",
+      "mode": "conceptual",
+      "restriction": "Do not compare our ratio numerically with the paper. Open-buy data are unavailable.",
+      "full_text_status": "Metadata only; authorized PDF not obtained in this environment."
+    },
+    {
+      "paper_id": "XING-2010",
+      "title": "What Does the Individual Option Volatility Smirk Tell Us About Future Equity Returns?",
+      "authors": [
+        "Yuhang Xing",
+        "Xiaoyan Zhang",
+        "Rui Zhao"
+      ],
+      "year": 2010,
+      "publication": "Journal of Financial and Quantitative Analysis 45(3), 641\u2013662",
+      "url": "https://www.cambridge.org/core/journals/journal-of-financial-and-quantitative-analysis/article/what-does-the-individual-option-volatility-smirk-tell-us-about-future-equity-returns/ECFD16BA9ACBDC8D577D1BD866FBEA72",
+      "linked_hypotheses": [
+        "skew-25"
+      ],
+      "published_mechanism": "Steeper individual-option smirks precede weaker equity returns and worse earnings shocks.",
+      "published_targets_pending_full_text": [
+        "10.9% per year risk-adjusted underperformance of steepest versus least pronounced smirks"
+      ],
+      "data_requirement": "Paper-specific individual-option smirk construction and historical universe.",
+      "our_substitute": "Nearest 25-delta put-minus-call IV on a mid-DTE DoltHub subset and full forward Cboe chains.",
+      "equivalence_grade": "C",
+      "mode": "conceptual",
+      "restriction": "Economic mechanism only; do not target the published 10.9% estimate.",
+      "full_text_status": "Metadata only; authorized PDF not obtained in this environment."
+    },
+    {
+      "paper_id": "ZHOU-2018",
+      "title": "Variance risk premia, asset predictability puzzles, and macroeconomic uncertainty",
+      "authors": [
+        "Hao Zhou"
+      ],
+      "year": 2018,
+      "publication": "Annual Review of Financial Economics",
+      "url": "https://www.annualreviews.org/content/journals/10.1146/annurev-financial-110217-022737",
+      "linked_hypotheses": [
+        "iv-rv-premium"
+      ],
+      "published_mechanism": "Risk-neutral expected variance minus objectively expected variance is priced across asset markets.",
+      "data_requirement": "Risk-neutral variance and a physical variance forecast; the review discusses multi-lag realized-variance forecasts.",
+      "our_substitute": "Mid-DTE ATM IV minus trailing 20-session realized volatility, with forward-RV validation.",
+      "equivalence_grade": "C",
+      "mode": "conceptual",
+      "restriction": "Our IV-minus-RV20 feature is not a variance swap or the paper's complete VRP estimator.",
+      "full_text_status": "Authorized PDF cached and hashed",
+      "local_file": "papers/zhou_2018_variance_risk_premia.pdf",
+      "sha256": "0cabf07c0b8ae9d02a141dd709755bb36a18a284e08b89471d7aeab0c3d8a1a1"
+    },
+    {
+      "paper_id": "ROGERS-2009",
+      "title": "Earnings Guidance and Market Uncertainty",
+      "authors": [
+        "Jonathan L. Rogers",
+        "Douglas J. Skinner",
+        "Andrew Van Buskirk"
+      ],
+      "year": 2009,
+      "publication": "Journal of Accounting & Economics 48(1), 90\u2013109",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1126405",
+      "linked_hypotheses": [
+        "earnings-crush"
+      ],
+      "published_mechanism": "Unbundled guidance can increase uncertainty; uncertainty declines after the earnings announcement.",
+      "paper_sample": {
+        "forecasts": 23474,
+        "period": "1996\u20132006",
+        "short_window": "3 trading days before/after forecast"
+      },
+      "data_requirement": "OptionMetrics standardized constant-duration ATM IV, First Call, CRSP and IBES.",
+      "our_substitute": "Matched traded-option mid-DTE IV around official earnings/filing timestamps.",
+      "equivalence_grade": "C",
+      "mode": "conceptual",
+      "restriction": "We test earnings IV crush, not the paper's guidance effect or standardized 30\u2013730 day IV series.",
+      "full_text_status": "Authorized PDF cached and hashed",
+      "local_file": "papers/rogers_skinner_van_buskirk_2009.pdf",
+      "sha256": "a0bb7bb28c637fbee645e3f9d5995dc8a30eba7f4f1be05a6684192f2368e679"
+    }
+  ],
+  "metadata_files": [
+    {
+      "file": "scholar/skew_returns.csv",
+      "sha256": "4aeaf9a73c19aefa6c3574729eaa10d0b73f4edff56bc04dfa0a5da3ae8030d8"
+    },
+    {
+      "file": "scholar/variance_risk_premium.csv",
+      "sha256": "038c655529ee98b2e50c44a57e2bdcb91b92b2a4bc8be730f3ea710e3b6edb5f"
+    },
+    {
+      "file": "scholar/put_call_returns.csv",
+      "sha256": "aed64bfcc9e0a8fac1cba210e0f49889056d0357c11dfce6c910cf3252f4697c"
+    },
+    {
+      "file": "scholar/earnings_implied_volatility.csv",
+      "sha256": "15a5f639d2ac62cc59c38b749247a19811827b8c3795fcca2890eaacfd1ede82"
+    },
+    {
+      "file": "scholar/pan_poteshman_option_volume.csv",
+      "sha256": "c7ec19bb8ddd49b2bc53376fd300fc589037cc04c2957da3b7fa1bf5a853092f"
+    },
+    {
+      "file": "scholar/variance_premium_equity_returns.csv",
+      "sha256": "f6e6dcd89735d013bc6e1173d8f54aa6c688473f5c60e06f220a0bb1715790f4"
+    }
+  ],
+  "next_gate": "Run source-specific conceptual tests only after the DoltHub clone and coverage QA. Numerical paper-target reconciliation requires the exact paper specifications and equivalent data."
+}

@@ -4,6 +4,7 @@ import { sql } from "drizzle-orm";
 import { getDb } from "../api/queries/connection";
 import { getBars } from "../api/services/prices";
 import { excessForwardReturn, icStats, type IcPair } from "../api/services/ic";
+import { groupedLagAutocorrelation, longShortTurnover, meanTStat, quantileSpread } from "../api/services/research-metrics";
 import { loadEdgarUniverse } from "../worker/lib/edgar";
 
 const onlyIdx = process.argv.indexOf("--only");
@@ -41,7 +42,7 @@ for (const cik of ciks) {
     pairs.push({ cik: cik, quarter, horizon: Number(hStr), x, y });
   }
 }
-const summarize = (rs: typeof pairs) => {
+const summarize = (rs: typeof pairs, extended = true) => {
   const byQuarter = new Map<string, IcPair[]>();
   for (const r of rs) {
     if (!byQuarter.has(r.quarter)) byQuarter.set(r.quarter, []);
@@ -50,12 +51,23 @@ const summarize = (rs: typeof pairs) => {
   const stats = [...byQuarter.entries()].map(([quarter, p]) => ({ quarter, ...icStats(p) }));
   const n = stats.reduce((s, r) => s + r.n, 0);
   const valid = stats.filter((r) => r.spearman !== null);
-  return {
+  const base = {
     quarters: valid.length,
     n,
     weightedSpearman: n ? valid.reduce((s, r) => s + r.spearman * r.n, 0) / n : null,
     medianSpearman: valid.length ? valid.map((r) => r.spearman).sort((a, b) => a - b)[Math.floor(valid.length / 2)] : null,
     positiveShare: valid.length ? valid.filter((r) => r.spearman > 0).length / valid.length : null,
+  };
+  if (!extended) return base;
+  const spreads = [...byQuarter.values()].map((p) => quantileSpread(p)).filter((x): x is NonNullable<typeof x> => x !== null);
+  const spreadN = spreads.reduce((s, x) => s + x.buckets.reduce((n, b) => n + b.n, 0), 0);
+  const timed = rs.map((r) => ({ key: String(r.cik), period: r.quarter, value: r.x }));
+  return {
+    ...base,
+    icTStatNaive: meanTStat(valid.map((r) => r.spearman)),
+    quantileTopBottom: spreadN ? spreads.reduce((s, x) => s + x.topBottom * x.buckets.reduce((n, b) => n + b.n, 0), 0) / spreadN : null,
+    signalAutocorrelation: groupedLagAutocorrelation(timed),
+    longShortTurnover: longShortTurnover(timed),
   };
 };
 function ci95(rs: typeof pairs, iterations = 2000) {
@@ -71,7 +83,7 @@ function ci95(rs: typeof pairs, iterations = 2000) {
       for (let k = 0; k < 4; k++) sampled.push(quarters[(start + k) % quarters.length]);
     }
     const block = sampled.flatMap((q) => rs.filter((r) => r.quarter === q));
-    means.push(summarize(block).weightedSpearman);
+    means.push(summarize(block, false).weightedSpearman);
   }
   means.sort((a, b) => a - b);
   return { low: means[Math.floor(iterations * 0.025)], high: means[Math.floor(iterations * 0.975)] };
