@@ -50,11 +50,18 @@ describe("Methodology handbook", () => {
     expect(host!.textContent).toContain("ΔIC = IC_ATM IV − IC_RV20");
     expect(host!.textContent).toContain("64.85%");
     expect(host!.textContent).toContain("0.0706");
+    expect(host!.textContent).toContain("AAPL risk profile");
+    expect(host!.textContent).toContain("$11.85");
+    expect(host!.textContent).toContain("$8.09");
+    expect(host!.textContent).toContain("0.682");
+    expect(host!.textContent).toContain("Volatility targeting");
+    expect(host!.textContent).toContain("Expected-return normalization");
+    expect(host!.textContent).toContain("Risk dashboard");
+    expect(host!.querySelector('svg[aria-label="AAPL expected move and risk bands"]')).not.toBeNull();
   });
 
   it("keeps production limits and academic references visible", () => {
-    expect(host!.textContent).toContain("not as a bullish or bearish vote");
-    expect(host!.textContent).toContain("not directional alpha");
+    expect(host!.textContent).toContain("not a directional trading signal");
     expect(host!.querySelectorAll(".methodology-references li")).toHaveLength(7);
   });
 });

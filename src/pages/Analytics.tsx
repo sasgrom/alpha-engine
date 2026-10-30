@@ -5,6 +5,7 @@ import OptionHypothesisLedger from "@/components/OptionHypothesisLedger";
 import ToneCarChart from "@/components/ToneCarChart";
 import { analyticsSnapshot } from "@/data/analytics-snapshot";
 import { Link } from "react-router";
+import { ArrowRight, BookOpen } from "lucide-react";
 
 const statusLabel: Record<AnalyticsStatus, string> = {
   done: "Done",
@@ -108,6 +109,17 @@ export default function Analytics() {
           <Metric label="Position events" value={m.positionEvents.toLocaleString("en-US")} hint="with actual filing dates" />
           <Metric label="Option snapshots" value={m.optionsSnapshots.toLocaleString("en-US")} hint="foundation, not long history" />
         </section>
+
+        <Link to="/analytics/methodology" className="methodology-tile">
+          <div className="methodology-tile-main">
+            <span className="methodology-tile-icon"><BookOpen size={19} /></span>
+            <div>
+              <div className="methodology-tile-title">Volatility Lab</div>
+              <div className="methodology-tile-subtitle">Notation, expected move, paired baselines and an AAPL risk-profile example</div>
+            </div>
+          </div>
+          <span className="methodology-tile-arrow"><ArrowRight size={20} /></span>
+        </Link>
 
         <section className="t-panel px-4 py-3">
           <div className="flex flex-wrap items-center gap-2">
