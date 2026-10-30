@@ -39,7 +39,7 @@ export interface GenerateResult {
 }
 
 /** Raw generate call (non-streaming). Throws on daemon errors. */
-export async function generate(prompt: string, opts: { model?: string; timeoutMs?: number; numPredict?: number; temperature?: number; jsonMode?: boolean; keepAlive?: string | number } = {}): Promise<GenerateResult> {
+export async function generate(prompt: string, opts: { model?: string; timeoutMs?: number; numPredict?: number; temperature?: number; jsonMode?: boolean; jsonSchema?: object; keepAlive?: string | number } = {}): Promise<GenerateResult> {
   const model = opts.model ?? LLM_MODEL;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), opts.timeoutMs ?? 120_000);
@@ -54,7 +54,7 @@ export async function generate(prompt: string, opts: { model?: string; timeoutMs
         // Qwen3.x supports a "thinking" mode; disable it so the reply is
         // pure JSON and extractScore never has to dig through chain-of-thought.
         think: false,
-        ...(opts.jsonMode ? { format: {
+        ...(opts.jsonSchema ? { format: opts.jsonSchema } : opts.jsonMode ? { format: {
           type: "object",
           properties: { score: { type: "number" }, why: { type: "string" } },
           required: ["score", "why"],

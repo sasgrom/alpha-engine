@@ -1,0 +1,64 @@
+{
+  "protocolId": "alpha-expectations-events-v1",
+  "frozenAt": "2026-10-30T01:52:00Z",
+  "status": "extraction_shadow_no_event_study_results",
+  "extraction": {
+    "promptVersion": "expectations-v1",
+    "schemaVersion": 1,
+    "productionDelivery": false,
+    "evidenceRequired": true,
+    "llmArithmeticAllowed": false,
+    "candidateDryRun": { "documents": 36, "routed": 31, "noCandidateText": 5 }
+  },
+  "requiredCoverage": {
+    "forms": ["10-K", "10-Q", "8-K", "amendments"],
+    "exhibits": "Preserve all substantive earnings EX-99 documents, including main release and supplement",
+    "actuals": "Same metric, scope, period, unit and accounting basis as guidance",
+    "consensus": "Point-in-time provider estimate with publication timestamp; null when unavailable",
+    "availability": "Filing acceptance timestamp and conservative post-close handling"
+  },
+  "features": {
+    "guidanceMid": "(lower + upper) / 2",
+    "guidanceWidth": "(upper - lower) / max(abs(guidanceMid), scale)",
+    "revision": "(newMid - priorMid) / max(abs(priorMid), scale)",
+    "guidanceSurprise": "(actual - priorMid) / max(abs(priorMid), scale)",
+    "consensusSurprise": "(actual - consensusAtCutoff) / max(abs(consensusAtCutoff), scale)",
+    "reactionZ": "CAR[0,1] / availabilityMatchedExpectedMoveReturn",
+    "reversal": "-sign(CAR[0,1]) * CAR[2,10]"
+  },
+  "primaryHypotheses": [
+    "own_guidance_miss_negative_car",
+    "beat_but_lower_forward_guidance_negative_car",
+    "narrative_fragility_amplifies_core_disappointment",
+    "timing_explanation_without_revision_predicts_reversal",
+    "guidance_credibility_changes_surprise_information"
+  ],
+  "windows": {
+    "discovery": { "start": "2010-01-01", "end": "2023-12-31" },
+    "validation": { "start": "2024-01-01", "end": "2025-12-31" },
+    "sealedHoldout": { "start": "2026-01-01", "end": null }
+  },
+  "validation": {
+    "independentUniverses": ["oddCik", "evenCik"],
+    "robustness": ["calendarYear", "sector", "guidanceHorizon", "basis", "marketRegime", "costScenario"],
+    "multipleTesting": "Benjamini-Hochberg FDR across primary endpoints",
+    "minimumHistoryForCredibility": 8,
+    "productionBlockedUntil": [
+      "human_reviewed_extraction_benchmark_passes",
+      "multi_exhibit_coverage_passes",
+      "period_unit_basis_matching_passes",
+      "departed_and_delisted_universe_added",
+      "event_study_survives_validation_and_holdout"
+    ]
+  },
+  "biasChecks": {
+    "lookAhead": "Only information public by event cutoff; labels carry exitDate",
+    "survivorship": "Current universe is a limitation and production blocker",
+    "sameWindowConfounding": "Record macro and other company disclosures; do not claim clean causality by default",
+    "execution": "No after-hours commentary treated as an executable close fill",
+    "consensusVintage": "Never use a later consensus estimate as the pre-event expectation",
+    "guidanceVintage": "Never compare actuals with a revised guidance value published after the original target was set",
+    "tuning": "No sealed-holdout tuning; failed and null results remain in output"
+  },
+  "oosUsedForTuning": false
+}

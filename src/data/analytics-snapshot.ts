@@ -4,7 +4,7 @@
  */
 export const analyticsSnapshot = {
   "week": "2026-W44",
-  "generatedAt": "2026-10-30T01:19:50.642Z",
+  "generatedAt": "2026-10-30T01:59:23.437Z",
   "metrics": {
     "companies": 495,
     "sectors": 11,
@@ -33,7 +33,7 @@ export const analyticsSnapshot = {
     "macroSeries": 8,
     "macroLastDate": "2026-10-19",
     "jobsError": 8,
-    "testCount": 384,
+    "testCount": 401,
     "optionsSnapshots": 250,
     "normalizedOptionRows": 310634
   },
@@ -125,9 +125,9 @@ export const analyticsSnapshot = {
     {
       "id": "guidance",
       "title": "Structured guidance",
-      "status": "missing",
-      "detail": "The main text factor is tone, not numeric forward-looking drivers.",
-      "next": "Extract revenue/EPS/margin/capex/buyback with source lineage."
+      "status": "partial",
+      "detail": "A 36-document review and expectations-v1 shadow extractor now cover ranges, revisions, floors, assumptions, non-disclosure and verbatim evidence. No reviewed extraction panel or event-study result exists yet.",
+      "next": "Run the human extraction benchmark, preserve all substantive EX-99 files, then test guidance surprise and revision against availability-anchored CAR."
     },
     {
       "id": "qa",
@@ -380,7 +380,7 @@ export const analyticsSnapshot = {
   "history": [
     {
       "week": "2026-W44",
-      "generatedAt": "2026-10-30T01:19:50.642Z",
+      "generatedAt": "2026-10-30T01:59:23.437Z",
       "metrics": {
         "companies": 495,
         "sectors": 11,
@@ -409,7 +409,7 @@ export const analyticsSnapshot = {
         "macroSeries": 8,
         "macroLastDate": "2026-10-19",
         "jobsError": 8,
-        "testCount": 384,
+        "testCount": 401,
         "optionsSnapshots": 250,
         "normalizedOptionRows": 310634
       }
