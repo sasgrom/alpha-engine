@@ -1,0 +1,14 @@
+[
+  { "cik": 1018724, "ticker": "AMZN", "name": "Amazon.com, Inc." },
+  { "cik": 789019, "ticker": "MSFT", "name": "Microsoft Corporation" },
+  { "cik": 1652044, "ticker": "GOOGL", "name": "Alphabet Inc." },
+  { "cik": 1326801, "ticker": "META", "name": "Meta Platforms, Inc." },
+  { "cik": 320193, "ticker": "AAPL", "name": "Apple Inc." },
+  { "cik": 1045810, "ticker": "NVDA", "name": "NVIDIA Corporation" },
+  { "cik": 19617, "ticker": "JPM", "name": "JPMorgan Chase & Co." },
+  { "cik": 34088, "ticker": "XOM", "name": "Exxon Mobil Corporation" },
+  { "cik": 18230, "ticker": "CAT", "name": "Caterpillar Inc." },
+  { "cik": 731766, "ticker": "UNH", "name": "UnitedHealth Group Incorporated" },
+  { "cik": 104169, "ticker": "WMT", "name": "Walmart Inc." },
+  { "cik": 78003, "ticker": "PFE", "name": "Pfizer Inc." }
+]

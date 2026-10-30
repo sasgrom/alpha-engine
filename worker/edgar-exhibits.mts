@@ -17,6 +17,10 @@ const from = arg("--from");
 const fromTicker = arg("--from-ticker")?.toUpperCase() ?? null;
 const universeFile = arg("--universe") ?? "edgar-universe.json";
 const force = process.argv.includes("--force");
+const benchmarkOnly = process.argv.includes("--benchmark");
+const benchmarkAccessions = benchmarkOnly
+  ? new Set((JSON.parse(readFileSync(path.resolve("research/expectations-benchmark-v1.json"), "utf8")) as { documents: { accessionNo: string }[] }).documents.map((doc) => doc.accessionNo))
+  : null;
 const MAX_FILING_BYTES = 50 * 1024 * 1024;
 const MIN_FREE_BYTES = 15 * 2 ** 30;
 const cacheDir = (cik: number) => path.resolve(import.meta.dirname, "cache", "edgar", String(cik));
@@ -56,7 +60,7 @@ for (const company of universe) {
   const manifest = readManifest(company.cik);
   if (!manifest.length) { prog.log(`${company.ticker}: no manifest`); continue; }
   mkdirSync(cacheDir(company.cik), { recursive: true });
-  const filings = manifest.filter((entry) => entry.fetched && isEightKForm(entry.form) && (!from || entry.filingDate >= from));
+  const filings = manifest.filter((entry) => entry.fetched && isEightKForm(entry.form) && (!from || entry.filingDate >= from) && (!benchmarkAccessions || benchmarkAccessions.has(entry.accessionNo)));
   for (const entry of filings) {
     if (!force && entry.exhibitsComplete && validCachedFiles(company.cik, entry.accessionNo, entry.exhibitFiles)) { totals.resumed++; continue; }
     try {

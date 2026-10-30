@@ -28,6 +28,10 @@ const from = arg("--from");
 const fromTicker = arg("--from-ticker")?.toUpperCase() ?? null;
 const universeFile = arg("--universe") ?? "edgar-universe.json";
 const dryRun = process.argv.includes("--dry-run");
+const benchmarkOnly = process.argv.includes("--benchmark");
+const benchmarkAccessions = benchmarkOnly
+  ? new Set((JSON.parse(readFileSync(path.resolve("research/expectations-benchmark-v1.json"), "utf8")) as { documents: { accessionNo: string }[] }).documents.map((doc) => doc.accessionNo))
+  : null;
 const rescore = process.argv.includes("--rescore");
 const limitValue = Number(arg("--limit") ?? 0);
 if (!Number.isInteger(limitValue) || limitValue < 0) throw new Error("--limit must be a non-negative integer");
@@ -98,7 +102,7 @@ for (const company of universe) {
   let manifest: ManifestEntry[];
   try { manifest = JSON.parse(readFileSync(path.join(cacheDir(company.cik), "manifest.json"), "utf8")); }
   catch { prog.log(`${company.ticker}: no manifest`); continue; }
-  const candidates = manifest.filter((entry) => entry.fetched && supportedForm(entry.form) && (!from || entry.filingDate >= from)).slice(0, limit ?? undefined);
+  const candidates = manifest.filter((entry) => entry.fetched && supportedForm(entry.form) && (!from || entry.filingDate >= from) && (!benchmarkAccessions || benchmarkAccessions.has(entry.accessionNo))).slice(0, limit ?? undefined);
   const tasks = candidates.flatMap((filing) => sourcesFor(company.cik, filing).map((sourceFile) => ({ filing, sourceFile })));
   const result = readResults(company.cik);
   let consecutiveFailures = 0;
