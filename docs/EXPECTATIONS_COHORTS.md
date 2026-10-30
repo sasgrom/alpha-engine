@@ -126,8 +126,8 @@ The remaining 20% covers the extraction instructions, JSON Schema, model templat
 - `no_candidate_text`: no relevant block found; no LLM call is needed.
 - `indivisible_block_exceeds_context`: source is preserved but not sent. Increase context only after a memory test or review the section boundaries manually.
 - `cache_unreadable`: source could not be read; never replace it with a model-generated substitute.
-- `unparsed`: response was not valid against the typed schema; resume is allowed.
-- `request_failed`: transport or daemon failure; two consecutive failures checkpoint and abort.
+- `unparsed`: response was not valid against the typed schema; raw output is appended to `worker/.runs/cohort-extraction-failures.jsonl` and the batch continues.
+- `request_failed`: transport or daemon failure; two consecutive failures checkpoint and abort. Parse failures are isolated per source and never abort the batch by themselves.
 
 A missing result is never converted into a pass. No source, table or amendment is deliberately discarded to make a prompt smaller.
 

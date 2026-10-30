@@ -2,7 +2,7 @@
 import dns from "node:dns";
 dns.setDefaultResultOrder("ipv4first");
 import "dotenv/config";
-import { readFileSync } from "node:fs";
+import { appendFileSync, mkdirSync, readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { loadEdgarUniverse } from "./lib/edgar";
@@ -19,6 +19,7 @@ import {
 import { generate, LLM_MODEL, status } from "./lib/ollama";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
+import { nextLlmFailureStreak, shouldAbortLlmBatch } from "./lib/llm-run-policy";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const only = arg("--only")?.toUpperCase() ?? null;
@@ -36,6 +37,8 @@ const benchmarkAccessions = benchmarkOnly
   : null;
 const cacheDir = (cik: number) => path.resolve(import.meta.dirname, "cache", "edgar", String(cik));
 const outputPath = (cik: number) => path.join(cacheDir(cik), "cohort-v2.json");
+const failureLog = path.resolve(import.meta.dirname, ".runs", "cohort-extraction-failures.jsonl");
+mkdirSync(path.dirname(failureLog), { recursive: true });
 const sha256 = (value: string) => createHash("sha256").update(value).digest("hex");
 
 interface Usage { promptTokens: number; evalCount: number; promptMs: number; evalMs: number; totalMs: number }
@@ -157,7 +160,13 @@ for (const company of universe) {
       if (!parsed) {
         base.status = "unparsed";
         totals.unparsed++;
-        consecutiveFailures++;
+        consecutiveFailures = nextLlmFailureStreak("unparsed", consecutiveFailures);
+        appendFileSync(failureLog, JSON.stringify({
+          ts: new Date().toISOString(), cik: company.cik, ticker: company.ticker,
+          cohortId: container.cohortId, containerId: container.containerId, sourceId: source.sourceId,
+          reason: "response_does_not_match_expectations_v2_schema", response: generated.text.slice(0, 8000),
+        }) + "\n");
+        prog.log(`${company.ticker} ${source.sourceId}: unparsed response recorded; continuing`);
       } else {
         const checked = rejectUnsupportedStatements(parsed, targetText);
         base.status = checked.response.statements.length || checked.response.guidanceStatus !== "found" ? "extracted" : "empty";
@@ -167,17 +176,17 @@ for (const company of universe) {
         base.rejectedEvidence = checked.rejected;
         totals.rejectedEvidence += checked.rejected;
         if (base.status === "extracted") totals.extracted++; else totals.empty++;
-        consecutiveFailures = 0;
+        consecutiveFailures = nextLlmFailureStreak("extracted", consecutiveFailures);
       }
     } catch (error) {
       base.status = "request_failed";
       base.extractionWarnings = [String(error).slice(0, 500)];
       totals.failed++;
-      consecutiveFailures++;
+      consecutiveFailures = nextLlmFailureStreak("request_failed", consecutiveFailures);
     }
     result.entries = [...result.entries.filter((entry) => !(entry.sourceId === source.sourceId && entry.containerId === container.containerId)), base];
     writeJsonAtomic(outputPath(company.cik), result, true);
-    if (consecutiveFailures >= 2) {
+    if (shouldAbortLlmBatch(consecutiveFailures)) {
       prog.done(`aborted after two LLM failures · state saved · ${JSON.stringify(totals)}`);
       process.exit(2);
     }
