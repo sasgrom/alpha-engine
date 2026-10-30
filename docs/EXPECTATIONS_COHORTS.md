@@ -86,6 +86,28 @@ npx tsx worker/build-expectations-report.mts --cohorts
 
 Reviewed publication requires a passing independent benchmark and full-history or explicitly aligned cohorts. Raw model responses are excluded from `src/data/expectations-report.ts` and `public/reports/expectations-report.json`.
 
+## Overnight run without XOM_PRE
+
+Use `worker/research-universe-52.json` when the predecessor alias is not worth debugging. The original 53-company file remains unchanged.
+
+```powershell
+npx tsx worker/edgar-exhibits.mts --universe research-universe-52.json
+npx tsx worker/edgar-cohorts.mts --universe research-universe-52.json --context 32768
+npx tsx worker/edgar-cohort-extract.mts --universe research-universe-52.json --dry-run
+npx tsx worker/edgar-cohort-extract.mts --universe research-universe-52.json
+```
+
+For a memory-validated larger context, replace `32768` with `65536`, `131072` or `262144`. Do not use 256K for an unattended run until `ollama ps` confirms 100% GPU without offload on the same model.
+
+After completion:
+
+```powershell
+npx tsx worker/expectations-benchmark.mts --cohorts
+npx tsx worker/build-expectations-report.mts --universe worker/research-universe-52.json --cohorts
+```
+
+`missing packs 0` is still required before claiming complete 52-company coverage. A batch that merely finishes is not proof of complete extraction quality.
+
 ## Runtime budgets
 
 `maxInputChars = floor(contextTokens × 0.8 × 4)`:
