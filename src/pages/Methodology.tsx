@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router";
-import { ArrowLeft, BookOpen, ShieldCheck, Sigma } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, ShieldCheck, Sigma } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 
 const toc = [
@@ -156,7 +156,7 @@ export default function Methodology() {
               <UseCase title="Expected-return normalization" formula="z_i = R_i / EM_i">Normalize expected return by expected move. This compares opportunities by risk-adjusted magnitude rather than by raw return, avoiding the false equivalence of high- and low-volatility names.</UseCase>
               <UseCase title="Risk dashboard" formula="EM, RV20, actual / expected, coverage, MAE, RMSE">Monitor implied versus realized volatility, calibration error, risk bands and regime deterioration. Alerts concern changing risk, not automatic bearishness.</UseCase>
             </div>
-            <div className="methodology-callout">Production order: paired baseline → expected-move calibration → volatility targeting → normalized magnitude model → risk dashboard. Term slope, skew25 and VRP remain outside production because their evidence is weak or regime-dependent.</div>
+            <div className="methodology-callout">Implementation status: paired baseline and expected-move calibration are complete; the volatility-target research engine and scenario risk replay are implemented; a normalized magnitude model still awaits a preregistered expected-return series. Term slope, skew25 and VRP remain outside production because their evidence is weak or regime-dependent.</div>
           </Section>
 
           <Section id="case-study" title="07 · AAPL risk profile">
@@ -176,6 +176,7 @@ export default function Methodology() {
               </div>
             </div>
             <p>The example illustrates the intended ticker profile: implied expected move, trailing baseline, realized move and confidence bands. ATM IV produced a wider but still serviceable range than RV20; the actual move finished inside the ATM band and slightly above the RV20 band. It is evidence of calibration, not a trade recommendation.</p>
+            <Link to="/analytics/risk-lab" className="methodology-back methodology-case-action">Open interactive AAPL risk replay <ArrowRight size={14} /></Link>
           </Section>
 
           <Section id="references" title="08 · Academic sources">

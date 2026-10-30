@@ -49,5 +49,6 @@ describe("Analytics volatility lab tile", () => {
     expect(tile).not.toBeNull();
     expect(tile!.textContent).toContain("Volatility Lab");
     expect(tile!.textContent).toContain("Notation, expected move, paired baselines and an AAPL risk-profile example");
+    expect(host!.querySelector('a[href="/analytics/risk-lab"]')).not.toBeNull();
   });
 });

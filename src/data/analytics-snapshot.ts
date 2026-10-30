@@ -4,7 +4,7 @@
  */
 export const analyticsSnapshot = {
   "week": "2026-W44",
-  "generatedAt": "2026-10-30T00:39:34.535Z",
+  "generatedAt": "2026-10-30T01:19:50.642Z",
   "metrics": {
     "companies": 495,
     "sectors": 11,
@@ -33,7 +33,7 @@ export const analyticsSnapshot = {
     "macroSeries": 8,
     "macroLastDate": "2026-10-19",
     "jobsError": 8,
-    "testCount": 372,
+    "testCount": 384,
     "optionsSnapshots": 250,
     "normalizedOptionRows": 310634
   },
@@ -202,9 +202,9 @@ export const analyticsSnapshot = {
     {
       "id": "portfolio",
       "title": "Portfolio / sizing",
-      "status": "missing",
-      "detail": "There is no proven expected excess return, so portfolio construction is premature.",
-      "next": "Prove edge net of costs, then cap+water-filling and risk limits."
+      "status": "partial",
+      "detail": "Name-level ATM IV/RV20 volatility scaling, sector/ADV caps, weight-change costs and an AAPL scenario replay are implemented. Expected-return-driven construction remains premature.",
+      "next": "Run the frozen home-worker protocol, then assess net risk-adjusted evidence before any production sizing."
     },
     {
       "id": "workerInfra",
@@ -330,9 +330,9 @@ export const analyticsSnapshot = {
     {
       "id": "portfolioRisk",
       "title": "Portfolio risk",
-      "status": "missing",
-      "detail": "Volatility scaling, caps, sector limits, liquidity, borrow and exposure control.",
-      "next": "Use cap+water-filling only after proven expected excess return."
+      "status": "partial",
+      "detail": "Volatility scaling, sector/liquidity caps, residual cash and leverage-change costs now exist; portfolio results are not yet measured.",
+      "next": "Run the frozen volatility-target protocol and expand departed/delisted coverage before production claims."
     },
     {
       "id": "independentValidation",
@@ -380,7 +380,7 @@ export const analyticsSnapshot = {
   "history": [
     {
       "week": "2026-W44",
-      "generatedAt": "2026-10-30T00:39:34.535Z",
+      "generatedAt": "2026-10-30T01:19:50.642Z",
       "metrics": {
         "companies": 495,
         "sectors": 11,
@@ -409,7 +409,7 @@ export const analyticsSnapshot = {
         "macroSeries": 8,
         "macroLastDate": "2026-10-19",
         "jobsError": 8,
-        "testCount": 372,
+        "testCount": 384,
         "optionsSnapshots": 250,
         "normalizedOptionRows": 310634
       }

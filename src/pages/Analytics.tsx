@@ -95,6 +95,7 @@ export default function Analytics() {
               <div>Snapshot: {analyticsSnapshot.generatedAt.slice(0, 16).replace("T", " ")} UTC</div>
               <div className="flex flex-wrap gap-3 justify-end">
                 <Link to="/analytics/methodology" className="text-live-cyan hover:underline">Methodology</Link>
+                <Link to="/analytics/risk-lab" className="text-live-cyan hover:underline">Risk Lab</Link>
                 <Link to="/" className="text-live-cyan hover:underline">Back to Mission Control</Link>
               </div>
             </div>

@@ -460,3 +460,126 @@
   .methodology-tile-subtitle { font-size: 11px; }
   .methodology-case-metrics { grid-template-columns: 1fr; }
 }
+
+/* Interactive historical volatility replay */
+.risk-lab-page { display: grid; gap: 16px; max-width: 1760px; margin: 0 auto; }
+.risk-lab-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 32px;
+  align-items: center;
+  padding: 25px 28px;
+  overflow: hidden;
+  background:
+    linear-gradient(105deg, hsl(187 86% 53% / 0.09), transparent 48%),
+    repeating-linear-gradient(0deg, transparent 0 3px, hsl(217 30% 80% / 0.012) 3px 4px),
+    hsl(var(--card));
+}
+.risk-lab-hero::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 2px; background: hsl(var(--live)); }
+.risk-lab-hero h1 { margin: 9px 0 8px; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: clamp(23px, 2.4vw, 34px); line-height: 1.15; letter-spacing: -0.045em; }
+.risk-lab-hero h1 span { margin-right: 12px; color: hsl(var(--live)); }
+.risk-lab-hero p { max-width: 850px; margin: 0; color: hsl(var(--muted-foreground)); font-size: 13px; line-height: 1.65; }
+.risk-lab-hero .t-label { display: flex; align-items: center; gap: 7px; }
+.risk-lab-hero-meta { display: grid; justify-items: end; gap: 7px; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; text-align: right; }
+.risk-lab-hero-meta strong { color: hsl(var(--foreground)); font-size: 18px; font-weight: 500; }
+.risk-replay-badge { padding: 5px 8px; border: 1px solid hsl(var(--warn) / 0.55); color: hsl(var(--warn)); font-size: 9px; letter-spacing: 0.12em; }
+.risk-lab-hero-meta > div { display: flex; gap: 14px; margin-top: 4px; }
+.risk-lab-hero-meta a, .risk-back-link { color: hsl(var(--live)); }
+.risk-lab-hero-meta a:hover, .risk-back-link:hover { text-decoration: underline; }
+.risk-lab-grid { display: grid; grid-template-columns: 248px minmax(0, 1fr) 292px; gap: 16px; align-items: start; }
+.risk-controls { position: sticky; top: 16px; padding: 18px; }
+.risk-model-control { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin: 14px 0 20px; padding: 0; border: 0; }
+.risk-model-control legend { margin-bottom: 8px; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; }
+.risk-model-control button { display: grid; gap: 3px; padding: 10px; border: 1px solid hsl(var(--border)); background: hsl(var(--secondary) / 0.5); color: hsl(var(--muted-foreground)); text-align: left; cursor: pointer; }
+.risk-model-control button:hover { border-color: hsl(var(--live) / 0.55); }
+.risk-model-control button.active { border-color: hsl(var(--live)); background: hsl(var(--live) / 0.09); color: hsl(var(--live)); box-shadow: inset 0 -2px 0 hsl(var(--live)); }
+.risk-model-control button span { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; font-weight: 600; }
+.risk-model-control button small { font-size: 9px; line-height: 1.35; }
+.risk-input-label { display: flex; justify-content: space-between; gap: 10px; margin: 15px 0 7px; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; line-height: 1.45; }
+.risk-input-label output { color: hsl(var(--live)); }
+.risk-range { width: 100%; accent-color: hsl(var(--live)); cursor: pointer; }
+.risk-range-scale { display: flex; justify-content: space-between; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 9px; }
+.risk-number-input { display: flex; align-items: center; min-height: 37px; border: 1px solid hsl(var(--border)); background: hsl(var(--secondary) / 0.45); }
+.risk-number-input:focus-within { border-color: hsl(var(--live)); box-shadow: 0 0 0 2px hsl(var(--live) / 0.10); }
+.risk-number-input input { width: 100%; min-width: 0; padding: 8px 10px; border: 0; outline: 0; background: transparent; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; }
+.risk-number-input > span { padding: 0 10px; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; }
+.risk-assumption-note { margin-top: 16px; padding-left: 10px; border-left: 2px solid hsl(var(--warn)); color: hsl(var(--muted-foreground)); font-size: 10px; line-height: 1.55; }
+.risk-input-error { margin-top: 10px; color: hsl(var(--crit)); font-size: 10px; line-height: 1.45; }
+.risk-formula-block { display: grid; gap: 6px; margin-top: 18px; padding-top: 15px; border-top: 1px solid hsl(var(--border)); }
+.risk-formula-block span { margin-top: 5px; color: hsl(var(--muted-foreground)); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; }
+.risk-formula-block code { color: hsl(var(--live)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; line-height: 1.55; white-space: normal; }
+.risk-download { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; margin-top: 17px; padding: 9px 10px; border: 1px solid hsl(var(--live) / 0.5); background: hsl(var(--live) / 0.08); color: hsl(var(--live)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; cursor: pointer; }
+.risk-download:hover { background: hsl(var(--live) / 0.14); }
+.risk-download:disabled { opacity: 0.4; cursor: not-allowed; }
+.risk-main-column, .risk-audit-column { display: grid; gap: 16px; min-width: 0; }
+.risk-metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.risk-metric-grid > div { min-width: 0; padding: 15px; }
+.risk-metric-grid span, .risk-metric-grid small { display: block; color: hsl(var(--muted-foreground)); font-size: 9px; line-height: 1.45; }
+.risk-metric-grid strong { display: block; margin: 8px 0 6px; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: clamp(17px, 1.5vw, 23px); font-weight: 500; letter-spacing: -0.04em; }
+.risk-metric-grid strong.negative { color: hsl(var(--crit)); }
+.risk-chart-panel, .risk-calibration, .risk-comparison { padding: 18px; min-width: 0; }
+.risk-section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+.risk-section-heading h2 { margin: 5px 0 0; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 14px; font-weight: 500; }
+.risk-section-heading > span { color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 9px; text-align: right; }
+.risk-section-heading > span.inside { color: hsl(var(--ok)); }
+.risk-section-heading > span.outside { color: hsl(var(--warn)); }
+.risk-chart-scroll { min-width: 0; }
+.risk-chart-scroll-note { display: none; }
+.risk-lab-chart { display: block; width: 100%; height: auto; min-width: 0; }
+.risk-coverage-row { display: grid; grid-template-columns: 58px minmax(0, 1fr) 55px; gap: 10px; align-items: center; margin: 12px 0; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; }
+.risk-coverage-row > strong { color: hsl(var(--foreground)); text-align: right; font-weight: 500; }
+.risk-coverage-track { height: 7px; background: hsl(var(--secondary)); overflow: hidden; }
+.risk-coverage-track > div { height: 100%; }
+.risk-coverage-track > div.atmIv { background: hsl(var(--live)); }
+.risk-coverage-track > div.rv20 { background: hsl(var(--warn)); }
+.risk-calibration-foot { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 16px; padding-top: 13px; border-top: 1px solid hsl(var(--border)); color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; }
+.risk-calibration-foot strong { color: hsl(var(--foreground)); font-weight: 500; }
+.risk-calibration p, .risk-audit-panel p, .risk-next-panel p { margin: 12px 0 0; color: hsl(var(--muted-foreground)); font-size: 10px; line-height: 1.6; }
+.risk-audit-panel, .risk-next-panel { padding: 18px; }
+.risk-audit-panel .t-label { display: flex; align-items: center; gap: 6px; }
+.risk-audit-panel dl { margin: 13px 0 0; }
+.risk-audit-panel dl > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 10px; padding: 9px 0; border-bottom: 1px solid hsl(var(--border) / 0.6); font-size: 10px; line-height: 1.45; }
+.risk-audit-panel dt { color: hsl(var(--muted-foreground)); }
+.risk-audit-panel dd { margin: 0; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; text-align: right; }
+.risk-next-panel { border-color: hsl(var(--live) / 0.28); background: linear-gradient(145deg, hsl(var(--live) / 0.06), hsl(var(--card))); }
+.risk-next-panel h2 { margin: 10px 0 0; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 15px; line-height: 1.45; }
+.risk-next-panel a { display: flex; align-items: center; gap: 7px; margin-top: 14px; color: hsl(var(--live)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; line-height: 1.5; }
+.risk-next-panel a:hover { text-decoration: underline; }
+.risk-table-wrap { overflow-x: auto; }
+.risk-comparison table { width: 100%; min-width: 780px; border-collapse: collapse; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; }
+.risk-comparison th, .risk-comparison td { padding: 11px 12px; border-bottom: 1px solid hsl(var(--border) / 0.65); text-align: right; white-space: nowrap; }
+.risk-comparison th:first-child, .risk-comparison td:first-child { text-align: left; }
+.risk-comparison th { color: hsl(var(--muted-foreground)); font-size: 9px; font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; }
+.risk-comparison td { color: hsl(var(--muted-foreground)); }
+.risk-comparison tr.selected td { background: hsl(var(--live) / 0.055); color: hsl(var(--live)); }
+.risk-comparison-note { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 13px; color: hsl(var(--muted-foreground)); font-size: 10px; line-height: 1.5; }
+.risk-back-link { display: inline-flex; align-items: center; gap: 7px; justify-self: start; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; }
+.methodology-case-action { margin-top: 16px; }
+
+@media (max-width: 1500px) {
+  .risk-lab-grid { grid-template-columns: 232px minmax(0, 1fr); }
+  .risk-audit-column { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .risk-metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 960px) {
+  .risk-lab-hero { grid-template-columns: 1fr; gap: 18px; }
+  .risk-lab-hero-meta { justify-items: start; text-align: left; }
+  .risk-lab-grid { grid-template-columns: 1fr; }
+  .risk-controls { position: static; }
+  .risk-model-control { max-width: 420px; }
+}
+@media (max-width: 640px) {
+  .risk-lab-hero { padding: 20px 18px; }
+  .risk-lab-hero h1 span { display: block; margin-bottom: 7px; }
+  .risk-metric-grid { gap: 8px; }
+  .risk-metric-grid > div { padding: 12px; }
+  .risk-metric-grid strong { font-size: 17px; }
+  .risk-chart-panel, .risk-calibration, .risk-comparison { padding: 14px; }
+  .risk-section-heading { display: grid; }
+  .risk-section-heading > span { text-align: left; }
+  .risk-audit-column { grid-template-columns: 1fr; }
+  .risk-chart-scroll { overflow-x: auto; padding-bottom: 5px; }
+  .risk-chart-scroll-note { display: block; margin: 4px 0 8px; color: hsl(var(--live)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 9px; }
+  .risk-lab-chart { width: 680px; max-width: none; }
+}

@@ -58,6 +58,7 @@ describe("Methodology handbook", () => {
     expect(host!.textContent).toContain("Expected-return normalization");
     expect(host!.textContent).toContain("Risk dashboard");
     expect(host!.querySelector('svg[aria-label="AAPL expected move and risk bands"]')).not.toBeNull();
+    expect(host!.querySelector('a[href="/analytics/risk-lab"]')).not.toBeNull();
   });
 
   it("keeps production limits and academic references visible", () => {
