@@ -48,21 +48,33 @@ export default function Expectations() {
   const [tab, setTab] = useState<"output" | "fallbacks" | "examples">("output");
   const [query, setQuery] = useState("");
   const [ticker, setTicker] = useState("all");
+  const [cohort, setCohort] = useState("all");
   const [metric, setMetric] = useState("all");
   const [revision, setRevision] = useState("all");
-  const tickers = useMemo(() => [...new Set(report.statements.map((statement) => statement.ticker))].sort(), []);
+  const fallbacks = useMemo(() => report.fallbacks ?? [], []);
+  const tickers = useMemo(() => [...new Set([...report.statements.map((statement) => statement.ticker), ...fallbacks.map((fallback) => fallback.ticker)])].sort(), [fallbacks]);
+  const cohorts = useMemo(() => {
+    const values = [...report.statements.map((statement) => statement.cohortId), ...fallbacks.map((fallback) => fallback.cohortId)];
+    return [...new Set(values.filter((value): value is string => Boolean(value)))].sort();
+  }, [fallbacks]);
   const metrics = useMemo(() => [...new Set(report.statements.map((statement) => statement.metricRaw))].sort(), []);
   const revisions = useMemo(() => [...new Set(report.statements.map((statement) => statement.revision))].sort(), []);
   const filtered = useMemo(() => report.statements.filter((statement) => {
-    const haystack = `${statement.ticker} ${statement.metricRaw} ${statement.scopeRaw} ${statement.periodRaw} ${statement.evidence}`.toLowerCase();
+    const haystack = `${statement.ticker} ${statement.metricRaw} ${statement.scopeRaw} ${statement.periodRaw} ${statement.cohortId ?? ""} ${statement.evidence}`.toLowerCase();
     return (!query || haystack.includes(query.toLowerCase()))
       && (ticker === "all" || statement.ticker === ticker)
+      && (cohort === "all" || statement.cohortId === cohort)
       && (metric === "all" || statement.metricRaw === metric)
       && (revision === "all" || statement.revision === revision);
-  }), [query, ticker, metric, revision]);
+  }), [query, ticker, cohort, metric, revision]);
+  const filteredFallbacks = useMemo(() => fallbacks.filter((fallback) => {
+    const haystack = `${fallback.ticker} ${fallback.summary} ${fallback.limitations.join(" ")} ${fallback.evidence} ${fallback.cohortId ?? ""}`.toLowerCase();
+    return (!query || haystack.includes(query.toLowerCase()))
+      && (ticker === "all" || fallback.ticker === ticker)
+      && (cohort === "all" || fallback.cohortId === cohort);
+  }), [fallbacks, query, ticker, cohort]);
   const status = statusCopy();
   const coverage = report.coverage;
-  const fallbacks = report.fallbacks ?? [];
   const coverageRate = coverage.companiesExpected ? coverage.companiesWithResults / coverage.companiesExpected : 0;
 
   return (
@@ -106,6 +118,7 @@ export default function Expectations() {
             <section className="t-panel expectations-filters">
               <div className="expectations-search"><Filter size={14} /><input aria-label="Search expectations" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search ticker, metric, scope or evidence" /></div>
               <select aria-label="Filter ticker" value={ticker} onChange={(event) => setTicker(event.target.value)}><option value="all">All tickers</option>{tickers.map((value) => <option key={value}>{value}</option>)}</select>
+              <select aria-label="Filter quarter" value={cohort} onChange={(event) => setCohort(event.target.value)}><option value="all">All quarters</option>{cohorts.map((value) => <option key={value}>{value}</option>)}</select>
               <select aria-label="Filter metric" value={metric} onChange={(event) => setMetric(event.target.value)}><option value="all">All metrics</option>{metrics.map((value) => <option key={value}>{value}</option>)}</select>
               <select aria-label="Filter revision" value={revision} onChange={(event) => setRevision(event.target.value)}><option value="all">All revisions</option>{revisions.map((value) => <option key={value}>{value}</option>)}</select>
               <span className="expectations-filter-count">{filtered.length} statements{filtered.length > 120 ? " · first 120" : ""}</span>
@@ -136,8 +149,15 @@ export default function Expectations() {
           </>
         ) : tab === "fallbacks" ? (
           fallbacks.length ? (
-            <section className="expectations-card-grid">
-              {fallbacks.map((fallback, index) => (
+            <>
+              <section className="t-panel expectations-filters">
+                <div className="expectations-search"><Filter size={14} /><input aria-label="Search fallback notes" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search ticker, summary, evidence or quarter" /></div>
+                <select aria-label="Filter fallback ticker" value={ticker} onChange={(event) => setTicker(event.target.value)}><option value="all">All tickers</option>{tickers.map((value) => <option key={value}>{value}</option>)}</select>
+                <select aria-label="Filter fallback quarter" value={cohort} onChange={(event) => setCohort(event.target.value)}><option value="all">All quarters</option>{cohorts.map((value) => <option key={value}>{value}</option>)}</select>
+                <span className="expectations-filter-count">{filteredFallbacks.length} notes{filteredFallbacks.length > 120 ? " · first 120" : ""}</span>
+              </section>
+              {filteredFallbacks.length ? <section className="expectations-card-grid">
+              {filteredFallbacks.slice(0, 120).map((fallback, index) => (
                 <article className="expectation-card t-panel" key={`${fallback.accessionNo}-${index}`}>
                   <header><div><span className="expectation-ticker">{fallback.ticker}</span><span className="expectation-form">{fallback.form} · {fallback.filingDate}</span></div><span className={`expectation-quality ${fallback.dataQuality}`}>{fallback.dataQuality}</span></header>
                   <div className="expectation-metric">Factual fallback note</div>
@@ -148,7 +168,10 @@ export default function Expectations() {
                   <footer><span>Fallback only · not a factor</span><a href={fallback.sourceUrl} target="_blank" rel="noreferrer">SEC filing <ExternalLink size={12} /></a></footer>
                 </article>
               ))}
-            </section>
+            </section> : (
+              <section className="t-panel expectations-empty"><FileSearch size={24} /><h2>No notes match these filters</h2><p>Change the ticker, quarter or search text to inspect other fallback notes.</p></section>
+            )}
+            </>
           ) : (
             <section className="t-panel expectations-empty"><FileSearch size={24} /><h2>No fallback notes yet</h2><p>Only sources whose structured response fails schema validation receive a separate factual fallback. They never become guidance factors.</p></section>
           )

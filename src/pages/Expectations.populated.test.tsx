@@ -7,6 +7,7 @@ import type { ExpectationReportStatement } from "../../worker/lib/expectations-r
 
 const statement = vi.hoisted(() => (ticker: string, qualifier: ExpectationReportStatement["qualifier"]): ExpectationReportStatement => ({
   cik: ticker === "AMZN" ? 1018724 : 1045810,
+  cohortId: ticker === "AMZN" ? "2026-10-29" : "2002-04-28",
   ticker,
   accessionNo: `acc-${ticker}`,
   form: "8-K",
@@ -44,13 +45,14 @@ vi.mock("@/data/expectations-report", () => ({
     generatedAt: "2026-10-30T00:00:00Z",
     scope: "test",
     status: "reviewed",
-    coverage: { companiesExpected: 53, companiesWithResults: 2, documents: 2, extracted: 2, noCandidate: 0, unparsed: 0, failed: 0, statements: 2, rejectedEvidence: 0, promptTokens: 100, evalTokens: 20 },
+    coverage: { companiesExpected: 53, companiesWithResults: 2, documents: 2, extracted: 2, noCandidate: 0, unparsed: 0, failed: 0, statements: 2, fallback: 2, fallbackUnverified: 0, rejectedEvidence: 0, promptTokens: 100, evalTokens: 20 },
     benchmark: { pass: true, recall: 1, issueCount: 0 },
     companies: [],
     statements: [statement("AMZN", "range"), statement("NVDA", "plus_minus")],
     fallbacks: [{
       cik: 1045810,
       ticker: "NVDA",
+      cohortId: "2002-04-28",
       accessionNo: "acc-fallback",
       form: "8-K",
       filingDate: "2002-04-29",
@@ -60,6 +62,20 @@ vi.mock("@/data/expectations-report", () => ({
       guidancePresence: "unclear",
       limitations: ["No explicit revenue guidance"],
       evidence: "We expect to continue deferring revenue until arbitration is resolved.",
+      evidenceVerified: true,
+    }, {
+      cik: 1018724,
+      ticker: "AMZN",
+      cohortId: "1999-05-02",
+      accessionNo: "acc-amzn-fallback",
+      form: "10-Q",
+      filingDate: "1999-06-15",
+      sourceUrl: "https://www.sec.gov/amzn-fallback",
+      summary: "An older Amazon quarterly filing with limited forward guidance.",
+      dataQuality: "limited",
+      guidancePresence: "unclear",
+      limitations: ["Old reporting format"],
+      evidence: "A source statement from the older Amazon filing.",
       evidenceVerified: true,
     }],
   },
@@ -101,6 +117,20 @@ describe("Populated expectations report", () => {
     expect(host!.textContent).toContain("evidence verified");
     expect(host!.textContent).toContain("Fallback only · not a factor");
     expect(host!.querySelector('a[href="https://www.sec.gov/nvda-fallback"]')).not.toBeNull();
+  });
+
+  it("filters fallback notes by quarter", async () => {
+    const tab = [...host!.querySelectorAll("button")].find((button) => button.textContent?.includes("Fallback notes"))!;
+    await act(async () => { tab.click(); });
+    const select = host!.querySelector('select[aria-label="Filter fallback quarter"]') as HTMLSelectElement;
+    await act(async () => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, "value")!.set!;
+      setter.call(select, "2002-04-28");
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    expect(host!.querySelectorAll(".expectation-card")).toHaveLength(1);
+    expect(host!.textContent).toContain("Xbox pricing arbitration");
+    expect(host!.textContent).not.toContain("older Amazon quarterly filing");
   });
 
   it("filters statements by ticker", async () => {

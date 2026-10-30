@@ -5,6 +5,7 @@ import { mergeGuidanceStatus } from "./exhibits";
 export interface ExpectationResultForReport {
   cik: number;
   ticker: string;
+  cohortId?: string;
   accessionNo: string;
   form: string;
   filingDate: string;
@@ -26,6 +27,7 @@ export interface ExpectationCompanyReport {
 export interface ExpectationReportStatement extends ExpectationStatement {
   cik: number;
   ticker: string;
+  cohortId: string | null;
   accessionNo: string;
   form: string;
   filingDate: string;
@@ -34,6 +36,7 @@ export interface ExpectationReportStatement extends ExpectationStatement {
 export interface ExpectationFallbackReport {
   cik: number;
   ticker: string;
+  cohortId: string | null;
   accessionNo: string;
   form: string;
   filingDate: string;
@@ -95,6 +98,7 @@ export function buildExpectationsReport(
     ...statement,
     cik: result.cik,
     ticker: result.ticker,
+    cohortId: result.cohortId ?? null,
     accessionNo: result.accessionNo,
     form: result.form,
     filingDate: result.filingDate,
@@ -106,6 +110,7 @@ export function buildExpectationsReport(
     return [{
       cik: result.cik,
       ticker: result.ticker,
+      cohortId: result.cohortId ?? null,
       accessionNo: result.accessionNo,
       form: result.form,
       filingDate: result.filingDate,
