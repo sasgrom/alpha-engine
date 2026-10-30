@@ -46,7 +46,7 @@ Initial requests:
 2. `GET /marketdata/v1/quotes?symbols=<ticker>`
 3. `GET /marketdata/v1/pricehistory?symbol=<ticker>&periodType=month&frequencyType=daily&frequency=1`
 4. `GET /marketdata/v1/instruments?symbol=<ticker>&projection=fundamental`
-5. `GET /marketdata/v1/user/preferences` before streaming.
+5. `GET /trader/v1/userPreference` before streaming.
 
 Rules:
 

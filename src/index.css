@@ -584,6 +584,59 @@
   .risk-lab-chart { width: 680px; max-width: none; }
 }
 
+/* Schwab market data */
+.market-page { display: grid; gap: 16px; max-width: 1600px; margin: 0 auto; }
+.market-hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center; padding: 24px 26px; border-left: 2px solid hsl(var(--live)); background: linear-gradient(110deg, hsl(187 86% 53% / 0.08), hsl(var(--card)) 65%); }
+.market-hero .t-label { display: flex; align-items: center; gap: 7px; }
+.market-hero h1 { margin: 9px 0 8px; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: clamp(23px, 2.4vw, 33px); letter-spacing: -0.045em; }
+.market-hero p { max-width: 780px; margin: 0; color: hsl(var(--muted-foreground)); font-size: 13px; line-height: 1.65; }
+.market-hero-status { display: grid; justify-items: end; gap: 7px; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; text-align: right; }
+.market-hero-status strong { color: hsl(var(--live)); font-size: 28px; font-weight: 500; }
+.market-status-ok { color: hsl(var(--ok)); }
+.market-status-warn { color: hsl(var(--warn)); }
+.market-tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid hsl(var(--border)); }
+.market-tabs button { display: flex; align-items: center; gap: 7px; padding: 10px 13px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; cursor: pointer; }
+.market-tabs button:hover { color: hsl(var(--foreground)); }
+.market-tabs button.active { border-bottom-color: hsl(var(--live)); color: hsl(var(--live)); }
+.market-metric-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+.market-metric { padding: 15px 16px; }
+.market-metric span, .market-metric small { display: block; color: hsl(var(--muted-foreground)); font-size: 9px; line-height: 1.45; }
+.market-metric strong { display: block; margin: 8px 0 6px; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 22px; font-weight: 500; }
+.market-filters { display: grid; grid-template-columns: minmax(230px, 1fr) repeat(4, minmax(125px, auto)) auto auto; gap: 9px; align-items: center; padding: 12px; }
+.market-search { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 0 9px; border: 1px solid hsl(var(--border)); background: hsl(var(--secondary) / 0.45); color: hsl(var(--muted-foreground)); }
+.market-search input { width: 100%; min-width: 0; padding: 9px 0; border: 0; outline: 0; background: transparent; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; }
+.market-filters select { min-height: 35px; padding: 7px 9px; border: 1px solid hsl(var(--border)); background: hsl(var(--secondary) / 0.45); color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; }
+.market-atm { display: flex; align-items: center; gap: 6px; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; white-space: nowrap; }
+.market-atm input { accent-color: hsl(var(--live)); }
+.market-filter-count { color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; text-align: right; white-space: nowrap; }
+.market-table-wrap { overflow-x: auto; }
+.market-table { width: 100%; min-width: 1080px; border-collapse: collapse; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; }
+.market-table th, .market-table td { padding: 9px 10px; border-bottom: 1px solid hsl(var(--border) / 0.6); text-align: right; white-space: nowrap; }
+.market-table th:first-child, .market-table td:first-child { text-align: left; }
+.market-table th { color: hsl(var(--muted-foreground)); font-size: 9px; font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; }
+.market-table td { color: hsl(var(--muted-foreground)); }
+.market-table td strong { color: hsl(var(--live)); font-weight: 500; }
+.market-contract small { display: block; margin-top: 3px; color: hsl(var(--muted-foreground)); font-size: 8px; }
+.market-hash { font-size: 9px; }
+.market-empty { display: grid; justify-items: center; gap: 12px; padding: 44px 20px; text-align: center; color: hsl(var(--muted-foreground)); }
+.market-empty h2 { margin: 0; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 16px; }
+.market-empty p { max-width: 680px; margin: 0; font-size: 12px; line-height: 1.65; }
+.market-empty code { max-width: 100%; padding: 10px 13px; background: hsl(var(--secondary)); color: hsl(var(--live)); font-size: 10px; line-height: 1.65; overflow-wrap: anywhere; text-align: left; }
+@media (max-width: 1350px) {
+  .market-metric-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .market-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .market-search { grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+  .market-hero { grid-template-columns: 1fr; padding: 20px 18px; }
+  .market-hero-status { justify-items: start; text-align: left; }
+  .market-metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .market-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+  .market-filters { grid-template-columns: 1fr; }
+  .market-filter-count { text-align: left; }
+}
 /* Expectations engine: reviewed guidance and evidence */
 .expectations-page { display: grid; gap: 16px; max-width: 1500px; margin: 0 auto; }
 .expectations-hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 28px; align-items: center; padding: 24px 26px; border-left: 2px solid hsl(var(--live)); background: linear-gradient(110deg, hsl(187 86% 53% / 0.08), hsl(var(--card)) 62%); }

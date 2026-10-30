@@ -23,14 +23,14 @@ describe("Expectations report", () => {
     host = null;
   });
 
-  it("shows honest zero coverage instead of inventing a mass extraction", () => {
-    expect(host!.textContent).toContain("Waiting for home extraction");
-    expect(host!.textContent).toContain("0 / 53");
-    expect(host!.textContent).toContain("No extracted statements yet");
-    expect(host!.textContent).toContain("npx tsx worker/edgar-cohort-extract.mts --universe research-universe-53.json");
-    expect(host!.textContent).not.toContain("--latest");
+  it("shows actual partial local coverage without presenting it as reviewed", () => {
+    expect(host!.textContent).toContain("Local results · review required");
+    expect(host!.textContent).toContain("1 / 51");
+    expect(host!.textContent).toContain("195");
+    expect(host!.textContent).toContain("255");
     expect(host!.textContent).toContain("Not run");
-    expect(host!.querySelectorAll(".expectation-card")).toHaveLength(0);
+    expect(host!.textContent).not.toContain("Waiting for home extraction");
+    expect(host!.querySelectorAll(".expectation-card")).toHaveLength(120);
   });
 
   it("offers real SEC reference examples in a separate, clearly labeled tab", async () => {

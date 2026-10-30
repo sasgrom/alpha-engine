@@ -13,6 +13,7 @@ import {
   X,
   Menu,
   FileSearch,
+  DatabaseZap,
 } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
@@ -53,6 +54,7 @@ const WORKERS_NAV = { icon: Activity, label: "Workers", path: "/workers" };
 const FLOWS_NAV = { icon: Activity, label: "Fund flows", path: "/fundflows" };
 const ANALYTICS_NAV = { icon: Activity, label: "Analytics", path: "/analytics" };
 const EXPECTATIONS_NAV = { icon: FileSearch, label: "Expectations", path: "/expectations" };
+const MARKET_DATA_NAV = { icon: DatabaseZap, label: "Market data", path: "/market-data" };
 
 function UtcClock() {
   const [now, setNow] = useState(new Date());
@@ -295,7 +297,7 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
 
   /** Nav items shared by the desktop sidebar and the mobile drawer. */
   const renderNavItems = (onNavigate?: () => void) =>
-    [...NAV, ...(isAdmin ? [...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, EXPECTATIONS_NAV, FLOWS_NAV, ADMIN_NAV] : [])].map((item) => {
+    [...NAV, ...(isAdmin ? [...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, FLOWS_NAV, ADMIN_NAV] : [])].map((item) => {
       const active = location.pathname === item.path;
       return (
         <Link
