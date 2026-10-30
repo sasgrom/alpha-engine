@@ -128,7 +128,7 @@ export default function Expectations() {
                 <FileSearch size={24} />
                 <h2>{report.statements.length ? "No statements match these filters" : "No extracted statements yet"}</h2>
                 <p>{report.statements.length ? "Clear or broaden the filters to inspect the reviewed output." : "Run the bounded 53-company extraction, review the benchmark report, then rebuild this page’s static data. No result is inferred from the reference examples."}</p>
-                {!report.statements.length && <code>npx tsx worker/edgar-expectations.mts --universe research-universe-53.json --latest</code>}
+                {!report.statements.length && <code>npx tsx worker/edgar-expectations.mts --universe research-universe-53.json</code>}
               </section>
             )}
           </>

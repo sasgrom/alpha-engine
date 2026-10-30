@@ -82,6 +82,7 @@ These are hypotheses, not accepted alpha. Every test needs an equal-information 
 - The price reaction can reflect information already priced in, positioning, macro news and other same-window disclosures; raw return is not enough.
 - Legacy tone still uses only the largest textual EX-99 exhibit. The expectations-specific exhibit worker now preserves the complete substantive set with hashes. JPM’s main narrative and supplement were verified as two separate files; full-universe coverage remains a gate.
 - GAAP actuals must not be compared with non-GAAP guidance, and reported growth must not be compared with constant-currency guidance without an explicit compatible series.
+- Independently selected latest forms can mix a new-quarter 8-K with an older-quarter 10-Q. Latest mode is extraction smoke only; guidance vintages and actual outcomes require full history and accession/reportDate/eventTs-aligned cohorts.
 - Current-company universes have survivorship bias. Departed/delisted firms remain mandatory for production claims.
 - Post-close filings require next-session execution; after-hours commentary is not an executable close price.
 - Blogger/LLM narrative is a hypothesis about what other investors may notice, not source evidence for the underlying financial claim.

@@ -27,7 +27,8 @@ describe("Expectations report", () => {
     expect(host!.textContent).toContain("Waiting for home extraction");
     expect(host!.textContent).toContain("0 / 53");
     expect(host!.textContent).toContain("No extracted statements yet");
-    expect(host!.textContent).toContain("--universe research-universe-53.json --latest");
+    expect(host!.textContent).toContain("npx tsx worker/edgar-expectations.mts --universe research-universe-53.json");
+    expect(host!.textContent).not.toContain("--latest");
     expect(host!.textContent).toContain("Not run");
     expect(host!.querySelectorAll(".expectation-card")).toHaveLength(0);
   });

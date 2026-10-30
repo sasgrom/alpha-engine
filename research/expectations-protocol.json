@@ -17,7 +17,8 @@
     "exhibits": "Preserve all substantive earnings EX-99 documents, including main release and supplement",
     "actuals": "Same metric, scope, period, unit, accounting basis and currency basis as guidance",
     "consensus": "Point-in-time provider estimate with publication timestamp; null when unavailable",
-    "availability": "Filing acceptance timestamp and conservative post-close handling"
+    "availability": "Filing acceptance timestamp and conservative post-close handling",
+    "cohortAlignment": "Match accession, reportDate and eventTs. Never pair independently selected latest forms. Latest-per-company mode is extraction smoke only; full history is required for guidance vintages and actual outcomes."
   },
   "features": {
     "guidanceMid": "(lower + upper) / 2",

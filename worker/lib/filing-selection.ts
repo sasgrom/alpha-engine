@@ -1,6 +1,6 @@
 import type { ManifestEntry } from "../edgar-fetch.mts";
 
-/** Latest primary 10-K, 10-Q and exhibit-bearing 8-K per company for a bounded smoke run. */
+/** Extraction-only smoke set. These dates are NOT aligned guidance-to-actual cohorts. */
 export function selectLatestFilings(entries: ManifestEntry[]): ManifestEntry[] {
   const selected: ManifestEntry[] = [];
   for (const form of ["10-K", "10-Q", "8-K"] as const) {
