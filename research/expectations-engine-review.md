@@ -103,4 +103,6 @@ Academic literature supports testing both underreaction and overreaction rather 
 
 An independent gold benchmark now covers 12 official documents and 27 required statements across range, floor, point-tolerance, qualitative non-disclosure, revision, GAAP/non-GAAP and constant-currency cases. It fails closed when extraction results are absent and treats additional statements as review items rather than automatic errors.
 
+Bounded `cohort-pack-v2.json` and merged `cohort-v2.json` are now implemented. Packs use content-derived fiscal periods, preserve complete sections, expose KiB/token estimates, split by documents or whole section boundaries and fail closed on indivisible oversized tables. Per-source prompts keep other period documents as context but validate evidence only against the target source.
+
 The next gate is to run the extractor on this benchmark and review mismatches before any full-history GPU run. Full-history performance tests are prohibited until extraction accuracy, multi-exhibit coverage and period/basis matching pass review.

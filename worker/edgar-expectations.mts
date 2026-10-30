@@ -2,10 +2,10 @@
 import dns from "node:dns";
 dns.setDefaultResultOrder("ipv4first");
 import "dotenv/config";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import path from "node:path";
-import { derivePlaintext, isEightKForm, loadEdgarUniverse } from "./lib/edgar";
+import { derivePlaintext, loadEdgarUniverse } from "./lib/edgar";
 import {
   buildExpectationPrompt,
   EXPECTATION_JSON_SCHEMA,
@@ -17,7 +17,7 @@ import {
   type ExpectationResponse,
 } from "./lib/expectations";
 import { generate, LLM_MODEL, status } from "./lib/ollama";
-import { exhibitCacheName } from "./lib/exhibits";
+import { expectationSourcesFor } from "./lib/expectation-sources";
 import { selectLatestFilings } from "./lib/filing-selection";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
@@ -75,15 +75,7 @@ function readResults(cik: number): ResultFile {
   }
 }
 function sourcesFor(cik: number, entry: ManifestEntry): string[] {
-  const base = entry.accessionNo.replace(/-/g, "");
-  if (isEightKForm(entry.form)) {
-    if (entry.exhibitFiles?.length) {
-      return entry.exhibitFiles.map((file) => path.join(cacheDir(cik), exhibitCacheName(entry.accessionNo, file.name))).filter((file) => existsSync(file));
-    }
-    const legacy = path.join(cacheDir(cik), `${base}.ex.htm`);
-    if (entry.exFile && existsSync(legacy)) return [legacy];
-  }
-  return [path.join(cacheDir(cik), `${base}.htm`)];
+  return expectationSourcesFor(cacheDir(cik), entry).map((source) => source.sourceFile);
 }
 const sha256 = (value: string) => createHash("sha256").update(value).digest("hex");
 

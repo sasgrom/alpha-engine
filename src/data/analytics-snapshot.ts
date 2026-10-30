@@ -4,7 +4,7 @@
  */
 export const analyticsSnapshot = {
   "week": "2026-W44",
-  "generatedAt": "2026-10-30T04:04:33.636Z",
+  "generatedAt": "2026-10-30T05:05:59.584Z",
   "metrics": {
     "companies": 495,
     "sectors": 11,
@@ -33,7 +33,7 @@ export const analyticsSnapshot = {
     "macroSeries": 8,
     "macroLastDate": "2026-10-19",
     "jobsError": 8,
-    "testCount": 416,
+    "testCount": 426,
     "optionsSnapshots": 250,
     "normalizedOptionRows": 310634
   },
@@ -126,7 +126,7 @@ export const analyticsSnapshot = {
       "id": "guidance",
       "title": "Structured guidance",
       "status": "partial",
-      "detail": "Expectations-v2 covers ranges, revisions, floors, assumptions and non-disclosure. A 27-statement independent gold benchmark, complete multi-EX-99 routing, full-history 53-company extraction, accession/reportDate/eventTs cohort rules and a reviewed UI report now exist. No extraction accuracy result or event study has run.",
+      "detail": "Expectations-v2 covers ranges, revisions, floors, assumptions and non-disclosure. A 27-statement independent gold benchmark, complete multi-EX-99 routing, full-history 53-company extraction, bounded cohort packs, accession/reportDate/eventTs cohort rules and a reviewed UI report now exist. No extraction accuracy result or event study has run.",
       "next": "Run and review the independent extraction benchmark, then match guidance vintages to actuals and test post-event CAR, drift and reversal."
     },
     {
@@ -380,7 +380,7 @@ export const analyticsSnapshot = {
   "history": [
     {
       "week": "2026-W44",
-      "generatedAt": "2026-10-30T04:04:33.636Z",
+      "generatedAt": "2026-10-30T05:05:59.584Z",
       "metrics": {
         "companies": 495,
         "sectors": 11,
@@ -409,7 +409,7 @@ export const analyticsSnapshot = {
         "macroSeries": 8,
         "macroLastDate": "2026-10-19",
         "jobsError": 8,
-        "testCount": 416,
+        "testCount": 426,
         "optionsSnapshots": 250,
         "normalizedOptionRows": 310634
       }

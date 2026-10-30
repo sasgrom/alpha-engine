@@ -1,0 +1,109 @@
+# Expectations Cohort Packs
+
+## Purpose
+
+Cohort packs preserve the complete evidence context for one fiscal period without forcing a large document into a small prompt or silently truncating a table. They are deterministic local files, not a long-running LLM conversation.
+
+- `cohort-pack-v2.json`: bounded source containers, sizes, token estimates, offsets and source hashes.
+- `cohort-v2.json`: per-source extracted statements, timestamps, evidence validation and resume state.
+- Raw LLM responses remain local and are excluded from the static UI report.
+
+## Workflow
+
+1. Group documents by fiscal period. 10-K/10-Q use `reportDate`; earnings 8-K/8-K/A use an explicit `quarter ended …` date extracted from content. If no defensible period exists, use `unresolved:<accession>` instead of guessing.
+2. Sort primary documents, exhibits and amendments by `eventTs` and `sourceId`. Amendments never overwrite originals.
+3. Preserve whole guidance, outlook and actual sections. Earnings exhibits remain whole when they fit. Long sections split only at complete subheadings or paragraph boundaries.
+4. Start a new container by document when the next document would exceed the input budget.
+5. If an indivisible table or block exceeds the budget, place it in `unpacked` with `indivisible_block_exceeds_context`. Do not truncate it.
+6. Extract statements separately for every `sourceId`. Other documents in the container are context only. Evidence is validated only against the target source.
+7. Merge the typed statements deterministically in `cohort-v2.json`.
+
+## Commands
+
+### Complete EX-99 coverage first
+
+```powershell
+npx tsx worker/edgar-exhibits.mts --universe research-universe-53.json
+```
+
+This is network-only and resumes by content hash. It does not require GPU.
+
+### Build packs at the current safe 32K runtime context
+
+```powershell
+npx tsx worker/edgar-cohorts.mts --universe research-universe-53.json --context 32768
+```
+
+Optional environment equivalent:
+
+```powershell
+$env:OLLAMA_NUM_CTX = "32768"
+npx tsx worker/edgar-cohorts.mts --universe research-universe-53.json
+Remove-Item Env:OLLAMA_NUM_CTX
+```
+
+### Build packs at 64K / 128K / 256K
+
+Use these only after the corresponding `ollama ps` memory test passes:
+
+```powershell
+npx tsx worker/edgar-cohorts.mts --universe research-universe-53.json --context 65536
+npx tsx worker/edgar-cohorts.mts --universe research-universe-53.json --context 131072
+npx tsx worker/edgar-cohorts.mts --universe research-universe-53.json --context 262144
+```
+
+The model's advertised 256K context is not the default runtime setting. Do not increase context merely because the model card allows it.
+
+### Inspect packs without LLM calls
+
+```powershell
+npx tsx worker/edgar-cohort-extract.mts --universe research-universe-53.json --dry-run
+```
+
+For one company:
+
+```powershell
+npx tsx worker/edgar-cohorts.mts --only PFE --context 262144
+npx tsx worker/edgar-cohort-extract.mts --only PFE --dry-run
+```
+
+The log shows each container's approximate tokens and each target source's KiB. Token estimate is `ceil(characters / 4)` and is a planning approximation, not a tokenizer guarantee.
+
+### Extract and merge
+
+```powershell
+npx tsx worker/edgar-cohort-extract.mts --universe research-universe-53.json
+```
+
+The worker reads `cohort-pack-v2.json`, makes one bounded request per target source and writes `cohort-v2.json` atomically after every source. It resumes only when source, container, input hash, model and prompt version all match.
+
+### Build the static UI report
+
+```powershell
+npx tsx worker/build-expectations-report.mts --cohorts
+```
+
+Reviewed publication requires a passing independent benchmark and full-history or explicitly aligned cohorts. Raw model responses are excluded from `src/data/expectations-report.ts` and `public/reports/expectations-report.json`.
+
+## Runtime budgets
+
+`maxInputChars = floor(contextTokens × 0.8 × 4)`:
+
+| Runtime context | Input character budget |
+| ---: | ---: |
+| 32,768 | 104,857 |
+| 65,536 | 209,715 |
+| 131,072 | 419,430 |
+| 262,144 | 838,860 |
+
+The remaining 20% covers the extraction instructions, JSON Schema, model template and response. Current response settings are `numPredict = 4096` tokens and at most 60 statements per source. Do not raise output size to compensate for a large cohort; split the source set instead.
+
+## Failure semantics
+
+- `no_candidate_text`: no relevant block found; no LLM call is needed.
+- `indivisible_block_exceeds_context`: source is preserved but not sent. Increase context only after a memory test or review the section boundaries manually.
+- `cache_unreadable`: source could not be read; never replace it with a model-generated substitute.
+- `unparsed`: response was not valid against the typed schema; resume is allowed.
+- `request_failed`: transport or daemon failure; two consecutive failures checkpoint and abort.
+
+A missing result is never converted into a pass. No source, table or amendment is deliberately discarded to make a prompt smaller.

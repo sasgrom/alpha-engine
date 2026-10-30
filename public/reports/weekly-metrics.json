@@ -1,6 +1,6 @@
 {
   "week": "2026-W44",
-  "generatedAt": "2026-10-30T04:04:33.636Z",
+  "generatedAt": "2026-10-30T05:05:59.584Z",
   "metrics": {
     "companies": 495,
     "sectors": 11,
@@ -29,7 +29,7 @@
     "macroSeries": 8,
     "macroLastDate": "2026-10-19",
     "jobsError": 8,
-    "testCount": 416,
+    "testCount": 426,
     "optionsSnapshots": 250,
     "normalizedOptionRows": 310634
   }

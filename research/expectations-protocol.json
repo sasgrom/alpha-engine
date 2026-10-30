@@ -10,7 +10,17 @@
     "llmArithmeticAllowed": false,
     "candidateDryRun": { "documents": 36, "routed": 31, "noCandidateText": 5 },
     "benchmark": { "benchmarkId": "expectations-gold-v1", "documents": 12, "requiredStatements": 27, "extraStatementsAreNotAutoErrors": true },
-    "multiExhibitSmoke": { "ticker": "JPM", "accessionNo": "0001628280-26-065582", "exhibits": 2, "passed": true }
+    "multiExhibitSmoke": { "ticker": "JPM", "accessionNo": "0001628280-26-065582", "exhibits": 2, "passed": true },
+    "cohortPacks": {
+      "input": "cohort-pack-v2.json",
+      "output": "cohort-v2.json",
+      "inputCharacterBudget": "floor(runtimeContextTokens * 0.8 * 4)",
+      "outputTokensPerSource": 4096,
+      "maxStatementsPerSource": 60,
+      "periodAlignment": "reportDate for periodic forms; explicit quarter-ended date from earnings exhibits; unresolved otherwise",
+      "overflow": "New container by document, then whole subheading/paragraph boundaries; indivisible oversized blocks remain unpacked and are never truncated",
+      "evidence": "Validated only against the target sourceId; context from other documents is not valid target evidence"
+    }
   },
   "requiredCoverage": {
     "forms": ["10-K", "10-Q", "8-K", "amendments"],
