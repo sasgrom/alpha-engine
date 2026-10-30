@@ -8,22 +8,22 @@ export const EXPECTATIONS_SCHEMA_VERSION = 2;
 const nullableNumber = z.number().finite().nullable();
 const statementSchema = z.object({
   kind: z.enum(["guidance", "actual", "assumption", "financing", "timing", "non_disclosure"]),
-  metricRaw: z.string().min(1).max(160),
+  metricRaw: z.string().min(1),
   metric: z.enum([
     "revenue", "operating_income", "net_income", "eps", "ebitda", "capex", "opex",
     "free_cash_flow", "operating_cash_flow", "debt", "margin", "tax_rate", "nii",
     "expense", "segment_revenue", "segment_profit", "backlog", "other",
   ]),
-  scopeRaw: z.string().min(1).max(180),
-  periodRaw: z.string().min(1).max(120),
-  comparisonRaw: z.string().max(180).nullable(),
+  scopeRaw: z.string().min(1),
+  periodRaw: z.string().min(1),
+  comparisonRaw: z.string().nullable(),
   qualifier: z.enum(["range", "point", "plus_minus", "at_least", "at_most", "approximately", "unchanged", "qualitative", "not_provided"]),
   valueLow: nullableNumber,
   valueHigh: nullableNumber,
   valuePoint: nullableNumber,
   tolerance: nullableNumber,
   toleranceUnit: z.enum(["percent", "basis_points", "same_unit"]).nullable(),
-  valueText: z.string().max(120).nullable(),
+  valueText: z.string().nullable(),
   unit: z.enum(["usd", "usd_millions", "usd_billions", "usd_per_share", "percent", "basis_points", "ratio", "days", "count", "text", "other"]),
   basis: z.enum(["gaap", "non_gaap", "reported", "adjusted", "mixed", "unclear"]),
   currencyBasis: z.enum(["reported", "constant_currency", "unclear"]),
@@ -31,10 +31,10 @@ const statementSchema = z.object({
   previousLow: nullableNumber,
   previousHigh: nullableNumber,
   previousPoint: nullableNumber,
-  previousGuidanceDateRaw: z.string().max(120).nullable(),
-  assumptionRaw: z.string().max(500).nullable(),
-  sourceSection: z.string().max(180).nullable(),
-  evidence: z.string().min(1).max(2500),
+  previousGuidanceDateRaw: z.string().nullable(),
+  assumptionRaw: z.string().nullable(),
+  sourceSection: z.string().nullable(),
+  evidence: z.string().min(1),
 }).strict();
 
 export const expectationResponseSchema = z.object({
@@ -221,11 +221,23 @@ function normalizeExpectationResponse(value: unknown): { value: unknown; normali
   return { value: { ...response, statements }, normalizations };
 }
 
+function sanitizeJsonStringWhitespace(json: string): string {
+  let output = "", inString = false, escaped = false;
+  for (const char of json) {
+    if (escaped) { output += char; escaped = false; continue; }
+    if (char === "\\") { output += char; escaped = true; continue; }
+    if (char === '"') { output += char; inString = !inString; continue; }
+    if (inString && char.charCodeAt(0) <= 31) { output += " "; continue; }
+    output += char;
+  }
+  return output;
+}
+
 export function parseExpectationResponseDetailed(reply: string): { response: ExpectationResponse | null; issues: string[]; normalizations: string[] } {
   const start = reply.indexOf("{"), end = reply.lastIndexOf("}");
   if (start < 0 || end <= start) return { response: null, issues: ["no_json_object"], normalizations: [] };
   try {
-    const normalized = normalizeExpectationResponse(JSON.parse(reply.slice(start, end + 1)));
+    const normalized = normalizeExpectationResponse(JSON.parse(sanitizeJsonStringWhitespace(reply.slice(start, end + 1))));
     const parsed = expectationResponseSchema.safeParse(normalized.value);
     if (parsed.success) return { response: parsed.data, issues: [], normalizations: normalized.normalizations };
     return { response: null, issues: parsed.error.issues.map((issue) => `${issue.path.join(".") || "root"}: ${issue.message}`), normalizations: normalized.normalizations };

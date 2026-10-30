@@ -157,6 +157,25 @@ describe("expectations extraction contract", () => {
     expect(result.response?.statements[0].toleranceUnit).toBe("same_unit");
   });
 
+  it("accepts long raw metric and assumption text without artificial caps", () => {
+    const longMetric = "A detailed operating metric with a long descriptive label ".repeat(8);
+    const longAssumption = "A source-supported management assumption with extensive context ".repeat(12);
+    const result = parseExpectationResponse(reply([
+      statement({ metricRaw: longMetric, assumptionRaw: longAssumption, evidence: "A sufficiently long verbatim source quote for benchmark testing" }),
+    ]));
+    expect(longMetric.length).toBeGreaterThan(160);
+    expect(longAssumption.length).toBeGreaterThan(500);
+    expect(result?.statements[0].metricRaw).toBe(longMetric);
+    expect(result?.statements[0].assumptionRaw).toBe(longAssumption);
+  });
+
+  it("sanitizes literal newlines inside JSON string values without changing the evidence semantics", () => {
+    const raw = `{"guidanceStatus":"found","statements":[${JSON.stringify(statement({ evidence: "First line of evidence\nSecond line of evidence" }))}],"extractionWarnings":[]}`.replace(/\\n/g, "\n");
+    const result = parseExpectationResponseDetailed(raw);
+    expect(result.response).not.toBeNull();
+    expect(result.response?.statements[0].evidence).toContain("First line of evidence Second line of evidence");
+  });
+
   it("rejects malformed or incomplete JSON rather than storing guesses", () => {
     expect(parseExpectationResponse("not json")).toBeNull();
     expect(parseExpectationResponse(JSON.stringify({ guidanceStatus: "found", statements: [{ metric: "revenue" }] }))).toBeNull();
