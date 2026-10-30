@@ -12,7 +12,7 @@ import {
   EXPECTATION_JSON_SCHEMA,
   EXPECTATIONS_PROMPT_VERSION,
   EXPECTATIONS_SCHEMA_VERSION,
-  parseExpectationResponse,
+  parseExpectationResponseDetailed,
   rejectUnsupportedStatements,
   type ExpectationResponse,
 } from "./lib/expectations";
@@ -156,19 +156,21 @@ for (const company of universe) {
       base.rawResponse = generated.text;
       totals.promptTokens += generated.promptEvalCount;
       totals.evalCount += generated.evalCount;
-      const parsed = parseExpectationResponse(generated.text);
-      if (!parsed) {
+      const parsed = parseExpectationResponseDetailed(generated.text);
+      if (!parsed.response) {
         base.status = "unparsed";
         totals.unparsed++;
         consecutiveFailures = nextLlmFailureStreak("unparsed", consecutiveFailures);
         appendFileSync(failureLog, JSON.stringify({
           ts: new Date().toISOString(), cik: company.cik, ticker: company.ticker,
           cohortId: container.cohortId, containerId: container.containerId, sourceId: source.sourceId,
-          reason: "response_does_not_match_expectations_v2_schema", response: generated.text.slice(0, 8000),
+          reason: "response_does_not_match_expectations_v2_schema",
+          validationErrors: parsed.issues,
+          response: generated.text.slice(0, 8000),
         }) + "\n");
-        prog.log(`${company.ticker} ${source.sourceId}: unparsed response recorded; continuing`);
+        prog.log(`${company.ticker} ${source.sourceId}: unparsed (${parsed.issues[0] ?? "unknown schema error"}); continuing`);
       } else {
-        const checked = rejectUnsupportedStatements(parsed, targetText);
+        const checked = rejectUnsupportedStatements(parsed.response, targetText);
         base.status = checked.response.statements.length || checked.response.guidanceStatus !== "found" ? "extracted" : "empty";
         base.guidanceStatus = checked.response.guidanceStatus;
         base.statements = checked.response.statements;

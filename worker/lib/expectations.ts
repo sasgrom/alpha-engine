@@ -125,15 +125,20 @@ export function evidenceInSource(evidence: string, source: string): boolean {
   return needle.length >= 20 && normalizeEvidence(source).includes(needle);
 }
 
-export function parseExpectationResponse(reply: string): ExpectationResponse | null {
+export function parseExpectationResponseDetailed(reply: string): { response: ExpectationResponse | null; issues: string[] } {
   const start = reply.indexOf("{"), end = reply.lastIndexOf("}");
-  if (start < 0 || end <= start) return null;
+  if (start < 0 || end <= start) return { response: null, issues: ["no_json_object"] };
   try {
     const parsed = expectationResponseSchema.safeParse(JSON.parse(reply.slice(start, end + 1)));
-    return parsed.success ? parsed.data : null;
-  } catch {
-    return null;
+    if (parsed.success) return { response: parsed.data, issues: [] };
+    return { response: null, issues: parsed.error.issues.map((issue) => `${issue.path.join(".") || "root"}: ${issue.message}`) };
+  } catch (error) {
+    return { response: null, issues: [`json_parse: ${String(error).slice(0, 300)}`] };
   }
+}
+
+export function parseExpectationResponse(reply: string): ExpectationResponse | null {
+  return parseExpectationResponseDetailed(reply).response;
 }
 
 export function rejectUnsupportedStatements(response: ExpectationResponse, source: string) {

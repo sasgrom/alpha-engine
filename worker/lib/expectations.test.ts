@@ -6,6 +6,7 @@ import {
   evidenceInSource,
   EXPECTATIONS_PROMPT_VERSION,
   parseExpectationResponse,
+  parseExpectationResponseDetailed,
   rejectUnsupportedStatements,
   selectExpectationText,
 } from "./expectations";
@@ -75,6 +76,12 @@ describe("expectations extraction contract", () => {
     expect(result?.guidanceStatus).toBe("not_found");
     expect(result?.statements).toEqual([]);
     expect(result?.extractionWarnings[0]).toBe(warning);
+  });
+
+  it("reports exact schema failure paths for diagnosis", () => {
+    const result = parseExpectationResponseDetailed(JSON.stringify({ guidanceStatus: "found", statements: [statement({ currencyBasis: undefined })], extractionWarnings: [] }));
+    expect(result.response).toBeNull();
+    expect(result.issues.some((issue) => issue.includes("currencyBasis"))).toBe(true);
   });
 
   it("rejects malformed or incomplete JSON rather than storing guesses", () => {
