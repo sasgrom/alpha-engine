@@ -99,7 +99,7 @@ Academic literature supports testing both underreaction and overreaction rather 
 
 ## 8. Implementation state
 
-`worker/edgar-expectations.mts` is a local-only expectations-v2 shadow extractor with deterministic candidate routing, strict typed output, evidence rejection, atomic per-company checkpoints and no production delivery. The existing tone v1 runner and its manifests are unchanged. A dry-run over all 36 sampled documents routed 31 documents to extraction and returned `no_candidate_text` for five, avoiding LLM calls where no relevant block was found.
+`worker/edgar-expectations.mts` is a local-only expectations-v3 shadow extractor with deterministic candidate routing, strict typed output, evidence rejection, atomic per-company checkpoints and no production delivery. The existing tone v1 runner and its manifests are unchanged. A dry-run over all 36 sampled documents routed 31 documents to extraction and returned `no_candidate_text` for five, avoiding LLM calls where no relevant block was found.
 
 An independent gold benchmark now covers 12 official documents and 27 required statements across range, floor, point-tolerance, qualitative non-disclosure, revision, GAAP/non-GAAP and constant-currency cases. It fails closed when extraction results are absent and treats additional statements as review items rather than automatic errors.
 

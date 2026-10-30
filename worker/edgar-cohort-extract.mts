@@ -107,7 +107,11 @@ for (const company of universe) {
   }
   const tasks = pack.containers.flatMap((container) => container.sources
     .filter((source) => (!from || source.filingDate >= from) && (!benchmarkAccessions || benchmarkAccessions.has(source.accessionNo)))
-    .map((source) => ({ container, source })));
+    .map((source) => ({ container, source })))
+    .sort((a, b) => a.container.cohortId.localeCompare(b.container.cohortId)
+      || a.container.index - b.container.index
+      || a.source.eventTs.localeCompare(b.source.eventTs)
+      || a.source.sourceId.localeCompare(b.source.sourceId));
   let consecutiveFailures = 0;
   for (const { container, source } of tasks.slice(0, limit ?? undefined)) {
     totals.sources++;

@@ -90,6 +90,7 @@ describe("cohort pack", () => {
     const pack = buildCohortPack([release, quarterly], { contextTokens: 32768, generatedAt: "now" });
     expect(pack.coverage.periods).toBe(1);
     expect(pack.containers[0].cohortId).toBe("2026-09-30");
+    expect(pack.containers[0].containerId).toBe("2026-09-30__001");
     expect(pack.containers[0].sources.map((source) => source.sourceId)).toEqual(["quarterly", "source-a"]);
   });
 

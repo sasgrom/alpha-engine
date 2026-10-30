@@ -146,6 +146,9 @@ describe("expectations extraction contract", () => {
     expect(prompt).toContain(EXPECTATIONS_PROMPT_VERSION);
     expect(prompt).toContain("do not score sentiment");
     expect(prompt).toContain("do not predict market reaction");
+    expect(prompt).toContain("Forward-looking statements do NOT require a precise target or numeric range");
+    expect(prompt).toContain("kind=non_disclosure ONLY for an explicit absence");
+    expect(prompt).toContain("usd_millions (not million or million USD)");
     expect(prompt).toContain("contiguous verbatim quote");
   });
 

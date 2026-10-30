@@ -19,7 +19,7 @@ const universe = JSON.parse(readFileSync(universePath, "utf8")) as { cik: number
 const results: ExpectationResultForReport[] = [];
 for (const company of universe) {
   try {
-    const file = JSON.parse(readFileSync(path.join(cacheRoot, String(company.cik), cohortMode ? "cohort-v2.json" : "expectations-v2.json"), "utf8")) as { entries: ExpectationResultForReport[] };
+    const file = JSON.parse(readFileSync(path.join(cacheRoot, String(company.cik), cohortMode ? "cohort-v2.json" : "expectations-v3.json"), "utf8")) as { entries: ExpectationResultForReport[] };
     results.push(...file.entries.filter((entry) => entry.cik === company.cik && entry.ticker === company.ticker));
   } catch { /* no extraction file is honest zero coverage, not an error */ }
 }
@@ -29,7 +29,7 @@ if (existsSync(benchmarkPath)) {
   benchmark = { pass: report.pass, recall: report.recall, issueCount: report.issues.length };
 }
 const scope = scopeMode === "full-history"
-  ? `Full-history 10-K, 10-Q and exhibit-bearing 8-K; expectations-v2${cohortMode ? "; bounded cohort packs" : ""}; accession/reportDate/eventTs alignment required downstream`
+  ? `Full-history 10-K, 10-Q and exhibit-bearing 8-K; expectations-v3${cohortMode ? "; bounded cohort packs" : ""}; accession/reportDate/eventTs alignment required downstream`
   : "Unaligned latest-filing extraction smoke; not guidance-to-actual cohorts";
 const report = buildExpectationsReport(universe, results, new Date().toISOString(), scope, benchmark, reviewed);
 const tmp = `${outTs}.${process.pid}.${Date.now()}.tmp`;

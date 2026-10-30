@@ -2,7 +2,7 @@ import { z } from "zod";
 import { isEightKForm } from "./edgar";
 import { MAX_INPUT_CHARS } from "./ollama";
 
-export const EXPECTATIONS_PROMPT_VERSION = "expectations-v2";
+export const EXPECTATIONS_PROMPT_VERSION = "expectations-v3";
 export const EXPECTATIONS_SCHEMA_VERSION = 2;
 
 const nullableNumber = z.number().finite().nullable();
@@ -100,13 +100,17 @@ Extraction contract: ${EXPECTATIONS_PROMPT_VERSION}
 Return ONLY one JSON object matching the supplied schema. Extract facts; do not score sentiment and do not predict market reaction.
 
 Rules:
-- guidanceStatus=found when numeric or substantive qualitative management guidance exists. Use deferred_to_call when the document points to a call for guidance. Use explicitly_not_provided only when management explicitly declines a guidance metric. Use not_found when no guidance is present in this document.
+- guidanceStatus=found when numeric OR qualitative forward-looking management expectations exist. Forward-looking statements do NOT require a precise target or numeric range. Capex, demand, pricing, margins, product roadmap, production, capacity, hiring, investment, cost, tax and financing expectations all count when management presents them as expectations or outlook.
+- Use deferred_to_call when the document points to a call for guidance. Use explicitly_not_provided only when management explicitly declines a guidance metric. Use not_found only when the document has no forward-looking management expectations; historical results and generic risk factors alone are not guidance.
+- kind=guidance for every actual expectation, including qualitative or uncertain forward-looking statements. kind=non_disclosure ONLY for an explicit absence of guidance.
 - Extract every material guidance statement and the reported actual metrics needed to compare it later. Include segment metrics, cash flow, capex, debt/financing and timing adjustments when they explain the outlook or headline result.
-- Preserve the exact metric, segment/scope, target period and comparison period. Store accounting basis (GAAP/non-GAAP/adjusted) separately from currencyBasis (reported/constant_currency). Never compare different bases yourself.
-- range: valueLow/valueHigh. point: valuePoint. plus_minus: valuePoint plus tolerance/toleranceUnit. at_least: valueLow. at_most: valueHigh. approximately: valuePoint. Keep qualitative phrases such as "high teens" in valueText with numeric fields null.
-- raised/lowered/narrowed/widened/reaffirmed refer to guidance vintage, not year-over-year results. Populate previous* only when the document states prior guidance; never infer it from a different filing.
+- Preserve the exact metric, segment/scope, target period and comparison period. Store accounting basis (GAAP/non-GAAP/adjusted) separately from currencyBasis (reported/constant_currency). Never compare different bases yourself. If the target period is not stated, use "unspecified" and add a warning instead of inventing it.
+- range: valueLow/valueHigh. point: valuePoint. plus_minus: valuePoint plus tolerance/toleranceUnit. at_least: valueLow. at_most: valueHigh. approximately: valuePoint. qualitative: valueText with numeric fields null. Use approximately for "expected to be approximately", not "expected".
+- Enum normalization is mandatory: use usd_millions (not million or million USD), usd_billions (not billion), basis_points (not percentage points), margin (not gross_margin_gaap or gross_margin_non_gaap), and lower-case basis values such as gaap and non_gaap.
+- raised/lowered/narrowed/widened/reaffirmed refer to guidance vintage, not year-over-year results. Choose exactly one revision value or unclear; never return slash-separated lists such as raised/lowered/narrowed.
+- Populate previous* only when the document states prior guidance; never infer it from a different filing.
 - Do not perform arithmetic, midpoint calculations, annualization, FX adjustment or unit conversion. Do not invent consensus, analyst expectations, dates, values or causal explanations.
-- kind=non_disclosure only for an explicit absence. Assumptions such as FX, China revenue, legal charges, event timing or market dependence must remain attached in assumptionRaw.
+- Assumptions such as FX, China revenue, legal charges, event timing or market dependence must remain attached in assumptionRaw.
 - evidence must be a contiguous verbatim quote from the supplied text containing the values and qualifiers used by that statement. Whitespace may differ. Do not paraphrase evidence.
 - If a table is ambiguous, preserve raw text and add an extractionWarning instead of guessing.
 

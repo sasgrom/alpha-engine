@@ -263,7 +263,7 @@ export function buildCohortPack(
       const index = containers.length;
       const text = item.text;
       containers.push({
-        containerId: `cohort-${index + 1}`,
+        containerId: `${period.replace(/[^a-zA-Z0-9-]/g, "_")}__${String(index + 1).padStart(3, "0")}`,
         cohortId: period,
         index,
         text,
