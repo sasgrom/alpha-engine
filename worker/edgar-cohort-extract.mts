@@ -166,7 +166,7 @@ for (const company of universe) {
           cohortId: container.cohortId, containerId: container.containerId, sourceId: source.sourceId,
           reason: "response_does_not_match_expectations_v2_schema",
           validationErrors: parsed.issues,
-          response: generated.text.slice(0, 8000),
+          response: generated.text,
         }) + "\n");
         prog.log(`${company.ticker} ${source.sourceId}: unparsed (${parsed.issues[0] ?? "unknown schema error"}); continuing`);
       } else {
