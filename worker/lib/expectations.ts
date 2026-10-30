@@ -2,7 +2,7 @@ import { z } from "zod";
 import { isEightKForm } from "./edgar";
 import { MAX_INPUT_CHARS } from "./ollama";
 
-export const EXPECTATIONS_PROMPT_VERSION = "expectations-v3";
+export const EXPECTATIONS_PROMPT_VERSION = "expectations-v4";
 export const EXPECTATIONS_SCHEMA_VERSION = 2;
 
 const nullableNumber = z.number().finite().nullable();
@@ -100,6 +100,8 @@ Extraction contract: ${EXPECTATIONS_PROMPT_VERSION}
 Return ONLY one JSON object matching the supplied schema. Extract facts; do not score sentiment and do not predict market reaction.
 
 Rules:
+- Evidence is mandatory for every statement. If no explicit forward-looking management expectation appears verbatim in the target source, return guidanceStatus=not_found and statements=[]. Never use prior knowledge, typical company guidance, plausible figures, or content from another SOURCE_ID, filing or period.
+- Do not turn arbitration, litigation, procedural filings, historical narratives or general risk factors into company guidance. A forward-looking statement is extracted only when it is actually present in the target text; if a precise quote cannot be produced, omit the statement.
 - guidanceStatus=found when numeric OR qualitative forward-looking management expectations exist. Forward-looking statements do NOT require a precise target or numeric range. Capex, demand, pricing, margins, product roadmap, production, capacity, hiring, investment, cost, tax and financing expectations all count when management presents them as expectations or outlook.
 - Use deferred_to_call when the document points to a call for guidance. Use explicitly_not_provided only when management explicitly declines a guidance metric. Use not_found only when the document has no forward-looking management expectations; historical results and generic risk factors alone are not guidance.
 - kind=guidance for every actual expectation, including qualitative or uncertain forward-looking statements. kind=non_disclosure ONLY for an explicit absence of guidance.

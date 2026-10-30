@@ -220,6 +220,8 @@ describe("expectations extraction contract", () => {
     expect(prompt).toContain("do not score sentiment");
     expect(prompt).toContain("do not predict market reaction");
     expect(prompt).toContain("Forward-looking statements do NOT require a precise target or numeric range");
+    expect(prompt).toContain("If no explicit forward-looking management expectation appears verbatim in the target source, return guidanceStatus=not_found and statements=[]");
+    expect(prompt).toContain("Never use prior knowledge, typical company guidance, plausible figures, or content from another SOURCE_ID, filing or period");
     expect(prompt).toContain("kind=non_disclosure ONLY for an explicit absence");
     expect(prompt).toContain("usd_millions (not million or million USD)");
     expect(prompt).toContain("contiguous verbatim quote");

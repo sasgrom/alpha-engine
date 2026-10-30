@@ -3,7 +3,7 @@
   "frozenAt": "2026-10-30T02:33:04Z",
   "status": "extraction_shadow_no_event_study_results",
   "extraction": {
-    "promptVersion": "expectations-v3",
+    "promptVersion": "expectations-v4",
     "schemaVersion": 2,
     "productionDelivery": false,
     "evidenceRequired": true,
