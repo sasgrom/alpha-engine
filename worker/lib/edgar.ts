@@ -39,9 +39,13 @@ function throttle(): Promise<void> {
 }
 
 export class SecHttpError extends Error {
-  constructor(public status: number, public url: string) {
+  status: number;
+  url: string;
+  constructor(status: number, url: string) {
     super(`HTTP ${status} for ${url}`);
     this.name = "SecHttpError";
+    this.status = status;
+    this.url = url;
   }
 }
 

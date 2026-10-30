@@ -18,6 +18,7 @@ import {
 } from "./lib/expectations";
 import { generate, LLM_MODEL, status } from "./lib/ollama";
 import { exhibitCacheName } from "./lib/exhibits";
+import { selectLatestFilings } from "./lib/filing-selection";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
 import type { ManifestEntry } from "./edgar-fetch.mts";
@@ -29,6 +30,7 @@ const fromTicker = arg("--from-ticker")?.toUpperCase() ?? null;
 const universeFile = arg("--universe") ?? "edgar-universe.json";
 const dryRun = process.argv.includes("--dry-run");
 const benchmarkOnly = process.argv.includes("--benchmark");
+const latestOnly = process.argv.includes("--latest");
 const benchmarkAccessions = benchmarkOnly
   ? new Set((JSON.parse(readFileSync(path.resolve("research/expectations-benchmark-v1.json"), "utf8")) as { documents: { accessionNo: string }[] }).documents.map((doc) => doc.accessionNo))
   : null;
@@ -102,7 +104,8 @@ for (const company of universe) {
   let manifest: ManifestEntry[];
   try { manifest = JSON.parse(readFileSync(path.join(cacheDir(company.cik), "manifest.json"), "utf8")); }
   catch { prog.log(`${company.ticker}: no manifest`); continue; }
-  const candidates = manifest.filter((entry) => entry.fetched && supportedForm(entry.form) && (!from || entry.filingDate >= from) && (!benchmarkAccessions || benchmarkAccessions.has(entry.accessionNo))).slice(0, limit ?? undefined);
+  const eligible = manifest.filter((entry) => entry.fetched && supportedForm(entry.form) && (!from || entry.filingDate >= from) && (!benchmarkAccessions || benchmarkAccessions.has(entry.accessionNo)));
+  const candidates = (latestOnly ? selectLatestFilings(eligible) : eligible).slice(0, limit ?? undefined);
   const tasks = candidates.flatMap((filing) => sourcesFor(company.cik, filing).map((sourceFile) => ({ filing, sourceFile })));
   const result = readResults(company.cik);
   let consecutiveFailures = 0;

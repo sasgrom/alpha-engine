@@ -53,6 +53,7 @@ function Detail({ node }: { node: AnalyticsNode | null }) {
       </div>
       <p className="t-mono text-[12px] leading-relaxed text-foreground/90 mt-3">{node.detail}</p>
       <p className="t-mono text-[12px] leading-relaxed text-muted-foreground mt-2"><strong className="text-foreground">Next step:</strong> {node.next}</p>
+      {node.id === "guidance" && <Link to="/expectations" className="inline-flex items-center gap-2 mt-3 t-mono text-[11px] text-live-cyan hover:underline">Open Expectations Engine <ArrowRight size={13} /></Link>}
     </div>
   );
 }
@@ -96,6 +97,7 @@ export default function Analytics() {
               <div className="flex flex-wrap gap-3 justify-end">
                 <Link to="/analytics/methodology" className="text-live-cyan hover:underline">Methodology</Link>
                 <Link to="/analytics/risk-lab" className="text-live-cyan hover:underline">Risk Lab</Link>
+                <Link to="/expectations" className="text-live-cyan hover:underline">Expectations</Link>
                 <Link to="/" className="text-live-cyan hover:underline">Back to Mission Control</Link>
               </div>
             </div>

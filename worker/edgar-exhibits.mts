@@ -7,6 +7,7 @@ import { createHash } from "node:crypto";
 import path from "node:path";
 import { fetchDoc, isEightKForm, listFilingDocs, loadEdgarUniverse, realCacheRoot } from "./lib/edgar";
 import { exhibitCacheName, selectSubstantiveExhibits } from "./lib/exhibits";
+import { selectLatestFilings } from "./lib/filing-selection";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
 import type { CachedExhibitFile, ManifestEntry } from "./edgar-fetch.mts";
@@ -18,6 +19,7 @@ const fromTicker = arg("--from-ticker")?.toUpperCase() ?? null;
 const universeFile = arg("--universe") ?? "edgar-universe.json";
 const force = process.argv.includes("--force");
 const benchmarkOnly = process.argv.includes("--benchmark");
+const latestOnly = process.argv.includes("--latest");
 const benchmarkAccessions = benchmarkOnly
   ? new Set((JSON.parse(readFileSync(path.resolve("research/expectations-benchmark-v1.json"), "utf8")) as { documents: { accessionNo: string }[] }).documents.map((doc) => doc.accessionNo))
   : null;
@@ -60,7 +62,8 @@ for (const company of universe) {
   const manifest = readManifest(company.cik);
   if (!manifest.length) { prog.log(`${company.ticker}: no manifest`); continue; }
   mkdirSync(cacheDir(company.cik), { recursive: true });
-  const filings = manifest.filter((entry) => entry.fetched && isEightKForm(entry.form) && (!from || entry.filingDate >= from) && (!benchmarkAccessions || benchmarkAccessions.has(entry.accessionNo)));
+  const eligible = manifest.filter((entry) => entry.fetched && isEightKForm(entry.form) && (!from || entry.filingDate >= from) && (!benchmarkAccessions || benchmarkAccessions.has(entry.accessionNo)));
+  const filings = latestOnly ? selectLatestFilings(eligible).filter((entry) => entry.form === "8-K") : eligible;
   for (const entry of filings) {
     if (!force && entry.exhibitsComplete && validCachedFiles(company.cik, entry.accessionNo, entry.exhibitFiles)) { totals.resumed++; continue; }
     try {

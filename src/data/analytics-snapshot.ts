@@ -4,7 +4,7 @@
  */
 export const analyticsSnapshot = {
   "week": "2026-W44",
-  "generatedAt": "2026-10-30T02:59:31.367Z",
+  "generatedAt": "2026-10-30T03:48:04.377Z",
   "metrics": {
     "companies": 495,
     "sectors": 11,
@@ -33,7 +33,7 @@ export const analyticsSnapshot = {
     "macroSeries": 8,
     "macroLastDate": "2026-10-19",
     "jobsError": 8,
-    "testCount": 408,
+    "testCount": 416,
     "optionsSnapshots": 250,
     "normalizedOptionRows": 310634
   },
@@ -126,7 +126,7 @@ export const analyticsSnapshot = {
       "id": "guidance",
       "title": "Structured guidance",
       "status": "partial",
-      "detail": "Expectations-v2 covers ranges, revisions, floors, assumptions and non-disclosure. A 27-statement independent gold benchmark and complete multi-EX-99 routing now exist, but no extraction accuracy result or event study has run.",
+      "detail": "Expectations-v2 covers ranges, revisions, floors, assumptions and non-disclosure. A 27-statement independent gold benchmark, complete multi-EX-99 routing, a bounded 53-company latest-filing mode and a reviewed UI report now exist. No extraction accuracy result or event study has run.",
       "next": "Run and review the independent extraction benchmark, then match guidance vintages to actuals and test post-event CAR, drift and reversal."
     },
     {
@@ -380,7 +380,7 @@ export const analyticsSnapshot = {
   "history": [
     {
       "week": "2026-W44",
-      "generatedAt": "2026-10-30T02:59:31.367Z",
+      "generatedAt": "2026-10-30T03:48:04.377Z",
       "metrics": {
         "companies": 495,
         "sectors": 11,
@@ -409,7 +409,7 @@ export const analyticsSnapshot = {
         "macroSeries": 8,
         "macroLastDate": "2026-10-19",
         "jobsError": 8,
-        "testCount": 408,
+        "testCount": 416,
         "optionsSnapshots": 250,
         "normalizedOptionRows": 310634
       }

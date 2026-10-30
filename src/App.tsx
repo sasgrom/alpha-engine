@@ -14,6 +14,7 @@ import FundFlows from './pages/FundFlows'
 import Analytics from './pages/Analytics'
 import Methodology from './pages/Methodology'
 import VolatilityRiskLab from './pages/VolatilityRiskLab'
+import Expectations from './pages/Expectations'
 import Messages from './pages/Messages'
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
@@ -70,6 +71,7 @@ export default function App() {
       <Route path="/analytics" element={<AdminOnly><Analytics /></AdminOnly>} />
       <Route path="/analytics/methodology" element={<AdminOnly><Methodology /></AdminOnly>} />
       <Route path="/analytics/risk-lab" element={<AdminOnly><VolatilityRiskLab /></AdminOnly>} />
+      <Route path="/expectations" element={<AdminOnly><Expectations /></AdminOnly>} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="*" element={<NotFound />} />
