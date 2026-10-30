@@ -10,6 +10,7 @@ import type { ManifestEntry } from "./edgar-fetch.mts";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const benchmarkPath = path.resolve(arg("--benchmark") ?? "research/expectations-benchmark-v1.json");
+const cohortMode = process.argv.includes("--cohorts");
 const outPath = path.resolve(arg("--out") ?? "worker/.runs/expectations-benchmark-report.json");
 const cacheRoot = path.resolve(arg("--cache") ?? path.resolve(import.meta.dirname, "cache", "edgar"));
 const benchmark = JSON.parse(readFileSync(benchmarkPath, "utf8")) as BenchmarkFile;
@@ -17,7 +18,7 @@ const extractions = new Map<string, ExtractionForBenchmark>();
 const sourceTexts = new Map<string, string>();
 for (const doc of benchmark.documents) {
   try {
-    const result = JSON.parse(readFileSync(path.join(cacheRoot, String(doc.cik), "expectations-v2.json"), "utf8")) as {
+    const result = JSON.parse(readFileSync(path.join(cacheRoot, String(doc.cik), cohortMode ? "cohort-v2.json" : "expectations-v2.json"), "utf8")) as {
       entries: { accessionNo: string; guidanceStatus: ExpectationResponse["guidanceStatus"] | null; statements: ExtractionForBenchmark["statements"] }[];
     };
     const entries = result.entries.filter((item) => item.accessionNo === doc.accessionNo);

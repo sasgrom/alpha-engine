@@ -77,9 +77,10 @@ npx tsx worker/edgar-cohort-extract.mts --universe research-universe-53.json
 
 The worker reads `cohort-pack-v2.json`, makes one bounded request per target source and writes `cohort-v2.json` atomically after every source. It resumes only when source, container, input hash, model and prompt version all match.
 
-### Build the static UI report
+### Run the independent benchmark and build the static UI report
 
 ```powershell
+npx tsx worker/expectations-benchmark.mts --cohorts
 npx tsx worker/build-expectations-report.mts --cohorts
 ```
 
