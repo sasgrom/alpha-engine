@@ -110,6 +110,31 @@ describe("expectations extraction contract", () => {
     expect(result?.statements[0].valueLow).toBeNull();
   });
 
+  it("normalizes an additional capex range and records the conversion", () => {
+    const result = parseExpectationResponseDetailed(reply([
+      statement({ qualifier: "expect to spend an additional", valueLow: 5, valueHigh: 10, valuePoint: null, unit: "usd_millions" }),
+    ]));
+    expect(result.response?.statements[0].qualifier).toBe("range");
+    expect(result.response?.statements[0].valueLow).toBe(5);
+    expect(result.response?.statements[0].valueHigh).toBe(10);
+    expect(result.normalizations).toContain("qualifier: expect to spend an additional -> range");
+  });
+
+  it("normalizes qualitative declines without inventing a dollar unit", () => {
+    const result = parseExpectationResponseDetailed(reply([
+      statement({ qualifier: "expect royalty revenue from ST to decrease both in absolute dollars and as a percentage of total revenue", valueLow: null, valueHigh: null, valuePoint: null, valueText: "decrease", unit: "usd_millions" }),
+    ]));
+    expect(result.response?.statements[0].qualifier).toBe("qualitative");
+    expect(result.response?.statements[0].unit).toBe("text");
+    expect(result.normalizations).toContain("unit: usd_millions -> text");
+  });
+
+  it("still rejects an unknown qualifier instead of accepting everything", () => {
+    const result = parseExpectationResponseDetailed(reply([statement({ qualifier: "banana", valueLow: 5, valueHigh: 10 })]));
+    expect(result.response).toBeNull();
+    expect(result.issues[0]).toContain("qualifier");
+  });
+
   it("rejects malformed or incomplete JSON rather than storing guesses", () => {
     expect(parseExpectationResponse("not json")).toBeNull();
     expect(parseExpectationResponse(JSON.stringify({ guidanceStatus: "found", statements: [{ metric: "revenue" }] }))).toBeNull();

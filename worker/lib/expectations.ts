@@ -129,36 +129,87 @@ export function evidenceInSource(evidence: string, source: string): boolean {
   return needle.length >= 20 && normalizeEvidence(source).includes(needle);
 }
 
-function normalizeExpectationResponse(value: unknown): unknown {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return value;
+const VALID_QUALIFIERS = new Set(["range", "point", "plus_minus", "at_least", "at_most", "approximately", "unchanged", "qualitative", "not_provided"]);
+
+function normalizeExpectationResponse(value: unknown): { value: unknown; normalizations: string[] } {
+  const normalizations: string[] = [];
+  if (!value || typeof value !== "object" || Array.isArray(value)) return { value, normalizations };
   const response = value as Record<string, unknown>;
-  if (!Array.isArray(response.statements)) return response;
-  return {
-    ...response,
-    statements: response.statements.map((item) => {
-      if (!item || typeof item !== "object" || Array.isArray(item)) return item;
-      const statement = item as Record<string, unknown>;
-      // "An additional $X" is an exact incremental amount, not a floor or range.
-      if (statement.qualifier === "expect to spend an additional"
-        && typeof statement.valueLow === "number"
-        && statement.valueHigh === null
-        && statement.valuePoint === null) {
-        return { ...statement, qualifier: "point", valuePoint: statement.valueLow, valueLow: null };
+  if (!Array.isArray(response.statements)) return { value: response, normalizations };
+  const statements = response.statements.map((item) => {
+    if (!item || typeof item !== "object" || Array.isArray(item)) return item;
+    const original = item as Record<string, unknown>;
+    const statement = { ...original };
+    const change = (field: string, next: unknown) => {
+      if (statement[field] === next) return;
+      normalizations.push(`${field}: ${String(statement[field])} -> ${String(next)}`);
+      statement[field] = next;
+    };
+    if (statement.basis === "GAAP") change("basis", "gaap");
+    if (statement.basis === "non-GAAP") change("basis", "non_gaap");
+    if (statement.toleranceUnit === "percentage points" || statement.toleranceUnit === "percentage point") change("toleranceUnit", "basis_points");
+    if (statement.unit === "million" || statement.unit === "million USD" || statement.unit === "millions" || statement.unit === "USD millions") change("unit", "usd_millions");
+    if (statement.unit === "billion" || statement.unit === "billion USD" || statement.unit === "billions" || statement.unit === "USD billions") change("unit", "usd_billions");
+    if (statement.metric === "gross_margin_gaap" || statement.metric === "gross_margin_non_gaap") change("metric", "margin");
+    if (statement.metric === "operating_expenses_gaap" || statement.metric === "operating_expenses_non_gaap") change("metric", "opex");
+    if (typeof statement.revision === "string" && statement.revision.includes("/")) change("revision", "unclear");
+    if (typeof statement.qualifier !== "string") return statement;
+    const rawQualifier = statement.qualifier;
+    if (VALID_QUALIFIERS.has(rawQualifier)) return statement;
+    const q = rawQualifier.toLowerCase();
+    const hasRange = typeof statement.valueLow === "number" && typeof statement.valueHigh === "number";
+    const hasLow = typeof statement.valueLow === "number";
+    const hasHigh = typeof statement.valueHigh === "number";
+    const hasPoint = typeof statement.valuePoint === "number";
+    const hasTolerance = typeof statement.tolerance === "number";
+    const hasText = typeof statement.valueText === "string" && statement.valueText.trim().length > 0;
+    if (/expect to spend an additional/.test(q)) {
+      if (hasRange) change("qualifier", "range");
+      else if (hasLow && !hasHigh && !hasPoint) {
+        change("qualifier", "point");
+        change("valuePoint", statement.valueLow);
+        change("valueLow", null);
       }
-      return statement;
-    }),
-  };
+    } else if (/at least|minimum|no less than/.test(q) && (hasLow || hasPoint)) {
+      change("qualifier", "at_least");
+      if (!hasLow && hasPoint) { change("valueLow", statement.valuePoint); change("valuePoint", null); }
+    } else if (/at most|maximum|no more than|up to/.test(q) && (hasHigh || hasPoint)) {
+      change("qualifier", "at_most");
+      if (!hasHigh && hasPoint) { change("valueHigh", statement.valuePoint); change("valuePoint", null); }
+    } else if (/between|range|from .+ to /.test(q) && hasRange) {
+      change("qualifier", "range");
+    } else if (/approximately|about|around|roughly|nearly/.test(q)) {
+      if (hasRange) change("qualifier", "range");
+      else if (hasPoint) change("qualifier", "approximately");
+      else if (hasTolerance) change("qualifier", "plus_minus");
+      else if (hasText) change("qualifier", "qualitative");
+    } else if (/expected|expect|flat|decrease|increase|grow|decline/.test(q)) {
+      if (hasRange) change("qualifier", "range");
+      else if (hasPoint) change("qualifier", "point");
+      else if (hasTolerance) change("qualifier", "plus_minus");
+      else if (hasText || q.length > 0) {
+        change("qualifier", "qualitative");
+        if (!hasText) change("valueText", rawQualifier);
+      }
+    }
+    if (statement.qualifier === "qualitative" && !hasLow && !hasHigh && !hasPoint && typeof statement.unit === "string" && statement.unit.startsWith("usd")) {
+      change("unit", "text");
+    }
+    return statement;
+  });
+  return { value: { ...response, statements }, normalizations };
 }
 
-export function parseExpectationResponseDetailed(reply: string): { response: ExpectationResponse | null; issues: string[] } {
+export function parseExpectationResponseDetailed(reply: string): { response: ExpectationResponse | null; issues: string[]; normalizations: string[] } {
   const start = reply.indexOf("{"), end = reply.lastIndexOf("}");
-  if (start < 0 || end <= start) return { response: null, issues: ["no_json_object"] };
+  if (start < 0 || end <= start) return { response: null, issues: ["no_json_object"], normalizations: [] };
   try {
-    const parsed = expectationResponseSchema.safeParse(normalizeExpectationResponse(JSON.parse(reply.slice(start, end + 1))));
-    if (parsed.success) return { response: parsed.data, issues: [] };
-    return { response: null, issues: parsed.error.issues.map((issue) => `${issue.path.join(".") || "root"}: ${issue.message}`) };
+    const normalized = normalizeExpectationResponse(JSON.parse(reply.slice(start, end + 1)));
+    const parsed = expectationResponseSchema.safeParse(normalized.value);
+    if (parsed.success) return { response: parsed.data, issues: [], normalizations: normalized.normalizations };
+    return { response: null, issues: parsed.error.issues.map((issue) => `${issue.path.join(".") || "root"}: ${issue.message}`), normalizations: normalized.normalizations };
   } catch (error) {
-    return { response: null, issues: [`json_parse: ${String(error).slice(0, 300)}`] };
+    return { response: null, issues: [`json_parse: ${String(error).slice(0, 300)}`], normalizations: [] };
   }
 }
 

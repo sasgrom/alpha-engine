@@ -178,7 +178,7 @@ for (const company of universe) {
         base.status = checked.response.statements.length || checked.response.guidanceStatus !== "found" ? "extracted" : "empty";
         base.guidanceStatus = checked.response.guidanceStatus;
         base.statements = checked.response.statements;
-        base.extractionWarnings = [...checked.response.extractionWarnings, ...(checked.rejected ? [`Rejected ${checked.rejected} statement(s) without target-source evidence`] : [])];
+        base.extractionWarnings = [...parsed.normalizations, ...checked.response.extractionWarnings, ...(checked.rejected ? [`Rejected ${checked.rejected} statement(s) without target-source evidence`] : [])];
         base.rejectedEvidence = checked.rejected;
         totals.rejectedEvidence += checked.rejected;
         if (base.status === "extracted") totals.extracted++; else totals.empty++;
