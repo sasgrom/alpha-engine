@@ -168,7 +168,7 @@ for (const company of universe) {
         appendFileSync(failureLog, JSON.stringify({
           ts: new Date().toISOString(), cik: company.cik, ticker: company.ticker,
           cohortId: container.cohortId, containerId: container.containerId, sourceId: source.sourceId,
-          reason: "response_does_not_match_expectations_v2_schema",
+          reason: `response_does_not_match_${EXPECTATIONS_PROMPT_VERSION}_schema`,
           validationErrors: parsed.issues,
           response: generated.text,
         }) + "\n");

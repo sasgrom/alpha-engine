@@ -84,6 +84,32 @@ describe("expectations extraction contract", () => {
     expect(result.issues.some((issue) => issue.includes("currencyBasis"))).toBe(true);
   });
 
+  it("normalizes an exact additional capex amount without treating it as a floor", () => {
+    const result = parseExpectationResponse(JSON.stringify({
+      guidanceStatus: "found",
+      statements: [statement({
+        kind: "guidance",
+        metricRaw: "capital expenditures",
+        metric: "capex",
+        scopeRaw: "next three months",
+        periodRaw: "next three months",
+        qualifier: "expect to spend an additional",
+        valueLow: 5,
+        valueHigh: null,
+        valuePoint: null,
+        unit: "usd_millions",
+        basis: "gaap",
+        revision: "unclear",
+        assumptionRaw: "Timing and amount depend on future growth",
+        evidence: "We expect to spend an additional $5.0 million for capital expenditures in the next three months",
+      })],
+      extractionWarnings: [],
+    }));
+    expect(result?.statements[0].qualifier).toBe("point");
+    expect(result?.statements[0].valuePoint).toBe(5);
+    expect(result?.statements[0].valueLow).toBeNull();
+  });
+
   it("rejects malformed or incomplete JSON rather than storing guesses", () => {
     expect(parseExpectationResponse("not json")).toBeNull();
     expect(parseExpectationResponse(JSON.stringify({ guidanceStatus: "found", statements: [{ metric: "revenue" }] }))).toBeNull();

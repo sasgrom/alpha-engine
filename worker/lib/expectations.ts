@@ -129,11 +129,32 @@ export function evidenceInSource(evidence: string, source: string): boolean {
   return needle.length >= 20 && normalizeEvidence(source).includes(needle);
 }
 
+function normalizeExpectationResponse(value: unknown): unknown {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return value;
+  const response = value as Record<string, unknown>;
+  if (!Array.isArray(response.statements)) return response;
+  return {
+    ...response,
+    statements: response.statements.map((item) => {
+      if (!item || typeof item !== "object" || Array.isArray(item)) return item;
+      const statement = item as Record<string, unknown>;
+      // "An additional $X" is an exact incremental amount, not a floor or range.
+      if (statement.qualifier === "expect to spend an additional"
+        && typeof statement.valueLow === "number"
+        && statement.valueHigh === null
+        && statement.valuePoint === null) {
+        return { ...statement, qualifier: "point", valuePoint: statement.valueLow, valueLow: null };
+      }
+      return statement;
+    }),
+  };
+}
+
 export function parseExpectationResponseDetailed(reply: string): { response: ExpectationResponse | null; issues: string[] } {
   const start = reply.indexOf("{"), end = reply.lastIndexOf("}");
   if (start < 0 || end <= start) return { response: null, issues: ["no_json_object"] };
   try {
-    const parsed = expectationResponseSchema.safeParse(JSON.parse(reply.slice(start, end + 1)));
+    const parsed = expectationResponseSchema.safeParse(normalizeExpectationResponse(JSON.parse(reply.slice(start, end + 1))));
     if (parsed.success) return { response: parsed.data, issues: [] };
     return { response: null, issues: parsed.error.issues.map((issue) => `${issue.path.join(".") || "root"}: ${issue.message}`) };
   } catch (error) {
