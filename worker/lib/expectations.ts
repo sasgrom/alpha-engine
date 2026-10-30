@@ -40,7 +40,7 @@ const statementSchema = z.object({
 export const expectationResponseSchema = z.object({
   guidanceStatus: z.enum(["found", "not_found", "explicitly_not_provided", "deferred_to_call"]),
   statements: z.array(statementSchema).max(60),
-  extractionWarnings: z.array(z.string().max(300)).max(12),
+  extractionWarnings: z.array(z.string()).max(12),
 }).strict();
 
 export type ExpectationStatement = z.infer<typeof statementSchema>;

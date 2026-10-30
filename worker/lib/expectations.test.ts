@@ -68,6 +68,15 @@ describe("expectations extraction contract", () => {
     expect(result?.guidanceStatus).toBe("explicitly_not_provided");
   });
 
+  it("accepts valid empty extraction with a long explanatory warning", () => {
+    const warning = "No numeric or substantive qualitative management guidance found in the provided text for NVDA (10-Q filed 1999-06-15). The document contains forward-looking statements regarding market trends, product life cycles, ASP declines, and general capital expenditure expectations ('$5.0 to $10.0 million'), but these are not specific guidance metrics with targets or ranges as defined by the extraction contract.";
+    expect(warning.length).toBeGreaterThan(300);
+    const result = parseExpectationResponse(JSON.stringify({ guidanceStatus: "not_found", statements: [], extractionWarnings: [warning] }));
+    expect(result?.guidanceStatus).toBe("not_found");
+    expect(result?.statements).toEqual([]);
+    expect(result?.extractionWarnings[0]).toBe(warning);
+  });
+
   it("rejects malformed or incomplete JSON rather than storing guesses", () => {
     expect(parseExpectationResponse("not json")).toBeNull();
     expect(parseExpectationResponse(JSON.stringify({ guidanceStatus: "found", statements: [{ metric: "revenue" }] }))).toBeNull();
