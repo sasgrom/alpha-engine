@@ -27,6 +27,25 @@ describe("reviewed expectations report", () => {
     expect(JSON.stringify(report)).not.toContain("rawResponse");
   });
 
+  it("keeps factual fallbacks separate from structured statements and counts verification", () => {
+    const fallbackResult = result({
+      status: "fallback",
+      fallback: {
+        summary: "The filing discusses Xbox pricing arbitration.",
+        dataQuality: "limited",
+        guidancePresence: "unclear",
+        limitations: ["No explicit revenue guidance"],
+        evidence: "We expect to continue deferring revenue until arbitration is resolved.",
+        evidenceVerified: true,
+      },
+    });
+    const report = buildExpectationsReport([{ cik: 1, ticker: "AAA" }], [fallbackResult], "2026-10-30T00:00:00Z", "latest filings");
+    expect(report.coverage.fallback).toBe(1);
+    expect(report.coverage.fallbackUnverified).toBe(0);
+    expect(report.fallbacks[0].summary).toContain("Xbox");
+    expect(report.fallbacks[0].evidenceVerified).toBe(true);
+  });
+
   it("never marks a report reviewed without a passing independent benchmark", () => {
     expect(() => buildExpectationsReport([{ cik: 1, ticker: "AAA" }], [result()], "2026-10-30T00:00:00Z", "latest", null, true)).toThrow("passing independent benchmark");
     const reviewed = buildExpectationsReport([{ cik: 1, ticker: "AAA" }], [result()], "2026-10-30T00:00:00Z", "latest", { pass: true, recall: 1, issueCount: 0 }, true);

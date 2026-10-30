@@ -131,6 +131,14 @@ The remaining 20% covers the extraction instructions, JSON Schema, model templat
 
 A missing result is never converted into a pass. No source, table or amendment is deliberately discarded to make a prompt smaller.
 
+## Factual fallback notes
+
+When a response fails schema validation, the worker makes one separate `expectations-fallback-v1` request using the target source, not the invalid response. It returns a short factual summary, `dataQuality` (`usable` / `limited` / `unusable`), `guidancePresence`, limitations and verbatim evidence.
+
+Fallbacks are isolated from structured guidance factors. `fallback` means the evidence was verified against the target source; `fallback_unverified` means it was not and must not be published as verified evidence. Original schema errors and raw responses remain in the audit log. Transport-failure policy is unchanged.
+
+The UI displays these notes in a separate Fallback notes tab. Raw fallback responses stay local.
+
 ## Missing packs and aliases
 
 Batch extraction skips a missing `cohort-pack-v2.json`, reports `missing packs N` and continues with the next company. `--only` remains fail-fast so a targeted run cannot silently hide a missing input. Dry-run counters are named `planned`, not `extracted`.

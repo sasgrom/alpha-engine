@@ -48,6 +48,20 @@ vi.mock("@/data/expectations-report", () => ({
     benchmark: { pass: true, recall: 1, issueCount: 0 },
     companies: [],
     statements: [statement("AMZN", "range"), statement("NVDA", "plus_minus")],
+    fallbacks: [{
+      cik: 1045810,
+      ticker: "NVDA",
+      accessionNo: "acc-fallback",
+      form: "8-K",
+      filingDate: "2002-04-29",
+      sourceUrl: "https://www.sec.gov/nvda-fallback",
+      summary: "The filing discusses Xbox pricing arbitration and deferred processor revenue.",
+      dataQuality: "limited",
+      guidancePresence: "unclear",
+      limitations: ["No explicit revenue guidance"],
+      evidence: "We expect to continue deferring revenue until arbitration is resolved.",
+      evidenceVerified: true,
+    }],
   },
 }));
 import Expectations from "./Expectations";
@@ -77,6 +91,16 @@ describe("Populated expectations report", () => {
     await act(async () => { details.querySelector("summary")!.click(); });
     expect(details.open).toBe(true);
     expect(details.textContent).toContain("AMZN revenue guidance is stated explicitly");
+  });
+
+  it("shows factual fallback notes separately from structured statements", async () => {
+    const tab = [...host!.querySelectorAll("button")].find((button) => button.textContent?.includes("Fallback notes"))!;
+    await act(async () => { tab.click(); });
+    expect(host!.textContent).toContain("Factual fallback note");
+    expect(host!.textContent).toContain("Xbox pricing arbitration");
+    expect(host!.textContent).toContain("evidence verified");
+    expect(host!.textContent).toContain("Fallback only · not a factor");
+    expect(host!.querySelector('a[href="https://www.sec.gov/nvda-fallback"]')).not.toBeNull();
   });
 
   it("filters statements by ticker", async () => {

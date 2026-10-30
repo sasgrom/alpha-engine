@@ -1,6 +1,6 @@
 {
  "schemaVersion": 2,
- "generatedAt": "2026-10-30T19:06:25.506Z",
+ "generatedAt": "2026-10-30T20:08:28.552Z",
  "scope": "Full-history 10-K, 10-Q and exhibit-bearing 8-K; expectations-v4; bounded cohort packs; accession/reportDate/eventTs alignment required downstream",
  "status": "waiting",
  "coverage": {
@@ -12,6 +12,8 @@
   "unparsed": 0,
   "failed": 0,
   "statements": 0,
+  "fallback": 0,
+  "fallbackUnverified": 0,
   "rejectedEvidence": 0,
   "promptTokens": 0,
   "evalTokens": 0
@@ -443,5 +445,6 @@
    "guidanceStatus": null
   }
  ],
- "statements": []
+ "statements": [],
+ "fallbacks": []
 }

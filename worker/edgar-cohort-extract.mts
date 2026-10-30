@@ -20,6 +20,14 @@ import { generate, LLM_MODEL, status } from "./lib/ollama";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
 import { nextLlmFailureStreak, shouldAbortLlmBatch } from "./lib/llm-run-policy";
+import {
+  buildExpectationFallbackPrompt,
+  EXPECTATION_FALLBACK_JSON_SCHEMA,
+  EXPECTATION_FALLBACK_VERSION,
+  fallbackEvidenceVerified,
+  parseExpectationFallback,
+  type ExpectationFallback,
+} from "./lib/expectation-fallback";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const only = arg("--only")?.toUpperCase() ?? null;
@@ -57,12 +65,15 @@ interface CohortResultEntry {
   inputSha256: string;
   model: string;
   promptVersion: string;
-  status: "extracted" | "empty" | "unparsed" | "request_failed";
+  status: "extracted" | "empty" | "unparsed" | "request_failed" | "fallback" | "fallback_unverified";
   guidanceStatus: ExpectationResponse["guidanceStatus"] | null;
   statements: ExpectationResponse["statements"];
   extractionWarnings: string[];
   rejectedEvidence: number;
   rawResponse: string | null;
+  fallback: (ExpectationFallback & { evidenceVerified: boolean }) | null;
+  fallbackRawResponse: string | null;
+  fallbackUsage: Usage | null;
   usage: Usage | null;
   updatedAt: string;
 }
@@ -85,7 +96,7 @@ const start = fromTicker ? universeAll.findIndex((company) => company.ticker ===
 if (fromTicker && start < 0) throw new Error(`Unknown --from-ticker ${fromTicker}`);
 const universe = universeAll.slice(Math.max(0, start));
 const prog = startProgress("edgar-cohort-extract", `${EXPECTATIONS_PROMPT_VERSION} · per-source extraction · target-only evidence`);
-const totals = { containers: 0, sources: 0, planned: 0, extracted: 0, empty: 0, unparsed: 0, failed: 0, resumed: 0, rejectedEvidence: 0, promptTokens: 0, evalCount: 0, missingPacks: 0 };
+const totals = { containers: 0, sources: 0, planned: 0, extracted: 0, empty: 0, unparsed: 0, failed: 0, resumed: 0, rejectedEvidence: 0, promptTokens: 0, evalCount: 0, missingPacks: 0, fallback: 0, fallbackUnverified: 0 };
 for (const company of universe) {
   let pack: CohortPack;
   try { pack = JSON.parse(readFileSync(path.join(cacheDir(company.cik), "cohort-pack-v2.json"), "utf8")) as CohortPack; }
@@ -141,6 +152,9 @@ for (const company of universe) {
       extractionWarnings: [],
       rejectedEvidence: 0,
       rawResponse: null,
+      fallback: null,
+      fallbackRawResponse: null,
+      fallbackUsage: null,
       usage: null,
       updatedAt: new Date().toISOString(),
     };
@@ -172,7 +186,33 @@ for (const company of universe) {
           validationErrors: parsed.issues,
           response: generated.text,
         }) + "\n");
-        prog.log(`${company.ticker} ${source.sourceId}: unparsed (${parsed.issues[0] ?? "unknown schema error"}); continuing`);
+        prog.log(`${company.ticker} ${source.sourceId}: unparsed (${parsed.issues[0] ?? "unknown schema error"}); trying factual fallback`);
+        try {
+          const fallbackGenerated = await generate(buildExpectationFallbackPrompt(targetText, {
+            ticker: company.ticker, form: source.form, filingDate: source.filingDate, accessionNo: source.accessionNo,
+          }), { jsonSchema: EXPECTATION_FALLBACK_JSON_SCHEMA, numPredict: 1024, timeoutMs: 120_000 });
+          base.fallbackUsage = { promptTokens: fallbackGenerated.promptEvalCount, evalCount: fallbackGenerated.evalCount, promptMs: fallbackGenerated.promptEvalMs, evalMs: fallbackGenerated.evalMs, totalMs: fallbackGenerated.totalMs };
+          base.fallbackRawResponse = fallbackGenerated.text;
+          totals.promptTokens += fallbackGenerated.promptEvalCount;
+          totals.evalCount += fallbackGenerated.evalCount;
+          const fallback = parseExpectationFallback(fallbackGenerated.text);
+          if (fallback) {
+            const verified = fallbackEvidenceVerified(fallback, targetText);
+            base.fallback = { ...fallback, evidenceVerified: verified };
+            base.status = verified ? "fallback" : "fallback_unverified";
+            base.extractionWarnings = verified ? [] : ["Fallback evidence is not contiguous target text"];
+            if (verified) totals.fallback++; else totals.fallbackUnverified++;
+            consecutiveFailures = nextLlmFailureStreak("extracted", consecutiveFailures);
+            prog.log(`${company.ticker} ${source.sourceId}: ${base.status} · ${fallback.dataQuality} · ${EXPECTATION_FALLBACK_VERSION}`);
+          } else {
+            prog.log(`${company.ticker} ${source.sourceId}: fallback was also unparsed; keeping original error`);
+          }
+        } catch (error) {
+          base.status = "request_failed";
+          base.extractionWarnings = [String(error).slice(0, 500)];
+          totals.failed++;
+          consecutiveFailures = nextLlmFailureStreak("request_failed", consecutiveFailures);
+        }
       } else {
         const checked = rejectUnsupportedStatements(parsed.response, targetText);
         base.status = checked.response.statements.length || checked.response.guidanceStatus !== "found" ? "extracted" : "empty";
@@ -201,4 +241,4 @@ for (const company of universe) {
   writeJsonAtomic(outputPath(company.cik), result, true);
   prog.stageDone(`${company.ticker}: sources ${tasks.length} · ${dryRun ? `planned ${totals.planned}` : `extracted ${totals.extracted}`} · resumed ${totals.resumed} · rejected ${totals.rejectedEvidence}`);
 }
-prog.done(`all done · sources ${totals.sources} · ${dryRun ? `planned ${totals.planned}` : `extracted ${totals.extracted}`} · empty ${totals.empty} · unparsed ${totals.unparsed} · failed ${totals.failed} · resumed ${totals.resumed} · rejected evidence ${totals.rejectedEvidence} · missing packs ${totals.missingPacks} · prompt ${totals.promptTokens} tok · generated ${totals.evalCount} tok`);
+prog.done(`all done · sources ${totals.sources} · ${dryRun ? `planned ${totals.planned}` : `extracted ${totals.extracted}`} · empty ${totals.empty} · unparsed ${totals.unparsed} · failed ${totals.failed} · resumed ${totals.resumed} · rejected evidence ${totals.rejectedEvidence} · fallback ${totals.fallback} · fallback unverified ${totals.fallbackUnverified} · missing packs ${totals.missingPacks} · prompt ${totals.promptTokens} tok · generated ${totals.evalCount} tok`);

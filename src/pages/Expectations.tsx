@@ -45,7 +45,7 @@ function statusCopy() {
 }
 
 export default function Expectations() {
-  const [tab, setTab] = useState<"output" | "examples">("output");
+  const [tab, setTab] = useState<"output" | "fallbacks" | "examples">("output");
   const [query, setQuery] = useState("");
   const [ticker, setTicker] = useState("all");
   const [metric, setMetric] = useState("all");
@@ -62,6 +62,7 @@ export default function Expectations() {
   }), [query, ticker, metric, revision]);
   const status = statusCopy();
   const coverage = report.coverage;
+  const fallbacks = report.fallbacks ?? [];
   const coverageRate = coverage.companiesExpected ? coverage.companiesWithResults / coverage.companiesExpected : 0;
 
   return (
@@ -96,6 +97,7 @@ export default function Expectations() {
 
         <div className="expectations-tabs" role="tablist" aria-label="Expectations content">
           <button type="button" role="tab" aria-selected={tab === "output"} className={tab === "output" ? "active" : ""} onClick={() => setTab("output")}><FileSearch size={14} /> Extracted report</button>
+          <button type="button" role="tab" aria-selected={tab === "fallbacks"} className={tab === "fallbacks" ? "active" : ""} onClick={() => setTab("fallbacks")}><FileSearch size={14} /> Fallback notes</button>
           <button type="button" role="tab" aria-selected={tab === "examples"} className={tab === "examples" ? "active" : ""} onClick={() => setTab("examples")}><ShieldCheck size={14} /> SEC reference examples</button>
         </div>
 
@@ -132,6 +134,24 @@ export default function Expectations() {
               </section>
             )}
           </>
+        ) : tab === "fallbacks" ? (
+          fallbacks.length ? (
+            <section className="expectations-card-grid">
+              {fallbacks.map((fallback, index) => (
+                <article className="expectation-card t-panel" key={`${fallback.accessionNo}-${index}`}>
+                  <header><div><span className="expectation-ticker">{fallback.ticker}</span><span className="expectation-form">{fallback.form} · {fallback.filingDate}</span></div><span className={`expectation-quality ${fallback.dataQuality}`}>{fallback.dataQuality}</span></header>
+                  <div className="expectation-metric">Factual fallback note</div>
+                  <div className="expectation-period">Guidance: {fallback.guidancePresence} · {fallback.evidenceVerified ? "evidence verified" : "evidence unverified"}</div>
+                  <p className="expectation-fallback-summary">{fallback.summary}</p>
+                  {fallback.limitations.length > 0 && <ul className="expectation-limitations">{fallback.limitations.map((item) => <li key={item}>{item}</li>)}</ul>}
+                  <details className="expectation-evidence"><summary>Source evidence</summary><blockquote>{fallback.evidence}</blockquote></details>
+                  <footer><span>Fallback only · not a factor</span><a href={fallback.sourceUrl} target="_blank" rel="noreferrer">SEC filing <ExternalLink size={12} /></a></footer>
+                </article>
+              ))}
+            </section>
+          ) : (
+            <section className="t-panel expectations-empty"><FileSearch size={24} /><h2>No fallback notes yet</h2><p>Only sources whose structured response fails schema validation receive a separate factual fallback. They never become guidance factors.</p></section>
+          )
         ) : (
           <section className="expectations-card-grid">
             {expectationReferenceExamples.map((example) => (

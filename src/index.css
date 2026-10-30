@@ -627,6 +627,12 @@
 .expectation-revision.raised { border-color: hsl(var(--ok) / 0.5); color: hsl(var(--ok)); }
 .expectation-revision.lowered { border-color: hsl(var(--crit) / 0.5); color: hsl(var(--crit)); }
 .expectation-revision.narrowed, .expectation-revision.reaffirmed { border-color: hsl(var(--live) / 0.45); color: hsl(var(--live)); }
+.expectation-quality { flex-shrink: 0; padding: 3px 6px; border: 1px solid hsl(var(--border)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 8px; text-transform: uppercase; }
+.expectation-quality.usable { border-color: hsl(var(--ok) / 0.5); color: hsl(var(--ok)); }
+.expectation-quality.limited { border-color: hsl(var(--warn) / 0.5); color: hsl(var(--warn)); }
+.expectation-quality.unusable { border-color: hsl(var(--crit) / 0.5); color: hsl(var(--crit)); }
+.expectation-fallback-summary { margin: 12px 0 0; color: hsl(var(--foreground) / 0.9); font-size: 12px; line-height: 1.65; }
+.expectation-limitations { margin: 10px 0 0; padding-left: 18px; color: hsl(var(--muted-foreground)); font-size: 10px; line-height: 1.55; }
 .expectation-metric { margin-top: 13px; color: hsl(var(--foreground)); font-size: 14px; font-weight: 500; }
 .expectation-period { margin-top: 4px; color: hsl(var(--muted-foreground)); font-size: 11px; }
 .expectation-value { margin: 12px 0 7px; color: hsl(var(--live)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: clamp(21px, 2vw, 28px); font-weight: 500; letter-spacing: -0.045em; }
