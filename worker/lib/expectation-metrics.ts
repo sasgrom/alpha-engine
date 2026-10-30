@@ -6,8 +6,8 @@ const norm = (value: string) => value.trim().toLowerCase().replace(/\s+/g, " ");
 export function expectationPairCompatible(guidance: ExpectationStatement, actual: ExpectationStatement): boolean {
   if (guidance.metric !== actual.metric || norm(guidance.metricRaw) !== norm(actual.metricRaw)) return false;
   if (norm(guidance.scopeRaw) !== norm(actual.scopeRaw) || norm(guidance.periodRaw) !== norm(actual.periodRaw)) return false;
-  if (guidance.unit !== actual.unit || guidance.basis !== actual.basis) return false;
-  return !["unclear", "mixed"].includes(guidance.basis) && !["unclear", "mixed"].includes(actual.basis);
+  if (guidance.unit !== actual.unit || guidance.basis !== actual.basis || guidance.currencyBasis !== actual.currencyBasis) return false;
+  return !["unclear", "mixed"].includes(guidance.basis) && !["unclear", "mixed"].includes(actual.basis) && guidance.currencyBasis !== "unclear" && actual.currencyBasis !== "unclear";
 }
 
 export function guidanceCenter(statement: ExpectationStatement): number | null {

@@ -4,7 +4,7 @@
  */
 export const analyticsSnapshot = {
   "week": "2026-W44",
-  "generatedAt": "2026-10-30T01:59:23.437Z",
+  "generatedAt": "2026-10-30T02:59:31.367Z",
   "metrics": {
     "companies": 495,
     "sectors": 11,
@@ -33,7 +33,7 @@ export const analyticsSnapshot = {
     "macroSeries": 8,
     "macroLastDate": "2026-10-19",
     "jobsError": 8,
-    "testCount": 401,
+    "testCount": 408,
     "optionsSnapshots": 250,
     "normalizedOptionRows": 310634
   },
@@ -126,8 +126,8 @@ export const analyticsSnapshot = {
       "id": "guidance",
       "title": "Structured guidance",
       "status": "partial",
-      "detail": "A 36-document review and expectations-v1 shadow extractor now cover ranges, revisions, floors, assumptions, non-disclosure and verbatim evidence. No reviewed extraction panel or event-study result exists yet.",
-      "next": "Run the human extraction benchmark, preserve all substantive EX-99 files, then test guidance surprise and revision against availability-anchored CAR."
+      "detail": "Expectations-v2 covers ranges, revisions, floors, assumptions and non-disclosure. A 27-statement independent gold benchmark and complete multi-EX-99 routing now exist, but no extraction accuracy result or event study has run.",
+      "next": "Run and review the independent extraction benchmark, then match guidance vintages to actuals and test post-event CAR, drift and reversal."
     },
     {
       "id": "qa",
@@ -203,8 +203,8 @@ export const analyticsSnapshot = {
       "id": "portfolio",
       "title": "Portfolio / sizing",
       "status": "partial",
-      "detail": "Name-level ATM IV/RV20 volatility scaling, sector/ADV caps, weight-change costs and an AAPL scenario replay are implemented. Expected-return-driven construction remains premature.",
-      "next": "Run the frozen home-worker protocol, then assess net risk-adjusted evidence before any production sizing."
+      "detail": "Across 91 months, ATM IV targeting has 8.45% volatility and 11.40% monthly max drawdown versus 9.95% and 14.87% for RV20. Net-return delta CI includes zero, so this is risk evidence, not return alpha.",
+      "next": "Add paired risk-metric uncertainty, non-overlapping daily execution and departed/delisted coverage before production sizing."
     },
     {
       "id": "workerInfra",
@@ -331,8 +331,8 @@ export const analyticsSnapshot = {
       "id": "portfolioRisk",
       "title": "Portfolio risk",
       "status": "partial",
-      "detail": "Volatility scaling, sector/liquidity caps, residual cash and leverage-change costs now exist; portfolio results are not yet measured.",
-      "next": "Run the frozen volatility-target protocol and expand departed/delisted coverage before production claims."
+      "detail": "ATM IV reduces volatility and monthly drawdown versus RV20 across all observed years and both CIK universes; net-return advantage is unproven and caps did not bind in this sample.",
+      "next": "Validate risk-metric uncertainty and daily execution, then expand departed/delisted coverage before production claims."
     },
     {
       "id": "independentValidation",
@@ -380,7 +380,7 @@ export const analyticsSnapshot = {
   "history": [
     {
       "week": "2026-W44",
-      "generatedAt": "2026-10-30T01:59:23.437Z",
+      "generatedAt": "2026-10-30T02:59:31.367Z",
       "metrics": {
         "companies": 495,
         "sectors": 11,
@@ -409,7 +409,7 @@ export const analyticsSnapshot = {
         "macroSeries": 8,
         "macroLastDate": "2026-10-19",
         "jobsError": 8,
-        "testCount": 401,
+        "testCount": 408,
         "optionsSnapshots": 250,
         "normalizedOptionRows": 310634
       }

@@ -1,19 +1,21 @@
 {
-  "protocolId": "alpha-expectations-events-v1",
-  "frozenAt": "2026-10-30T01:52:00Z",
+  "protocolId": "alpha-expectations-events-v2",
+  "frozenAt": "2026-10-30T02:33:04Z",
   "status": "extraction_shadow_no_event_study_results",
   "extraction": {
-    "promptVersion": "expectations-v1",
-    "schemaVersion": 1,
+    "promptVersion": "expectations-v2",
+    "schemaVersion": 2,
     "productionDelivery": false,
     "evidenceRequired": true,
     "llmArithmeticAllowed": false,
-    "candidateDryRun": { "documents": 36, "routed": 31, "noCandidateText": 5 }
+    "candidateDryRun": { "documents": 36, "routed": 31, "noCandidateText": 5 },
+    "benchmark": { "benchmarkId": "expectations-gold-v1", "documents": 12, "requiredStatements": 27, "extraStatementsAreNotAutoErrors": true },
+    "multiExhibitSmoke": { "ticker": "JPM", "accessionNo": "0001628280-26-065582", "exhibits": 2, "passed": true }
   },
   "requiredCoverage": {
     "forms": ["10-K", "10-Q", "8-K", "amendments"],
     "exhibits": "Preserve all substantive earnings EX-99 documents, including main release and supplement",
-    "actuals": "Same metric, scope, period, unit and accounting basis as guidance",
+    "actuals": "Same metric, scope, period, unit, accounting basis and currency basis as guidance",
     "consensus": "Point-in-time provider estimate with publication timestamp; null when unavailable",
     "availability": "Filing acceptance timestamp and conservative post-close handling"
   },
@@ -25,6 +27,24 @@
     "consensusSurprise": "(actual - consensusAtCutoff) / max(abs(consensusAtCutoff), scale)",
     "reactionZ": "CAR[0,1] / availabilityMatchedExpectedMoveReturn",
     "reversal": "-sign(CAR[0,1]) * CAR[2,10]"
+  },
+  "timingModel": {
+    "eventTime": "SEC filing acceptance timestamp; conservative post-close classification when exact time is unavailable",
+    "latencyPolicy": "EOD prices cannot establish minute/hour latency. Immediate reaction is measured, never assumed tradable. Intraday claims require timestamped intraday data.",
+    "windows": {
+      "immediate": { "label": "[0,1]", "role": "measurement_only", "entry": "no same-print execution" },
+      "earlyPostEvent": { "label": "[2,5]", "role": "reversal_or_continuation", "entry": "only after the first executable close and all feature timestamps" },
+      "delayedDrift": { "label": "[6,21]", "role": "gradual_information_processing", "entry": "point-in-time features only" },
+      "interReport": { "label": "[22,63]", "role": "separate_fundamental_realization_model", "entry": "not a pure crowd-psychology test" }
+    },
+    "models": {
+      "preEventRisk": "Exposure and expected-move risk only; the unreleased report is never an input",
+      "immediateReaction": "Descriptive event study, not an executable signal",
+      "postEventResidual": "Uses only information available after the first executable close; predicts later residual reversal or continuation",
+      "interReportFundamental": "Separate long-window model with macro and subsequent-disclosure confounding controls"
+    },
+    "nullReaction": "A valid null outcome; no signal and no forced position",
+    "overreactionDefinition": "Residual reaction after controlling for compatible guidance, consensus, segment and financing revisions; a large price drop alone is not mispricing"
   },
   "primaryHypotheses": [
     "own_guidance_miss_negative_car",
@@ -41,13 +61,14 @@
   "validation": {
     "independentUniverses": ["oddCik", "evenCik"],
     "robustness": ["calendarYear", "sector", "guidanceHorizon", "basis", "marketRegime", "costScenario"],
-    "multipleTesting": "Benjamini-Hochberg FDR across primary endpoints",
+    "multipleTesting": "Benjamini-Hochberg FDR across primary endpoints and preregistered event windows",
     "minimumHistoryForCredibility": 8,
     "productionBlockedUntil": [
-      "human_reviewed_extraction_benchmark_passes",
+      "independent_reviewed_extraction_benchmark_passes",
       "multi_exhibit_coverage_passes",
       "period_unit_basis_matching_passes",
       "departed_and_delisted_universe_added",
+      "intraday_latency_claims_require_intraday_data",
       "event_study_survives_validation_and_holdout"
     ]
   },
@@ -58,6 +79,8 @@
     "execution": "No after-hours commentary treated as an executable close fill",
     "consensusVintage": "Never use a later consensus estimate as the pre-event expectation",
     "guidanceVintage": "Never compare actuals with a revised guidance value published after the original target was set",
+    "postEventFeatureCutoff": "First-reaction returns are features only for positions entered after that reaction is observable",
+    "overlappingWindowInference": "Use autocorrelation-aware inference for overlapping drift windows",
     "tuning": "No sealed-holdout tuning; failed and null results remain in output"
   },
   "oosUsedForTuning": false

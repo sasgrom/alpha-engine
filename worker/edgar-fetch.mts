@@ -33,6 +33,7 @@ import { fetchDoc, fetchFilingDocument, isEightKForm, isPermanentSecMissing, lis
 import { startProgress } from "./lib/progress";
 import { writeJsonAtomic } from "./lib/json-file";
 
+export interface CachedExhibitFile { name: string; size: number; sha256: string }
 export interface ManifestEntry extends EdgarFiling {
   docName: string | null;
   fetched: boolean;
@@ -40,6 +41,9 @@ export interface ManifestEntry extends EdgarFiling {
   /** 8-K meat lives in EX-99.x — largest textual exhibit cached as <accn>.ex.htm */
   exFile?: string | null;
   exChecked?: boolean;
+  /** Expectations-only complete EX-99 set; legacy tone keeps exFile unchanged. */
+  exhibitFiles?: CachedExhibitFile[];
+  exhibitsComplete?: boolean;
   error?: string;
   /** consecutive fetch failures; ≥ MAX_FAILURES → dead (SEC link is truly gone) */
   failCount?: number;

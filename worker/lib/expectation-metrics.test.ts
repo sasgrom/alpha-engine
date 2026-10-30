@@ -15,7 +15,7 @@ import {
 const statement = (overrides: Partial<ExpectationStatement> = {}): ExpectationStatement => ({
   kind: "guidance", metricRaw: "Revenue", metric: "revenue", scopeRaw: "Consolidated", periodRaw: "FY2026", comparisonRaw: "FY2025",
   qualifier: "range", valueLow: 60.5, valueHigh: 62.5, valuePoint: null, tolerance: null, toleranceUnit: null, valueText: null,
-  unit: "usd_billions", basis: "reported", revision: "raised", previousLow: 59.5, previousHigh: 62.5, previousPoint: null,
+  unit: "usd_billions", basis: "reported", currencyBasis: "reported", revision: "raised", previousLow: 59.5, previousHigh: 62.5, previousPoint: null,
   previousGuidanceDateRaw: "previous quarter", assumptionRaw: null, sourceSection: "Guidance", evidence: "Revenue is expected to be $60.5 to $62.5 billion",
   ...overrides,
 });
@@ -24,7 +24,7 @@ describe("deterministic expectation metrics", () => {
   it("requires exact metric, scope, period, unit and basis compatibility", () => {
     const guidance = statement();
     expect(expectationPairCompatible(guidance, statement({ kind: "actual" }))).toBe(true);
-    expect(expectationPairCompatible(guidance, statement({ kind: "actual", basis: "constant_currency" }))).toBe(false);
+    expect(expectationPairCompatible(guidance, statement({ kind: "actual", currencyBasis: "constant_currency" }))).toBe(false);
     expect(expectationPairCompatible(guidance, statement({ kind: "actual", scopeRaw: "AWS" }))).toBe(false);
     expect(expectationPairCompatible(guidance, statement({ kind: "actual", periodRaw: "Q4 2026" }))).toBe(false);
   });

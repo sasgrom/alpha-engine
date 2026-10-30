@@ -144,10 +144,14 @@ export default function Methodology() {
                   <tr><td>MAE</td><td>13.58</td><td>13.91</td><td>Lower absolute error</td></tr>
                   <tr><td>RMSE</td><td>26.30</td><td>28.03</td><td>Lower tail-sensitive error</td></tr>
                   <tr><td>Mean actual / expected</td><td>0.899</td><td>1.057</td><td>RV20 overestimates more</td></tr>
+                  <tr><td>Targeted annualized volatility</td><td>8.45%</td><td>9.95%</td><td>15.11% lower with ATM IV</td></tr>
+                  <tr><td>Targeted max drawdown</td><td>11.40%</td><td>14.87%</td><td>Monthly observations, not a daily equity curve</td></tr>
+                  <tr><td>Targeted net-return delta</td><td>−9.13 bps / month <small>95% CI −21.24…+6.42</small></td><td>baseline</td><td>No proven return advantage</td></tr>
                 </tbody>
               </table>
             </div>
             <p>All 90 months and both independent CIK universes are positive for ATM IV. The paired advantage also wins in every month of 2025–2026. That supports <strong>volatility and sizing value</strong>, not directional alpha.</p>
+            <p>In the 91-month volatility-target run, ATM IV also reduced volatility and monthly drawdown in every calendar year and in both independent universes. Its Sharpe-like ratio was 1.151 versus 1.087 for RV20, but the net-return confidence interval crossed zero. This is evidence for the <strong>risk layer</strong>, not a return forecast.</p>
           </Section>
 
           <Section id="use-cases" title="06 · Use cases">
@@ -156,7 +160,7 @@ export default function Methodology() {
               <UseCase title="Expected-return normalization" formula="z_i = R_i / EM_i">Normalize expected return by expected move. This compares opportunities by risk-adjusted magnitude rather than by raw return, avoiding the false equivalence of high- and low-volatility names.</UseCase>
               <UseCase title="Risk dashboard" formula="EM, RV20, actual / expected, coverage, MAE, RMSE">Monitor implied versus realized volatility, calibration error, risk bands and regime deterioration. Alerts concern changing risk, not automatic bearishness.</UseCase>
             </div>
-            <div className="methodology-callout">Implementation status: paired baseline and expected-move calibration are complete; the volatility-target research engine and scenario risk replay are implemented; a normalized magnitude model still awaits a preregistered expected-return series. Term slope, skew25 and VRP remain outside production because their evidence is weak or regime-dependent.</div>
+            <div className="methodology-callout">Implementation status: paired baseline and expected-move calibration are complete; the 91-month volatility-target run supports risk reduction but not return alpha; the scenario risk replay is implemented; a normalized magnitude model still awaits a preregistered expected-return series. Term slope, skew25 and VRP remain outside production because their evidence is weak or regime-dependent.</div>
           </Section>
 
           <Section id="case-study" title="07 · AAPL risk profile">

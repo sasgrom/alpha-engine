@@ -26,6 +26,7 @@ const statement = (overrides: Record<string, unknown> = {}) => ({
   valueText: null,
   unit: "usd_billions",
   basis: "reported",
+  currencyBasis: "reported",
   revision: "initial",
   previousLow: null,
   previousHigh: null,

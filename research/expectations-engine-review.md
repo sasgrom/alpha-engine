@@ -45,7 +45,7 @@ Each statement retains:
 - kind: guidance, actual, assumption, financing, timing or explicit non-disclosure;
 - raw and canonical metric, consolidated/segment scope, target and comparison periods;
 - range, point, plus/minus, floor, ceiling, approximate, unchanged or qualitative value form;
-- unit, GAAP/non-GAAP/constant-currency/reported/adjusted basis;
+- unit, accounting basis (GAAP/non-GAAP/reported/adjusted) and a separate currency basis (reported/constant-currency);
 - initial/raised/lowered/narrowed/widened/reaffirmed revision and prior guidance values when stated in the same document;
 - assumptions, source section and a contiguous verbatim evidence quote.
 
@@ -80,14 +80,26 @@ These are hypotheses, not accepted alpha. Every test needs an equal-information 
 
 - Company guidance is not analyst consensus. The two series must remain separate.
 - The price reaction can reflect information already priced in, positioning, macro news and other same-window disclosures; raw return is not enough.
-- The current EDGAR fetch stores only the largest textual EX-99 exhibit. JPM demonstrates why the main release and supplement must both be preserved before full expectations coverage is claimed.
+- Legacy tone still uses only the largest textual EX-99 exhibit. The expectations-specific exhibit worker now preserves the complete substantive set with hashes. JPM’s main narrative and supplement were verified as two separate files; full-universe coverage remains a gate.
 - GAAP actuals must not be compared with non-GAAP guidance, and reported growth must not be compared with constant-currency guidance without an explicit compatible series.
 - Current-company universes have survivorship bias. Departed/delisted firms remain mandatory for production claims.
 - Post-close filings require next-session execution; after-hours commentary is not an executable close price.
 - Blogger/LLM narrative is a hypothesis about what other investors may notice, not source evidence for the underlying financial claim.
 
-## 7. Implementation state
+## 7. Timing and the post-factum hypothesis
 
-`worker/edgar-expectations.mts` is a local-only shadow extractor with deterministic candidate routing, strict typed output, evidence rejection, atomic per-company checkpoints and no production delivery. The existing tone v1 runner and its manifests are unchanged. A dry-run over all 36 sampled documents routed 31 documents to extraction and returned `no_candidate_text` for five, avoiding LLM calls where no relevant block was found.
+Immediate reaction, delayed processing and post-event reversal are separate events. The current EOD dataset cannot establish whether the market took minutes, hours or part of a session: that requires timestamped intraday prices. It can measure the first executable close-to-close reaction and later drift without pretending that the first print was tradable.
 
-The next gate is a small human-reviewed extraction benchmark before any full-history GPU run. Full-history performance tests are prohibited until extraction accuracy, multi-exhibit coverage and period/basis matching pass review.
+The preregistered windows are `[0,1]` for measurement only, `[2,5]` for early continuation/reversal, `[6,21]` for delayed processing and `[22,63]` for a separate fundamental-realization model. A position using the first reaction as a feature can be entered only after that reaction is observable. A quiet market is a valid null result, not a reason to invent a position.
+
+Post-factum calm analysis is useful only when it estimates residual reaction after compatible guidance, consensus, segment and financing revisions. A large decline by itself does not establish undervaluation. If forward cash-flow expectations broke, continuation may be rational; if the reaction is large relative to a mostly unchanged forward path and a source-supported timing explanation, reversal becomes a testable hypothesis.
+
+Academic literature supports testing both underreaction and overreaction rather than assuming one universal delay. In particular, [Hirshleifer, Lim and Teoh (2009)](https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1540-6261.2009.01501.x) study distraction-related underreaction, while the broader PEAD literature reports continuation and reversal in different conditions. These references guide windows; they do not substitute for a local preregistered test.
+
+## 8. Implementation state
+
+`worker/edgar-expectations.mts` is a local-only expectations-v2 shadow extractor with deterministic candidate routing, strict typed output, evidence rejection, atomic per-company checkpoints and no production delivery. The existing tone v1 runner and its manifests are unchanged. A dry-run over all 36 sampled documents routed 31 documents to extraction and returned `no_candidate_text` for five, avoiding LLM calls where no relevant block was found.
+
+An independent gold benchmark now covers 12 official documents and 27 required statements across range, floor, point-tolerance, qualitative non-disclosure, revision, GAAP/non-GAAP and constant-currency cases. It fails closed when extraction results are absent and treats additional statements as review items rather than automatic errors.
+
+The next gate is to run the extractor on this benchmark and review mismatches before any full-history GPU run. Full-history performance tests are prohibited until extraction accuracy, multi-exhibit coverage and period/basis matching pass review.

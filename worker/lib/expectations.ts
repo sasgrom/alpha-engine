@@ -2,8 +2,8 @@ import { z } from "zod";
 import { isEightKForm } from "./edgar";
 import { MAX_INPUT_CHARS } from "./ollama";
 
-export const EXPECTATIONS_PROMPT_VERSION = "expectations-v1";
-export const EXPECTATIONS_SCHEMA_VERSION = 1;
+export const EXPECTATIONS_PROMPT_VERSION = "expectations-v2";
+export const EXPECTATIONS_SCHEMA_VERSION = 2;
 
 const nullableNumber = z.number().finite().nullable();
 const statementSchema = z.object({
@@ -25,7 +25,8 @@ const statementSchema = z.object({
   toleranceUnit: z.enum(["percent", "basis_points", "same_unit"]).nullable(),
   valueText: z.string().max(120).nullable(),
   unit: z.enum(["usd", "usd_millions", "usd_billions", "usd_per_share", "percent", "basis_points", "ratio", "days", "count", "text", "other"]),
-  basis: z.enum(["gaap", "non_gaap", "constant_currency", "reported", "adjusted", "mixed", "unclear"]),
+  basis: z.enum(["gaap", "non_gaap", "reported", "adjusted", "mixed", "unclear"]),
+  currencyBasis: z.enum(["reported", "constant_currency", "unclear"]),
   revision: z.enum(["initial", "raised", "lowered", "narrowed", "widened", "reaffirmed", "actual", "not_provided", "unclear"]),
   previousLow: nullableNumber,
   previousHigh: nullableNumber,
@@ -69,7 +70,7 @@ export const EXPECTATION_JSON_SCHEMA = {
           qualifier: { type: "string" }, valueLow: { anyOf: [{ type: "number" }, { type: "null" }] },
           valueHigh: { anyOf: [{ type: "number" }, { type: "null" }] }, valuePoint: { anyOf: [{ type: "number" }, { type: "null" }] },
           tolerance: { anyOf: [{ type: "number" }, { type: "null" }] }, toleranceUnit: { anyOf: [{ type: "string" }, { type: "null" }] },
-          valueText: { anyOf: [{ type: "string" }, { type: "null" }] }, unit: { type: "string" }, basis: { type: "string" }, revision: { type: "string" },
+          valueText: { anyOf: [{ type: "string" }, { type: "null" }] }, unit: { type: "string" }, basis: { type: "string" }, currencyBasis: { type: "string" }, revision: { type: "string" },
           previousLow: { anyOf: [{ type: "number" }, { type: "null" }] }, previousHigh: { anyOf: [{ type: "number" }, { type: "null" }] },
           previousPoint: { anyOf: [{ type: "number" }, { type: "null" }] }, previousGuidanceDateRaw: { anyOf: [{ type: "string" }, { type: "null" }] },
           assumptionRaw: { anyOf: [{ type: "string" }, { type: "null" }] }, sourceSection: { anyOf: [{ type: "string" }, { type: "null" }] },
@@ -77,7 +78,7 @@ export const EXPECTATION_JSON_SCHEMA = {
         },
         required: [
           "kind", "metricRaw", "metric", "scopeRaw", "periodRaw", "comparisonRaw", "qualifier", "valueLow", "valueHigh",
-          "valuePoint", "tolerance", "toleranceUnit", "valueText", "unit", "basis", "revision", "previousLow", "previousHigh",
+          "valuePoint", "tolerance", "toleranceUnit", "valueText", "unit", "basis", "currencyBasis", "revision", "previousLow", "previousHigh",
           "previousPoint", "previousGuidanceDateRaw", "assumptionRaw", "sourceSection", "evidence",
         ],
       },
@@ -101,7 +102,7 @@ Return ONLY one JSON object matching the supplied schema. Extract facts; do not 
 Rules:
 - guidanceStatus=found when numeric or substantive qualitative management guidance exists. Use deferred_to_call when the document points to a call for guidance. Use explicitly_not_provided only when management explicitly declines a guidance metric. Use not_found when no guidance is present in this document.
 - Extract every material guidance statement and the reported actual metrics needed to compare it later. Include segment metrics, cash flow, capex, debt/financing and timing adjustments when they explain the outlook or headline result.
-- Preserve the exact metric, segment/scope, target period, comparison period and accounting basis. Never compare GAAP with non-GAAP or reported with constant-currency values yourself.
+- Preserve the exact metric, segment/scope, target period and comparison period. Store accounting basis (GAAP/non-GAAP/adjusted) separately from currencyBasis (reported/constant_currency). Never compare different bases yourself.
 - range: valueLow/valueHigh. point: valuePoint. plus_minus: valuePoint plus tolerance/toleranceUnit. at_least: valueLow. at_most: valueHigh. approximately: valuePoint. Keep qualitative phrases such as "high teens" in valueText with numeric fields null.
 - raised/lowered/narrowed/widened/reaffirmed refer to guidance vintage, not year-over-year results. Populate previous* only when the document states prior guidance; never infer it from a different filing.
 - Do not perform arithmetic, midpoint calculations, annualization, FX adjustment or unit conversion. Do not invent consensus, analyst expectations, dates, values or causal explanations.

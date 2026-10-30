@@ -17,6 +17,7 @@ import {
   type ExpectationResponse,
 } from "./lib/expectations";
 import { generate, LLM_MODEL, status } from "./lib/ollama";
+import { exhibitCacheName } from "./lib/exhibits";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
 import type { ManifestEntry } from "./edgar-fetch.mts";
@@ -32,7 +33,7 @@ const limitValue = Number(arg("--limit") ?? 0);
 if (!Number.isInteger(limitValue) || limitValue < 0) throw new Error("--limit must be a non-negative integer");
 const limit = limitValue || null;
 const cacheDir = (cik: number) => path.resolve(import.meta.dirname, "cache", "edgar", String(cik));
-const resultPath = (cik: number) => path.join(cacheDir(cik), "expectations-v1.json");
+const resultPath = (cik: number) => path.join(cacheDir(cik), "expectations-v2.json");
 const supportedForm = (form: string) => /^(?:10-K|10-Q|8-K)(?:\/A)?$/.test(form);
 
 interface Usage { promptTokens: number; evalCount: number; promptMs: number; evalMs: number; totalMs: number }
@@ -67,10 +68,16 @@ function readResults(cik: number): ResultFile {
     return { schemaVersion: EXPECTATIONS_SCHEMA_VERSION, entries: [] };
   }
 }
-function sourceFor(cik: number, entry: ManifestEntry): string {
+function sourcesFor(cik: number, entry: ManifestEntry): string[] {
   const base = entry.accessionNo.replace(/-/g, "");
-  const exhibit = path.join(cacheDir(cik), `${base}.ex.htm`);
-  return isEightKForm(entry.form) && entry.exFile && existsSync(exhibit) ? exhibit : path.join(cacheDir(cik), `${base}.htm`);
+  if (isEightKForm(entry.form)) {
+    if (entry.exhibitFiles?.length) {
+      return entry.exhibitFiles.map((file) => path.join(cacheDir(cik), exhibitCacheName(entry.accessionNo, file.name))).filter((file) => existsSync(file));
+    }
+    const legacy = path.join(cacheDir(cik), `${base}.ex.htm`);
+    if (entry.exFile && existsSync(legacy)) return [legacy];
+  }
+  return [path.join(cacheDir(cik), `${base}.htm`)];
 }
 const sha256 = (value: string) => createHash("sha256").update(value).digest("hex");
 
@@ -92,10 +99,10 @@ for (const company of universe) {
   try { manifest = JSON.parse(readFileSync(path.join(cacheDir(company.cik), "manifest.json"), "utf8")); }
   catch { prog.log(`${company.ticker}: no manifest`); continue; }
   const candidates = manifest.filter((entry) => entry.fetched && supportedForm(entry.form) && (!from || entry.filingDate >= from)).slice(0, limit ?? undefined);
+  const tasks = candidates.flatMap((filing) => sourcesFor(company.cik, filing).map((sourceFile) => ({ filing, sourceFile })));
   const result = readResults(company.cik);
   let consecutiveFailures = 0;
-  for (const filing of candidates) {
-    const sourceFile = sourceFor(company.cik, filing);
+  for (const { filing, sourceFile } of tasks) {
     let plain: string;
     try { plain = derivePlaintext(readFileSync(sourceFile, "utf8")); }
     catch {
@@ -104,7 +111,7 @@ for (const company of universe) {
     }
     const selected = selectExpectationText(plain, filing.form);
     const inputSha256 = sha256(`${filing.form}\n${filing.filingDate}\n${selected.text}`);
-    const prior = result.entries.find((entry) => entry.accessionNo === filing.accessionNo && entry.inputSha256 === inputSha256 && entry.model === LLM_MODEL && entry.promptVersion === EXPECTATIONS_PROMPT_VERSION);
+    const prior = result.entries.find((entry) => entry.accessionNo === filing.accessionNo && entry.sourceFile === sourceFile && entry.inputSha256 === inputSha256 && entry.model === LLM_MODEL && entry.promptVersion === EXPECTATIONS_PROMPT_VERSION);
     if (prior && prior.status !== "request_failed" && prior.status !== "unparsed") {
       totals.resumed++;
       continue;
@@ -118,7 +125,7 @@ for (const company of universe) {
     };
     if (selected.status === "no_candidate_text") {
       base.status = "no_candidate_text";
-      result.entries = [...result.entries.filter((entry) => entry.accessionNo !== filing.accessionNo), base];
+      result.entries = [...result.entries.filter((entry) => !(entry.accessionNo === filing.accessionNo && entry.sourceFile === sourceFile)), base];
       if (!dryRun) writeJsonAtomic(resultPath(company.cik), result, true);
       totals.noCandidate++;
       continue;
@@ -159,7 +166,7 @@ for (const company of universe) {
       totals.failed++;
       consecutiveFailures++;
     }
-    result.entries = [...result.entries.filter((entry) => entry.accessionNo !== filing.accessionNo), base];
+    result.entries = [...result.entries.filter((entry) => !(entry.accessionNo === filing.accessionNo && entry.sourceFile === sourceFile)), base];
     writeJsonAtomic(resultPath(company.cik), result, true);
     if (consecutiveFailures >= 2) {
       prog.log(`${company.ticker}: two consecutive LLM failures; state checkpointed, aborting`);
@@ -168,6 +175,6 @@ for (const company of universe) {
     }
   }
   if (!dryRun) writeJsonAtomic(resultPath(company.cik), result, true);
-  prog.stageDone(`${company.ticker}: candidates ${candidates.length} · resumed ${totals.resumed} · extracted ${totals.extracted} · no-candidate ${totals.noCandidate}`);
+  prog.stageDone(`${company.ticker}: sources ${tasks.length} · resumed ${totals.resumed} · extracted ${totals.extracted} · no-candidate ${totals.noCandidate}`);
 }
 prog.done(`all done · extracted ${totals.extracted} · empty ${totals.empty} · no-candidate ${totals.noCandidate} · unparsed ${totals.unparsed} · failed ${totals.failed} · resumed ${totals.resumed} · rejected evidence ${totals.rejectedEvidence} · prompt ${totals.promptTokens} tok · generated ${totals.evalCount} tok`);
