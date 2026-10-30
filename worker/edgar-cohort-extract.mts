@@ -6,6 +6,7 @@ import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { loadEdgarUniverse } from "./lib/edgar";
+import { dedupeExpectationUniverse } from "./lib/universe";
 import { buildCohortExpectationPrompt, cohortSourceText, type CohortPack } from "./lib/cohort-pack";
 import {
   EXPECTATION_JSON_SCHEMA,
@@ -75,17 +76,22 @@ if (!dryRun) {
   if (!st.ok) throw new Error("Ollama daemon not reachable at 127.0.0.1:11434");
   if (!st.models.some((model) => model === LLM_MODEL || model.startsWith(`${LLM_MODEL.split(":")[0]}:`))) throw new Error(`Model ${LLM_MODEL} is not pulled`);
 }
-const universeAll = loadEdgarUniverse(universeFile).filter((company) => !only || company.ticker === only);
+const universeAll = dedupeExpectationUniverse(loadEdgarUniverse(universeFile).filter((company) => !only || company.ticker === only));
 if (only && !universeAll.length) throw new Error(`Unknown ticker ${only}`);
 const start = fromTicker ? universeAll.findIndex((company) => company.ticker === fromTicker) : 0;
 if (fromTicker && start < 0) throw new Error(`Unknown --from-ticker ${fromTicker}`);
 const universe = universeAll.slice(Math.max(0, start));
 const prog = startProgress("edgar-cohort-extract", `${EXPECTATIONS_PROMPT_VERSION} · per-source extraction · target-only evidence`);
-const totals = { containers: 0, sources: 0, extracted: 0, empty: 0, unparsed: 0, failed: 0, resumed: 0, rejectedEvidence: 0, promptTokens: 0, evalCount: 0 };
+const totals = { containers: 0, sources: 0, planned: 0, extracted: 0, empty: 0, unparsed: 0, failed: 0, resumed: 0, rejectedEvidence: 0, promptTokens: 0, evalCount: 0, missingPacks: 0 };
 for (const company of universe) {
   let pack: CohortPack;
   try { pack = JSON.parse(readFileSync(path.join(cacheDir(company.cik), "cohort-pack-v2.json"), "utf8")) as CohortPack; }
-  catch { throw new Error(`${company.ticker}: cohort-pack-v2.json missing. Run npx tsx worker/edgar-cohorts.mts --universe ${universeFile}${only ? ` --only ${only}` : ""} first`); }
+  catch {
+    if (only) throw new Error(`${company.ticker}: cohort-pack-v2.json missing. Run npx tsx worker/edgar-cohorts.mts --universe ${universeFile} --only ${only} first`);
+    totals.missingPacks++;
+    prog.log(`${company.ticker}: cohort-pack-v2.json missing; skipped`);
+    continue;
+  }
   const result: CohortResultFile = rescore
     ? { schemaVersion: EXPECTATIONS_SCHEMA_VERSION, contextTokens: pack.contextTokens, packGeneratedAt: pack.generatedAt, unpacked: pack.unpacked, entries: [] }
     : (() => { try { return JSON.parse(readFileSync(outputPath(company.cik), "utf8")) as CohortResultFile; } catch { return { schemaVersion: EXPECTATIONS_SCHEMA_VERSION, contextTokens: pack.contextTokens, packGeneratedAt: pack.generatedAt, unpacked: pack.unpacked, entries: [] }; } })();
@@ -132,7 +138,7 @@ for (const company of universe) {
       updatedAt: new Date().toISOString(),
     };
     if (dryRun) {
-      totals.extracted++;
+      totals.planned++;
       prog.log(`${company.ticker} ${container.containerId} ${source.sourceId}: ${(Buffer.byteLength(targetText) / 1024).toFixed(1)} KiB target · ${container.estimatedTokens.toLocaleString("en-US")} tok container`);
       continue;
     }
@@ -178,6 +184,6 @@ for (const company of universe) {
   }
   totals.containers += tasks.length;
   writeJsonAtomic(outputPath(company.cik), result, true);
-  prog.stageDone(`${company.ticker}: sources ${tasks.length} · extracted ${totals.extracted} · resumed ${totals.resumed} · rejected ${totals.rejectedEvidence}`);
+  prog.stageDone(`${company.ticker}: sources ${tasks.length} · ${dryRun ? `planned ${totals.planned}` : `extracted ${totals.extracted}`} · resumed ${totals.resumed} · rejected ${totals.rejectedEvidence}`);
 }
-prog.done(`all done · sources ${totals.sources} · extracted ${totals.extracted} · empty ${totals.empty} · unparsed ${totals.unparsed} · failed ${totals.failed} · resumed ${totals.resumed} · rejected evidence ${totals.rejectedEvidence} · prompt ${totals.promptTokens} tok · generated ${totals.evalCount} tok`);
+prog.done(`all done · sources ${totals.sources} · ${dryRun ? `planned ${totals.planned}` : `extracted ${totals.extracted}`} · empty ${totals.empty} · unparsed ${totals.unparsed} · failed ${totals.failed} · resumed ${totals.resumed} · rejected evidence ${totals.rejectedEvidence} · missing packs ${totals.missingPacks} · prompt ${totals.promptTokens} tok · generated ${totals.evalCount} tok`);

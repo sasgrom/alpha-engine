@@ -18,6 +18,7 @@ import {
 } from "./lib/expectations";
 import { generate, LLM_MODEL, status } from "./lib/ollama";
 import { expectationSourcesFor } from "./lib/expectation-sources";
+import { dedupeExpectationUniverse } from "./lib/universe";
 import { selectLatestFilings } from "./lib/filing-selection";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
@@ -85,7 +86,7 @@ if (!dryRun) {
   if (!st.models.some((model) => model === LLM_MODEL || model.startsWith(`${LLM_MODEL.split(":")[0]}:`))) throw new Error(`Model ${LLM_MODEL} is not pulled`);
 }
 const prog = startProgress("edgar-expectations", `${EXPECTATIONS_PROMPT_VERSION} · local shadow only · ${dryRun ? "dry-run" : `model ${LLM_MODEL}`}`);
-const universeAll = loadEdgarUniverse(universeFile).filter((company) => !only || company.ticker === only);
+const universeAll = dedupeExpectationUniverse(loadEdgarUniverse(universeFile).filter((company) => !only || company.ticker === only));
 if (only && !universeAll.length) throw new Error(`Unknown ticker ${only}`);
 const startIndex = fromTicker ? universeAll.findIndex((company) => company.ticker === fromTicker) : 0;
 if (fromTicker && startIndex < 0) throw new Error(`Unknown --from-ticker ${fromTicker}`);

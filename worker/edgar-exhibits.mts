@@ -8,6 +8,7 @@ import path from "node:path";
 import { fetchDoc, isEightKForm, listFilingDocs, loadEdgarUniverse, realCacheRoot } from "./lib/edgar";
 import { exhibitCacheName, selectSubstantiveExhibits } from "./lib/exhibits";
 import { selectLatestFilings } from "./lib/filing-selection";
+import { dedupeExpectationUniverse } from "./lib/universe";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
 import type { CachedExhibitFile, ManifestEntry } from "./edgar-fetch.mts";
@@ -49,7 +50,7 @@ function validCachedFiles(cik: number, accessionNo: string, files: CachedExhibit
 }
 const exhibitPath = (cik: number, accessionNo: string, name: string) => path.join(cacheDir(cik), exhibitCacheName(accessionNo, name));
 
-const universeAll = loadEdgarUniverse(universeFile).filter((company) => !only || company.ticker === only);
+const universeAll = dedupeExpectationUniverse(loadEdgarUniverse(universeFile).filter((company) => !only || company.ticker === only));
 if (only && !universeAll.length) throw new Error(`Unknown ticker ${only}`);
 const start = fromTicker ? universeAll.findIndex((company) => company.ticker === fromTicker) : 0;
 if (fromTicker && start < 0) throw new Error(`Unknown --from-ticker ${fromTicker}`);

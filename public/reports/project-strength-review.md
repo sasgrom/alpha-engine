@@ -35,7 +35,7 @@ The strongest parts are engineering, provenance, idempotency, recovery, availabi
 | Position events | 16,422 events with actual filing dates |
 | Macro | 47,901 observations from 8 series |
 | Options | 250 snapshots and 310,634 normalized rows |
-| Tests | 426 tests plus desktop/mobile browser checks |
+| Tests | 427 tests plus desktop/mobile browser checks |
 
 These values describe the current database and local manifests, not an invented weekly trend.
 

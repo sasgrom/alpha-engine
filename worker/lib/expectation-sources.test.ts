@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { expectationSourcesFor } from "./expectation-sources";
+import { dedupeExpectationUniverse } from "./universe";
 import type { ManifestEntry } from "../edgar-fetch.mts";
 
 const dirs: string[] = [];
@@ -39,5 +40,13 @@ describe("expectation source paths", () => {
     expect(sources).toHaveLength(1);
     expect(sources[0].role).toBe("amendment");
     expect(sources[0].sourceFile).toBe(path.join(dir, `${base}.ex.htm`));
+  });
+
+  it("processes a shared CIK once and keeps an explicitly requested predecessor", () => {
+    const xom = { cik: 34088, ticker: "XOM" };
+    const predecessor = { cik: 34088, ticker: "XOM_PRE" };
+    expect(dedupeExpectationUniverse([predecessor, xom])).toEqual([xom]);
+    expect(dedupeExpectationUniverse([xom, predecessor])).toEqual([xom]);
+    expect(dedupeExpectationUniverse([predecessor])).toEqual([predecessor]);
   });
 });

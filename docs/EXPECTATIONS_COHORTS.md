@@ -108,3 +108,33 @@ The remaining 20% covers the extraction instructions, JSON Schema, model templat
 - `request_failed`: transport or daemon failure; two consecutive failures checkpoint and abort.
 
 A missing result is never converted into a pass. No source, table or amendment is deliberately discarded to make a prompt smaller.
+
+## Missing packs and aliases
+
+Batch extraction skips a missing `cohort-pack-v2.json`, reports `missing packs N` and continues with the next company. `--only` remains fail-fast so a targeted run cannot silently hide a missing input. Dry-run counters are named `planned`, not `extracted`.
+
+Filing pipelines dedupe shared CIKs and prefer the current ticker over a `_PRE` alias, preventing XOM/XOM_PRE from overwriting one another. An explicitly requested predecessor is still processed when `--only XOM_PRE` is used.
+
+For the XOM_PRE missing-pack case, first check:
+
+```powershell
+Test-Path worker/cache/edgar/34088/manifest.json
+Test-Path worker/cache/edgar/34088/cohort-pack-v2.json
+```
+
+If the manifest exists, build only the missing pack and resume:
+
+```powershell
+npx tsx worker/edgar-cohorts.mts --only XOM_PRE --context 32768
+npx tsx worker/edgar-cohort-extract.mts --universe research-universe-53.json --dry-run
+```
+
+If the manifest is absent, restore primary documents first:
+
+```powershell
+npx tsx worker/edgar-fetch.mts --only XOM_PRE
+npx tsx worker/edgar-exhibits.mts --only XOM_PRE
+npx tsx worker/edgar-cohorts.mts --only XOM_PRE --context 32768
+```
+
+PowerShell `ParserError` lines after a Node stack trace are shell interpretation of pasted error text, not additional application failures. Do not execute the stack-trace lines as commands.
