@@ -79,9 +79,9 @@ describe("expectations extraction contract", () => {
   });
 
   it("reports exact schema failure paths for diagnosis", () => {
-    const result = parseExpectationResponseDetailed(JSON.stringify({ guidanceStatus: "found", statements: [statement({ currencyBasis: undefined })], extractionWarnings: [] }));
+    const result = parseExpectationResponseDetailed(JSON.stringify({ guidanceStatus: "found", statements: [statement({ metricRaw: undefined })], extractionWarnings: [] }));
     expect(result.response).toBeNull();
-    expect(result.issues.some((issue) => issue.includes("currencyBasis"))).toBe(true);
+    expect(result.issues.some((issue) => issue.includes("metricRaw"))).toBe(true);
   });
 
   it("normalizes an exact additional capex amount without treating it as a floor", () => {
@@ -133,6 +133,28 @@ describe("expectations extraction contract", () => {
     const result = parseExpectationResponseDetailed(reply([statement({ qualifier: "banana", valueLow: 5, valueHigh: 10 })]));
     expect(result.response).toBeNull();
     expect(result.issues[0]).toContain("qualifier");
+  });
+
+  it("keeps an unknown metric as other with its raw label and normalizes revision", () => {
+    const result = parseExpectationResponseDetailed(reply([
+      statement({ metricRaw: "Royalty revenue from ST", metric: "royalty_revenue", revision: "maintained" }),
+      statement({ metricRaw: "Current guidance", metric: "another_custom_metric", revision: "current guidance" }),
+      statement({ metricRaw: "Updated metric", metric: "updated_metric", revision: "updated" }),
+    ]));
+    expect(result.response?.statements.map((item) => item.metric)).toEqual(["other", "other", "other"]);
+    expect(result.response?.statements.map((item) => item.revision)).toEqual(["reaffirmed", "initial", "unclear"]);
+    expect(result.response?.statements[0].metricRaw).toBe("Royalty revenue from ST");
+    expect(result.normalizations.some((item) => item.includes("royalty_revenue -> other"))).toBe(true);
+  });
+
+  it("marks unknown basis and unit values explicitly instead of dropping the statement", () => {
+    const result = parseExpectationResponseDetailed(reply([
+      statement({ basis: "sometimes", currencyBasis: "unknown", unit: "widgets", toleranceUnit: "furlongs" }),
+    ]));
+    expect(result.response?.statements[0].basis).toBe("unclear");
+    expect(result.response?.statements[0].currencyBasis).toBe("unclear");
+    expect(result.response?.statements[0].unit).toBe("other");
+    expect(result.response?.statements[0].toleranceUnit).toBe("same_unit");
   });
 
   it("rejects malformed or incomplete JSON rather than storing guesses", () => {
