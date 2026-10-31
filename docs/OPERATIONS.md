@@ -125,7 +125,7 @@ powershell -ExecutionPolicy Bypass -File worker\operations-scheduler-install.ps1
 schtasks /Run /TN AlphaEngine-Operations-Scheduler
 ```
 
-The installer creates one `ONLOGON` task. `-DisableLegacyTasks` disables the old Stocktwits, GDELT and Digest tasks so they cannot duplicate the new scheduler. GDELT remains frozen. To inspect or stop the scheduler:
+The installer creates one `ONLOGON` task. `-DisableLegacyTasks` disables old Stocktwits, GDELT and Digest tasks when present and skips tasks that do not exist, so reruns are idempotent. GDELT remains frozen. To inspect or stop the scheduler:
 
 ```powershell
 schtasks /Query /TN AlphaEngine-Operations-Scheduler /V /FO LIST
