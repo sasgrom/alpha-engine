@@ -888,3 +888,29 @@
 }
 
 .ops-expected { max-width: 100%; margin: 7px 0 0; padding: 11px 12px; overflow-x: auto; background: hsl(var(--secondary) / 0.65); color: hsl(var(--ok)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 9px; line-height: 1.65; white-space: pre; }
+
+/* Schwab Feature Lab */
+.feature-lab { display: grid; gap: 14px; }
+.feature-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 15px 17px; }
+.feature-toolbar > div { display: grid; gap: 4px; }
+.feature-toolbar strong { color: hsl(var(--live)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 20px; font-weight: 500; }
+.feature-toolbar small { color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 9px; }
+.feature-toolbar select { min-width: 150px; min-height: 38px; padding: 7px 10px; border: 1px solid hsl(var(--border)); background: hsl(var(--secondary) / 0.45); color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; }
+.feature-chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.feature-chart { min-width: 0; padding: 13px 12px 6px; }
+.feature-chart-title { display: flex; align-items: flex-start; gap: 8px; padding: 0 6px 8px; color: hsl(var(--live)); }
+.feature-chart-title > div { display: grid; gap: 3px; }
+.feature-chart-title strong { color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; font-weight: 500; }
+.feature-chart-title span { color: hsl(var(--muted-foreground)); font-size: 10px; line-height: 1.45; }
+.feature-table { min-width: 1220px; }
+.feature-notes { display: grid; gap: 7px; color: hsl(var(--muted-foreground)); font-size: 10px; line-height: 1.55; }
+.feature-notes > div { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 10px; }
+.feature-notes strong { color: hsl(var(--warn)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 9px; font-weight: 500; text-transform: uppercase; }
+@media (max-width: 1000px) {
+  .feature-chart-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .feature-toolbar { align-items: stretch; flex-direction: column; }
+  .feature-toolbar select { width: 100%; }
+  .feature-notes > div { grid-template-columns: 1fr; gap: 3px; }
+}

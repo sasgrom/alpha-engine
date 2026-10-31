@@ -16,7 +16,7 @@ type Config = Record<string, { enabled: boolean; cron: string | null }>;
 const DEFAULT_CONFIG: Config = Object.fromEntries(OPERATION_JOBS.map((job) => [job.id, { enabled: job.defaultEnabled, cron: job.cron }]));
 const DAILY_FLOW = [
   "edgar-fetch-daily", "edgar-exhibits-daily", "facts-fetch-daily", "research-series", "research-factors", "analytics-snapshot",
-  "schwab-fetch-daily", "schwab-snapshot", "expectations-report", "ui-production-build", "daily-digest",
+  "schwab-fetch-daily", "schwab-snapshot", "schwab-feature-lab", "expectations-report", "ui-production-build", "daily-digest",
 ];
 const laneNames = { service: "Services", collect: "Collect", research: "Research", review: "Review", delivery: "Deliver" };
 const modeCopy = { scheduled: "Scheduled", paused: "Paused", manual: "Manual", frozen: "Frozen", blocked: "Review gate" };
