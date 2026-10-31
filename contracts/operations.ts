@@ -65,7 +65,7 @@ export const OPERATION_JOBS: OperationJob[] = [
     id: "schwab-fetch-daily", name: "Schwab REST daily snapshot", group: "options", mode: "scheduled", cron: "0 4 * * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/schwab-fetch.mts", ["--universe", "research-universe-51.json"]), purpose: "Capture chains, quotes, daily price history and instruments with hashes and availability timestamps.",
     input: "Schwab Market Data Production; local token file; research-universe-51.json.", output: "D:-only raw snapshots and a resumable manifest; User Preference status is recorded separately for streaming setup.",
-    destination: "Local Schwab archive only; no orders, accounts or production sync.", requirements: ["network", "driveD"], notes: "Same-day complete tickers resume without redownloading. A User Preference 401 does not invalidate completed REST data.",
+    destination: "Local Schwab archive only; no orders, accounts or production sync.", requirements: ["network", "driveD"], notes: "Same-day complete tickers resume without redownloading. For a fresh intraday snapshot, run the same command with --force: it appends timestamped raw snapshots instead of overwriting history. User Preference 401 does not invalidate REST data.",
   }),
   job({
     id: "schwab-snapshot", name: "Schwab normalized UI snapshot", group: "options", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-fetch-daily"],

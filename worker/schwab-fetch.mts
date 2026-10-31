@@ -5,6 +5,7 @@ import path from "node:path";
 import { isSchwabTokenFresh, loadSchwabToken, refreshSchwabToken, saveSchwabToken, schwabGet, schwabTokenDirectory, schwabTraderGet } from "./lib/schwab";
 import { sha256Text } from "./lib/schwab-normalize";
 import { isSchwabBodyOverflow, mergeSchwabChunks, monthlySchwabChunks } from "./lib/schwab-chain-chunks";
+import { schwabChainFile, schwabChunkDirectory, schwabChunkDirectoryFromFile, schwabQuoteFile } from "./lib/schwab-snapshot";
 import { dedupeExpectationUniverse } from "./lib/universe";
 import { loadEdgarUniverse, realCacheRoot } from "./lib/edgar";
 import { writeJsonAtomic } from "./lib/json-file";
@@ -14,10 +15,11 @@ import type { SchwabManifest, SchwabManifestEntry } from "./lib/schwab-market-da
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const only = arg("--only")?.toUpperCase() ?? null;
 const fromTicker = arg("--from-ticker")?.toUpperCase() ?? null;
+const force = process.argv.includes("--force");
 const universeFile = arg("--universe") ?? "research-universe-51.json";
 const root = path.resolve(arg("--root") ?? schwabTokenDirectory());
 const manifestPath = path.join(root, "manifest.json");
-const prog = startProgress("schwab-fetch", `root ${root} · universe ${universeFile}`);
+const prog = startProgress("schwab-fetch", `root ${root} · universe ${universeFile}${force ? " · force new snapshot" : ""}`);
 if (process.platform === "win32" && !/^d:/i.test(root)) throw new Error("Raw Schwab archives must stay on the D: drive");
 mkdirSync(root, { recursive: true });
 const realRoot = realCacheRoot(root);
@@ -54,7 +56,7 @@ async function request(pathname: string, accessToken: string, service: "market" 
   return result.body;
 }
 const today = new Date().toISOString().slice(0, 10);
-async function fetchChain(ticker: string): Promise<{ raw: string; chunks: number }> {
+async function fetchChain(ticker: string, capturedAt: string): Promise<{ raw: string; chunks: number }> {
   try {
     return { raw: await request(`chains?symbol=${encodeURIComponent(ticker)}&contractType=ALL&includeQuotes=TRUE`, token.access_token), chunks: 1 };
   } catch (error) {
@@ -64,7 +66,7 @@ async function fetchChain(ticker: string): Promise<{ raw: string; chunks: number
     const payloads: { fromDate: string; toDate: string; raw: string }[] = [];
     for (const [index, chunk] of chunks.entries()) {
       const raw = await request(`chains?symbol=${encodeURIComponent(ticker)}&contractType=ALL&includeQuotes=TRUE&fromDate=${chunk.fromDate}&toDate=${chunk.toDate}`, token.access_token);
-      writeTextAtomic(path.join(root, `chains/${today}/chunks/${ticker}/${chunk.fromDate}_${chunk.toDate}.json`), raw);
+      writeTextAtomic(path.join(root, `${schwabChunkDirectory(today, ticker, capturedAt, force)}/${chunk.fromDate}_${chunk.toDate}.json`), raw);
       payloads.push({ ...chunk, raw });
       if ((index + 1) % 6 === 0 || index === chunks.length - 1) prog.log(`${ticker}: ${index + 1}/${chunks.length} chain chunks cached`);
     }
@@ -76,7 +78,11 @@ try {
   const previous = JSON.parse(readFileSync(manifestPath, "utf8")) as SchwabManifest;
   if (previous.schemaVersion === 1 && Array.isArray(previous.tickers)) manifest.tickers.push(...previous.tickers);
 } catch { /* fresh manifest */ }
-function replaceEntry(entry: SchwabManifestEntry): void {
+function replaceEntry(entry: SchwabManifestEntry, append: boolean): void {
+  if (append) {
+    manifest.tickers.push(entry);
+    return;
+  }
   const index = manifest.tickers.findIndex((item) => item.ticker === entry.ticker && item.capturedAt.slice(0, 10) === today);
   if (index >= 0) manifest.tickers[index] = entry;
   else manifest.tickers.push(entry);
@@ -86,27 +92,28 @@ let transportFailures = 0;
 for (const company of universe) {
   const previous = manifest.tickers.find((item) => item.ticker === company.ticker && item.status === "complete" && item.capturedAt.slice(0, 10) === today);
   const requiredFiles = [
-    `chains/${today}/${company.ticker}.json`,
-    `quotes/${today}/${company.ticker}.json`,
+    previous?.file ?? `chains/${today}/${company.ticker}.json`,
+    previous ? previous.file.replace(/^chains\//, "quotes/") : `quotes/${today}/${company.ticker}.json`,
     `pricehistory/${company.ticker}.json`,
     `instruments/${company.ticker}.json`,
   ];
   if (previous?.chainChunks && previous.chainChunks > 1) {
-    requiredFiles.push(...monthlySchwabChunks(today).map((chunk) => `chains/${today}/chunks/${company.ticker}/${chunk.fromDate}_${chunk.toDate}.json`));
+    const chunkDirectory = schwabChunkDirectoryFromFile(today, company.ticker, previous.file);
+    requiredFiles.push(...monthlySchwabChunks(today).map((chunk) => `${chunkDirectory}/${chunk.fromDate}_${chunk.toDate}.json`));
   }
-  if (previous && requiredFiles.every((file) => existsSync(path.join(root, file)))) {
+  if (!force && previous && requiredFiles.every((file) => existsSync(path.join(root, file)))) {
     prog.item(completedInScope(), universe.length, `${company.ticker} resumed`);
     continue;
   }
   const capturedAt = new Date().toISOString();
-  const entry: SchwabManifestEntry = { ticker: company.ticker, status: "partial", capturedAt, sourceHash: "", file: `chains/${today}/${company.ticker}.json` };
+  const entry: SchwabManifestEntry = { ticker: company.ticker, status: "partial", capturedAt, sourceHash: "", file: schwabChainFile(today, company.ticker, capturedAt, force) };
   try {
-    const chain = await fetchChain(company.ticker);
+    const chain = await fetchChain(company.ticker, capturedAt);
     writeTextAtomic(path.join(root, entry.file), chain.raw);
     entry.sourceHash = sha256Text(chain.raw);
     entry.chainChunks = chain.chunks;
     const quote = await request(`quotes?symbols=${encodeURIComponent(company.ticker)}`, token.access_token);
-    writeTextAtomic(path.join(root, `quotes/${today}/${company.ticker}.json`), quote);
+    writeTextAtomic(path.join(root, schwabQuoteFile(today, company.ticker, capturedAt, force)), quote);
     const history = await request(`pricehistory?symbol=${encodeURIComponent(company.ticker)}&periodType=month&frequencyType=daily&frequency=1`, token.access_token);
     writeTextAtomic(path.join(root, `pricehistory/${company.ticker}.json`), history);
     const instrument = await request(`instruments?symbol=${encodeURIComponent(company.ticker)}&projection=fundamental`, token.access_token);
@@ -119,7 +126,7 @@ for (const company of universe) {
     if (status === undefined) transportFailures++;
     else transportFailures = 0;
   }
-  replaceEntry(entry);
+  replaceEntry(entry, force);
   writeJsonAtomic(manifestPath, manifest, true);
   prog.item(completedInScope(), universe.length, `${company.ticker} ${entry.status}`);
   if (transportFailures >= 2) {

@@ -54,6 +54,18 @@ These values stay in the local user profile and never enter Git or browser code.
 
 The daily collector and the keepalive job share `D:\research\alpha-engine\schwab\token.json`. Browser authorization should be unnecessary unless the refresh token is revoked, the app credentials/permissions change, or the machine remains offline beyond the refresh window. The collector also writes normalized snapshots to both `public/reports` and an existing `dist/public/reports`, so a production rebuild is not required for new Schwab data. A build is required only for application code changes.
 
+## Force a fresh same-day snapshot
+
+Normal same-day execution resumes complete tickers and does not create a new chain. To intentionally download a fresh snapshot now and preserve the earlier one:
+
+```powershell
+npx tsx worker/schwab-fetch.mts --universe research-universe-51.json --force
+npx tsx worker/build-schwab-market-data.mts
+npx tsx worker/schwab-features.mts
+```
+
+`--force` bypasses resume, appends a new manifest entry with a fresh `capturedAt`, and writes chain/quote files into unique timestamped paths. Chunked chains receive the same snapshot-specific directory, so force mode does not overwrite earlier evidence. Price history and instruments remain current-history files. No application rebuild is required for the new data.
+
 ## Oversized option chains
 
 A full-chain HTTP 502 containing `TooBigBody` or `Body buffer overflow` triggers one bounded fallback: at most 60 monthly chain windows covering five years. Every raw window is stored separately under `chains/YYYY-MM-DD/chunks/<ticker>/` and hashed into merged provenance. The normalized manifest records the chunk count. Any failed window leaves the ticker partial; there is no infinite retry and no silent partial-chain success.

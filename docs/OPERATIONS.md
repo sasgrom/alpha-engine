@@ -330,7 +330,7 @@ npx tsx scripts/materialize-research-factors.mts --universe research-universe-51
 - **Output:** D:-only raw snapshots and a resumable manifest; User Preference status is recorded separately for streaming setup.
 - **Destination:** Local Schwab archive only; no orders, accounts or production sync.
 - **Requirements:** network, driveD
-- **Operational note:** Same-day complete tickers resume without redownloading. A User Preference 401 does not invalidate completed REST data.
+- **Operational note:** Same-day complete tickers resume without redownloading. For a fresh intraday snapshot, run the same command with --force: it appends timestamped raw snapshots instead of overwriting history. User Preference 401 does not invalidate REST data.
 
 ```powershell
 npx tsx worker/schwab-fetch.mts --universe research-universe-51.json
