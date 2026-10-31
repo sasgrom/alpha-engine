@@ -1,9 +1,9 @@
 /** Build the reviewed static Schwab market-data snapshot without credentials. */
-import { existsSync, mkdirSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { buildSchwabMarketSnapshot, type SchwabManifest } from "./lib/schwab-market-data";
 import { loadSchwabToken, schwabTokenDirectory } from "./lib/schwab";
-import { writeJsonAtomic } from "./lib/json-file";
+import { writeSchwabJsonOutputs } from "./lib/schwab-output";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const root = path.resolve(arg("--root") ?? schwabTokenDirectory());
@@ -19,10 +19,5 @@ try {
   lastRefreshAt = token.createdAt;
 } catch { /* no token metadata is exposed as an empty value, never an error */ }
 const snapshot = buildSchwabMarketSnapshot({ root, tickersExpected, manifest, generatedAt: new Date().toISOString(), tokenExpiresAt, lastRefreshAt });
-writeJsonAtomic(path.resolve("public/reports/schwab-market-data.json"), snapshot, true);
-const distRoot = path.resolve("dist/public");
-if (existsSync(distRoot)) {
-  mkdirSync(path.join(distRoot, "reports"), { recursive: true });
-  writeJsonAtomic(path.join(distRoot, "reports", "schwab-market-data.json"), snapshot, true);
-}
+writeSchwabJsonOutputs("schwab-market-data.json", snapshot);
 console.log(`[schwab-market-data] ${snapshot.coverage.tickersCompleted}/${snapshot.coverage.tickersExpected} tickers · ${snapshot.coverage.contracts} contracts · QA ${snapshot.qa.manifestErrors} errors`);

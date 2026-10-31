@@ -130,6 +130,8 @@ Use existing option-feature builders where compatible:
 
 New Schwab snapshots are an additional provider, not silently merged with DoltHub or Cboe records. Provider comparisons require identical underlying, trade date and contract ID.
 
+`worker/schwab-features.mts` materializes the small `schwab-features.json` report used by the Feature Lab UI. It includes ATM IV, expected move, DTE slope, skew25, put/call ratios, turnover, spreads and RV20 from completed daily bars. Zero-DTE expected move is explicitly null until an intraday model exists. The report carries the source-snapshot SHA256 and is written to both `public/reports` and an existing `dist/public/reports`.
+
 ## 7. UI specification
 
 New owner-only route: `/market-data`.

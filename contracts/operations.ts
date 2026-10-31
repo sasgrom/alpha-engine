@@ -74,6 +74,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Reviewed local static snapshot only.", requirements: ["review"], notes: "Hash mismatches, truncated chains and provider failures remain visible. The builder also updates an existing dist/public/reports, so new Schwab data does not require an application rebuild.",
   }),
   job({
+    id: "schwab-feature-lab", name: "Schwab Feature Lab materialization", group: "options", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-snapshot"],
+    ...npx("worker/schwab-features.mts"), purpose: "Materialize small provider-specific ATM IV, expected-move, DTE, skew, put/call, turnover, spread and RV20 feature snapshots.",
+    input: "Latest normalized Schwab snapshot, raw daily price history and manifest.", output: "public/reports/schwab-features.json and an updated production copy with source-snapshot lineage.",
+    destination: "Local Feature Lab UI only; no production factor promotion.", requirements: ["review"], notes: "0DTE expected move and RV20 remain null when their inputs are insufficient. Skew and IV−RV20 are descriptive, not directional signals.",
+  }),
+  job({
     id: "analytics-snapshot", name: "Analytics and weekly evidence snapshot", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-factors"],
     ...npx("scripts/build-analytics-snapshot.mts"), purpose: "Refresh Analytics metrics and weekly evidence from the current DB and option manifests.",
     input: "Local fundamentals, factors, tone, prices, 13F and option feature manifests.", output: "Generated analytics JSON/TypeScript and the English project-strength review.",
@@ -86,7 +92,7 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local static UI artifacts; partial results remain explicitly unreviewed.", requirements: ["review"], notes: "Safe even while extraction is paused: it reports the actual partial state instead of fabricating completion.",
   }),
   job({
-    id: "ui-production-build", name: "Production UI rebuild", group: "delivery", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["analytics-snapshot", "schwab-snapshot", "expectations-report"],
+    id: "ui-production-build", name: "Production UI rebuild", group: "delivery", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["analytics-snapshot", "schwab-feature-lab", "expectations-report"],
     executable: "npm", args: ["run", "build"], command: "npm run build", purpose: "Compile newly generated static snapshots and the server into dist for normal production-mode operation.",
     input: "Current source and freshly generated report artifacts.", output: "dist/public and dist/boot.js.",
     destination: "Local production server files only; no cloud deployment.", requirements: ["review"], notes: "Required for application code or generated TypeScript changes, not for a Schwab-only JSON refresh. Not required for npm run dev; restart production only when server behavior changes.",
