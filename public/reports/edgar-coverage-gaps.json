@@ -1,0 +1,6021 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-10-31T23:52:07.473Z",
+ "sourceGeneratedAt": "2026-10-31T23:41:04.524Z",
+ "since": "2000-01-01",
+ "summary": {
+  "errors": 648,
+  "warnings": 104,
+  "continuityIssues": 648,
+  "continuityQuarters": 2275,
+  "excludedPre2000": 0
+ },
+ "byType": [
+  {
+   "type": "continuity_gap",
+   "count": 648
+  },
+  {
+   "type": "revision_outlier",
+   "count": 100
+  },
+  {
+   "type": "unit_change",
+   "count": 4
+  }
+ ],
+ "byCik": [
+  {
+   "cik": 320193,
+   "count": 752,
+   "errors": 648,
+   "warnings": 104
+  }
+ ],
+ "byEra": [
+  {
+   "era": "2000-2009",
+   "errors": 309,
+   "warnings": 19
+  },
+  {
+   "era": "2010-2019",
+   "errors": 294,
+   "warnings": 63
+  },
+  {
+   "era": "2020-2024",
+   "errors": 45,
+   "warnings": 18
+  },
+  {
+   "era": "2025-2026",
+   "errors": 0,
+   "warnings": 0
+  },
+  {
+   "era": "unknown",
+   "errors": 0,
+   "warnings": 4
+  }
+ ],
+ "gaps": [
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsDecreasesResultingFromSettlementsWithTaxingAuthorities",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q3",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q3",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2012Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsToAcquireBusinessesNetOfCashAcquired",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1",
+    "2009Q4",
+    "2010Q1",
+    "2010Q4",
+    "2011Q1",
+    "2017Q1",
+    "2021Q4",
+    "2022Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2022Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromSaleAndMaturityOfOtherInvestments",
+   "missingQuarters": [
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2018Q4",
+    "2019Q1",
+    "2019Q2",
+    "2019Q4",
+    "2020Q1"
+   ],
+   "firstMissingPeriod": "2016Q4",
+   "lastMissingPeriod": "2020Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "RepaymentsOfLongTermDebt",
+   "missingQuarters": [
+    "2014Q4",
+    "2015Q1",
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2017Q4",
+    "2018Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2014Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockRepurchasedAndRetiredDuringPeriodValue",
+   "missingQuarters": [
+    "2013Q3",
+    "2014Q2",
+    "2014Q3",
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q3",
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4"
+   ],
+   "firstMissingPeriod": "2013Q3",
+   "lastMissingPeriod": "2016Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AntidilutiveSecuritiesExcludedFromComputationOfEarningsPerShareAmount",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q3",
+    "2014Q1",
+    "2014Q2",
+    "2014Q3",
+    "2014Q4"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2014Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetCashProvidedByUsedInFinancingActivities",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2014Q1",
+    "2014Q2",
+    "2014Q3",
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q3",
+    "2015Q4"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2015Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetCashProvidedByUsedInInvestingActivities",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2014Q1",
+    "2014Q2",
+    "2014Q3",
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q3",
+    "2015Q4"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2015Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetCashProvidedByUsedInOperatingActivities",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2014Q1",
+    "2014Q2",
+    "2014Q3",
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q3",
+    "2015Q4"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2015Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsToAcquireAvailableForSaleSecuritiesDebt",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2011Q2",
+    "2011Q3",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q3",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsToAcquireOtherInvestments",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q3",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q3"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2012Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromIssuanceOfLongTermDebt",
+   "missingQuarters": [
+    "2011Q4",
+    "2012Q1",
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2017Q1",
+    "2021Q4",
+    "2022Q1",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromSaleOfAvailableForSaleSecuritiesDebt",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2011Q2",
+    "2011Q3",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q3",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromShortTermDebtMaturingInMoreThanThreeMonths",
+   "missingQuarters": [
+    "2017Q1",
+    "2023Q1",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1",
+    "2025Q2",
+    "2025Q4",
+    "2026Q1"
+   ],
+   "firstMissingPeriod": "2017Q1",
+   "lastMissingPeriod": "2026Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromRepaymentsOfShortTermDebtMaturingInMoreThanThreeMonths",
+   "missingQuarters": [
+    "2017Q1",
+    "2023Q1",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q3",
+    "2024Q4",
+    "2025Q1",
+    "2025Q4"
+   ],
+   "firstMissingPeriod": "2017Q1",
+   "lastMissingPeriod": "2025Q4",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsGrantsInPeriod",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2012Q2",
+    "2012Q3",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockRepurchasedAndRetiredDuringPeriodShares",
+   "missingQuarters": [
+    "2013Q3",
+    "2014Q2",
+    "2014Q3",
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q3",
+    "2015Q4",
+    "2016Q1"
+   ],
+   "firstMissingPeriod": "2013Q3",
+   "lastMissingPeriod": "2016Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccruedIncomeTaxesCurrent",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2011Q1",
+    "2011Q2",
+    "2011Q3",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AdjustmentsToAdditionalPaidInCapitalTaxEffectFromShareBasedCompensation",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AdvertisingExpense",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AmortizationOfIntangibleAssets",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesContinuousUnrealizedLossPositionFairValue",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q3",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesContinuousUnrealizedLossPositionLessThanTwelveMonthsFairValue",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q3",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesContinuousUnrealizedLossPositionTwelveMonthsOrLongerFairValue",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2011Q1",
+    "2011Q2",
+    "2011Q3",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CapitalizedComputerSoftwareAmortization",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CollateralAlreadyPostedAggregateFairValue",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q2",
+    "2011Q3",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2013Q1",
+    "2013Q2"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CurrentFederalTaxExpenseBenefit",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CurrentForeignTaxExpenseBenefit",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CurrentStateAndLocalTaxExpenseBenefit",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DebtInstrumentCarryingAmount",
+   "missingQuarters": [
+    "2017Q1",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4"
+   ],
+   "firstMissingPeriod": "2017Q1",
+   "lastMissingPeriod": "2023Q4",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DebtInstrumentUnamortizedDiscountPremiumAndDebtIssuanceCostsNet",
+   "missingQuarters": [
+    "2017Q1",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4"
+   ],
+   "firstMissingPeriod": "2017Q1",
+   "lastMissingPeriod": "2023Q4",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DecreaseInUnrecognizedTaxBenefitsIsReasonablyPossible",
+   "missingQuarters": [
+    "2017Q1",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4"
+   ],
+   "firstMissingPeriod": "2017Q1",
+   "lastMissingPeriod": "2023Q4",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredFederalIncomeTaxExpenseBenefit",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredForeignIncomeTaxExpenseBenefit",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxAssetsNet",
+   "missingQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1"
+   ],
+   "firstMissingPeriod": "2022Q4",
+   "lastMissingPeriod": "2025Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxLiabilities",
+   "missingQuarters": [
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q4",
+    "2016Q1"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2016Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredStateAndLocalIncomeTaxExpenseBenefit",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsDeferredIncome",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsGoodwillAndIntangibleAssets",
+   "missingQuarters": [
+    "2019Q4",
+    "2020Q1",
+    "2020Q2",
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1"
+   ],
+   "firstMissingPeriod": "2019Q4",
+   "lastMissingPeriod": "2022Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsGross",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsLiabilitiesNet",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsNet",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsOther",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsOtherComprehensiveLoss",
+   "missingQuarters": [
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1"
+   ],
+   "firstMissingPeriod": "2021Q4",
+   "lastMissingPeriod": "2024Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsPropertyPlantAndEquipment",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2017Q4",
+    "2018Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2018Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwards",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsForeign",
+   "missingQuarters": [
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1"
+   ],
+   "firstMissingPeriod": "2021Q4",
+   "lastMissingPeriod": "2024Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsResearch",
+   "missingQuarters": [
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1"
+   ],
+   "firstMissingPeriod": "2021Q4",
+   "lastMissingPeriod": "2024Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxDeferredExpenseCompensationAndBenefitsShareBasedCompensationCost",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxDeferredExpenseReservesAndAccruals",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsValuationAllowance",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilities",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesLeasingArrangements",
+   "missingQuarters": [
+    "2019Q4",
+    "2020Q1",
+    "2020Q2",
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1"
+   ],
+   "firstMissingPeriod": "2019Q4",
+   "lastMissingPeriod": "2022Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesOther",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesOtherComprehensiveIncome",
+   "missingQuarters": [
+    "2019Q4",
+    "2020Q1",
+    "2020Q2",
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1"
+   ],
+   "firstMissingPeriod": "2019Q4",
+   "lastMissingPeriod": "2022Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesPropertyPlantAndEquipment",
+   "missingQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1"
+   ],
+   "firstMissingPeriod": "2022Q4",
+   "lastMissingPeriod": "2025Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesUndistributedForeignEarnings",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DefinedContributionPlanCostRecognized",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DefinedContributionPlanMaximumAnnualContributionsPerEmployeeAmount",
+   "missingQuarters": [
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q4",
+    "2016Q1"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2016Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "Depreciation",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2018Q4",
+    "2019Q1",
+    "2019Q2",
+    "2019Q4",
+    "2020Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2020Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DepreciationAndAmortization",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "Dividends",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2017Q4",
+    "2018Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2018Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateContinuingOperations",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationAtFederalStatutoryIncomeTaxRate",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationFdiiAmount",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationForeignIncomeTaxRateDifferential",
+   "missingQuarters": [
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q4",
+    "2016Q1"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2016Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationShareBasedCompensationExcessTaxBenefitAmount",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2018Q4",
+    "2019Q1",
+    "2019Q2",
+    "2019Q4",
+    "2020Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2020Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationTaxCutsAndJobsActOf2017Amount",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2018Q4",
+    "2019Q1",
+    "2019Q2",
+    "2019Q4",
+    "2020Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2020Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "EmployeeServiceShareBasedCompensationCashFlowEffectCashUsedToSettleAwards",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2012Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "EntityPublicFloat",
+   "missingQuarters": [
+    "2009Q2",
+    "2009Q3",
+    "2009Q4",
+    "2010Q2",
+    "2010Q3",
+    "2010Q4",
+    "2011Q2",
+    "2011Q3"
+   ],
+   "firstMissingPeriod": "2009Q2",
+   "lastMissingPeriod": "2011Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FairValueHedgesAtFairValueNet",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FederalIncomeTaxExpenseBenefitContinuingOperations",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiability",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityCurrent",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityNoncurrent",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDue",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueAfterYearFive",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueNextTwelveMonths",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueYearFive",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueYearFour",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueYearThree",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueYearTwo",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityUndiscountedExcessAmount",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseRightOfUseAsset",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAccumulatedAmortization",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpense",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseAfterYearFive",
+   "missingQuarters": [
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2014Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseNextTwelveMonths",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearFive",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearFour",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearThree",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearTwo",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsGross",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ForeignIncomeTaxExpenseBenefitContinuingOperations",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "GoodwillImpairmentLoss",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ImpairmentOfIntangibleAssetsExcludingGoodwill",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ImpairmentOfIntangibleAssetsIndefinitelivedExcludingGoodwill",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesForeign",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationDeductionsQualifiedProductionActivities",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationForeignIncomeTaxRateDifferential",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationIncomeTaxExpenseBenefitAtFederalStatutoryIncomeTaxRate",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationOtherAdjustments",
+   "missingQuarters": [
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2014Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationOtherReconcilingItems",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationStateAndLocalIncomeTaxes",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationTaxCreditsResearch",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IntangibleAssetsGrossExcludingGoodwill",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1",
+    "2017Q1",
+    "2018Q1",
+    "2018Q2",
+    "2018Q3",
+    "2018Q4",
+    "2019Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2019Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IntangibleAssetsNetExcludingGoodwill",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2018Q1",
+    "2018Q2",
+    "2018Q3",
+    "2018Q4",
+    "2019Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2019Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "InterestCostsIncurred",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2023Q2",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "InterestExpenseDebt",
+   "missingQuarters": [
+    "2017Q1",
+    "2019Q2",
+    "2019Q4",
+    "2020Q1",
+    "2020Q2",
+    "2020Q4",
+    "2021Q1",
+    "2021Q2"
+   ],
+   "firstMissingPeriod": "2017Q1",
+   "lastMissingPeriod": "2021Q2",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryFinishedGoodsNetOfReserves",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2015Q3",
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q3"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2016Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryPartsAndComponentsNetOfReserves",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2015Q3",
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q3"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2016Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "LeaseAndRentalExpense",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDue",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueAfterYearFive",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueNextTwelveMonths",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueYearFive",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueYearFour",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueYearThree",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueYearTwo",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityUndiscountedExcessAmount",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebt",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2015Q2",
+    "2015Q3",
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q3"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2016Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalAfterYearFive",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2017Q4",
+    "2018Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2018Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+   "missingQuarters": [
+    "2014Q2",
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4"
+   ],
+   "firstMissingPeriod": "2014Q2",
+   "lastMissingPeriod": "2016Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2017Q4",
+    "2018Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2018Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2017Q4",
+    "2018Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2018Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2017Q4",
+    "2018Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2018Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2017Q4",
+    "2018Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2018Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "NoncurrentAssets",
+   "missingQuarters": [
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q4",
+    "2016Q1"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2016Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeaseCost",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeaseLiability",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeaseLiabilityCurrent",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeaseLiabilityNoncurrent",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasePayments",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeaseRightOfUseAsset",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueCurrent",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInFiveYears",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInFourYears",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInThreeYears",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInTwoYears",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueThereafter",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesRentExpenseNet",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherAccruedLiabilitiesCurrent",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2015Q3",
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q3",
+    "2016Q4"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2016Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherAccruedLiabilitiesNoncurrent",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2017Q1",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2024Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherAssetsMiscellaneousNoncurrent",
+   "missingQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1"
+   ],
+   "firstMissingPeriod": "2022Q4",
+   "lastMissingPeriod": "2025Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossCashFlowHedgeGainLossReclassificationAfterTax",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q3",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q3"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2022Q3",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossForeignCurrencyTranslationAdjustmentTax",
+   "missingQuarters": [
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2014Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIForSaleOfSecuritiesTax",
+   "missingQuarters": [
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2014Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIOnDerivativesTax",
+   "missingQuarters": [
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2014Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeReclassificationAdjustmentOnDerivativesIncludedInNetIncomeTax",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeUnrealizedGainLossOnDerivativesArisingDuringPeriodTax",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeUnrealizedHoldingGainLossOnSecuritiesArisingDuringPeriodTax",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedNumber",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedWeightedAverageGrantDateFairValue",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardNumberOfSharesAvailableForGrant",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingNumber",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingWeightedAverageExercisePrice",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementsByShareBasedPaymentAwardOptionsGrantsInPeriodWeightedAverageExercisePrice",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q2",
+    "2012Q3",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "SharesPaidForTaxWithholdingForShareBasedCompensation",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "StateAndLocalIncomeTaxExpenseBenefitContinuingOperations",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockholdersEquity",
+   "missingQuarters": [
+    "2006Q4",
+    "2007Q1",
+    "2007Q2",
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2006Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockholdersEquityNoteStockSplitConversionRatio1",
+   "missingQuarters": [
+    "2014Q3",
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q3",
+    "2015Q4",
+    "2016Q1",
+    "2016Q2"
+   ],
+   "firstMissingPeriod": "2014Q3",
+   "lastMissingPeriod": "2016Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockRepurchaseProgramAuthorizedAmount1",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q3",
+    "2013Q4",
+    "2014Q1",
+    "2014Q4",
+    "2015Q1",
+    "2015Q4"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "UndistributedEarningsOfForeignSubsidiaries",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefits",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2017Q1",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsDecreasesResultingFromPriorPeriodTaxPositions",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsIncomeTaxPenaltiesAndInterestExpense",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsIncreasesResultingFromCurrentPeriodTaxPositions",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsIncreasesResultingFromPriorPeriodTaxPositions",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2014Q1",
+    "2014Q2",
+    "2014Q4",
+    "2015Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2015Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsReductionsResultingFromLapseOfApplicableStatuteOfLimitations",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsThatWouldImpactEffectiveTaxRate",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2017Q1",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnFifthAnniversary",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2018Q4",
+    "2019Q1",
+    "2019Q2",
+    "2019Q4",
+    "2020Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2020Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnFirstAnniversary",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2018Q4",
+    "2019Q1",
+    "2019Q2",
+    "2019Q4",
+    "2020Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2020Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnFourthAnniversary",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2018Q4",
+    "2019Q1",
+    "2019Q2",
+    "2019Q4",
+    "2020Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2020Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnSecondAnniversary",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2018Q4",
+    "2019Q1",
+    "2019Q2",
+    "2019Q4",
+    "2020Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2020Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnThirdAnniversary",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2018Q4",
+    "2019Q1",
+    "2019Q2",
+    "2019Q4",
+    "2020Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2020Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceSheetAmount",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q3",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2021Q4"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2021Q4",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueAfterFiveYears",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2018Q4",
+    "2019Q1",
+    "2019Q2",
+    "2019Q4",
+    "2020Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2020Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueInRemainderOfFiscalYear",
+   "missingQuarters": [
+    "2023Q1",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q3",
+    "2024Q4",
+    "2025Q1",
+    "2025Q2"
+   ],
+   "firstMissingPeriod": "2023Q1",
+   "lastMissingPeriod": "2025Q2",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "VariableLeaseCost",
+   "missingQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "CashAndCashEquivalentsAtCarryingValue",
+   "missingQuarters": [
+    "2006Q4",
+    "2007Q1",
+    "2007Q2",
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2006Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ComprehensiveIncomeNetOfTax",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DepreciationDepletionAndAmortization",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryRawMaterialsAndPurchasedPartsNetOfReserves",
+   "missingQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2025Q4",
+    "2026Q1"
+   ],
+   "firstMissingPeriod": "2022Q4",
+   "lastMissingPeriod": "2026Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "StandardProductWarrantyAccrual",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccruedIncomeTaxesNoncurrent",
+   "missingQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2"
+   ],
+   "firstMissingPeriod": "2022Q4",
+   "lastMissingPeriod": "2024Q2",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesCurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesNoncurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "BusinessAcquisitionPurchasePriceAllocationGoodwillAmount",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2012Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CapitalizedComputerSoftwareAdditions",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ChangeInUnrealizedGainLossOnFairValueHedgingInstruments",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommercialPaper",
+   "missingQuarters": [
+    "2013Q4",
+    "2014Q1",
+    "2017Q1",
+    "2020Q1",
+    "2020Q2",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "CostOfGoodsAndServicesSoldDepreciation",
+   "missingQuarters": [
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2017Q4",
+    "2018Q1",
+    "2018Q2"
+   ],
+   "firstMissingPeriod": "2016Q4",
+   "lastMissingPeriod": "2018Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxLiabilitiesNet",
+   "missingQuarters": [
+    "2014Q4",
+    "2015Q1",
+    "2015Q2",
+    "2015Q4",
+    "2016Q1",
+    "2016Q2"
+   ],
+   "firstMissingPeriod": "2014Q4",
+   "lastMissingPeriod": "2016Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsUnrealizedLossesOnAvailableforSaleSecuritiesGross",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2018Q4",
+    "2019Q1",
+    "2019Q2"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2019Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilityNotRecognizedAmountOfUnrecognizedDeferredTaxLiabilityUndistributedEarningsOfForeignSubsidiaries",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1",
+    "2016Q2",
+    "2016Q4",
+    "2017Q1",
+    "2017Q2"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2017Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationChangeInDeferredTaxAssetsValuationAllowance",
+   "missingQuarters": [
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1",
+    "2025Q2"
+   ],
+   "firstMissingPeriod": "2023Q4",
+   "lastMissingPeriod": "2025Q2",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDue",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4",
+    "2011Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentForSaleOfSecuritiesIncludedInNetIncomeNetOfTax",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2012Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentOnDerivativesIncludedInNetIncomeTax",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4",
+    "2012Q1",
+    "2012Q2"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2012Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "SegmentReportingReconcilingItemsAssets",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "SegmentReportingSegmentAssets",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1",
+    "2010Q2"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShortTermDebtWeightedAverageInterestRate",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1",
+    "2017Q1",
+    "2017Q2",
+    "2020Q1",
+    "2020Q2"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2020Q2",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockIssuedDuringPeriodValueShareBasedCompensation",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1",
+    "2009Q2"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2009Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccountsPayableCurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccumulatedOtherComprehensiveIncomeLossAvailableForSaleSecuritiesAdjustmentNetOfTax",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccumulatedOtherComprehensiveIncomeLossCumulativeChangesInNetGainLossFromCashFlowHedgesEffectNetOfTax",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccumulatedOtherComprehensiveIncomeLossForeignCurrencyTranslationAdjustmentNetOfTax",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
+   "missingQuarters": [
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2017Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2016Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockDividendsPerShareDeclared",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DerivativeFairValueOfDerivativeNet",
+   "missingQuarters": [
+    "2017Q1",
+    "2021Q3",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2"
+   ],
+   "firstMissingPeriod": "2017Q1",
+   "lastMissingPeriod": "2022Q2",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsNet",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2013Q2",
+    "2013Q4",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "InterestExpense",
+   "missingQuarters": [
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "InvestmentIncomeInterestAndDividend",
+   "missingQuarters": [
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeAvailableForSaleSecuritiesAdjustmentNetOfTaxPeriodIncreaseDecrease",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeDerivativesQualifyingAsHedgesNetOfTaxPeriodIncreaseDecrease",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeForeignCurrencyTransactionAndTranslationAdjustmentNetOfTaxPeriodIncreaseDecrease",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeUnrealizedHoldingGainLossOnSecuritiesArisingDuringPeriodNetOfTax",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherNonoperatingIncomeExpense",
+   "missingQuarters": [
+    "2011Q4",
+    "2012Q1",
+    "2012Q2",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromIssuanceOfCommonStock",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2017Q4",
+    "2018Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2018Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromOtherShortTermDebt",
+   "missingQuarters": [
+    "2019Q3",
+    "2019Q4",
+    "2020Q1",
+    "2020Q4",
+    "2021Q1"
+   ],
+   "firstMissingPeriod": "2019Q3",
+   "lastMissingPeriod": "2021Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsForfeitedInPeriod",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsForfeitedInPeriodWeightedAverageGrantDateFairValue",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsGrantsInPeriod",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsGrantsInPeriodWeightedAverageGrantDateFairValue",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedInPeriod",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedInPeriodWeightedAverageGrantDateFairValue",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisesInPeriod",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisesInPeriodWeightedAverageExercisePrice",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsForfeituresInPeriod",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsForfeituresInPeriodWeightedAverageExercisePrice",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsGrantsInPeriodWeightedAverageExercisePrice",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccountsReceivableNetCurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccruedLiabilitiesCurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccumulatedOtherComprehensiveIncomeLossNetOfTax",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "AllocatedShareBasedCompensationExpense",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "Assets",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "AssetsCurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "AssetsNoncurrent",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockSharesAuthorized",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockSharesIssued",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockSharesOutstanding",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "CostOfGoodsAndServicesSold",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "EarningsPerShareBasic",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "EarningsPerShareDiluted",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "GrossProfit",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+   "missingQuarters": [
+    "2011Q4",
+    "2012Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxesPaidNet",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxExpenseBenefit",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInAccountsPayable",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInAccountsReceivable",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInInventories",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInOtherOperatingAssets",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInOtherOperatingLiabilities",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInOtherReceivables",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncrementalCommonSharesAttributableToShareBasedPaymentArrangements",
+   "missingQuarters": [
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2021Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "InterestPaidNet",
+   "missingQuarters": [
+    "2016Q4",
+    "2017Q1",
+    "2017Q2",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2016Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryNet",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "Liabilities",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LiabilitiesAndStockholdersEquity",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LiabilitiesCurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LiabilitiesNoncurrent",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtCurrent",
+   "missingQuarters": [
+    "2014Q4",
+    "2015Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2014Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalRemainderOfFiscalYear",
+   "missingQuarters": [
+    "2013Q3",
+    "2013Q4",
+    "2014Q1",
+    "2014Q3"
+   ],
+   "firstMissingPeriod": "2013Q3",
+   "lastMissingPeriod": "2014Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtNoncurrent",
+   "missingQuarters": [
+    "2014Q4",
+    "2015Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2014Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetIncomeLoss",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "NonoperatingIncomeExpense",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "NontradeReceivablesCurrent",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingExpenses",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingIncomeLoss",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherAssetsCurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherAssetsNoncurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIForSaleOfSecuritiesNetOfTax",
+   "missingQuarters": [
+    "2011Q4",
+    "2012Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherLiabilitiesCurrent",
+   "missingQuarters": [
+    "2017Q4",
+    "2018Q1",
+    "2018Q2",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherLiabilitiesNoncurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsForProceedsFromOtherInvestingActivities",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromRepaymentsOfCommercialPaper",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProductWarrantyAccrualClassifiedCurrent",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2008Q2",
+    "2008Q4"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2008Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ResearchAndDevelopmentExpense",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "RetainedEarningsAccumulatedDeficit",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "SellingGeneralAndAdministrativeExpense",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensation",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsForfeituresWeightedAverageGrantDateFairValue",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardFairValueAssumptionsExpectedDividendRate",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsGrantsInPeriodWeightedAverageGrantDateFairValue",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q4",
+    "2011Q4",
+    "2012Q3"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2012Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementsByShareBasedPaymentAwardOptionsExercisesInPeriodWeightedAverageExercisePrice",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementsByShareBasedPaymentAwardOptionsForfeituresInPeriodWeightedAverageExercisePrice",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2011Q4"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "StandardProductWarrantyAccrualPayments",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "StandardProductWarrantyAccrualWarrantiesIssued",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockIssuedDuringPeriodSharesStockOptionsExercised",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2",
+    "2010Q4"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "WeightedAverageNumberOfDilutedSharesOutstanding",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "WeightedAverageNumberOfSharesOutstandingBasic",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccumulatedDepreciationDepletionAndAmortizationPropertyPlantAndEquipment",
+   "missingQuarters": [
+    "2011Q4",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "AllowanceForDoubtfulAccountsReceivableCurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecurities",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesAccumulatedGrossUnrealizedGainBeforeTax",
+   "missingQuarters": [
+    "2013Q4",
+    "2014Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesAccumulatedGrossUnrealizedLossBeforeTax",
+   "missingQuarters": [
+    "2013Q4",
+    "2014Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesAmortizedCost",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "BusinessAcquisitionPurchasePriceAllocationAmortizableIntangibleAssets",
+   "missingQuarters": [
+    "2011Q4",
+    "2012Q1",
+    "2012Q2"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2012Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CashAndCashEquivalentsPeriodIncreaseDecrease",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockParOrStatedValuePerShare",
+   "missingQuarters": [
+    "2013Q4",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStocksIncludingAdditionalPaidInCapital",
+   "missingQuarters": [
+    "2013Q4",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxExpenseBenefit",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredRevenueCurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredRevenueNoncurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesNoncurrent",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DepreciationAmortizationAndAccretionNet",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ExcessTaxBenefitFromShareBasedCompensationFinancingActivities",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsUsefulLifeMaximum",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsUsefulLifeMinimum",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearFive",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearFour",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearOne",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearThree",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearTwo",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "GeneralAndAdministrativeExpense",
+   "missingQuarters": [
+    "2023Q4",
+    "2024Q1",
+    "2024Q2"
+   ],
+   "firstMissingPeriod": "2023Q4",
+   "lastMissingPeriod": "2024Q2",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "Goodwill",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "HedgedAssetFairValueHedge",
+   "missingQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2"
+   ],
+   "firstMissingPeriod": "2022Q4",
+   "lastMissingPeriod": "2023Q2",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "HedgedLiabilityFairValueHedge",
+   "missingQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2"
+   ],
+   "firstMissingPeriod": "2022Q4",
+   "lastMissingPeriod": "2023Q2",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxExaminationInterestExpense",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2010Q2"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInDeferredRevenue",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossAvailableForSaleSecuritiesAdjustmentNetOfTax",
+   "missingQuarters": [
+    "2010Q4",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax",
+   "missingQuarters": [
+    "2010Q4",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossNetOfTax",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1",
+    "2011Q2"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent",
+   "missingQuarters": [
+    "2015Q4",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIOnDerivativesNetOfTax",
+   "missingQuarters": [
+    "2011Q4",
+    "2012Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeUnrealizedGainLossOnDerivativesArisingDuringPeriodNetOfTax",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsRelatedToTaxWithholdingForShareBasedCompensation",
+   "missingQuarters": [
+    "2010Q4",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsToAcquireAvailableForSaleSecurities",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsToAcquireIntangibleAssets",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromSaleOfAvailableForSaleSecurities",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProductWarrantyAccrualWarrantiesIssued",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2009Q2"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProductWarrantyExpense",
+   "missingQuarters": [
+    "2009Q3",
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q3",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "PropertyPlantAndEquipmentGross",
+   "missingQuarters": [
+    "2011Q4",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "PropertyPlantAndEquipmentNet",
+   "missingQuarters": [
+    "2011Q4",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "SalesRevenueNet",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "SegmentReportingInformationOperatingIncomeLoss",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "SellingAndMarketingExpense",
+   "missingQuarters": [
+    "2023Q4",
+    "2024Q1",
+    "2024Q2"
+   ],
+   "firstMissingPeriod": "2023Q4",
+   "lastMissingPeriod": "2024Q2",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardFairValueAssumptionsExpectedTerm",
+   "missingQuarters": [
+    "2010Q1",
+    "2010Q2",
+    "2010Q3"
+   ],
+   "firstMissingPeriod": "2010Q1",
+   "lastMissingPeriod": "2010Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardFairValueAssumptionsRiskFreeInterestRate",
+   "missingQuarters": [
+    "2010Q1",
+    "2010Q2",
+    "2010Q3"
+   ],
+   "firstMissingPeriod": "2010Q1",
+   "lastMissingPeriod": "2010Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardFairValueAssumptionsWeightedAverageVolatilityRate",
+   "missingQuarters": [
+    "2010Q1",
+    "2010Q2",
+    "2010Q3"
+   ],
+   "firstMissingPeriod": "2010Q1",
+   "lastMissingPeriod": "2010Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "TreasuryStockValueAcquiredCostMethod",
+   "missingQuarters": [
+    "2013Q4",
+    "2014Q1",
+    "2014Q2"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2014Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsIncomeTaxPenaltiesAndInterestAccrued",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "WeightedAverageNumberDilutedSharesOutstandingAdjustment",
+   "missingQuarters": [
+    "2009Q4",
+    "2017Q1",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccountsPayable",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccruedLiabilities",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesDebtSecuritiesCurrent",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesDebtSecuritiesNoncurrent",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesFairValueDisclosure",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableforsaleSecuritiesGrossUnrealizedGain",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesGrossUnrealizedLosses1",
+   "missingQuarters": [
+    "2010Q4",
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "Cash",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect",
+   "missingQuarters": [
+    "2017Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "CashEquivalentsAtCarryingValue",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommitmentsAndContingencies",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockNoParValue",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockValue",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "CostOfReimbursableExpense",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsNetCurrent",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "EmployeeRelatedLiabilitiesCurrent",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FairValueAssetsMeasuredOnRecurringBasisCashAndCashEquivalents",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FairValueAssetsMeasuredOnRecurringBasisDerivativeFinancialInstrumentsAssets",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FairValueLiabilitiesMeasuredOnRecurringBasisDerivativeFinancialInstrumentsLiabilities",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ForeignCurrencyDerivativeAssetsAtFairValue",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ForeignCurrencyDerivativeInstrumentsNotDesignatedAsHedgingInstrumentsAssetAtFairValue",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ForeignCurrencyDerivativeInstrumentsNotDesignatedAsHedgingInstrumentsLiabilityAtFairValue",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ForeignCurrencyDerivativeLiabilitiesAtFairValue",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "FurnitureAndFixturesGross",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "GainLossOnSaleOfPropertyPlantEquipment",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2008Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "GoodwillAcquiredDuringPeriod",
+   "missingQuarters": [
+    "2012Q4",
+    "2013Q1"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2013Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2008Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationNondeductibleExpenseShareBasedCompensationCost",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IndefiniteLivedIntangibleAssetsExcludingGoodwill",
+   "missingQuarters": [
+    "2013Q4",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "LeaseholdImprovementsGross",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "NotionalAmountOfForeignCurrencyDerivativeInstrumentsNotDesignatedAsHedgingInstruments",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OciBeforeReclassificationsBeforeTaxAttributableToParent",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2016Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossDerivativesQualifyingAsHedgesNetOfTax",
+   "missingQuarters": [
+    "2010Q4",
+    "2017Q1"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2017Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossTaxPortionAttributableToParent1",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2016Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeReclassificationAdjustmentOnDerivativesIncludedInNetIncomeNetOfTax",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherDeferredCreditsCurrent",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsToAcquireProductiveAssets",
+   "missingQuarters": [
+    "2007Q4",
+    "2008Q1"
+   ],
+   "firstMissingPeriod": "2007Q4",
+   "lastMissingPeriod": "2008Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromPaymentsForOtherFinancingActivities",
+   "missingQuarters": [
+    "2017Q4",
+    "2023Q1"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2023Q1",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProductWarrantyAccrualPayments",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ReclassificationFromAociCurrentPeriodBeforeTaxAttributableToParent",
+   "missingQuarters": [
+    "2015Q4",
+    "2016Q1"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2016Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedInPeriodTotalFairValue",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisesInPeriodTotalIntrinsicValue",
+   "missingQuarters": [
+    "2008Q4",
+    "2009Q1"
+   ],
+   "firstMissingPeriod": "2008Q4",
+   "lastMissingPeriod": "2009Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "TranslationAdjustmentForNetInvestmentHedgeNetOfTax",
+   "missingQuarters": [
+    "2009Q4",
+    "2010Q1"
+   ],
+   "firstMissingPeriod": "2009Q4",
+   "lastMissingPeriod": "2010Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccruedMarketingCostsCurrent",
+   "missingQuarters": [
+    "2011Q4"
+   ],
+   "firstMissingPeriod": "2011Q4",
+   "lastMissingPeriod": "2011Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesContinuousUnrealizedLossPosition12MonthsOrLongerAccumulatedLoss",
+   "missingQuarters": [
+    "2017Q4"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2017Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesContinuousUnrealizedLossPositionAccumulatedLoss",
+   "missingQuarters": [
+    "2017Q4"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2017Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesContinuousUnrealizedLossPositionLessThan12MonthsAccumulatedLoss",
+   "missingQuarters": [
+    "2017Q4"
+   ],
+   "firstMissingPeriod": "2017Q4",
+   "lastMissingPeriod": "2017Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedIntangibleAssetsOtherThanGoodwill",
+   "missingQuarters": [
+    "2013Q3"
+   ],
+   "firstMissingPeriod": "2013Q3",
+   "lastMissingPeriod": "2013Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedLiabilities",
+   "missingQuarters": [
+    "2013Q3"
+   ],
+   "firstMissingPeriod": "2013Q3",
+   "lastMissingPeriod": "2013Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DebtInstrumentUnamortizedDiscountPremiumNet",
+   "missingQuarters": [
+    "2015Q4"
+   ],
+   "firstMissingPeriod": "2015Q4",
+   "lastMissingPeriod": "2015Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "DerivativeCollateralObligationToReturnCash",
+   "missingQuarters": [
+    "2020Q4"
+   ],
+   "firstMissingPeriod": "2020Q4",
+   "lastMissingPeriod": "2020Q4",
+   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+  },
+  {
+   "cik": 320193,
+   "concept": "EmployeeServiceShareBasedCompensationUnrecognizedCompensationCostsOnNonvestedAwardsWeightedAveragePeriodOfRecognition",
+   "missingQuarters": [
+    "2010Q3"
+   ],
+   "firstMissingPeriod": "2010Q3",
+   "lastMissingPeriod": "2010Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "EntityCommonStockSharesOutstanding",
+   "missingQuarters": [
+    "2009Q3"
+   ],
+   "firstMissingPeriod": "2009Q3",
+   "lastMissingPeriod": "2009Q3",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationTaxContingenciesDomestic",
+   "missingQuarters": [
+    "2014Q2"
+   ],
+   "firstMissingPeriod": "2014Q2",
+   "lastMissingPeriod": "2014Q2",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "MarketingExpense",
+   "missingQuarters": [
+    "2010Q4"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2010Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetCashProvidedByUsedInFinancingActivitiesContinuingOperations",
+   "missingQuarters": [
+    "2012Q4"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2012Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations",
+   "missingQuarters": [
+    "2012Q4"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2012Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",
+   "missingQuarters": [
+    "2012Q4"
+   ],
+   "firstMissingPeriod": "2012Q4",
+   "lastMissingPeriod": "2012Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentOnDerivativesIncludedInNetIncomeNetOfTax",
+   "missingQuarters": [
+    "2010Q4"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2010Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherShortTermBorrowings",
+   "missingQuarters": [
+    "2019Q4"
+   ],
+   "firstMissingPeriod": "2019Q4",
+   "lastMissingPeriod": "2019Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisableWeightedAverageRemainingContractualTerm",
+   "missingQuarters": [
+    "2011Q1"
+   ],
+   "firstMissingPeriod": "2011Q1",
+   "lastMissingPeriod": "2011Q1",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "SignificantChangeInUnrecognizedTaxBenefitsIsReasonablyPossibleEstimatedRangeOfChangeLowerBound",
+   "missingQuarters": [
+    "2013Q4"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2013Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "SignificantChangeInUnrecognizedTaxBenefitsIsReasonablyPossibleEstimatedRangeOfChangeUpperBound",
+   "missingQuarters": [
+    "2013Q4"
+   ],
+   "firstMissingPeriod": "2013Q4",
+   "lastMissingPeriod": "2013Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  },
+  {
+   "cik": 320193,
+   "concept": "TaxesPayableCurrent",
+   "missingQuarters": [
+    "2010Q4"
+   ],
+   "firstMissingPeriod": "2010Q4",
+   "lastMissingPeriod": "2010Q4",
+   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+  }
+ ],
+ "omittedGaps": 0
+}

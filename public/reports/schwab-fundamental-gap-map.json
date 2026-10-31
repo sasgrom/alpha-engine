@@ -1,0 +1,3312 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-10-31T23:55:51.029Z",
+ "sourceGapGeneratedAt": "2026-10-31T23:52:07.473Z",
+ "coverage": {
+  "direct": 2,
+  "derived": 7,
+  "unsupported": 400
+ },
+ "candidates": [
+  {
+   "cik": 320193,
+   "concept": "AccountsPayable",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccountsPayableCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccountsReceivableNetCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccruedIncomeTaxesCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccruedIncomeTaxesNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccruedLiabilities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccruedLiabilitiesCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccruedMarketingCostsCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccumulatedDepreciationDepletionAndAmortizationPropertyPlantAndEquipment",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccumulatedOtherComprehensiveIncomeLossAvailableForSaleSecuritiesAdjustmentNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccumulatedOtherComprehensiveIncomeLossCumulativeChangesInNetGainLossFromCashFlowHedgesEffectNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccumulatedOtherComprehensiveIncomeLossForeignCurrencyTranslationAdjustmentNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AccumulatedOtherComprehensiveIncomeLossNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AdjustmentsToAdditionalPaidInCapitalTaxEffectFromShareBasedCompensation",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AdvertisingExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AllocatedShareBasedCompensationExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AllowanceForDoubtfulAccountsReceivableCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AmortizationOfIntangibleAssets",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AntidilutiveSecuritiesExcludedFromComputationOfEarningsPerShareAmount",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "Assets",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AssetsCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AssetsNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecurities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesAccumulatedGrossUnrealizedGainBeforeTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesAccumulatedGrossUnrealizedLossBeforeTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesAmortizedCost",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesContinuousUnrealizedLossPosition12MonthsOrLongerAccumulatedLoss",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesContinuousUnrealizedLossPositionAccumulatedLoss",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesContinuousUnrealizedLossPositionFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesContinuousUnrealizedLossPositionLessThan12MonthsAccumulatedLoss",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesContinuousUnrealizedLossPositionLessThanTwelveMonthsFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesContinuousUnrealizedLossPositionTwelveMonthsOrLongerFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesDebtSecuritiesCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesDebtSecuritiesNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesFairValueDisclosure",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesGrossUnrealizedLosses1",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableForSaleSecuritiesNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "AvailableforsaleSecuritiesGrossUnrealizedGain",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "BusinessAcquisitionPurchasePriceAllocationAmortizableIntangibleAssets",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "BusinessAcquisitionPurchasePriceAllocationGoodwillAmount",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedIntangibleAssetsOtherThanGoodwill",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedLiabilities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CapitalizedComputerSoftwareAdditions",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CapitalizedComputerSoftwareAmortization",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "Cash",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CashAndCashEquivalentsAtCarryingValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CashAndCashEquivalentsPeriodIncreaseDecrease",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalentsPeriodIncreaseDecreaseIncludingExchangeRateEffect",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CashEquivalentsAtCarryingValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ChangeInUnrealizedGainLossOnFairValueHedgingInstruments",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CollateralAlreadyPostedAggregateFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommercialPaper",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommitmentsAndContingencies",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockDividendsPerShareDeclared",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockNoParValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockParOrStatedValuePerShare",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockSharesAuthorized",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockSharesIssued",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockSharesOutstanding",
+   "status": "direct_candidate",
+   "schwabFields": [
+    "sharesOutstanding"
+   ],
+   "formula": null,
+   "reason": "Direct provider field exists, but it is current snapshot metadata, not EDGAR vintage history."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStockValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CommonStocksIncludingAdditionalPaidInCapital",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ComprehensiveIncomeNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CostOfGoodsAndServicesSold",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CostOfGoodsAndServicesSoldDepreciation",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CostOfReimbursableExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CurrentFederalTaxExpenseBenefit",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CurrentForeignTaxExpenseBenefit",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "CurrentStateAndLocalTaxExpenseBenefit",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DebtInstrumentCarryingAmount",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DebtInstrumentUnamortizedDiscountPremiumAndDebtIssuanceCostsNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DebtInstrumentUnamortizedDiscountPremiumNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DecreaseInUnrecognizedTaxBenefitsIsReasonablyPossible",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredFederalIncomeTaxExpenseBenefit",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredForeignIncomeTaxExpenseBenefit",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxAssetsNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxExpenseBenefit",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxLiabilities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxLiabilitiesNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredRevenueCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredRevenueNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredStateAndLocalIncomeTaxExpenseBenefit",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsDeferredIncome",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsGoodwillAndIntangibleAssets",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsGross",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsLiabilitiesNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsNetCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsOther",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsOtherComprehensiveLoss",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsPropertyPlantAndEquipment",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwards",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsForeign",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsResearch",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxDeferredExpenseCompensationAndBenefitsShareBasedCompensationCost",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxDeferredExpenseReservesAndAccruals",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsUnrealizedLossesOnAvailableforSaleSecuritiesGross",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsValuationAllowance",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesLeasingArrangements",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesOther",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesOtherComprehensiveIncome",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesPropertyPlantAndEquipment",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesUndistributedForeignEarnings",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilityNotRecognizedAmountOfUnrecognizedDeferredTaxLiabilityUndistributedEarningsOfForeignSubsidiaries",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DefinedContributionPlanCostRecognized",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DefinedContributionPlanMaximumAnnualContributionsPerEmployeeAmount",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "Depreciation",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DepreciationAmortizationAndAccretionNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DepreciationAndAmortization",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DepreciationDepletionAndAmortization",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DerivativeCollateralObligationToReturnCash",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "DerivativeFairValueOfDerivativeNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "Dividends",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "EarningsPerShareBasic",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "EarningsPerShareDiluted",
+   "status": "direct_candidate",
+   "schwabFields": [
+    "epsTTM",
+    "eps"
+   ],
+   "formula": null,
+   "reason": "Direct provider field exists, but it is current snapshot metadata, not EDGAR vintage history."
+  },
+  {
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateContinuingOperations",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationAtFederalStatutoryIncomeTaxRate",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationFdiiAmount",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationForeignIncomeTaxRateDifferential",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationShareBasedCompensationExcessTaxBenefitAmount",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationTaxCutsAndJobsActOf2017Amount",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "EmployeeRelatedLiabilitiesCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "EmployeeServiceShareBasedCompensationCashFlowEffectCashUsedToSettleAwards",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "EmployeeServiceShareBasedCompensationUnrecognizedCompensationCostsOnNonvestedAwardsWeightedAveragePeriodOfRecognition",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "EntityCommonStockSharesOutstanding",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "EntityPublicFloat",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ExcessTaxBenefitFromShareBasedCompensationFinancingActivities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FairValueAssetsMeasuredOnRecurringBasisCashAndCashEquivalents",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FairValueAssetsMeasuredOnRecurringBasisDerivativeFinancialInstrumentsAssets",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FairValueHedgesAtFairValueNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FairValueLiabilitiesMeasuredOnRecurringBasisDerivativeFinancialInstrumentsLiabilities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FederalIncomeTaxExpenseBenefitContinuingOperations",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiability",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueAfterYearFive",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueNextTwelveMonths",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueYearFive",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueYearFour",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueYearThree",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueYearTwo",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityUndiscountedExcessAmount",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FinanceLeaseRightOfUseAsset",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAccumulatedAmortization",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseAfterYearFive",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseNextTwelveMonths",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearFive",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearFour",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearThree",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearTwo",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsGross",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsUsefulLifeMaximum",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsUsefulLifeMinimum",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ForeignCurrencyDerivativeAssetsAtFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ForeignCurrencyDerivativeInstrumentsNotDesignatedAsHedgingInstrumentsAssetAtFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ForeignCurrencyDerivativeInstrumentsNotDesignatedAsHedgingInstrumentsLiabilityAtFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ForeignCurrencyDerivativeLiabilitiesAtFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ForeignIncomeTaxExpenseBenefitContinuingOperations",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FurnitureAndFixturesGross",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearFive",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearFour",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearOne",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearThree",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearTwo",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "GainLossOnSaleOfPropertyPlantEquipment",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "GeneralAndAdministrativeExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "Goodwill",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "GoodwillAcquiredDuringPeriod",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "GoodwillImpairmentLoss",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "GrossProfit",
+   "status": "derived_candidate",
+   "schwabFields": [
+    "grossMarginTTM",
+    "grossMarginMRQ"
+   ],
+   "formula": "Margin ratio only; gross-profit dollars are not reconstructed",
+   "reason": "Derived only; never treat as an exact EDGAR replacement or vintage-equivalent fact."
+  },
+  {
+   "cik": 320193,
+   "concept": "HedgedAssetFairValueHedge",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "HedgedLiabilityFairValueHedge",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ImpairmentOfIntangibleAssetsExcludingGoodwill",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ImpairmentOfIntangibleAssetsIndefinitelivedExcludingGoodwill",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesForeign",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxExaminationInterestExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxExpenseBenefit",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationChangeInDeferredTaxAssetsValuationAllowance",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationDeductionsQualifiedProductionActivities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationForeignIncomeTaxRateDifferential",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationIncomeTaxExpenseBenefitAtFederalStatutoryIncomeTaxRate",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationNondeductibleExpenseShareBasedCompensationCost",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationOtherAdjustments",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationOtherReconcilingItems",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationStateAndLocalIncomeTaxes",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationTaxContingenciesDomestic",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationTaxCreditsResearch",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncomeTaxesPaidNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInAccountsPayable",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInAccountsReceivable",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInDeferredRevenue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInInventories",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInOtherOperatingAssets",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInOtherOperatingLiabilities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncreaseDecreaseInOtherReceivables",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncrementalCommonSharesAttributableToShareBasedPaymentArrangements",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IndefiniteLivedIntangibleAssetsExcludingGoodwill",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IntangibleAssetsGrossExcludingGoodwill",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "IntangibleAssetsNetExcludingGoodwill",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "InterestCostsIncurred",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "InterestExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "InterestExpenseDebt",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "InterestPaidNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryFinishedGoodsNetOfReserves",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryPartsAndComponentsNetOfReserves",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryRawMaterialsAndPurchasedPartsNetOfReserves",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "InvestmentIncomeInterestAndDividend",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LeaseAndRentalExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LeaseholdImprovementsGross",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueAfterYearFive",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueNextTwelveMonths",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueYearFive",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueYearFour",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueYearThree",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueYearTwo",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityUndiscountedExcessAmount",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "Liabilities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LiabilitiesAndStockholdersEquity",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LiabilitiesCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LiabilitiesNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebt",
+   "status": "derived_candidate",
+   "schwabFields": [
+    "totalDebtToCapital",
+    "totalDebtToEquity",
+    "ltDebtToEquity"
+   ],
+   "formula": "Debt ratios only; debt dollars are not reconstructed",
+   "reason": "Derived only; never treat as an exact EDGAR replacement or vintage-equivalent fact."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalAfterYearFive",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalRemainderOfFiscalYear",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "LongTermDebtNoncurrent",
+   "status": "derived_candidate",
+   "schwabFields": [
+    "totalDebtToCapital",
+    "totalDebtToEquity",
+    "ltDebtToEquity"
+   ],
+   "formula": "Debt ratios only; debt dollars are not reconstructed",
+   "reason": "Derived only; never treat as an exact EDGAR replacement or vintage-equivalent fact."
+  },
+  {
+   "cik": 320193,
+   "concept": "MarketingExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetCashProvidedByUsedInFinancingActivities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetCashProvidedByUsedInFinancingActivitiesContinuingOperations",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetCashProvidedByUsedInInvestingActivities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetCashProvidedByUsedInInvestingActivitiesContinuingOperations",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetCashProvidedByUsedInOperatingActivities",
+   "status": "derived_candidate",
+   "schwabFields": [
+    "pcfRatio",
+    "marketCap"
+   ],
+   "formula": "marketCap / pcfRatio",
+   "reason": "Derived only; never treat as an exact EDGAR replacement or vintage-equivalent fact."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "NetIncomeLoss",
+   "status": "derived_candidate",
+   "schwabFields": [
+    "epsTTM",
+    "sharesOutstanding"
+   ],
+   "formula": "epsTTM × sharesOutstanding",
+   "reason": "Derived only; never treat as an exact EDGAR replacement or vintage-equivalent fact."
+  },
+  {
+   "cik": 320193,
+   "concept": "NoncurrentAssets",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "NonoperatingIncomeExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "NontradeReceivablesCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "NotionalAmountOfForeignCurrencyDerivativeInstrumentsNotDesignatedAsHedgingInstruments",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OciBeforeReclassificationsBeforeTaxAttributableToParent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingExpenses",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingIncomeLoss",
+   "status": "derived_candidate",
+   "schwabFields": [
+    "operatingMarginTTM",
+    "operatingMarginMRQ"
+   ],
+   "formula": "Margin ratio only; operating-income dollars are not reconstructed",
+   "reason": "Derived only; never treat as an exact EDGAR replacement or vintage-equivalent fact."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeaseCost",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeaseLiability",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeaseLiabilityCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeaseLiabilityNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasePayments",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeaseRightOfUseAsset",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInFiveYears",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInFourYears",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInThreeYears",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInTwoYears",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueThereafter",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OperatingLeasesRentExpenseNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherAccruedLiabilitiesCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherAccruedLiabilitiesNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherAssetsCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherAssetsMiscellaneousNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherAssetsNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeAvailableForSaleSecuritiesAdjustmentNetOfTaxPeriodIncreaseDecrease",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeDerivativesQualifyingAsHedgesNetOfTaxPeriodIncreaseDecrease",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeForeignCurrencyTransactionAndTranslationAdjustmentNetOfTaxPeriodIncreaseDecrease",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossAvailableForSaleSecuritiesAdjustmentNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossCashFlowHedgeGainLossReclassificationAfterTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossDerivativesQualifyingAsHedgesNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossForeignCurrencyTranslationAdjustmentTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossNetOfTaxPortionAttributableToParent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentForSaleOfSecuritiesIncludedInNetIncomeNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIForSaleOfSecuritiesNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIForSaleOfSecuritiesTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIOnDerivativesNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentFromAOCIOnDerivativesTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentOnDerivativesIncludedInNetIncomeNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentOnDerivativesIncludedInNetIncomeTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossTaxPortionAttributableToParent1",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeReclassificationAdjustmentOnDerivativesIncludedInNetIncomeNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeReclassificationAdjustmentOnDerivativesIncludedInNetIncomeTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeUnrealizedGainLossOnDerivativesArisingDuringPeriodNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeUnrealizedGainLossOnDerivativesArisingDuringPeriodTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeUnrealizedHoldingGainLossOnSecuritiesArisingDuringPeriodNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeUnrealizedHoldingGainLossOnSecuritiesArisingDuringPeriodTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherDeferredCreditsCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherLiabilitiesCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherLiabilitiesNoncurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherNonoperatingIncomeExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "OtherShortTermBorrowings",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsForProceedsFromOtherInvestingActivities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsRelatedToTaxWithholdingForShareBasedCompensation",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsToAcquireAvailableForSaleSecurities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsToAcquireAvailableForSaleSecuritiesDebt",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsToAcquireBusinessesNetOfCashAcquired",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsToAcquireIntangibleAssets",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsToAcquireOtherInvestments",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "PaymentsToAcquireProductiveAssets",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromIssuanceOfCommonStock",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromIssuanceOfLongTermDebt",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromMaturitiesPrepaymentsAndCallsOfAvailableForSaleSecurities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromOtherShortTermDebt",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromPaymentsForOtherFinancingActivities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromRepaymentsOfCommercialPaper",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromRepaymentsOfShortTermDebtMaturingInMoreThanThreeMonths",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromSaleAndMaturityOfOtherInvestments",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromSaleOfAvailableForSaleSecurities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromSaleOfAvailableForSaleSecuritiesDebt",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProceedsFromShortTermDebtMaturingInMoreThanThreeMonths",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProductWarrantyAccrualClassifiedCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProductWarrantyAccrualPayments",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProductWarrantyAccrualWarrantiesIssued",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ProductWarrantyExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "PropertyPlantAndEquipmentGross",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "PropertyPlantAndEquipmentNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ReclassificationFromAociCurrentPeriodBeforeTaxAttributableToParent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "RepaymentsOfLongTermDebt",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ResearchAndDevelopmentExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "RetainedEarningsAccumulatedDeficit",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "SalesRevenueNet",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "SegmentReportingInformationOperatingIncomeLoss",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "SegmentReportingReconcilingItemsAssets",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "SegmentReportingSegmentAssets",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "SellingAndMarketingExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "SellingGeneralAndAdministrativeExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensation",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsForfeitedInPeriod",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsForfeitedInPeriodWeightedAverageGrantDateFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsForfeituresWeightedAverageGrantDateFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsGrantsInPeriod",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsGrantsInPeriodWeightedAverageGrantDateFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedNumber",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsNonvestedWeightedAverageGrantDateFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedInPeriod",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedInPeriodTotalFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsVestedInPeriodWeightedAverageGrantDateFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardFairValueAssumptionsExpectedDividendRate",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardFairValueAssumptionsExpectedTerm",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardFairValueAssumptionsRiskFreeInterestRate",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardFairValueAssumptionsWeightedAverageVolatilityRate",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardNumberOfSharesAvailableForGrant",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisableWeightedAverageRemainingContractualTerm",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisesInPeriod",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisesInPeriodTotalIntrinsicValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsExercisesInPeriodWeightedAverageExercisePrice",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsForfeituresInPeriod",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsForfeituresInPeriodWeightedAverageExercisePrice",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsGrantsInPeriod",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsGrantsInPeriodWeightedAverageExercisePrice",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsGrantsInPeriodWeightedAverageGrantDateFairValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingNumber",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsOutstandingWeightedAverageExercisePrice",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementsByShareBasedPaymentAwardOptionsExercisesInPeriodWeightedAverageExercisePrice",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementsByShareBasedPaymentAwardOptionsForfeituresInPeriodWeightedAverageExercisePrice",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShareBasedCompensationArrangementsByShareBasedPaymentAwardOptionsGrantsInPeriodWeightedAverageExercisePrice",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "SharesPaidForTaxWithholdingForShareBasedCompensation",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "ShortTermDebtWeightedAverageInterestRate",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "SignificantChangeInUnrecognizedTaxBenefitsIsReasonablyPossibleEstimatedRangeOfChangeLowerBound",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "SignificantChangeInUnrecognizedTaxBenefitsIsReasonablyPossibleEstimatedRangeOfChangeUpperBound",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "StandardProductWarrantyAccrual",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "StandardProductWarrantyAccrualPayments",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "StandardProductWarrantyAccrualWarrantiesIssued",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "StateAndLocalIncomeTaxExpenseBenefitContinuingOperations",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockIssuedDuringPeriodSharesStockOptionsExercised",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockIssuedDuringPeriodValueShareBasedCompensation",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockRepurchaseProgramAuthorizedAmount1",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockRepurchasedAndRetiredDuringPeriodShares",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockRepurchasedAndRetiredDuringPeriodValue",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockholdersEquity",
+   "status": "derived_candidate",
+   "schwabFields": [
+    "bookValuePerShare",
+    "sharesOutstanding"
+   ],
+   "formula": "bookValuePerShare × sharesOutstanding",
+   "reason": "Derived only; never treat as an exact EDGAR replacement or vintage-equivalent fact."
+  },
+  {
+   "cik": 320193,
+   "concept": "StockholdersEquityNoteStockSplitConversionRatio1",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "TaxesPayableCurrent",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "TranslationAdjustmentForNetInvestmentHedgeNetOfTax",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "TreasuryStockValueAcquiredCostMethod",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UndistributedEarningsOfForeignSubsidiaries",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefits",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsDecreasesResultingFromPriorPeriodTaxPositions",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsDecreasesResultingFromSettlementsWithTaxingAuthorities",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsIncomeTaxPenaltiesAndInterestAccrued",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsIncomeTaxPenaltiesAndInterestExpense",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsIncreasesResultingFromCurrentPeriodTaxPositions",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsIncreasesResultingFromPriorPeriodTaxPositions",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsReductionsResultingFromLapseOfApplicableStatuteOfLimitations",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsThatWouldImpactEffectiveTaxRate",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnFifthAnniversary",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnFirstAnniversary",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnFourthAnniversary",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnSecondAnniversary",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnThirdAnniversary",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceSheetAmount",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueAfterFiveYears",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueInRemainderOfFiscalYear",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "VariableLeaseCost",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "WeightedAverageNumberDilutedSharesOutstandingAdjustment",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "WeightedAverageNumberOfDilutedSharesOutstanding",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  },
+  {
+   "cik": 320193,
+   "concept": "WeightedAverageNumberOfSharesOutstandingBasic",
+   "status": "unsupported",
+   "schwabFields": [],
+   "formula": null,
+   "reason": "No direct or defensible derived Schwab fundamental field exists for this XBRL concept."
+  }
+ ]
+}

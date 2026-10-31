@@ -176,6 +176,18 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Read-only QA report; no repairs, deletions or silent interpolation.", requirements: ["mysql", "review"], notes: "Run with --strict to block the next research stage on any error. Warnings retain unit changes, irregular durations, revision outliers and concept coverage gaps for review.",
   }),
   job({
+    id: "edgar-gap-analysis", name: "EDGAR coverage and continuity gap analysis", group: "fundamentals", mode: "manual", cron: null, defaultEnabled: false, dependsOn: ["fundamental-integrity-audit"],
+    ...npx("scripts/edgar-gap-analysis.mts"), purpose: "Group integrity findings by era, concept and unique missing quarter rather than treating all history as equally repairable.",
+    input: "public/reports/fundamental-integrity.json with periodEnd >= 2000-01-01.", output: "edgar-coverage-gaps.json and .md with era/type/CIK summaries, deduplicated missing quarters and remediation guidance.",
+    destination: "Read-only EDGAR remediation manifest.", requirements: ["review"], notes: "Pre-2000 findings are excluded. Recent gaps trigger EDGAR refresh; historical gaps are not blindly backfilled with current-provider data.",
+  }),
+  job({
+    id: "schwab-fundamental-gap-map", name: "Schwab fundamental gap mapping", group: "fundamentals", mode: "manual", cron: null, defaultEnabled: false, dependsOn: ["edgar-gap-analysis", "schwab-context-hourly"],
+    ...npx("scripts/schwab-fundamental-gap-map.mts"), purpose: "Map EDGAR concept gaps to direct, derived and unsupported Schwab fundamental candidates without fabricating XBRL replacements.",
+    input: "edgar-coverage-gaps.json, schwab-context.json and the 51-name ticker registry.", output: "schwab-fundamental-gap-map.json and .md with per-concept fields, formulas and vintage-equivalence warnings.",
+    destination: "Read-only candidate map for a later reviewed repair plan.", requirements: ["review"], notes: "Direct fields are current metadata, not vintage replacements. Derived formulas are approximate; unsupported concepts stay missing.",
+  }),
+  job({
     id: "tone-event-study", name: "Availability-anchored tone event study", group: "research", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
     ...npx("scripts/tone-event-study.mts"), purpose: "Estimate abnormal returns and CAR after filings with conservative post-close availability.",
     input: "Local tone events, prices and SPY.", output: "Event-study JSON used by the Analytics CAR chart.",
