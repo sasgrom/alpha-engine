@@ -1,6 +1,6 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-10-31T00:25:24.683Z",
+ "generatedAt": "2026-10-31T03:14:37.257Z",
  "provider": "schwab",
  "files": [
   {
@@ -246,7 +246,7 @@
    "file": "chains/2026-10-31/MU.json",
    "sourceHash": "",
    "status": "partial",
-   "capturedAt": "2026-10-31T00:05:26.492Z",
+   "capturedAt": "2026-10-31T03:14:24.386Z",
    "error": "Error: HTTP 502: {\"fault\":{\"faultstring\":\"Body buffer overflow\",\"detail\":{\"errorcode\":\"protocol.http.TooBigBody\"}}}"
   },
   {
@@ -370,8 +370,8 @@
   "contracts": 117212,
   "expirations": 30,
   "latestCapture": "2026-10-31T00:06:23.615Z",
-  "tokenExpiresAt": "2026-10-31T00:34:34.023Z",
-  "lastRefreshAt": "2026-10-31T00:04:34.023Z"
+  "tokenExpiresAt": "2026-10-31T03:43:53.897Z",
+  "lastRefreshAt": "2026-10-31T03:13:53.897Z"
  },
  "options": [
   {
