@@ -170,6 +170,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Console/log only.", requirements: ["mysql", "review"], notes: "Use --strict manually only after the known registry decision is resolved.",
   }),
   job({
+    id: "fundamental-integrity-audit", name: "Fundamental integrity and continuity audit", group: "fundamentals", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
+    ...npx("scripts/fundamental-integrity-audit.mts"), purpose: "Fail closed on duplicates, unit conflicts, missing periods, availability inversions, continuity gaps and factor-before-fact without modifying the database.",
+    input: "Local facts, series_points, factor_points, company registry and research-universe-51.json.", output: "public/reports/fundamental-integrity.json and .md with CIK, concept, period and accession evidence plus explicit omitted-issue counts.",
+    destination: "Read-only QA report; no repairs, deletions or silent interpolation.", requirements: ["mysql", "review"], notes: "Run with --strict to block the next research stage on any error. Warnings retain unit changes, irregular durations, revision outliers and concept coverage gaps for review.",
+  }),
+  job({
     id: "tone-event-study", name: "Availability-anchored tone event study", group: "research", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
     ...npx("scripts/tone-event-study.mts"), purpose: "Estimate abnormal returns and CAR after filings with conservative post-close availability.",
     input: "Local tone events, prices and SPY.", output: "Event-study JSON used by the Analytics CAR chart.",
