@@ -36,5 +36,13 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "three-core": [path.resolve(__dirname, "node_modules/three/build/three.core.js")],
+          "three-renderer": ["three"],
+        },
+      },
+    },
   },
 });
