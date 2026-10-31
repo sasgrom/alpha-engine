@@ -10,9 +10,9 @@ Use exactly **one** web server on port 3000. The scheduler is a separate process
 
 Normal daily UI and local ingest API.
 
-- **When:** Use for ordinary operation after npm run build. Do not run together with the dev server.
+- **When:** Use for ordinary operation after npm run build. Install the hidden ONLOGON task with worker/home-server-install.ps1; never run it together with the dev server.
 - **Input:** dist/public, dist/boot.js and the home .env.
-- **Output:** One local application at http://127.0.0.1:3000.
+- **Output:** One local application at http://127.0.0.1:3000 and worker/.runs/home-server.log.
 
 ```powershell
 $env:NODE_ENV = "production"
@@ -116,16 +116,19 @@ Receive reviewed data and present the cloud UI.
 Manual terminal apply after review only
 ```
 
-## 2. Install the single cron engine
+## 2. Install hidden startup processes
 
 Run from `C:\dev\alpha-engine` after `git pull` and `npm install --no-audit --no-fund`:
 
 ```powershell
+npm run build
+powershell -ExecutionPolicy Bypass -File worker\home-server-install.ps1
 powershell -ExecutionPolicy Bypass -File worker\operations-scheduler-install.ps1 -DisableLegacyTasks
+schtasks /Run /TN AlphaEngine-Home-Server
 schtasks /Run /TN AlphaEngine-Operations-Scheduler
 ```
 
-The installer creates one `ONLOGON` task. `-DisableLegacyTasks` disables old Stocktwits, GDELT and Digest tasks when present and skips tasks that do not exist, so reruns are idempotent. GDELT remains frozen. To inspect or stop the scheduler:
+Both installers create hidden `ONLOGON` processes: the production UI and the single cron engine. `npm run dev` remains a manual development-only mode. `-DisableLegacyTasks` disables old Stocktwits, GDELT and Digest tasks when present and skips tasks that do not exist, so reruns are idempotent. GDELT remains frozen. Because the hidden launchers detach, Task Scheduler may show Ready rather than Running; verify the server with curl and the scheduler with its heartbeat/log. To inspect or stop the scheduler:
 
 ```powershell
 schtasks /Query /TN AlphaEngine-Operations-Scheduler /V /FO LIST

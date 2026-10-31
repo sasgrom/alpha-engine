@@ -20,14 +20,16 @@ $env:NODE_ENV = "production"
 node dist/boot.js
 ```
 
-Install the single scheduler once:
+Install the hidden production server and single scheduler once:
 
 ```powershell
+powershell -ExecutionPolicy Bypass -File worker\home-server-install.ps1
 powershell -ExecutionPolicy Bypass -File worker\operations-scheduler-install.ps1 -DisableLegacyTasks
+schtasks /Run /TN AlphaEngine-Home-Server
 schtasks /Run /TN AlphaEngine-Operations-Scheduler
 ```
 
-For development, stop the production server and use `npm run dev`. For scheduler diagnostics, use `npx tsx worker/operations-scheduler.mts` instead of the Windows task.
+Both start hidden at logon. For development, stop the production server and use `npm run dev`. For scheduler diagnostics, use `npx tsx worker/operations-scheduler.mts` instead of the Windows task.
 
 ## Safety boundaries
 

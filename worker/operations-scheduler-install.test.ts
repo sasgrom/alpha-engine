@@ -17,4 +17,12 @@ describe("operations scheduler installer", () => {
     expect(script).not.toContain('schtasks /Create /TN "AlphaEngine-Stocktwits"');
     expect(script).not.toContain('schtasks /Create /TN "AlphaEngine-GDELT"');
   });
+
+  it("starts the scheduler through the hidden launcher", () => {
+    expect(script).toContain("operations-scheduler-hidden.vbs");
+    expect(script).not.toContain("$Action = \"cmd /c");
+    const hidden = readFileSync("worker/operations-scheduler-hidden.vbs", "utf8");
+    expect(hidden).toContain("operations-scheduler.mts");
+    expect(hidden).toContain(", 0, False");
+  });
 });

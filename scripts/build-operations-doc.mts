@@ -19,16 +19,19 @@ for (const module of OPERATION_MODULES) {
   lines.push(`### ${module.name}`, "", module.purpose, "", `- **When:** ${module.when}`, `- **Input:** ${module.input}`, `- **Output:** ${module.output}`, "", "```powershell", module.normalCommand, "```", "");
 }
 lines.push(
-  "## 2. Install the single cron engine",
+  "## 2. Install hidden startup processes",
   "",
   "Run from `C:\\dev\\alpha-engine` after `git pull` and `npm install --no-audit --no-fund`:",
   "",
   "```powershell",
+  "npm run build",
+  "powershell -ExecutionPolicy Bypass -File worker\\home-server-install.ps1",
   "powershell -ExecutionPolicy Bypass -File worker\\operations-scheduler-install.ps1 -DisableLegacyTasks",
+  "schtasks /Run /TN AlphaEngine-Home-Server",
   "schtasks /Run /TN AlphaEngine-Operations-Scheduler",
   "```",
   "",
-  "The installer creates one `ONLOGON` task. `-DisableLegacyTasks` disables old Stocktwits, GDELT and Digest tasks when present and skips tasks that do not exist, so reruns are idempotent. GDELT remains frozen. To inspect or stop the scheduler:",
+  "Both installers create hidden `ONLOGON` processes: the production UI and the single cron engine. `npm run dev` remains a manual development-only mode. `-DisableLegacyTasks` disables old Stocktwits, GDELT and Digest tasks when present and skips tasks that do not exist, so reruns are idempotent. GDELT remains frozen. Because the hidden launchers detach, Task Scheduler may show Ready rather than Running; verify the server with curl and the scheduler with its heartbeat/log. To inspect or stop the scheduler:",
   "",
   "```powershell",
   "schtasks /Query /TN AlphaEngine-Operations-Scheduler /V /FO LIST",
