@@ -51,6 +51,9 @@ describe("Operations center", () => {
   it("offers the full runbook and keeps frozen and production apply jobs non-runnable", async () => {
     await click(button(host!, "Runbook")!);
     expect(host!.textContent).toContain("operations-scheduler-install.ps1");
+    expect(host!.textContent).toContain("cohort-extract.log");
+    expect(host!.textContent).toContain("Expected output");
+    expect(host!.textContent).toContain("Activity vs static report");
     expect(host!.textContent).toContain("Production cron");
     expect(host!.textContent).toContain("Reviewed signals production push");
     expect(host!.textContent).toContain("Frozen — no automated or manual GDELT requests");

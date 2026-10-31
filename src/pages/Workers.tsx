@@ -235,7 +235,18 @@ export default function Workers() {
                   <p>Stocktwits runs hourly at minute 30. 13F checks run Monday and Thursday. Tone, cohort extraction and legacy Cboe remain paused until explicitly enabled. Research evaluations and production apply are not cron jobs.</p>
                 </article>
                 <article className="t-panel ops-doc-section">
-                  <span className="t-label">03 · Full registry documentation</span><h2>What runs, why, and where the data goes.</h2>
+                  <span className="t-label">03 · Live cohort extraction</span><h2>Current source, rate, ETA and resume.</h2>
+                  <ol className="ops-steps">
+                    <li><strong>Run from C:\dev\alpha-engine and keep a live log.</strong><code>{`npx tsx worker/edgar-cohort-extract.mts --universe research-universe-51.json 2>&1 | Tee-Object -FilePath worker\\.runs\\cohort-extract.log`}</code><CopyButton text={'npx tsx worker/edgar-cohort-extract.mts --universe research-universe-51.json 2>&1 | Tee-Object -FilePath worker\\.runs\\cohort-extract.log'} /></li>
+                    <li><strong>Watch progress in a second PowerShell.</strong><code>{`Get-Content worker\\.runs\\cohort-extract.log -Tail 40 -Wait`}</code><CopyButton text={'Get-Content worker\\.runs\\cohort-extract.log -Tail 40 -Wait'} /><p>Follow only failures with <code>Get-Content worker\.runs\cohort-extraction-failures.jsonl -Tail 20 -Wait</code>.</p></li>
+                    <li><strong>Expected output.</strong><pre className="ops-expected">{`0/195 (0001018724-26-000004:primary:... · started) | 0.0/min | elapsed 0s
+1/195 (0001018724-26-000026:primary:... · extracted) | 2.4/min | ETA 1h05m | elapsed 25s
+2/195 (0001018724-26-000038:exhibit:... · resumed) | 2.8/min | ETA 58m | elapsed 43s`}</pre><p><code>started</code> means the LLM request is still in flight. Terminal lines show extracted, empty, unparsed, fallback, request_failed or resumed. Each source is checkpointed atomically to <code>worker\cache\edgar\&lt;CIK&gt;\cohort-v2.json</code>, so Ctrl+C and a later restart preserve completed work.</p></li>
+                  </ol>
+                  <p><strong>Activity vs static report:</strong> Operations → Activity shows the scheduler log for jobs launched here. `/expectations` is the reviewed static report, not a live progress view. A manual extraction started before this progress update must be restarted after `git pull` to show the new lines; completed sources resume.</p>
+                </article>
+                <article className="t-panel ops-doc-section">
+                  <span className="t-label">04 · Full registry documentation</span><h2>What runs, why, and where the data goes.</h2>
                   <div className="ops-runbook-jobs">{OPERATION_JOBS.map((job) => <details key={job.id} id={`runbook-${job.id}`}><summary><span>{job.name}</span><ModeBadge job={job} /></summary>{jobDetails(job, true)}</details>)}</div>
                 </article>
               </section>
