@@ -16,14 +16,17 @@ if ($LASTEXITCODE -ne 0) {
 
 if ($DisableLegacyTasks) {
   foreach ($Name in @("AlphaEngine-Stocktwits", "AlphaEngine-GDELT", "AlphaEngine-Digest")) {
-    schtasks /Query /TN $Name *> $null
-    if ($LASTEXITCODE -ne 0) {
+    $LegacyTask = Get-ScheduledTask -TaskName $Name -ErrorAction SilentlyContinue
+    if ($null -eq $LegacyTask) {
       Write-Host "Legacy task not present, skipping: $Name"
       continue
     }
-    schtasks /Change /TN $Name /DISABLE | Out-Host
-    if ($LASTEXITCODE -ne 0) {
-      Write-Warning "Could not disable legacy task $Name (exit $LASTEXITCODE)"
+    try {
+      Disable-ScheduledTask -InputObject $LegacyTask -ErrorAction Stop | Out-Null
+      Write-Host "Disabled legacy task: $Name"
+    }
+    catch {
+      Write-Warning "Could not disable legacy task ${Name}: $($_.Exception.Message)"
     }
   }
 }
