@@ -77,6 +77,25 @@ npx tsx worker/edgar-cohort-extract.mts --universe research-universe-53.json
 
 The worker reads `cohort-pack-v2.json`, makes one bounded request per target source and writes `cohort-v2.json` atomically after every source. It resumes only when source, container, input hash, model and prompt version all match.
 
+### Live progress and logs
+
+Every source now reports `done/total`, its current `sourceId`, `started` or terminal status, processing rate, ETA and elapsed time. A long LLM call therefore leaves a visible current-source line instead of only an eventual error.
+
+To keep the same output in a log while it is printed:
+
+```powershell
+npx tsx worker/edgar-cohort-extract.mts --universe research-universe-51.json 2>&1 | Tee-Object -FilePath worker\.runs\cohort-extract.log
+```
+
+Watch from a second PowerShell:
+
+```powershell
+Get-Content worker\.runs\cohort-extract.log -Tail 40 -Wait
+Get-Content worker\.runs\cohort-extraction-failures.jsonl -Tail 20 -Wait
+```
+
+Per-company `cohort-v2.json` files are checkpoints and can be inspected by `LastWriteTime`; `/expectations` is a reviewed static report, not a live progress view. When extraction is started from Operations, its Activity view reads the scheduler log instead.
+
 ### Run the independent benchmark and build the static UI report
 
 ```powershell

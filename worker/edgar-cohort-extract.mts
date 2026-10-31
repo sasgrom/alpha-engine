@@ -124,13 +124,25 @@ for (const company of universe) {
       || a.source.eventTs.localeCompare(b.source.eventTs)
       || a.source.sourceId.localeCompare(b.source.sourceId));
   let consecutiveFailures = 0;
+  let companyDone = 0;
+  prog.stage(`${company.ticker}: ${tasks.length} sources`);
   for (const { container, source } of tasks.slice(0, limit ?? undefined)) {
     totals.sources++;
     const targetText = cohortSourceText(container, source.sourceId);
-    if (!targetText) continue;
+    if (!targetText) {
+      companyDone++;
+      prog.item(companyDone, tasks.length, `${source.sourceId} · no target text`);
+      continue;
+    }
+    prog.item(companyDone, tasks.length, `${source.sourceId} · started`);
     const inputSha256 = sha256(`${source.sourceId}\n${container.inputSha256}`);
     const prior = result.entries.find((entry) => entry.sourceId === source.sourceId && entry.containerId === container.containerId && entry.inputSha256 === inputSha256 && entry.model === LLM_MODEL && entry.promptVersion === EXPECTATIONS_PROMPT_VERSION);
-    if (prior && prior.status !== "request_failed" && prior.status !== "unparsed") { totals.resumed++; continue; }
+    if (prior && prior.status !== "request_failed" && prior.status !== "unparsed") {
+      totals.resumed++;
+      companyDone++;
+      prog.item(companyDone, tasks.length, `${source.sourceId} · resumed`);
+      continue;
+    }
     const base: CohortResultEntry = {
       cik: company.cik,
       ticker: company.ticker,
@@ -160,7 +172,9 @@ for (const company of universe) {
     };
     if (dryRun) {
       totals.planned++;
+      companyDone++;
       prog.log(`${company.ticker} ${container.containerId} ${source.sourceId}: ${(Buffer.byteLength(targetText) / 1024).toFixed(1)} KiB target · ${container.estimatedTokens.toLocaleString("en-US")} tok container`);
+      prog.item(companyDone, tasks.length, `${source.sourceId} · planned`);
       continue;
     }
     try {
@@ -232,6 +246,8 @@ for (const company of universe) {
     }
     result.entries = [...result.entries.filter((entry) => !(entry.sourceId === source.sourceId && entry.containerId === container.containerId)), base];
     writeJsonAtomic(outputPath(company.cik), result, true);
+    companyDone++;
+    prog.item(companyDone, tasks.length, `${source.sourceId} · ${base.status}`);
     if (shouldAbortLlmBatch(consecutiveFailures)) {
       prog.done(`aborted after two LLM failures · state saved · ${JSON.stringify(totals)}`);
       process.exit(2);
