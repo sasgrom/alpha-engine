@@ -1,0 +1,127 @@
+[
+  {
+    "cik": 2488,
+    "ticker": "AMD",
+    "name": "AMD"
+  },
+  {
+    "cik": 50863,
+    "ticker": "INTC",
+    "name": "INTC"
+  },
+  {
+    "cik": 1321655,
+    "ticker": "PLTR",
+    "name": "PLTR"
+  },
+  {
+    "cik": 1065280,
+    "ticker": "NFLX",
+    "name": "NFLX"
+  },
+  {
+    "cik": 1318605,
+    "ticker": "TSLA",
+    "name": "TSLA"
+  },
+  {
+    "cik": 320187,
+    "ticker": "NKE",
+    "name": "NKE"
+  },
+  {
+    "cik": 1397187,
+    "ticker": "LULU",
+    "name": "LULU"
+  },
+  {
+    "cik": 884887,
+    "ticker": "RCL",
+    "name": "RCL"
+  },
+  {
+    "cik": 886982,
+    "ticker": "GS",
+    "name": "GS"
+  },
+  {
+    "cik": 927628,
+    "ticker": "COF",
+    "name": "COF"
+  },
+  {
+    "cik": 78003,
+    "ticker": "PFE",
+    "name": "PFE"
+  },
+  {
+    "cik": 2115436,
+    "ticker": "XOM",
+    "name": "XOM"
+  },
+  {
+    "cik": 831259,
+    "ticker": "FCX",
+    "name": "FCX"
+  },
+  {
+    "cik": 12927,
+    "ticker": "BA",
+    "name": "BA"
+  },
+  {
+    "cik": 753308,
+    "ticker": "NEE",
+    "name": "NEE"
+  },
+  {
+    "cik": 1596532,
+    "ticker": "ANET",
+    "name": "ANET"
+  },
+  {
+    "cik": 723125,
+    "ticker": "MU",
+    "name": "MU"
+  },
+  {
+    "cik": 1375365,
+    "ticker": "SMCI",
+    "name": "SMCI"
+  },
+  {
+    "cik": 1274494,
+    "ticker": "FSLR",
+    "name": "FSLR"
+  },
+  {
+    "cik": 1682852,
+    "ticker": "MRNA",
+    "name": "MRNA"
+  },
+  {
+    "cik": 27904,
+    "ticker": "DAL",
+    "name": "DAL"
+  },
+  {
+    "cik": 1792789,
+    "ticker": "DASH",
+    "name": "DASH"
+  },
+  {
+    "cik": 18230,
+    "ticker": "CAT",
+    "name": "CAT"
+  },
+  {
+    "cik": 1053507,
+    "ticker": "AMT",
+    "name": "AMT"
+  },
+  {
+    "cik": 1506307,
+    "ticker": "KMI",
+    "name": "KMI"
+  }
+]

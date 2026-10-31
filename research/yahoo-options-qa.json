@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-29",
+  "provider": "Yahoo Finance get_option_chain",
+  "underlying": "AAPL",
+  "conclusion": "Rejected as an IV/Greeks/OI source. Keep only as a limited activity reference, not a production options provider.",
+  "near": {
+    "expiration": "2026-11-20",
+    "yahooRows": 178,
+    "matchedContracts": 178,
+    "cboeExpirationRows": 188,
+    "twoSidedQuotes": 1,
+    "twoSidedShare": 0.0056179775280898875,
+    "positiveIvShare": 0.5280898876404494,
+    "ivMedianAbsError": 0.26274093749999994,
+    "positiveOpenInterestShare": 0,
+    "volumeSpearmanVsCboe": 0.7163865197506639
+  },
+  "far": {
+    "expiration": "2028-12-15",
+    "yahooRows": 145,
+    "matchedContracts": 145,
+    "cboeExpirationRows": 146,
+    "twoSidedQuotes": 5,
+    "twoSidedShare": 0.034482758620689655,
+    "positiveIvShare": 0.5172413793103449,
+    "ivMedianAbsError": 0.258490625,
+    "positiveOpenInterestShare": 0.020689655172413793,
+    "volumeSpearmanVsCboe": 0.2591334034480795
+  },
+  "notes": [
+    "Contract IDs match the existing Cboe snapshot; low quote coverage is a provider-data limitation, not a join failure.",
+    "Most bid/ask fields are zero and many IV values are placeholders or coarse bands.",
+    "Near-expiry volume rank agreement does not generalize to the far expiry.",
+    "The earlier EODHD/Cboe near-ATM QA result is unchanged."
+  ]
+}

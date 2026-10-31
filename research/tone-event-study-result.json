@@ -1,0 +1,721 @@
+{
+  "policy": {
+    "session": "post_close",
+    "model": "market OLS, 120 estimation returns, minimum 60",
+    "scoreGroups": "positive >= 0.2; negative <= -0.2"
+  },
+  "companies": [
+    {
+      "ticker": "NVDA",
+      "cik": 1045810,
+      "filings": 250,
+      "usableEvents": 81,
+      "first": "2020-02-10",
+      "last": "2026-08-27"
+    },
+    {
+      "ticker": "AMD",
+      "cik": 2488,
+      "filings": 250,
+      "usableEvents": 62,
+      "first": "2020-02-05",
+      "last": "2026-08-18"
+    },
+    {
+      "ticker": "INTC",
+      "cik": 50863,
+      "filings": 250,
+      "usableEvents": 46,
+      "first": "2020-04-24",
+      "last": "2026-07-24"
+    },
+    {
+      "ticker": "PLTR",
+      "cik": 1321655,
+      "filings": 55,
+      "usableEvents": 53,
+      "first": "2021-02-17",
+      "last": "2026-08-05"
+    },
+    {
+      "ticker": "META",
+      "cik": 1326801,
+      "filings": 168,
+      "usableEvents": 85,
+      "first": "2020-01-30",
+      "last": "2026-10-23"
+    },
+    {
+      "ticker": "NFLX",
+      "cik": 1065280,
+      "filings": 231,
+      "usableEvents": 57,
+      "first": "2020-01-30",
+      "last": "2026-10-22"
+    },
+    {
+      "ticker": "AMZN",
+      "cik": 1018724,
+      "filings": 250,
+      "usableEvents": 50,
+      "first": "2020-01-31",
+      "last": "2026-08-07"
+    },
+    {
+      "ticker": "TSLA",
+      "cik": 1318605,
+      "filings": 153,
+      "usableEvents": 41,
+      "first": "2020-01-30",
+      "last": "2026-10-23"
+    },
+    {
+      "ticker": "NKE",
+      "cik": 320187,
+      "filings": 250,
+      "usableEvents": 59,
+      "first": "2020-02-06",
+      "last": "2026-10-05"
+    },
+    {
+      "ticker": "LULU",
+      "cik": 1397187,
+      "filings": 174,
+      "usableEvents": 55,
+      "first": "2020-02-10",
+      "last": "2026-09-04"
+    },
+    {
+      "ticker": "RCL",
+      "cik": 884887,
+      "filings": 147,
+      "usableEvents": 44,
+      "first": "2020-02-05",
+      "last": "2026-10-07"
+    },
+    {
+      "ticker": "GS",
+      "cik": 886982,
+      "filings": 250,
+      "usableEvents": 83,
+      "first": "2020-01-30",
+      "last": "2026-10-14"
+    },
+    {
+      "ticker": "COF",
+      "cik": 927628,
+      "filings": 250,
+      "usableEvents": 68,
+      "first": "2020-02-21",
+      "last": "2026-10-21"
+    },
+    {
+      "ticker": "UNH",
+      "cik": 731766,
+      "filings": 250,
+      "usableEvents": 55,
+      "first": "2020-02-11",
+      "last": "2026-10-14"
+    },
+    {
+      "ticker": "PFE",
+      "cik": 78003,
+      "filings": 250,
+      "usableEvents": 85,
+      "first": "2020-03-02",
+      "last": "2026-08-05"
+    },
+    {
+      "ticker": "XOM",
+      "cik": 2115436,
+      "filings": 2,
+      "usableEvents": 2,
+      "first": "2026-07-08",
+      "last": "2026-08-03"
+    },
+    {
+      "ticker": "FCX",
+      "cik": 831259,
+      "filings": 250,
+      "usableEvents": 44,
+      "first": "2020-02-18",
+      "last": "2026-07-24"
+    },
+    {
+      "ticker": "BA",
+      "cik": 12927,
+      "filings": 250,
+      "usableEvents": 69,
+      "first": "2020-01-30",
+      "last": "2026-08-31"
+    },
+    {
+      "ticker": "PLD",
+      "cik": 1045609,
+      "filings": 250,
+      "usableEvents": 103,
+      "first": "2020-02-05",
+      "last": "2026-08-07"
+    },
+    {
+      "ticker": "NEE",
+      "cik": 753308,
+      "filings": 250,
+      "usableEvents": 82,
+      "first": "2020-02-11",
+      "last": "2026-10-22"
+    },
+    {
+      "ticker": "MSFT",
+      "cik": 789019,
+      "filings": 250,
+      "usableEvents": 57,
+      "first": "2020-01-30",
+      "last": "2026-07-30"
+    },
+    {
+      "ticker": "AVGO",
+      "cik": 1730168,
+      "filings": 100,
+      "usableEvents": 76,
+      "first": "2020-02-18",
+      "last": "2026-09-03"
+    },
+    {
+      "ticker": "ANET",
+      "cik": 1596532,
+      "filings": 118,
+      "usableEvents": 52,
+      "first": "2020-02-05",
+      "last": "2026-08-05"
+    },
+    {
+      "ticker": "MU",
+      "cik": 723125,
+      "filings": 250,
+      "usableEvents": 66,
+      "first": "2020-02-13",
+      "last": "2026-10-12"
+    },
+    {
+      "ticker": "SMCI",
+      "cik": 1375365,
+      "filings": 205,
+      "usableEvents": 55,
+      "first": "2020-05-08",
+      "last": "2026-08-12"
+    },
+    {
+      "ticker": "FSLR",
+      "cik": 1274494,
+      "filings": 248,
+      "usableEvents": 65,
+      "first": "2020-02-13",
+      "last": "2026-08-14"
+    },
+    {
+      "ticker": "MRNA",
+      "cik": 1682852,
+      "filings": 93,
+      "usableEvents": 72,
+      "first": "2020-02-12",
+      "last": "2026-08-13"
+    },
+    {
+      "ticker": "LLY",
+      "cik": 59478,
+      "filings": 250,
+      "usableEvents": 90,
+      "first": "2020-01-31",
+      "last": "2026-10-19"
+    },
+    {
+      "ticker": "DAL",
+      "cik": 27904,
+      "filings": 250,
+      "usableEvents": 56,
+      "first": "2020-02-03",
+      "last": "2026-10-12"
+    },
+    {
+      "ticker": "DASH",
+      "cik": 1792789,
+      "filings": 39,
+      "usableEvents": 36,
+      "first": "2021-05-14",
+      "last": "2026-08-06"
+    },
+    {
+      "ticker": "HD",
+      "cik": 354950,
+      "filings": 250,
+      "usableEvents": 44,
+      "first": "2020-02-06",
+      "last": "2026-08-26"
+    },
+    {
+      "ticker": "CAT",
+      "cik": 18230,
+      "filings": 250,
+      "usableEvents": 70,
+      "first": "2020-02-03",
+      "last": "2026-08-06"
+    },
+    {
+      "ticker": "AMT",
+      "cik": 1053507,
+      "filings": 250,
+      "usableEvents": 63,
+      "first": "2020-02-06",
+      "last": "2026-09-15"
+    },
+    {
+      "ticker": "JPM",
+      "cik": 19617,
+      "filings": 250,
+      "usableEvents": 250,
+      "first": "2024-01-16",
+      "last": "2026-10-19"
+    },
+    {
+      "ticker": "KMI",
+      "cik": 1506307,
+      "filings": 204,
+      "usableEvents": 75,
+      "first": "2020-02-13",
+      "last": "2026-10-26"
+    },
+    {
+      "ticker": "AAPL",
+      "cik": 320193,
+      "filings": 208,
+      "usableEvents": 47,
+      "first": "2020-01-30",
+      "last": "2026-08-03"
+    },
+    {
+      "ticker": "IBM",
+      "cik": 51143,
+      "filings": 250,
+      "usableEvents": 74,
+      "first": "2020-01-30",
+      "last": "2026-10-23"
+    },
+    {
+      "ticker": "LMT",
+      "cik": 936468,
+      "filings": 250,
+      "usableEvents": 43,
+      "first": "2020-02-10",
+      "last": "2026-08-31"
+    },
+    {
+      "ticker": "T",
+      "cik": 732717,
+      "filings": 0,
+      "usableEvents": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "ticker": "GOOGL",
+      "cik": 1652044,
+      "filings": 0,
+      "usableEvents": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "ticker": "JNJ",
+      "cik": 200406,
+      "filings": 0,
+      "usableEvents": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "ticker": "PG",
+      "cik": 80424,
+      "filings": 0,
+      "usableEvents": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "ticker": "WMT",
+      "cik": 104169,
+      "filings": 0,
+      "usableEvents": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "ticker": "CVX",
+      "cik": 93410,
+      "filings": 0,
+      "usableEvents": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "ticker": "MA",
+      "cik": 1141391,
+      "filings": 0,
+      "usableEvents": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "ticker": "V",
+      "cik": 1403161,
+      "filings": 0,
+      "usableEvents": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "ticker": "COST",
+      "cik": 909832,
+      "filings": 0,
+      "usableEvents": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "ticker": "AIG",
+      "cik": 5272,
+      "filings": 0,
+      "usableEvents": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "ticker": "COP",
+      "cik": 1163165,
+      "filings": 0,
+      "usableEvents": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "ticker": "LIN",
+      "cik": 1707925,
+      "filings": 0,
+      "usableEvents": 0,
+      "first": null,
+      "last": null
+    }
+  ],
+  "results": {
+    "all": {
+      "events": 2515,
+      "horizons": {
+        "1": {
+          "n": 2514,
+          "meanCar": -0.000623761917672191,
+          "medianCar": -0.0021812299038237986,
+          "tStatNaive": -0.5784123329167628
+        },
+        "5": {
+          "n": 2503,
+          "meanCar": -0.0019375693917829222,
+          "medianCar": -0.0036701307349382515,
+          "tStatNaive": -1.2080087841814777
+        },
+        "21": {
+          "n": 2478,
+          "meanCar": -0.0006792749868659873,
+          "medianCar": -0.004375328031809415,
+          "tStatNaive": -0.24717302365150626
+        },
+        "63": {
+          "n": 2420,
+          "meanCar": 0.00009079597021264181,
+          "medianCar": -0.009639805978724011,
+          "tStatNaive": 0.01965759414855847
+        }
+      }
+    },
+    "positive": {
+      "events": 1539,
+      "horizons": {
+        "1": {
+          "n": 1538,
+          "meanCar": -0.00040118451284565306,
+          "medianCar": -0.002825023246598059,
+          "tStatNaive": -0.2544430307401154
+        },
+        "5": {
+          "n": 1528,
+          "meanCar": -0.005260125184647226,
+          "medianCar": -0.006275829657822253,
+          "tStatNaive": -2.668142107476803
+        },
+        "21": {
+          "n": 1521,
+          "meanCar": -0.006985589509963119,
+          "medianCar": -0.010277376324603866,
+          "tStatNaive": -1.9785631625156572
+        },
+        "63": {
+          "n": 1478,
+          "meanCar": -0.013141440921991775,
+          "medianCar": -0.019586073230437203,
+          "tStatNaive": -2.2276517875305992
+        }
+      }
+    },
+    "negative": {
+      "events": 155,
+      "horizons": {
+        "1": {
+          "n": 155,
+          "meanCar": -0.006653207307880024,
+          "medianCar": -0.005776618260075361,
+          "tStatNaive": -1.3305718754272253
+        },
+        "5": {
+          "n": 154,
+          "meanCar": -0.005416581397134692,
+          "medianCar": -0.006557792412743714,
+          "tStatNaive": -0.7354508311563424
+        },
+        "21": {
+          "n": 153,
+          "meanCar": 0.025530862838445238,
+          "medianCar": 0.012538182896700847,
+          "tStatNaive": 2.154775681864945
+        },
+        "63": {
+          "n": 152,
+          "meanCar": 0.06767609200040282,
+          "medianCar": 0.06188588790895753,
+          "tStatNaive": 3.348071745034845
+        }
+      }
+    }
+  },
+  "independentUniverses": {
+    "oddCik": {
+      "all": {
+        "events": 1407,
+        "car63": {
+          "n": 1353,
+          "meanCar": -0.0025025947590435445,
+          "medianCar": -0.013214355222760986,
+          "tStatNaive": -0.40077942763359686
+        }
+      },
+      "positive": {
+        "events": 761,
+        "car63": {
+          "n": 732,
+          "meanCar": -0.018026136418220273,
+          "medianCar": -0.018814585662282966,
+          "tStatNaive": -2.1287425468475707
+        }
+      },
+      "negative": {
+        "events": 106,
+        "car63": {
+          "n": 103,
+          "meanCar": 0.04629105027058972,
+          "medianCar": 0.02045667685913731,
+          "tStatNaive": 1.8186468725823135
+        }
+      }
+    },
+    "evenCik": {
+      "all": {
+        "events": 1108,
+        "car63": {
+          "n": 1067,
+          "meanCar": 0.003379322358857086,
+          "medianCar": -0.0061153714878654395,
+          "tStatNaive": 0.49253851064431775
+        }
+      },
+      "positive": {
+        "events": 778,
+        "car63": {
+          "n": 746,
+          "meanCar": -0.008348415314432416,
+          "medianCar": -0.02172208599366123,
+          "tStatNaive": -1.0154328110970667
+        }
+      },
+      "negative": {
+        "events": 49,
+        "car63": {
+          "n": 49,
+          "meanCar": 0.11262832257531612,
+          "medianCar": 0.1408738074090622,
+          "tStatNaive": 3.507585088909727
+        }
+      }
+    }
+  },
+  "yearly63": {
+    "2020": {
+      "all": {
+        "events": 347,
+        "n": 347,
+        "meanCar": 0.012687160177081843,
+        "medianCar": -0.01490387280267306,
+        "tStatNaive": 0.9191341669120644
+      },
+      "positive": {
+        "events": 204,
+        "n": 204,
+        "meanCar": -0.02312695986220016,
+        "medianCar": -0.03799455251704691,
+        "tStatNaive": -1.3837384772425632
+      },
+      "negative": {
+        "events": 30,
+        "n": 30,
+        "meanCar": 0.18301343292033387,
+        "medianCar": 0.1408738074090622,
+        "tStatNaive": 3.3580147518694727
+      }
+    },
+    "2021": {
+      "all": {
+        "events": 338,
+        "n": 338,
+        "meanCar": -0.03158600959322068,
+        "medianCar": -0.01651115408546918,
+        "tStatNaive": -2.577766311449507
+      },
+      "positive": {
+        "events": 233,
+        "n": 233,
+        "meanCar": -0.024862170797264497,
+        "medianCar": -0.008310446756236798,
+        "tStatNaive": -1.623225484045905
+      },
+      "negative": {
+        "events": 13,
+        "n": 13,
+        "meanCar": 0.022260449862093197,
+        "medianCar": 0.05440364276423099,
+        "tStatNaive": 0.527534346370967
+      }
+    },
+    "2022": {
+      "all": {
+        "events": 329,
+        "n": 329,
+        "meanCar": 0.029864863074671615,
+        "medianCar": 0.025422793574081066,
+        "tStatNaive": 2.600387175565406
+      },
+      "positive": {
+        "events": 223,
+        "n": 223,
+        "meanCar": 0.018983377829353845,
+        "medianCar": 0.0019378766891541312,
+        "tStatNaive": 1.3297828128291727
+      },
+      "negative": {
+        "events": 23,
+        "n": 23,
+        "meanCar": 0.12686834813020756,
+        "medianCar": 0.15484940728941407,
+        "tStatNaive": 2.7475356334217844
+      }
+    },
+    "2023": {
+      "all": {
+        "events": 315,
+        "n": 315,
+        "meanCar": -0.00043977792226939836,
+        "medianCar": -0.006637513948643915,
+        "tStatNaive": -0.035054902800631116
+      },
+      "positive": {
+        "events": 221,
+        "n": 221,
+        "meanCar": -0.014375779044112528,
+        "medianCar": -0.023275795619749563,
+        "tStatNaive": -0.951138954421701
+      },
+      "negative": {
+        "events": 28,
+        "n": 28,
+        "meanCar": 0.0293953891175117,
+        "medianCar": 0.02762479789010364,
+        "tStatNaive": 0.9453505769461775
+      }
+    },
+    "2024": {
+      "all": {
+        "events": 411,
+        "n": 411,
+        "meanCar": 0.012319231036181141,
+        "medianCar": 0.02288213453764127,
+        "tStatNaive": 0.9911256749570828
+      },
+      "positive": {
+        "events": 243,
+        "n": 243,
+        "meanCar": 0.0031025751563388093,
+        "medianCar": 0.012528171582864893,
+        "tStatNaive": 0.20595725820197716
+      },
+      "negative": {
+        "events": 23,
+        "n": 23,
+        "meanCar": 0.03733346724133481,
+        "medianCar": 0.02288213453764127,
+        "tStatNaive": 0.6579602514428691
+      }
+    },
+    "2025": {
+      "all": {
+        "events": 411,
+        "n": 411,
+        "meanCar": -0.004313802868182441,
+        "medianCar": -0.023575300034574843,
+        "tStatNaive": -0.4353579108752867
+      },
+      "positive": {
+        "events": 217,
+        "n": 217,
+        "meanCar": -0.021684597085927362,
+        "medianCar": -0.026851561306860235,
+        "tStatNaive": -1.4980631939294482
+      },
+      "negative": {
+        "events": 23,
+        "n": 23,
+        "meanCar": 0.08225163764625504,
+        "medianCar": -0.01394476987882464,
+        "tStatNaive": 1.5657945694347124
+      }
+    },
+    "2026": {
+      "all": {
+        "events": 364,
+        "n": 269,
+        "meanCar": -0.02410367276625938,
+        "medianCar": -0.019471340447388245,
+        "tStatNaive": -1.8986256977808431
+      },
+      "positive": {
+        "events": 198,
+        "n": 137,
+        "meanCar": -0.04391882012841962,
+        "medianCar": -0.04067961831374271,
+        "tStatNaive": -2.2876178167812133
+      },
+      "negative": {
+        "events": 15,
+        "n": 12,
+        "meanCar": -0.16537693053797192,
+        "medianCar": -0.1566310528628701,
+        "tStatNaive": -2.8157783147217152
+      }
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "protocolId": "alpha-expectations-events-v2",
+  "frozenAt": "2026-10-30T02:33:04Z",
+  "status": "extraction_shadow_no_event_study_results",
+  "extraction": {
+    "promptVersion": "expectations-v4",
+    "schemaVersion": 2,
+    "productionDelivery": false,
+    "evidenceRequired": true,
+    "llmArithmeticAllowed": false,
+    "candidateDryRun": { "documents": 36, "routed": 31, "noCandidateText": 5 },
+    "benchmark": { "benchmarkId": "expectations-gold-v1", "documents": 12, "requiredStatements": 27, "extraStatementsAreNotAutoErrors": true },
+    "multiExhibitSmoke": { "ticker": "JPM", "accessionNo": "0001628280-26-065582", "exhibits": 2, "passed": true },
+    "cohortPacks": {
+      "input": "cohort-pack-v2.json",
+      "output": "cohort-v2.json",
+      "inputCharacterBudget": "floor(runtimeContextTokens * 0.8 * 4)",
+      "outputTokensPerSource": 4096,
+      "maxStatementsPerSource": 60,
+      "periodAlignment": "reportDate for periodic forms; explicit quarter-ended date from earnings exhibits; unresolved otherwise",
+      "overflow": "New container by document, then whole subheading/paragraph boundaries; indivisible oversized blocks remain unpacked and are never truncated",
+      "evidence": "Validated only against the target sourceId; context from other documents is not valid target evidence"
+    }
+  },
+  "requiredCoverage": {
+    "forms": ["10-K", "10-Q", "8-K", "amendments"],
+    "exhibits": "Preserve all substantive earnings EX-99 documents, including main release and supplement",
+    "actuals": "Same metric, scope, period, unit, accounting basis and currency basis as guidance",
+    "consensus": "Point-in-time provider estimate with publication timestamp; null when unavailable",
+    "availability": "Filing acceptance timestamp and conservative post-close handling",
+    "cohortAlignment": "Match accession, reportDate and eventTs. Never pair independently selected latest forms. Latest-per-company mode is extraction smoke only; full history is required for guidance vintages and actual outcomes."
+  },
+  "features": {
+    "guidanceMid": "(lower + upper) / 2",
+    "guidanceWidth": "(upper - lower) / max(abs(guidanceMid), scale)",
+    "revision": "(newMid - priorMid) / max(abs(priorMid), scale)",
+    "guidanceSurprise": "(actual - priorMid) / max(abs(priorMid), scale)",
+    "consensusSurprise": "(actual - consensusAtCutoff) / max(abs(consensusAtCutoff), scale)",
+    "reactionZ": "CAR[0,1] / availabilityMatchedExpectedMoveReturn",
+    "reversal": "-sign(CAR[0,1]) * CAR[2,10]"
+  },
+  "timingModel": {
+    "eventTime": "SEC filing acceptance timestamp; conservative post-close classification when exact time is unavailable",
+    "latencyPolicy": "EOD prices cannot establish minute/hour latency. Immediate reaction is measured, never assumed tradable. Intraday claims require timestamped intraday data.",
+    "windows": {
+      "immediate": { "label": "[0,1]", "role": "measurement_only", "entry": "no same-print execution" },
+      "earlyPostEvent": { "label": "[2,5]", "role": "reversal_or_continuation", "entry": "only after the first executable close and all feature timestamps" },
+      "delayedDrift": { "label": "[6,21]", "role": "gradual_information_processing", "entry": "point-in-time features only" },
+      "interReport": { "label": "[22,63]", "role": "separate_fundamental_realization_model", "entry": "not a pure crowd-psychology test" }
+    },
+    "models": {
+      "preEventRisk": "Exposure and expected-move risk only; the unreleased report is never an input",
+      "immediateReaction": "Descriptive event study, not an executable signal",
+      "postEventResidual": "Uses only information available after the first executable close; predicts later residual reversal or continuation",
+      "interReportFundamental": "Separate long-window model with macro and subsequent-disclosure confounding controls"
+    },
+    "nullReaction": "A valid null outcome; no signal and no forced position",
+    "overreactionDefinition": "Residual reaction after controlling for compatible guidance, consensus, segment and financing revisions; a large price drop alone is not mispricing"
+  },
+  "primaryHypotheses": [
+    "own_guidance_miss_negative_car",
+    "beat_but_lower_forward_guidance_negative_car",
+    "narrative_fragility_amplifies_core_disappointment",
+    "timing_explanation_without_revision_predicts_reversal",
+    "guidance_credibility_changes_surprise_information"
+  ],
+  "windows": {
+    "discovery": { "start": "2010-01-01", "end": "2023-12-31" },
+    "validation": { "start": "2024-01-01", "end": "2025-12-31" },
+    "sealedHoldout": { "start": "2026-01-01", "end": null }
+  },
+  "validation": {
+    "independentUniverses": ["oddCik", "evenCik"],
+    "robustness": ["calendarYear", "sector", "guidanceHorizon", "basis", "marketRegime", "costScenario"],
+    "multipleTesting": "Benjamini-Hochberg FDR across primary endpoints and preregistered event windows",
+    "minimumHistoryForCredibility": 8,
+    "productionBlockedUntil": [
+      "independent_reviewed_extraction_benchmark_passes",
+      "multi_exhibit_coverage_passes",
+      "period_unit_basis_matching_passes",
+      "departed_and_delisted_universe_added",
+      "intraday_latency_claims_require_intraday_data",
+      "event_study_survives_validation_and_holdout"
+    ]
+  },
+  "biasChecks": {
+    "lookAhead": "Only information public by event cutoff; labels carry exitDate",
+    "survivorship": "Current universe is a limitation and production blocker",
+    "sameWindowConfounding": "Record macro and other company disclosures; do not claim clean causality by default",
+    "execution": "No after-hours commentary treated as an executable close fill",
+    "consensusVintage": "Never use a later consensus estimate as the pre-event expectation",
+    "guidanceVintage": "Never compare actuals with a revised guidance value published after the original target was set",
+    "postEventFeatureCutoff": "First-reaction returns are features only for positions entered after that reaction is observable",
+    "overlappingWindowInference": "Use autocorrelation-aware inference for overlapping drift windows",
+    "tuning": "No sealed-holdout tuning; failed and null results remain in output"
+  },
+  "oosUsedForTuning": false
+}

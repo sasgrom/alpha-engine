@@ -1,0 +1,12 @@
+[
+  {
+    "cik": 2115436,
+    "ticker": "XOM",
+    "name": "XOM"
+  },
+  {
+    "cik": 34088,
+    "ticker": "XOM_PRE",
+    "name": "EXXON MOBIL CORP (predecessor)"
+  }
+]

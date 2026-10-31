@@ -1,0 +1,32 @@
+[
+  {
+    "cik": 320193,
+    "ticker": "AAPL",
+    "name": "Apple Inc.",
+    "gdeltQuery": "\"Apple\""
+  },
+  {
+    "cik": 732717,
+    "ticker": "T",
+    "name": "AT&T INC.",
+    "gdeltQuery": "\"AT&T\""
+  },
+  {
+    "cik": 789019,
+    "ticker": "MSFT",
+    "name": "MICROSOFT CORP",
+    "gdeltQuery": "\"Microsoft\""
+  },
+  {
+    "cik": 1045609,
+    "ticker": "PLD",
+    "name": "Prologis, Inc.",
+    "gdeltQuery": "\"Prologis\""
+  },
+  {
+    "cik": 1045810,
+    "ticker": "NVDA",
+    "name": "NVIDIA CORP",
+    "gdeltQuery": "\"NVIDIA\""
+  }
+]
