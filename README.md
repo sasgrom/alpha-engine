@@ -1,73 +1,48 @@
-# React + TypeScript + Vite
+# Alpha Engine
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Point-in-time equity research, local-first collection and reviewed production delivery.
 
-Currently, two official plugins are available:
+## Start here
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Operations UI:** `/workers` — clickable Run Stack, all scheduled/manual jobs, cron controls, dependency chains, logs and the full runbook.
+- **Operations documentation:** [`docs/OPERATIONS.md`](docs/OPERATIONS.md) — generated from the same registry used by the scheduler and UI.
+- **System manual:** [`docs/ALPHA_ENGINE_MANUAL_EN.md`](docs/ALPHA_ENGINE_MANUAL_EN.md).
+- **Worker details:** [`worker/README.md`](worker/README.md).
 
-## React Compiler
+## Normal home operation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Use one web server, not both:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```powershell
+npm install --no-audit --no-fund
+npm run build
+$env:NODE_ENV = "production"
+node dist/boot.js
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Install the single scheduler once:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```powershell
+powershell -ExecutionPolicy Bypass -File worker\operations-scheduler-install.ps1 -DisableLegacyTasks
+schtasks /Run /TN AlphaEngine-Operations-Scheduler
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+For development, stop the production server and use `npm run dev`. For scheduler diagnostics, use `npx tsx worker/operations-scheduler.mts` instead of the Windows task.
+
+## Safety boundaries
+
+- Local Ollama and local MySQL; production receives reviewed data only.
+- No default direct-to-production collection and no production apply cron.
+- GDELT remains frozen, including manual browser access.
+- No orders, account balances or positions from Schwab.
+- No credentials in browser code or Git.
+- No forced DDL, table drops or unreviewed schema migration.
+
+## Verification
+
+```powershell
+npm run check
+npm test
+npm run build
+npx tsx scripts/build-operations-doc.mts
 ```

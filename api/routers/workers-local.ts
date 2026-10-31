@@ -16,6 +16,15 @@ import path from "node:path";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createRouter, adminQuery } from "../middleware";
+import { OPERATION_JOB_MAP } from "../../contracts/operations";
+import {
+  OPERATIONS_RUNS_DIR,
+  appendOperationCommand,
+  loadOperationConfig,
+  loadOperationsState,
+  operationChain,
+  saveOperationConfig,
+} from "../../worker/lib/operations-scheduler";
 
 const ROOT = path.resolve(import.meta.dirname, "..", "..");
 const RUNS_DIR = path.join(ROOT, "worker", ".runs");
@@ -109,6 +118,9 @@ export const workersLocalRouter = createRouter({
     )
     .mutation(({ input }) => {
       requireLocal();
+      if (input.worker === "gdelt" || input.worker === "gdelt-backfill") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "GDELT is frozen by owner decision; no automated or manual requests are allowed" });
+      }
       if ([...live.values()].length >= 1) {
         throw new TRPCError({ code: "CONFLICT", message: "a worker is already running — wait or kill it first" });
       }
@@ -195,15 +207,54 @@ export const workersLocalRouter = createRouter({
     return { supported: true as const, tasks: [...parseSchtasksCsv(csv), ...parseSchtasksCsv(csv2)] };
   }),
 
-  probe: adminQuery.input(z.object({ query: z.string().default('"Microsoft"') })).query(async ({ input }) => {
+  operations: adminQuery.query(() => {
     requireLocal();
-    const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encodeURIComponent(input.query)}&mode=ToneChart&format=json&timespan=1h`;
-    try {
-      const res = await fetch(url, { headers: { "user-agent": "alpha-engine-research/1.0" } });
-      const text = await res.text();
-      return { ok: res.ok, status: res.status, body: text.slice(0, 800) };
-    } catch (e: any) {
-      return { ok: false, status: 0, body: String(e?.cause?.code ?? e?.message ?? e) };
+    return { config: loadOperationConfig(), state: loadOperationsState() };
+  }),
+
+  setOperation: adminQuery.input(z.object({
+    jobId: z.string().min(1).max(100),
+    enabled: z.boolean(),
+    cron: z.string().trim().min(1).max(80).nullable(),
+  })).mutation(({ input }) => {
+    requireLocal();
+    const job = OPERATION_JOB_MAP[input.jobId];
+    if (!job || !["scheduled", "paused"].includes(job.mode)) throw new TRPCError({ code: "BAD_REQUEST", message: "Only scheduled or paused registry jobs can be edited" });
+    if (job.cron !== null && !input.cron) throw new TRPCError({ code: "BAD_REQUEST", message: "This root job requires a cron expression" });
+    if (job.cron === null && input.cron) throw new TRPCError({ code: "BAD_REQUEST", message: "This job is dependency-triggered and cannot have an independent cron" });
+    const config = loadOperationConfig();
+    config[job.id] = { enabled: input.enabled, cron: input.cron };
+    saveOperationConfig(config);
+    return { ok: true };
+  }),
+
+  runOperation: adminQuery.input(z.object({ jobId: z.string().min(1).max(100) })).mutation(({ input }) => {
+    requireLocal();
+    const chain = operationChain(input.jobId);
+    if (chain.some((job) => !job.executable || ["frozen", "blocked"].includes(job.mode))) {
+      throw new TRPCError({ code: "FORBIDDEN", message: "This registry entry is documentation-only, frozen or requires terminal review" });
     }
+    const id = `${Date.now()}-${input.jobId}`;
+    appendOperationCommand({ id, action: "run", jobId: input.jobId, requestedAt: new Date().toISOString() });
+    return { id, chain: chain.map((job) => job.id) };
+  }),
+
+  killOperation: adminQuery.input(z.object({ jobId: z.string().min(1).max(100) })).mutation(({ input }) => {
+    requireLocal();
+    if (!OPERATION_JOB_MAP[input.jobId]) throw new TRPCError({ code: "NOT_FOUND", message: "Unknown operation job" });
+    appendOperationCommand({ id: `${Date.now()}-${input.jobId}`, action: "kill", jobId: input.jobId, requestedAt: new Date().toISOString() });
+    return { ok: true };
+  }),
+
+  operationLog: adminQuery.input(z.object({ jobId: z.string().min(1).max(100), lines: z.number().min(1).max(500).default(120) })).query(({ input }) => {
+    requireLocal();
+    const run = loadOperationsState().lastRuns[input.jobId];
+    if (!run || path.dirname(path.resolve(run.logFile)) !== path.resolve(OPERATIONS_RUNS_DIR) || !existsSync(run.logFile)) return { lines: [] };
+    return { lines: readFileSync(run.logFile, "utf8").split(/\r?\n/).slice(-input.lines) };
+  }),
+
+  probe: adminQuery.input(z.object({ query: z.string().default('"Microsoft"') })).query(() => {
+    requireLocal();
+    throw new TRPCError({ code: "FORBIDDEN", message: "GDELT is frozen by owner decision; probe is disabled" });
   }),
 });

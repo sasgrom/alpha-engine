@@ -50,7 +50,7 @@ const NAV = [
  * who guesses /admin gets FORBIDDEN from every procedure.
  */
 const ADMIN_NAV = { icon: ShieldCheck, label: "Admin", path: "/admin" };
-const WORKERS_NAV = { icon: Activity, label: "Workers", path: "/workers" };
+const WORKERS_NAV = { icon: Activity, label: "Operations", path: "/workers" };
 const FLOWS_NAV = { icon: Activity, label: "Fund flows", path: "/fundflows" };
 const ANALYTICS_NAV = { icon: Activity, label: "Analytics", path: "/analytics" };
 const EXPECTATIONS_NAV = { icon: FileSearch, label: "Expectations", path: "/expectations" };

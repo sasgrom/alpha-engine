@@ -24,19 +24,17 @@ no-lookahead), and INSERT-IGNOREs redeliveries — reruns are safe.
 | `gdelt.mts` | GDELT collector: hourly bucket tone + buzz per company. |
 | `stocktwits.mts` | Stocktwits collector: buzz + sentiment label per ticker. |
 
-## Run (from repo root, Node ≥ 20)
+## Current operations
+
+Use `/workers` and [`docs/OPERATIONS.md`](../docs/OPERATIONS.md) as the only operational entry point. The shared registry covers all collectors, cron schedules, dependencies, logs and report builders. Do not create per-worker `schtasks` commands: they can duplicate the central scheduler.
+
+For a manual Stocktwits diagnostic only:
 
 ```powershell
-npx tsx worker/gdelt.mts
 npx tsx worker/stocktwits.mts
 ```
 
-## Schedule (Windows Task Scheduler, hourly, staggered)
-
-```powershell
-schtasks /Create /TN "AlphaEngine-GDELT" /SC HOURLY /TR "cmd /c cd /d C:\dev\alpha-engine && if not exist worker\.runs mkdir worker\.runs && npx tsx worker\gdelt.mts >> worker\.runs\gdelt-scheduled.log 2>&1"
-schtasks /Create /TN "AlphaEngine-Stocktwits" /SC HOURLY /MO 1 /ST 00:30 /TR "cmd /c cd /d C:\dev\alpha-engine && if not exist worker\.runs mkdir worker\.runs && npx tsx worker\stocktwits.mts >> worker\.runs\stocktwits-scheduled.log 2>&1"
-```
+GDELT is frozen by owner decision. Do not run its collector, backfill, probe or manual browser imports, and do not re-enable its legacy Windows task.
 
 ## Data honesty
 
@@ -47,27 +45,9 @@ schtasks /Create /TN "AlphaEngine-Stocktwits" /SC HOURLY /MO 1 /ST 00:30 /TR "cm
 - Stocktwits label score = (bullish − bearish) / labeled messages of the
   30-message stream window; `null` when nothing labeled.
 
-## Historical backfill (one-off, on-demand)
+## GDELT historical work
 
-```powershell
-npx tsx worker/gdelt-backfill.mts --from 2024-01-01 --to 2026-10-21
-```
-
-Per company per UTC day, ONE ToneChart call yields both tone and exact
-article count. Rows are `src:"backfill"` with day-bucket payloadKeys —
-resumable by rerunning the same range. A year × 5 companies ≈ 3 h at the
-GDELT fair-use pace (6 s/call). Defaults: from = 2 years ago, to = yesterday.
-
-## Plan B: manual GDELT exports (when the IP is throttled)
-
-Download per company per ≤3-month window (browser, human pace):
-- buzz:  `.../doc?query=%22Microsoft%22&mode=ArtList&maxrecords=250&format=csv&startdatetime=20241001000000&enddatetime=20241231235959`
-- tone:  same with `mode=TimelineTone`
-
-Then: `npx tsx worker/import-gdelt-csv.mts --file <path> --ticker MSFT`
-Auto-detects ArtList (per-day buzz) vs Timeline (per-day tone); gdeltcsv:*
-payloadKeys make reimports free. Note: ArtList tops out at 250 articles per
-window — for heavy tickers use monthly windows for honest volume.
+Frozen. Legacy backfill and CSV-import commands are intentionally omitted from the operational documentation. Do not issue automated or manual GDELT requests.
 
 ## EDGAR tone: audited full-universe run
 

@@ -3,6 +3,8 @@
 > Living document. Extended every development iteration.
 > Audience: economist / mathematician / programmer.
 > Document version: **v2-en** (iteration 3b state; English edition of the Russian master).
+>
+> **Current operations:** use `/workers` and [OPERATIONS.md](OPERATIONS.md) for the single scheduler, current commands, dependencies and startup instructions. Historical scheduler commands elsewhere in this manual are superseded.
 
 ---
 

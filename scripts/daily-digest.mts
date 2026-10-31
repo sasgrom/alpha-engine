@@ -9,8 +9,8 @@
  * review; a plain `node`-rerun with the variable removed ships it to prod
  * (upsert by (kind, forDate) refreshes honestly).
  *
- * Scheduler (Windows): schtasks /Create /TN "AlphaEngine-Digest" /SC DAILY
- *   /ST 07:15 /TR "cmd /c cd /d C:\dev\alpha-engine && npx tsx scripts\daily-digest.mts >> worker\.runs\digest.log 2>&1"
+ * Scheduled centrally as daily-digest in contracts/operations.ts and /workers.
+ * Do not create a separate AlphaEngine-Digest Windows task.
  */
 import dns from "node:dns";
 dns.setDefaultResultOrder("ipv4first");
