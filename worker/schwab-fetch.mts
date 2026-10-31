@@ -105,7 +105,29 @@ for (const company of universe) {
     throw new Error("Two consecutive Schwab transport failures; checkpoint saved");
   }
 }
-const preferences = await request("userPreference", token.access_token, "trader");
-writeTextAtomic(path.join(root, "user-preferences.json"), preferences);
+let preferenceSummary = "User Preference captured";
+try {
+  const preferences = await request("userPreference", token.access_token, "trader");
+  writeTextAtomic(path.join(root, "user-preferences.json"), preferences);
+  writeJsonAtomic(path.join(root, "user-preference-status.json"), {
+    schemaVersion: 1,
+    status: "complete",
+    capturedAt: new Date().toISOString(),
+    file: "user-preferences.json",
+    sourceHash: sha256Text(preferences),
+  }, true);
+} catch (error) {
+  const httpStatus = (error as { httpStatus?: number }).httpStatus ?? null;
+  preferenceSummary = `User Preference ${httpStatus ? `HTTP ${httpStatus}` : "transport failure"}; streaming setup blocked`;
+  writeJsonAtomic(path.join(root, "user-preference-status.json"), {
+    schemaVersion: 1,
+    status: "failed",
+    capturedAt: new Date().toISOString(),
+    httpStatus,
+    error: String(error).slice(0, 400),
+    requiredFor: "streaming-only",
+  }, true);
+  prog.log(`${preferenceSummary}; completed REST snapshots are preserved`);
+}
 writeJsonAtomic(manifestPath, manifest, true);
-prog.done(`complete ${completedInScope()}/${universe.length} tickers · manifest ${manifestPath}`);
+prog.done(`complete ${completedInScope()}/${universe.length} tickers · ${preferenceSummary} · manifest ${manifestPath}`);

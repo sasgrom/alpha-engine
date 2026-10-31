@@ -55,6 +55,7 @@ Rules:
 - Resume by ticker, endpoint, trade date and content hash; no duplicate downloads.
 - No hardcoded 4K/16K document cap and no truncation of option chains or filing tables.
 - A failed ticker does not abort the universe. Two consecutive transport failures checkpoint and stop the run.
+- User Preference is required only for streaming setup. Its failure is recorded in `user-preference-status.json` and does not invalidate completed REST snapshots or trigger a full-universe rerun.
 
 ### 4.3 Streaming client
 
