@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { Activity, DatabaseZap, FileCheck2, Filter, LineChart, RadioTower } from "lucide-react";
+import { Activity, DatabaseZap, FileCheck2, Filter, Globe2, LineChart, RadioTower } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import SchwabFeatureLab from "@/components/SchwabFeatureLab";
+import SchwabContext from "@/components/SchwabContext";
 import type { SchwabMarketSnapshot } from "../../worker/lib/schwab-normalize";
 
 const EMPTY_SNAPSHOT: SchwabMarketSnapshot = {
@@ -46,7 +47,7 @@ export default function MarketData() {
       .catch(() => { if (active) setLoadStatus("error"); });
     return () => { active = false; };
   }, []);
-  const [tab, setTab] = useState<"overview" | "feature" | "options" | "provenance">("overview");
+  const [tab, setTab] = useState<"overview" | "feature" | "context" | "options" | "provenance">("overview");
   const [ticker, setTicker] = useState("all");
   const [expiry, setExpiry] = useState("all");
   const [side, setSide] = useState("all");
@@ -86,6 +87,7 @@ export default function MarketData() {
         <div className="market-tabs" role="tablist" aria-label="Market data views">
           <button type="button" role="tab" aria-selected={tab === "overview"} className={tab === "overview" ? "active" : ""} onClick={() => setTab("overview")}><Activity size={14} /> Overview</button>
           <button type="button" role="tab" aria-selected={tab === "feature"} className={tab === "feature" ? "active" : ""} onClick={() => setTab("feature")}><LineChart size={14} /> Feature Lab</button>
+          <button type="button" role="tab" aria-selected={tab === "context"} className={tab === "context" ? "active" : ""} onClick={() => setTab("context")}><Globe2 size={14} /> Market Context</button>
           <button type="button" role="tab" aria-selected={tab === "options"} className={tab === "options" ? "active" : ""} onClick={() => setTab("options")}><Filter size={14} /> Options</button>
           <button type="button" role="tab" aria-selected={tab === "provenance"} className={tab === "provenance" ? "active" : ""} onClick={() => setTab("provenance")}><FileCheck2 size={14} /> Provenance & QA</button>
         </div>
@@ -110,6 +112,7 @@ export default function MarketData() {
         )}
 
         {tab === "feature" && <SchwabFeatureLab />}
+        {tab === "context" && <SchwabContext />}
 
         {tab === "options" && (
           <>

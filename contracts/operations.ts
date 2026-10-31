@@ -80,6 +80,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local Feature Lab UI only; no production factor promotion.", requirements: ["review"], notes: "0DTE expected move and RV20 remain null when their inputs are insufficient. Skew and IV−RV20 are descriptive, not directional signals.",
   }),
   job({
+    id: "schwab-context-hourly", name: "Schwab market context pack", group: "options", mode: "scheduled", cron: "10 * * * *", defaultEnabled: true, dependsOn: [],
+    ...npx("worker/schwab-context.mts"), purpose: "Refresh market hours, S&P/Nasdaq/Dow movers, instrument profiles and AAPL/SPY five-minute bars separately from option chains.",
+    input: "Schwab Market Data Production, existing instrument files and the local token.", output: "schwab-context.json with sessions, movers, primitive fundamental fields, intraday VWAP/opening range and per-endpoint provenance.",
+    destination: "Local Market Context UI only; no accounts, orders or full-universe streaming.", requirements: ["network", "driveD"], notes: "Hourly context is independent of daily option features. Missing endpoints remain visible; no GPU is used.",
+  }),
+  job({
     id: "analytics-snapshot", name: "Analytics and weekly evidence snapshot", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-factors"],
     ...npx("scripts/build-analytics-snapshot.mts"), purpose: "Refresh Analytics metrics and weekly evidence from the current DB and option manifests.",
     input: "Local fundamentals, factors, tone, prices, 13F and option feature manifests.", output: "Generated analytics JSON/TypeScript and the English project-strength review.",

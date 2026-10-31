@@ -48,6 +48,13 @@ Initial requests:
 4. `GET /marketdata/v1/instruments?symbol=<ticker>&projection=fundamental`
 5. `GET /trader/v1/userPreference` before streaming.
 
+Separate context pack (`worker/schwab-context.mts`, independent of daily chains):
+
+- `GET /marketdata/v1/markets/equity` and `/markets/option` for session/holiday metadata;
+- `GET /marketdata/v1/movers/$SPX`, `/movers/$COMPX` and `/movers/$DJI` for index movers;
+- `pricehistory` for AAPL/SPY with `periodType=day&period=5&frequencyType=minute&frequency=5` for intraday VWAP and opening range;
+- existing `instruments` files are normalized into profiles without treating them as XBRL replacements.
+
 Rules:
 
 - Bounded concurrency and a serialized provider-specific rate limiter; never hide 429 responses.
