@@ -70,7 +70,7 @@ export const OPERATION_JOBS: OperationJob[] = [
   job({
     id: "schwab-snapshot", name: "Schwab normalized UI snapshot", group: "options", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-fetch-daily"],
     ...npx("worker/build-schwab-market-data.mts"), purpose: "Normalize the latest valid chain per ticker and expose credential-free static data to /market-data.",
-    input: "Latest Schwab manifest entries and raw chains.", output: "public/reports/schwab-market-data.json and src/data/schwab-market-data.ts with OSI IDs, DTE and QA.",
+    input: "Latest Schwab manifest entries and raw chains.", output: "public/reports/schwab-market-data.json with OSI IDs, DTE and QA, fetched on demand by /market-data.",
     destination: "Reviewed local static snapshot only.", requirements: ["review"], notes: "Hash mismatches, truncated chains and provider failures remain visible instead of falling back to stale success.",
   }),
   job({

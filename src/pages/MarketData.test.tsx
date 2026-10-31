@@ -6,8 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import MarketData from "./MarketData";
 
 vi.mock("@/components/AppLayout", () => ({ default: ({ children }: { children: ReactNode }) => <>{children}</> }));
-vi.mock("@/data/schwab-market-data", () => ({
-  schwabMarketSnapshot: {
+const snapshot = {
     schemaVersion: 1,
     generatedAt: "2026-10-30T12:00:00Z",
     provider: "schwab",
@@ -18,8 +17,7 @@ vi.mock("@/data/schwab-market-data", () => ({
       { symbol: "MSFT 261120C00100000", osiId: "MSFT  261120C00100000", underlying: "MSFT", expiration: "2026-11-20", dte: 21, strike: 100, putCall: "CALL", bid: 1, ask: 1.2, last: 1.1, mark: 1.1, spread: 0.2, volume: 10, openInterest: 20, iv: 0.4, delta: 0.4, gamma: 0.01, theta: -0.01, vega: 0.1, rho: 0.01, underlyingPrice: 200, delayed: false, sourceHash: "y", sourceStatus: "SUCCESS" },
     ],
     qa: { duplicateOsi: 0, zeroBid: 0, zeroAsk: 0, crossed: 0, invalidGreeks: 0, invalidIv: 0, manifestErrors: 0 },
-  },
-}));
+};
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -27,11 +25,12 @@ describe("Schwab Market Data UI", () => {
   let root: ReturnType<typeof createRoot> | null = null;
   let host: HTMLDivElement | null = null;
   beforeEach(async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, json: async () => snapshot }));
     host = document.createElement("div");
     document.body.appendChild(host);
     await act(async () => { root = createRoot(host!); root.render(<MemoryRouter><MarketData /></MemoryRouter>); });
   });
-  afterEach(() => { if (root) act(() => root!.unmount()); host?.remove(); root = null; host = null; });
+  afterEach(() => { if (root) act(() => root!.unmount()); host?.remove(); root = null; host = null; vi.unstubAllGlobals(); });
 
   it("shows real coverage, token metadata and provenance without secrets", () => {
     expect(host!.textContent).toContain("Schwab Market Data Production");

@@ -340,7 +340,7 @@ npx tsx worker/schwab-fetch.mts --universe research-universe-51.json
 - **Dependencies:** `schwab-fetch-daily`
 - **Purpose:** Normalize the latest valid chain per ticker and expose credential-free static data to /market-data.
 - **Input:** Latest Schwab manifest entries and raw chains.
-- **Output:** public/reports/schwab-market-data.json and src/data/schwab-market-data.ts with OSI IDs, DTE and QA.
+- **Output:** public/reports/schwab-market-data.json with OSI IDs, DTE and QA, fetched on demand by /market-data.
 - **Destination:** Reviewed local static snapshot only.
 - **Requirements:** review
 - **Operational note:** Hash mismatches, truncated chains and provider failures remain visible instead of falling back to stale success.
