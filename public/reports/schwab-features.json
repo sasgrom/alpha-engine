@@ -1,12 +1,12 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-10-31T20:22:42.667Z",
+ "generatedAt": "2026-10-31T21:06:21.803Z",
  "provider": "schwab",
- "sourceSnapshotSha256": "843ec5ec4eb7c1452ae320049d834d8aee94d4fb2f96a62886d2bd0abe23015d",
+ "sourceSnapshotSha256": "bc8748e1691c45a8809a80ae6edb1a79ebb2ea9e52accbdf32c872f17b7fd88b",
  "coverage": {
-  "tickers": 50,
-  "contracts": 117212,
-  "rv20Available": 0
+  "tickers": 51,
+  "contracts": 128158,
+  "rv20Available": 51
  },
  "tickers": [
   {
@@ -14,8 +14,8 @@
    "capturedAt": "2026-10-31T00:05:55.496Z",
    "snapshotCount": 1,
    "spot": 345.1,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.13856424851891344,
+   "ivRvspread": 0.3351657514810865,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -127,7 +127,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -136,8 +135,8 @@
    "capturedAt": "2026-10-31T00:06:18.813Z",
    "snapshotCount": 1,
    "spot": 81.9,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.19261193602341603,
+   "ivRvspread": 1.277258063976584,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -249,7 +248,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -258,8 +256,8 @@
    "capturedAt": "2026-10-31T00:04:37.184Z",
    "snapshotCount": 1,
    "spot": 508.5,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.5826319335541346,
+   "ivRvspread": -0.042401933554134574,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -371,7 +369,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -380,8 +377,8 @@
    "capturedAt": "2026-10-31T00:05:51.839Z",
    "snapshotCount": 1,
    "spot": 187.69,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.4014982354752975,
+   "ivRvspread": -0.0844382354752975,
    "buckets": [
     {
      "bucket": "8-30D",
@@ -456,17 +453,15 @@
      "contracts": 188
     }
    ],
-   "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required."
-   ]
+   "warnings": []
   },
   {
    "ticker": "AMZN",
    "capturedAt": "2026-10-31T00:04:53.859Z",
    "snapshotCount": 1,
    "spot": 240.8,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.36307519602967003,
+   "ivRvspread": 0.21787480397032993,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -578,7 +573,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -587,8 +581,8 @@
    "capturedAt": "2026-10-31T00:05:25.138Z",
    "snapshotCount": 1,
    "spot": 169.86,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.541955463700401,
+   "ivRvspread": -0.047175463700401044,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -700,7 +694,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -709,8 +702,8 @@
    "capturedAt": "2026-10-31T00:05:22.941Z",
    "snapshotCount": 1,
    "spot": 327.2,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.43012593975939506,
+   "ivRvspread": 0.17330406024060496,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -822,7 +815,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -831,8 +823,8 @@
    "capturedAt": "2026-10-31T00:05:15.693Z",
    "snapshotCount": 1,
    "spot": 171.3,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.45418102751670525,
+   "ivRvspread": -0.030831027516705245,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -944,7 +936,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -953,8 +944,8 @@
    "capturedAt": "2026-10-31T00:05:49.134Z",
    "snapshotCount": 1,
    "spot": 624.63,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.4931310953695506,
+   "ivRvspread": 0.10953890463044946,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -1066,7 +1057,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -1075,8 +1065,8 @@
    "capturedAt": "2026-10-31T00:05:09.475Z",
    "snapshotCount": 1,
    "spot": 204.78,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.20256294055815457,
+   "ivRvspread": 0.9387870594418455,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -1188,7 +1178,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -1197,8 +1186,8 @@
    "capturedAt": "2026-10-31T00:06:19.896Z",
    "snapshotCount": 1,
    "spot": 153.71,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.24005299441685812,
+   "ivRvspread": 0.6806470055831418,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -1310,7 +1299,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -1319,8 +1307,8 @@
    "capturedAt": "2026-10-31T00:06:15.788Z",
    "snapshotCount": 1,
    "spot": 1010.91,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.17061507547426819,
+   "ivRvspread": 0.15326492452573182,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -1432,7 +1420,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -1441,8 +1428,8 @@
    "capturedAt": "2026-10-31T00:06:10.906Z",
    "snapshotCount": 1,
    "spot": 235.63,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.21021563294827553,
+   "ivRvspread": 0.18418436705172445,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -1554,7 +1541,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -1563,8 +1549,8 @@
    "capturedAt": "2026-10-31T00:05:44.525Z",
    "snapshotCount": 1,
    "spot": 80.08,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.3375537237052811,
+   "ivRvspread": 0.5755362762947189,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -1676,7 +1662,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -1685,8 +1670,8 @@
    "capturedAt": "2026-10-31T00:05:45.946Z",
    "snapshotCount": 1,
    "spot": 179.18,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.4917713090249404,
+   "ivRvspread": 1.2713186909750598,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -1798,7 +1783,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -1807,8 +1791,8 @@
    "capturedAt": "2026-10-31T00:06:23.615Z",
    "snapshotCount": 1,
    "spot": 66.31,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.46577410949117914,
+   "ivRvspread": 0.0880558905088209,
    "buckets": [
     {
      "bucket": "8-30D",
@@ -1865,17 +1849,15 @@
      "contracts": 72
     }
    ],
-   "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required."
-   ]
+   "warnings": []
   },
   {
    "ticker": "FCX",
    "capturedAt": "2026-10-31T00:05:13.792Z",
    "snapshotCount": 1,
    "spot": 62.69,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.3540681884544357,
+   "ivRvspread": 0.2908818115455643,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -1987,7 +1969,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -1996,8 +1977,8 @@
    "capturedAt": "2026-10-31T00:05:38.201Z",
    "snapshotCount": 1,
    "spot": 174.69,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.33462198536861415,
+   "ivRvspread": 0.36116801463138576,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -2109,7 +2090,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -2118,8 +2098,8 @@
    "capturedAt": "2026-10-31T00:06:03.125Z",
    "snapshotCount": 1,
    "spot": 281.46,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.5193818639023138,
+   "ivRvspread": 0.04128813609768622,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -2231,7 +2211,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -2240,8 +2219,8 @@
    "capturedAt": "2026-10-31T00:05:04.668Z",
    "snapshotCount": 1,
    "spot": 894.5,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.20705220021582318,
+   "ivRvspread": 0.5640477997841769,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -2353,7 +2332,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -2362,8 +2340,8 @@
    "capturedAt": "2026-10-31T00:05:47.390Z",
    "snapshotCount": 1,
    "spot": 329.8,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.29459639607450855,
+   "ivRvspread": -0.010656396074508578,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -2475,7 +2453,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -2484,8 +2461,8 @@
    "capturedAt": "2026-10-31T00:05:58.200Z",
    "snapshotCount": 1,
    "spot": 257.6,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.24081290784197446,
+   "ivRvspread": 0.1795370921580255,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -2597,7 +2574,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -2606,8 +2582,8 @@
    "capturedAt": "2026-10-31T00:04:41.632Z",
    "snapshotCount": 1,
    "spot": 64.88,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.5433188640411277,
+   "ivRvspread": 0.1795211359588723,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -2719,7 +2695,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -2728,8 +2703,8 @@
    "capturedAt": "2026-10-31T00:06:06.657Z",
    "snapshotCount": 1,
    "spot": 273.24,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.3148728458396648,
+   "ivRvspread": 0.08014715416033524,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -2841,7 +2816,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -2850,8 +2824,8 @@
    "capturedAt": "2026-10-31T00:05:52.807Z",
    "snapshotCount": 1,
    "spot": 337.55,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.13508474991321523,
+   "ivRvspread": 0.33354525008678476,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -2963,7 +2937,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -2972,8 +2945,8 @@
    "capturedAt": "2026-10-31T00:05:54.292Z",
    "snapshotCount": 1,
    "spot": 33.89,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.25285986850706205,
+   "ivRvspread": 0.15189013149293795,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -3085,7 +3058,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -3094,8 +3066,8 @@
    "capturedAt": "2026-10-31T00:06:21.301Z",
    "snapshotCount": 1,
    "spot": 515,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.14334890837401063,
+   "ivRvspread": 0.07040109162598937,
    "buckets": [
     {
      "bucket": "8-30D",
@@ -3170,17 +3142,15 @@
      "contracts": 182
     }
    ],
-   "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required."
-   ]
+   "warnings": []
   },
   {
    "ticker": "LLY",
    "capturedAt": "2026-10-31T00:05:41.452Z",
    "snapshotCount": 1,
    "spot": 1417,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.3533681683364542,
+   "ivRvspread": 0.22049183166354586,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -3292,7 +3262,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -3301,8 +3270,8 @@
    "capturedAt": "2026-10-31T00:06:00.030Z",
    "snapshotCount": 1,
    "spot": 637.4,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.35972003423808224,
+   "ivRvspread": 0.4076599657619177,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -3414,7 +3383,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -3423,8 +3391,8 @@
    "capturedAt": "2026-10-31T00:05:01.219Z",
    "snapshotCount": 1,
    "spot": 106.99,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.473538135199019,
+   "ivRvspread": 0.3340918648009811,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -3536,7 +3504,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -3545,8 +3512,8 @@
    "capturedAt": "2026-10-31T00:06:12.235Z",
    "snapshotCount": 1,
    "spot": 637.95,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.21719673965883518,
+   "ivRvspread": 0.4324932603411648,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -3658,7 +3625,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -3667,8 +3633,8 @@
    "capturedAt": "2026-10-31T00:04:45.831Z",
    "snapshotCount": 1,
    "spot": 614.3,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.3812762669537026,
+   "ivRvspread": 0.035283733046297394,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -3780,7 +3746,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -3789,8 +3754,8 @@
    "capturedAt": "2026-10-31T00:05:39.687Z",
    "snapshotCount": 1,
    "spot": 221.45,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 1.098258049625839,
+   "ivRvspread": -0.368618049625839,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -3902,7 +3867,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -3911,8 +3875,8 @@
    "capturedAt": "2026-10-31T00:05:19.886Z",
    "snapshotCount": 1,
    "spot": 523,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.1958169436785801,
+   "ivRvspread": 0.03135305632141988,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -4024,17 +3988,117 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
+  },
+  {
+   "ticker": "MU",
+   "capturedAt": "2026-10-31T05:45:31.439Z",
+   "snapshotCount": 1,
+   "spot": 0,
+   "rv20": 0.6035468073941586,
+   "ivRvspread": 10.452103192605842,
+   "buckets": [
+    {
+     "bucket": "1-7D",
+     "dte": 4,
+     "atmIv": 11.05565,
+     "expectedMove": null,
+     "expectedMovePct": null,
+     "termSlope": -3.3407400000000003,
+     "skew25": 0.19961999999999996,
+     "putCallVolumeRatio": 1.2253024388893503,
+     "putCallOiRatio": 1.2966682703872985,
+     "turnover": 2.1049150278876114,
+     "atmSpreadPct": 1.0088344743345738,
+     "zeroBidShare": 0.09005145797598628,
+     "zeroAskShare": 0,
+     "volume": 401923,
+     "openInterest": 190945,
+     "contracts": 1166
+    },
+    {
+     "bucket": "8-30D",
+     "dte": 20,
+     "atmIv": 7.71491,
+     "expectedMove": null,
+     "expectedMovePct": null,
+     "termSlope": -3.6285799999999995,
+     "skew25": 0.0021999999999999797,
+     "putCallVolumeRatio": 1.013975605258305,
+     "putCallOiRatio": 1.0910793909230514,
+     "turnover": 0.33820559499030045,
+     "atmSpreadPct": 1.0088339724470956,
+     "zeroBidShare": 0.029542920847268672,
+     "zeroAskShare": 0,
+     "volume": 152897,
+     "openInterest": 452083,
+     "contracts": 1794
+    },
+    {
+     "bucket": "31-90D",
+     "dte": 48,
+     "atmIv": 4.08633,
+     "expectedMove": null,
+     "expectedMovePct": null,
+     "termSlope": -1.67443,
+     "skew25": 0.021009999999999973,
+     "putCallVolumeRatio": 0.8573504400521788,
+     "putCallOiRatio": 1.2805119692922167,
+     "turnover": 0.12792378456880896,
+     "atmSpreadPct": 1.0088892675584333,
+     "zeroBidShare": 0.010752688172043012,
+     "zeroAskShare": 0,
+     "volume": 112483,
+     "openInterest": 879297,
+     "contracts": 1860
+    },
+    {
+     "bucket": "91-365D",
+     "dte": 229,
+     "atmIv": 2.4119,
+     "expectedMove": null,
+     "expectedMovePct": null,
+     "termSlope": -0.85196,
+     "skew25": -0.01477000000000006,
+     "putCallVolumeRatio": 0.9739731162641246,
+     "putCallOiRatio": 0.9363758897295377,
+     "turnover": 0.0735170928238063,
+     "atmSpreadPct": 1.0072785170021608,
+     "zeroBidShare": 0.01427771556550952,
+     "zeroAskShare": 0,
+     "volume": 36860,
+     "openInterest": 501380,
+     "contracts": 3572
+    },
+    {
+     "bucket": "365+D",
+     "dte": 594,
+     "atmIv": 1.55994,
+     "expectedMove": null,
+     "expectedMovePct": null,
+     "termSlope": null,
+     "skew25": -0.06427000000000005,
+     "putCallVolumeRatio": 0.6293785310734463,
+     "putCallOiRatio": 0.5295163161916622,
+     "turnover": 0.06937515728391042,
+     "atmSpreadPct": 1.008824447407996,
+     "zeroBidShare": 0.007047768206734534,
+     "zeroAskShare": 0,
+     "volume": 18746,
+     "openInterest": 270212,
+     "contracts": 2554
+    }
+   ],
+   "warnings": []
   },
   {
    "ticker": "NEE",
    "capturedAt": "2026-10-31T00:05:18.617Z",
    "snapshotCount": 1,
    "spot": 83.68,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.22713450963414641,
+   "ivRvspread": 0.4079754903658537,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -4146,7 +4210,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -4155,8 +4218,8 @@
    "capturedAt": "2026-10-31T00:04:51.039Z",
    "snapshotCount": 1,
    "spot": 62.08,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.34675471737689256,
+   "ivRvspread": 0.0837752826231074,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -4268,7 +4331,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -4277,8 +4339,8 @@
    "capturedAt": "2026-10-31T00:04:59.743Z",
    "snapshotCount": 1,
    "spot": 38.58,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.317668564213497,
+   "ivRvspread": 0.08881143578650302,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -4390,7 +4452,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -4399,8 +4460,8 @@
    "capturedAt": "2026-10-31T00:04:34.029Z",
    "snapshotCount": 1,
    "spot": 205.25,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.30166122224713776,
+   "ivRvspread": 0.020278777752862243,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -4512,7 +4573,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -4521,8 +4581,8 @@
    "capturedAt": "2026-10-31T00:05:12.526Z",
    "snapshotCount": 1,
    "spot": 30.45,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.21073070903565844,
+   "ivRvspread": 0.1373992909643416,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -4634,7 +4694,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -4643,8 +4702,8 @@
    "capturedAt": "2026-10-31T00:06:08.203Z",
    "snapshotCount": 1,
    "spot": 161.62,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.2715598363968571,
+   "ivRvspread": 0.18574016360314288,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -4756,7 +4815,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -4765,8 +4823,8 @@
    "capturedAt": "2026-10-31T00:05:17.467Z",
    "snapshotCount": 1,
    "spot": 128.83,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.2295020674690567,
+   "ivRvspread": 0.011667932530943309,
    "buckets": [
     {
      "bucket": "8-30D",
@@ -4841,17 +4899,15 @@
      "contracts": 116
     }
    ],
-   "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required."
-   ]
+   "warnings": []
   },
   {
    "ticker": "PLTR",
    "capturedAt": "2026-10-31T00:04:43.722Z",
    "snapshotCount": 1,
    "spot": 184.74,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.45291460027019903,
+   "ivRvspread": 0.08801539972980099,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -4963,7 +5019,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -4972,8 +5027,8 @@
    "capturedAt": "2026-10-31T00:05:03.162Z",
    "snapshotCount": 1,
    "spot": 307.5,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.37606037447939805,
+   "ivRvspread": 1.586699625520602,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -5085,7 +5140,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -5094,8 +5148,8 @@
    "capturedAt": "2026-10-31T00:06:22.559Z",
    "snapshotCount": 1,
    "spot": 12.13,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.3218012905456918,
+   "ivRvspread": 1.0761887094543083,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -5207,7 +5261,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -5216,8 +5269,8 @@
    "capturedAt": "2026-10-31T00:05:36.526Z",
    "snapshotCount": 1,
    "spot": 33.04,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.7691653130265956,
+   "ivRvspread": -0.2122353130265957,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -5329,7 +5382,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -5338,8 +5390,8 @@
    "capturedAt": "2026-10-31T00:06:02.080Z",
    "snapshotCount": 1,
    "spot": 21.45,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.5916486215982549,
+   "ivRvspread": -0.27228862159825495,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -5451,7 +5503,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -5460,8 +5511,8 @@
    "capturedAt": "2026-10-31T00:04:55.726Z",
    "snapshotCount": 1,
    "spot": 400.21,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.3908616309673991,
+   "ivRvspread": -0.2087316309673991,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -5573,7 +5624,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -5582,8 +5632,8 @@
    "capturedAt": "2026-10-31T00:05:10.736Z",
    "snapshotCount": 1,
    "spot": 406,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.28070962075003575,
+   "ivRvspread": 0.2432103792499643,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -5695,7 +5745,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -5704,8 +5753,8 @@
    "capturedAt": "2026-10-31T00:06:14.091Z",
    "snapshotCount": 1,
    "spot": 414.05,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.19678088831948692,
+   "ivRvspread": 0.09219911168051309,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -5817,7 +5866,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   },
@@ -5826,8 +5874,8 @@
    "capturedAt": "2026-10-31T00:06:09.461Z",
    "snapshotCount": 1,
    "spot": 123.5,
-   "rv20": null,
-   "ivRvspread": null,
+   "rv20": 0.20304107209168223,
+   "ivRvspread": 0.17637892790831775,
    "buckets": [
     {
      "bucket": "0DTE",
@@ -5939,7 +5987,6 @@
     }
    ],
    "warnings": [
-    "RV20 unavailable: at least 21 completed daily closes are required.",
     "0DTE expected move is null: an intraday time-to-close model is not assumed."
    ]
   }

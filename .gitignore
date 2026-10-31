@@ -5,3 +5,5 @@ dist/
 worker/cache/
 worker/cache.backup-*/
 worker/.runs/
+public/reports/schwab-features.json
+public/reports/schwab-market-data.json
