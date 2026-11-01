@@ -14,10 +14,10 @@ import {
   EXPECTATIONS_SCHEMA_VERSION,
   parseExpectationResponseDetailed,
   rejectUnsupportedStatements,
-  type ExpectationResponse,
 } from "./lib/expectations";
 import { generate, LLM_MODEL, status } from "./lib/ollama";
-import { writeJsonAtomic } from "./lib/json-file";
+import { clearCohortEntryCache, readCohortResult, writeCohortEntryAtomic, writeCohortResultSnapshot, type CohortResultEntry, type CohortResultFile } from "./lib/cohort-checkpoint";
+import { formatCohortWindow, type CohortSourceTiming } from "./lib/cohort-telemetry";
 import { startProgress } from "./lib/progress";
 import { nextLlmFailureStreak, shouldAbortLlmBatch } from "./lib/llm-run-policy";
 import {
@@ -26,7 +26,6 @@ import {
   EXPECTATION_FALLBACK_VERSION,
   fallbackEvidenceVerified,
   parseExpectationFallback,
-  type ExpectationFallback,
 } from "./lib/expectation-fallback";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
@@ -44,46 +43,9 @@ const benchmarkAccessions = benchmarkOnly
   ? new Set((JSON.parse(readFileSync(path.resolve("research/expectations-benchmark-v1.json"), "utf8")) as { documents: { accessionNo: string }[] }).documents.map((doc) => doc.accessionNo))
   : null;
 const cacheDir = (cik: number) => path.resolve(import.meta.dirname, "cache", "edgar", String(cik));
-const outputPath = (cik: number) => path.join(cacheDir(cik), "cohort-v2.json");
 const failureLog = path.resolve(import.meta.dirname, ".runs", "cohort-extraction-failures.jsonl");
 mkdirSync(path.dirname(failureLog), { recursive: true });
 const sha256 = (value: string) => createHash("sha256").update(value).digest("hex");
-
-interface Usage { promptTokens: number; evalCount: number; promptMs: number; evalMs: number; totalMs: number }
-interface CohortResultEntry {
-  cik: number;
-  ticker: string;
-  cohortId: string;
-  containerId: string;
-  sourceId: string;
-  accessionNo: string;
-  form: string;
-  filingDate: string;
-  eventTs: string;
-  reportDate: string;
-  sourceFile: string;
-  inputSha256: string;
-  model: string;
-  promptVersion: string;
-  status: "extracted" | "empty" | "unparsed" | "request_failed" | "fallback" | "fallback_unverified";
-  guidanceStatus: ExpectationResponse["guidanceStatus"] | null;
-  statements: ExpectationResponse["statements"];
-  extractionWarnings: string[];
-  rejectedEvidence: number;
-  rawResponse: string | null;
-  fallback: (ExpectationFallback & { evidenceVerified: boolean }) | null;
-  fallbackRawResponse: string | null;
-  fallbackUsage: Usage | null;
-  usage: Usage | null;
-  updatedAt: string;
-}
-interface CohortResultFile {
-  schemaVersion: number;
-  contextTokens: number;
-  packGeneratedAt: string;
-  unpacked: CohortPack["unpacked"];
-  entries: CohortResultEntry[];
-}
 
 if (!dryRun) {
   const st = await status();
@@ -106,15 +68,18 @@ for (const company of universe) {
     prog.log(`${company.ticker}: cohort-pack-v2.json missing; skipped`);
     continue;
   }
+  const freshResult: CohortResultFile = { schemaVersion: EXPECTATIONS_SCHEMA_VERSION, contextTokens: pack.contextTokens, packGeneratedAt: pack.generatedAt, unpacked: pack.unpacked, entries: [] };
   const result: CohortResultFile = rescore
-    ? { schemaVersion: EXPECTATIONS_SCHEMA_VERSION, contextTokens: pack.contextTokens, packGeneratedAt: pack.generatedAt, unpacked: pack.unpacked, entries: [] }
-    : (() => { try { return JSON.parse(readFileSync(outputPath(company.cik), "utf8")) as CohortResultFile; } catch { return { schemaVersion: EXPECTATIONS_SCHEMA_VERSION, contextTokens: pack.contextTokens, packGeneratedAt: pack.generatedAt, unpacked: pack.unpacked, entries: [] }; } })();
-  if (result.schemaVersion !== EXPECTATIONS_SCHEMA_VERSION || result.packGeneratedAt !== pack.generatedAt || result.contextTokens !== pack.contextTokens) {
+    ? freshResult
+    : readCohortResult(cacheDir(company.cik), freshResult) ?? freshResult;
+  if (rescore || result.schemaVersion !== EXPECTATIONS_SCHEMA_VERSION || result.packGeneratedAt !== pack.generatedAt || result.contextTokens !== pack.contextTokens) {
     result.schemaVersion = EXPECTATIONS_SCHEMA_VERSION;
     result.contextTokens = pack.contextTokens;
     result.packGeneratedAt = pack.generatedAt;
     result.unpacked = pack.unpacked;
     result.entries = [];
+    clearCohortEntryCache(cacheDir(company.cik));
+    writeCohortResultSnapshot(cacheDir(company.cik), result);
   }
   const tasks = pack.containers.flatMap((container) => container.sources
     .filter((source) => (!from || source.filingDate >= from) && (!benchmarkAccessions || benchmarkAccessions.has(source.accessionNo)))
@@ -125,6 +90,7 @@ for (const company of universe) {
       || a.source.sourceId.localeCompare(b.source.sourceId));
   let consecutiveFailures = 0;
   let companyDone = 0;
+  const companyTimings: CohortSourceTiming[] = [];
   prog.stage(`${company.ticker}: ${tasks.length} sources`);
   for (const { container, source } of tasks.slice(0, limit ?? undefined)) {
     totals.sources++;
@@ -143,6 +109,7 @@ for (const company of universe) {
       prog.item(companyDone, tasks.length, `${source.sourceId} · resumed`);
       continue;
     }
+    const sourceStartedAt = Date.now();
     const base: CohortResultEntry = {
       cik: company.cik,
       ticker: company.ticker,
@@ -245,16 +212,25 @@ for (const company of universe) {
       consecutiveFailures = nextLlmFailureStreak("request_failed", consecutiveFailures);
     }
     result.entries = [...result.entries.filter((entry) => !(entry.sourceId === source.sourceId && entry.containerId === container.containerId)), base];
-    writeJsonAtomic(outputPath(company.cik), result, true);
+    writeCohortEntryAtomic(cacheDir(company.cik), base);
+    companyTimings.push({
+      wallMs: Date.now() - sourceStartedAt,
+      llmMs: (base.usage?.totalMs ?? 0) + (base.fallbackUsage?.totalMs ?? 0),
+      promptTokens: (base.usage?.promptTokens ?? 0) + (base.fallbackUsage?.promptTokens ?? 0),
+      evalCount: (base.usage?.evalCount ?? 0) + (base.fallbackUsage?.evalCount ?? 0),
+      fallback: Boolean(base.fallbackUsage),
+    });
+    if (companyTimings.length % 10 === 0) prog.log(`${company.ticker} ${formatCohortWindow(companyTimings)}`);
     companyDone++;
     prog.item(companyDone, tasks.length, `${source.sourceId} · ${base.status}`);
     if (shouldAbortLlmBatch(consecutiveFailures)) {
+      writeCohortResultSnapshot(cacheDir(company.cik), result);
       prog.done(`aborted after two LLM failures · state saved · ${JSON.stringify(totals)}`);
       process.exit(2);
     }
   }
   totals.containers += tasks.length;
-  writeJsonAtomic(outputPath(company.cik), result, true);
-  prog.stageDone(`${company.ticker}: sources ${tasks.length} · ${dryRun ? `planned ${totals.planned}` : `extracted ${totals.extracted}`} · resumed ${totals.resumed} · rejected ${totals.rejectedEvidence}`);
+  writeCohortResultSnapshot(cacheDir(company.cik), result);
+  prog.stageDone(`${company.ticker}: sources ${tasks.length} · ${dryRun ? `planned ${totals.planned}` : `extracted ${totals.extracted}`} · resumed ${totals.resumed} · rejected ${totals.rejectedEvidence}${companyTimings.length ? ` · ${formatCohortWindow(companyTimings)}` : ""}`);
 }
 prog.done(`all done · sources ${totals.sources} · ${dryRun ? `planned ${totals.planned}` : `extracted ${totals.extracted}`} · empty ${totals.empty} · unparsed ${totals.unparsed} · failed ${totals.failed} · resumed ${totals.resumed} · rejected evidence ${totals.rejectedEvidence} · fallback ${totals.fallback} · fallback unverified ${totals.fallbackUnverified} · missing packs ${totals.missingPacks} · prompt ${totals.promptTokens} tok · generated ${totals.evalCount} tok`);

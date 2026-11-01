@@ -703,7 +703,7 @@ describe("edgar fetch: EX-99 idempotency", () => {
 describe("ollama structured tone output", () => {
   it("requests score/why schema and a capped response", async () => {
     const original = globalThis.fetch;
-    let body: any;
+    let body: { format: { type: string; required: string[] }; options: { num_predict: number; num_ctx: number }; keep_alive: string; context?: unknown; messages?: unknown };
     globalThis.fetch = async (_url, init) => {
       body = JSON.parse(String(init?.body));
       return new Response(JSON.stringify({ response: "{\"score\":0.2,\"why\":\"ok\"}", total_duration: 1000000000, eval_count: 1, eval_duration: 1000000000 }), { status: 200 });
@@ -715,6 +715,8 @@ describe("ollama structured tone output", () => {
       expect(body.options.num_predict).toBe(256);
       expect(body.options.num_ctx).toBe(32768);
       expect(body.keep_alive).toBe("30m");
+      expect(body).not.toHaveProperty("context");
+      expect(body).not.toHaveProperty("messages");
     } finally {
       globalThis.fetch = original;
     }

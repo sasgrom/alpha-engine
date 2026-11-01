@@ -94,6 +94,18 @@ describe("cohort pack", () => {
     expect(pack.containers[0].sources.map((source) => source.sourceId)).toEqual(["quarterly", "source-a"]);
   });
 
+  it("never carries an earlier quarter into a later quarter prompt", () => {
+    const old = doc({ sourceId: "old-quarter", accessionNo: "0000000-26-000001", reportDate: "2026-06-30", plain: "Second Quarter Guidance\nRevenue is expected to be $90 billion." });
+    const current = doc({ sourceId: "current-quarter", accessionNo: "0000000-26-000002", sourceFile: "b.htm", reportDate: "2026-09-30", plain: "Third Quarter Guidance\nRevenue is expected to be $100 billion." });
+    const pack = buildCohortPack([old, current], { contextTokens: 32768, generatedAt: "now" });
+    const container = pack.containers.find((item) => item.cohortId === "2026-09-30")!;
+    const prompt = buildCohortExpectationPrompt(container, "current-quarter", { ticker: "AAA", form: "10-Q", filingDate: "2026-10-30", accessionNo: current.accessionNo });
+    expect(prompt).toContain("current-quarter");
+    expect(prompt).toContain("$100 billion");
+    expect(prompt).not.toContain("old-quarter");
+    expect(prompt).not.toContain("$90 billion");
+  });
+
   it("keeps undated filings in separate cohorts instead of inventing a shared period", () => {
     const a = doc({ reportDate: "" });
     const b = doc({ sourceId: "source-b", accessionNo: "0000000-26-000002", sourceFile: "b.htm", reportDate: "" });

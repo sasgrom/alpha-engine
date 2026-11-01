@@ -6,6 +6,7 @@ import { evaluateExpectationBenchmark, type BenchmarkFile, type ExtractionForBen
 import type { ExpectationResponse } from "./lib/expectations";
 import { exhibitCacheName, mergeGuidanceStatus } from "./lib/exhibits";
 import { writeJsonAtomic } from "./lib/json-file";
+import { readCohortEntries } from "./lib/cohort-checkpoint";
 import type { ManifestEntry } from "./edgar-fetch.mts";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
@@ -18,10 +19,11 @@ const extractions = new Map<string, ExtractionForBenchmark>();
 const sourceTexts = new Map<string, string>();
 for (const doc of benchmark.documents) {
   try {
-    const result = JSON.parse(readFileSync(path.join(cacheRoot, String(doc.cik), cohortMode ? "cohort-v2.json" : "expectations-v2.json"), "utf8")) as {
-      entries: { accessionNo: string; guidanceStatus: ExpectationResponse["guidanceStatus"] | null; statements: ExtractionForBenchmark["statements"] }[];
-    };
-    const entries = result.entries.filter((item) => item.accessionNo === doc.accessionNo);
+    type BenchmarkEntry = { sourceId: string; accessionNo: string; guidanceStatus: ExpectationResponse["guidanceStatus"] | null; statements: ExtractionForBenchmark["statements"] };
+    const resultEntries = cohortMode
+      ? readCohortEntries<BenchmarkEntry>(path.join(cacheRoot, String(doc.cik)))
+      : (JSON.parse(readFileSync(path.join(cacheRoot, String(doc.cik), "expectations-v2.json"), "utf8")) as { entries: BenchmarkEntry[] }).entries;
+    const entries = resultEntries.filter((item) => item.accessionNo === doc.accessionNo);
     if (entries.length) {
       extractions.set(doc.accessionNo, {
         accessionNo: doc.accessionNo,

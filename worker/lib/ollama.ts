@@ -49,6 +49,7 @@ export async function generate(prompt: string, opts: { model?: string; timeoutMs
       headers: { "content-type": "application/json" },
       signal: ctrl.signal,
       body: JSON.stringify({
+        // Stateless by contract: no Ollama context token or chat history crosses sources/quarters.
         model, prompt, stream: false,
         keep_alive: opts.keepAlive ?? process.env.OLLAMA_KEEP_ALIVE ?? "30m",
         // Qwen3.x supports a "thinking" mode; disable it so the reply is

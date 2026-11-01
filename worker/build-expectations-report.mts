@@ -3,6 +3,7 @@ import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from "nod
 import path from "node:path";
 import { buildExpectationsReport, type ExpectationResultForReport } from "./lib/expectations-report";
 import { writeJsonAtomic } from "./lib/json-file";
+import { readCohortEntries } from "./lib/cohort-checkpoint";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const universePath = path.resolve(arg("--universe") ?? "worker/research-universe-53.json");
@@ -19,8 +20,10 @@ const universe = JSON.parse(readFileSync(universePath, "utf8")) as { cik: number
 const results: ExpectationResultForReport[] = [];
 for (const company of universe) {
   try {
-    const file = JSON.parse(readFileSync(path.join(cacheRoot, String(company.cik), cohortMode ? "cohort-v2.json" : "expectations-v4.json"), "utf8")) as { entries: ExpectationResultForReport[] };
-    results.push(...file.entries.filter((entry) => entry.cik === company.cik && entry.ticker === company.ticker));
+    const entries = cohortMode
+      ? readCohortEntries<ExpectationResultForReport>(path.join(cacheRoot, String(company.cik)))
+      : (JSON.parse(readFileSync(path.join(cacheRoot, String(company.cik), "expectations-v4.json"), "utf8")) as { entries: ExpectationResultForReport[] }).entries;
+    results.push(...entries.filter((entry) => entry.cik === company.cik && entry.ticker === company.ticker));
   } catch { /* no extraction file is honest zero coverage, not an error */ }
 }
 let benchmark: { pass: boolean; recall: number | null; issueCount: number } | null = null;
