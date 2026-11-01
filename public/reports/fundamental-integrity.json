@@ -1,6 +1,6 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-01T00:44:34.030Z",
+ "generatedAt": "2026-11-01T02:06:31.620Z",
  "universeSha256": "1fc432db229329c10df5da2d663ad49062af2da5a5da393184c72f91b3d248f8",
  "status": "fail",
  "summary": {
@@ -8,10 +8,10 @@
   "facts": 25135,
   "series": 20210,
   "factors": 545,
-  "errors": 648,
-  "warnings": 104,
+  "errors": 482,
+  "warnings": 270,
   "duplicates": 0,
-  "continuityGaps": 648,
+  "continuityGaps": 482,
   "availabilityInversions": 0,
   "coverageGaps": 0,
   "omittedIssues": 0
@@ -221,30 +221,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue",
-   "periodEnd": "2007-09-29",
-   "message": "33 missing quarters in expected grid: 2007Q4, 2008Q1, 2008Q2, 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "AdjustmentsToAdditionalPaidInCapitalTaxEffectFromShareBasedCompensation",
-   "periodEnd": "2007-09-29",
-   "message": "9 missing quarters in expected grid: 2007Q4, 2008Q1, 2008Q2, 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "AdvertisingExpense",
-   "periodEnd": "2008-09-27",
-   "message": "21 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "AllocatedShareBasedCompensationExpense",
    "periodEnd": "2012-09-29",
    "message": "2 missing quarters in expected grid: 2012Q4, 2013Q1, 2017Q1, 2023Q1"
@@ -264,14 +240,6 @@
    "concept": "AllowanceForDoubtfulAccountsReceivableCurrent",
    "periodEnd": "2008-09-27",
    "message": "2 missing quarters in canonical grid: 2008Q4, 2009Q1, 2017Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "AmortizationOfIntangibleAssets",
-   "periodEnd": "2010-09-25",
-   "message": "21 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
   },
   {
    "severity": "error",
@@ -613,22 +581,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "BusinessAcquisitionPurchasePriceAllocationAmortizableIntangibleAssets",
-   "periodEnd": "2011-09-24",
-   "message": "3 missing quarters in expected grid: 2011Q4, 2012Q1, 2012Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "BusinessAcquisitionPurchasePriceAllocationAmortizableIntangibleAssets",
-   "periodEnd": "2011-09-24",
-   "message": "3 missing quarters in canonical grid: 2011Q4, 2012Q1, 2012Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "BusinessAcquisitionPurchasePriceAllocationGoodwillAmount",
    "periodEnd": "2010-06-26",
    "message": "6 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2"
@@ -672,22 +624,6 @@
    "concept": "BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedLiabilities",
    "periodEnd": "2013-06-29",
    "message": "1 missing quarters in canonical grid: 2013Q3"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "CapitalizedComputerSoftwareAdditions",
-   "periodEnd": "2008-09-27",
-   "message": "6 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "CapitalizedComputerSoftwareAmortization",
-   "periodEnd": "2008-09-27",
-   "message": "9 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
   },
   {
    "severity": "error",
@@ -768,14 +704,6 @@
    "concept": "CashEquivalentsAtCarryingValue",
    "periodEnd": "2009-09-26",
    "message": "2 missing quarters in canonical grid: 2009Q4, 2010Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "ChangeInUnrealizedGainLossOnFairValueHedgingInstruments",
-   "periodEnd": "2008-09-27",
-   "message": "6 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2"
   },
   {
    "severity": "error",
@@ -965,41 +893,9 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "CostOfGoodsAndServicesSoldDepreciation",
-   "periodEnd": "2016-09-24",
-   "message": "6 missing quarters in expected grid: 2016Q4, 2017Q1, 2017Q2, 2017Q4, 2018Q1, 2018Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "CostOfReimbursableExpense",
    "periodEnd": "2008-09-27",
    "message": "2 missing quarters in expected grid: 2008Q4, 2009Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "CurrentFederalTaxExpenseBenefit",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "CurrentForeignTaxExpenseBenefit",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "CurrentStateAndLocalTaxExpenseBenefit",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
   },
   {
    "severity": "error",
@@ -1069,38 +965,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "DeferredFederalIncomeTaxExpenseBenefit",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredForeignIncomeTaxExpenseBenefit",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredIncomeTaxAssetsNet",
-   "periodEnd": "2022-09-24",
-   "message": "9 missing quarters in expected grid: 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredIncomeTaxAssetsNet",
-   "periodEnd": "2022-09-24",
-   "message": "9 missing quarters in canonical grid: 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "DeferredIncomeTaxExpenseBenefit",
    "periodEnd": "2007-09-29",
    "message": "2 missing quarters in expected grid: 2007Q4, 2008Q1, 2017Q1"
@@ -1109,38 +973,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "DeferredIncomeTaxLiabilities",
-   "periodEnd": "2013-09-28",
-   "message": "36 missing quarters in expected grid: 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredIncomeTaxLiabilities",
-   "periodEnd": "2013-09-28",
-   "message": "36 missing quarters in canonical grid: 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredIncomeTaxLiabilitiesNet",
-   "periodEnd": "2014-09-27",
-   "message": "6 missing quarters in expected grid: 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1, 2016Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredIncomeTaxLiabilitiesNet",
-   "periodEnd": "2014-09-27",
-   "message": "6 missing quarters in canonical grid: 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1, 2016Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "DeferredRevenueCurrent",
    "periodEnd": "2008-09-27",
    "message": "2 missing quarters in expected grid: 2008Q4, 2009Q1, 2017Q1"
@@ -1168,94 +1000,6 @@
    "concept": "DeferredRevenueNoncurrent",
    "periodEnd": "2008-09-27",
    "message": "2 missing quarters in canonical grid: 2008Q4, 2009Q1, 2017Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredStateAndLocalIncomeTaxExpenseBenefit",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsDeferredIncome",
-   "periodEnd": "2012-09-29",
-   "message": "39 missing quarters in expected grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsDeferredIncome",
-   "periodEnd": "2012-09-29",
-   "message": "39 missing quarters in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsGoodwillAndIntangibleAssets",
-   "periodEnd": "2019-09-28",
-   "message": "9 missing quarters in expected grid: 2019Q4, 2020Q1, 2020Q2, 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsGoodwillAndIntangibleAssets",
-   "periodEnd": "2019-09-28",
-   "message": "9 missing quarters in canonical grid: 2019Q4, 2020Q1, 2020Q2, 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsGross",
-   "periodEnd": "2009-09-26",
-   "message": "52 missing quarters in expected grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsGross",
-   "periodEnd": "2009-09-26",
-   "message": "52 missing quarters in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsLiabilitiesNet",
-   "periodEnd": "2009-09-26",
-   "message": "51 missing quarters in expected grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsLiabilitiesNet",
-   "periodEnd": "2009-09-26",
-   "message": "51 missing quarters in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsNet",
-   "periodEnd": "2009-09-26",
-   "message": "48 missing quarters in expected grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsNet",
-   "periodEnd": "2009-09-26",
-   "message": "48 missing quarters in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
   },
   {
    "severity": "error",
@@ -1277,198 +1021,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "DeferredTaxAssetsOther",
-   "periodEnd": "2009-09-26",
-   "message": "48 missing quarters in expected grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsOther",
-   "periodEnd": "2009-09-26",
-   "message": "48 missing quarters in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsOtherComprehensiveLoss",
-   "periodEnd": "2021-09-25",
-   "message": "9 missing quarters in expected grid: 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsOtherComprehensiveLoss",
-   "periodEnd": "2021-09-25",
-   "message": "9 missing quarters in canonical grid: 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsPropertyPlantAndEquipment",
-   "periodEnd": "2015-09-26",
-   "message": "9 missing quarters in expected grid: 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1, 2017Q2, 2017Q4, 2018Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsPropertyPlantAndEquipment",
-   "periodEnd": "2015-09-26",
-   "message": "9 missing quarters in canonical grid: 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1, 2017Q2, 2017Q4, 2018Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsTaxCreditCarryforwards",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in expected grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsTaxCreditCarryforwards",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsForeign",
-   "periodEnd": "2021-09-25",
-   "message": "12 missing quarters in expected grid: 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsForeign",
-   "periodEnd": "2021-09-25",
-   "message": "12 missing quarters in canonical grid: 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsResearch",
-   "periodEnd": "2021-09-25",
-   "message": "12 missing quarters in expected grid: 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsResearch",
-   "periodEnd": "2021-09-25",
-   "message": "12 missing quarters in canonical grid: 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsTaxDeferredExpenseCompensationAndBenefitsShareBasedCompensationCost",
-   "periodEnd": "2009-09-26",
-   "message": "30 missing quarters in expected grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsTaxDeferredExpenseCompensationAndBenefitsShareBasedCompensationCost",
-   "periodEnd": "2009-09-26",
-   "message": "30 missing quarters in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsTaxDeferredExpenseReservesAndAccruals",
-   "periodEnd": "2009-09-26",
-   "message": "48 missing quarters in expected grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsTaxDeferredExpenseReservesAndAccruals",
-   "periodEnd": "2009-09-26",
-   "message": "48 missing quarters in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsUnrealizedLossesOnAvailableforSaleSecuritiesGross",
-   "periodEnd": "2017-09-30",
-   "message": "6 missing quarters in expected grid: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsUnrealizedLossesOnAvailableforSaleSecuritiesGross",
-   "periodEnd": "2017-09-30",
-   "message": "6 missing quarters in canonical grid: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsValuationAllowance",
-   "periodEnd": "2009-09-26",
-   "message": "49 missing quarters in expected grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxAssetsValuationAllowance",
-   "periodEnd": "2009-09-26",
-   "message": "49 missing quarters in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxLiabilities",
-   "periodEnd": "2010-09-25",
-   "message": "23 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxLiabilities",
-   "periodEnd": "2010-09-25",
-   "message": "23 missing quarters in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxLiabilitiesLeasingArrangements",
-   "periodEnd": "2019-09-28",
-   "message": "18 missing quarters in expected grid: 2019Q4, 2020Q1, 2020Q2, 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxLiabilitiesLeasingArrangements",
-   "periodEnd": "2019-09-28",
-   "message": "18 missing quarters in canonical grid: 2019Q4, 2020Q1, 2020Q2, 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "DeferredTaxLiabilitiesNoncurrent",
    "periodEnd": "2009-09-26",
    "message": "2 missing quarters in expected grid: 2009Q4, 2010Q1, 2017Q1"
@@ -1485,54 +1037,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "DeferredTaxLiabilitiesOther",
-   "periodEnd": "2010-09-25",
-   "message": "45 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxLiabilitiesOther",
-   "periodEnd": "2010-09-25",
-   "message": "45 missing quarters in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxLiabilitiesOtherComprehensiveIncome",
-   "periodEnd": "2019-09-28",
-   "message": "15 missing quarters in expected grid: 2019Q4, 2020Q1, 2020Q2, 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxLiabilitiesOtherComprehensiveIncome",
-   "periodEnd": "2019-09-28",
-   "message": "15 missing quarters in canonical grid: 2019Q4, 2020Q1, 2020Q2, 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxLiabilitiesPropertyPlantAndEquipment",
-   "periodEnd": "2022-09-24",
-   "message": "9 missing quarters in expected grid: 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxLiabilitiesPropertyPlantAndEquipment",
-   "periodEnd": "2022-09-24",
-   "message": "9 missing quarters in canonical grid: 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "DeferredTaxLiabilitiesUndistributedForeignEarnings",
    "periodEnd": "2009-09-26",
    "message": "30 missing quarters in expected grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
@@ -1549,57 +1053,9 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "DeferredTaxLiabilityNotRecognizedAmountOfUnrecognizedDeferredTaxLiabilityUndistributedEarningsOfForeignSubsidiaries",
-   "periodEnd": "2015-09-26",
-   "message": "6 missing quarters in expected grid: 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1, 2017Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DeferredTaxLiabilityNotRecognizedAmountOfUnrecognizedDeferredTaxLiabilityUndistributedEarningsOfForeignSubsidiaries",
-   "periodEnd": "2015-09-26",
-   "message": "6 missing quarters in canonical grid: 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1, 2017Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DefinedContributionPlanCostRecognized",
-   "periodEnd": "2008-09-27",
-   "message": "21 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DefinedContributionPlanMaximumAnnualContributionsPerEmployeeAmount",
-   "periodEnd": "2013-09-28",
-   "message": "24 missing quarters in expected grid: 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "Depreciation",
-   "periodEnd": "2017-09-30",
-   "message": "24 missing quarters in expected grid: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "DepreciationAmortizationAndAccretionNet",
    "periodEnd": "2007-09-29",
    "message": "2 missing quarters in expected grid: 2007Q4, 2008Q1, 2017Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "DepreciationAndAmortization",
-   "periodEnd": "2008-09-27",
-   "message": "24 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
   },
   {
    "severity": "error",
@@ -1645,14 +1101,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "Dividends",
-   "periodEnd": "2015-09-26",
-   "message": "9 missing quarters in expected grid: 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1, 2017Q2, 2017Q4, 2018Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "EarningsPerShareBasic",
    "periodEnd": "2007-09-29",
    "message": "2 missing quarters in expected grid: 2007Q4, 2008Q1, 2017Q1, 2023Q1"
@@ -1669,49 +1117,9 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "EffectiveIncomeTaxRateContinuingOperations",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "EffectiveIncomeTaxRateReconciliationAtFederalStatutoryIncomeTaxRate",
    "periodEnd": "2008-09-27",
    "message": "49 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "EffectiveIncomeTaxRateReconciliationFdiiAmount",
-   "periodEnd": "2020-09-26",
-   "message": "9 missing quarters in expected grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "EffectiveIncomeTaxRateReconciliationForeignIncomeTaxRateDifferential",
-   "periodEnd": "2013-09-28",
-   "message": "12 missing quarters in expected grid: 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "EffectiveIncomeTaxRateReconciliationShareBasedCompensationExcessTaxBenefitAmount",
-   "periodEnd": "2017-09-30",
-   "message": "21 missing quarters in expected grid: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "EffectiveIncomeTaxRateReconciliationTaxCutsAndJobsActOf2017Amount",
-   "periodEnd": "2017-09-30",
-   "message": "15 missing quarters in expected grid: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
   },
   {
    "severity": "error",
@@ -1821,22 +1229,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "FairValueHedgesAtFairValueNet",
-   "periodEnd": "2009-09-26",
-   "message": "12 missing quarters in expected grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FairValueHedgesAtFairValueNet",
-   "periodEnd": "2009-09-26",
-   "message": "12 missing quarters in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "FairValueLiabilitiesMeasuredOnRecurringBasisDerivativeFinancialInstrumentsLiabilities",
    "periodEnd": "2009-09-26",
    "message": "2 missing quarters in expected grid: 2009Q4, 2010Q1"
@@ -1853,14 +1245,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "FederalIncomeTaxExpenseBenefitContinuingOperations",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "FinanceLeaseLiability",
    "periodEnd": "2019-12-28",
    "message": "15 missing quarters in expected grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
@@ -1871,38 +1255,6 @@
    "cik": 320193,
    "concept": "FinanceLeaseLiability",
    "periodEnd": "2019-12-28",
-   "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FinanceLeaseLiabilityCurrent",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in expected grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FinanceLeaseLiabilityCurrent",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FinanceLeaseLiabilityNoncurrent",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in expected grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FinanceLeaseLiabilityNoncurrent",
-   "periodEnd": "2020-09-26",
    "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
   },
   {
@@ -1935,22 +1287,6 @@
    "cik": 320193,
    "concept": "FinanceLeaseLiabilityPaymentsDueAfterYearFive",
    "periodEnd": "2019-12-28",
-   "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FinanceLeaseLiabilityPaymentsDueNextTwelveMonths",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in expected grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FinanceLeaseLiabilityPaymentsDueNextTwelveMonths",
-   "periodEnd": "2020-09-26",
    "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
   },
   {
@@ -2031,22 +1367,6 @@
    "cik": 320193,
    "concept": "FinanceLeaseLiabilityUndiscountedExcessAmount",
    "periodEnd": "2019-12-28",
-   "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FinanceLeaseRightOfUseAsset",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in expected grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FinanceLeaseRightOfUseAsset",
-   "periodEnd": "2020-09-26",
    "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
   },
   {
@@ -2064,110 +1384,6 @@
    "concept": "FiniteLivedIntangibleAssetsAccumulatedAmortization",
    "periodEnd": "2009-09-26",
    "message": "43 missing quarters in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpense",
-   "periodEnd": "2008-09-27",
-   "message": "9 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseAfterYearFive",
-   "periodEnd": "2014-09-27",
-   "message": "9 missing quarters in expected grid: 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseAfterYearFive",
-   "periodEnd": "2014-09-27",
-   "message": "9 missing quarters in canonical grid: 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseNextTwelveMonths",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in expected grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseNextTwelveMonths",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearFive",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in expected grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearFive",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearFour",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in expected grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearFour",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearThree",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in expected grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearThree",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearTwo",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in expected grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearTwo",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
   },
   {
    "severity": "error",
@@ -2205,22 +1421,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsUsefulLifeMaximum",
-   "periodEnd": "2010-09-25",
-   "message": "3 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FiniteLivedIntangibleAssetsUsefulLifeMinimum",
-   "periodEnd": "2010-09-25",
-   "message": "3 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "ForeignCurrencyDerivativeAssetsAtFairValue",
    "periodEnd": "2009-09-26",
    "message": "2 missing quarters in expected grid: 2009Q4, 2010Q1"
@@ -2285,14 +1485,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "ForeignIncomeTaxExpenseBenefitContinuingOperations",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "FurnitureAndFixturesGross",
    "periodEnd": "2009-09-26",
    "message": "2 missing quarters in expected grid: 2009Q4, 2010Q1"
@@ -2304,46 +1496,6 @@
    "concept": "FurnitureAndFixturesGross",
    "periodEnd": "2009-09-26",
    "message": "2 missing quarters in canonical grid: 2009Q4, 2010Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FutureAmortizationExpenseYearFive",
-   "periodEnd": "2010-09-25",
-   "message": "3 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FutureAmortizationExpenseYearFour",
-   "periodEnd": "2010-09-25",
-   "message": "3 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FutureAmortizationExpenseYearOne",
-   "periodEnd": "2010-09-25",
-   "message": "3 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FutureAmortizationExpenseYearThree",
-   "periodEnd": "2010-09-25",
-   "message": "3 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "FutureAmortizationExpenseYearTwo",
-   "periodEnd": "2010-09-25",
-   "message": "3 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2"
   },
   {
    "severity": "error",
@@ -2389,14 +1541,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "GoodwillImpairmentLoss",
-   "periodEnd": "2008-09-27",
-   "message": "27 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "GrossProfit",
    "periodEnd": "2007-09-29",
    "message": "2 missing quarters in expected grid: 2007Q4, 2008Q1, 2017Q1, 2023Q1"
@@ -2437,33 +1581,9 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "ImpairmentOfIntangibleAssetsExcludingGoodwill",
-   "periodEnd": "2008-09-27",
-   "message": "15 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "ImpairmentOfIntangibleAssetsIndefinitelivedExcludingGoodwill",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in expected grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
    "periodEnd": "2011-09-24",
    "message": "2 missing quarters in expected grid: 2011Q4, 2012Q1, 2017Q1, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesForeign",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
   },
   {
    "severity": "error",
@@ -2485,49 +1605,9 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "IncomeTaxExaminationInterestExpense",
-   "periodEnd": "2009-09-26",
-   "message": "3 missing quarters in expected grid: 2009Q4, 2010Q1, 2010Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "IncomeTaxExpenseBenefit",
    "periodEnd": "2007-09-29",
    "message": "2 missing quarters in expected grid: 2007Q4, 2008Q1, 2017Q1, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "IncomeTaxReconciliationChangeInDeferredTaxAssetsValuationAllowance",
-   "periodEnd": "2023-09-30",
-   "message": "6 missing quarters in expected grid: 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1, 2025Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "IncomeTaxReconciliationDeductionsQualifiedProductionActivities",
-   "periodEnd": "2009-09-26",
-   "message": "27 missing quarters in expected grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "IncomeTaxReconciliationForeignIncomeTaxRateDifferential",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "IncomeTaxReconciliationIncomeTaxExpenseBenefitAtFederalStatutoryIncomeTaxRate",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
   },
   {
    "severity": "error",
@@ -2541,41 +1621,9 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "IncomeTaxReconciliationOtherAdjustments",
-   "periodEnd": "2011-09-24",
-   "message": "42 missing quarters in expected grid: 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "IncomeTaxReconciliationOtherReconcilingItems",
-   "periodEnd": "2008-09-27",
-   "message": "12 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "IncomeTaxReconciliationStateAndLocalIncomeTaxes",
-   "periodEnd": "2008-09-27",
-   "message": "48 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "IncomeTaxReconciliationTaxContingenciesDomestic",
    "periodEnd": "2014-03-29",
    "message": "1 missing quarters in expected grid: 2014Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "IncomeTaxReconciliationTaxCreditsResearch",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
   },
   {
    "severity": "error",
@@ -2797,14 +1845,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "LeaseAndRentalExpense",
-   "periodEnd": "2008-09-27",
-   "message": "9 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "LeaseholdImprovementsGross",
    "periodEnd": "2009-09-26",
    "message": "2 missing quarters in expected grid: 2009Q4, 2010Q1"
@@ -2847,22 +1887,6 @@
    "cik": 320193,
    "concept": "LesseeOperatingLeaseLiabilityPaymentsDueAfterYearFive",
    "periodEnd": "2019-12-28",
-   "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueNextTwelveMonths",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in expected grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueNextTwelveMonths",
-   "periodEnd": "2020-09-26",
    "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
   },
   {
@@ -3261,22 +2285,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "NoncurrentAssets",
-   "periodEnd": "2013-09-28",
-   "message": "36 missing quarters in expected grid: 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "NoncurrentAssets",
-   "periodEnd": "2013-09-28",
-   "message": "36 missing quarters in canonical grid: 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "NonoperatingIncomeExpense",
    "periodEnd": "2007-09-29",
    "message": "2 missing quarters in expected grid: 2007Q4, 2008Q1, 2017Q1, 2023Q1"
@@ -3365,57 +2373,9 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "OperatingLeaseLiabilityCurrent",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in expected grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeaseLiabilityCurrent",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeaseLiabilityNoncurrent",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in expected grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeaseLiabilityNoncurrent",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "OperatingLeasePayments",
    "periodEnd": "2019-12-28",
    "message": "15 missing quarters in expected grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeaseRightOfUseAsset",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in expected grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeaseRightOfUseAsset",
-   "periodEnd": "2020-09-26",
-   "message": "15 missing quarters in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
   },
   {
    "severity": "error",
@@ -3432,110 +2392,6 @@
    "concept": "OperatingLeasesFutureMinimumPaymentsDue",
    "periodEnd": "2009-09-26",
    "message": "5 missing quarters in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2017Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesFutureMinimumPaymentsDueCurrent",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesFutureMinimumPaymentsDueCurrent",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesFutureMinimumPaymentsDueInFiveYears",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesFutureMinimumPaymentsDueInFiveYears",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesFutureMinimumPaymentsDueInFourYears",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesFutureMinimumPaymentsDueInFourYears",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesFutureMinimumPaymentsDueInThreeYears",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesFutureMinimumPaymentsDueInThreeYears",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesFutureMinimumPaymentsDueInTwoYears",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesFutureMinimumPaymentsDueInTwoYears",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesFutureMinimumPaymentsDueThereafter",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesFutureMinimumPaymentsDueThereafter",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OperatingLeasesRentExpenseNet",
-   "periodEnd": "2010-09-25",
-   "message": "27 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
   },
   {
    "severity": "error",
@@ -3584,22 +2440,6 @@
    "concept": "OtherAssetsCurrent",
    "periodEnd": "2008-09-27",
    "message": "2 missing quarters in canonical grid: 2008Q4, 2009Q1, 2017Q1, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OtherAssetsMiscellaneousNoncurrent",
-   "periodEnd": "2022-09-24",
-   "message": "9 missing quarters in expected grid: 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OtherAssetsMiscellaneousNoncurrent",
-   "periodEnd": "2022-09-24",
-   "message": "9 missing quarters in canonical grid: 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1"
   },
   {
    "severity": "error",
@@ -3757,14 +2597,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentOnDerivativesIncludedInNetIncomeTax",
-   "periodEnd": "2010-09-25",
-   "message": "6 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "OtherComprehensiveIncomeLossTaxPortionAttributableToParent1",
    "periodEnd": "2015-09-26",
    "message": "2 missing quarters in expected grid: 2015Q4, 2016Q1"
@@ -3776,14 +2608,6 @@
    "concept": "OtherComprehensiveIncomeReclassificationAdjustmentOnDerivativesIncludedInNetIncomeNetOfTax",
    "periodEnd": "2008-09-27",
    "message": "2 missing quarters in expected grid: 2008Q4, 2009Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "OtherComprehensiveIncomeReclassificationAdjustmentOnDerivativesIncludedInNetIncomeTax",
-   "periodEnd": "2008-09-27",
-   "message": "9 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
   },
   {
    "severity": "error",
@@ -4277,38 +3101,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "SegmentReportingReconcilingItemsAssets",
-   "periodEnd": "2008-09-27",
-   "message": "6 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "SegmentReportingReconcilingItemsAssets",
-   "periodEnd": "2008-09-27",
-   "message": "6 missing quarters in canonical grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "SegmentReportingSegmentAssets",
-   "periodEnd": "2008-09-27",
-   "message": "6 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "SegmentReportingSegmentAssets",
-   "periodEnd": "2008-09-27",
-   "message": "6 missing quarters in canonical grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "SellingAndMarketingExpense",
    "periodEnd": "2023-09-30",
    "message": "3 missing quarters in expected grid: 2023Q4, 2024Q1, 2024Q2"
@@ -4685,14 +3477,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "SharesPaidForTaxWithholdingForShareBasedCompensation",
-   "periodEnd": "2010-09-25",
-   "message": "24 missing quarters in expected grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "ShortTermDebtWeightedAverageInterestRate",
    "periodEnd": "2014-06-28",
    "message": "5 missing quarters in expected grid: 2015Q4, 2016Q1, 2017Q1, 2017Q2, 2020Q1, 2020Q2"
@@ -4773,14 +3557,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "StateAndLocalIncomeTaxExpenseBenefitContinuingOperations",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "StockholdersEquity",
    "periodEnd": "2006-09-30",
    "message": "8 missing quarters in expected grid: 2006Q4, 2007Q1, 2007Q2, 2007Q4, 2008Q1, 2008Q2, 2008Q4, 2009Q1"
@@ -4816,14 +3592,6 @@
    "concept": "StockIssuedDuringPeriodSharesStockOptionsExercised",
    "periodEnd": "2009-09-26",
    "message": "4 missing quarters in expected grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "StockIssuedDuringPeriodValueShareBasedCompensation",
-   "periodEnd": "2007-09-29",
-   "message": "6 missing quarters in expected grid: 2007Q4, 2008Q1, 2008Q2, 2008Q4, 2009Q1, 2009Q2"
   },
   {
    "severity": "error",
@@ -4909,30 +3677,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "TreasuryStockValueAcquiredCostMethod",
-   "periodEnd": "2013-09-28",
-   "message": "3 missing quarters in expected grid: 2013Q4, 2014Q1, 2014Q2"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "UndistributedEarningsOfForeignSubsidiaries",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in expected grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "UndistributedEarningsOfForeignSubsidiaries",
-   "periodEnd": "2012-09-29",
-   "message": "15 missing quarters in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "UnrecognizedTaxBenefits",
    "periodEnd": "2009-09-26",
    "message": "14 missing quarters in expected grid: 2009Q4, 2010Q1, 2017Q1, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
@@ -4944,14 +3688,6 @@
    "concept": "UnrecognizedTaxBenefits",
    "periodEnd": "2009-09-26",
    "message": "14 missing quarters in canonical grid: 2009Q4, 2010Q1, 2017Q1, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "UnrecognizedTaxBenefitsDecreasesResultingFromPriorPeriodTaxPositions",
-   "periodEnd": "2012-09-29",
-   "message": "39 missing quarters in expected grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
   },
   {
    "severity": "error",
@@ -4989,38 +3725,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "UnrecognizedTaxBenefitsIncomeTaxPenaltiesAndInterestExpense",
-   "periodEnd": "2012-09-29",
-   "message": "27 missing quarters in expected grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "UnrecognizedTaxBenefitsIncreasesResultingFromCurrentPeriodTaxPositions",
-   "periodEnd": "2012-09-29",
-   "message": "39 missing quarters in expected grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "UnrecognizedTaxBenefitsIncreasesResultingFromPriorPeriodTaxPositions",
-   "periodEnd": "2012-09-29",
-   "message": "39 missing quarters in expected grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "UnrecognizedTaxBenefitsReductionsResultingFromLapseOfApplicableStatuteOfLimitations",
-   "periodEnd": "2008-09-27",
-   "message": "51 missing quarters in expected grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "UnrecognizedTaxBenefitsThatWouldImpactEffectiveTaxRate",
    "periodEnd": "2009-09-26",
    "message": "14 missing quarters in expected grid: 2009Q4, 2010Q1, 2017Q1, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
@@ -5032,22 +3736,6 @@
    "concept": "UnrecognizedTaxBenefitsThatWouldImpactEffectiveTaxRate",
    "periodEnd": "2009-09-26",
    "message": "14 missing quarters in canonical grid: 2009Q4, 2010Q1, 2017Q1, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnFifthAnniversary",
-   "periodEnd": "2017-09-30",
-   "message": "24 missing quarters in expected grid: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnFifthAnniversary",
-   "periodEnd": "2017-09-30",
-   "message": "24 missing quarters in canonical grid: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
   },
   {
    "severity": "error",
@@ -5133,22 +3821,6 @@
    "severity": "error",
    "type": "continuity_gap",
    "cik": 320193,
-   "concept": "UnrecordedUnconditionalPurchaseObligationDueAfterFiveYears",
-   "periodEnd": "2017-09-30",
-   "message": "24 missing quarters in expected grid: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
-   "concept": "UnrecordedUnconditionalPurchaseObligationDueAfterFiveYears",
-   "periodEnd": "2017-09-30",
-   "message": "24 missing quarters in canonical grid: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
-  },
-  {
-   "severity": "error",
-   "type": "continuity_gap",
-   "cik": 320193,
    "concept": "UnrecordedUnconditionalPurchaseObligationDueInRemainderOfFiscalYear",
    "periodEnd": "2022-12-31",
    "message": "9 missing quarters in expected grid: 2023Q1, 2023Q4, 2024Q1, 2024Q2, 2024Q3, 2024Q4, 2025Q1, 2025Q2"
@@ -5200,6 +3872,1334 @@
    "concept": "WeightedAverageNumberOfSharesOutstandingBasic",
    "periodEnd": "2007-09-29",
    "message": "2 missing quarters in expected grid: 2007Q4, 2008Q1, 2017Q1, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "AdjustmentsToAdditionalPaidInCapitalSharebasedCompensationRequisiteServicePeriodRecognitionValue",
+   "periodEnd": "2007-09-29",
+   "message": "33 quarters outside annual 10-K disclosure cadence: 2007Q4, 2008Q1, 2008Q2, 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "AdjustmentsToAdditionalPaidInCapitalTaxEffectFromShareBasedCompensation",
+   "periodEnd": "2007-09-29",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2007Q4, 2008Q1, 2008Q2, 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "AdvertisingExpense",
+   "periodEnd": "2008-09-27",
+   "message": "21 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "AmortizationOfIntangibleAssets",
+   "periodEnd": "2010-09-25",
+   "message": "21 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "BusinessAcquisitionPurchasePriceAllocationAmortizableIntangibleAssets",
+   "periodEnd": "2011-09-24",
+   "message": "3 quarters outside annual 10-K disclosure cadence: 2011Q4, 2012Q1, 2012Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "BusinessAcquisitionPurchasePriceAllocationAmortizableIntangibleAssets",
+   "periodEnd": "2011-09-24",
+   "message": "3 quarters outside annual disclosure cadence in canonical grid: 2011Q4, 2012Q1, 2012Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "CapitalizedComputerSoftwareAdditions",
+   "periodEnd": "2008-09-27",
+   "message": "6 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "CapitalizedComputerSoftwareAmortization",
+   "periodEnd": "2008-09-27",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "ChangeInUnrealizedGainLossOnFairValueHedgingInstruments",
+   "periodEnd": "2008-09-27",
+   "message": "6 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "CostOfGoodsAndServicesSoldDepreciation",
+   "periodEnd": "2016-09-24",
+   "message": "6 quarters outside annual 10-K disclosure cadence: 2016Q4, 2017Q1, 2017Q2, 2017Q4, 2018Q1, 2018Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "CurrentFederalTaxExpenseBenefit",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "CurrentForeignTaxExpenseBenefit",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "CurrentStateAndLocalTaxExpenseBenefit",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredFederalIncomeTaxExpenseBenefit",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredForeignIncomeTaxExpenseBenefit",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxAssetsNet",
+   "periodEnd": "2022-09-24",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxAssetsNet",
+   "periodEnd": "2022-09-24",
+   "message": "9 quarters outside annual disclosure cadence in canonical grid: 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxLiabilities",
+   "periodEnd": "2013-09-28",
+   "message": "36 quarters outside annual 10-K disclosure cadence: 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxLiabilities",
+   "periodEnd": "2013-09-28",
+   "message": "36 quarters outside annual disclosure cadence in canonical grid: 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxLiabilitiesNet",
+   "periodEnd": "2014-09-27",
+   "message": "6 quarters outside annual 10-K disclosure cadence: 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1, 2016Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredIncomeTaxLiabilitiesNet",
+   "periodEnd": "2014-09-27",
+   "message": "6 quarters outside annual disclosure cadence in canonical grid: 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1, 2016Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredStateAndLocalIncomeTaxExpenseBenefit",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsDeferredIncome",
+   "periodEnd": "2012-09-29",
+   "message": "39 quarters outside annual 10-K disclosure cadence: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsDeferredIncome",
+   "periodEnd": "2012-09-29",
+   "message": "39 quarters outside annual disclosure cadence in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsGoodwillAndIntangibleAssets",
+   "periodEnd": "2019-09-28",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2019Q4, 2020Q1, 2020Q2, 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsGoodwillAndIntangibleAssets",
+   "periodEnd": "2019-09-28",
+   "message": "9 quarters outside annual disclosure cadence in canonical grid: 2019Q4, 2020Q1, 2020Q2, 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsGross",
+   "periodEnd": "2009-09-26",
+   "message": "52 quarters outside annual 10-K disclosure cadence: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsGross",
+   "periodEnd": "2009-09-26",
+   "message": "52 quarters outside annual disclosure cadence in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsLiabilitiesNet",
+   "periodEnd": "2009-09-26",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsLiabilitiesNet",
+   "periodEnd": "2009-09-26",
+   "message": "51 quarters outside annual disclosure cadence in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsNet",
+   "periodEnd": "2009-09-26",
+   "message": "48 quarters outside annual 10-K disclosure cadence: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsNet",
+   "periodEnd": "2009-09-26",
+   "message": "48 quarters outside annual disclosure cadence in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsOther",
+   "periodEnd": "2009-09-26",
+   "message": "48 quarters outside annual 10-K disclosure cadence: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsOther",
+   "periodEnd": "2009-09-26",
+   "message": "48 quarters outside annual disclosure cadence in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsOtherComprehensiveLoss",
+   "periodEnd": "2021-09-25",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsOtherComprehensiveLoss",
+   "periodEnd": "2021-09-25",
+   "message": "9 quarters outside annual disclosure cadence in canonical grid: 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsPropertyPlantAndEquipment",
+   "periodEnd": "2015-09-26",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1, 2017Q2, 2017Q4, 2018Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsPropertyPlantAndEquipment",
+   "periodEnd": "2015-09-26",
+   "message": "9 quarters outside annual disclosure cadence in canonical grid: 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1, 2017Q2, 2017Q4, 2018Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwards",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwards",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsForeign",
+   "periodEnd": "2021-09-25",
+   "message": "12 quarters outside annual 10-K disclosure cadence: 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsForeign",
+   "periodEnd": "2021-09-25",
+   "message": "12 quarters outside annual disclosure cadence in canonical grid: 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsResearch",
+   "periodEnd": "2021-09-25",
+   "message": "12 quarters outside annual 10-K disclosure cadence: 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsResearch",
+   "periodEnd": "2021-09-25",
+   "message": "12 quarters outside annual disclosure cadence in canonical grid: 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxDeferredExpenseCompensationAndBenefitsShareBasedCompensationCost",
+   "periodEnd": "2009-09-26",
+   "message": "30 quarters outside annual 10-K disclosure cadence: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxDeferredExpenseCompensationAndBenefitsShareBasedCompensationCost",
+   "periodEnd": "2009-09-26",
+   "message": "30 quarters outside annual disclosure cadence in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxDeferredExpenseReservesAndAccruals",
+   "periodEnd": "2009-09-26",
+   "message": "48 quarters outside annual 10-K disclosure cadence: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsTaxDeferredExpenseReservesAndAccruals",
+   "periodEnd": "2009-09-26",
+   "message": "48 quarters outside annual disclosure cadence in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsUnrealizedLossesOnAvailableforSaleSecuritiesGross",
+   "periodEnd": "2017-09-30",
+   "message": "6 quarters outside annual 10-K disclosure cadence: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsUnrealizedLossesOnAvailableforSaleSecuritiesGross",
+   "periodEnd": "2017-09-30",
+   "message": "6 quarters outside annual disclosure cadence in canonical grid: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsValuationAllowance",
+   "periodEnd": "2009-09-26",
+   "message": "49 quarters outside annual 10-K disclosure cadence: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxAssetsValuationAllowance",
+   "periodEnd": "2009-09-26",
+   "message": "49 quarters outside annual disclosure cadence in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilities",
+   "periodEnd": "2010-09-25",
+   "message": "23 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilities",
+   "periodEnd": "2010-09-25",
+   "message": "23 quarters outside annual disclosure cadence in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesLeasingArrangements",
+   "periodEnd": "2019-09-28",
+   "message": "18 quarters outside annual 10-K disclosure cadence: 2019Q4, 2020Q1, 2020Q2, 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesLeasingArrangements",
+   "periodEnd": "2019-09-28",
+   "message": "18 quarters outside annual disclosure cadence in canonical grid: 2019Q4, 2020Q1, 2020Q2, 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesOther",
+   "periodEnd": "2010-09-25",
+   "message": "45 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesOther",
+   "periodEnd": "2010-09-25",
+   "message": "45 quarters outside annual disclosure cadence in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesOtherComprehensiveIncome",
+   "periodEnd": "2019-09-28",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2019Q4, 2020Q1, 2020Q2, 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesOtherComprehensiveIncome",
+   "periodEnd": "2019-09-28",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2019Q4, 2020Q1, 2020Q2, 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesPropertyPlantAndEquipment",
+   "periodEnd": "2022-09-24",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilitiesPropertyPlantAndEquipment",
+   "periodEnd": "2022-09-24",
+   "message": "9 quarters outside annual disclosure cadence in canonical grid: 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilityNotRecognizedAmountOfUnrecognizedDeferredTaxLiabilityUndistributedEarningsOfForeignSubsidiaries",
+   "periodEnd": "2015-09-26",
+   "message": "6 quarters outside annual 10-K disclosure cadence: 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1, 2017Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DeferredTaxLiabilityNotRecognizedAmountOfUnrecognizedDeferredTaxLiabilityUndistributedEarningsOfForeignSubsidiaries",
+   "periodEnd": "2015-09-26",
+   "message": "6 quarters outside annual disclosure cadence in canonical grid: 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1, 2017Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DefinedContributionPlanCostRecognized",
+   "periodEnd": "2008-09-27",
+   "message": "21 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DefinedContributionPlanMaximumAnnualContributionsPerEmployeeAmount",
+   "periodEnd": "2013-09-28",
+   "message": "24 quarters outside annual 10-K disclosure cadence: 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "Depreciation",
+   "periodEnd": "2017-09-30",
+   "message": "24 quarters outside annual 10-K disclosure cadence: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "DepreciationAndAmortization",
+   "periodEnd": "2008-09-27",
+   "message": "24 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "Dividends",
+   "periodEnd": "2015-09-26",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1, 2017Q2, 2017Q4, 2018Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateContinuingOperations",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationFdiiAmount",
+   "periodEnd": "2020-09-26",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationForeignIncomeTaxRateDifferential",
+   "periodEnd": "2013-09-28",
+   "message": "12 quarters outside annual 10-K disclosure cadence: 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationShareBasedCompensationExcessTaxBenefitAmount",
+   "periodEnd": "2017-09-30",
+   "message": "21 quarters outside annual 10-K disclosure cadence: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "EffectiveIncomeTaxRateReconciliationTaxCutsAndJobsActOf2017Amount",
+   "periodEnd": "2017-09-30",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FairValueHedgesAtFairValueNet",
+   "periodEnd": "2009-09-26",
+   "message": "12 quarters outside annual 10-K disclosure cadence: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FairValueHedgesAtFairValueNet",
+   "periodEnd": "2009-09-26",
+   "message": "12 quarters outside annual disclosure cadence in canonical grid: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FederalIncomeTaxExpenseBenefitContinuingOperations",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityCurrent",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityCurrent",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityNoncurrent",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityNoncurrent",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueNextTwelveMonths",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FinanceLeaseLiabilityPaymentsDueNextTwelveMonths",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FinanceLeaseRightOfUseAsset",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FinanceLeaseRightOfUseAsset",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpense",
+   "periodEnd": "2008-09-27",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseAfterYearFive",
+   "periodEnd": "2014-09-27",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseAfterYearFive",
+   "periodEnd": "2014-09-27",
+   "message": "9 quarters outside annual disclosure cadence in canonical grid: 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1, 2016Q2, 2016Q4, 2017Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseNextTwelveMonths",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseNextTwelveMonths",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearFive",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearFive",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearFour",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearFour",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearThree",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearThree",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearTwo",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsAmortizationExpenseYearTwo",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsUsefulLifeMaximum",
+   "periodEnd": "2010-09-25",
+   "message": "3 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FiniteLivedIntangibleAssetsUsefulLifeMinimum",
+   "periodEnd": "2010-09-25",
+   "message": "3 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "ForeignIncomeTaxExpenseBenefitContinuingOperations",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearFive",
+   "periodEnd": "2010-09-25",
+   "message": "3 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearFour",
+   "periodEnd": "2010-09-25",
+   "message": "3 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearOne",
+   "periodEnd": "2010-09-25",
+   "message": "3 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearThree",
+   "periodEnd": "2010-09-25",
+   "message": "3 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "FutureAmortizationExpenseYearTwo",
+   "periodEnd": "2010-09-25",
+   "message": "3 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "GoodwillImpairmentLoss",
+   "periodEnd": "2008-09-27",
+   "message": "27 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "ImpairmentOfIntangibleAssetsExcludingGoodwill",
+   "periodEnd": "2008-09-27",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "ImpairmentOfIntangibleAssetsIndefinitelivedExcludingGoodwill",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesForeign",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "IncomeTaxExaminationInterestExpense",
+   "periodEnd": "2009-09-26",
+   "message": "3 quarters outside annual 10-K disclosure cadence: 2009Q4, 2010Q1, 2010Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationChangeInDeferredTaxAssetsValuationAllowance",
+   "periodEnd": "2023-09-30",
+   "message": "6 quarters outside annual 10-K disclosure cadence: 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1, 2025Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationDeductionsQualifiedProductionActivities",
+   "periodEnd": "2009-09-26",
+   "message": "27 quarters outside annual 10-K disclosure cadence: 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationForeignIncomeTaxRateDifferential",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationIncomeTaxExpenseBenefitAtFederalStatutoryIncomeTaxRate",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationOtherAdjustments",
+   "periodEnd": "2011-09-24",
+   "message": "42 quarters outside annual 10-K disclosure cadence: 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationOtherReconcilingItems",
+   "periodEnd": "2008-09-27",
+   "message": "12 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationStateAndLocalIncomeTaxes",
+   "periodEnd": "2008-09-27",
+   "message": "48 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "IncomeTaxReconciliationTaxCreditsResearch",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "LeaseAndRentalExpense",
+   "periodEnd": "2008-09-27",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueNextTwelveMonths",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueNextTwelveMonths",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "NoncurrentAssets",
+   "periodEnd": "2013-09-28",
+   "message": "36 quarters outside annual 10-K disclosure cadence: 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "NoncurrentAssets",
+   "periodEnd": "2013-09-28",
+   "message": "36 quarters outside annual disclosure cadence in canonical grid: 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1, 2015Q2, 2015Q4, 2016Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeaseLiabilityCurrent",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeaseLiabilityCurrent",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeaseLiabilityNoncurrent",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeaseLiabilityNoncurrent",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeaseRightOfUseAsset",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeaseRightOfUseAsset",
+   "periodEnd": "2020-09-26",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2020Q4, 2021Q1, 2021Q2, 2021Q4, 2022Q1, 2022Q2, 2022Q4, 2023Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueCurrent",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueCurrent",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual disclosure cadence in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInFiveYears",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInFiveYears",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual disclosure cadence in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInFourYears",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInFourYears",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual disclosure cadence in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInThreeYears",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInThreeYears",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual disclosure cadence in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInTwoYears",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueInTwoYears",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual disclosure cadence in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueThereafter",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesFutureMinimumPaymentsDueThereafter",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual disclosure cadence in canonical grid: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OperatingLeasesRentExpenseNet",
+   "periodEnd": "2010-09-25",
+   "message": "27 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OtherAssetsMiscellaneousNoncurrent",
+   "periodEnd": "2022-09-24",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OtherAssetsMiscellaneousNoncurrent",
+   "periodEnd": "2022-09-24",
+   "message": "9 quarters outside annual disclosure cadence in canonical grid: 2022Q4, 2023Q1, 2023Q2, 2023Q4, 2024Q1, 2024Q2, 2024Q4, 2025Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeLossReclassificationAdjustmentOnDerivativesIncludedInNetIncomeTax",
+   "periodEnd": "2010-09-25",
+   "message": "6 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "OtherComprehensiveIncomeReclassificationAdjustmentOnDerivativesIncludedInNetIncomeTax",
+   "periodEnd": "2008-09-27",
+   "message": "9 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "SegmentReportingReconcilingItemsAssets",
+   "periodEnd": "2008-09-27",
+   "message": "6 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "SegmentReportingReconcilingItemsAssets",
+   "periodEnd": "2008-09-27",
+   "message": "6 quarters outside annual disclosure cadence in canonical grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "SegmentReportingSegmentAssets",
+   "periodEnd": "2008-09-27",
+   "message": "6 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "SegmentReportingSegmentAssets",
+   "periodEnd": "2008-09-27",
+   "message": "6 quarters outside annual disclosure cadence in canonical grid: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "SharesPaidForTaxWithholdingForShareBasedCompensation",
+   "periodEnd": "2010-09-25",
+   "message": "24 quarters outside annual 10-K disclosure cadence: 2010Q4, 2011Q1, 2011Q2, 2011Q4, 2012Q1, 2012Q2, 2012Q4, 2013Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "StateAndLocalIncomeTaxExpenseBenefitContinuingOperations",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "StockIssuedDuringPeriodValueShareBasedCompensation",
+   "periodEnd": "2007-09-29",
+   "message": "6 quarters outside annual 10-K disclosure cadence: 2007Q4, 2008Q1, 2008Q2, 2008Q4, 2009Q1, 2009Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "TreasuryStockValueAcquiredCostMethod",
+   "periodEnd": "2013-09-28",
+   "message": "3 quarters outside annual 10-K disclosure cadence: 2013Q4, 2014Q1, 2014Q2"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "UndistributedEarningsOfForeignSubsidiaries",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual 10-K disclosure cadence: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "UndistributedEarningsOfForeignSubsidiaries",
+   "periodEnd": "2012-09-29",
+   "message": "15 quarters outside annual disclosure cadence in canonical grid: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsDecreasesResultingFromPriorPeriodTaxPositions",
+   "periodEnd": "2012-09-29",
+   "message": "39 quarters outside annual 10-K disclosure cadence: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsIncomeTaxPenaltiesAndInterestExpense",
+   "periodEnd": "2012-09-29",
+   "message": "27 quarters outside annual 10-K disclosure cadence: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsIncreasesResultingFromCurrentPeriodTaxPositions",
+   "periodEnd": "2012-09-29",
+   "message": "39 quarters outside annual 10-K disclosure cadence: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsIncreasesResultingFromPriorPeriodTaxPositions",
+   "periodEnd": "2012-09-29",
+   "message": "39 quarters outside annual 10-K disclosure cadence: 2012Q4, 2013Q1, 2013Q2, 2013Q4, 2014Q1, 2014Q2, 2014Q4, 2015Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "UnrecognizedTaxBenefitsReductionsResultingFromLapseOfApplicableStatuteOfLimitations",
+   "periodEnd": "2008-09-27",
+   "message": "51 quarters outside annual 10-K disclosure cadence: 2008Q4, 2009Q1, 2009Q2, 2009Q4, 2010Q1, 2010Q2, 2010Q4, 2011Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnFifthAnniversary",
+   "periodEnd": "2017-09-30",
+   "message": "24 quarters outside annual 10-K disclosure cadence: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationBalanceOnFifthAnniversary",
+   "periodEnd": "2017-09-30",
+   "message": "24 quarters outside annual disclosure cadence in canonical grid: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueAfterFiveYears",
+   "periodEnd": "2017-09-30",
+   "message": "24 quarters outside annual 10-K disclosure cadence: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
+  },
+  {
+   "severity": "warning",
+   "type": "cadence_expected_gap",
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueAfterFiveYears",
+   "periodEnd": "2017-09-30",
+   "message": "24 quarters outside annual disclosure cadence in canonical grid: 2017Q4, 2018Q1, 2018Q2, 2018Q4, 2019Q1, 2019Q2, 2019Q4, 2020Q1"
   },
   {
    "severity": "warning",

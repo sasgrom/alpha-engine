@@ -1,7 +1,7 @@
 export type IntegritySeverity = "error" | "warning";
 export type IntegrityIssueType =
   | "missing_availability" | "missing_unit" | "missing_period" | "invalid_period" | "irregular_duration"
-  | "duplicate_fact" | "frame_conflict" | "unit_change" | "unit_conflict" | "continuity_gap"
+  | "duplicate_fact" | "frame_conflict" | "unit_change" | "unit_conflict" | "continuity_gap" | "cadence_expected_gap"
   | "availability_inversion" | "duplicate_series_point" | "revision_outlier" | "duplicate_factor_point"
   | "factor_before_fact" | "missing_stage" | "count_inversion" | "coverage_gap" | "orphan_cik";
 export interface IntegrityIssue { severity: IntegritySeverity; type: IntegrityIssueType; cik: number; concept?: string; periodEnd?: string; message: string; accessionNo?: string }
@@ -36,6 +36,17 @@ function quarterLabel(index: number): string { return `${Math.floor(index / 4)}Q
 function finiteDate(value: string | null): boolean { return !!value && Number.isFinite(Date.parse(value)); }
 function groupBy<T>(rows: T[], keyOf: (row: T) => string): Map<string, T[]> { const out = new Map<string, T[]>(); for (const row of rows) { const key = keyOf(row); if (!out.has(key)) out.set(key, []); out.get(key)!.push(row); } return out; }
 function revisionRatio(first: number, latest: number): number { return Math.abs(latest - first) / Math.max(Math.abs(first), 1e-9); }
+const conceptKey = (cik: number, concept: string): string => `${cik}|${concept}`;
+const annualOnlyRows = (rows: FundamentalFactRow[]): boolean => rows.some((row) => row.form?.startsWith("10-K")) && !rows.some((row) => row.form?.startsWith("10-Q"));
+export function annualOnlyConceptKeys(rows: FundamentalFactRow[]): Set<string> {
+  const keys = new Set<string>();
+  for (const [cik, companyRows] of groupBy(rows, (row) => String(row.cik))) {
+    for (const [concept, conceptRows] of groupBy(companyRows, (row) => row.concept)) {
+      if (annualOnlyRows(conceptRows)) keys.add(conceptKey(Number(cik), concept));
+    }
+  }
+  return keys;
+}
 
 export function auditFundamentalFacts(rows: FundamentalFactRow[]): IntegrityIssue[] {
   const issues: IntegrityIssue[] = [];
@@ -82,7 +93,11 @@ export function auditFundamentalFacts(rows: FundamentalFactRow[]): IntegrityIssu
         if (missing > 0) {
           const present = new Set(periods.map(quarterIndex));
           const gaps = Array.from({ length: expected + 1 }, (_, i) => quarterIndex(periods[0]) + i).filter((index) => !present.has(index)).slice(0, 8).map(quarterLabel);
-          add("error", "continuity_gap", Number(cik), concept, periods[0], `${missing} missing quarters in expected grid: ${gaps.join(", ")}`);
+          if (annualOnlyRows(conceptRows)) {
+            add("warning", "cadence_expected_gap", Number(cik), concept, periods[0], `${missing} quarters outside annual 10-K disclosure cadence: ${gaps.join(", ")}`);
+          } else {
+            add("error", "continuity_gap", Number(cik), concept, periods[0], `${missing} missing quarters in expected grid: ${gaps.join(", ")}`);
+          }
         }
       }
     }
@@ -93,7 +108,7 @@ export function auditFundamentalFacts(rows: FundamentalFactRow[]): IntegrityIssu
   return issues;
 }
 
-export function auditSeriesPoints(rows: FundamentalSeriesRow[]): IntegrityIssue[] {
+export function auditSeriesPoints(rows: FundamentalSeriesRow[], annualOnly: Set<string> = new Set()): IntegrityIssue[] {
   const issues: IntegrityIssue[] = [];
   const add = (severity: IntegritySeverity, type: IntegrityIssueType, cik: number, concept: string, periodEnd: string | null, message: string, accessionNo?: string) => issues.push({ severity, type, cik: Number(cik), concept, ...(periodEnd ? { periodEnd } : {}), message, ...(accessionNo ? { accessionNo } : {}) });
   const unique = new Map<string, FundamentalSeriesRow>();
@@ -115,7 +130,11 @@ export function auditSeriesPoints(rows: FundamentalSeriesRow[]): IntegrityIssue[
         if (missing > 0) {
           const present = new Set(periods.map(quarterIndex));
           const gaps = Array.from({ length: expected + 1 }, (_, i) => quarterIndex(periods[0]) + i).filter((index) => !present.has(index)).slice(0, 8).map(quarterLabel);
-          add("error", "continuity_gap", Number(cik), concept, periods[0], `${missing} missing quarters in canonical grid: ${gaps.join(", ")}`);
+          if (annualOnly.has(conceptKey(Number(cik), concept))) {
+            add("warning", "cadence_expected_gap", Number(cik), concept, periods[0], `${missing} quarters outside annual disclosure cadence in canonical grid: ${gaps.join(", ")}`);
+          } else {
+            add("error", "continuity_gap", Number(cik), concept, periods[0], `${missing} missing quarters in canonical grid: ${gaps.join(", ")}`);
+          }
         }
       }
       for (const period of periods) {
@@ -164,7 +183,7 @@ export function buildFundamentalIntegrityReport(params: {
 }): FundamentalIntegrityReport {
   const { facts, series, factors, universeSha256, generatedAt, maxIssues = 10_000 } = params;
   const ciks = new Set([...facts.map((row) => row.cik), ...series.map((row) => row.cik), ...factors.map((row) => row.cik)]);
-  const issues = [...auditFundamentalFacts(facts), ...auditSeriesPoints(series), ...auditFactorPoints(factors, facts)];
+  const issues = [...auditFundamentalFacts(facts), ...auditSeriesPoints(series, annualOnlyConceptKeys(facts)), ...auditFactorPoints(factors, facts)];
   for (const cik of ciks) {
     const factCount = facts.filter((row) => row.cik === cik).length;
     const seriesCount = series.filter((row) => row.cik === cik).length;

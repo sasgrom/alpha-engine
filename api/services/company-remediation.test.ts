@@ -15,7 +15,7 @@ const gapMap: SchwabFundamentalGapMap = { schemaVersion: 1, generatedAt: "2026-1
 const sourceSparseDiagnosis: RecentGapDiagnosisReport = {
   schemaVersion: 1, generatedAt: "2026-10-31T01:00:00Z", sourceGapGeneratedAt: gapAnalysis.generatedAt,
   sourceFactsSha256: "abc", cik: 320193,
-  summary: { recentErrors: 7, concepts: 5, missingQuarters: 12, recoverableQuarters: 0, aliasQuarters: 0, unavailableQuarters: 12 },
+  summary: { recentErrors: 7, cadenceExpectedIssues: 0, concepts: 5, missingQuarters: 12, recoverableQuarters: 0, aliasQuarters: 0, unavailableQuarters: 12, annualOnlyConcepts: 0, annualOnlyQuarters: 0, quarterlyReviewConcepts: 5, quarterlyReviewQuarters: 12 },
   gaps: [],
 };
 

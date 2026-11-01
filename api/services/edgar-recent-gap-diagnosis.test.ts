@@ -14,8 +14,8 @@ const analysis: EdgarGapAnalysis = {
   ],
 };
 const sourceIssues: IntegrityIssue[] = analysis.gaps.map((gap) => ({
-  severity: "error",
-  type: "continuity_gap",
+  severity: gap.concept === "UnavailableConcept" ? "warning" : "error",
+  type: gap.concept === "UnavailableConcept" ? "cadence_expected_gap" : "continuity_gap",
   cik: gap.cik,
   concept: gap.concept,
   periodEnd: "2020-09-30",
@@ -24,8 +24,9 @@ const sourceIssues: IntegrityIssue[] = analysis.gaps.map((gap) => ({
 const companyFacts = {
   facts: {
     "us-gaap": {
-      AssetsCurrent: { units: { USD: [{ end: "2020-03-31" }] } },
-      FinanceLeaseLiabilityNoncurrent: { units: { USD: [{ end: "2020-06-30" }] } },
+      AssetsCurrent: { units: { USD: [{ end: "2020-03-31", form: "10-Q" }] } },
+      FinanceLeaseLiabilityNoncurrent: { units: { USD: [{ end: "2020-06-30", form: "10-Q" }] } },
+      UnavailableConcept: { units: { USD: [{ end: "2019-12-31", form: "10-K" }, { end: "2020-12-31", form: "10-K" }] } },
     },
   },
 };
@@ -34,11 +35,16 @@ describe("recent EDGAR gap diagnosis", () => {
   it("separates exact recovery, alias candidates and unavailable quarters", () => {
     const report = diagnoseRecentGaps(analysis, sourceIssues, companyFacts, 320193, "abc", "2026-10-31T01:00:00Z");
     expect(report.gaps.map((gap) => gap.status)).toEqual(["recoverable", "alias_candidate", "unavailable"]);
-    expect(report.summary.recentErrors).toBe(3);
+    expect(report.summary.recentErrors).toBe(2);
+    expect(report.summary.cadenceExpectedIssues).toBe(1);
     expect(report.summary.missingQuarters).toBe(3);
     expect(report.summary.recoverableQuarters).toBe(1);
     expect(report.summary.aliasQuarters).toBe(1);
     expect(report.summary.unavailableQuarters).toBe(1);
+    expect(report.summary.annualOnlyConcepts).toBe(1);
+    expect(report.summary.annualOnlyQuarters).toBe(1);
+    expect(report.summary.quarterlyReviewConcepts).toBe(2);
+    expect(report.gaps[2].cadenceAction).toBe("exclude_from_quarterly_imputation");
     expect(report.gaps[0].unavailableQuarters).toEqual([]);
     expect(report.gaps[1].reason).toContain("Current/Noncurrent twin");
     expect(report.gaps[1].reason).toContain("FinanceLeaseLiabilityNoncurrent");

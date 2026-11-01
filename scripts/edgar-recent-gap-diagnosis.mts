@@ -40,15 +40,18 @@ const lines = [
   `Source gap analysis: ${report.sourceGapGeneratedAt}`,
   `Source integrity audit: ${integrity.generatedAt}`,
   `Source facts SHA256: ${sourceFactsSha256}`,
-  `Recent errors: ${report.summary.recentErrors}`,
+  `Recent strict continuity errors: ${report.summary.recentErrors}`,
+  `Annual-cadence findings reclassified from errors: ${report.summary.cadenceExpectedIssues}`,
   `Concepts: ${report.summary.concepts}`,
   `Missing recent quarters: ${report.summary.missingQuarters}`,
   `Exact recoverable quarters: ${report.summary.recoverableQuarters}`,
   `Alias candidate quarters: ${report.summary.aliasQuarters}`,
-  `Unavailable quarters: ${report.summary.unavailableQuarters}`, "",
+  `Unavailable quarters: ${report.summary.unavailableQuarters}`,
+  `Annual-only concepts: ${report.summary.annualOnlyConcepts} · quarters excluded from quarterly imputation: ${report.summary.annualOnlyQuarters}`,
+  `Quarterly/mixed concepts for isolated-gap review: ${report.summary.quarterlyReviewConcepts} · quarters: ${report.summary.quarterlyReviewQuarters}`, "",
   "## Concepts", "",
-  ...report.gaps.map((gap) => `- ${gap.concept} · **${gap.status}** · last available ${gap.lastAvailable ?? "n/a"} · recent ${gap.recentQuarters.length} · recoverable ${gap.recoverableQuarters.length} · alias ${gap.aliasQuarters.length} · unavailable ${gap.unavailableQuarters.length} — ${gap.reason}`),
+  ...report.gaps.map((gap) => `- ${gap.concept} · **${gap.status}** · cadence ${gap.cadence} (${gap.forms.join(", ") || "no recent form"}) · ${gap.cadenceAction} · last available ${gap.lastAvailable ?? "n/a"} · recent ${gap.recentQuarters.length} · recoverable ${gap.recoverableQuarters.length} · alias ${gap.aliasQuarters.length} · unavailable ${gap.unavailableQuarters.length} — ${gap.reason}`),
 ];
 writeFileSync(path.resolve(`public/reports/remediation/${ticker}-recent-gap-diagnosis.md`), `${lines.join("\n")}\n`, "utf8");
 if (existsSync(path.dirname(distDir))) writeFileSync(path.join(distDir, `${ticker}-recent-gap-diagnosis.md`), `${lines.join("\n")}\n`, "utf8");
-prog.done(`${ticker} · recent errors ${report.summary.recentErrors} · concepts ${report.summary.concepts} · quarters ${report.summary.missingQuarters} · exact ${report.summary.recoverableQuarters} · alias ${report.summary.aliasQuarters} · unavailable ${report.summary.unavailableQuarters}`);
+prog.done(`${ticker} · recent errors ${report.summary.recentErrors} · concepts ${report.summary.concepts} · quarters ${report.summary.missingQuarters} · annual-only ${report.summary.annualOnlyQuarters} · quarterly review ${report.summary.quarterlyReviewQuarters} · exact ${report.summary.recoverableQuarters} · alias ${report.summary.aliasQuarters}`);

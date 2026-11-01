@@ -1,16 +1,21 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-01T01:27:05.736Z",
- "sourceGapGeneratedAt": "2026-11-01T01:27:02.759Z",
+ "generatedAt": "2026-11-01T02:06:36.308Z",
+ "sourceGapGeneratedAt": "2026-11-01T02:06:33.034Z",
  "sourceFactsSha256": "73a86c6aedc31f77cac2ea4df5f80f0b3bd7e6eb58bb4e01444fbedf3afb9c43",
  "cik": 320193,
  "summary": {
-  "recentErrors": 45,
+  "recentErrors": 13,
+  "cadenceExpectedIssues": 32,
   "concepts": 25,
   "missingQuarters": 166,
   "recoverableQuarters": 0,
   "aliasQuarters": 0,
-  "unavailableQuarters": 166
+  "unavailableQuarters": 166,
+  "annualOnlyConcepts": 17,
+  "annualOnlyQuarters": 134,
+  "quarterlyReviewConcepts": 8,
+  "quarterlyReviewQuarters": 32
  },
  "gaps": [
   {
@@ -39,6 +44,12 @@
     "2024Q4",
     "2025Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 6,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -67,6 +78,12 @@
     "2023Q4",
     "2024Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 6,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -95,6 +112,12 @@
     "2022Q4",
     "2023Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 10,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -123,6 +146,12 @@
     "2023Q4",
     "2024Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 5,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -151,6 +180,12 @@
     "2023Q4",
     "2024Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 5,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -179,6 +214,12 @@
     "2024Q4",
     "2025Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 6,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -207,6 +248,12 @@
     "2022Q4",
     "2023Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 6,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -235,6 +282,12 @@
     "2022Q4",
     "2023Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 11,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -263,6 +316,12 @@
     "2022Q4",
     "2023Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 11,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -291,6 +350,12 @@
     "2022Q4",
     "2023Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 6,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -319,6 +384,12 @@
     "2022Q4",
     "2023Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 11,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -347,6 +418,12 @@
     "2022Q4",
     "2023Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 6,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -375,6 +452,12 @@
     "2022Q4",
     "2023Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 11,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -403,6 +486,12 @@
     "2022Q4",
     "2023Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 11,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -431,6 +520,12 @@
     "2022Q4",
     "2023Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 11,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -459,6 +554,12 @@
     "2024Q4",
     "2025Q1"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 6,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -487,6 +588,12 @@
     "2025Q1",
     "2025Q2"
    ],
+   "cadence": "quarterly_or_mixed",
+   "forms": [
+    "10-Q"
+   ],
+   "recentFactCount": 6,
+   "cadenceAction": "evaluate_isolated_gaps",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -513,6 +620,12 @@
     "2025Q4",
     "2026Q1"
    ],
+   "cadence": "quarterly_or_mixed",
+   "forms": [
+    "10-Q"
+   ],
+   "recentFactCount": 12,
+   "cadenceAction": "evaluate_isolated_gaps",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -537,6 +650,12 @@
     "2025Q1",
     "2025Q2"
    ],
+   "cadence": "annual_only",
+   "forms": [
+    "10-K"
+   ],
+   "recentFactCount": 3,
+   "cadenceAction": "exclude_from_quarterly_imputation",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -557,6 +676,13 @@
     "2022Q2",
     "2023Q1"
    ],
+   "cadence": "quarterly_or_mixed",
+   "forms": [
+    "10-K",
+    "10-Q"
+   ],
+   "recentFactCount": 39,
+   "cadenceAction": "evaluate_isolated_gaps",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -575,6 +701,13 @@
     "2024Q1",
     "2024Q2"
    ],
+   "cadence": "quarterly_or_mixed",
+   "forms": [
+    "10-K",
+    "10-Q"
+   ],
+   "recentFactCount": 13,
+   "cadenceAction": "evaluate_isolated_gaps",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -593,6 +726,13 @@
     "2023Q1",
     "2023Q2"
    ],
+   "cadence": "quarterly_or_mixed",
+   "forms": [
+    "10-K",
+    "10-Q"
+   ],
+   "recentFactCount": 12,
+   "cadenceAction": "evaluate_isolated_gaps",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -611,6 +751,13 @@
     "2023Q1",
     "2023Q2"
    ],
+   "cadence": "quarterly_or_mixed",
+   "forms": [
+    "10-K",
+    "10-Q"
+   ],
+   "recentFactCount": 26,
+   "cadenceAction": "evaluate_isolated_gaps",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -629,6 +776,13 @@
     "2024Q1",
     "2024Q2"
    ],
+   "cadence": "quarterly_or_mixed",
+   "forms": [
+    "10-K",
+    "10-Q"
+   ],
+   "recentFactCount": 13,
+   "cadenceAction": "evaluate_isolated_gaps",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   },
   {
@@ -643,6 +797,12 @@
    "unavailableQuarters": [
     "2020Q4"
    ],
+   "cadence": "quarterly_or_mixed",
+   "forms": [
+    "10-Q"
+   ],
+   "recentFactCount": 4,
+   "cadenceAction": "evaluate_isolated_gaps",
    "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
   }
  ]

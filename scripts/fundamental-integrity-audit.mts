@@ -69,7 +69,7 @@ const lines = [
   `- Concept coverage gaps: ${report.summary.coverageGaps}`,
   `- Omitted issues beyond display cap: ${report.summary.omittedIssues}`,
   "",
-  "No rows were modified. Exact duplicates, frame conflicts, unit conflicts, availability inversions and factor-before-fact are errors. Missing concept groups, unit changes, irregular durations and revision outliers are warnings.",
+  "No rows were modified. Exact duplicates, frame conflicts, unit conflicts, availability inversions and factor-before-fact are errors. Missing concept groups, unit changes, irregular durations, revision outliers and annual-only cadence gaps are warnings. Annual-only concepts are not forced onto a quarterly grid or imputed.",
   "",
   "## First issues",
   "",

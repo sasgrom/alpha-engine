@@ -1,11 +1,10 @@
 import type { SchwabContextReport, SchwabInstrumentProfile } from "../../worker/lib/schwab-context";
 import type { EdgarGapAnalysis } from "./edgar-gap-analysis";
 export type SchwabGapCandidateStatus = "direct_candidate" | "derived_candidate" | "unsupported";
-export interface SchwabGapCandidate { cik: number; concept: string; status: SchwabGapCandidateStatus; schwabFields: string[]; formula: string | null; reason: string }
+export type SchwabGapUsage = "current_provider_feature" | "derived_current_provider_feature" | "none";
+export interface SchwabGapCandidate { cik: number; concept: string; status: SchwabGapCandidateStatus; usage: SchwabGapUsage; schwabFields: string[]; formula: string | null; capturedAt: string | null; sourceHash: string | null; reason: string }
 export interface SchwabFundamentalGapMap { schemaVersion: 1; generatedAt: string; sourceGapGeneratedAt: string; coverage: { direct: number; derived: number; unsupported: number }; candidates: SchwabGapCandidate[] }
-const direct = (concept: string, fields: string[]): SchwabGapCandidate => ({ cik: 0, concept, status: "direct_candidate", schwabFields: fields, formula: null, reason: "Direct provider field exists, but it is current snapshot metadata, not EDGAR vintage history." });
-const derived = (concept: string, fields: string[], formula: string, reason: string): SchwabGapCandidate => ({ cik: 0, concept, status: "derived_candidate", schwabFields: fields, formula, reason });
-const unsupported = (concept: string, reason: string): SchwabGapCandidate => ({ cik: 0, concept, status: "unsupported", schwabFields: [], formula: null, reason });
+const unsupported = (concept: string, reason: string): SchwabGapCandidate => ({ cik: 0, concept, status: "unsupported", usage: "none", schwabFields: [], formula: null, capturedAt: null, sourceHash: null, reason });
 const directMap = new Map<string, { fields: string[]; formula?: string; status?: SchwabGapCandidateStatus }>([
   ["EarningsPerShareDiluted", { fields: ["epsTTM", "eps"] }],
   ["EarningsPerShareBasicAndDiluted", { fields: ["epsTTM", "eps"] }],
@@ -57,9 +56,15 @@ export function mapSchwabFundamentalGap(concept: string, profile: SchwabInstrume
   if (!available.length) return unsupported(concept, "Schwab profile exists, but the required fundamental field is absent.");
   const status = mapped.status ?? "direct_candidate";
   return {
-    cik: 0, concept, status, schwabFields: available,
+    cik: 0, concept, status,
+    usage: status === "derived_candidate" ? "derived_current_provider_feature" : "current_provider_feature",
+    schwabFields: available,
     formula: mapped.formula ?? null,
-    reason: status === "derived_candidate" ? "Derived only; never treat as an exact EDGAR replacement or vintage-equivalent fact." : "Direct provider field exists, but it is current snapshot metadata, not EDGAR vintage history.",
+    capturedAt: null,
+    sourceHash: null,
+    reason: status === "derived_candidate"
+      ? "Use only as a snapshot-anchored derived provider feature; it is not an exact EDGAR replacement or vintage-equivalent fact."
+      : "Use as a snapshot-anchored provider feature; do not relabel it as EDGAR vintage history.",
   };
 }
 
@@ -67,10 +72,14 @@ export function buildSchwabFundamentalGapMap(gaps: EdgarGapAnalysis, context: Sc
   const concepts = [...new Set(gaps.gaps.map((gap) => gap.concept))].sort();
   const profiles = new Map(context.instruments.map((profile) => [profile.symbol, profile]));
   const candidates = concepts.map((concept) => {
-    const ticker = gaps.gaps.find((gap) => gap.concept === concept);
-    const profile = ticker ? profiles.get(tickerByCik[ticker.cik]) : undefined;
+    const gap = gaps.gaps.find((item) => item.concept === concept);
+    const symbol = gap ? tickerByCik[gap.cik] : undefined;
+    const profile = symbol ? profiles.get(symbol) : undefined;
     const mapped = mapSchwabFundamentalGap(concept, profile);
-    return { ...mapped, cik: ticker?.cik ?? 0 };
+    const evidence = symbol && mapped.status !== "unsupported"
+      ? context.files.find((file) => file.kind === `instrument/${symbol}` && file.status === "complete")
+      : undefined;
+    return { ...mapped, cik: gap?.cik ?? 0, capturedAt: evidence?.capturedAt ?? null, sourceHash: evidence?.sourceHash ?? null };
   });
   return {
     schemaVersion: 1, generatedAt, sourceGapGeneratedAt: gaps.generatedAt,

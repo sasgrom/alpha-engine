@@ -1,4 +1,4 @@
-import type { FundamentalIntegrityReport, IntegrityIssue, IntegrityIssueType } from "./fundamental-integrity";
+import type { FundamentalIntegrityReport, IntegrityIssueType } from "./fundamental-integrity";
 export interface EdgarGapTypeSummary { type: IntegrityIssueType; count: number }
 export interface EdgarGapCikSummary { cik: number; count: number; errors: number; warnings: number }
 export interface EdgarContinuityGap { cik: number; concept: string; missingQuarters: string[]; firstMissingPeriod: string | null; lastMissingPeriod: string | null; recommendedAction: string }
@@ -18,7 +18,6 @@ const gapText = (message: string): string[] => {
   const match = message.match(/:\s*([^:]+)$/);
   return match ? match[1].split(",").map((value) => value.trim()).filter(Boolean) : [];
 };
-const missingCount = (message: string): number => Number(message.match(/^(\d+)\s+missing quarters/)?.[1] ?? 0);
 const eraOf = (periodEnd: string | undefined): string => !periodEnd ? "unknown" : periodEnd < "2010-01-01" ? "2000-2009" : periodEnd < "2020-01-01" ? "2010-2019" : periodEnd < "2025-01-01" ? "2020-2024" : "2025-2026";
 const actionFor = (lastPeriod: string | null): string => lastPeriod && lastPeriod >= "2020-01-01"
   ? "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
@@ -40,11 +39,12 @@ export function analyzeEdgarGaps(report: FundamentalIntegrityReport, generatedAt
     errors: eligible.filter((issue) => eraOf(issue.periodEnd) === era && issue.severity === "error").length,
     warnings: eligible.filter((issue) => eraOf(issue.periodEnd) === era && issue.severity === "warning").length,
   }));
-  const grouped = new Map<string, { quarters: Set<string>; first: string | null; last: string | null }>();
-  for (const issue of eligible.filter((item) => item.type === "continuity_gap")) {
+  const grouped = new Map<string, { quarters: Set<string>; first: string | null; last: string | null; cadenceExpected: boolean }>();
+  for (const issue of eligible.filter((item) => item.type === "continuity_gap" || item.type === "cadence_expected_gap")) {
     const key = `${issue.cik}|${issue.concept}`;
-    if (!grouped.has(key)) grouped.set(key, { quarters: new Set(), first: null, last: null });
+    if (!grouped.has(key)) grouped.set(key, { quarters: new Set(), first: null, last: null, cadenceExpected: false });
     const entry = grouped.get(key)!;
+    if (issue.type === "cadence_expected_gap") entry.cadenceExpected = true;
     for (const quarter of gapText(issue.message)) entry.quarters.add(quarter);
     if (issue.periodEnd && (!entry.first || issue.periodEnd < entry.first)) entry.first = issue.periodEnd;
     if (issue.periodEnd && (!entry.last || issue.periodEnd > entry.last)) entry.last = issue.periodEnd;
@@ -56,7 +56,9 @@ export function analyzeEdgarGaps(report: FundamentalIntegrityReport, generatedAt
       cik: Number(cikString), concept, missingQuarters,
       firstMissingPeriod: missingQuarters[0] ?? entry.first,
       lastMissingPeriod: missingQuarters[missingQuarters.length - 1] ?? entry.last,
-      recommendedAction: actionFor(missingQuarters[missingQuarters.length - 1] ?? entry.last),
+      recommendedAction: entry.cadenceExpected
+        ? "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
+        : actionFor(missingQuarters[missingQuarters.length - 1] ?? entry.last),
     };
   }).sort((a, b) => b.missingQuarters.length - a.missingQuarters.length || a.concept.localeCompare(b.concept) || a.cik - b.cik);
   return {

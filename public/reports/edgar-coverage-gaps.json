@@ -1,19 +1,23 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-01T00:44:35.742Z",
- "sourceGeneratedAt": "2026-11-01T00:44:34.030Z",
+ "generatedAt": "2026-11-01T02:06:33.034Z",
+ "sourceGeneratedAt": "2026-11-01T02:06:31.620Z",
  "since": "2000-01-01",
  "summary": {
-  "errors": 648,
-  "warnings": 104,
-  "continuityIssues": 648,
+  "errors": 482,
+  "warnings": 270,
+  "continuityIssues": 482,
   "continuityQuarters": 2275,
   "excludedPre2000": 0
  },
  "byType": [
   {
+   "type": "cadence_expected_gap",
+   "count": 166
+  },
+  {
    "type": "continuity_gap",
-   "count": 648
+   "count": 482
   },
   {
    "type": "revision_outlier",
@@ -28,25 +32,25 @@
   {
    "cik": 320193,
    "count": 752,
-   "errors": 648,
-   "warnings": 104
+   "errors": 482,
+   "warnings": 270
   }
  ],
  "byEra": [
   {
    "era": "2000-2009",
-   "errors": 309,
-   "warnings": 19
+   "errors": 256,
+   "warnings": 72
   },
   {
    "era": "2010-2019",
-   "errors": 294,
-   "warnings": 63
+   "errors": 213,
+   "warnings": 144
   },
   {
    "era": "2020-2024",
-   "errors": 45,
-   "warnings": 18
+   "errors": 13,
+   "warnings": 50
   },
   {
    "era": "2025-2026",
@@ -420,7 +424,7 @@
    ],
    "firstMissingPeriod": "2007Q4",
    "lastMissingPeriod": "2010Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -437,7 +441,7 @@
    ],
    "firstMissingPeriod": "2007Q4",
    "lastMissingPeriod": "2010Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -454,7 +458,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -471,7 +475,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2013Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -539,7 +543,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -573,7 +577,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -590,7 +594,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -607,7 +611,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -675,7 +679,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -692,7 +696,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -709,7 +713,7 @@
    ],
    "firstMissingPeriod": "2022Q4",
    "lastMissingPeriod": "2025Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -726,7 +730,7 @@
    ],
    "firstMissingPeriod": "2013Q4",
    "lastMissingPeriod": "2016Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -743,7 +747,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -760,7 +764,7 @@
    ],
    "firstMissingPeriod": "2012Q4",
    "lastMissingPeriod": "2015Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -777,7 +781,7 @@
    ],
    "firstMissingPeriod": "2019Q4",
    "lastMissingPeriod": "2022Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -794,7 +798,7 @@
    ],
    "firstMissingPeriod": "2009Q4",
    "lastMissingPeriod": "2012Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -811,7 +815,7 @@
    ],
    "firstMissingPeriod": "2009Q4",
    "lastMissingPeriod": "2012Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -828,7 +832,7 @@
    ],
    "firstMissingPeriod": "2009Q4",
    "lastMissingPeriod": "2012Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -845,7 +849,7 @@
    ],
    "firstMissingPeriod": "2009Q4",
    "lastMissingPeriod": "2012Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -862,7 +866,7 @@
    ],
    "firstMissingPeriod": "2021Q4",
    "lastMissingPeriod": "2024Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -879,7 +883,7 @@
    ],
    "firstMissingPeriod": "2015Q4",
    "lastMissingPeriod": "2018Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -896,7 +900,7 @@
    ],
    "firstMissingPeriod": "2020Q4",
    "lastMissingPeriod": "2023Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -913,7 +917,7 @@
    ],
    "firstMissingPeriod": "2021Q4",
    "lastMissingPeriod": "2024Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -930,7 +934,7 @@
    ],
    "firstMissingPeriod": "2021Q4",
    "lastMissingPeriod": "2024Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -947,7 +951,7 @@
    ],
    "firstMissingPeriod": "2009Q4",
    "lastMissingPeriod": "2012Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -964,7 +968,7 @@
    ],
    "firstMissingPeriod": "2009Q4",
    "lastMissingPeriod": "2012Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -981,7 +985,7 @@
    ],
    "firstMissingPeriod": "2009Q4",
    "lastMissingPeriod": "2012Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -998,7 +1002,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2013Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1015,7 +1019,7 @@
    ],
    "firstMissingPeriod": "2019Q4",
    "lastMissingPeriod": "2022Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1032,7 +1036,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2013Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1049,7 +1053,7 @@
    ],
    "firstMissingPeriod": "2019Q4",
    "lastMissingPeriod": "2022Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1066,7 +1070,7 @@
    ],
    "firstMissingPeriod": "2022Q4",
    "lastMissingPeriod": "2025Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1100,7 +1104,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1117,7 +1121,7 @@
    ],
    "firstMissingPeriod": "2013Q4",
    "lastMissingPeriod": "2016Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1134,7 +1138,7 @@
    ],
    "firstMissingPeriod": "2017Q4",
    "lastMissingPeriod": "2020Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1151,7 +1155,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1168,7 +1172,7 @@
    ],
    "firstMissingPeriod": "2015Q4",
    "lastMissingPeriod": "2018Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1185,7 +1189,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1219,7 +1223,7 @@
    ],
    "firstMissingPeriod": "2020Q4",
    "lastMissingPeriod": "2023Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1236,7 +1240,7 @@
    ],
    "firstMissingPeriod": "2013Q4",
    "lastMissingPeriod": "2016Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1253,7 +1257,7 @@
    ],
    "firstMissingPeriod": "2017Q4",
    "lastMissingPeriod": "2020Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1270,7 +1274,7 @@
    ],
    "firstMissingPeriod": "2017Q4",
    "lastMissingPeriod": "2020Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1321,7 +1325,7 @@
    ],
    "firstMissingPeriod": "2009Q4",
    "lastMissingPeriod": "2012Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1338,7 +1342,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1372,7 +1376,7 @@
    ],
    "firstMissingPeriod": "2020Q4",
    "lastMissingPeriod": "2023Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1389,7 +1393,7 @@
    ],
    "firstMissingPeriod": "2020Q4",
    "lastMissingPeriod": "2023Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1440,7 +1444,7 @@
    ],
    "firstMissingPeriod": "2020Q4",
    "lastMissingPeriod": "2023Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1542,7 +1546,7 @@
    ],
    "firstMissingPeriod": "2020Q4",
    "lastMissingPeriod": "2023Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1576,7 +1580,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1593,7 +1597,7 @@
    ],
    "firstMissingPeriod": "2014Q4",
    "lastMissingPeriod": "2017Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1610,7 +1614,7 @@
    ],
    "firstMissingPeriod": "2012Q4",
    "lastMissingPeriod": "2015Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1627,7 +1631,7 @@
    ],
    "firstMissingPeriod": "2012Q4",
    "lastMissingPeriod": "2015Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1644,7 +1648,7 @@
    ],
    "firstMissingPeriod": "2012Q4",
    "lastMissingPeriod": "2015Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1661,7 +1665,7 @@
    ],
    "firstMissingPeriod": "2012Q4",
    "lastMissingPeriod": "2015Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1678,7 +1682,7 @@
    ],
    "firstMissingPeriod": "2012Q4",
    "lastMissingPeriod": "2015Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1712,7 +1716,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1729,7 +1733,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1746,7 +1750,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1763,7 +1767,7 @@
    ],
    "firstMissingPeriod": "2012Q4",
    "lastMissingPeriod": "2015Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1780,7 +1784,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1797,7 +1801,7 @@
    ],
    "firstMissingPeriod": "2009Q4",
    "lastMissingPeriod": "2012Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1814,7 +1818,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1831,7 +1835,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1848,7 +1852,7 @@
    ],
    "firstMissingPeriod": "2011Q4",
    "lastMissingPeriod": "2014Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1865,7 +1869,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1882,7 +1886,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -1899,7 +1903,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2018,7 +2022,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2069,7 +2073,7 @@
    ],
    "firstMissingPeriod": "2020Q4",
    "lastMissingPeriod": "2023Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2290,7 +2294,7 @@
    ],
    "firstMissingPeriod": "2013Q4",
    "lastMissingPeriod": "2016Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2341,7 +2345,7 @@
    ],
    "firstMissingPeriod": "2020Q4",
    "lastMissingPeriod": "2023Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2358,7 +2362,7 @@
    ],
    "firstMissingPeriod": "2020Q4",
    "lastMissingPeriod": "2023Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2392,7 +2396,7 @@
    ],
    "firstMissingPeriod": "2020Q4",
    "lastMissingPeriod": "2023Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2409,7 +2413,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2013Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2426,7 +2430,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2013Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2443,7 +2447,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2013Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2460,7 +2464,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2013Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2477,7 +2481,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2013Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2494,7 +2498,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2013Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2511,7 +2515,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2013Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2562,7 +2566,7 @@
    ],
    "firstMissingPeriod": "2022Q4",
    "lastMissingPeriod": "2025Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2647,7 +2651,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2800,7 +2804,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2013Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2817,7 +2821,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2885,7 +2889,7 @@
    ],
    "firstMissingPeriod": "2012Q4",
    "lastMissingPeriod": "2015Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2919,7 +2923,7 @@
    ],
    "firstMissingPeriod": "2012Q4",
    "lastMissingPeriod": "2015Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2936,7 +2940,7 @@
    ],
    "firstMissingPeriod": "2012Q4",
    "lastMissingPeriod": "2015Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2953,7 +2957,7 @@
    ],
    "firstMissingPeriod": "2012Q4",
    "lastMissingPeriod": "2015Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2970,7 +2974,7 @@
    ],
    "firstMissingPeriod": "2012Q4",
    "lastMissingPeriod": "2015Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -2987,7 +2991,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2011Q1",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3021,7 +3025,7 @@
    ],
    "firstMissingPeriod": "2017Q4",
    "lastMissingPeriod": "2020Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3123,7 +3127,7 @@
    ],
    "firstMissingPeriod": "2017Q4",
    "lastMissingPeriod": "2020Q1",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3312,7 +3316,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2010Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3327,7 +3331,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2010Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3357,7 +3361,7 @@
    ],
    "firstMissingPeriod": "2016Q4",
    "lastMissingPeriod": "2018Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3372,7 +3376,7 @@
    ],
    "firstMissingPeriod": "2014Q4",
    "lastMissingPeriod": "2016Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3387,7 +3391,7 @@
    ],
    "firstMissingPeriod": "2017Q4",
    "lastMissingPeriod": "2019Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3402,7 +3406,7 @@
    ],
    "firstMissingPeriod": "2015Q4",
    "lastMissingPeriod": "2017Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3417,7 +3421,7 @@
    ],
    "firstMissingPeriod": "2023Q4",
    "lastMissingPeriod": "2025Q2",
-   "recommendedAction": "Refresh EDGAR companyfacts and exhibits for the affected concept/period; preserve availability anchors."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3462,7 +3466,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2012Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3477,7 +3481,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2010Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3492,7 +3496,7 @@
    ],
    "firstMissingPeriod": "2008Q4",
    "lastMissingPeriod": "2010Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -3522,7 +3526,7 @@
    ],
    "firstMissingPeriod": "2007Q4",
    "lastMissingPeriod": "2009Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -4791,7 +4795,7 @@
    ],
    "firstMissingPeriod": "2011Q4",
    "lastMissingPeriod": "2012Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -4911,7 +4915,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2011Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -4923,7 +4927,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2011Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -4935,7 +4939,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2011Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -4947,7 +4951,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2011Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -4959,7 +4963,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2011Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -4971,7 +4975,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2011Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -4983,7 +4987,7 @@
    ],
    "firstMissingPeriod": "2010Q4",
    "lastMissingPeriod": "2011Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -5043,7 +5047,7 @@
    ],
    "firstMissingPeriod": "2009Q4",
    "lastMissingPeriod": "2010Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,
@@ -5307,7 +5311,7 @@
    ],
    "firstMissingPeriod": "2013Q4",
    "lastMissingPeriod": "2014Q2",
-   "recommendedAction": "Historical gap only. Do not backfill with current-provider data unless the research window explicitly requires it."
+   "recommendedAction": "Annual-only disclosure cadence. Exclude from quarterly continuity errors and quarterly trend imputation."
   },
   {
    "cik": 320193,

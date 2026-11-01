@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Expectations from "./Expectations";
+import { expectationsReport } from "@/data/expectations-report";
 
 vi.mock("@/components/AppLayout", () => ({ default: ({ children }: { children: ReactNode }) => <>{children}</> }));
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -25,12 +26,13 @@ describe("Expectations report", () => {
 
   it("shows actual partial local coverage without presenting it as reviewed", () => {
     expect(host!.textContent).toContain("Local results · review required");
-    expect(host!.textContent).toContain("1 / 51");
-    expect(host!.textContent).toContain("195");
-    expect(host!.textContent).toContain("255");
+    const { coverage } = expectationsReport;
+    expect(host!.textContent).toContain(`${coverage.companiesWithResults} / ${coverage.companiesExpected}`);
+    expect(host!.textContent).toContain(coverage.documents.toLocaleString("en-US"));
+    expect(host!.textContent).toContain(coverage.statements.toLocaleString("en-US"));
     expect(host!.textContent).toContain("Not run");
     expect(host!.textContent).not.toContain("Waiting for home extraction");
-    expect(host!.querySelectorAll(".expectation-card")).toHaveLength(120);
+    expect(host!.querySelectorAll(".expectation-card")).toHaveLength(Math.min(120, expectationsReport.statements.length));
   });
 
   it("offers real SEC reference examples in a separate, clearly labeled tab", async () => {

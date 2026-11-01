@@ -27,7 +27,17 @@ Additional first stages:
 2. `edgar-exhibits` for complete EX-99 preservation;
 3. `facts-fetch` for current companyfacts into local MySQL.
 
-The fallback then runs the same audit, diagnosis and mapping again, so remaining EDGAR gaps are distinguished from valuation-only Schwab candidates. The diagnosis is scoped to continuity errors with `periodEnd >= 2020-01-01`; it checks exact concepts and Current/Noncurrent twins without merging them automatically.
+The fallback then runs the same audit, diagnosis and mapping again, so remaining EDGAR gaps are distinguished from valuation-only Schwab candidates. The diagnosis is scoped to continuity findings with `periodEnd >= 2020-01-01`; it checks exact concepts and Current/Noncurrent twins without merging them automatically.
+
+Annual-only 10-K concepts are warnings (`cadence_expected_gap`), not quarterly continuity errors. They remain visible in gap reports but are excluded from quarterly trend imputation. Schwab direct and derived fields are allowed as snapshot-anchored provider features with `capturedAt` and `sourceHash`; they are not relabeled as historical EDGAR facts.
+
+## Causal imputation candidates
+
+```powershell
+npx tsx scripts/build-causal-imputation.mts --ticker AAPL
+```
+
+This read-only builder evaluates only non-annual isolated gaps with four consecutive actual quarters and an actual following quarter. Causal OLS4 uses only the four prior values. A separate retrospective smoother may average that forecast with the following actual, but it is marked `usesFutureObservation=true` and inherits the following fact's `sourceFiled` availability. Neither method overwrites reported or canonical series; output is a review candidate under `public/reports/remediation/<ticker>-imputation-candidates.json`.
 
 ## Strict gate
 

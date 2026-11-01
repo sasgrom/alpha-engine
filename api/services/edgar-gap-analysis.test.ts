@@ -27,6 +27,18 @@ describe("EDGAR gap analysis", () => {
     expect(result.byEra.find((row) => row.era === "2020-2024")?.errors).toBe(2);
   });
 
+  it("keeps annual-cadence findings visible without recommending another EDGAR refresh", () => {
+    const annual: FundamentalIntegrityReport = {
+      ...source,
+      issues: [issue("cadence_expected_gap", "2020-03-31", "2 quarters outside annual disclosure cadence: 2020Q1, 2020Q2", "warning")],
+    };
+    const result = analyzeEdgarGaps(annual, "2026-10-31T01:00:00Z");
+    expect(result.summary.errors).toBe(0);
+    expect(result.summary.continuityIssues).toBe(0);
+    expect(result.gaps[0].recommendedAction).toContain("Annual-only");
+    expect(result.gaps[0].recommendedAction).toContain("Exclude");
+  });
+
   it("keeps display-cap omissions explicit and recommends refresh only for recent gaps", () => {
     const result = analyzeEdgarGaps(source, "2026-10-31T01:00:00Z", "2000-01-01", 1);
     expect(result.omittedGaps).toBe(0);

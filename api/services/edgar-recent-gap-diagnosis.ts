@@ -2,6 +2,7 @@ import type { EdgarGapAnalysis } from "./edgar-gap-analysis";
 import type { IntegrityIssue } from "./fundamental-integrity";
 
 export type GapDiagnosisStatus = "recoverable" | "alias_candidate" | "unavailable";
+export type ReportingCadence = "annual_only" | "quarterly_or_mixed" | "no_recent_facts";
 export interface RecentGapDiagnosis {
   concept: string;
   status: GapDiagnosisStatus;
@@ -10,6 +11,10 @@ export interface RecentGapDiagnosis {
   recoverableQuarters: string[];
   aliasQuarters: string[];
   unavailableQuarters: string[];
+  cadence: ReportingCadence;
+  forms: string[];
+  recentFactCount: number;
+  cadenceAction: "exclude_from_quarterly_imputation" | "evaluate_isolated_gaps" | "inspect_source_history";
   reason: string;
 }
 export interface RecentGapDiagnosisReport {
@@ -20,15 +25,20 @@ export interface RecentGapDiagnosisReport {
   cik: number;
   summary: {
     recentErrors: number;
+    cadenceExpectedIssues: number;
     concepts: number;
     missingQuarters: number;
     recoverableQuarters: number;
     aliasQuarters: number;
     unavailableQuarters: number;
+    annualOnlyConcepts: number;
+    annualOnlyQuarters: number;
+    quarterlyReviewConcepts: number;
+    quarterlyReviewQuarters: number;
   };
   gaps: RecentGapDiagnosis[];
 }
-interface CompanyFact { end: string }
+interface CompanyFact { end: string; form?: string }
 interface CompanyConcept { units: Record<string, CompanyFact[]> }
 export interface SecCompanyFacts {
   facts: Record<string, Record<string, CompanyConcept>>;
@@ -59,6 +69,25 @@ function availableQuarters(concept: CompanyConcept | undefined): Set<string> {
   );
 }
 
+function reportingCadence(concept: CompanyConcept | undefined): {
+  cadence: ReportingCadence;
+  forms: string[];
+  recentFactCount: number;
+  cadenceAction: RecentGapDiagnosis["cadenceAction"];
+} {
+  const recentFacts = Object.values(concept?.units ?? {}).flat().filter((fact) => fact.end >= "2020-01-01");
+  const forms = [...new Set(recentFacts.map((fact) => fact.form).filter((form): form is string => Boolean(form)))].sort();
+  const hasAnnual = forms.some((form) => form.startsWith("10-K"));
+  const hasQuarterly = forms.some((form) => form.startsWith("10-Q"));
+  const cadence: ReportingCadence = !recentFacts.length ? "no_recent_facts" : hasAnnual && !hasQuarterly ? "annual_only" : "quarterly_or_mixed";
+  return {
+    cadence,
+    forms,
+    recentFactCount: recentFacts.length,
+    cadenceAction: cadence === "annual_only" ? "exclude_from_quarterly_imputation" : cadence === "no_recent_facts" ? "inspect_source_history" : "evaluate_isolated_gaps",
+  };
+}
+
 export function diagnoseRecentGaps(
   gapAnalysis: EdgarGapAnalysis,
   sourceIssues: IntegrityIssue[],
@@ -69,13 +98,15 @@ export function diagnoseRecentGaps(
 ): RecentGapDiagnosisReport {
   const concepts = conceptsByName(companyFacts);
   const recentIssues = sourceIssues.filter((issue) =>
-    issue.cik === cik && issue.severity === "error" && issue.type === "continuity_gap" &&
+    issue.cik === cik && (issue.type === "continuity_gap" || issue.type === "cadence_expected_gap") &&
     Boolean(issue.concept) && Boolean(issue.periodEnd && issue.periodEnd >= "2020-01-01"));
   const recentConcepts = new Set(recentIssues.map((issue) => issue.concept));
   const recentGaps = gapAnalysis.gaps.filter((gap) =>
     gap.cik === cik && recentConcepts.has(gap.concept));
   const gaps = recentGaps.map((gap) => {
-    const available = availableQuarters(concepts.get(gap.concept));
+    const concept = concepts.get(gap.concept);
+    const available = availableQuarters(concept);
+    const cadence = reportingCadence(concept);
     const twin = twinOf(gap.concept);
     const twinAvailable = twin ? availableQuarters(concepts.get(twin)) : new Set<string>();
     const recentQuarters = gap.missingQuarters.filter((quarter) => quarter >= RECENT_QUARTER);
@@ -99,6 +130,7 @@ export function diagnoseRecentGaps(
       recoverableQuarters,
       aliasQuarters,
       unavailableQuarters,
+      ...cadence,
       reason,
     };
   });
@@ -109,12 +141,17 @@ export function diagnoseRecentGaps(
     sourceFactsSha256,
     cik,
     summary: {
-      recentErrors: recentIssues.length,
+      recentErrors: recentIssues.filter((issue) => issue.severity === "error").length,
+      cadenceExpectedIssues: recentIssues.filter((issue) => issue.type === "cadence_expected_gap").length,
       concepts: gaps.length,
       missingQuarters: gaps.reduce((total, gap) => total + gap.recentQuarters.length, 0),
       recoverableQuarters: gaps.reduce((total, gap) => total + gap.recoverableQuarters.length, 0),
       aliasQuarters: gaps.reduce((total, gap) => total + gap.aliasQuarters.length, 0),
       unavailableQuarters: gaps.reduce((total, gap) => total + gap.unavailableQuarters.length, 0),
+      annualOnlyConcepts: gaps.filter((gap) => gap.cadence === "annual_only").length,
+      annualOnlyQuarters: gaps.filter((gap) => gap.cadence === "annual_only").reduce((total, gap) => total + gap.recentQuarters.length, 0),
+      quarterlyReviewConcepts: gaps.filter((gap) => gap.cadence !== "annual_only").length,
+      quarterlyReviewQuarters: gaps.filter((gap) => gap.cadence !== "annual_only").reduce((total, gap) => total + gap.recentQuarters.length, 0),
     },
     gaps,
   };

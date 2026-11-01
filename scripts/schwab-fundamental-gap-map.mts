@@ -1,5 +1,5 @@
 /** Map EDGAR continuity gaps to defensible Schwab fundamental candidates. No replacements are applied. */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { buildSchwabFundamentalGapMap } from "../api/services/schwab-fundamental-gap-map";
 import type { EdgarGapAnalysis } from "../api/services/edgar-gap-analysis";
@@ -28,10 +28,10 @@ const lines = [
   `Direct candidates: ${report.coverage.direct}`,
   `Derived candidates: ${report.coverage.derived}`,
   `Unsupported concepts: ${report.coverage.unsupported}`, "",
-  "Direct means a provider field exists, not that EDGAR history is replaced. Derived candidates are approximations only. Unsupported concepts remain EDGAR gaps and are not fabricated from Schwab.", "",
+  "Direct and derived fields are usable as snapshot-anchored Schwab provider features with their own provenance. They are not relabeled as EDGAR history. Unsupported concepts remain EDGAR gaps and are not fabricated from Schwab.", "",
   "## Candidates", "",
-  ...report.candidates.map((candidate) => `- CIK ${candidate.cik} · ${candidate.concept} · **${candidate.status}** · ${candidate.schwabFields.join(", ") || "no provider field"}${candidate.formula ? ` · ${candidate.formula}` : ""} — ${candidate.reason}`),
+  ...report.candidates.map((candidate) => `- CIK ${candidate.cik} · ${candidate.concept} · **${candidate.status}** · ${candidate.usage} · ${candidate.schwabFields.join(", ") || "no provider field"}${candidate.formula ? ` · ${candidate.formula}` : ""}${candidate.capturedAt ? ` · captured ${candidate.capturedAt} · SHA256 ${candidate.sourceHash}` : ""} — ${candidate.reason}`),
 ];
-writeJsonAtomic(path.resolve("public/reports/schwab-fundamental-gap-map.md"), `${lines.join("\n")}\n`, true);
-if (existsSync(distDir)) writeJsonAtomic(path.join(distDir, "schwab-fundamental-gap-map.md"), `${lines.join("\n")}\n`, true);
+writeFileSync(path.resolve("public/reports/schwab-fundamental-gap-map.md"), `${lines.join("\n")}\n`, "utf8");
+if (existsSync(distDir)) writeFileSync(path.join(distDir, "schwab-fundamental-gap-map.md"), `${lines.join("\n")}\n`, "utf8");
 prog.done(`direct ${report.coverage.direct} · derived ${report.coverage.derived} · unsupported ${report.coverage.unsupported}`);

@@ -1,0 +1,372 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-01T02:06:40.327Z",
+ "sourceDiagnosisGeneratedAt": "2026-11-01T02:06:36.308Z",
+ "sourceFactsSha256": "73a86c6aedc31f77cac2ea4df5f80f0b3bd7e6eb58bb4e01444fbedf3afb9c43",
+ "cik": 320193,
+ "policy": {
+  "rawSeriesChanged": false,
+  "causalRule": "OLS4 uses only four consecutive observations before the target quarter. It never uses the following-quarter value. Conservative availability is the following actual observation's sourceFiled date.",
+  "retrospectiveRule": "The OLS4/next-actual average is a separate two-sided smoother, uses future information and is unavailable before the following actual sourceFiled date. Never substitute it into an earlier signal."
+ },
+ "summary": {
+  "annualExcludedQuarters": 134,
+  "evaluatedQuarters": 32,
+  "candidateQuarters": 0,
+  "skippedQuarters": 32
+ },
+ "quarters": [
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueInRemainderOfFiscalYear",
+   "quarter": "2023Q1",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "Four consecutive actual quarters were not available before the imputation availability date."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueInRemainderOfFiscalYear",
+   "quarter": "2023Q4",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueInRemainderOfFiscalYear",
+   "quarter": "2024Q1",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueInRemainderOfFiscalYear",
+   "quarter": "2024Q2",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueInRemainderOfFiscalYear",
+   "quarter": "2024Q3",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueInRemainderOfFiscalYear",
+   "quarter": "2024Q4",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueInRemainderOfFiscalYear",
+   "quarter": "2025Q1",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueInRemainderOfFiscalYear",
+   "quarter": "2025Q2",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryRawMaterialsAndPurchasedPartsNetOfReserves",
+   "quarter": "2022Q4",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryRawMaterialsAndPurchasedPartsNetOfReserves",
+   "quarter": "2023Q1",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "Four consecutive actual quarters were not available before the imputation availability date."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryRawMaterialsAndPurchasedPartsNetOfReserves",
+   "quarter": "2023Q4",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryRawMaterialsAndPurchasedPartsNetOfReserves",
+   "quarter": "2024Q1",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryRawMaterialsAndPurchasedPartsNetOfReserves",
+   "quarter": "2024Q2",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "Four consecutive actual quarters were not available before the imputation availability date."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryRawMaterialsAndPurchasedPartsNetOfReserves",
+   "quarter": "2025Q4",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "InventoryRawMaterialsAndPurchasedPartsNetOfReserves",
+   "quarter": "2026Q1",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "Four consecutive actual quarters were not available before the imputation availability date."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncrementalCommonSharesAttributableToShareBasedPaymentArrangements",
+   "quarter": "2021Q4",
+   "unit": "shares",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncrementalCommonSharesAttributableToShareBasedPaymentArrangements",
+   "quarter": "2022Q1",
+   "unit": "shares",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncrementalCommonSharesAttributableToShareBasedPaymentArrangements",
+   "quarter": "2022Q2",
+   "unit": "shares",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "IncrementalCommonSharesAttributableToShareBasedPaymentArrangements",
+   "quarter": "2023Q1",
+   "unit": "shares",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "Four consecutive actual quarters were not available before the imputation availability date."
+  },
+  {
+   "cik": 320193,
+   "concept": "GeneralAndAdministrativeExpense",
+   "quarter": "2023Q4",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "GeneralAndAdministrativeExpense",
+   "quarter": "2024Q1",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "GeneralAndAdministrativeExpense",
+   "quarter": "2024Q2",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "HedgedAssetFairValueHedge",
+   "quarter": "2022Q4",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "HedgedAssetFairValueHedge",
+   "quarter": "2023Q1",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "HedgedAssetFairValueHedge",
+   "quarter": "2023Q2",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "Four consecutive actual quarters were not available before the imputation availability date."
+  },
+  {
+   "cik": 320193,
+   "concept": "HedgedLiabilityFairValueHedge",
+   "quarter": "2022Q4",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "HedgedLiabilityFairValueHedge",
+   "quarter": "2023Q1",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "HedgedLiabilityFairValueHedge",
+   "quarter": "2023Q2",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "Four consecutive actual quarters were not available before the imputation availability date."
+  },
+  {
+   "cik": 320193,
+   "concept": "SellingAndMarketingExpense",
+   "quarter": "2023Q4",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "SellingAndMarketingExpense",
+   "quarter": "2024Q1",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "SellingAndMarketingExpense",
+   "quarter": "2024Q2",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "No unambiguous actual observation exists in the immediately following quarter; tail and multi-quarter gaps are not trend-filled."
+  },
+  {
+   "cik": 320193,
+   "concept": "DerivativeCollateralObligationToReturnCash",
+   "quarter": "2020Q4",
+   "unit": "USD",
+   "sourceQuarters": [],
+   "causal": null,
+   "retrospective": null,
+   "status": "skipped",
+   "reason": "Four consecutive actual quarters were not available before the imputation availability date."
+  }
+ ]
+}

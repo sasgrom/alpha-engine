@@ -48,6 +48,22 @@ describe("fundamental integrity and continuity", () => {
     expect(issues.some((issue) => issue.type === "continuity_gap" && issue.message.includes("2024Q2"))).toBe(true);
   });
 
+  it("treats annual-only disclosure as cadence, not a quarterly continuity error", () => {
+    const annualFacts = [
+      fact("Assets", "2023-12-31", { form: "10-K", filed: "2024-02-01" }),
+      fact("Assets", "2024-12-31", { form: "10-K", filed: "2025-02-01" }),
+    ];
+    const annualSeries = [
+      series("Assets", "2023-12-31", "first", { sourceFiled: "2024-02-01" }),
+      series("Assets", "2024-12-31", "latest", { sourceFiled: "2025-02-01" }),
+    ];
+    const report = buildFundamentalIntegrityReport({ facts: annualFacts, series: annualSeries, factors: [], universeSha256: "abc", generatedAt: "2026-10-31T00:00:00Z" });
+    expect(report.summary.errors).toBe(0);
+    expect(report.summary.continuityGaps).toBe(0);
+    expect(report.issues.filter((issue) => issue.type === "cadence_expected_gap")).toHaveLength(2);
+    expect(report.issues.every((issue) => issue.severity === "warning")).toBe(true);
+  });
+
   it("rejects availability and factor-before-fact inversions", () => {
     const inverted = fact("Assets", "2024-03-31", { filed: "2024-03-01" });
     expect(auditFundamentalFacts([inverted]).some((issue) => issue.type === "availability_inversion")).toBe(true);
