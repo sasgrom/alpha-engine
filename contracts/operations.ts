@@ -188,6 +188,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Read-only candidate map for a later reviewed repair plan.", requirements: ["review"], notes: "Direct fields are current metadata, not vintage replacements. Derived formulas are approximate; unsupported concepts stay missing.",
   }),
   job({
+    id: "remediate-company", name: "Per-company EDGAR remediation and Schwab fallback", group: "fundamentals", mode: "manual", cron: null, defaultEnabled: false, dependsOn: ["schwab-context-hourly"],
+    ...npx("scripts/remediate-company.mts"), purpose: "Run a bounded EDGAR refresh, uncapped per-company integrity audit and only then a defensible Schwab fallback candidate map.",
+    input: "One --ticker, EDGAR cache, local facts/series/factors and Schwab instrument profile.", output: "public/reports/remediation/<ticker>.json with stages, errors, recent gaps, availability inversions, candidates and next action.",
+    destination: "Local reviewed remediation plan; no automatic value insertion or production sync.", requirements: ["network", "server", "mysql", "driveD", "review"], notes: "Default dry-run. Use --apply for EDGAR network refresh and --strict to fail on remaining errors. One ticker per run; no hidden retries.",
+  }),
+  job({
     id: "tone-event-study", name: "Availability-anchored tone event study", group: "research", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
     ...npx("scripts/tone-event-study.mts"), purpose: "Estimate abnormal returns and CAR after filings with conservative post-close availability.",
     input: "Local tone events, prices and SPY.", output: "Event-study JSON used by the Analytics CAR chart.",
