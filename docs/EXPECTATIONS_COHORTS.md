@@ -5,7 +5,8 @@
 Cohort packs preserve the complete evidence context for one fiscal period without forcing a large document into a small prompt or silently truncating a table. They are deterministic local files, not a long-running LLM conversation.
 
 - `cohort-pack-v2.json`: bounded source containers, sizes, token estimates, offsets and source hashes.
-- `cohort-v2.json`: per-source extracted statements, timestamps, evidence validation and resume state.
+- `cohort-v2-entries/`: atomic per-source extracted statements, timestamps, evidence validation and crash-safe resume state.
+- `cohort-v2.json`: merged company snapshot refreshed at company completion and clean aborts.
 - Raw LLM responses remain local and are excluded from the static UI report.
 
 ## Workflow
@@ -75,7 +76,7 @@ The log shows each container's approximate tokens and each target source's KiB. 
 npx tsx worker/edgar-cohort-extract.mts --universe research-universe-53.json
 ```
 
-The worker reads `cohort-pack-v2.json`, makes one bounded request per target source and writes `cohort-v2.json` atomically after every source. It resumes only when source, container, input hash, model and prompt version all match.
+The worker reads `cohort-pack-v2.json`, makes one bounded stateless request per target source and writes one atomic `cohort-v2-entries` file per completed source. It no longer rewrites the entire company history after every document. The merged `cohort-v2.json` snapshot is refreshed at company completion and clean aborts. Resume requires matching source, container, input hash, model and prompt version.
 
 ### Live progress and logs
 
@@ -94,7 +95,15 @@ Get-Content worker\.runs\cohort-extract.log -Tail 40 -Wait
 Get-Content worker\.runs\cohort-extraction-failures.jsonl -Tail 20 -Wait
 ```
 
-Per-company `cohort-v2.json` files are checkpoints and can be inspected by `LastWriteTime`; `/expectations` is a reviewed static report, not a live progress view. When extraction is started from Operations, its Activity view reads the scheduler log instead.
+Per-company `cohort-v2.json` files are merged snapshots and can be inspected by `LastWriteTime`; `/expectations` is a reviewed static report, not a live progress view. When extraction is started from Operations, its Activity view reads the scheduler log instead. Every ten new sources, rolling telemetry reports prompt/generated tokens, fallback share, LLM time and other overhead separately from the cumulative average.
+
+### Audit extraction quality without another LLM run
+
+```powershell
+npx tsx worker/cohort-qa.mts --universe research-universe-51.json --only GS --strict
+```
+
+The QA report is written to `worker/.runs/cohort-qa/<ticker>.json`. It checks source coverage, output caps, context overflow, `guidanceStatus=found` without statements, stored evidence against exact target text, and heuristic `not_found` cases that contain expectation language. `PASS` means no hard integrity error was found; heuristic review flags and incomplete coverage remain explicit. `extracted` means a response parsed successfully, not that guidance was found.
 
 ### Run the independent benchmark and build the static UI report
 
