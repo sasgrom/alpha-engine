@@ -1,0 +1,22 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-01T00:44:37.304Z",
+ "ticker": "AAPL",
+ "apply": true,
+ "strict": false,
+ "stages": [
+  "edgar-fetch",
+  "edgar-exhibits",
+  "facts-fetch",
+  "integrity-audit",
+  "gap-analysis",
+  "schwab-gap-map"
+ ],
+ "edgarErrors": 648,
+ "recentErrors": 45,
+ "availabilityInversions": 0,
+ "directCandidates": 2,
+ "derivedCandidates": 7,
+ "unsupportedConcepts": 400,
+ "nextAction": "edgar_refresh_recent"
+}
