@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildCompanyRemediationPlan } from "./company-remediation";
 import type { EdgarGapAnalysis } from "./edgar-gap-analysis";
+import type { RecentGapDiagnosisReport } from "./edgar-recent-gap-diagnosis";
 import type { SchwabFundamentalGapMap } from "./schwab-fundamental-gap-map";
 
 const gapAnalysis: EdgarGapAnalysis = {
@@ -11,13 +12,33 @@ const gapAnalysis: EdgarGapAnalysis = {
   gaps: [], omittedGaps: 0,
 };
 const gapMap: SchwabFundamentalGapMap = { schemaVersion: 1, generatedAt: "2026-10-31T00:00:00Z", sourceGapGeneratedAt: "2026-10-31T00:00:00Z", coverage: { direct: 2, derived: 3, unsupported: 15 }, candidates: [] };
+const sourceSparseDiagnosis: RecentGapDiagnosisReport = {
+  schemaVersion: 1, generatedAt: "2026-10-31T01:00:00Z", sourceGapGeneratedAt: gapAnalysis.generatedAt,
+  sourceFactsSha256: "abc", cik: 320193,
+  summary: { recentErrors: 7, concepts: 5, missingQuarters: 12, recoverableQuarters: 0, aliasQuarters: 0, unavailableQuarters: 12 },
+  gaps: [],
+};
 
 describe("company remediation plan", () => {
-  it("keeps EDGAR refresh first and Schwab fallback last when availability is broken", () => {
-    const plan = buildCompanyRemediationPlan({ ticker: "AAPL", gapAnalysis, gapMap, apply: true, strict: true });
-    expect(plan.stages).toEqual(["edgar-fetch", "edgar-exhibits", "facts-fetch", "integrity-audit", "gap-analysis", "schwab-gap-map"]);
+  it("keeps EDGAR first and stops blind refreshes after source-sparse diagnosis", () => {
+    const plan = buildCompanyRemediationPlan({ ticker: "AAPL", gapAnalysis, gapMap, recentGapDiagnosis: sourceSparseDiagnosis, apply: true, strict: true });
+    expect(plan.stages).toEqual(["edgar-fetch", "edgar-exhibits", "facts-fetch", "integrity-audit", "gap-analysis", "recent-gap-diagnosis", "schwab-gap-map"]);
     expect(plan.recentErrors).toBe(7);
-    expect(plan.nextAction).toBe("edgar_refresh_recent");
+    expect(plan.nextAction).toBe("review_source_sparse_gaps");
+    expect(plan.unavailableQuarters).toBe(12);
+  });
+
+  it("routes exact facts to ingestion review and twins to taxonomy review", () => {
+    const exact = buildCompanyRemediationPlan({
+      ticker: "AAPL", gapAnalysis, gapMap, apply: false, strict: false,
+      recentGapDiagnosis: { ...sourceSparseDiagnosis, summary: { ...sourceSparseDiagnosis.summary, recoverableQuarters: 2, unavailableQuarters: 10 } },
+    });
+    const alias = buildCompanyRemediationPlan({
+      ticker: "AAPL", gapAnalysis, gapMap, apply: false, strict: false,
+      recentGapDiagnosis: { ...sourceSparseDiagnosis, summary: { ...sourceSparseDiagnosis.summary, aliasQuarters: 3, unavailableQuarters: 9 } },
+    });
+    expect(exact.nextAction).toBe("review_fact_ingestion");
+    expect(alias.nextAction).toBe("review_taxonomy_aliases");
   });
 
   it("prioritizes availability inversions before any new factor work", () => {

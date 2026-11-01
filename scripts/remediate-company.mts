@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { buildCompanyRemediationPlan } from "../api/services/company-remediation";
 import type { EdgarGapAnalysis } from "../api/services/edgar-gap-analysis";
+import type { RecentGapDiagnosisReport } from "../api/services/edgar-recent-gap-diagnosis";
 import type { SchwabFundamentalGapMap } from "../api/services/schwab-fundamental-gap-map";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 import { startProgress } from "../worker/lib/progress";
@@ -31,14 +32,16 @@ if (apply) {
 }
 await run("scripts/fundamental-integrity-audit.mts", ["--only", ticker]);
 await run("scripts/edgar-gap-analysis.mts", ["--input", "public/reports/fundamental-integrity.json"]);
+await run("scripts/edgar-recent-gap-diagnosis.mts", ["--ticker", ticker]);
 await run("scripts/schwab-fundamental-gap-map.mts", ["--gaps", "public/reports/edgar-coverage-gaps.json", "--context", "public/reports/schwab-context.json"]);
 const gapAnalysis = JSON.parse(readFileSync("public/reports/edgar-coverage-gaps.json", "utf8")) as EdgarGapAnalysis;
+const recentGapDiagnosis = JSON.parse(readFileSync(`public/reports/remediation/${ticker}-recent-gap-diagnosis.json`, "utf8")) as RecentGapDiagnosisReport;
 const gapMap = JSON.parse(readFileSync("public/reports/schwab-fundamental-gap-map.json", "utf8")) as SchwabFundamentalGapMap;
-const plan = buildCompanyRemediationPlan({ ticker, gapAnalysis, gapMap, apply, strict });
+const plan = buildCompanyRemediationPlan({ ticker, gapAnalysis, gapMap, recentGapDiagnosis, apply, strict });
 const output = { schemaVersion: 1, generatedAt: new Date().toISOString(), ...plan };
 const file = path.resolve(`public/reports/remediation/${ticker}.json`);
 writeJsonAtomic(file, output, true);
 const distDir = path.resolve("dist/public/reports/remediation");
 if (existsSync(path.dirname(distDir))) writeJsonAtomic(path.join(distDir, `${ticker}.json`), output, true);
-prog.done(`${ticker} · ${plan.nextAction} · errors ${plan.edgarErrors} · recent ${plan.recentErrors} · direct ${plan.directCandidates} · derived ${plan.derivedCandidates} · unsupported ${plan.unsupportedConcepts} · ${file}`);
+prog.done(`${ticker} · ${plan.nextAction} · errors ${plan.edgarErrors} · recent ${plan.recentErrors} · exact ${plan.recoverableQuarters} · alias ${plan.aliasQuarters} · unavailable ${plan.unavailableQuarters} · direct ${plan.directCandidates} · derived ${plan.derivedCandidates} · unsupported ${plan.unsupportedConcepts} · ${file}`);
 if (strict && plan.edgarErrors > 0) process.exit(1);

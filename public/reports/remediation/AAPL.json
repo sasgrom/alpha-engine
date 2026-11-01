@@ -1,6 +1,6 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-01T00:44:37.304Z",
+ "generatedAt": "2026-11-01T01:27:07.108Z",
  "ticker": "AAPL",
  "apply": true,
  "strict": false,
@@ -10,6 +10,7 @@
   "facts-fetch",
   "integrity-audit",
   "gap-analysis",
+  "recent-gap-diagnosis",
   "schwab-gap-map"
  ],
  "edgarErrors": 648,
@@ -18,5 +19,9 @@
  "directCandidates": 2,
  "derivedCandidates": 7,
  "unsupportedConcepts": 400,
- "nextAction": "edgar_refresh_recent"
+ "recentGapConcepts": 25,
+ "recoverableQuarters": 0,
+ "aliasQuarters": 0,
+ "unavailableQuarters": 166,
+ "nextAction": "review_source_sparse_gaps"
 }

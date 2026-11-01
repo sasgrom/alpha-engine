@@ -1,0 +1,649 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-01T01:27:05.736Z",
+ "sourceGapGeneratedAt": "2026-11-01T01:27:02.759Z",
+ "sourceFactsSha256": "73a86c6aedc31f77cac2ea4df5f80f0b3bd7e6eb58bb4e01444fbedf3afb9c43",
+ "cik": 320193,
+ "summary": {
+  "recentErrors": 45,
+  "concepts": 25,
+  "missingQuarters": 166,
+  "recoverableQuarters": 0,
+  "aliasQuarters": 0,
+  "unavailableQuarters": 166
+ },
+ "gaps": [
+  {
+   "concept": "DeferredIncomeTaxAssetsNet",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "DeferredTaxAssetsOtherComprehensiveLoss",
+   "status": "unavailable",
+   "lastAvailable": "2024Q3",
+   "recentQuarters": [
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwards",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsForeign",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "DeferredTaxAssetsTaxCreditCarryforwardsResearch",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "DeferredTaxLiabilitiesPropertyPlantAndEquipment",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "EffectiveIncomeTaxRateReconciliationFdiiAmount",
+   "status": "unavailable",
+   "lastAvailable": "2023Q3",
+   "recentQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "FinanceLeaseLiabilityCurrent",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "FinanceLeaseLiabilityNoncurrent",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "FinanceLeaseLiabilityPaymentsDueNextTwelveMonths",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "FinanceLeaseRightOfUseAsset",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "LesseeOperatingLeaseLiabilityPaymentsDueNextTwelveMonths",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "OperatingLeaseLiabilityCurrent",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "OperatingLeaseLiabilityNoncurrent",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "OperatingLeaseRightOfUseAsset",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2020Q4",
+    "2021Q1",
+    "2021Q2",
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2022Q4",
+    "2023Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "OtherAssetsMiscellaneousNoncurrent",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "UnrecordedUnconditionalPurchaseObligationDueInRemainderOfFiscalYear",
+   "status": "unavailable",
+   "lastAvailable": "2026Q2",
+   "recentQuarters": [
+    "2023Q1",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q3",
+    "2024Q4",
+    "2025Q1",
+    "2025Q2"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2023Q1",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q3",
+    "2024Q4",
+    "2025Q1",
+    "2025Q2"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "InventoryRawMaterialsAndPurchasedPartsNetOfReserves",
+   "status": "unavailable",
+   "lastAvailable": "2026Q2",
+   "recentQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2025Q4",
+    "2026Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2025Q4",
+    "2026Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "IncomeTaxReconciliationChangeInDeferredTaxAssetsValuationAllowance",
+   "status": "unavailable",
+   "lastAvailable": "2025Q3",
+   "recentQuarters": [
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1",
+    "2025Q2"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2023Q4",
+    "2024Q1",
+    "2024Q2",
+    "2024Q4",
+    "2025Q1",
+    "2025Q2"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "IncrementalCommonSharesAttributableToShareBasedPaymentArrangements",
+   "status": "unavailable",
+   "lastAvailable": "2026Q2",
+   "recentQuarters": [
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2023Q1"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2021Q4",
+    "2022Q1",
+    "2022Q2",
+    "2023Q1"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "GeneralAndAdministrativeExpense",
+   "status": "unavailable",
+   "lastAvailable": "2026Q2",
+   "recentQuarters": [
+    "2023Q4",
+    "2024Q1",
+    "2024Q2"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2023Q4",
+    "2024Q1",
+    "2024Q2"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "HedgedAssetFairValueHedge",
+   "status": "unavailable",
+   "lastAvailable": "2024Q3",
+   "recentQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "HedgedLiabilityFairValueHedge",
+   "status": "unavailable",
+   "lastAvailable": "2026Q2",
+   "recentQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2022Q4",
+    "2023Q1",
+    "2023Q2"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "SellingAndMarketingExpense",
+   "status": "unavailable",
+   "lastAvailable": "2026Q2",
+   "recentQuarters": [
+    "2023Q4",
+    "2024Q1",
+    "2024Q2"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2023Q4",
+    "2024Q1",
+    "2024Q2"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  },
+  {
+   "concept": "DerivativeCollateralObligationToReturnCash",
+   "status": "unavailable",
+   "lastAvailable": "2021Q2",
+   "recentQuarters": [
+    "2020Q4"
+   ],
+   "recoverableQuarters": [],
+   "aliasQuarters": [],
+   "unavailableQuarters": [
+    "2020Q4"
+   ],
+   "reason": "No exact or Current/Noncurrent twin fact exists for these quarters in current companyfacts; repeated download cannot restore them."
+  }
+ ]
+}
