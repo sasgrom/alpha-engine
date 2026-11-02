@@ -1,0 +1,371 @@
+{
+ "schemaVersion": 1,
+ "dataMode": "fixture",
+ "generatedAt": "2026-11-02T15:50:48.511Z",
+ "asOf": "2026-11-02T15:50:48.459Z",
+ "policy": {
+  "noSectorInference": true,
+  "upperBoundWhenHedgeUnknown": true,
+  "staleEvidenceIsHistoricalOnly": true,
+  "creditRequiresNewIssuanceTerms": true
+ },
+ "scenarios": [
+  {
+   "channel": "rates",
+   "shock": 0.01,
+   "shockUnit": "decimal",
+   "baseline": {
+    "seriesId": "DGS10",
+    "observationPeriod": "2026-10-29",
+    "value": 0.04,
+    "scenarioValue": 0.05,
+    "unit": "Percent",
+    "availableAt": "2026-10-30T00:00:00.000Z",
+    "researchEligibleAt": "2026-10-30T23:59:59.999Z",
+    "vintageId": "DGS10|2026-10-29|2026-10-30",
+    "frequency": "Daily",
+    "releasedAt": null,
+    "availabilityBasis": "fred_realtime_start",
+    "supersededAt": null,
+    "ingestedAt": "2026-11-01T00:00:00Z",
+    "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
+    "sourceHash": "fixture",
+    "stale": false
+   },
+   "status": "partial",
+   "reasons": [],
+   "impacts": [
+    {
+     "ticker": "DAL",
+     "status": "not_computable",
+     "reasons": [
+      "fixed_interest_share_missing_or_invalid"
+     ],
+     "metrics": []
+    },
+    {
+     "ticker": "RCL",
+     "status": "computable",
+     "reasons": [
+      "hedge_share_unknown_upper_bound"
+     ],
+     "metrics": [
+      {
+       "name": "interest_upper_bound",
+       "value": 6378900.0000000065,
+       "unit": "USD/year",
+       "impactType": "upper_bound",
+       "formula": "debt × (1 − fixedInterestShare) × (1 − interestRateHedgeShare) × rateShock; assumes immediate full repricing of exposed debt",
+       "concepts": [
+        "LongTermDebtAndCapitalLeaseObligations"
+       ],
+       "periodStart": null,
+       "periodEnd": "2026-06-30",
+       "availableAt": "2026-07-28",
+       "stale": false
+      }
+     ]
+    },
+    {
+     "ticker": "CVX",
+     "status": "not_computable",
+     "reasons": [
+      "fixed_interest_share_missing_or_invalid"
+     ],
+     "metrics": []
+    },
+    {
+     "ticker": "COP",
+     "status": "not_computable",
+     "reasons": [
+      "fixed_interest_share_missing_or_invalid"
+     ],
+     "metrics": []
+    },
+    {
+     "ticker": "PFE",
+     "status": "not_computable",
+     "reasons": [
+      "fixed_interest_share_missing_or_invalid"
+     ],
+     "metrics": []
+    }
+   ]
+  },
+  {
+   "channel": "oil",
+   "shock": 0.2,
+   "shockUnit": "decimal_percentage",
+   "baseline": {
+    "seriesId": "DCOILWTICO",
+    "observationPeriod": "2026-10-29",
+    "value": 80,
+    "scenarioValue": 96,
+    "unit": "Percent",
+    "availableAt": "2026-10-30T00:00:00.000Z",
+    "researchEligibleAt": "2026-10-30T23:59:59.999Z",
+    "vintageId": "DCOILWTICO|2026-10-29|2026-10-30",
+    "frequency": "Daily",
+    "releasedAt": null,
+    "availabilityBasis": "fred_realtime_start",
+    "supersededAt": null,
+    "ingestedAt": "2026-11-01T00:00:00Z",
+    "sourceUrl": "https://fred.stlouisfed.org/series/DCOILWTICO",
+    "sourceHash": "fixture",
+    "stale": false
+   },
+   "status": "partial",
+   "reasons": [],
+   "impacts": [
+    {
+     "ticker": "DAL",
+     "status": "computable",
+     "reasons": [
+      "hedge_and_pass_through_unknown_gross_exposure"
+     ],
+     "metrics": [
+      {
+       "name": "fuel_cost_gross",
+       "value": 2240400000,
+       "unit": "USD",
+       "impactType": "gross_exposure",
+       "formula": "fuelCost × oilShockPct; gross exposure before hedges, basis, pass-through and tax",
+       "concepts": [
+        "FuelCosts"
+       ],
+       "periodStart": null,
+       "periodEnd": "2026-09-30",
+       "availableAt": "2026-10-09T23:59:59.999Z",
+       "stale": false
+      }
+     ]
+    },
+    {
+     "ticker": "RCL",
+     "status": "historical_only",
+     "reasons": [
+      "hedge_and_pass_through_unknown_gross_exposure"
+     ],
+     "metrics": [
+      {
+       "name": "fuel_cost_gross",
+       "value": 77064400,
+       "unit": "USD",
+       "impactType": "gross_exposure",
+       "formula": "fuelCost × oilShockPct; gross exposure before hedges, basis, pass-through and tax",
+       "concepts": [
+        "FuelCosts"
+       ],
+       "periodStart": null,
+       "periodEnd": "2021-12-31",
+       "availableAt": "2022-03-01T23:59:59.999Z",
+       "stale": true
+      }
+     ]
+    },
+    {
+     "ticker": "CVX",
+     "status": "historical_only",
+     "reasons": [
+      "hedge_and_pass_through_unknown_gross_exposure"
+     ],
+     "metrics": [
+      {
+       "name": "oil_revenue_gross",
+       "value": 7193600000,
+       "unit": "USD",
+       "impactType": "gross_exposure",
+       "formula": "oilRevenue × oilShockPct; gross exposure before hedges, basis, pass-through and tax",
+       "concepts": [
+        "OilAndGasRevenue"
+       ],
+       "periodStart": null,
+       "periodEnd": "2018-03-31",
+       "availableAt": "2018-05-03T23:59:59.999Z",
+       "stale": true
+      },
+      {
+       "name": "oil_cost_gross",
+       "value": 4246600000,
+       "unit": "USD",
+       "impactType": "gross_exposure",
+       "formula": "oilCost × oilShockPct; gross exposure before hedges, basis, pass-through and tax",
+       "concepts": [
+        "CostOfPurchasedOilAndGas"
+       ],
+       "periodStart": null,
+       "periodEnd": "2018-03-31",
+       "availableAt": "2018-05-03T23:59:59.999Z",
+       "stale": true
+      }
+     ]
+    },
+    {
+     "ticker": "COP",
+     "status": "historical_only",
+     "reasons": [
+      "hedge_and_pass_through_unknown_gross_exposure"
+     ],
+     "metrics": [
+      {
+       "name": "oil_cost_gross",
+       "value": 1355600000,
+       "unit": "USD",
+       "impactType": "gross_exposure",
+       "formula": "oilCost × oilShockPct; gross exposure before hedges, basis, pass-through and tax",
+       "concepts": [
+        "CostOfPurchasedOilAndGas"
+       ],
+       "periodStart": null,
+       "periodEnd": "2018-06-30",
+       "availableAt": "2018-08-01T23:59:59.999Z",
+       "stale": true
+      }
+     ]
+    },
+    {
+     "ticker": "PFE",
+     "status": "not_computable",
+     "reasons": [
+      "fuel_cost_and_oil_revenue_cost_missing"
+     ],
+     "metrics": []
+    }
+   ]
+  },
+  {
+   "channel": "usd",
+   "shock": 0.05,
+   "shockUnit": "decimal_percentage",
+   "baseline": {
+    "seriesId": "DTWEXBGS",
+    "observationPeriod": "2026-10-29",
+    "value": 100,
+    "scenarioValue": 105,
+    "unit": "Percent",
+    "availableAt": "2026-10-30T00:00:00.000Z",
+    "researchEligibleAt": "2026-10-30T23:59:59.999Z",
+    "vintageId": "DTWEXBGS|2026-10-29|2026-10-30",
+    "frequency": "Daily",
+    "releasedAt": null,
+    "availabilityBasis": "fred_realtime_start",
+    "supersededAt": null,
+    "ingestedAt": "2026-11-01T00:00:00Z",
+    "sourceUrl": "https://fred.stlouisfed.org/series/DTWEXBGS",
+    "sourceHash": "fixture",
+    "stale": false
+   },
+   "status": "not_computable",
+   "reasons": [],
+   "impacts": [
+    {
+     "ticker": "DAL",
+     "status": "not_computable",
+     "reasons": [
+      "foreign_revenue_share_missing_or_invalid"
+     ],
+     "metrics": []
+    },
+    {
+     "ticker": "RCL",
+     "status": "not_computable",
+     "reasons": [
+      "foreign_revenue_share_missing_or_invalid"
+     ],
+     "metrics": []
+    },
+    {
+     "ticker": "CVX",
+     "status": "not_computable",
+     "reasons": [
+      "foreign_revenue_share_missing_or_invalid"
+     ],
+     "metrics": []
+    },
+    {
+     "ticker": "COP",
+     "status": "not_computable",
+     "reasons": [
+      "foreign_revenue_share_missing_or_invalid"
+     ],
+     "metrics": []
+    },
+    {
+     "ticker": "PFE",
+     "status": "not_computable",
+     "reasons": [
+      "foreign_revenue_share_missing_or_invalid"
+     ],
+     "metrics": []
+    }
+   ]
+  },
+  {
+   "channel": "credit",
+   "shock": 0.01,
+   "shockUnit": "decimal",
+   "baseline": {
+    "seriesId": "BAMLH0A0HYM2",
+    "observationPeriod": "2026-10-29",
+    "value": 3,
+    "scenarioValue": 3.01,
+    "unit": "Percent",
+    "availableAt": "2026-10-30T00:00:00.000Z",
+    "researchEligibleAt": "2026-10-30T23:59:59.999Z",
+    "vintageId": "BAMLH0A0HYM2|2026-10-29|2026-10-30",
+    "frequency": "Daily",
+    "releasedAt": null,
+    "availabilityBasis": "fred_realtime_start",
+    "supersededAt": null,
+    "ingestedAt": "2026-11-01T00:00:00Z",
+    "sourceUrl": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
+    "sourceHash": "fixture",
+    "stale": false
+   },
+   "status": "not_computable",
+   "reasons": [],
+   "impacts": [
+    {
+     "ticker": "DAL",
+     "status": "not_computable",
+     "reasons": [
+      "new_issuance_spread_maturity_and_rating_missing"
+     ],
+     "metrics": []
+    },
+    {
+     "ticker": "RCL",
+     "status": "not_computable",
+     "reasons": [
+      "new_issuance_spread_maturity_and_rating_missing"
+     ],
+     "metrics": []
+    },
+    {
+     "ticker": "CVX",
+     "status": "not_computable",
+     "reasons": [
+      "new_issuance_spread_maturity_and_rating_missing"
+     ],
+     "metrics": []
+    },
+    {
+     "ticker": "COP",
+     "status": "not_computable",
+     "reasons": [
+      "new_issuance_spread_maturity_and_rating_missing"
+     ],
+     "metrics": []
+    },
+    {
+     "ticker": "PFE",
+     "status": "not_computable",
+     "reasons": [
+      "new_issuance_spread_maturity_and_rating_missing"
+     ],
+     "metrics": []
+    }
+   ]
+  }
+ ]
+}

@@ -70,15 +70,24 @@ function latestByConcept(rows: FundamentalSeriesRow[], concept: string, asOf: st
   }
   return [...byPeriod.values()].sort((a, b) => b.periodEnd.localeCompare(a.periodEnd));
 }
+function quarterIndex(periodEnd: string): number | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(periodEnd)) return null;
+  return Number(periodEnd.slice(0, 4)) * 4 + Math.ceil(Number(periodEnd.slice(5, 7)) / 3) - 1;
+}
+// TTM uses four latest points, but gaps must remain visible as partial evidence
+// rather than being presented as a complete contiguous window.
 function flowMetric(rows: FundamentalSeriesRow[], concepts: string[], asOf: string): ExposureMetric {
   for (const concept of concepts) {
     const points = latestByConcept(rows, concept, asOf).slice(0, 4);
     if (!points.length) continue;
     const unit = metricUnit(points[0].unit);
     if (points.some((point) => metricUnit(point.unit) !== unit)) return missing(`${concept}: unit conflict`);
+    const indices = points.map((point) => quarterIndex(point.periodEnd));
+    const nonConsecutive = indices.some((value, index) => value === null || (index > 0 && indices[index - 1]! - value! !== 1));
     const value = points.reduce((total, point) => total + (point.val ?? 0), 0);
-    const quality = points.length === 4 ? "available" : "partial";
-    return available(value, unit, [concept], points[0].periodEnd, points[0].sourceFiled, quality, points.length < 4 ? `Only ${points.length} quarterly points` : null);
+    const quality = points.length === 4 && !nonConsecutive ? "available" : "partial";
+    const note = nonConsecutive ? "Non-consecutive quarterly points" : points.length < 4 ? `Only ${points.length} quarterly points` : null;
+    return available(value, unit, [concept], points[0].periodEnd, points[0].sourceFiled, quality, note);
   }
   return missing(`No ${concepts.join(" or ")}`);
 }
@@ -115,7 +124,7 @@ function ratio(numerator: ExposureMetric, denominator: ExposureMetric, note: str
     periodEnd: numerator.periodEnd ?? denominator.periodEnd,
     sourceFiled: numerator.sourceFiled ?? denominator.sourceFiled,
     quality: numerator.quality === "partial" || denominator.quality === "partial" ? "partial" : "available",
-    note: null,
+    note: numerator.note ?? denominator.note,
   };
 }
 
@@ -135,7 +144,7 @@ export function buildCompanyExposure(input: CompanyExposureInput, asOf: string):
   const oilCost = flowMetric(input.rows, ["CostOfPurchasedOilAndGas"], asOf);
   const totalRevenue = stockMetric(input.rows, ["RevenueFromContractWithCustomerExcludingAssessedTax"], asOf);
   const domesticRevenue = stockMetric(input.rows, ["EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToEntitysCountryOfDomicile"], asOf);
-  const foreignRevenueShare = domesticRevenue.quality !== "missing" && totalRevenue.quality !== "missing" && totalRevenue.value! > 0 && domesticRevenue.unit === totalRevenue.unit
+  const foreignRevenueShare = domesticRevenue.quality !== "missing" && totalRevenue.quality !== "missing" && domesticRevenue.periodEnd === totalRevenue.periodEnd && totalRevenue.value! > 0 && domesticRevenue.unit === totalRevenue.unit
     ? available(Math.max(0, 1 - domesticRevenue.value! / totalRevenue.value!), "ratio", [...domesticRevenue.concepts, ...totalRevenue.concepts], domesticRevenue.periodEnd!, domesticRevenue.sourceFiled, "available", "Computed as 1 − domicile revenue / total revenue for the same period")
     : missing("No directly comparable domicile and total revenue");
   const foreignDerivativeNotional = stockMetric(input.rows, ["NotionalAmountOfForeignCurrencyDerivatives"], asOf);
@@ -161,6 +170,28 @@ export function buildCompanyExposure(input: CompanyExposureInput, asOf: string):
     foreignRevenueShare: withEvidenceAge(foreignRevenueShare, asOf),
     foreignDerivativeNotional: withEvidenceAge(foreignDerivativeNotional, asOf),
     missing: missingFields,
+  };
+}
+
+// Targeted rebuilds replace one ticker without dropping the others or changing
+// the original universe provenance hash.
+export function mergeCompanyExposureReports(previous: CompanyExposureReport, update: CompanyExposureReport): CompanyExposureReport {
+  const companies = new Map(previous.companies.map((company) => [company.ticker, company]));
+  for (const company of update.companies) companies.set(company.ticker, company);
+  const merged = [...companies.values()].sort((a, b) => a.ticker.localeCompare(b.ticker));
+  return {
+    ...update,
+    universeSha256: previous.universeSha256,
+    companies: merged,
+    coverage: {
+      companies: merged.length,
+      debt: merged.filter((company) => company.debt.quality !== "missing").length,
+      interestCoverage: merged.filter((company) => company.interestCoverage.quality !== "missing").length,
+      fuelCost: merged.filter((company) => company.fuelCostToOperatingIncome.quality !== "missing").length,
+      oilRevenue: merged.filter((company) => company.oilRevenue.quality !== "missing").length,
+      oilCost: merged.filter((company) => company.oilCost.quality !== "missing").length,
+      foreignRevenueShare: merged.filter((company) => company.foreignRevenueShare.quality !== "missing").length,
+    },
   };
 }
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCompanyExposure, buildCompanyExposureReport } from "./company-exposure";
+import { buildCompanyExposure, buildCompanyExposureReport, mergeCompanyExposureReports } from "./company-exposure";
 import type { FundamentalSeriesRow } from "./fundamental-integrity";
 
 let nextId = 1;
@@ -30,6 +30,18 @@ describe("company macro exposure evidence", () => {
     expect(company.foreignRevenueShare.quality).toBe("missing");
   });
 
+  it("marks a TTM built from non-consecutive quarters as partial", () => {
+    const rows = [
+      ...flows(1, "OperatingIncomeLoss", 20).slice(0, 2),
+      point(1, "OperatingIncomeLoss", "2025-12-31", 20),
+      point(1, "OperatingIncomeLoss", "2026-06-30", 20),
+      point(1, "LongTermDebt", "2025-12-31", 100),
+    ];
+    const company = buildCompanyExposure({ cik: 1, ticker: "GAP", name: "Gap", sector: null, rows }, "2026-08-31T00:00:00Z");
+    expect(company.debtToOperatingIncome.quality).toBe("partial");
+    expect(company.debtToOperatingIncome.note).toContain("Non-consecutive");
+  });
+
   it("derives foreign revenue share only from comparable domicile and total revenue", () => {
     const rows = [
       point(2, "RevenueFromContractWithCustomerExcludingAssessedTax", "2025-12-31", 100),
@@ -40,6 +52,15 @@ describe("company macro exposure evidence", () => {
     expect(company.foreignRevenueShare.value).toBeCloseTo(0.6);
     expect(company.foreignRevenueShare.note).toContain("1 − domicile revenue");
     expect(company.foreignDerivativeNotional.value).toBe(5);
+  });
+
+  it("rejects foreign revenue ratios from different periods", () => {
+    const rows = [
+      point(2, "RevenueFromContractWithCustomerExcludingAssessedTax", "2025-12-31", 100),
+      point(2, "EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToEntitysCountryOfDomicile", "2011-04-03", 40),
+    ];
+    const company = buildCompanyExposure({ cik: 2, ticker: "PFE", name: "Pfizer", sector: "Health Care", rows }, "2026-01-31T00:00:00Z");
+    expect(company.foreignRevenueShare.quality).toBe("missing");
   });
 
   it("fails closed on negative operating income and excludes future periods", () => {
@@ -57,6 +78,19 @@ describe("company macro exposure evidence", () => {
     const company = buildCompanyExposure({ cik: 1, ticker: "OLD", name: "Old", sector: null, rows: [point(1, "LongTermDebt", "2020-12-31", 100)] }, "2026-01-31T00:00:00Z");
     expect(company.debt.stale).toBe(true);
     expect(company.debt.evidenceAgeDays).toBeGreaterThan(550);
+  });
+
+  it("merges targeted updates without dropping other companies", () => {
+    const base = buildCompanyExposureReport([
+      { cik: 1, ticker: "AAA", name: "A", sector: null, rows: [point(1, "LongTermDebt", "2025-12-31", 100)] },
+      { cik: 2, ticker: "PFE", name: "Old PFE", sector: null, rows: [point(2, "LongTermDebt", "2025-12-31", 100)] },
+    ], "2026-01-31T00:00:00Z", "2026-02-01T00:00:00Z");
+    const update = buildCompanyExposureReport([{ cik: 2, ticker: "PFE", name: "New PFE", sector: null, rows: [] }], "2026-01-31T00:00:00Z", "2026-02-02T00:00:00Z");
+    const merged = mergeCompanyExposureReports(base, update);
+    expect(merged.companies).toHaveLength(2);
+    expect(merged.companies.find((company) => company.ticker === "AAA")?.debt.value).toBe(100);
+    expect(merged.companies.find((company) => company.ticker === "PFE")?.name).toBe("New PFE");
+    expect(merged.universeSha256).toBe(base.universeSha256);
   });
 
   it("reports only actual coverage and never creates a direction score", () => {

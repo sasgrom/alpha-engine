@@ -184,4 +184,47 @@ For one company or a historical as-of check:
 npx tsx scripts/build-company-exposure.mts --only DAL --as-of 2026-01-31T00:00:00Z
 ```
 
-Outputs are `public/reports/company-exposures.json` and `.md`. The report computes only directly supported values: debt/operating income, operating income/interest expense, cash/debt, fuel cost/operating income, oil revenue/cost and foreign revenue share when domicile and total revenue are directly comparable. It does not infer sector directions, floating-rate debt share, maturity schedules or hedge ratios. Each metric carries source concepts, period, availability and stale-evidence flags.
+Outputs are `public/reports/company-exposures.json` and `.md`. The report computes only directly supported values: debt/operating income, operating income/interest expense, cash/debt, fuel cost/operating income, oil revenue/cost and foreign revenue share when domicile and total revenue are directly comparable **for the same periodEnd**. It does not infer sector directions, floating-rate debt share, maturity schedules or hedge ratios. Each metric carries source concepts, period, availability and stale-evidence flags.
+
+## 9. Pilot source-linked evidence pack
+
+```powershell
+npx tsx scripts/exposure-evidence-probe.mts
+npx tsx scripts/build-pilot-exposure-evidence.mts
+```
+
+The probe inspects fresh SEC companyfacts for DAL, RCL, CVX, COP and PFE. The builder preserves exact fixed-rate shares, weighted/effective rates, interest-rate hedge shares, maturity concepts, fuel/oil metrics and foreign derivative notionals with accession links and raw-payload hashes. No LLM is used. Staleness is based on the economic period, not on the accession year. If comparable domicile and total revenue do not share `periodEnd`, foreign revenue share remains missing.
+
+## 10. Macro Scenario Engine
+
+```powershell
+npx tsx scripts/build-macro-scenarios.mts --macro-root D:\research\alpha-engine\macro
+```
+
+Optional shocks and historical as-of:
+
+```powershell
+npx tsx scripts/build-macro-scenarios.mts --rate-shock 0.01 --oil-shock 0.20 --usd-shock 0.05 --credit-shock 0.01 --as-of 2026-01-31T00:00:00Z
+```
+
+The engine reads normalized FRED baselines, pilot SEC evidence and company exposure rows. Every baseline uses `availableAt` and `researchEligibleAt`; SEC evidence must also have `availableAt/sourceFiled <= asOf`. Future evidence is excluded rather than backdated.
+
+- **Rates:** `debt × (1 − fixedInterestShare) × (1 − interestRateHedgeShare) × rateShock`, in USD/year. If hedge share is unknown, the result is an **upper bound**, not a point estimate. The formula assumes immediate full repricing and is not a maturity-specific forecast.
+- **Oil:** fuel cost, oil revenue and purchased oil/gas are multiplied by the oil shock. These are **gross exposure** values before hedges, basis, pass-through and tax, not profit forecasts. Stale evidence is `historical_only`.
+- **USD:** `−foreignRevenueShare × usdShockPct` is only a translation elasticity. It is not earnings impact and does not infer derivative direction. No valid share means `not_computable`.
+- **Credit:** remains `not_computable` until new-issuance spread, maturity and rating terms exist.
+
+The output is `public/reports/macro-scenarios.json` and `.md`. Use `--out /tmp/macro-scenarios.json` for an isolated smoke run. Scenario shocks are user-defined assumptions, not FRED forecasts.
+
+## 11. Scenario Lab UI and review invariants
+
+Open owner-only **`/scenario-lab`**. It loads the three reviewed reports at runtime, recomputes every shock in the browser and exports the current JSON. No scenario state is inferred from missing reports.
+
+- `complete` means every pilot computes; `partial` means only a subset computes.
+- `upper_bound` is used when hedge share is unknown; `gross_exposure` is not net income.
+- FRED baseline carries full source URL, hash, vintage and research availability.
+- Fuel and oil evidence preserves `periodStart`, so YTD periods cannot be mistaken for standalone quarters.
+- TTM built from non-consecutive quarters is `partial`, never silently `available`.
+- Targeted company rebuilds preserve the original `universeSha256`.
+
+The evidence inspector shows exact formula, concepts, period, availability and reasons for `not_computable`. Empty states include the build commands rather than fabricated data. A fixture, when used for tests, is explicitly marked `dataMode: "fixture"` and is never presented as a live FRED baseline.

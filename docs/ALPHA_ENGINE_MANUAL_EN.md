@@ -1576,3 +1576,18 @@ From the first NVDA runs (owner eyeballing via why): (1) MD&A extraction verifie
 - Login rate-limits and captcha live in process memory (a restart resets them; single-instance deployment, D25);
 - The view-as lens (4e) is read-only by construction; writes under it are rejected server-side;
 - Scoring coverage as of iteration 3b: 2 companies × 3 documents × 9 aspects (rubric v2) = 54 rows; validation ρ not yet computed — sample < 30 filings and < 20 companies.
+
+
+## 9. Macro scenarios and exposure mapping
+
+The macro exposure pipeline is: FRED/ALFRED vintage data → manifest QA → SEC exposure evidence → Scenario Engine → Scenario Lab UI.
+
+- FRED series are downloaded from 2000-01-01 in yearly real-time chunks. Availability is kept separate from observation period and is not presented as the original agency release timestamp.
+- Company exposure uses XBRL evidence: debt, fixed-rate share, interest-rate hedges, fuel, oil and revenue geography. Missing parameters are never filled from sector rules or zeros.
+- `upper_bound` means hedge share is unknown; `gross_exposure` is pre-hedge, pre-basis, pre-pass-through and pre-tax sensitivity, not a profit forecast.
+- `historical_only` means stale evidence, not a current scenario; `not_computable` means insufficient evidence.
+- `complete` means all pilots compute; `partial` means only a subset computes.
+- Fuel and oil concepts preserve `periodStart`, so YTD cannot be mistaken for a standalone quarter. TTM built from non-consecutive quarters is marked `partial`.
+- Scenario Lab (`/scenario-lab`) recomputes every shock in the browser using the same engine and exposes baseline, impacts, formulas and an evidence inspector. Fixtures are always explicitly distinguished from the live FRED baseline.
+
+Operator manual: `docs/MACRO_DATA.md`.
