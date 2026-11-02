@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fetchFredText, mergeVintageDates, normalizeFredObservations, realtimeChunks, redactFredSecrets, type FredSeriesMetadata } from "./fred";
+import { fetchFredText, mergeVintageDates, normalizeFredObservations, realtimeChunks, realtimeEndFromPayload, redactFredSecrets, type FredSeriesMetadata } from "./fred";
 import { realtimeResearchStart, selectMacroSeries } from "./macro-sources";
 
 const metadata: FredSeriesMetadata = { id: "GDP", title: "GDP", frequency: "Quarterly", units: "Billions", seasonal_adjustment: "SAAR", last_updated: "2026-10-30" };
@@ -31,6 +31,11 @@ describe("FRED vintage normalization", () => {
     ]);
     expect(realtimeChunks("2020-01-01", "2020-12-31")).toEqual([{ start: "2020-01-01", end: "2020-12-31" }]);
     expect(mergeVintageDates([["2024-01-01", "2024-02-01"], ["2024-02-01", "2025-01-01"]])).toEqual(["2024-01-01", "2024-02-01", "2025-01-01"]);
+  });
+
+  it("uses the server-provided real-time boundary instead of a local date", () => {
+    expect(realtimeEndFromPayload(JSON.stringify({ realtime_start: "2026-11-01", realtime_end: "2026-11-01" }))).toBe("2026-11-01");
+    expect(() => realtimeEndFromPayload("{}")).toThrow("no valid realtime_end");
   });
 
   it("does not treat a download chunk boundary as supersession", () => {

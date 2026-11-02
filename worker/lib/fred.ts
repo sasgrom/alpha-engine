@@ -66,7 +66,13 @@ export function redactFredSecrets(value: string, apiKey: string): string {
   return value.split(apiKey).join("[redacted]").replace(/api_key=[^&\s]+/gi, "api_key=[redacted]");
 }
 
-export async function fetchFredText(endpoint: "series" | "series/observations" | "series/vintagedates", params: Record<string, string>, apiKey: string): Promise<string> {
+export function realtimeEndFromPayload(raw: string): string {
+  const payload = JSON.parse(raw) as { realtime_end?: string };
+  if (!payload.realtime_end || !/^\d{4}-\d{2}-\d{2}$/.test(payload.realtime_end)) throw new Error("FRED realtime_period returned no valid realtime_end");
+  return payload.realtime_end;
+}
+
+export async function fetchFredText(endpoint: "realtime_period" | "series" | "series/observations" | "series/vintagedates", params: Record<string, string>, apiKey: string): Promise<string> {
   const query = new URLSearchParams({ ...params, api_key: apiKey, file_type: "json" });
   const url = `https://api.stlouisfed.org/fred/${endpoint}?${query}`;
   const response = await fetch(url, { signal: AbortSignal.timeout(60_000), headers: { "user-agent": "AlphaEngineMacro/1.0" } });

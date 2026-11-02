@@ -3,7 +3,7 @@ import "dotenv/config";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { MACRO_RESEARCH_START, realtimeResearchStart, selectMacroSeries, type MacroGroup, type MacroSeriesDefinition } from "./lib/macro-sources";
-import { fetchFredText, mergeVintageDates, normalizeFredObservations, realtimeChunks, sha256Text, type FredObservation, type FredSeriesMetadata, type NormalizedMacroPoint } from "./lib/fred";
+import { fetchFredText, mergeVintageDates, normalizeFredObservations, realtimeChunks, realtimeEndFromPayload, sha256Text, type FredObservation, type FredSeriesMetadata, type NormalizedMacroPoint } from "./lib/fred";
 import { prepareMacroRoot, writeTextAtomic } from "./lib/macro-io";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
@@ -45,6 +45,8 @@ const previous: FredManifest = existsSync(manifestPath)
   : { schemaVersion: 1, generatedAt: "", researchSince: MACRO_RESEARCH_START, entries: [] };
 const results: SeriesManifestEntry[] = [];
 const prog = startProgress("macro-fred", `${selected.length} series · local only · no production sync`);
+const realtimeEnd = realtimeEndFromPayload(await fetchFredText("realtime_period", {}, apiKey));
+prog.log(`FRED server realtime_end ${realtimeEnd}`);
 
 function pathsFor(seriesId: string) {
   const directory = path.join(root, "raw", "fred", seriesId);
@@ -100,7 +102,7 @@ for (const [index, definition] of selected.entries()) {
       const vintageDateChunks: string[][] = [];
       if (firstVintage) {
         const researchStart = realtimeResearchStart(firstVintage);
-        const chunks = realtimeChunks(researchStart, capturedAt.slice(0, 10));
+        const chunks = realtimeChunks(researchStart, realtimeEnd);
         prog.log(`${definition.seriesId}: source vintage ${firstVintage} · research start ${researchStart} · ${chunks.length} one-year real-time chunks`);
         for (const chunk of chunks) {
           let rawObservations: string;

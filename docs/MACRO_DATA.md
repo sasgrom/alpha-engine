@@ -123,7 +123,7 @@ npx tsx worker/macro-fred-fetch.mts --group inflation --from 2000-01-01
 npx tsx worker/macro-fred-fetch.mts --series DGS10 --from 2020-01-01 --force
 ```
 
-The collector first requests each series' earliest ALFRED vintage and then builds one-calendar-year real-time chunks from the later of that date and 2000-01-01. It never sends an unsupported pre-inception period or pre-2000 research period. `output_type=3` retains new and revised values as separate vintage rows. Raw chunks and merged responses are both preserved, and missing values (`.`) remain null. If a series has no ALFRED vintages, the manifest explicitly records `availabilityMode: "current_fred_only"` instead of pretending historical availability exists.
+The collector first requests the FRED server's `realtime_period`, then each series' earliest ALFRED vintage, and builds one-calendar-year real-time chunks from the later of that vintage and 2000-01-01 through the server-provided date. Local computer time is never used as the ALFRED boundary. It never sends an unsupported pre-inception period or pre-2000 research period. `output_type=3` retains new and revised values as separate vintage rows. Raw chunks and merged responses are both preserved, and missing values (`.`) remain null. If a series has no ALFRED vintages, the manifest explicitly records `availabilityMode: "current_fred_only"` instead of pretending historical availability exists.
 
 ## 5. Output layout
 
