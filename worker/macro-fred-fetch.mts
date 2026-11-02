@@ -49,7 +49,7 @@ const results: SeriesManifestEntry[] = [];
 const prog = startProgress("macro-fred", `${selected.length} series · local only · no production sync`);
 let lastFredRequestAt = 0;
 async function fetchLimited(endpoint: Parameters<typeof fetchFredText>[0], params: Record<string, string>): Promise<string> {
-  const waitMs = Math.max(0, 600 - (Date.now() - lastFredRequestAt));
+  const waitMs = Math.max(0, Number(process.env.FRED_MIN_INTERVAL_MS ?? 600) - (Date.now() - lastFredRequestAt));
   if (waitMs) await sleep(waitMs);
   lastFredRequestAt = Date.now();
   return fetchFredText(endpoint, params, apiKey);
@@ -97,6 +97,7 @@ for (const [index, definition] of selected.entries()) {
     sameArtifact(prior.raw.metadata, raw.metadata) && sameArtifact(prior.raw.observations, raw.observations) && sameArtifact(prior.raw.vintageDates, raw.vintageDates);
   try {
     let capturedAt = prior?.capturedAt ?? new Date().toISOString();
+    const emptyChunks: string[] = [];
     if (canResume) {
       prog.log(`${definition.seriesId}: resumed ${prior.rows} rows`);
     } else {
@@ -107,7 +108,6 @@ for (const [index, definition] of selected.entries()) {
       const firstVintage = (JSON.parse(rawFirstVintage) as { vintage_dates?: string[] }).vintage_dates?.[0] ?? null;
       const observationChunks: FredObservation[][] = [];
       const vintageDateChunks: string[][] = [];
-      const emptyChunks: string[] = [];
       if (firstVintage) {
         const researchStart = realtimeResearchStart(firstVintage);
         const chunks = openEndedRealtimeChunks(researchStart, capturedAt.slice(0, 10));

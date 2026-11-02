@@ -83,7 +83,8 @@ export function isEmptyVintageError(error: unknown): boolean {
 
 export async function fetchFredText(endpoint: "series" | "series/observations" | "series/vintagedates", params: Record<string, string>, apiKey: string): Promise<string> {
   const query = new URLSearchParams({ ...params, api_key: apiKey, file_type: "json" });
-  const url = `https://api.stlouisfed.org/fred/${endpoint}?${query}`;
+  const base = process.env.FRED_API_BASE_URL ?? "https://api.stlouisfed.org/fred";
+  const url = `${base}/${endpoint}?${query}`;
   const response = await fetch(url, { signal: AbortSignal.timeout(60_000), headers: { "user-agent": "AlphaEngineMacro/1.0" } });
   const text = await response.text();
   if (!response.ok) throw new Error(redactFredSecrets(`FRED HTTP ${response.status}: ${text.slice(0, 300)}`, apiKey));
