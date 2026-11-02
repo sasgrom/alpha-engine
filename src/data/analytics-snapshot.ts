@@ -4,7 +4,7 @@
  */
 export const analyticsSnapshot = {
   "week": "2026-W45",
-  "generatedAt": "2026-11-02T19:31:51.125Z",
+  "generatedAt": "2026-11-02T20:17:28.030Z",
   "metrics": {
     "companies": 496,
     "sectors": 11,
@@ -416,7 +416,7 @@ export const analyticsSnapshot = {
     },
     {
       "week": "2026-W45",
-      "generatedAt": "2026-11-02T19:31:51.125Z",
+      "generatedAt": "2026-11-02T20:17:28.030Z",
       "metrics": {
         "companies": 496,
         "sectors": 11,

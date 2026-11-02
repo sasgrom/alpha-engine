@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-02T19:17:23.722Z",
- "asOf": "2026-11-02T19:15:50.891Z",
+ "generatedAt": "2026-11-02T20:17:08.616Z",
+ "asOf": "2026-11-02T20:15:37.432Z",
  "universeSha256": "f253b8c5622e380bdc0a4e3781157c8d043be756994651b9fb9510eedb27bbbe",
  "policy": {
   "noSectorInference": true,

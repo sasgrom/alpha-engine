@@ -1,6 +1,6 @@
 # Company macro exposure evidence
 
-As of: 2026-11-02T19:15:50.891Z
+As of: 2026-11-02T20:15:37.432Z
 Universe SHA256: f253b8c5622e380bdc0a4e3781157c8d043be756994651b9fb9510eedb27bbbe
 Only directly supported metrics are populated. No sector-derived direction scores. Missing evidence remains missing.
 
