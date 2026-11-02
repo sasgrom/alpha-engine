@@ -1592,3 +1592,10 @@ The macro exposure pipeline is: FRED/ALFRED vintage data → manifest QA → SEC
 - Shock Calibration (`scripts/build-shock-calibration.mts`) computes historical percentiles of FRED changes with moving-block confidence intervals; `Mild p50`, `Severe p90` and `Extreme p99` are not directional forecasts. FRED `Percent` rate and credit values are divided by 100 to match Scenario Engine decimal shocks; unsupported rate units fail closed.
 
 Operator manual: `docs/MACRO_DATA.md`.
+
+## 10. Daily operations health
+
+- `/workers` opens **Daily report**, an operational health view separate from the LLM morning brief. It checks scheduler heartbeat, per-ticker Schwab capture for the current UTC date, Feature Lab source hash, hourly context and actual job runs.
+- Rebuild on demand with `npx tsx scripts/build-daily-operations-report.mts`. The registry also schedules it at 07:20 local home time after the morning jobs.
+- Outputs are `public/reports/daily-operations.json` and `.md`; an existing `dist/public/reports` copy is updated without an application rebuild. These machine-specific health artifacts are ignored by Git and remain local unless separately reviewed for delivery.
+- A completed cron job does not prove fresh evidence. Every expected Schwab ticker must have a complete capture for the report date, and Feature Lab must match the current normalized snapshot SHA256.

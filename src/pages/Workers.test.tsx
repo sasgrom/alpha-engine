@@ -32,17 +32,20 @@ describe("Operations center", () => {
   beforeEach(async () => {
     mocks.local = false;
     vi.clearAllMocks();
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(null, { status: 404 })));
     host = document.createElement("div");
     document.body.appendChild(host);
     await act(async () => { root = createRoot(host!); root.render(<MemoryRouter><Workers /></MemoryRouter>); });
   });
-  afterEach(() => { if (root) act(() => root!.unmount()); host?.remove(); root = null; host = null; mocks.local = false; });
+  afterEach(() => { if (root) act(() => root!.unmount()); host?.remove(); root = null; host = null; mocks.local = false; vi.unstubAllGlobals(); });
 
   it("shows the complete registry and clickable server stack in documentation mode", async () => {
     expect(host!.textContent).toContain("One operating picture");
     expect(host!.textContent).toContain(`Registered jobs${OPERATION_JOBS.length}`);
-    expect(host!.textContent).toContain("Use one web server, not both.");
+    expect(host!.textContent).toContain("No daily operations report");
     expect(host!.textContent).toContain("Read-only outside the home console");
+    await click(button(host!, "Run stack")!);
+    expect(host!.textContent).toContain("Use one web server, not both.");
     await click(button(host!, "Development server")!);
     expect(host!.textContent).toContain("Use only while developing");
     expect(host!.textContent).toContain("npm run dev");

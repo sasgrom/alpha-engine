@@ -96,12 +96,13 @@ for (const [index, job] of OPERATION_JOBS.entries()) {
 lines.push(
   "## 6. Daily review checklist",
   "",
-  "1. Open `/workers`: scheduler heartbeat is online, no unexpected current/queued job, and next run is plausible.",
-  "2. Open Activity for failed jobs; inspect the log rather than blindly rerunning the whole universe.",
-  "3. Check `/market-data` coverage, manifest errors and duplicate OSI counts after the Schwab chain.",
-  "4. Check Analytics and Expectations freshness after report builders and the production UI rebuild.",
-  "5. Run dry-review jobs before any production transfer. Apply commands remain in the terminal and are never cron jobs.",
-  "6. Do not start both dev and production web servers. Do not start a second scheduler or re-enable legacy overlapping tasks.",
+  "1. Open `/workers` → **Daily report**. Require an online scheduler, same-day Schwab capture for every expected ticker and zero failed checks. The report is operational evidence, separate from the LLM morning digest.",
+  "2. Rebuild the report on demand with `npx tsx scripts/build-daily-operations-report.mts`. It writes credential-free JSON and Markdown locally and updates an existing dist bundle without an application rebuild.",
+  "3. Open Activity for failed jobs; inspect the log rather than blindly rerunning the whole universe. Use the Schwab Feature Lab chain when raw chains, normalized data and features must be refreshed together.",
+  "4. Check `/market-data` coverage, manifest errors and duplicate OSI counts after the Schwab chain.",
+  "5. Check Analytics and Expectations freshness after report builders and the production UI rebuild.",
+  "6. Run dry-review jobs before any production transfer. Apply commands remain in the terminal and are never cron jobs.",
+  "7. Do not start both dev and production web servers. Do not start a second scheduler or re-enable legacy overlapping tasks.",
   "",
 );
 writeFileSync("docs/OPERATIONS.md", `${lines.join("\n").trimEnd()}\n`);

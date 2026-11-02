@@ -1,0 +1,104 @@
+{
+ "schemaVersion": 1,
+ "dataMode": "fixture",
+ "generatedAt": "2026-11-03T07:20:00.000Z",
+ "date": "2026-11-03",
+ "dateBasis": "UTC",
+ "status": "critical",
+ "scheduler": {
+  "status": "offline",
+  "heartbeatAt": "2026-11-03T04:00:00.000Z",
+  "startedAt": "2026-11-02T07:00:00.000Z",
+  "currentJobId": null,
+  "queuedJobs": 0,
+  "nextRunAt": null,
+  "enabledJobs": 2,
+  "configurationSource": "file"
+ },
+ "schwab": {
+  "status": "error",
+  "snapshotGeneratedAt": "2026-11-02T04:10:00.000Z",
+  "latestCapture": "2026-11-02T04:05:00.000Z",
+  "tickersExpected": 2,
+  "tickersCompleted": 2,
+  "tickersCapturedToday": 0,
+  "contracts": 100,
+  "manifestErrors": 0,
+  "featuresGeneratedAt": "2026-11-02T04:11:00.000Z",
+  "featuresSourceCurrent": true,
+  "contextGeneratedAt": "2026-11-02T04:12:00.000Z",
+  "contextErrors": 0
+ },
+ "summary": {
+  "checksOk": 1,
+  "checksWarning": 0,
+  "checksError": 2,
+  "checksPending": 0,
+  "jobsDoneToday": 0,
+  "jobsFailedToday": 1,
+  "jobsEnabled": 2
+ },
+ "checks": [
+  {
+   "id": "scheduler-heartbeat",
+   "label": "Operations scheduler",
+   "status": "error",
+   "observedAt": "2026-11-03T04:00:00.000Z",
+   "detail": "Scheduler heartbeat is stale.",
+   "action": "schtasks /Run /TN AlphaEngine-Operations-Scheduler"
+  },
+  {
+   "id": "schwab-daily-evidence",
+   "label": "Schwab daily raw evidence",
+   "status": "error",
+   "observedAt": "2026-11-02T04:05:00.000Z",
+   "detail": "0/2 tickers captured today.",
+   "action": "npx tsx worker/schwab-fetch.mts --universe research-universe-51.json",
+   "jobId": "schwab-fetch-daily"
+  },
+  {
+   "id": "schwab-feature-lineage",
+   "label": "Schwab Feature Lab lineage",
+   "status": "ok",
+   "observedAt": "2026-11-02T04:11:00.000Z",
+   "detail": "Feature source hash matches the normalized snapshot.",
+   "action": null
+  }
+ ],
+ "jobs": [
+  {
+   "jobId": "schwab-fetch-daily",
+   "name": "Schwab REST daily snapshot",
+   "group": "options",
+   "mode": "scheduled",
+   "enabled": true,
+   "cron": "0 4 * * *",
+   "dependsOn": [],
+   "nextRunAt": "2026-11-04T04:00:00.000Z",
+   "lastRun": {
+    "runId": "fixture-run-1",
+    "status": "error",
+    "trigger": "cron",
+    "startedAt": "2026-11-03T04:00:00.000Z",
+    "endedAt": "2026-11-03T04:01:00.000Z",
+    "exitCode": 1,
+    "error": "Fixture provider failure"
+   }
+  },
+  {
+   "jobId": "daily-operations-report",
+   "name": "Daily operations health report",
+   "group": "maintenance",
+   "mode": "scheduled",
+   "enabled": true,
+   "cron": "20 7 * * *",
+   "dependsOn": [],
+   "nextRunAt": "2026-11-04T07:20:00.000Z",
+   "lastRun": null
+  }
+ ],
+ "actions": [
+  "schtasks /Run /TN AlphaEngine-Operations-Scheduler",
+  "npx tsx worker/schwab-fetch.mts --universe research-universe-51.json"
+ ]
+}

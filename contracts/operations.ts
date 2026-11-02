@@ -110,6 +110,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local probation when INGEST_URL is set; no automatic reviewed production promotion is added by the scheduler.", requirements: ["server", "gpu", "mysql"], notes: "SEC facts and crowd comments stay separate. An empty signal window exits successfully without generating filler.",
   }),
   job({
+    id: "daily-operations-report", name: "Daily operations health report", group: "maintenance", mode: "scheduled", cron: "20 7 * * *", defaultEnabled: true, dependsOn: [],
+    ...npx("scripts/build-daily-operations-report.mts"), purpose: "Record scheduler health, same-day Schwab evidence, job failures and pending automation in one owner-only static report.",
+    input: "Persistent scheduler state, current registry configuration and credential-free Schwab report summaries.", output: "daily-operations.json and .md in public/reports and an existing dist/public/reports bundle.",
+    destination: "Local Operations UI only; no production sync.", requirements: [], notes: "Runs independently after the morning jobs so failed parents cannot suppress the health report. A critical report is evidence, not a scheduler process failure.",
+  }),
+  job({
     id: "13f-refresh", name: "13F holdings and full-book refresh", group: "fundamentals", mode: "scheduled", cron: "0 5 * * 1,4", defaultEnabled: true, dependsOn: [],
     ...npx("scripts/13f-refresh.mts", ["--quarters", "4"]), purpose: "Check recent 13F-HR filings and amendments without repeating the full historical build.",
     input: "worker/funds-13f.json, SEC XML, cached CUSIP mappings and OpenFIGI only for unknown securities.", output: "fund_quarters, fund_holdings and deterministic share/full-book-weight events for the latest four quarters.",

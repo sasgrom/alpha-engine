@@ -4,19 +4,20 @@ import {
   Layers3, Network, Play, RefreshCw, Search, Server, ShieldCheck, Square, Terminal, Workflow,
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
+import DailyOperationsReportView from "@/components/DailyOperationsReport";
 import { trpc } from "@/providers/trpc";
 import {
   OPERATION_GROUPS, OPERATION_JOBS, OPERATION_JOB_MAP, OPERATION_MODULES,
   type OperationGroup, type OperationJob, type OperationModule,
 } from "@contracts/operations";
 
-type Tab = "stack" | "jobs" | "runbook" | "activity";
+type Tab = "daily" | "stack" | "jobs" | "runbook" | "activity";
 type Selection = { kind: "job" | "module"; id: string };
 type Config = Record<string, { enabled: boolean; cron: string | null }>;
 const DEFAULT_CONFIG: Config = Object.fromEntries(OPERATION_JOBS.map((job) => [job.id, { enabled: job.defaultEnabled, cron: job.cron }]));
 const DAILY_FLOW = [
   "edgar-fetch-daily", "edgar-exhibits-daily", "facts-fetch-daily", "research-series", "research-factors", "analytics-snapshot",
-  "schwab-fetch-daily", "schwab-snapshot", "schwab-feature-lab", "expectations-report", "ui-production-build", "daily-digest",
+  "schwab-fetch-daily", "schwab-snapshot", "schwab-feature-lab", "expectations-report", "ui-production-build", "daily-digest", "daily-operations-report",
 ];
 const laneNames = { service: "Services", collect: "Collect", research: "Research", review: "Review", delivery: "Deliver" };
 const modeCopy = { scheduled: "Scheduled", paused: "Paused", manual: "Manual", frozen: "Frozen", blocked: "Review gate" };
@@ -55,7 +56,7 @@ export default function Workers() {
   const setOperation = trpc.workersLocal.setOperation.useMutation({ onSuccess: invalidate });
   const runOperation = trpc.workersLocal.runOperation.useMutation({ onSuccess: invalidate });
   const killOperation = trpc.workersLocal.killOperation.useMutation({ onSuccess: invalidate });
-  const [tab, setTab] = useState<Tab>("stack");
+  const [tab, setTab] = useState<Tab>("daily");
   const [selection, setSelection] = useState<Selection>({ kind: "module", id: "production-server" });
   const [group, setGroup] = useState<OperationGroup | "all">("all");
   const [query, setQuery] = useState("");
@@ -178,8 +179,10 @@ export default function Workers() {
 
           <main className="operations-main">
             <div className="operations-tabs" role="tablist" aria-label="Operations views">
-              {([{ id: "stack", name: "Run stack", icon: Layers3 }, { id: "jobs", name: "Jobs & schedules", icon: CalendarClock }, { id: "runbook", name: "Runbook", icon: FileText }, { id: "activity", name: "Activity", icon: Activity }] as const).map((item) => <button type="button" role="tab" aria-selected={tab === item.id} key={item.id} className={tab === item.id ? "active" : ""} onClick={() => setTab(item.id)}><item.icon size={14} />{item.name}</button>)}
+              {([{ id: "daily", name: "Daily report", icon: ShieldCheck }, { id: "stack", name: "Run stack", icon: Layers3 }, { id: "jobs", name: "Jobs & schedules", icon: CalendarClock }, { id: "runbook", name: "Runbook", icon: FileText }, { id: "activity", name: "Activity", icon: Activity }] as const).map((item) => <button type="button" role="tab" aria-selected={tab === item.id} key={item.id} className={tab === item.id ? "active" : ""} onClick={() => setTab(item.id)}><item.icon size={14} />{item.name}</button>)}
             </div>
+
+            {tab === "daily" && <DailyOperationsReportView onOpenJob={(jobId) => selectJob(jobId, "jobs")} />}
 
             {tab === "stack" && (
               <section className="ops-stack">
