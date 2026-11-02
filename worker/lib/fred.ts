@@ -54,6 +54,11 @@ export function realtimeChunks(start: string, end: string, years = 1): RealtimeC
   }
   return chunks;
 }
+export function openEndedRealtimeChunks(start: string, end: string): RealtimeChunk[] {
+  const chunks = realtimeChunks(start, end);
+  chunks[chunks.length - 1].end = "9999-12-31";
+  return chunks;
+}
 export function mergeVintageDates(chunks: string[][]): string[] {
   return [...new Set(chunks.flat())].sort();
 }
@@ -69,13 +74,7 @@ export function isEmptyVintageError(error: unknown): boolean {
   return error instanceof Error && error.message.includes("No vintage dates exist for the specified real-time period");
 }
 
-export function realtimeEndFromPayload(raw: string): string {
-  const payload = JSON.parse(raw) as { realtime_end?: string };
-  if (!payload.realtime_end || !/^\d{4}-\d{2}-\d{2}$/.test(payload.realtime_end)) throw new Error("FRED realtime_period returned no valid realtime_end");
-  return payload.realtime_end;
-}
-
-export async function fetchFredText(endpoint: "realtime_period" | "series" | "series/observations" | "series/vintagedates", params: Record<string, string>, apiKey: string): Promise<string> {
+export async function fetchFredText(endpoint: "series" | "series/observations" | "series/vintagedates", params: Record<string, string>, apiKey: string): Promise<string> {
   const query = new URLSearchParams({ ...params, api_key: apiKey, file_type: "json" });
   const url = `https://api.stlouisfed.org/fred/${endpoint}?${query}`;
   const response = await fetch(url, { signal: AbortSignal.timeout(60_000), headers: { "user-agent": "AlphaEngineMacro/1.0" } });

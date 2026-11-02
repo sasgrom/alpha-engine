@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fetchFredText, isEmptyVintageError, mergeVintageDates, normalizeFredObservations, realtimeChunks, realtimeEndFromPayload, redactFredSecrets, type FredSeriesMetadata } from "./fred";
+import { fetchFredText, isEmptyVintageError, mergeVintageDates, normalizeFredObservations, openEndedRealtimeChunks, realtimeChunks, redactFredSecrets, type FredSeriesMetadata } from "./fred";
 import { realtimeResearchStart, selectMacroSeries } from "./macro-sources";
 
 const metadata: FredSeriesMetadata = { id: "GDP", title: "GDP", frequency: "Quarterly", units: "Billions", seasonal_adjustment: "SAAR", last_updated: "2026-10-30" };
@@ -33,9 +33,12 @@ describe("FRED vintage normalization", () => {
     expect(mergeVintageDates([["2024-01-01", "2024-02-01"], ["2024-02-01", "2025-01-01"]])).toEqual(["2024-01-01", "2024-02-01", "2025-01-01"]);
   });
 
-  it("uses the server-provided real-time boundary instead of a local date", () => {
-    expect(realtimeEndFromPayload(JSON.stringify({ realtime_start: "2026-11-01", realtime_end: "2026-11-01" }))).toBe("2026-11-01");
-    expect(() => realtimeEndFromPayload("{}")).toThrow("no valid realtime_end");
+  it("opens only the final current-year chunk to the real-time maximum", () => {
+    expect(openEndedRealtimeChunks("2024-01-01", "2026-11-02")).toEqual([
+      { start: "2024-01-01", end: "2024-12-31" },
+      { start: "2025-01-01", end: "2025-12-31" },
+      { start: "2026-01-01", end: "9999-12-31" },
+    ]);
   });
 
   it("recognizes only the explicit empty-vintage response", () => {
