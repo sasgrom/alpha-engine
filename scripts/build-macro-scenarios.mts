@@ -36,7 +36,7 @@ for (const seriesId of seriesIds) {
   macroSeries[seriesId] = JSON.parse(readFileSync(file, "utf8")) as NormalizedMacroPoint[];
 }
 const prog = startProgress("macro-scenarios", `${definitions.length} scenarios · availability anchored`);
-const report = buildMacroScenarioReport({ asOf, definitions, macroSeries, pilot: pilotReport.companies, exposures: exposureReport.companies });
+const report = buildMacroScenarioReport({ dataMode: process.argv.includes("--fixture") ? "fixture" : "live", asOf, definitions, macroSeries, pilot: pilotReport.companies, exposures: exposureReport.companies });
 const jsonPath = path.resolve(arg("--out") ?? "public/reports/macro-scenarios.json");
 const markdownPath = jsonPath.replace(/\.json$/i, ".md");
 writeJsonAtomic(jsonPath, report, true);
@@ -50,7 +50,7 @@ for (const scenario of report.scenarios) {
   else lines.push(`No baseline: ${scenario.reasons.join(", ")}`, "");
   for (const impact of scenario.impacts) {
     lines.push(`- ${impact.ticker}: **${impact.status}**${impact.reasons.length ? ` · ${impact.reasons.join("; ")}` : ""}`);
-    for (const metric of impact.metrics) lines.push(`  - ${metric.name}: ${metric.value} ${metric.unit} · ${metric.impactType} · ${metric.periodEnd}${metric.stale ? " · stale" : ""}`);
+    for (const metric of impact.metrics) lines.push(`  - ${metric.name}: ${metric.value} ${metric.unit} · ${metric.impactType} · ${metric.periodStart ? `${metric.periodStart} → ` : ""}${metric.periodEnd}${metric.stale ? " · stale" : ""}`);
   }
   lines.push("");
 }

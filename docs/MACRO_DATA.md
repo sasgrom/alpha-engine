@@ -215,3 +215,16 @@ The engine reads normalized FRED baselines, pilot SEC evidence and company expos
 - **Credit:** remains `not_computable` until new-issuance spread, maturity and rating terms exist.
 
 The output is `public/reports/macro-scenarios.json` and `.md`. Use `--out /tmp/macro-scenarios.json` for an isolated smoke run. Scenario shocks are user-defined assumptions, not FRED forecasts.
+
+## 11. Scenario Lab UI and review invariants
+
+Open owner-only **`/scenario-lab`**. It loads the three reviewed reports at runtime, recomputes every shock in the browser and exports the current JSON. No scenario state is inferred from missing reports.
+
+- `complete` means every pilot computes; `partial` means only a subset computes.
+- `upper_bound` is used when hedge share is unknown; `gross_exposure` is not net income.
+- FRED baseline carries full source URL, hash, vintage and research availability.
+- Fuel and oil evidence preserves `periodStart`, so YTD periods cannot be mistaken for standalone quarters.
+- TTM built from non-consecutive quarters is `partial`, never silently `available`.
+- Targeted company rebuilds preserve the original `universeSha256`.
+
+The evidence inspector shows exact formula, concepts, period, availability and reasons for `not_computable`. Empty states include the build commands rather than fabricated data. A fixture, when used for tests, is explicitly marked `dataMode: "fixture"` and is never presented as a live FRED baseline.

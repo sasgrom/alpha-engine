@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildPilotEvidence, type EvidenceCompanyFacts } from "./pilot-exposure-evidence";
 
-const record = (end: string, val: number, filed = end) => ({ end, val, filed, form: "10-K", accn: "0001-26-000001" });
+const record = (end: string, val: number, filed = end, start?: string) => ({ end, val, filed, form: "10-K", accn: "0001-26-000001", ...(start ? { start } : {}) });
 type Fact = ReturnType<typeof record>;
 const facts = (concepts: Record<string, Record<string, Fact[]>>): EvidenceCompanyFacts => ({
   cik: 1,
@@ -19,6 +19,14 @@ describe("pilot exposure evidence", () => {
     expect(company.weightedAverageInterestRate?.value).toBe(0.0471);
     expect(company.debtMaturities[0].value).toBe(3211000000);
     expect(company.debtMaturities[0].sourceUrl).toContain("000126000001");
+  });
+
+  it("preserves the start of a YTD exposure period", () => {
+    const company = buildPilotEvidence(facts({
+      FuelCosts: { USD: [record("2026-09-30", 11202000000, "2026-10-09", "2026-01-01")] },
+    }), "DAL", "2026-11-02T00:00:00Z");
+    expect(company.fuelCost?.periodStart).toBe("2026-01-01");
+    expect(company.fuelCost?.periodEnd).toBe("2026-09-30");
   });
 
   it("computes foreign revenue share only from matching periods and marks it stale", () => {

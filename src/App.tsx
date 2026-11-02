@@ -19,6 +19,7 @@ const FundFlows = lazy(() => import("./pages/FundFlows"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const Methodology = lazy(() => import("./pages/Methodology"));
 const VolatilityRiskLab = lazy(() => import("./pages/VolatilityRiskLab"));
+const MacroScenarioLab = lazy(() => import("./pages/MacroScenarioLab"));
 const Expectations = lazy(() => import("./pages/Expectations"));
 const MarketData = lazy(() => import("./pages/MarketData"));
 const Messages = lazy(() => import("./pages/Messages"));
@@ -74,6 +75,7 @@ export default function App() {
       <Route path="/analytics" element={<AdminOnly><Analytics /></AdminOnly>} />
       <Route path="/analytics/methodology" element={<AdminOnly><Methodology /></AdminOnly>} />
       <Route path="/analytics/risk-lab" element={<AdminOnly><VolatilityRiskLab /></AdminOnly>} />
+      <Route path="/scenario-lab" element={<AdminOnly><MacroScenarioLab /></AdminOnly>} />
       <Route path="/expectations" element={<AdminOnly><Expectations /></AdminOnly>} />
       <Route path="/market-data" element={<AdminOnly><MarketData /></AdminOnly>} />
       <Route path="/login" element={<Login />} />

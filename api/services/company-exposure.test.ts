@@ -30,6 +30,18 @@ describe("company macro exposure evidence", () => {
     expect(company.foreignRevenueShare.quality).toBe("missing");
   });
 
+  it("marks a TTM built from non-consecutive quarters as partial", () => {
+    const rows = [
+      ...flows(1, "OperatingIncomeLoss", 20).slice(0, 2),
+      point(1, "OperatingIncomeLoss", "2025-12-31", 20),
+      point(1, "OperatingIncomeLoss", "2026-06-30", 20),
+      point(1, "LongTermDebt", "2025-12-31", 100),
+    ];
+    const company = buildCompanyExposure({ cik: 1, ticker: "GAP", name: "Gap", sector: null, rows }, "2026-08-31T00:00:00Z");
+    expect(company.debtToOperatingIncome.quality).toBe("partial");
+    expect(company.debtToOperatingIncome.note).toContain("Non-consecutive");
+  });
+
   it("derives foreign revenue share only from comparable domicile and total revenue", () => {
     const rows = [
       point(2, "RevenueFromContractWithCustomerExcludingAssessedTax", "2025-12-31", 100),
@@ -78,6 +90,7 @@ describe("company macro exposure evidence", () => {
     expect(merged.companies).toHaveLength(2);
     expect(merged.companies.find((company) => company.ticker === "AAA")?.debt.value).toBe(100);
     expect(merged.companies.find((company) => company.ticker === "PFE")?.name).toBe("New PFE");
+    expect(merged.universeSha256).toBe(base.universeSha256);
   });
 
   it("reports only actual coverage and never creates a direction score", () => {

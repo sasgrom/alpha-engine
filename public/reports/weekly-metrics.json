@@ -1,20 +1,20 @@
 {
-  "week": "2026-W44",
-  "generatedAt": "2026-11-01T11:30:49.788Z",
+  "week": "2026-W45",
+  "generatedAt": "2026-11-02T16:04:28.421Z",
   "metrics": {
-    "companies": 496,
+    "companies": 495,
     "sectors": 11,
-    "factsRows": 1353727,
+    "factsRows": 1348866,
     "factsCompanies": 53,
-    "factorPoints": 21438,
-    "factorCompanies": 51,
+    "factorPoints": 21894,
+    "factorCompanies": 53,
     "factorTypes": 16,
     "priceRows": 447282,
     "priceTickers": 54,
     "latestPriceDate": "2026-10-26",
-    "edgarToneRows": 34459,
-    "edgarToneCompanies": 102,
-    "edgarFirstEvent": "1994-01-05 00:00:00",
+    "edgarToneRows": 16133,
+    "edgarToneCompanies": 53,
+    "edgarFirstEvent": "1994-01-21 00:00:00",
     "edgarLastEvent": "2026-10-23 00:00:00",
     "fundHoldings": 875860,
     "funds": 300,
@@ -28,9 +28,9 @@
     "macroRows": 47901,
     "macroSeries": 8,
     "macroLastDate": "2026-10-19",
-    "jobsError": 0,
-    "testCount": null,
-    "optionsSnapshots": 0,
-    "normalizedOptionRows": 0
+    "jobsError": 8,
+    "testCount": 567,
+    "optionsSnapshots": 250,
+    "normalizedOptionRows": 310634
   }
 }

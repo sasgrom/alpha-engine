@@ -3,22 +3,22 @@
  * Weekly analytics snapshot. English only for the published analytics surface.
  */
 export const analyticsSnapshot = {
-  "week": "2026-W44",
-  "generatedAt": "2026-11-01T11:30:49.788Z",
+  "week": "2026-W45",
+  "generatedAt": "2026-11-02T16:04:28.421Z",
   "metrics": {
-    "companies": 496,
+    "companies": 495,
     "sectors": 11,
-    "factsRows": 1353727,
+    "factsRows": 1348866,
     "factsCompanies": 53,
-    "factorPoints": 21438,
-    "factorCompanies": 51,
+    "factorPoints": 21894,
+    "factorCompanies": 53,
     "factorTypes": 16,
     "priceRows": 447282,
     "priceTickers": 54,
     "latestPriceDate": "2026-10-26",
-    "edgarToneRows": 34459,
-    "edgarToneCompanies": 102,
-    "edgarFirstEvent": "1994-01-05 00:00:00",
+    "edgarToneRows": 16133,
+    "edgarToneCompanies": 53,
+    "edgarFirstEvent": "1994-01-21 00:00:00",
     "edgarLastEvent": "2026-10-23 00:00:00",
     "fundHoldings": 875860,
     "funds": 300,
@@ -32,10 +32,10 @@ export const analyticsSnapshot = {
     "macroRows": 47901,
     "macroSeries": 8,
     "macroLastDate": "2026-10-19",
-    "jobsError": 0,
-    "testCount": null,
-    "optionsSnapshots": 0,
-    "normalizedOptionRows": 0
+    "jobsError": 8,
+    "testCount": 567,
+    "optionsSnapshots": 250,
+    "normalizedOptionRows": 310634
   },
   "actual": [
     {
@@ -49,7 +49,7 @@ export const analyticsSnapshot = {
       "id": "tone",
       "title": "EDGAR tone",
       "status": "partial",
-      "detail": "34,459 tone rows from 102 CIKs. Prompt v1 has positive 126-session IC, but short-horizon and yearly evidence is unstable.",
+      "detail": "16,133 tone rows from 53 CIKs. Prompt v1 has positive 126-session IC, but short-horizon and yearly evidence is unstable.",
       "next": "Finish the remaining universe, review skip/failure/token summaries, then sync only reviewed rows."
     },
     {
@@ -63,7 +63,7 @@ export const analyticsSnapshot = {
       "id": "fundamentals",
       "title": "Fundamentals / XBRL",
       "status": "partial",
-      "detail": "1,353,727 facts and 21,438 factor points from 53/51 CIKs, including XOM_PRE.",
+      "detail": "1,348,866 facts and 21,894 factor points from 53/53 CIKs, including XOM_PRE.",
       "next": "Reconcile per-CIK lineage and preserve first-filed availability while expanding departed names."
     },
     {
@@ -84,7 +84,7 @@ export const analyticsSnapshot = {
       "id": "optionsRaw",
       "title": "Options raw data",
       "status": "partial",
-      "detail": "0 snapshots and 0 normalized rows from Cboe, EODHD, ORATS and samples. Breadth is not long history.",
+      "detail": "250 snapshots and 310,634 normalized rows from Cboe, EODHD, ORATS and samples. Breadth is not long history.",
       "next": "Backfill mid-DTE IV on D: via DoltHub and keep volume/OI proxies separate from full-chain evidence."
     },
     {
@@ -412,6 +412,42 @@ export const analyticsSnapshot = {
         "testCount": null,
         "optionsSnapshots": 0,
         "normalizedOptionRows": 0
+      }
+    },
+    {
+      "week": "2026-W45",
+      "generatedAt": "2026-11-02T16:04:28.421Z",
+      "metrics": {
+        "companies": 495,
+        "sectors": 11,
+        "factsRows": 1348866,
+        "factsCompanies": 53,
+        "factorPoints": 21894,
+        "factorCompanies": 53,
+        "factorTypes": 16,
+        "priceRows": 447282,
+        "priceTickers": 54,
+        "latestPriceDate": "2026-10-26",
+        "edgarToneRows": 16133,
+        "edgarToneCompanies": 53,
+        "edgarFirstEvent": "1994-01-21 00:00:00",
+        "edgarLastEvent": "2026-10-23 00:00:00",
+        "fundHoldings": 875860,
+        "funds": 300,
+        "fundCompanies": 371,
+        "fundQuarters": 15,
+        "fundQuarterRows": 3372,
+        "fundQuarterMissingDates": 0,
+        "positionEvents": 16422,
+        "firstPositionEvent": "2024-02-13 00:00:00",
+        "lastPositionEvent": "2026-09-02 00:00:00",
+        "macroRows": 47901,
+        "macroSeries": 8,
+        "macroLastDate": "2026-10-19",
+        "jobsError": 8,
+        "testCount": 567,
+        "optionsSnapshots": 250,
+        "normalizedOptionRows": 310634
       }
     }
   ]

@@ -12,6 +12,7 @@ export interface ScenarioMetric {
   impactType: "upper_bound" | "estimate" | "gross_exposure";
   formula: string;
   concepts: string[];
+  periodStart?: string | null;
   periodEnd: string | null;
   availableAt: string | null;
   stale: boolean;
@@ -35,6 +36,13 @@ export interface MacroScenario {
     availableAt: string;
     researchEligibleAt: string;
     vintageId: string;
+    frequency: string;
+    releasedAt: null;
+    availabilityBasis: "fred_realtime_start";
+    supersededAt: string | null;
+    ingestedAt: string;
+    sourceUrl: string;
+    sourceHash: string;
     stale: boolean;
   } | null;
   status: "complete" | "partial" | "historical_only" | "not_computable";
@@ -43,6 +51,7 @@ export interface MacroScenario {
 }
 export interface MacroScenarioReport {
   schemaVersion: 1;
+  dataMode?: "live" | "fixture";
   generatedAt: string;
   asOf: string;
   policy: {
@@ -54,6 +63,7 @@ export interface MacroScenarioReport {
   scenarios: MacroScenario[];
 }
 export interface MacroScenarioInput {
+  dataMode?: "live" | "fixture";
   asOf: string;
   definitions: MacroScenarioDefinition[];
   macroSeries: Record<string, NormalizedMacroPoint[]>;
@@ -75,10 +85,11 @@ export function latestMacroPoint(rows: NormalizedMacroPoint[], asOf: string): No
   }
   return [...byPeriod.values()].sort((a, b) => b.observationPeriod.localeCompare(a.observationPeriod) || b.availableAt.localeCompare(a.availableAt))[0] ?? null;
 }
-function metricDetails(metric: ExposureMetric | ExposureEvidence, asOf: string): { concepts: string[]; periodEnd: string | null; availableAt: string | null; stale: boolean } {
+function metricDetails(metric: ExposureMetric | ExposureEvidence, asOf: string): { concepts: string[]; periodStart: string | null; periodEnd: string | null; availableAt: string | null; stale: boolean } {
   const concepts = "concept" in metric && metric.concept ? [metric.concept] : "concepts" in metric ? metric.concepts : [];
   const availableAt = "availableAt" in metric ? metric.availableAt : "sourceFiled" in metric ? metric.sourceFiled : null;
-  return { concepts, periodEnd: metric.periodEnd, availableAt, stale: metric.stale === true || stale(metric.periodEnd, asOf) };
+  const periodStart = "periodStart" in metric ? metric.periodStart : null;
+  return { concepts, periodStart, periodEnd: metric.periodEnd, availableAt, stale: metric.stale === true || stale(metric.periodEnd, asOf) };
 }
 function validShare(value: number | null): boolean { return value !== null && Number.isFinite(value) && value >= 0 && value <= 1; }
 function availabilityDate(metric: ExposureMetric | ExposureEvidence, asOf: string): string | null {
@@ -159,10 +170,15 @@ function usdImpact(pilot: PilotEvidence | undefined, shock: number, asOf: string
     }],
   };
 }
+// "complete" means every pilot computes; "partial" means only a subset does.
+// A stale FRED baseline moves the whole scenario to historical-only context.
 function scenarioStatus(impacts: CompanyScenarioImpact[], baselineStale: boolean): MacroScenario["status"] {
   if (baselineStale) return "historical_only";
-  if (impacts.some((impact) => impact.status === "computable")) return "complete";
-  if (impacts.some((impact) => impact.status === "historical_only")) return "partial";
+  const computable = impacts.filter((impact) => impact.status === "computable").length;
+  const historical = impacts.filter((impact) => impact.status === "historical_only").length;
+  if (computable === impacts.length && impacts.length > 0) return "complete";
+  if (computable > 0) return "partial";
+  if (historical > 0) return "historical_only";
   return "not_computable";
 }
 
@@ -178,7 +194,24 @@ export function buildMacroScenarioReport(input: MacroScenarioInput): MacroScenar
     }
     const baselineStale = stale(point.observationPeriod, input.asOf);
     const scenarioValue = definition.channel === "rates" || definition.channel === "credit" ? point.value + definition.shock : point.value * (1 + definition.shock);
-    const baseline = { seriesId: point.seriesId, observationPeriod: point.observationPeriod, value: point.value, scenarioValue, unit: point.unit, availableAt: point.availableAt, researchEligibleAt: point.researchEligibleAt, vintageId: point.vintageId, stale: baselineStale };
+    const baseline = {
+      seriesId: point.seriesId,
+      observationPeriod: point.observationPeriod,
+      value: point.value,
+      scenarioValue,
+      unit: point.unit,
+      availableAt: point.availableAt,
+      researchEligibleAt: point.researchEligibleAt,
+      vintageId: point.vintageId,
+      frequency: point.frequency,
+      releasedAt: null,
+      availabilityBasis: point.availabilityBasis,
+      supersededAt: point.supersededAt,
+      ingestedAt: point.ingestedAt,
+      sourceUrl: point.sourceUrl,
+      sourceHash: point.sourceHash,
+      stale: baselineStale,
+    };
     const impacts = input.pilot.map((pilot) => {
       if (definition.channel === "rates") return rateImpact(pilot, exposures.get(pilot.ticker), definition.shock, input.asOf);
       if (definition.channel === "oil") return oilImpact(pilot, definition.shock, input.asOf);
@@ -189,6 +222,7 @@ export function buildMacroScenarioReport(input: MacroScenarioInput): MacroScenar
   });
   return {
     schemaVersion: 1,
+    ...(input.dataMode ? { dataMode: input.dataMode } : {}),
     generatedAt: new Date().toISOString(),
     asOf: input.asOf,
     policy: { noSectorInference: true, upperBoundWhenHedgeUnknown: true, staleEvidenceIsHistoricalOnly: true, creditRequiresNewIssuanceTerms: true },

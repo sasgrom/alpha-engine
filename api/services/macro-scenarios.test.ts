@@ -6,7 +6,7 @@ import type { CompanyExposureRow, ExposureMetric } from "./company-exposure";
 
 const AS_OF = "2026-11-02T00:00:00Z";
 const evidence = (metric: string, value: number, stale = false): ExposureEvidence => ({
-  metric, concept: metric, value, unit: "USD", periodEnd: stale ? "2020-12-31" : "2026-09-30", availableAt: stale ? "2021-01-30T23:59:59.999Z" : "2026-10-30T23:59:59.999Z",
+  metric, concept: metric, value, unit: "USD", periodStart: null, periodEnd: stale ? "2020-12-31" : "2026-09-30", availableAt: stale ? "2021-01-30T23:59:59.999Z" : "2026-10-30T23:59:59.999Z",
   form: "10-Q", accessionNo: "accn", sourceUrl: "https://sec.gov/", sourceFactsSha256: "abc", stale, note: null,
 });
 const metric = (value: number | null, stale = false): ExposureMetric => ({ value, unit: "USD", concepts: ["LongTermDebt"], periodEnd: stale ? "2020-12-31" : "2026-09-30", sourceFiled: stale ? "2021-01-30" : "2026-10-30", quality: value === null ? "missing" : "available", note: null, stale });
@@ -44,7 +44,16 @@ describe("macro scenarios", () => {
     expect(impact.metrics[0].impactType).toBe("upper_bound");
     expect(impact.metrics[0].value).toBeCloseTo(6_861_600);
     expect(impact.metrics[0].unit).toBe("USD/year");
+    expect(report.scenarios[0].status).toBe("complete");
     expect(report.scenarios[0].baseline?.scenarioValue).toBeCloseTo(0.05);
+  });
+
+  it("marks a scenario partial when only a subset of companies computes", () => {
+    const report = buildMacroScenarioReport(input([
+      pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) }),
+      pilot("PFE"),
+    ], [exposure("RCL", 22_872_000_000), exposure("PFE", 4_000_000_000)]));
+    expect(report.scenarios[0].status).toBe("partial");
   });
 
   it("uses a known current hedge share instead of an upper bound", () => {
