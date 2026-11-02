@@ -194,3 +194,24 @@ npx tsx scripts/build-pilot-exposure-evidence.mts
 ```
 
 The probe inspects fresh SEC companyfacts for DAL, RCL, CVX, COP and PFE. The builder preserves exact fixed-rate shares, weighted/effective rates, interest-rate hedge shares, maturity concepts, fuel/oil metrics and foreign derivative notionals with accession links and raw-payload hashes. No LLM is used. Staleness is based on the economic period, not on the accession year. If comparable domicile and total revenue do not share `periodEnd`, foreign revenue share remains missing.
+
+## 10. Macro Scenario Engine
+
+```powershell
+npx tsx scripts/build-macro-scenarios.mts --macro-root D:\research\alpha-engine\macro
+```
+
+Optional shocks and historical as-of:
+
+```powershell
+npx tsx scripts/build-macro-scenarios.mts --rate-shock 0.01 --oil-shock 0.20 --usd-shock 0.05 --credit-shock 0.01 --as-of 2026-01-31T00:00:00Z
+```
+
+The engine reads normalized FRED baselines, pilot SEC evidence and company exposure rows. Every baseline uses `availableAt` and `researchEligibleAt`; SEC evidence must also have `availableAt/sourceFiled <= asOf`. Future evidence is excluded rather than backdated.
+
+- **Rates:** `debt × (1 − fixedInterestShare) × (1 − interestRateHedgeShare) × rateShock`, in USD/year. If hedge share is unknown, the result is an **upper bound**, not a point estimate. The formula assumes immediate full repricing and is not a maturity-specific forecast.
+- **Oil:** fuel cost, oil revenue and purchased oil/gas are multiplied by the oil shock. These are **gross exposure** values before hedges, basis, pass-through and tax, not profit forecasts. Stale evidence is `historical_only`.
+- **USD:** `−foreignRevenueShare × usdShockPct` is only a translation elasticity. It is not earnings impact and does not infer derivative direction. No valid share means `not_computable`.
+- **Credit:** remains `not_computable` until new-issuance spread, maturity and rating terms exist.
+
+The output is `public/reports/macro-scenarios.json` and `.md`. Use `--out /tmp/macro-scenarios.json` for an isolated smoke run. Scenario shocks are user-defined assumptions, not FRED forecasts.
