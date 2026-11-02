@@ -24,7 +24,8 @@ const metadata = await db.select().from(companyRegistry).where(inArray(companyRe
 const seriesRows: Array<typeof seriesPoints.$inferSelect> = [];
 for (let offset = 0; offset < ciks.length; offset += 5) {
   const batch = ciks.slice(offset, offset + 5);
-  seriesRows.push(...await db.select().from(seriesPoints).where(inArray(seriesPoints.cik, batch)));
+  const batchRows = await db.select().from(seriesPoints).where(inArray(seriesPoints.cik, batch));
+  for (const row of batchRows) seriesRows.push(row);
 }
 const metadataByCik = new Map(metadata.map((row) => [row.cik, row]));
 const rowsByCik = new Map<number, typeof seriesRows>();
