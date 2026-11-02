@@ -13,6 +13,7 @@ interface SeriesManifestEntry {
   seriesId: string;
   group: MacroGroup;
   status: "complete" | "empty" | "error";
+  availabilityMode?: "alfred_vintages" | "current_fred_only";
   capturedAt: string;
   rows: number;
   firstObservation: string | null;
@@ -91,39 +92,55 @@ for (const [index, definition] of selected.entries()) {
     } else {
       capturedAt = new Date().toISOString();
       const rawMetadata = await fetchFredText("series", { series_id: definition.seriesId }, apiKey);
-      const chunks = realtimeChunks("1776-07-04", capturedAt.slice(0, 10));
+      const rawFirstVintage = await fetchFredText("series/vintagedates", { series_id: definition.seriesId, sort_order: "asc", limit: "1" }, apiKey);
+      writeTextAtomic(path.join(root, "raw", "fred", definition.seriesId, "vintage-first.json"), rawFirstVintage);
+      const firstVintage = (JSON.parse(rawFirstVintage) as { vintage_dates?: string[] }).vintage_dates?.[0] ?? null;
       const observationChunks: FredObservation[][] = [];
       const vintageDateChunks: string[][] = [];
-      prog.log(`${definition.seriesId}: ${chunks.length} five-year real-time chunks`);
-      for (const chunk of chunks) {
-        let rawObservations: string;
-        let rawVintageDates: string;
-        try {
-          rawObservations = await fetchFredText("series/observations", {
-            series_id: definition.seriesId,
-            realtime_start: chunk.start,
-            realtime_end: chunk.end,
-            observation_start: from,
-            observation_end: to,
-            output_type: "3",
-            sort_order: "asc",
-            limit: "100000",
-          }, apiKey);
-          rawVintageDates = await fetchFredText("series/vintagedates", {
-            series_id: definition.seriesId,
-            realtime_start: chunk.start,
-            realtime_end: chunk.end,
-            sort_order: "asc",
-            limit: "10000",
-          }, apiKey);
-        } catch (error) {
-          throw new Error(`${definition.seriesId} real-time ${chunk.start}…${chunk.end}: ${error instanceof Error ? error.message : String(error)}`);
+      if (firstVintage) {
+        const chunks = realtimeChunks(firstVintage, capturedAt.slice(0, 10));
+        prog.log(`${definition.seriesId}: first vintage ${firstVintage} · ${chunks.length} five-year real-time chunks`);
+        for (const chunk of chunks) {
+          let rawObservations: string;
+          let rawVintageDates: string;
+          try {
+            rawObservations = await fetchFredText("series/observations", {
+              series_id: definition.seriesId,
+              realtime_start: chunk.start,
+              realtime_end: chunk.end,
+              observation_start: from,
+              observation_end: to,
+              output_type: "3",
+              sort_order: "asc",
+              limit: "100000",
+            }, apiKey);
+            rawVintageDates = await fetchFredText("series/vintagedates", {
+              series_id: definition.seriesId,
+              realtime_start: chunk.start,
+              realtime_end: chunk.end,
+              sort_order: "asc",
+              limit: "10000",
+            }, apiKey);
+          } catch (error) {
+            throw new Error(`${definition.seriesId} real-time ${chunk.start}…${chunk.end}: ${error instanceof Error ? error.message : String(error)}`);
+          }
+          const suffix = `${chunk.start}_${chunk.end}`;
+          writeTextAtomic(path.join(root, "raw", "fred", definition.seriesId, "chunks", `observations-${suffix}.json`), rawObservations);
+          writeTextAtomic(path.join(root, "raw", "fred", definition.seriesId, "chunks", `vintagedates-${suffix}.json`), rawVintageDates);
+          observationChunks.push((JSON.parse(rawObservations) as { observations?: FredObservation[] }).observations ?? []);
+          vintageDateChunks.push((JSON.parse(rawVintageDates) as { vintage_dates?: string[] }).vintage_dates ?? []);
         }
-        const suffix = `${chunk.start}_${chunk.end}`;
-        writeTextAtomic(path.join(root, "raw", "fred", definition.seriesId, "chunks", `observations-${suffix}.json`), rawObservations);
-        writeTextAtomic(path.join(root, "raw", "fred", definition.seriesId, "chunks", `vintagedates-${suffix}.json`), rawVintageDates);
-        observationChunks.push((JSON.parse(rawObservations) as { observations?: FredObservation[] }).observations ?? []);
-        vintageDateChunks.push((JSON.parse(rawVintageDates) as { vintage_dates?: string[] }).vintage_dates ?? []);
+      } else {
+        prog.log(`${definition.seriesId}: no ALFRED vintages; using current FRED observations only`);
+        const rawCurrent = await fetchFredText("series/observations", {
+          series_id: definition.seriesId,
+          observation_start: from,
+          observation_end: to,
+          output_type: "1",
+          sort_order: "asc",
+          limit: "100000",
+        }, apiKey);
+        observationChunks.push((JSON.parse(rawCurrent) as { observations?: FredObservation[] }).observations ?? []);
       }
       const combinedObservations = JSON.stringify({ observations: observationChunks.flat() });
       const combinedVintageDates = JSON.stringify({ vintage_dates: mergeVintageDates(vintageDateChunks) });
@@ -141,6 +158,7 @@ for (const [index, definition] of selected.entries()) {
       seriesId: definition.seriesId,
       group: definition.group,
       status: rows.length ? "complete" : "empty",
+      availabilityMode: vintageDates.length ? "alfred_vintages" : "current_fred_only",
       capturedAt,
       rows: rows.length,
       firstObservation: rows[0]?.observationPeriod ?? null,

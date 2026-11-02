@@ -121,7 +121,7 @@ npx tsx worker/macro-fred-fetch.mts --group inflation --from 2000-01-01
 npx tsx worker/macro-fred-fetch.mts --series DGS10 --from 2020-01-01 --force
 ```
 
-`output_type=3` is used for observations so new and revised values are retained as separate vintage rows. Long real-time history is downloaded in five-year chunks to remain below FRED's per-request vintage-date limit. Raw chunks and merged responses are both preserved. `realtime_start` and `realtime_end` are retained, and missing values (`.`) remain null.
+The collector first requests each series' earliest ALFRED vintage and only then builds five-year real-time chunks from that date. It never sends an unsupported pre-inception period such as 1776 for every series. `output_type=3` retains new and revised values as separate vintage rows. Raw chunks and merged responses are both preserved, and missing values (`.`) remain null. If a series has no ALFRED vintages, the manifest explicitly records `availabilityMode: "current_fred_only"` instead of pretending historical availability exists.
 
 ## 5. Output layout
 
