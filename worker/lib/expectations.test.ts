@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { createHash } from "node:crypto";
+import { protocolHash } from "../../api/services/research-protocol";
 import {
   buildExpectationPrompt,
   evidenceInSource,
@@ -249,7 +249,7 @@ describe("expectations extraction contract", () => {
   it("freezes the expectations research protocol with an intact checksum", () => {
     const bytes = readFileSync("research/expectations-protocol.json");
     const protocol = JSON.parse(bytes.toString("utf8"));
-    const digest = createHash("sha256").update(bytes).digest("hex");
+    const digest = protocolHash(bytes.toString("utf8"));
     expect(readFileSync("research/expectations-protocol.sha256", "utf8")).toContain(digest);
     expect(protocol.extraction.promptVersion).toBe(EXPECTATIONS_PROMPT_VERSION);
     expect(protocol.extraction.candidateDryRun).toEqual({ documents: 36, routed: 31, noCandidateText: 5 });

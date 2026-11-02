@@ -1,7 +1,7 @@
 # Company macro exposure evidence
 
-As of: 2026-11-02T09:19:03.204Z
-Universe SHA256: 44f2b1712d27c25ba4b73e02270e234f489d813a7b169baf6ea703fc5df21ea9
+As of: 2026-11-02T19:07:59.484Z
+Universe SHA256: f253b8c5622e380bdc0a4e3781157c8d043be756994651b9fb9510eedb27bbbe
 Only directly supported metrics are populated. No sector-derived direction scores. Missing evidence remains missing.
 
 Coverage: debt 47/51 · interest coverage 35 · fuel 2 · oil revenue 1 · oil cost 2 · foreign revenue share 0

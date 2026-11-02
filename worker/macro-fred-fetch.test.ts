@@ -34,7 +34,9 @@ describe("macro FRED CLI", () => {
     });
     await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
     const address = server.address() as AddressInfo;
-    const out = mkdtempSync(path.join(tmpdir(), "macro-fred-cli-"));
+    const out = process.platform === "win32"
+      ? path.join("D:\\research\\alpha-engine-test", `macro-fred-cli-${process.pid}-${Date.now()}`)
+      : mkdtempSync(path.join(tmpdir(), "macro-fred-cli-"));
     try {
       let stdout: string;
       try {

@@ -1,8 +1,8 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-02T09:20:19.397Z",
- "asOf": "2026-11-02T09:19:03.204Z",
- "universeSha256": "44f2b1712d27c25ba4b73e02270e234f489d813a7b169baf6ea703fc5df21ea9",
+ "generatedAt": "2026-11-02T19:13:11.191Z",
+ "asOf": "2026-11-02T19:07:59.484Z",
+ "universeSha256": "f253b8c5622e380bdc0a4e3781157c8d043be756994651b9fb9510eedb27bbbe",
  "policy": {
   "noSectorInference": true,
   "noDirectionScore": true,
@@ -59,8 +59,8 @@
     ],
     "periodEnd": "2026-06-27",
     "sourceFiled": "2026-07-31",
-    "quality": "available",
-    "note": null,
+    "quality": "partial",
+    "note": "Non-consecutive quarterly points",
     "evidenceAgeDays": 128,
     "stale": false
    },
@@ -787,8 +787,8 @@
     ],
     "periodEnd": "2026-08-02",
     "sourceFiled": "2026-09-10",
-    "quality": "available",
-    "note": null,
+    "quality": "partial",
+    "note": "Non-consecutive quarterly points",
     "evidenceAgeDays": 92,
     "stale": false
    },
@@ -1017,7 +1017,7 @@
     "periodEnd": "2025-12-31",
     "sourceFiled": "2026-02-13",
     "quality": "partial",
-    "note": null,
+    "note": "Only one current/noncurrent debt component is available",
     "evidenceAgeDays": 306,
     "stale": false
    },
@@ -1042,7 +1042,7 @@
     "periodEnd": "2026-06-30",
     "sourceFiled": "2026-08-05",
     "quality": "partial",
-    "note": null,
+    "note": "Only one current/noncurrent debt component is available",
     "evidenceAgeDays": 125,
     "stale": false
    },
@@ -1980,8 +1980,8 @@
     ],
     "periodEnd": "2026-06-30",
     "sourceFiled": "2026-08-06",
-    "quality": "available",
-    "note": null,
+    "quality": "partial",
+    "note": "Non-consecutive quarterly points",
     "evidenceAgeDays": 125,
     "stale": false
    },
@@ -2358,7 +2358,7 @@
     "periodEnd": "2026-06-30",
     "sourceFiled": "2026-08-03",
     "quality": "partial",
-    "note": null,
+    "note": "Only one current/noncurrent debt component is available",
     "evidenceAgeDays": 125,
     "stale": false
    },
@@ -2705,8 +2705,8 @@
     ],
     "periodEnd": "2026-06-27",
     "sourceFiled": "2026-07-24",
-    "quality": "available",
-    "note": null,
+    "quality": "partial",
+    "note": "Non-consecutive quarterly points",
     "evidenceAgeDays": 128,
     "stale": false
    },
@@ -2828,8 +2828,8 @@
     ],
     "periodEnd": "2015-03-29",
     "sourceFiled": "2015-05-01",
-    "quality": "available",
-    "note": null,
+    "quality": "partial",
+    "note": "Non-consecutive quarterly points",
     "evidenceAgeDays": 4236,
     "stale": true
    },
@@ -3926,7 +3926,7 @@
     "periodEnd": "2026-06-30",
     "sourceFiled": "2026-07-31",
     "quality": "partial",
-    "note": null,
+    "note": "Only one current/noncurrent debt component is available",
     "evidenceAgeDays": 125,
     "stale": false
    },
@@ -5118,7 +5118,7 @@
     "periodEnd": "2021-12-31",
     "sourceFiled": "2022-02-24",
     "quality": "partial",
-    "note": null,
+    "note": "Only one current/noncurrent debt component is available",
     "evidenceAgeDays": 1767,
     "stale": true
    },
@@ -5985,8 +5985,8 @@
     ],
     "periodEnd": "2026-03-31",
     "sourceFiled": "2026-04-29",
-    "quality": "available",
-    "note": null,
+    "quality": "partial",
+    "note": "Non-consecutive quarterly points",
     "evidenceAgeDays": 216,
     "stale": false
    },

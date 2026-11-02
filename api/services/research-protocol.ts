@@ -27,7 +27,9 @@ const protocolZ = z.object({
 }).passthrough();
 
 export function protocolHash(text: string): string {
-  return createHash("sha256").update(text).digest("hex");
+  // Protocols are byte-frozen on Linux LF. Git may materialize CRLF on Windows;
+  // normalize line endings so the same protocol has the same reviewable hash.
+  return createHash("sha256").update(text.replace(/\r\n/g, "\n")).digest("hex");
 }
 
 export function validateResearchProtocol(value: unknown): string[] {

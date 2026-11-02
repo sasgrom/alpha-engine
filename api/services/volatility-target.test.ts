@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
-import { createHash } from "node:crypto";
+import { protocolHash } from "./research-protocol";
 import {
   buildVolTargetWeights,
   DEFAULT_VOL_TARGET_POLICY,
@@ -103,7 +103,7 @@ describe("volatility targeting", () => {
   it("keeps the frozen protocol aligned with executable defaults and its checksum", () => {
     const bytes = readFileSync("research/vol-target-protocol.json");
     const protocol = JSON.parse(bytes.toString("utf8"));
-    const digest = createHash("sha256").update(bytes).digest("hex");
+    const digest = protocolHash(bytes.toString("utf8"));
     expect(readFileSync("research/vol-target-protocol.sha256", "utf8")).toContain(digest);
     expect(protocol.policy).toEqual({ ...DEFAULT_VOL_TARGET_POLICY, baseCostBps: 20 });
     expect(protocol.frozenBeforeVolTargetResults).toBe(true);
