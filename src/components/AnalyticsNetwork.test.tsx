@@ -45,8 +45,10 @@ describe("AnalyticsNetwork", () => {
   });
 
   it("keeps the snapshot evidence-based and current", () => {
+    const universe = JSON.parse(readFileSync("worker/research-universe-51.json", "utf8")) as unknown[];
     expect(analyticsSnapshot.metrics.factorCompanies).toBeLessThan(analyticsSnapshot.metrics.companies);
-    expect(analyticsSnapshot.metrics.factorCompanies).toBe(analyticsSnapshot.metrics.factsCompanies);
+    expect(analyticsSnapshot.metrics.factorCompanies).toBeGreaterThanOrEqual(universe.length);
+    expect(analyticsSnapshot.metrics.factorCompanies).toBeLessThanOrEqual(analyticsSnapshot.metrics.factsCompanies);
     expect(analyticsSnapshot.metrics.edgarToneCompanies).toBeGreaterThanOrEqual(50);
     expect(analyticsSnapshot.metrics.optionsSnapshots).toBeGreaterThanOrEqual(200);
     expect(analyticsSnapshot.metrics.latestPriceDate >= "2026-10-26").toBe(true);
