@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fetchFredText, isEmptyVintageError, mergeVintageDates, normalizeFredObservations, openEndedRealtimeChunks, realtimeChunks, redactFredSecrets, type FredSeriesMetadata } from "./fred";
+import { dedupeFredObservations, fetchFredText, isEmptyVintageError, mergeVintageDates, normalizeFredObservations, openEndedRealtimeChunks, realtimeChunks, redactFredSecrets, type FredSeriesMetadata } from "./fred";
 import { realtimeResearchStart, selectMacroSeries } from "./macro-sources";
 
 const metadata: FredSeriesMetadata = { id: "GDP", title: "GDP", frequency: "Quarterly", units: "Billions", seasonal_adjustment: "SAAR", last_updated: "2026-10-30" };
@@ -41,14 +41,22 @@ describe("FRED vintage normalization", () => {
     ]);
   });
 
+  it("deduplicates vintages spanning chunks but rejects conflicting values", () => {
+    const first = observation("2024-01-15", "2024-12-31", "100");
+    expect(dedupeFredObservations([first, first])).toHaveLength(1);
+    expect(() => dedupeFredObservations([first, { ...first, value: "101" }])).toThrow("Conflicting FRED vintage");
+  });
+
   it("recognizes only the explicit empty-vintage response", () => {
     expect(isEmptyVintageError(new Error("FRED HTTP 400: No vintage dates exist for the specified real-time period: 2005-06-28 to 2005-12-31."))).toBe(true);
     expect(isEmptyVintageError(new Error("FRED HTTP 500: Internal Server Error"))).toBe(false);
   });
 
-  it("does not treat a download chunk boundary as supersession", () => {
-    const rows = normalizeFredObservations("GDP", [observation("2026-08-27", "2023-12-31", "100")], metadata, "abc", "2026-10-30T12:00:00Z");
-    expect(rows[0].supersededAt).toBeNull();
+  it("uses the API realtime_end and treats an open current revision as unsuperseded", () => {
+    const closed = normalizeFredObservations("GDP", [observation("2026-08-27", "2026-09-28", "100")], metadata, "abc", "2026-10-30T12:00:00Z");
+    expect(closed[0].supersededAt).toBe("2026-09-28T23:59:59.999Z");
+    const open = normalizeFredObservations("GDP", [observation("2026-09-29", ".", "101")], metadata, "abc", "2026-10-30T12:00:00Z");
+    expect(open[0].supersededAt).toBeNull();
   });
 
   it("builds the official JSON endpoint without exposing the key in returned data", async () => {
@@ -59,10 +67,10 @@ describe("FRED vintage normalization", () => {
       return new Response(JSON.stringify({ observations: [] }), { status: 200 });
     };
     try {
-      const text = await fetchFredText("series/observations", { series_id: "GDP", output_type: "3" }, "abcdefghijklmnopqrstuvwxyz123456");
+      const text = await fetchFredText("series/observations", { series_id: "GDP", output_type: "1" }, "abcdefghijklmnopqrstuvwxyz123456");
       expect(JSON.parse(text)).toEqual({ observations: [] });
       expect(requestUrl).toContain("https://api.stlouisfed.org/fred/series/observations?");
-      expect(requestUrl).toContain("output_type=3");
+      expect(requestUrl).toContain("output_type=1");
       expect(requestUrl).toContain("file_type=json");
       expect(text).not.toContain("abcdefghijklmnopqrstuvwxyz123456");
     } finally {

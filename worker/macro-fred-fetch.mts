@@ -1,9 +1,10 @@
 /** Local FRED/ALFRED collector with raw evidence, vintage history and day-precision availability. */
 import "dotenv/config";
+import { setTimeout as sleep } from "node:timers/promises";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { MACRO_RESEARCH_START, realtimeResearchStart, selectMacroSeries, type MacroGroup, type MacroSeriesDefinition } from "./lib/macro-sources";
-import { fetchFredText, isEmptyVintageError, mergeVintageDates, normalizeFredObservations, openEndedRealtimeChunks, sha256Text, type FredObservation, type FredSeriesMetadata, type NormalizedMacroPoint } from "./lib/fred";
+import { dedupeFredObservations, fetchFredText, isEmptyVintageError, mergeVintageDates, normalizeFredObservations, openEndedRealtimeChunks, sha256Text, type FredObservation, type FredSeriesMetadata, type NormalizedMacroPoint } from "./lib/fred";
 import { prepareMacroRoot, writeTextAtomic } from "./lib/macro-io";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
@@ -46,6 +47,13 @@ const previous: FredManifest = existsSync(manifestPath)
   : { schemaVersion: 1, generatedAt: "", researchSince: MACRO_RESEARCH_START, entries: [] };
 const results: SeriesManifestEntry[] = [];
 const prog = startProgress("macro-fred", `${selected.length} series · local only · no production sync`);
+let lastFredRequestAt = 0;
+async function fetchLimited(endpoint: Parameters<typeof fetchFredText>[0], params: Record<string, string>): Promise<string> {
+  const waitMs = Math.max(0, 600 - (Date.now() - lastFredRequestAt));
+  if (waitMs) await sleep(waitMs);
+  lastFredRequestAt = Date.now();
+  return fetchFredText(endpoint, params, apiKey);
+}
 
 function pathsFor(seriesId: string) {
   const directory = path.join(root, "raw", "fred", seriesId);
@@ -93,8 +101,8 @@ for (const [index, definition] of selected.entries()) {
       prog.log(`${definition.seriesId}: resumed ${prior.rows} rows`);
     } else {
       capturedAt = new Date().toISOString();
-      const rawMetadata = await fetchFredText("series", { series_id: definition.seriesId }, apiKey);
-      const rawFirstVintage = await fetchFredText("series/vintagedates", { series_id: definition.seriesId, sort_order: "asc", limit: "1" }, apiKey);
+      const rawMetadata = await fetchLimited("series", { series_id: definition.seriesId }, apiKey);
+      const rawFirstVintage = await fetchLimited("series/vintagedates", { series_id: definition.seriesId, sort_order: "asc", limit: "1" }, apiKey);
       writeTextAtomic(path.join(root, "raw", "fred", definition.seriesId, "vintage-first.json"), rawFirstVintage);
       const firstVintage = (JSON.parse(rawFirstVintage) as { vintage_dates?: string[] }).vintage_dates?.[0] ?? null;
       const observationChunks: FredObservation[][] = [];
@@ -108,17 +116,17 @@ for (const [index, definition] of selected.entries()) {
           let rawObservations: string;
           let rawVintageDates: string;
           try {
-            rawObservations = await fetchFredText("series/observations", {
+            rawObservations = await fetchLimited("series/observations", {
               series_id: definition.seriesId,
               realtime_start: chunk.start,
               realtime_end: chunk.end,
               observation_start: from,
               observation_end: to,
-              output_type: "3",
+              output_type: "1",
               sort_order: "asc",
               limit: "100000",
             }, apiKey);
-            rawVintageDates = await fetchFredText("series/vintagedates", {
+            rawVintageDates = await fetchLimited("series/vintagedates", {
               series_id: definition.seriesId,
               realtime_start: chunk.start,
               realtime_end: chunk.end,
@@ -143,7 +151,7 @@ for (const [index, definition] of selected.entries()) {
         }
       } else {
         prog.log(`${definition.seriesId}: no ALFRED vintages; using current FRED observations only`);
-        const rawCurrent = await fetchFredText("series/observations", {
+        const rawCurrent = await fetchLimited("series/observations", {
           series_id: definition.seriesId,
           observation_start: from,
           observation_end: to,
@@ -153,7 +161,7 @@ for (const [index, definition] of selected.entries()) {
         }, apiKey);
         observationChunks.push((JSON.parse(rawCurrent) as { observations?: FredObservation[] }).observations ?? []);
       }
-      const combinedObservations = JSON.stringify({ observations: observationChunks.flat() });
+      const combinedObservations = JSON.stringify({ observations: dedupeFredObservations(observationChunks.flat()) });
       const combinedVintageDates = JSON.stringify({ vintage_dates: mergeVintageDates(vintageDateChunks) });
       writeTextAtomic(files.metadata, rawMetadata);
       writeTextAtomic(files.observations, combinedObservations);

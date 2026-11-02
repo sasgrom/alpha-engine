@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 
 export interface FredObservation {
   realtime_start: string;
-  realtime_end: string;
+  realtime_end?: string;
   date: string;
   value: string;
 }
@@ -59,13 +59,20 @@ export function openEndedRealtimeChunks(start: string, end: string): RealtimeChu
   chunks[chunks.length - 1].end = "9999-12-31";
   return chunks;
 }
+export function dedupeFredObservations(observations: FredObservation[]): FredObservation[] {
+  const unique = new Map<string, FredObservation>();
+  for (const observation of observations) {
+    const key = `${observation.date}|${observation.realtime_start}`;
+    const prior = unique.get(key);
+    if (prior && (prior.value !== observation.value || prior.realtime_end !== observation.realtime_end)) {
+      throw new Error(`Conflicting FRED vintage ${key}`);
+    }
+    if (!prior) unique.set(key, observation);
+  }
+  return [...unique.values()];
+}
 export function mergeVintageDates(chunks: string[][]): string[] {
   return [...new Set(chunks.flat())].sort();
-}
-export function previousUtcDay(date: string): string {
-  const timestamp = Date.parse(`${date}T00:00:00Z`);
-  if (!Number.isFinite(timestamp)) throw new Error(`Invalid vintage date ${date}`);
-  return new Date(timestamp - 86_400_000).toISOString().slice(0, 10);
 }
 export function redactFredSecrets(value: string, apiKey: string): string {
   return value.split(apiKey).join("[redacted]").replace(/api_key=[^&\s]+/gi, "api_key=[redacted]");
@@ -104,7 +111,9 @@ export function normalizeFredObservations(
       availabilityBasis: "fred_realtime_start" as const,
       researchEligibleAt: endOfUtcDay(observation.realtime_start),
       vintageId: `${seriesId}|${observation.date}|${observation.realtime_start}`,
-      supersededAt: null,
+      supersededAt: !observation.realtime_end || observation.realtime_end === "." || observation.realtime_end === "9999-12-31" || observation.realtime_end >= ingestedAt.slice(0, 10)
+        ? null
+        : endOfUtcDay(observation.realtime_end),
       ingestedAt,
       sourceUrl: fredSeriesUrl(seriesId),
       sourceHash,
@@ -117,13 +126,5 @@ export function normalizeFredObservations(
     if (row.availableAt > row.ingestedAt) throw new Error(`FRED availability is after ingestion for ${row.vintageId}`);
     if (row.researchEligibleAt < row.availableAt) throw new Error(`Invalid research availability for ${row.vintageId}`);
   }
-  rows.sort((a, b) => a.observationPeriod.localeCompare(b.observationPeriod) || a.availableAt.localeCompare(b.availableAt));
-  // Chunk boundaries are download mechanics, not vintage lifetimes. A value is
-  // superseded only by the next revision of the same observation period.
-  for (let index = 0; index < rows.length - 1; index++) {
-    if (rows[index].observationPeriod === rows[index + 1].observationPeriod) {
-      rows[index].supersededAt = endOfUtcDay(previousUtcDay(rows[index + 1].availableAt.slice(0, 10)));
-    }
-  }
-  return rows;
+  return rows.sort((a, b) => a.observationPeriod.localeCompare(b.observationPeriod) || a.availableAt.localeCompare(b.availableAt));
 }
