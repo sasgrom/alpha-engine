@@ -3,8 +3,8 @@
  * Weekly analytics snapshot. English only for the published analytics surface.
  */
 export const analyticsSnapshot = {
-  "week": "2026-W44",
-  "generatedAt": "2026-11-01T11:30:49.788Z",
+  "week": "2026-W45",
+  "generatedAt": "2026-11-02T11:30:47.175Z",
   "metrics": {
     "companies": 496,
     "sectors": 11,
@@ -381,6 +381,42 @@ export const analyticsSnapshot = {
     {
       "week": "2026-W44",
       "generatedAt": "2026-11-01T11:30:49.788Z",
+      "metrics": {
+        "companies": 496,
+        "sectors": 11,
+        "factsRows": 1353727,
+        "factsCompanies": 53,
+        "factorPoints": 21438,
+        "factorCompanies": 51,
+        "factorTypes": 16,
+        "priceRows": 447282,
+        "priceTickers": 54,
+        "latestPriceDate": "2026-10-26",
+        "edgarToneRows": 34459,
+        "edgarToneCompanies": 102,
+        "edgarFirstEvent": "1994-01-05 00:00:00",
+        "edgarLastEvent": "2026-10-23 00:00:00",
+        "fundHoldings": 875860,
+        "funds": 300,
+        "fundCompanies": 371,
+        "fundQuarters": 15,
+        "fundQuarterRows": 3372,
+        "fundQuarterMissingDates": 0,
+        "positionEvents": 16422,
+        "firstPositionEvent": "2024-02-13 00:00:00",
+        "lastPositionEvent": "2026-09-02 00:00:00",
+        "macroRows": 47901,
+        "macroSeries": 8,
+        "macroLastDate": "2026-10-19",
+        "jobsError": 0,
+        "testCount": null,
+        "optionsSnapshots": 0,
+        "normalizedOptionRows": 0
+      }
+    },
+    {
+      "week": "2026-W45",
+      "generatedAt": "2026-11-02T11:30:47.175Z",
       "metrics": {
         "companies": 496,
         "sectors": 11,
