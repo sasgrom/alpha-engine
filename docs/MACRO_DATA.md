@@ -228,3 +228,21 @@ Open owner-only **`/scenario-lab`**. It loads the three reviewed reports at runt
 - Targeted company rebuilds preserve the original `universeSha256`.
 
 The evidence inspector shows exact formula, concepts, period, availability and reasons for `not_computable`. Empty states include the build commands rather than fabricated data. A fixture, when used for tests, is explicitly marked `dataMode: "fixture"` and is never presented as a live FRED baseline.
+
+## 12. Shock calibration
+
+```powershell
+npx tsx scripts/build-shock-calibration.mts --macro-root D:\research\alpha-engine\macro
+```
+
+Calibration reads normalized FRED history and computes absolute daily changes for rates/credit and log returns for oil/USD. It selects the latest vintage available at each observation period, never uses availability after the report `asOf` and requires at least 30 changes per horizon. FRED `Percent` values are divided by 100 so rate and credit presets use the decimal shocks required by Scenario Engine; unsupported rate units fail closed. Scenario Engine converts decimal shocks back to source units for the displayed scenario baseline.
+
+Outputs `public/reports/shock-calibration.json` and `.md` with p50/p75/p90/p95/p99 for 1, 5, 21 and 63 observations. Confidence intervals use 200 moving-block bootstrap replicates with a maximum block length of 20.
+
+Scenario Lab uses calibrated presets when present:
+
+- `Mild p50`;
+- `Severe p90`;
+- `Extreme p99`.
+
+Without calibration it falls back to illustrative presets. Percentiles are not directional forecasts. The evidence inspector includes p50/p90 confidence intervals when available.

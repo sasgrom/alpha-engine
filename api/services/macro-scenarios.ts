@@ -181,6 +181,12 @@ function scenarioStatus(impacts: CompanyScenarioImpact[], baselineStale: boolean
   if (historical > 0) return "historical_only";
   return "not_computable";
 }
+function shiftedRateBaseline(point: NormalizedMacroPoint, shock: number): number | null {
+  const unit = point.unit.trim().toLowerCase();
+  if (unit === "percent" || unit === "%") return point.value! + shock * 100;
+  if (unit === "decimal" || unit === "ratio") return point.value! + shock;
+  return null;
+}
 
 export function buildMacroScenarioReport(input: MacroScenarioInput): MacroScenarioReport {
   const exposures = new Map(input.exposures.map((company) => [company.ticker, company]));
@@ -193,7 +199,10 @@ export function buildMacroScenarioReport(input: MacroScenarioInput): MacroScenar
       return { channel: definition.channel, shock: definition.shock, shockUnit: UNIT[definition.channel], baseline: null, status: "not_computable", reasons: ["fred_baseline_missing"], impacts: input.pilot.map((pilot) => notComputable(pilot.ticker, ["fred_baseline_missing"])) };
     }
     const baselineStale = stale(point.observationPeriod, input.asOf);
-    const scenarioValue = definition.channel === "rates" || definition.channel === "credit" ? point.value + definition.shock : point.value * (1 + definition.shock);
+    const scenarioValue = definition.channel === "rates" || definition.channel === "credit" ? shiftedRateBaseline(point, definition.shock) : point.value * (1 + definition.shock);
+    if (scenarioValue === null) {
+      return { channel: definition.channel, shock: definition.shock, shockUnit: UNIT[definition.channel], baseline: null, status: "not_computable", reasons: ["unsupported_baseline_unit"], impacts: input.pilot.map((pilot) => notComputable(pilot.ticker, ["unsupported_baseline_unit"])) };
+    }
     const baseline = {
       seriesId: point.seriesId,
       observationPeriod: point.observationPeriod,

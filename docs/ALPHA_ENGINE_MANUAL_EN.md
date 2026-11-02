@@ -1589,5 +1589,6 @@ The macro exposure pipeline is: FRED/ALFRED vintage data → manifest QA → SEC
 - `complete` means all pilots compute; `partial` means only a subset computes.
 - Fuel and oil concepts preserve `periodStart`, so YTD cannot be mistaken for a standalone quarter. TTM built from non-consecutive quarters is marked `partial`.
 - Scenario Lab (`/scenario-lab`) recomputes every shock in the browser using the same engine and exposes baseline, impacts, formulas and an evidence inspector. Fixtures are always explicitly distinguished from the live FRED baseline.
+- Shock Calibration (`scripts/build-shock-calibration.mts`) computes historical percentiles of FRED changes with moving-block confidence intervals; `Mild p50`, `Severe p90` and `Extreme p99` are not directional forecasts. FRED `Percent` rate and credit values are divided by 100 to match Scenario Engine decimal shocks; unsupported rate units fail closed.
 
 Operator manual: `docs/MACRO_DATA.md`.

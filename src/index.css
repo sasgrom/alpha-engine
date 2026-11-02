@@ -979,6 +979,7 @@
 .scenario-presets { display: flex; gap: 5px; margin: 7px 0 15px; }
 .scenario-presets button { flex: 1; min-height: 29px; padding: 4px 5px; border: 1px solid hsl(var(--border)); background: transparent; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 8px; cursor: pointer; }
 .scenario-presets button.active, .scenario-presets button:hover { border-color: hsl(var(--live) / 0.55); color: hsl(var(--live)); }
+.scenario-preset-source { margin-top: 5px; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 8px; line-height: 1.45; }
 .scenario-download { display: inline-flex; align-items: center; justify-content: center; gap: 7px; width: 100%; min-height: 36px; margin-top: 12px; border: 1px solid hsl(var(--live) / 0.45); background: hsl(var(--live) / 0.07); color: hsl(var(--live)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 9px; cursor: pointer; }
 .scenario-download:hover { background: hsl(var(--live) / 0.14); }
 .scenario-control-note { display: flex; align-items: flex-start; gap: 7px; margin-top: 15px; padding-top: 13px; border-top: 1px solid hsl(var(--border)); color: hsl(var(--muted-foreground)); }

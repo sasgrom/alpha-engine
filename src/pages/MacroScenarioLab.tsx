@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Activity, AlertTriangle, Download, FileCheck2, FlaskConical, Info, SlidersHorizontal } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { buildMacroScenarioReport, type MacroScenarioDefinition, type MacroScenarioReport, type ScenarioChannel } from "../../api/services/macro-scenarios";
+import type { ShockCalibrationReport } from "../../api/services/shock-calibration";
 import type { PilotEvidenceReport } from "../../api/services/pilot-exposure-evidence";
 import type { CompanyExposureReport } from "../../api/services/company-exposure";
 import type { NormalizedMacroPoint } from "../../worker/lib/fred";
@@ -12,6 +13,7 @@ interface ScenarioBundle {
   report: MacroScenarioReport;
   pilot: PilotEvidenceReport;
   exposure: CompanyExposureReport;
+  calibration: ShockCalibrationReport | null;
   macroSeries: Record<string, NormalizedMacroPoint[]>;
 }
 const CHANNELS: ScenarioChannel[] = ["rates", "oil", "usd", "credit"];
@@ -22,19 +24,25 @@ const SHOCK_PRESETS: Record<ScenarioChannel, { label: string; value: number }[]>
   credit: [{ label: "+50 bp", value: 0.005 }, { label: "+100 bp", value: 0.01 }, { label: "+200 bp", value: 0.02 }],
 };
 const SHOCK_LIMITS: Record<ScenarioChannel, { min: number; max: number; step: number }> = {
-  rates: { min: -0.02, max: 0.05, step: 0.001 },
+  rates: { min: -0.02, max: 0.05, step: 0.0001 },
   oil: { min: -0.5, max: 0.9, step: 0.01 },
   usd: { min: -0.2, max: 0.5, step: 0.01 },
-  credit: { min: -0.01, max: 0.05, step: 0.001 },
+  credit: { min: -0.01, max: 0.05, step: 0.0001 },
 };
 let bundleRequest: Promise<ScenarioBundle> | null = null;
+function fetchCalibration(): Promise<ShockCalibrationReport | null> {
+  return fetch("/reports/shock-calibration.json", { cache: "no-store" })
+    .then((response) => response.status === 404 ? null : response.ok ? response.json() as Promise<ShockCalibrationReport> : Promise.reject(new Error(`Calibration HTTP ${response.status}`)))
+    .catch(() => null);
+}
 function requestBundle(): Promise<ScenarioBundle> {
   if (!bundleRequest) {
     bundleRequest = Promise.all([
       fetch("/reports/macro-scenarios.json", { cache: "no-store" }),
       fetch("/reports/pilot-exposure-evidence.json", { cache: "no-store" }),
       fetch("/reports/company-exposures.json", { cache: "no-store" }),
-    ]).then(async ([scenarioResponse, pilotResponse, exposureResponse]) => {
+      fetchCalibration(),
+    ]).then(async ([scenarioResponse, pilotResponse, exposureResponse, calibration]) => {
       for (const response of [scenarioResponse, pilotResponse, exposureResponse]) if (!response.ok) throw new Error(`Snapshot HTTP ${response.status}`);
       const [report, pilot, exposure] = await Promise.all([scenarioResponse.json(), pilotResponse.json(), exposureResponse.json()]) as [MacroScenarioReport, PilotEvidenceReport, CompanyExposureReport];
       if (report.schemaVersion !== 1 || !Array.isArray(report.scenarios) || !Array.isArray(pilot.companies) || !Array.isArray(exposure.companies)) throw new Error("Unsupported scenario schema");
@@ -43,7 +51,7 @@ function requestBundle(): Promise<ScenarioBundle> {
         if (!scenario.baseline) continue;
         macroSeries[scenario.baseline.seriesId] = [{ ...scenario.baseline, availablePrecision: "day" }];
       }
-      return { report, pilot, exposure, macroSeries };
+      return { report, pilot, exposure, calibration, macroSeries };
     }).catch((error: unknown) => { bundleRequest = null; throw error; });
   }
   return bundleRequest;
@@ -86,6 +94,15 @@ export default function MacroScenarioLab() {
   const scenario = report?.scenarios.find((item) => item.channel === channel) ?? null;
   const impacts = useMemo(() => (scenario?.impacts ?? []).filter((impact) => ticker === "ALL" || impact.ticker === ticker), [scenario, ticker]);
   const selectedImpact = ticker === "ALL" ? null : impacts[0] ?? null;
+  const channelSeries: Record<ScenarioChannel, string> = { rates: "DGS10", oil: "DCOILWTICO", usd: "DTWEXBGS", credit: "BAMLH0A0HYM2" };
+  const calibration = bundle?.calibration?.calibrations.find((item) => item.seriesId === channelSeries[channel] && item.status === "ready") ?? null;
+  const presets = calibration?.presets
+    ? [
+        { label: `Mild p${calibration.presets.mild.percentile}`, value: calibration.presets.mild.shock },
+        { label: `Severe p${calibration.presets.severe.percentile}`, value: calibration.presets.severe.shock },
+        { label: `Extreme p${calibration.presets.extreme.percentile}`, value: calibration.presets.extreme.shock },
+      ]
+    : SHOCK_PRESETS[channel];
   const updateShock = (value: number) => {
     const limits = SHOCK_LIMITS[channel];
     setShocks((current) => ({ ...current, [channel]: Math.max(limits.min, Math.min(limits.max, Number.isFinite(value) ? value : 0)) }));
@@ -136,7 +153,8 @@ export default function MacroScenarioLab() {
               <label className="scenario-control-label" htmlFor="scenario-shock">Custom shock · {shockText(channel, shocks[channel])}</label>
               <input id="scenario-shock" className="scenario-slider" type="range" min={SHOCK_LIMITS[channel].min} max={SHOCK_LIMITS[channel].max} step={SHOCK_LIMITS[channel].step} value={shocks[channel]} onChange={(event) => updateShock(Number(event.target.value))} />
               <input className="scenario-number" aria-label="Shock value" type="number" min={SHOCK_LIMITS[channel].min} max={SHOCK_LIMITS[channel].max} step={SHOCK_LIMITS[channel].step} value={shocks[channel]} onChange={(event) => updateShock(Number(event.target.value))} />
-              <div className="scenario-presets">{SHOCK_PRESETS[channel].map((preset) => <button type="button" key={preset.label} className={shocks[channel] === preset.value ? "active" : ""} onClick={() => updateShock(preset.value)}>{preset.label}</button>)}</div>
+              <div className="scenario-presets">{presets.map((preset) => <button type="button" key={preset.label} className={shocks[channel] === preset.value ? "active" : ""} onClick={() => updateShock(preset.value)}>{preset.label}</button>)}</div>
+              <div className="scenario-preset-source">{calibration?.presets ? "Calibrated from FRED daily changes" : "Illustrative presets · build shock calibration for historical presets"}</div>
               <label className="scenario-control-label" htmlFor="scenario-ticker">Company</label>
               <select id="scenario-ticker" value={ticker} onChange={(event) => setTicker(event.target.value)}>
                 <option value="ALL">All pilot companies</option>
@@ -209,6 +227,11 @@ export default function MacroScenarioLab() {
                     <div><dt>SHA256</dt><dd className="scenario-hash">{scenario.baseline?.sourceHash ?? "—"}</dd></div>
                     <div><dt>Availability basis</dt><dd>{scenario.baseline?.availabilityBasis ?? "—"}</dd></div>
                     <div><dt>Research eligible</dt><dd>{scenario.baseline?.researchEligibleAt ?? "—"}</dd></div>
+                    {calibration?.distributions["1"] && <>
+                      <div><dt>p50 / p90 / p99</dt><dd>{calibration.distributions["1"].p50} / {calibration.distributions["1"].p90} / {calibration.distributions["1"].p99}</dd></div>
+                      <div><dt>p50 CI95</dt><dd>{calibration.distributions["1"].ci95P50?.join(" … ")}</dd></div>
+                      <div><dt>p90 CI95</dt><dd>{calibration.distributions["1"].ci95P90?.join(" … ")}</dd></div>
+                    </>}
                   </dl></div>
                 </>
               )}

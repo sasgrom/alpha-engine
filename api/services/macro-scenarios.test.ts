@@ -27,7 +27,7 @@ const input = (pilotRows: PilotEvidence[], exposureRows: CompanyExposureRow[], s
   asOf: AS_OF,
   definitions: [{ channel: "rates" as const, shock }],
   macroSeries: {
-    DGS10: [macro(0.04)],
+    DGS10: [macro(4)],
     DCOILWTICO: [macro(80, "2026-10-30T00:00:00.000Z", "DCOILWTICO")],
     DTWEXBGS: [macro(100, "2026-10-30T00:00:00.000Z", "DTWEXBGS")],
     BAMLH0A0HYM2: [macro(3, "2026-10-30T00:00:00.000Z", "BAMLH0A0HYM2")],
@@ -45,7 +45,7 @@ describe("macro scenarios", () => {
     expect(impact.metrics[0].value).toBeCloseTo(6_861_600);
     expect(impact.metrics[0].unit).toBe("USD/year");
     expect(report.scenarios[0].status).toBe("complete");
-    expect(report.scenarios[0].baseline?.scenarioValue).toBeCloseTo(0.05);
+    expect(report.scenarios[0].baseline?.scenarioValue).toBeCloseTo(5);
   });
 
   it("marks a scenario partial when only a subset of companies computes", () => {
@@ -103,6 +103,14 @@ describe("macro scenarios", () => {
     old.observationPeriod = "2020-01-01";
     const report = buildMacroScenarioReport({ ...input([pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) })], [exposure("RCL", 22_872_000_000)]), macroSeries: { DGS10: [old] } });
     expect(report.scenarios[0].status).toBe("historical_only");
+  });
+
+  it("fails closed for an unsupported rate baseline unit", () => {
+    const unsupported = macro(4);
+    unsupported.unit = "Basis points";
+    const report = buildMacroScenarioReport({ ...input([pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) })], [exposure("RCL", 22_872_000_000)]), macroSeries: { DGS10: [unsupported] } });
+    expect(report.scenarios[0].status).toBe("not_computable");
+    expect(report.scenarios[0].reasons).toContain("unsupported_baseline_unit");
   });
 
   it("rejects out-of-range shocks and missing baselines", () => {

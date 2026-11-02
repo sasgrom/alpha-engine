@@ -15,7 +15,7 @@ describe("Macro Scenario Lab", () => {
   beforeEach(async () => {
     vi.stubGlobal("fetch", async (input: RequestInfo | URL) => {
       const url = String(input);
-      const file = url === "/reports/macro-scenarios.json" ? "src/test-fixtures/macro-scenarios.json" : `public${url}`;
+      const file = url === "/reports/macro-scenarios.json" ? "src/test-fixtures/macro-scenarios.json" : url === "/reports/shock-calibration.json" ? "src/test-fixtures/shock-calibration.json" : `public${url}`;
       return new Response(readFileSync(file, "utf8"), { status: 200 });
     });
     host = document.createElement("div");
@@ -50,6 +50,13 @@ describe("Macro Scenario Lab", () => {
     await act(async () => { rcl.click(); });
     expect(host!.textContent).toContain("assumes immediate full repricing of exposed debt");
     expect(host!.textContent).toContain("hedge_share_unknown_upper_bound");
+  });
+
+  it("uses calibrated FRED presets and confidence intervals", () => {
+    expect(host!.textContent).toContain("Mild p50");
+    expect(host!.textContent).toContain("Severe p90");
+    expect(host!.textContent).toContain("Extreme p99");
+    expect(host!.textContent).toContain("p50 CI95");
   });
 
   it("separates current gross fuel exposure from historical and missing channels", async () => {

@@ -1595,5 +1595,6 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 - `complete` означает вычисление всех пилотов, `partial` — только их подмножества.
 - Топливо и нефтяные концепты сохраняют `periodStart`, поэтому YTD не выдаётся за standalone quarter; TTM с непоследовательными кварталами помечается `partial`.
 - Scenario Lab (`/scenario-lab`) пересчитывает shocks в браузере тем же движком и показывает baseline, impacts, формулы и evidence inspector. Fixture-данные всегда маркируются отдельно от live baseline.
+- Shock Calibration (`scripts/build-shock-calibration.mts`) вычисляет исторические percentiles изменений FRED и moving-block confidence intervals; пресеты `Mild p50`, `Severe p90`, `Extreme p99` не являются направленным прогнозом. Значения FRED `Percent` для ставок и кредита делятся на 100, поэтому пресеты соответствуют decimal shocks Scenario Engine; неподдерживаемые единицы отклоняются.
 
 Подробный операционный мануал: `docs/MACRO_DATA.md`.
