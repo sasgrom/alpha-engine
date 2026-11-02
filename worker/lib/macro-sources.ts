@@ -1,3 +1,4 @@
+export const MACRO_RESEARCH_START = "2000-01-01";
 export type MacroGroup = "rates" | "oil" | "usd" | "credit" | "inflation" | "labor" | "growth";
 export interface MacroSeriesDefinition {
   seriesId: string;
@@ -29,6 +30,10 @@ export const MACRO_SERIES: MacroSeriesDefinition[] = [
   { seriesId: "GDPC1", group: "growth", channel: "real_gdp" },
   { seriesId: "GDP", group: "growth", channel: "nominal_gdp" },
 ];
+
+export function realtimeResearchStart(firstVintage: string): string {
+  return firstVintage > MACRO_RESEARCH_START ? firstVintage : MACRO_RESEARCH_START;
+}
 
 export function selectMacroSeries(group: string | null, seriesId: string | null): MacroSeriesDefinition[] {
   if (seriesId) {

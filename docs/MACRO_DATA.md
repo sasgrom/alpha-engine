@@ -2,6 +2,8 @@
 
 Local-only collectors for availability-anchored macro research. They write raw evidence, normalized vintage rows and manifests. They do not write MySQL, do not call production and do not publish data.
 
+**Research window: 2000-01-01 onward.** Observation periods and real-time vintages before 2000 are outside the Alpha Engine scope and are not downloaded. `--from` rejects earlier dates.
+
 ## 1. Prepare
 
 ```powershell
@@ -121,7 +123,7 @@ npx tsx worker/macro-fred-fetch.mts --group inflation --from 2000-01-01
 npx tsx worker/macro-fred-fetch.mts --series DGS10 --from 2020-01-01 --force
 ```
 
-The collector first requests each series' earliest ALFRED vintage and only then builds five-year real-time chunks from that date. It never sends an unsupported pre-inception period such as 1776 for every series. `output_type=3` retains new and revised values as separate vintage rows. Raw chunks and merged responses are both preserved, and missing values (`.`) remain null. If a series has no ALFRED vintages, the manifest explicitly records `availabilityMode: "current_fred_only"` instead of pretending historical availability exists.
+The collector first requests each series' earliest ALFRED vintage and then builds five-year real-time chunks from the later of that date and 2000-01-01. It never sends an unsupported pre-inception period or pre-2000 research period. `output_type=3` retains new and revised values as separate vintage rows. Raw chunks and merged responses are both preserved, and missing values (`.`) remain null. If a series has no ALFRED vintages, the manifest explicitly records `availabilityMode: "current_fred_only"` instead of pretending historical availability exists.
 
 ## 5. Output layout
 

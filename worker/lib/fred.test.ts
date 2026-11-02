@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { fetchFredText, mergeVintageDates, normalizeFredObservations, realtimeChunks, redactFredSecrets, type FredSeriesMetadata } from "./fred";
-import { selectMacroSeries } from "./macro-sources";
+import { realtimeResearchStart, selectMacroSeries } from "./macro-sources";
 
 const metadata: FredSeriesMetadata = { id: "GDP", title: "GDP", frequency: "Quarterly", units: "Billions", seasonal_adjustment: "SAAR", last_updated: "2026-10-30" };
 const observation = (realtimeStart: string, realtimeEnd: string, value: string) => ({ realtime_start: realtimeStart, realtime_end: realtimeEnd, date: "2026-07-01", value });
@@ -58,6 +58,11 @@ describe("FRED vintage normalization", () => {
 
   it("redacts the API key from failures", () => {
     expect(redactFredSecrets("HTTP 403 api_key=secret123&x=1 secret123", "secret123")).not.toContain("secret123");
+  });
+
+  it("never starts research vintages before 2000", () => {
+    expect(realtimeResearchStart("1954-07-01")).toBe("2000-01-01");
+    expect(realtimeResearchStart("2018-04-03")).toBe("2018-04-03");
   });
 
   it("uses the documented collection order and deliberate groups", () => {

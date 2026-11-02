@@ -2,7 +2,7 @@
 import "dotenv/config";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { selectMacroSeries, type MacroGroup, type MacroSeriesDefinition } from "./lib/macro-sources";
+import { MACRO_RESEARCH_START, realtimeResearchStart, selectMacroSeries, type MacroGroup, type MacroSeriesDefinition } from "./lib/macro-sources";
 import { fetchFredText, mergeVintageDates, normalizeFredObservations, realtimeChunks, sha256Text, type FredObservation, type FredSeriesMetadata, type NormalizedMacroPoint } from "./lib/fred";
 import { prepareMacroRoot, writeTextAtomic } from "./lib/macro-io";
 import { writeJsonAtomic } from "./lib/json-file";
@@ -24,24 +24,25 @@ interface SeriesManifestEntry {
   notes?: string;
   error?: string;
 }
-interface FredManifest { schemaVersion: 1; generatedAt: string; entries: SeriesManifestEntry[] }
+interface FredManifest { schemaVersion: 1; generatedAt: string; researchSince: "2000-01-01"; entries: SeriesManifestEntry[] }
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const group = arg("--group");
 const series = arg("--series")?.toUpperCase() ?? null;
 const force = process.argv.includes("--force");
-const from = arg("--from") ?? "1776-07-04";
+const from = arg("--from") ?? MACRO_RESEARCH_START;
 const to = arg("--to") ?? "9999-12-31";
 const outRoot = path.resolve(arg("--out") ?? (process.platform === "win32" ? "D:\\research\\alpha-engine\\macro" : "worker/cache/macro"));
 const apiKey = process.env.FRED_API_KEY?.trim() ?? "";
 if (!/^[a-z0-9]{32}$/.test(apiKey)) throw new Error("Set FRED_API_KEY in the current shell session; do not paste it into chat or Git.");
 if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) throw new Error("--from and --to must be YYYY-MM-DD");
+if (from < MACRO_RESEARCH_START) throw new Error(`--from must be ${MACRO_RESEARCH_START} or later; pre-2000 history is outside the Alpha Engine research window.`);
 const selected = selectMacroSeries(group, series);
 const root = prepareMacroRoot(outRoot);
 const manifestPath = path.join(root, "manifest-fred.json");
 const previous: FredManifest = existsSync(manifestPath)
   ? JSON.parse(readFileSync(manifestPath, "utf8")) as FredManifest
-  : { schemaVersion: 1, generatedAt: "", entries: [] };
+  : { schemaVersion: 1, generatedAt: "", researchSince: MACRO_RESEARCH_START, entries: [] };
 const results: SeriesManifestEntry[] = [];
 const prog = startProgress("macro-fred", `${selected.length} series · local only · no production sync`);
 
@@ -65,7 +66,7 @@ function sameArtifact(previous: RawArtifact | null, current: RawArtifact | null)
 function persistManifest(): void {
   const merged = new Map(previous.entries.map((entry) => [entry.seriesId, entry]));
   for (const entry of results) merged.set(entry.seriesId, entry);
-  writeJsonAtomic(manifestPath, { schemaVersion: 1, generatedAt: new Date().toISOString(), entries: [...merged.values()].sort((a, b) => a.seriesId.localeCompare(b.seriesId)) } satisfies FredManifest, true);
+  writeJsonAtomic(manifestPath, { schemaVersion: 1, generatedAt: new Date().toISOString(), researchSince: MACRO_RESEARCH_START, entries: [...merged.values()].sort((a, b) => a.seriesId.localeCompare(b.seriesId)) } satisfies FredManifest, true);
 }
 function parseMetadata(raw: string, seriesId: string): FredSeriesMetadata {
   const payload = JSON.parse(raw) as { seriess?: FredSeriesMetadata[] };
@@ -98,8 +99,9 @@ for (const [index, definition] of selected.entries()) {
       const observationChunks: FredObservation[][] = [];
       const vintageDateChunks: string[][] = [];
       if (firstVintage) {
-        const chunks = realtimeChunks(firstVintage, capturedAt.slice(0, 10));
-        prog.log(`${definition.seriesId}: first vintage ${firstVintage} · ${chunks.length} five-year real-time chunks`);
+        const researchStart = realtimeResearchStart(firstVintage);
+        const chunks = realtimeChunks(researchStart, capturedAt.slice(0, 10));
+        prog.log(`${definition.seriesId}: source vintage ${firstVintage} · research start ${researchStart} · ${chunks.length} five-year real-time chunks`);
         for (const chunk of chunks) {
           let rawObservations: string;
           let rawVintageDates: string;
