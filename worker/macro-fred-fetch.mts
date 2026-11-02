@@ -3,7 +3,7 @@ import "dotenv/config";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { selectMacroSeries, type MacroGroup, type MacroSeriesDefinition } from "./lib/macro-sources";
-import { fetchFredText, normalizeFredObservations, sha256Text, type FredObservation, type FredSeriesMetadata, type NormalizedMacroPoint } from "./lib/fred";
+import { fetchFredText, mergeVintageDates, normalizeFredObservations, realtimeChunks, sha256Text, type FredObservation, type FredSeriesMetadata, type NormalizedMacroPoint } from "./lib/fred";
 import { prepareMacroRoot, writeTextAtomic } from "./lib/macro-io";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
@@ -90,15 +90,46 @@ for (const [index, definition] of selected.entries()) {
       prog.log(`${definition.seriesId}: resumed ${prior.rows} rows`);
     } else {
       capturedAt = new Date().toISOString();
-      const common = { series_id: definition.seriesId, realtime_start: "1776-07-04", realtime_end: "9999-12-31" };
-      const rawMetadata = await fetchFredText("series", common, apiKey);
-      const rawObservations = await fetchFredText("series/observations", {
-        ...common, observation_start: from, observation_end: to, output_type: "3", sort_order: "asc", limit: "100000",
-      }, apiKey);
-      const rawVintageDates = await fetchFredText("series/vintagedates", { ...common, sort_order: "asc", limit: "10000" }, apiKey);
+      const rawMetadata = await fetchFredText("series", { series_id: definition.seriesId }, apiKey);
+      const chunks = realtimeChunks("1776-07-04", capturedAt.slice(0, 10));
+      const observationChunks: FredObservation[][] = [];
+      const vintageDateChunks: string[][] = [];
+      prog.log(`${definition.seriesId}: ${chunks.length} five-year real-time chunks`);
+      for (const chunk of chunks) {
+        let rawObservations: string;
+        let rawVintageDates: string;
+        try {
+          rawObservations = await fetchFredText("series/observations", {
+            series_id: definition.seriesId,
+            realtime_start: chunk.start,
+            realtime_end: chunk.end,
+            observation_start: from,
+            observation_end: to,
+            output_type: "3",
+            sort_order: "asc",
+            limit: "100000",
+          }, apiKey);
+          rawVintageDates = await fetchFredText("series/vintagedates", {
+            series_id: definition.seriesId,
+            realtime_start: chunk.start,
+            realtime_end: chunk.end,
+            sort_order: "asc",
+            limit: "10000",
+          }, apiKey);
+        } catch (error) {
+          throw new Error(`${definition.seriesId} real-time ${chunk.start}…${chunk.end}: ${error instanceof Error ? error.message : String(error)}`);
+        }
+        const suffix = `${chunk.start}_${chunk.end}`;
+        writeTextAtomic(path.join(root, "raw", "fred", definition.seriesId, "chunks", `observations-${suffix}.json`), rawObservations);
+        writeTextAtomic(path.join(root, "raw", "fred", definition.seriesId, "chunks", `vintagedates-${suffix}.json`), rawVintageDates);
+        observationChunks.push((JSON.parse(rawObservations) as { observations?: FredObservation[] }).observations ?? []);
+        vintageDateChunks.push((JSON.parse(rawVintageDates) as { vintage_dates?: string[] }).vintage_dates ?? []);
+      }
+      const combinedObservations = JSON.stringify({ observations: observationChunks.flat() });
+      const combinedVintageDates = JSON.stringify({ vintage_dates: mergeVintageDates(vintageDateChunks) });
       writeTextAtomic(files.metadata, rawMetadata);
-      writeTextAtomic(files.observations, rawObservations);
-      writeTextAtomic(files.vintageDates, rawVintageDates);
+      writeTextAtomic(files.observations, combinedObservations);
+      writeTextAtomic(files.vintageDates, combinedVintageDates);
       raw.metadata = readArtifact(files.metadata);
       raw.observations = readArtifact(files.observations);
       raw.vintageDates = readArtifact(files.vintageDates);

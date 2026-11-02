@@ -121,7 +121,7 @@ npx tsx worker/macro-fred-fetch.mts --group inflation --from 2000-01-01
 npx tsx worker/macro-fred-fetch.mts --series DGS10 --from 2020-01-01 --force
 ```
 
-`output_type=3` is used for observations so new and revised values are retained as separate vintage rows. `realtime_start` and `realtime_end` are preserved. Missing values (`.`) remain null.
+`output_type=3` is used for observations so new and revised values are retained as separate vintage rows. Long real-time history is downloaded in five-year chunks to remain below FRED's per-request vintage-date limit. Raw chunks and merged responses are both preserved. `realtime_start` and `realtime_end` are retained, and missing values (`.`) remain null.
 
 ## 5. Output layout
 

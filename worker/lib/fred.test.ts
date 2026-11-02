@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fetchFredText, normalizeFredObservations, redactFredSecrets, type FredSeriesMetadata } from "./fred";
+import { fetchFredText, mergeVintageDates, normalizeFredObservations, realtimeChunks, redactFredSecrets, type FredSeriesMetadata } from "./fred";
 import { selectMacroSeries } from "./macro-sources";
 
 const metadata: FredSeriesMetadata = { id: "GDP", title: "GDP", frequency: "Quarterly", units: "Billions", seasonal_adjustment: "SAAR", last_updated: "2026-10-30" };
@@ -21,6 +21,20 @@ describe("FRED vintage normalization", () => {
     const rows = normalizeFredObservations("GDP", [observation("2026-08-27", "9999-12-31", ".")], metadata, "abc", "2026-10-30T12:00:00Z");
     expect(rows[0].value).toBeNull();
     expect(() => normalizeFredObservations("GDP", [observation("2026-08-27", "9999-12-31", "1"), observation("2026-08-27", "9999-12-31", "2")], metadata, "abc", "2026-10-30T12:00:00Z")).toThrow("Duplicate FRED vintage");
+  });
+
+  it("chunks long real-time history into bounded five-year requests", () => {
+    expect(realtimeChunks("2019-01-01", "2026-11-02")).toEqual([
+      { start: "2019-01-01", end: "2023-12-31" },
+      { start: "2024-01-01", end: "2026-11-02" },
+    ]);
+    expect(realtimeChunks("2020-01-01", "2020-12-31")).toEqual([{ start: "2020-01-01", end: "2020-12-31" }]);
+    expect(mergeVintageDates([["2024-01-01", "2024-02-01"], ["2024-02-01", "2025-01-01"]])).toEqual(["2024-01-01", "2024-02-01", "2025-01-01"]);
+  });
+
+  it("does not treat a download chunk boundary as supersession", () => {
+    const rows = normalizeFredObservations("GDP", [observation("2026-08-27", "2023-12-31", "100")], metadata, "abc", "2026-10-30T12:00:00Z");
+    expect(rows[0].supersededAt).toBeNull();
   });
 
   it("builds the official JSON endpoint without exposing the key in returned data", async () => {
