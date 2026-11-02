@@ -158,6 +158,7 @@ Do not use these day-precision rows to claim intraday release-event alpha. Exact
 
 - `manifest-fred.json` records rows, observation/vintage bounds, raw hashes and per-series errors.
 - `manifest-events.json` records page hashes and accumulated event counts.
+- A real-time chunk with no vintage dates is recorded as an empty chunk and does not invalidate other years. Empty ranges are listed in the series manifest entry.
 - A series error does not get converted into a successful empty series.
 - No source is retried silently forever and no raw response is overwritten with a model-generated substitute.
 - ISM Manufacturing/Services PMI is deliberately not included yet. It needs a dedicated official ISM adapter and release-time evidence; no proxy series is passed off as PMI.

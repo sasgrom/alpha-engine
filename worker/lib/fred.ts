@@ -65,6 +65,9 @@ export function previousUtcDay(date: string): string {
 export function redactFredSecrets(value: string, apiKey: string): string {
   return value.split(apiKey).join("[redacted]").replace(/api_key=[^&\s]+/gi, "api_key=[redacted]");
 }
+export function isEmptyVintageError(error: unknown): boolean {
+  return error instanceof Error && error.message.includes("No vintage dates exist for the specified real-time period");
+}
 
 export function realtimeEndFromPayload(raw: string): string {
   const payload = JSON.parse(raw) as { realtime_end?: string };

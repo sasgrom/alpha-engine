@@ -3,7 +3,7 @@ import "dotenv/config";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { MACRO_RESEARCH_START, realtimeResearchStart, selectMacroSeries, type MacroGroup, type MacroSeriesDefinition } from "./lib/macro-sources";
-import { fetchFredText, mergeVintageDates, normalizeFredObservations, realtimeChunks, realtimeEndFromPayload, sha256Text, type FredObservation, type FredSeriesMetadata, type NormalizedMacroPoint } from "./lib/fred";
+import { fetchFredText, isEmptyVintageError, mergeVintageDates, normalizeFredObservations, realtimeChunks, realtimeEndFromPayload, sha256Text, type FredObservation, type FredSeriesMetadata, type NormalizedMacroPoint } from "./lib/fred";
 import { prepareMacroRoot, writeTextAtomic } from "./lib/macro-io";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
@@ -20,6 +20,7 @@ interface SeriesManifestEntry {
   lastObservation: string | null;
   firstVintage: string | null;
   lastVintage: string | null;
+  emptyChunks?: string[];
   raw: { metadata: RawArtifact | null; observations: RawArtifact | null; vintageDates: RawArtifact | null };
   notes?: string;
   error?: string;
@@ -100,6 +101,7 @@ for (const [index, definition] of selected.entries()) {
       const firstVintage = (JSON.parse(rawFirstVintage) as { vintage_dates?: string[] }).vintage_dates?.[0] ?? null;
       const observationChunks: FredObservation[][] = [];
       const vintageDateChunks: string[][] = [];
+      const emptyChunks: string[] = [];
       if (firstVintage) {
         const researchStart = realtimeResearchStart(firstVintage);
         const chunks = realtimeChunks(researchStart, realtimeEnd);
@@ -126,6 +128,13 @@ for (const [index, definition] of selected.entries()) {
               limit: "10000",
             }, apiKey);
           } catch (error) {
+            if (isEmptyVintageError(error)) {
+              const range = `${chunk.start}…${chunk.end}`;
+              emptyChunks.push(range);
+              writeTextAtomic(path.join(root, "raw", "fred", definition.seriesId, "chunks", `empty-${chunk.start}_${chunk.end}.json`), JSON.stringify({ status: "empty", realtime_start: chunk.start, realtime_end: chunk.end }));
+              prog.log(`${definition.seriesId}: empty real-time ${range}`);
+              continue;
+            }
             throw new Error(`${definition.seriesId} real-time ${chunk.start}…${chunk.end}: ${error instanceof Error ? error.message : String(error)}`);
           }
           const suffix = `${chunk.start}_${chunk.end}`;
@@ -169,6 +178,7 @@ for (const [index, definition] of selected.entries()) {
       lastObservation: rows.at(-1)?.observationPeriod ?? null,
       firstVintage: vintageDates[0] ?? null,
       lastVintage: vintageDates.at(-1) ?? null,
+      ...(emptyChunks.length ? { emptyChunks } : {}),
       raw,
       ...(definition.notes ? { notes: definition.notes } : {}),
     });

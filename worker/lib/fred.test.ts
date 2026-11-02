@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fetchFredText, mergeVintageDates, normalizeFredObservations, realtimeChunks, realtimeEndFromPayload, redactFredSecrets, type FredSeriesMetadata } from "./fred";
+import { fetchFredText, isEmptyVintageError, mergeVintageDates, normalizeFredObservations, realtimeChunks, realtimeEndFromPayload, redactFredSecrets, type FredSeriesMetadata } from "./fred";
 import { realtimeResearchStart, selectMacroSeries } from "./macro-sources";
 
 const metadata: FredSeriesMetadata = { id: "GDP", title: "GDP", frequency: "Quarterly", units: "Billions", seasonal_adjustment: "SAAR", last_updated: "2026-10-30" };
@@ -36,6 +36,11 @@ describe("FRED vintage normalization", () => {
   it("uses the server-provided real-time boundary instead of a local date", () => {
     expect(realtimeEndFromPayload(JSON.stringify({ realtime_start: "2026-11-01", realtime_end: "2026-11-01" }))).toBe("2026-11-01");
     expect(() => realtimeEndFromPayload("{}")).toThrow("no valid realtime_end");
+  });
+
+  it("recognizes only the explicit empty-vintage response", () => {
+    expect(isEmptyVintageError(new Error("FRED HTTP 400: No vintage dates exist for the specified real-time period: 2005-06-28 to 2005-12-31."))).toBe(true);
+    expect(isEmptyVintageError(new Error("FRED HTTP 500: Internal Server Error"))).toBe(false);
   });
 
   it("does not treat a download chunk boundary as supersession", () => {
