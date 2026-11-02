@@ -1,7 +1,7 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-02T19:13:11.191Z",
- "asOf": "2026-11-02T19:07:59.484Z",
+ "generatedAt": "2026-11-02T19:17:23.722Z",
+ "asOf": "2026-11-02T19:15:50.891Z",
  "universeSha256": "f253b8c5622e380bdc0a4e3781157c8d043be756994651b9fb9510eedb27bbbe",
  "policy": {
   "noSectorInference": true,
@@ -507,58 +507,58 @@
    "name": "AMAZON COM INC",
    "sector": "Consumer Discretionary",
    "debt": {
-    "value": 132995000000,
+    "value": 180887000000,
     "unit": "USD",
     "concepts": [
      "LongTermDebt"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-31",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-30",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "debtToOperatingIncome": {
-    "value": 1.4191885777701896,
+    "value": 1.7331985512523236,
     "unit": "ratio",
     "concepts": [
      "LongTermDebt",
      "OperatingIncomeLoss"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-31",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-30",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "interestCoverage": {
-    "value": 31.206127206127206,
+    "value": 34.75391275391275,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpense"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-31",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-30",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.5880897778111959,
+    "value": 0.30838589837854574,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebt"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-31",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-30",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -1740,17 +1740,17 @@
     "stale": false
    },
    "interestCoverage": {
-    "value": 237.33333333333334,
+    "value": 298.6666666666667,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpense"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-05",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-30",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "cashToDebt": {
@@ -2081,7 +2081,7 @@
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 0.12181895140746929,
+    "value": 0.11666097797816073,
     "unit": "ratio",
     "concepts": [
      "LongTermDebtAndCapitalLeaseObligations",
@@ -2095,31 +2095,31 @@
     "stale": true
    },
    "interestCoverage": {
-    "value": 84.45895365660148,
+    "value": 88.19316749894992,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpense"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-30",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "cashToDebt": {
-    "value": 7.65812225568821,
+    "value": 7.148832420074754,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebtAndCapitalLeaseObligations"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-30",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -2204,7 +2204,7 @@
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 0.07373939902999431,
+    "value": 0.06934818061359699,
     "unit": "ratio",
     "concepts": [
      "LongTermDebtAndCapitalLeaseObligations",
@@ -2218,31 +2218,31 @@
     "stale": true
    },
    "interestCoverage": {
-    "value": 458.472049689441,
+    "value": 487.5031055900621,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpense"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-23",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "cashToDebt": {
-    "value": 5.136046297997428,
+    "value": 5.174903545838692,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebtAndCapitalLeaseObligations"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-23",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -2554,7 +2554,7 @@
    "cik": 51143,
    "ticker": "IBM",
    "name": "INTERNATIONAL BUSINESS MACHINES CORP",
-   "sector": "Information Technology",
+   "sector": null,
    "debt": {
     "value": 56804000000,
     "unit": "USD",
@@ -2686,42 +2686,45 @@
     "stale": false
    },
    "debtToOperatingIncome": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "Debt / operating income is unavailable: non-positive or missing denominator",
-    "evidenceAgeDays": null,
+    "value": 26.438706015891032,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2025-12-27",
+    "sourceFiled": "2026-01-23",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 310,
     "stale": false
    },
    "interestCoverage": {
-    "value": -0.0816542948038176,
+    "value": 1.8685047720042418,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpense"
     ],
-    "periodEnd": "2026-06-27",
-    "sourceFiled": "2026-07-24",
+    "periodEnd": "2026-09-26",
+    "sourceFiled": "2026-10-30",
     "quality": "partial",
     "note": "Non-consecutive quarterly points",
-    "evidenceAgeDays": 128,
+    "evidenceAgeDays": 37,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.2763550499087689,
+    "value": 0.46894923258559623,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebt"
     ],
-    "periodEnd": "2026-06-27",
-    "sourceFiled": "2026-07-24",
+    "periodEnd": "2026-09-26",
+    "sourceFiled": "2026-10-30",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 128,
+    "evidenceAgeDays": 37,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -3156,58 +3159,58 @@
    "name": "LINDE PLC",
    "sector": "Materials",
    "debt": {
-    "value": 20678000000,
+    "value": 20593000000,
     "unit": "USD",
     "concepts": [
      "LongTermDebtAndCapitalLeaseObligations"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-31",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "debtToOperatingIncome": {
-    "value": 2.204947750053316,
+    "value": 2.247898701015173,
     "unit": "ratio",
     "concepts": [
      "LongTermDebtAndCapitalLeaseObligations",
      "OperatingIncomeLoss"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-31",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "interestCoverage": {
-    "value": 37.36254980079681,
+    "value": 35.507751937984494,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpenseNonoperating"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-31",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.23687010349163362,
+    "value": 0.19166707133491964,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebtAndCapitalLeaseObligations"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-31",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -3314,17 +3317,17 @@
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.3036574608129199,
+    "value": 0.16573929565040374,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebt"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-05",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -3393,8 +3396,8 @@
   {
    "cik": 936468,
    "ticker": "LMT",
-   "name": "LOCKHEED MARTIN CORP",
-   "sector": "Industrials",
+   "name": "Lockheed Martin Corp",
+   "sector": null,
    "debt": {
     "value": 21700000000,
     "unit": "USD",
@@ -3646,7 +3649,7 @@
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 0.0010261421939897386,
+    "value": 0.0009874917709019092,
     "unit": "ratio",
     "concepts": [
      "LongTermDebt",
@@ -3660,31 +3663,31 @@
     "stale": true
    },
    "interestCoverage": {
-    "value": 33.549180327868854,
+    "value": 34.86229508196721,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpense"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-30",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "cashToDebt": {
-    "value": 537.6666666666666,
+    "value": 483.1904761904762,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebt"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-30",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -3754,7 +3757,7 @@
    "cik": 1326801,
    "ticker": "META",
    "name": "Meta Platforms, Inc.",
-   "sector": "Communication Services",
+   "sector": null,
    "debt": {
     "value": 83669000000,
     "unit": "USD",
@@ -3999,58 +4002,58 @@
    "name": "MICROSOFT CORP",
    "sector": "Information Technology",
    "debt": {
-    "value": 40294000000,
+    "value": 35481000000,
     "unit": "USD",
     "concepts": [
      "LongTermDebt"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-29",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-28",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "debtToOperatingIncome": {
-    "value": 0.2595644079697495,
+    "value": 0.21742007831314228,
     "unit": "ratio",
     "concepts": [
      "LongTermDebt",
      "OperatingIncomeLoss"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-29",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-28",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "interestCoverage": {
-    "value": 52.891652470187395,
+    "value": 55.60170357751278,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpense"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-29",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-28",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.5195562614781357,
+    "value": 0.5716017023195513,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebt"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-29",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-28",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -5216,62 +5219,62 @@
    "name": "ROYAL CARIBBEAN CRUISES LTD",
    "sector": "Consumer Discretionary",
    "debt": {
-    "value": 21263000000,
+    "value": 20116000000,
     "unit": "USD",
     "concepts": [
      "LongTermDebtAndCapitalLeaseObligations"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-28",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "debtToOperatingIncome": {
-    "value": 4.165948275862069,
+    "value": 3.8149061255452303,
     "unit": "ratio",
     "concepts": [
      "LongTermDebtAndCapitalLeaseObligations",
      "OperatingIncomeLoss"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-28",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "interestCoverage": {
-    "value": 3.4801273410231603,
+    "value": 3.595358830175377,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpense"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-28",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.0411512956779382,
+    "value": 0.04230463312785842,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebtAndCapitalLeaseObligations"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-28",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
-    "value": 0.07549412225705329,
+    "value": 0.07307453062772615,
     "unit": "ratio",
     "concepts": [
      "FuelCosts",
@@ -5368,31 +5371,31 @@
     "stale": false
    },
    "interestCoverage": {
-    "value": -13.747081712062256,
+    "value": -13.350194552529183,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpense"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-30",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.6500180962721679,
+    "value": 0.6349981903727832,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebt"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-30",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -5587,58 +5590,58 @@
    "name": "AT&T INC.",
    "sector": "Communication Services",
    "debt": {
-    "value": 134631000000,
+    "value": 150144000000,
     "unit": "USD",
     "concepts": [
      "LongTermDebtAndCapitalLeaseObligations"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-22",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-21",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "debtToOperatingIncome": {
-    "value": 5.258407217904152,
+    "value": 6.367700072098053,
     "unit": "ratio",
     "concepts": [
      "LongTermDebtAndCapitalLeaseObligations",
      "OperatingIncomeLoss"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-22",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-21",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "interestCoverage": {
-    "value": 3.7590662164146234,
+    "value": 3.4618998678608133,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpense"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-22",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-21",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.13050486143607343,
+    "value": 0.07171115728900256,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebtAndCapitalLeaseObligations"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-22",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-21",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 33,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
