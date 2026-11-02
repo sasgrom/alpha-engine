@@ -1,0 +1,4003 @@
+diff --git a/api/services/company-exposure.test.ts b/api/services/company-exposure.test.ts
+index e6447c8..dbf26f0 100644
+--- a/api/services/company-exposure.test.ts
++++ b/api/services/company-exposure.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, expect, it } from "vitest";
+-import { buildCompanyExposure, buildCompanyExposureReport } from "./company-exposure";
++import { buildCompanyExposure, buildCompanyExposureReport, mergeCompanyExposureReports } from "./company-exposure";
+ import type { FundamentalSeriesRow } from "./fundamental-integrity";
+ 
+ let nextId = 1;
+@@ -30,6 +30,18 @@ describe("company macro exposure evidence", () => {
+     expect(company.foreignRevenueShare.quality).toBe("missing");
+   });
+ 
++  it("marks a TTM built from non-consecutive quarters as partial", () => {
++    const rows = [
++      ...flows(1, "OperatingIncomeLoss", 20).slice(0, 2),
++      point(1, "OperatingIncomeLoss", "2025-12-31", 20),
++      point(1, "OperatingIncomeLoss", "2026-06-30", 20),
++      point(1, "LongTermDebt", "2025-12-31", 100),
++    ];
++    const company = buildCompanyExposure({ cik: 1, ticker: "GAP", name: "Gap", sector: null, rows }, "2026-08-31T00:00:00Z");
++    expect(company.debtToOperatingIncome.quality).toBe("partial");
++    expect(company.debtToOperatingIncome.note).toContain("Non-consecutive");
++  });
++
+   it("derives foreign revenue share only from comparable domicile and total revenue", () => {
+     const rows = [
+       point(2, "RevenueFromContractWithCustomerExcludingAssessedTax", "2025-12-31", 100),
+@@ -42,6 +54,15 @@ describe("company macro exposure evidence", () => {
+     expect(company.foreignDerivativeNotional.value).toBe(5);
+   });
+ 
++  it("rejects foreign revenue ratios from different periods", () => {
++    const rows = [
++      point(2, "RevenueFromContractWithCustomerExcludingAssessedTax", "2025-12-31", 100),
++      point(2, "EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToEntitysCountryOfDomicile", "2011-04-03", 40),
++    ];
++    const company = buildCompanyExposure({ cik: 2, ticker: "PFE", name: "Pfizer", sector: "Health Care", rows }, "2026-01-31T00:00:00Z");
++    expect(company.foreignRevenueShare.quality).toBe("missing");
++  });
++
+   it("fails closed on negative operating income and excludes future periods", () => {
+     const rows = [
+       point(1, "LongTermDebt", "2025-12-31", 100),
+@@ -59,6 +80,19 @@ describe("company macro exposure evidence", () => {
+     expect(company.debt.evidenceAgeDays).toBeGreaterThan(550);
+   });
+ 
++  it("merges targeted updates without dropping other companies", () => {
++    const base = buildCompanyExposureReport([
++      { cik: 1, ticker: "AAA", name: "A", sector: null, rows: [point(1, "LongTermDebt", "2025-12-31", 100)] },
++      { cik: 2, ticker: "PFE", name: "Old PFE", sector: null, rows: [point(2, "LongTermDebt", "2025-12-31", 100)] },
++    ], "2026-01-31T00:00:00Z", "2026-02-01T00:00:00Z");
++    const update = buildCompanyExposureReport([{ cik: 2, ticker: "PFE", name: "New PFE", sector: null, rows: [] }], "2026-01-31T00:00:00Z", "2026-02-02T00:00:00Z");
++    const merged = mergeCompanyExposureReports(base, update);
++    expect(merged.companies).toHaveLength(2);
++    expect(merged.companies.find((company) => company.ticker === "AAA")?.debt.value).toBe(100);
++    expect(merged.companies.find((company) => company.ticker === "PFE")?.name).toBe("New PFE");
++    expect(merged.universeSha256).toBe(base.universeSha256);
++  });
++
+   it("reports only actual coverage and never creates a direction score", () => {
+     const report = buildCompanyExposureReport([{ cik: 1, ticker: "TEST", name: "Test", sector: null, rows: [point(1, "LongTermDebt", "2025-12-31", 100)] }], "2026-01-31T00:00:00Z", "2026-02-01T00:00:00Z");
+     expect(report.coverage.debt).toBe(1);
+diff --git a/api/services/company-exposure.ts b/api/services/company-exposure.ts
+index a35a275..9a0b381 100644
+--- a/api/services/company-exposure.ts
++++ b/api/services/company-exposure.ts
+@@ -70,15 +70,24 @@ function latestByConcept(rows: FundamentalSeriesRow[], concept: string, asOf: st
+   }
+   return [...byPeriod.values()].sort((a, b) => b.periodEnd.localeCompare(a.periodEnd));
+ }
++function quarterIndex(periodEnd: string): number | null {
++  if (!/^\d{4}-\d{2}-\d{2}$/.test(periodEnd)) return null;
++  return Number(periodEnd.slice(0, 4)) * 4 + Math.ceil(Number(periodEnd.slice(5, 7)) / 3) - 1;
++}
++// TTM uses four latest points, but gaps must remain visible as partial evidence
++// rather than being presented as a complete contiguous window.
+ function flowMetric(rows: FundamentalSeriesRow[], concepts: string[], asOf: string): ExposureMetric {
+   for (const concept of concepts) {
+     const points = latestByConcept(rows, concept, asOf).slice(0, 4);
+     if (!points.length) continue;
+     const unit = metricUnit(points[0].unit);
+     if (points.some((point) => metricUnit(point.unit) !== unit)) return missing(`${concept}: unit conflict`);
++    const indices = points.map((point) => quarterIndex(point.periodEnd));
++    const nonConsecutive = indices.some((value, index) => value === null || (index > 0 && indices[index - 1]! - value! !== 1));
+     const value = points.reduce((total, point) => total + (point.val ?? 0), 0);
+-    const quality = points.length === 4 ? "available" : "partial";
+-    return available(value, unit, [concept], points[0].periodEnd, points[0].sourceFiled, quality, points.length < 4 ? `Only ${points.length} quarterly points` : null);
++    const quality = points.length === 4 && !nonConsecutive ? "available" : "partial";
++    const note = nonConsecutive ? "Non-consecutive quarterly points" : points.length < 4 ? `Only ${points.length} quarterly points` : null;
++    return available(value, unit, [concept], points[0].periodEnd, points[0].sourceFiled, quality, note);
+   }
+   return missing(`No ${concepts.join(" or ")}`);
+ }
+@@ -115,7 +124,7 @@ function ratio(numerator: ExposureMetric, denominator: ExposureMetric, note: str
+     periodEnd: numerator.periodEnd ?? denominator.periodEnd,
+     sourceFiled: numerator.sourceFiled ?? denominator.sourceFiled,
+     quality: numerator.quality === "partial" || denominator.quality === "partial" ? "partial" : "available",
+-    note: null,
++    note: numerator.note ?? denominator.note,
+   };
+ }
+ 
+@@ -135,7 +144,7 @@ export function buildCompanyExposure(input: CompanyExposureInput, asOf: string):
+   const oilCost = flowMetric(input.rows, ["CostOfPurchasedOilAndGas"], asOf);
+   const totalRevenue = stockMetric(input.rows, ["RevenueFromContractWithCustomerExcludingAssessedTax"], asOf);
+   const domesticRevenue = stockMetric(input.rows, ["EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToEntitysCountryOfDomicile"], asOf);
+-  const foreignRevenueShare = domesticRevenue.quality !== "missing" && totalRevenue.quality !== "missing" && totalRevenue.value! > 0 && domesticRevenue.unit === totalRevenue.unit
++  const foreignRevenueShare = domesticRevenue.quality !== "missing" && totalRevenue.quality !== "missing" && domesticRevenue.periodEnd === totalRevenue.periodEnd && totalRevenue.value! > 0 && domesticRevenue.unit === totalRevenue.unit
+     ? available(Math.max(0, 1 - domesticRevenue.value! / totalRevenue.value!), "ratio", [...domesticRevenue.concepts, ...totalRevenue.concepts], domesticRevenue.periodEnd!, domesticRevenue.sourceFiled, "available", "Computed as 1 − domicile revenue / total revenue for the same period")
+     : missing("No directly comparable domicile and total revenue");
+   const foreignDerivativeNotional = stockMetric(input.rows, ["NotionalAmountOfForeignCurrencyDerivatives"], asOf);
+@@ -164,6 +173,28 @@ export function buildCompanyExposure(input: CompanyExposureInput, asOf: string):
+   };
+ }
+ 
++// Targeted rebuilds replace one ticker without dropping the others or changing
++// the original universe provenance hash.
++export function mergeCompanyExposureReports(previous: CompanyExposureReport, update: CompanyExposureReport): CompanyExposureReport {
++  const companies = new Map(previous.companies.map((company) => [company.ticker, company]));
++  for (const company of update.companies) companies.set(company.ticker, company);
++  const merged = [...companies.values()].sort((a, b) => a.ticker.localeCompare(b.ticker));
++  return {
++    ...update,
++    universeSha256: previous.universeSha256,
++    companies: merged,
++    coverage: {
++      companies: merged.length,
++      debt: merged.filter((company) => company.debt.quality !== "missing").length,
++      interestCoverage: merged.filter((company) => company.interestCoverage.quality !== "missing").length,
++      fuelCost: merged.filter((company) => company.fuelCostToOperatingIncome.quality !== "missing").length,
++      oilRevenue: merged.filter((company) => company.oilRevenue.quality !== "missing").length,
++      oilCost: merged.filter((company) => company.oilCost.quality !== "missing").length,
++      foreignRevenueShare: merged.filter((company) => company.foreignRevenueShare.quality !== "missing").length,
++    },
++  };
++}
++
+ export function buildCompanyExposureReport(inputs: CompanyExposureInput[], asOf: string, generatedAt: string): CompanyExposureReport {
+   const companies = inputs.map((input) => buildCompanyExposure(input, asOf)).sort((a, b) => a.ticker.localeCompare(b.ticker));
+   return {
+diff --git a/api/services/macro-scenarios.test.ts b/api/services/macro-scenarios.test.ts
+new file mode 100644
+index 0000000..715949c
+--- /dev/null
++++ b/api/services/macro-scenarios.test.ts
+@@ -0,0 +1,116 @@
++import { describe, expect, it } from "vitest";
++import { buildMacroScenarioReport, latestMacroPoint } from "./macro-scenarios";
++import type { NormalizedMacroPoint } from "../../worker/lib/fred";
++import type { ExposureEvidence, PilotEvidence } from "./pilot-exposure-evidence";
++import type { CompanyExposureRow, ExposureMetric } from "./company-exposure";
++
++const AS_OF = "2026-11-02T00:00:00Z";
++const evidence = (metric: string, value: number, stale = false): ExposureEvidence => ({
++  metric, concept: metric, value, unit: "USD", periodStart: null, periodEnd: stale ? "2020-12-31" : "2026-09-30", availableAt: stale ? "2021-01-30T23:59:59.999Z" : "2026-10-30T23:59:59.999Z",
++  form: "10-Q", accessionNo: "accn", sourceUrl: "https://sec.gov/", sourceFactsSha256: "abc", stale, note: null,
++});
++const metric = (value: number | null, stale = false): ExposureMetric => ({ value, unit: "USD", concepts: ["LongTermDebt"], periodEnd: stale ? "2020-12-31" : "2026-09-30", sourceFiled: stale ? "2021-01-30" : "2026-10-30", quality: value === null ? "missing" : "available", note: null, stale });
++const exposure = (ticker: string, debt: number | null): CompanyExposureRow => ({
++  cik: 1, ticker, name: ticker, sector: null,
++  debt: metric(debt), debtToOperatingIncome: metric(null), interestCoverage: metric(null), cashToDebt: metric(null), fuelCostToOperatingIncome: metric(null), oilRevenue: metric(null), oilCost: metric(null), foreignRevenueShare: metric(null), foreignDerivativeNotional: metric(null), missing: [],
++});
++const pilot = (ticker: string, overrides: Partial<PilotEvidence> = {}): PilotEvidence => ({
++  cik: 1, ticker, sourceFactsSha256: "abc", fixedInterestShare: null, weightedAverageInterestRate: null, interestRateHedgeShare: null, effectiveInterestRate: null,
++  debtMaturities: [], fuelCost: null, oilRevenue: null, oilCost: null, foreignRevenueShare: null, foreignDerivativeNotional: null, missing: [], ...overrides,
++});
++const macro = (value: number, availableAt = "2026-10-30T00:00:00.000Z", seriesId = "DGS10"): NormalizedMacroPoint => ({
++  seriesId, observationPeriod: "2026-10-29", value, unit: "Percent", frequency: "Daily", releasedAt: null, availableAt,
++  availablePrecision: "day", availabilityBasis: "fred_realtime_start", researchEligibleAt: availableAt, vintageId: `${seriesId}|${value}|${availableAt}`,
++  supersededAt: null, ingestedAt: "2026-11-01T00:00:00Z", sourceUrl: `https://fred.stlouisfed.org/series/${seriesId}`, sourceHash: "abc",
++});
++const input = (pilotRows: PilotEvidence[], exposureRows: CompanyExposureRow[], shock = 0.01) => ({
++  asOf: AS_OF,
++  definitions: [{ channel: "rates" as const, shock }],
++  macroSeries: {
++    DGS10: [macro(0.04)],
++    DCOILWTICO: [macro(80, "2026-10-30T00:00:00.000Z", "DCOILWTICO")],
++    DTWEXBGS: [macro(100, "2026-10-30T00:00:00.000Z", "DTWEXBGS")],
++    BAMLH0A0HYM2: [macro(3, "2026-10-30T00:00:00.000Z", "BAMLH0A0HYM2")],
++  },
++  pilot: pilotRows,
++  exposures: exposureRows,
++});
++
++describe("macro scenarios", () => {
++  it("computes an exposed-debt upper bound when hedge share is unknown", () => {
++    const report = buildMacroScenarioReport(input([pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) })], [exposure("RCL", 22_872_000_000)]));
++    const impact = report.scenarios[0].impacts[0];
++    expect(impact.status).toBe("computable");
++    expect(impact.metrics[0].impactType).toBe("upper_bound");
++    expect(impact.metrics[0].value).toBeCloseTo(6_861_600);
++    expect(impact.metrics[0].unit).toBe("USD/year");
++    expect(report.scenarios[0].status).toBe("complete");
++    expect(report.scenarios[0].baseline?.scenarioValue).toBeCloseTo(0.05);
++  });
++
++  it("marks a scenario partial when only a subset of companies computes", () => {
++    const report = buildMacroScenarioReport(input([
++      pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) }),
++      pilot("PFE"),
++    ], [exposure("RCL", 22_872_000_000), exposure("PFE", 4_000_000_000)]));
++    expect(report.scenarios[0].status).toBe("partial");
++  });
++
++  it("uses a known current hedge share instead of an upper bound", () => {
++    const report = buildMacroScenarioReport(input([pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97), interestRateHedgeShare: evidence("hedge", 0.5) })], [exposure("RCL", 22_872_000_000)]));
++    expect(report.scenarios[0].impacts[0].metrics[0].impactType).toBe("estimate");
++    expect(report.scenarios[0].impacts[0].metrics[0].value).toBeCloseTo(3_430_800);
++  });
++
++  it("computes gross fuel exposure and marks stale fuel historical only", () => {
++    const current = buildMacroScenarioReport({ ...input([pilot("DAL", { fuelCost: evidence("FuelCosts", 11_202_000_000) })], []), definitions: [{ channel: "oil", shock: 0.2 }] });
++    expect(current.scenarios[0].impacts[0].status).toBe("computable");
++    expect(current.scenarios[0].impacts[0].metrics[0].value).toBeCloseTo(2_240_400_000);
++    expect(current.scenarios[0].impacts[0].metrics[0].impactType).toBe("gross_exposure");
++    const stale = buildMacroScenarioReport({ ...input([pilot("RCL", { fuelCost: evidence("FuelCosts", 385_322_000, true) })], []), definitions: [{ channel: "oil", shock: 0.2 }] });
++    expect(stale.scenarios[0].impacts[0].status).toBe("historical_only");
++    expect(stale.scenarios[0].impacts[0].metrics[0].value).toBeCloseTo(77_064_400);
++  });
++
++  it("does not compute USD exposure without a valid foreign revenue share", () => {
++    const report = buildMacroScenarioReport({ ...input([pilot("PFE")], []), definitions: [{ channel: "usd", shock: 0.05 }] });
++    expect(report.scenarios[0].impacts[0].status).toBe("not_computable");
++    expect(report.scenarios[0].impacts[0].metrics).toEqual([]);
++  });
++
++  it("fails closed for credit scenarios without new issuance terms", () => {
++    const report = buildMacroScenarioReport({ ...input([pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) })], [exposure("RCL", 22_872_000_000)]), definitions: [{ channel: "credit", shock: 0.01 }] });
++    expect(report.scenarios[0].impacts[0].status).toBe("not_computable");
++    expect(report.scenarios[0].impacts[0].reasons).toContain("new_issuance_spread_maturity_and_rating_missing");
++  });
++
++  it("excludes future FRED observations from the baseline", () => {
++    const rows = [macro(0.04), macro(0.09, "2027-01-01T00:00:00.000Z")];
++    expect(latestMacroPoint(rows, AS_OF)?.value).toBe(0.04);
++    expect(latestMacroPoint(rows, "2026-10-01T00:00:00Z")).toBeNull();
++  });
++
++  it("rejects SEC evidence that was unavailable at the scenario as-of date", () => {
++    const future = evidence("fixed", 0.97);
++    future.availableAt = "2027-01-01T00:00:00.000Z";
++    const report = buildMacroScenarioReport(input([pilot("RCL", { fixedInterestShare: future })], [exposure("RCL", 22_872_000_000)]));
++    expect(report.scenarios[0].impacts[0].status).toBe("not_computable");
++    expect(report.scenarios[0].impacts[0].reasons).toContain("fixed_interest_share_unavailable_asof");
++  });
++
++  it("marks the scenario historical when the FRED baseline is stale", () => {
++    const old = macro(0.04);
++    old.observationPeriod = "2020-01-01";
++    const report = buildMacroScenarioReport({ ...input([pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) })], [exposure("RCL", 22_872_000_000)]), macroSeries: { DGS10: [old] } });
++    expect(report.scenarios[0].status).toBe("historical_only");
++  });
++
++  it("rejects out-of-range shocks and missing baselines", () => {
++    const out = buildMacroScenarioReport({ ...input([pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) })], [exposure("RCL", 22_872_000_000)], 0.5) });
++    expect(out.scenarios[0].status).toBe("not_computable");
++    expect(out.scenarios[0].reasons).toContain("shock_out_of_bounds");
++    const missing = buildMacroScenarioReport({ ...input([pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) })], [exposure("RCL", 22_872_000_000)]), macroSeries: {} });
++    expect(missing.scenarios[0].status).toBe("not_computable");
++    expect(missing.scenarios[0].reasons).toContain("fred_baseline_missing");
++  });
++});
+diff --git a/api/services/macro-scenarios.ts b/api/services/macro-scenarios.ts
+new file mode 100644
+index 0000000..8b9d386
+--- /dev/null
++++ b/api/services/macro-scenarios.ts
+@@ -0,0 +1,231 @@
++import type { NormalizedMacroPoint } from "../../worker/lib/fred";
++import type { CompanyExposureRow, ExposureMetric } from "./company-exposure";
++import type { ExposureEvidence, PilotEvidence } from "./pilot-exposure-evidence";
++
++export type ScenarioChannel = "rates" | "oil" | "usd" | "credit";
++export type ScenarioStatus = "computable" | "historical_only" | "not_computable";
++export interface MacroScenarioDefinition { channel: ScenarioChannel; shock: number }
++export interface ScenarioMetric {
++  name: "interest_upper_bound" | "interest_estimate" | "fuel_cost_gross" | "oil_revenue_gross" | "oil_cost_gross" | "usd_translation_elasticity";
++  value: number;
++  unit: "USD/year" | "USD" | "ratio";
++  impactType: "upper_bound" | "estimate" | "gross_exposure";
++  formula: string;
++  concepts: string[];
++  periodStart?: string | null;
++  periodEnd: string | null;
++  availableAt: string | null;
++  stale: boolean;
++}
++export interface CompanyScenarioImpact {
++  ticker: string;
++  status: ScenarioStatus;
++  reasons: string[];
++  metrics: ScenarioMetric[];
++}
++export interface MacroScenario {
++  channel: ScenarioChannel;
++  shock: number;
++  shockUnit: "decimal" | "decimal_percentage";
++  baseline: {
++    seriesId: string;
++    observationPeriod: string;
++    value: number;
++    scenarioValue: number;
++    unit: string;
++    availableAt: string;
++    researchEligibleAt: string;
++    vintageId: string;
++    frequency: string;
++    releasedAt: null;
++    availabilityBasis: "fred_realtime_start";
++    supersededAt: string | null;
++    ingestedAt: string;
++    sourceUrl: string;
++    sourceHash: string;
++    stale: boolean;
++  } | null;
++  status: "complete" | "partial" | "historical_only" | "not_computable";
++  reasons: string[];
++  impacts: CompanyScenarioImpact[];
++}
++export interface MacroScenarioReport {
++  schemaVersion: 1;
++  dataMode?: "live" | "fixture";
++  generatedAt: string;
++  asOf: string;
++  policy: {
++    noSectorInference: true;
++    upperBoundWhenHedgeUnknown: true;
++    staleEvidenceIsHistoricalOnly: true;
++    creditRequiresNewIssuanceTerms: true;
++  };
++  scenarios: MacroScenario[];
++}
++export interface MacroScenarioInput {
++  dataMode?: "live" | "fixture";
++  asOf: string;
++  definitions: MacroScenarioDefinition[];
++  macroSeries: Record<string, NormalizedMacroPoint[]>;
++  pilot: PilotEvidence[];
++  exposures: CompanyExposureRow[];
++}
++
++const SERIES: Record<ScenarioChannel, string> = { rates: "DGS10", oil: "DCOILWTICO", usd: "DTWEXBGS", credit: "BAMLH0A0HYM2" };
++const UNIT: Record<ScenarioChannel, MacroScenario["shockUnit"]> = { rates: "decimal", oil: "decimal_percentage", usd: "decimal_percentage", credit: "decimal" };
++const MAX_SHOCK: Record<ScenarioChannel, number> = { rates: 0.05, oil: 0.90, usd: 0.90, credit: 0.05 };
++const stale = (periodEnd: string | null, asOf: string): boolean => periodEnd ? (Date.parse(asOf) - Date.parse(`${periodEnd}T00:00:00Z`)) / 86_400_000 > 550 : false;
++
++export function latestMacroPoint(rows: NormalizedMacroPoint[], asOf: string): NormalizedMacroPoint | null {
++  const eligible = rows.filter((row) => row.value !== null && Number.isFinite(row.value) && row.observationPeriod <= asOf.slice(0, 10) && row.availableAt <= asOf && row.researchEligibleAt <= asOf);
++  const byPeriod = new Map<string, NormalizedMacroPoint>();
++  for (const row of eligible) {
++    const prior = byPeriod.get(row.observationPeriod);
++    if (!prior || row.availableAt > prior.availableAt) byPeriod.set(row.observationPeriod, row);
++  }
++  return [...byPeriod.values()].sort((a, b) => b.observationPeriod.localeCompare(a.observationPeriod) || b.availableAt.localeCompare(a.availableAt))[0] ?? null;
++}
++function metricDetails(metric: ExposureMetric | ExposureEvidence, asOf: string): { concepts: string[]; periodStart: string | null; periodEnd: string | null; availableAt: string | null; stale: boolean } {
++  const concepts = "concept" in metric && metric.concept ? [metric.concept] : "concepts" in metric ? metric.concepts : [];
++  const availableAt = "availableAt" in metric ? metric.availableAt : "sourceFiled" in metric ? metric.sourceFiled : null;
++  const periodStart = "periodStart" in metric ? metric.periodStart : null;
++  return { concepts, periodStart, periodEnd: metric.periodEnd, availableAt, stale: metric.stale === true || stale(metric.periodEnd, asOf) };
++}
++function validShare(value: number | null): boolean { return value !== null && Number.isFinite(value) && value >= 0 && value <= 1; }
++function availabilityDate(metric: ExposureMetric | ExposureEvidence, asOf: string): string | null {
++  const availableAt = "availableAt" in metric ? metric.availableAt : "sourceFiled" in metric ? metric.sourceFiled : null;
++  return availableAt && availableAt <= asOf ? availableAt : null;
++}
++function notComputable(ticker: string, reasons: string[]): CompanyScenarioImpact { return { ticker, status: "not_computable", reasons, metrics: [] }; }
++
++function rateImpact(pilot: PilotEvidence | undefined, exposure: CompanyExposureRow | undefined, shock: number, asOf: string): CompanyScenarioImpact {
++  if (!pilot || !exposure) return notComputable(pilot?.ticker ?? exposure?.ticker ?? "UNKNOWN", ["pilot_or_exposure_evidence_missing"]);
++  const fixed = pilot.fixedInterestShare;
++  const debt = exposure.debt;
++  if (!fixed || !validShare(fixed.value)) return notComputable(pilot.ticker, ["fixed_interest_share_missing_or_invalid"]);
++  if (!availabilityDate(fixed, asOf)) return notComputable(pilot.ticker, ["fixed_interest_share_unavailable_asof"]);
++  if (debt.quality === "missing" || debt.value === null || debt.value < 0) return notComputable(pilot.ticker, ["debt_missing_or_invalid"]);
++  if (!availabilityDate(debt, asOf)) return notComputable(pilot.ticker, ["debt_unavailable_asof"]);
++  const isHistorical = stale(fixed.periodEnd, asOf) || stale(debt.periodEnd, asOf);
++  const hedge = pilot.interestRateHedgeShare;
++  if (hedge && !validShare(hedge.value)) return notComputable(pilot.ticker, ["interest_rate_hedge_share_invalid"]);
++  const hedgeAvailable = hedge ? availabilityDate(hedge, asOf) : null;
++  const hedgeValue = hedge && hedgeAvailable ? hedge.value! : 0;
++  const exposedDebt = debt.value * (1 - fixed.value!) * (1 - hedgeValue);
++  const impactType = hedgeAvailable ? "estimate" : "upper_bound";
++  const status = isHistorical || (hedge && stale(hedge.periodEnd, asOf)) ? "historical_only" : "computable";
++  const details = metricDetails(debt, asOf);
++  return {
++    ticker: pilot.ticker,
++    status,
++    reasons: hedgeAvailable ? [] : ["hedge_share_unknown_upper_bound"],
++    metrics: [{
++      name: impactType === "estimate" ? "interest_estimate" : "interest_upper_bound",
++      value: exposedDebt * shock,
++      unit: "USD/year",
++      impactType,
++      formula: "debt × (1 − fixedInterestShare) × (1 − interestRateHedgeShare) × rateShock; assumes immediate full repricing of exposed debt",
++      ...details,
++    }],
++  };
++}
++function oilMetrics(pilot: PilotEvidence, shock: number, asOf: string): { metrics: ScenarioMetric[]; historical: boolean } {
++  const metrics: ScenarioMetric[] = [];
++  let historical = false;
++  for (const [name, evidence] of [["fuel_cost_gross", pilot.fuelCost], ["oil_revenue_gross", pilot.oilRevenue], ["oil_cost_gross", pilot.oilCost]] as const) {
++    if (!evidence || evidence.value === null || !availabilityDate(evidence, asOf)) continue;
++    historical ||= stale(evidence.periodEnd, asOf);
++    metrics.push({
++      name,
++      value: evidence.value * shock,
++      unit: "USD",
++      impactType: "gross_exposure",
++      formula: `${name === "fuel_cost_gross" ? "fuelCost" : name === "oil_revenue_gross" ? "oilRevenue" : "oilCost"} × oilShockPct; gross exposure before hedges, basis, pass-through and tax`,
++      ...metricDetails(evidence, asOf),
++    });
++  }
++  return { metrics, historical };
++}
++function oilImpact(pilot: PilotEvidence | undefined, shock: number, asOf: string): CompanyScenarioImpact {
++  if (!pilot) return notComputable("UNKNOWN", ["pilot_evidence_missing"]);
++  const { metrics, historical } = oilMetrics(pilot, shock, asOf);
++  if (!metrics.length) return notComputable(pilot.ticker, ["fuel_cost_and_oil_revenue_cost_missing"]);
++  return { ticker: pilot.ticker, status: historical ? "historical_only" : "computable", reasons: ["hedge_and_pass_through_unknown_gross_exposure"], metrics };
++}
++function usdImpact(pilot: PilotEvidence | undefined, shock: number, asOf: string): CompanyScenarioImpact {
++  if (!pilot?.foreignRevenueShare || !validShare(pilot.foreignRevenueShare.value)) return notComputable(pilot?.ticker ?? "UNKNOWN", ["foreign_revenue_share_missing_or_invalid"]);
++  const share = pilot.foreignRevenueShare;
++  if (!availabilityDate(share, asOf)) return notComputable(pilot.ticker, ["foreign_revenue_share_unavailable_asof"]);
++  return {
++    ticker: pilot.ticker,
++    status: stale(share.periodEnd, asOf) ? "historical_only" : "computable",
++    reasons: ["translation_elasticity_only_not_profit_or_hedge_direction"],
++    metrics: [{
++      name: "usd_translation_elasticity",
++      value: -share.value! * shock,
++      unit: "ratio",
++      impactType: "gross_exposure",
++      formula: "−foreignRevenueShare × usdShockPct; translation elasticity only, not earnings or hedge-adjusted impact",
++      ...metricDetails(share, asOf),
++    }],
++  };
++}
++// "complete" means every pilot computes; "partial" means only a subset does.
++// A stale FRED baseline moves the whole scenario to historical-only context.
++function scenarioStatus(impacts: CompanyScenarioImpact[], baselineStale: boolean): MacroScenario["status"] {
++  if (baselineStale) return "historical_only";
++  const computable = impacts.filter((impact) => impact.status === "computable").length;
++  const historical = impacts.filter((impact) => impact.status === "historical_only").length;
++  if (computable === impacts.length && impacts.length > 0) return "complete";
++  if (computable > 0) return "partial";
++  if (historical > 0) return "historical_only";
++  return "not_computable";
++}
++
++export function buildMacroScenarioReport(input: MacroScenarioInput): MacroScenarioReport {
++  const exposures = new Map(input.exposures.map((company) => [company.ticker, company]));
++  const scenarios = input.definitions.map((definition): MacroScenario => {
++    if (!Number.isFinite(definition.shock) || Math.abs(definition.shock) > MAX_SHOCK[definition.channel]) {
++      return { channel: definition.channel, shock: definition.shock, shockUnit: UNIT[definition.channel], baseline: null, status: "not_computable", reasons: ["shock_out_of_bounds"], impacts: [] };
++    }
++    const point = latestMacroPoint(input.macroSeries[SERIES[definition.channel]] ?? [], input.asOf);
++    if (!point || point.value === null) {
++      return { channel: definition.channel, shock: definition.shock, shockUnit: UNIT[definition.channel], baseline: null, status: "not_computable", reasons: ["fred_baseline_missing"], impacts: input.pilot.map((pilot) => notComputable(pilot.ticker, ["fred_baseline_missing"])) };
++    }
++    const baselineStale = stale(point.observationPeriod, input.asOf);
++    const scenarioValue = definition.channel === "rates" || definition.channel === "credit" ? point.value + definition.shock : point.value * (1 + definition.shock);
++    const baseline = {
++      seriesId: point.seriesId,
++      observationPeriod: point.observationPeriod,
++      value: point.value,
++      scenarioValue,
++      unit: point.unit,
++      availableAt: point.availableAt,
++      researchEligibleAt: point.researchEligibleAt,
++      vintageId: point.vintageId,
++      frequency: point.frequency,
++      releasedAt: null,
++      availabilityBasis: point.availabilityBasis,
++      supersededAt: point.supersededAt,
++      ingestedAt: point.ingestedAt,
++      sourceUrl: point.sourceUrl,
++      sourceHash: point.sourceHash,
++      stale: baselineStale,
++    };
++    const impacts = input.pilot.map((pilot) => {
++      if (definition.channel === "rates") return rateImpact(pilot, exposures.get(pilot.ticker), definition.shock, input.asOf);
++      if (definition.channel === "oil") return oilImpact(pilot, definition.shock, input.asOf);
++      if (definition.channel === "usd") return usdImpact(pilot, definition.shock, input.asOf);
++      return notComputable(pilot.ticker, ["new_issuance_spread_maturity_and_rating_missing"]);
++    });
++    return { channel: definition.channel, shock: definition.shock, shockUnit: UNIT[definition.channel], baseline, status: scenarioStatus(impacts, baselineStale), reasons: [], impacts };
++  });
++  return {
++    schemaVersion: 1,
++    ...(input.dataMode ? { dataMode: input.dataMode } : {}),
++    generatedAt: new Date().toISOString(),
++    asOf: input.asOf,
++    policy: { noSectorInference: true, upperBoundWhenHedgeUnknown: true, staleEvidenceIsHistoricalOnly: true, creditRequiresNewIssuanceTerms: true },
++    scenarios,
++  };
++}
+diff --git a/api/services/pilot-exposure-evidence.test.ts b/api/services/pilot-exposure-evidence.test.ts
+new file mode 100644
+index 0000000..fd3816c
+--- /dev/null
++++ b/api/services/pilot-exposure-evidence.test.ts
+@@ -0,0 +1,58 @@
++import { describe, expect, it } from "vitest";
++import { buildPilotEvidence, type EvidenceCompanyFacts } from "./pilot-exposure-evidence";
++
++const record = (end: string, val: number, filed = end, start?: string) => ({ end, val, filed, form: "10-K", accn: "0001-26-000001", ...(start ? { start } : {}) });
++type Fact = ReturnType<typeof record>;
++const facts = (concepts: Record<string, Record<string, Fact[]>>): EvidenceCompanyFacts => ({
++  cik: 1,
++  facts: { "us-gaap": Object.fromEntries(Object.entries(concepts).map(([concept, units]) => [concept, { units }])) },
++});
++
++describe("pilot exposure evidence", () => {
++  it("uses exact current rate concepts and preserves their availability", () => {
++    const company = buildPilotEvidence(facts({
++      LongTermDebtPercentageBearingFixedInterestRate: { pure: [record("2026-09-30", 0.97, "2026-10-30")] },
++      DebtWeightedAverageInterestRate: { pure: [record("2026-09-30", 0.0471, "2026-10-30")] },
++      LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo: { USD: [record("2026-09-30", 3211000000, "2026-10-30")] },
++    }), "RCL", "2026-11-02T00:00:00Z");
++    expect(company.fixedInterestShare?.value).toBe(0.97);
++    expect(company.weightedAverageInterestRate?.value).toBe(0.0471);
++    expect(company.debtMaturities[0].value).toBe(3211000000);
++    expect(company.debtMaturities[0].sourceUrl).toContain("000126000001");
++  });
++
++  it("preserves the start of a YTD exposure period", () => {
++    const company = buildPilotEvidence(facts({
++      FuelCosts: { USD: [record("2026-09-30", 11202000000, "2026-10-09", "2026-01-01")] },
++    }), "DAL", "2026-11-02T00:00:00Z");
++    expect(company.fuelCost?.periodStart).toBe("2026-01-01");
++    expect(company.fuelCost?.periodEnd).toBe("2026-09-30");
++  });
++
++  it("computes foreign revenue share only from matching periods and marks it stale", () => {
++    const company = buildPilotEvidence(facts({
++      RevenueFromContractWithCustomerExcludingAssessedTax: { USD: [record("2011-04-03", 100, "2011-05-01")] },
++      EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToEntitysCountryOfDomicile: { USD: [record("2011-04-03", 40, "2011-05-01")] },
++      NotionalAmountOfForeignCurrencyDerivatives: { USD: [record("2011-04-03", 5, "2011-05-01")] },
++    }), "PFE", "2026-11-02T00:00:00Z");
++    expect(company.foreignRevenueShare?.value).toBeCloseTo(0.6);
++    expect(company.foreignRevenueShare?.unit).toBe("ratio");
++    expect(company.foreignRevenueShare?.stale).toBe(true);
++    expect(company.foreignDerivativeNotional?.value).toBe(5);
++  });
++
++  it("marks old economic periods stale even when the accession is recent", () => {
++    const company = buildPilotEvidence(facts({
++      PercentageOfDebtHedgedByInterestRateDerivatives: { pure: [record("2023-12-31", 0.6, "2026-10-30")] },
++    }), "COP", "2026-11-02T00:00:00Z");
++    expect(company.interestRateHedgeShare?.stale).toBe(true);
++  });
++
++  it("does not invent missing fuel, oil or rate-hedge evidence", () => {
++    const company = buildPilotEvidence(facts({}), "CVX", "2026-11-02T00:00:00Z");
++    expect(company.fuelCost).toBeNull();
++    expect(company.oilRevenue).toBeNull();
++    expect(company.interestRateHedgeShare).toBeNull();
++    expect(company.missing).toContain("direct fuel or oil exposure");
++  });
++});
+diff --git a/api/services/pilot-exposure-evidence.ts b/api/services/pilot-exposure-evidence.ts
+new file mode 100644
+index 0000000..2260340
+--- /dev/null
++++ b/api/services/pilot-exposure-evidence.ts
+@@ -0,0 +1,124 @@
++import { endOfUtcDay, sha256Text } from "../../worker/lib/fred";
++
++interface FactRecord { end: string; filed?: string; form?: string; accn?: string; val?: number; start?: string }
++interface ConceptBody { units: Record<string, FactRecord[]> }
++export interface EvidenceCompanyFacts { cik: number; facts: Record<string, Record<string, ConceptBody>> }
++export interface ExposureEvidence {
++  metric: string;
++  concept: string | null;
++  value: number | null;
++  unit: string | null;
++  periodStart: string | null;
++  periodEnd: string | null;
++  availableAt: string | null;
++  form: string | null;
++  accessionNo: string | null;
++  sourceUrl: string | null;
++  sourceFactsSha256: string;
++  stale: boolean;
++  note: string | null;
++}
++export interface PilotEvidence {
++  cik: number;
++  ticker: string;
++  sourceFactsSha256: string;
++  fixedInterestShare: ExposureEvidence | null;
++  weightedAverageInterestRate: ExposureEvidence | null;
++  interestRateHedgeShare: ExposureEvidence | null;
++  effectiveInterestRate: ExposureEvidence | null;
++  debtMaturities: ExposureEvidence[];
++  fuelCost: ExposureEvidence | null;
++  oilRevenue: ExposureEvidence | null;
++  oilCost: ExposureEvidence | null;
++  foreignRevenueShare: ExposureEvidence | null;
++  foreignDerivativeNotional: ExposureEvidence | null;
++  missing: string[];
++}
++export interface PilotEvidenceReport { schemaVersion: 1; generatedAt: string; asOf: string; companies: PilotEvidence[] }
++
++function latestRecord(payload: EvidenceCompanyFacts, concept: string, asOf: string): { record: FactRecord; unit: string } | null {
++  const records: { record: FactRecord; unit: string }[] = [];
++  for (const taxonomy of Object.values(payload.facts)) {
++    const body = taxonomy[concept];
++    for (const [unit, facts] of Object.entries(body?.units ?? {})) {
++      for (const record of facts) if (record.end <= asOf.slice(0, 10) && (!record.filed || record.filed <= asOf)) records.push({ record, unit });
++    }
++  }
++  records.sort((a, b) => b.record.end.localeCompare(a.record.end) || (b.record.filed ?? "").localeCompare(a.record.filed ?? "") || (b.record.accn ?? "").localeCompare(a.record.accn ?? ""));
++  return records[0] ?? null;
++}
++function evidence(payload: EvidenceCompanyFacts, metric: string, concept: string, asOf: string, sourceFactsSha256: string, note: string | null = null): ExposureEvidence | null {
++  const latest = latestRecord(payload, concept, asOf);
++  if (!latest) return null;
++  const { record, unit } = latest;
++  const evidenceDate = record.end || record.filed;
++  const ageDays = evidenceDate ? Math.max(0, Math.floor((Date.parse(asOf) - Date.parse(evidenceDate)) / 86_400_000)) : 0;
++  return {
++    metric,
++    concept,
++    value: typeof record.val === "number" && Number.isFinite(record.val) ? record.val : null,
++    unit,
++    periodStart: record.start ?? null,
++    periodEnd: record.end,
++    availableAt: record.filed ? endOfUtcDay(record.filed) : null,
++    form: record.form ?? null,
++    accessionNo: record.accn ?? null,
++    sourceUrl: record.accn ? `https://www.sec.gov/Archives/edgar/data/${payload.cik}/${record.accn.replace(/-/g, "")}/` : null,
++    sourceFactsSha256,
++    stale: ageDays > 550,
++    note,
++  };
++}
++function allMaturities(payload: EvidenceCompanyFacts, asOf: string, sourceFactsSha256: string): ExposureEvidence[] {
++  const concepts = new Set<string>();
++  for (const taxonomy of Object.values(payload.facts)) for (const concept of Object.keys(taxonomy)) if (concept.startsWith("LongTermDebtMaturitiesRepaymentsOfPrincipal")) concepts.add(concept);
++  return [...concepts].sort().map((concept) => evidence(payload, "debt_maturity", concept, asOf, sourceFactsSha256)).filter((item): item is ExposureEvidence => Boolean(item));
++}
++
++export function buildPilotEvidence(payload: EvidenceCompanyFacts, ticker: string, asOf: string): PilotEvidence {
++  const sourceFactsSha256 = sha256Text(JSON.stringify(payload));
++  const fixedInterestShare = evidence(payload, "fixed_interest_share", "LongTermDebtPercentageBearingFixedInterestRate", asOf, sourceFactsSha256);
++  const weightedAverageInterestRate = evidence(payload, "weighted_average_interest_rate", "DebtWeightedAverageInterestRate", asOf, sourceFactsSha256);
++  const interestRateHedgeShare = evidence(payload, "interest_rate_hedge_share", "PercentageOfDebtHedgedByInterestRateDerivatives", asOf, sourceFactsSha256);
++  const effectiveInterestRate = evidence(payload, "effective_interest_rate", "DebtInstrumentInterestRateEffectivePercentage", asOf, sourceFactsSha256);
++  const debtMaturities = allMaturities(payload, asOf, sourceFactsSha256);
++  const fuelCost = evidence(payload, "fuel_cost", "FuelCosts", asOf, sourceFactsSha256);
++  const oilRevenue = evidence(payload, "oil_revenue", "OilAndGasRevenue", asOf, sourceFactsSha256);
++  const oilCost = evidence(payload, "oil_cost", "CostOfPurchasedOilAndGas", asOf, sourceFactsSha256);
++  const totalRevenue = latestRecord(payload, "RevenueFromContractWithCustomerExcludingAssessedTax", asOf);
++  const domesticRevenue = latestRecord(payload, "EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToEntitysCountryOfDomicile", asOf);
++  const foreignRevenueShare = totalRevenue && domesticRevenue && totalRevenue.unit === domesticRevenue.unit && totalRevenue.record.end === domesticRevenue.record.end && totalRevenue.record.val! > 0
++    ? evidence(payload, "foreign_revenue_share", domesticRevenueUnitConcept(), asOf, sourceFactsSha256, "Computed as 1 − domicile revenue / total revenue for the same period")
++    : null;
++  if (foreignRevenueShare) {
++    foreignRevenueShare.value = Math.max(0, 1 - domesticRevenue!.record.val! / totalRevenue!.record.val!);
++    foreignRevenueShare.unit = "ratio";
++  }
++  const foreignDerivativeNotional = evidence(payload, "foreign_derivative_notional", "NotionalAmountOfForeignCurrencyDerivatives", asOf, sourceFactsSha256);
++  const missing = [
++    ...(!fixedInterestShare && !interestRateHedgeShare ? ["fixed/floating debt share or interest-rate hedge share"] : []),
++    ...(!fuelCost && !oilRevenue && !oilCost ? ["direct fuel or oil exposure"] : []),
++    ...(!foreignRevenueShare ? ["directly comparable foreign revenue share"] : []),
++  ];
++  return {
++    cik: payload.cik,
++    ticker,
++    sourceFactsSha256,
++    fixedInterestShare,
++    weightedAverageInterestRate,
++    interestRateHedgeShare,
++    effectiveInterestRate,
++    debtMaturities,
++    fuelCost,
++    oilRevenue,
++    oilCost,
++    foreignRevenueShare,
++    foreignDerivativeNotional,
++    missing,
++  };
++}
++function domesticRevenueUnitConcept(): string { return "EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToEntitysCountryOfDomicile"; }
++
++export function buildPilotEvidenceReport(payloads: EvidenceCompanyFacts[], tickers: string[], asOf: string, generatedAt: string): PilotEvidenceReport {
++  return { schemaVersion: 1, generatedAt, asOf, companies: payloads.map((payload, index) => buildPilotEvidence(payload, tickers[index], asOf)) };
++}
+diff --git a/docs/ALPHA_ENGINE_MANUAL.md b/docs/ALPHA_ENGINE_MANUAL.md
+index e8a8600..0aef1ba 100644
+--- a/docs/ALPHA_ENGINE_MANUAL.md
++++ b/docs/ALPHA_ENGINE_MANUAL.md
+@@ -1582,3 +1582,18 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
+ - Rate-limit логина и капча — в памяти процесса (рестарт их обнуляет; деплой одноинстансный, D25);
+ - Линза view-as (4e) — read-only по построению; записи под ней отклоняются сервером;
+ - Скоринг-покрытие на момент итерации 3b: 2 компании × 3 документа × 9 аспектов (rubric v2) = 54 строки; валидационный ρ не вычислялся — выборка < 30 филингов и < 20 компаний.
++
++
++## 9. Макросценарии и карта экспозиций
++
++Слой macro exposure строится в следующем порядке: FRED/ALFRED vintage data → manifest QA → SEC exposure evidence → Scenario Engine → Scenario Lab UI.
++
++- FRED-серии загружаются с 2000-01-01, годовыми real-time чанками; availability отделена от observation period и не подменяет время исходного агентского релиза.
++- Компания-специфичная экспозиция берётся из XBRL: долг, fixed-rate share, interest-rate hedges, топливо, нефть, география выручки. Отсутствующие параметры не восполняются секторными правилами или нулями.
++- `upper_bound` — верхняя граница при неизвестном hedge share; `gross_exposure` — валовая чувствительность без hedges, basis, pass-through и налогов, а не прогноз прибыли.
++- `historical_only` — устаревший параметр, а не актуальный сценарий; `not_computable` — недостаточно доказательств.
++- `complete` означает вычисление всех пилотов, `partial` — только их подмножества.
++- Топливо и нефтяные концепты сохраняют `periodStart`, поэтому YTD не выдаётся за standalone quarter; TTM с непоследовательными кварталами помечается `partial`.
++- Scenario Lab (`/scenario-lab`) пересчитывает shocks в браузере тем же движком и показывает baseline, impacts, формулы и evidence inspector. Fixture-данные всегда маркируются отдельно от live baseline.
++
++Подробный операционный мануал: `docs/MACRO_DATA.md`.
+diff --git a/docs/ALPHA_ENGINE_MANUAL_EN.md b/docs/ALPHA_ENGINE_MANUAL_EN.md
+index 1bec956..253bb45 100644
+--- a/docs/ALPHA_ENGINE_MANUAL_EN.md
++++ b/docs/ALPHA_ENGINE_MANUAL_EN.md
+@@ -1576,3 +1576,18 @@ From the first NVDA runs (owner eyeballing via why): (1) MD&A extraction verifie
+ - Login rate-limits and captcha live in process memory (a restart resets them; single-instance deployment, D25);
+ - The view-as lens (4e) is read-only by construction; writes under it are rejected server-side;
+ - Scoring coverage as of iteration 3b: 2 companies × 3 documents × 9 aspects (rubric v2) = 54 rows; validation ρ not yet computed — sample < 30 filings and < 20 companies.
++
++
++## 9. Macro scenarios and exposure mapping
++
++The macro exposure pipeline is: FRED/ALFRED vintage data → manifest QA → SEC exposure evidence → Scenario Engine → Scenario Lab UI.
++
++- FRED series are downloaded from 2000-01-01 in yearly real-time chunks. Availability is kept separate from observation period and is not presented as the original agency release timestamp.
++- Company exposure uses XBRL evidence: debt, fixed-rate share, interest-rate hedges, fuel, oil and revenue geography. Missing parameters are never filled from sector rules or zeros.
++- `upper_bound` means hedge share is unknown; `gross_exposure` is pre-hedge, pre-basis, pre-pass-through and pre-tax sensitivity, not a profit forecast.
++- `historical_only` means stale evidence, not a current scenario; `not_computable` means insufficient evidence.
++- `complete` means all pilots compute; `partial` means only a subset computes.
++- Fuel and oil concepts preserve `periodStart`, so YTD cannot be mistaken for a standalone quarter. TTM built from non-consecutive quarters is marked `partial`.
++- Scenario Lab (`/scenario-lab`) recomputes every shock in the browser using the same engine and exposes baseline, impacts, formulas and an evidence inspector. Fixtures are always explicitly distinguished from the live FRED baseline.
++
++Operator manual: `docs/MACRO_DATA.md`.
+diff --git a/docs/MACRO_DATA.md b/docs/MACRO_DATA.md
+index 10e2560..ec81e3f 100644
+--- a/docs/MACRO_DATA.md
++++ b/docs/MACRO_DATA.md
+@@ -184,4 +184,47 @@ For one company or a historical as-of check:
+ npx tsx scripts/build-company-exposure.mts --only DAL --as-of 2026-01-31T00:00:00Z
+ ```
+ 
+-Outputs are `public/reports/company-exposures.json` and `.md`. The report computes only directly supported values: debt/operating income, operating income/interest expense, cash/debt, fuel cost/operating income, oil revenue/cost and foreign revenue share when domicile and total revenue are directly comparable. It does not infer sector directions, floating-rate debt share, maturity schedules or hedge ratios. Each metric carries source concepts, period, availability and stale-evidence flags.
++Outputs are `public/reports/company-exposures.json` and `.md`. The report computes only directly supported values: debt/operating income, operating income/interest expense, cash/debt, fuel cost/operating income, oil revenue/cost and foreign revenue share when domicile and total revenue are directly comparable **for the same periodEnd**. It does not infer sector directions, floating-rate debt share, maturity schedules or hedge ratios. Each metric carries source concepts, period, availability and stale-evidence flags.
++
++## 9. Pilot source-linked evidence pack
++
++```powershell
++npx tsx scripts/exposure-evidence-probe.mts
++npx tsx scripts/build-pilot-exposure-evidence.mts
++```
++
++The probe inspects fresh SEC companyfacts for DAL, RCL, CVX, COP and PFE. The builder preserves exact fixed-rate shares, weighted/effective rates, interest-rate hedge shares, maturity concepts, fuel/oil metrics and foreign derivative notionals with accession links and raw-payload hashes. No LLM is used. Staleness is based on the economic period, not on the accession year. If comparable domicile and total revenue do not share `periodEnd`, foreign revenue share remains missing.
++
++## 10. Macro Scenario Engine
++
++```powershell
++npx tsx scripts/build-macro-scenarios.mts --macro-root D:\research\alpha-engine\macro
++```
++
++Optional shocks and historical as-of:
++
++```powershell
++npx tsx scripts/build-macro-scenarios.mts --rate-shock 0.01 --oil-shock 0.20 --usd-shock 0.05 --credit-shock 0.01 --as-of 2026-01-31T00:00:00Z
++```
++
++The engine reads normalized FRED baselines, pilot SEC evidence and company exposure rows. Every baseline uses `availableAt` and `researchEligibleAt`; SEC evidence must also have `availableAt/sourceFiled <= asOf`. Future evidence is excluded rather than backdated.
++
++- **Rates:** `debt × (1 − fixedInterestShare) × (1 − interestRateHedgeShare) × rateShock`, in USD/year. If hedge share is unknown, the result is an **upper bound**, not a point estimate. The formula assumes immediate full repricing and is not a maturity-specific forecast.
++- **Oil:** fuel cost, oil revenue and purchased oil/gas are multiplied by the oil shock. These are **gross exposure** values before hedges, basis, pass-through and tax, not profit forecasts. Stale evidence is `historical_only`.
++- **USD:** `−foreignRevenueShare × usdShockPct` is only a translation elasticity. It is not earnings impact and does not infer derivative direction. No valid share means `not_computable`.
++- **Credit:** remains `not_computable` until new-issuance spread, maturity and rating terms exist.
++
++The output is `public/reports/macro-scenarios.json` and `.md`. Use `--out /tmp/macro-scenarios.json` for an isolated smoke run. Scenario shocks are user-defined assumptions, not FRED forecasts.
++
++## 11. Scenario Lab UI and review invariants
++
++Open owner-only **`/scenario-lab`**. It loads the three reviewed reports at runtime, recomputes every shock in the browser and exports the current JSON. No scenario state is inferred from missing reports.
++
++- `complete` means every pilot computes; `partial` means only a subset computes.
++- `upper_bound` is used when hedge share is unknown; `gross_exposure` is not net income.
++- FRED baseline carries full source URL, hash, vintage and research availability.
++- Fuel and oil evidence preserves `periodStart`, so YTD periods cannot be mistaken for standalone quarters.
++- TTM built from non-consecutive quarters is `partial`, never silently `available`.
++- Targeted company rebuilds preserve the original `universeSha256`.
++
++The evidence inspector shows exact formula, concepts, period, availability and reasons for `not_computable`. Empty states include the build commands rather than fabricated data. A fixture, when used for tests, is explicitly marked `dataMode: "fixture"` and is never presented as a live FRED baseline.
+* Unmerged path public/reports/company-exposures.json
+* Unmerged path public/reports/company-exposures.md
+diff --git a/public/reports/exposure-evidence-probe.json b/public/reports/exposure-evidence-probe.json
+new file mode 100644
+index 0000000..79e82e3
+--- /dev/null
++++ b/public/reports/exposure-evidence-probe.json
+@@ -0,0 +1,1369 @@
++{
++ "schemaVersion": 1,
++ "generatedAt": "2026-11-02T08:13:22.406Z",
++ "candidates": {
++  "DAL": [
++   {
++    "concept": "DebtInstrumentCarryingAmount",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 26,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-09",
++     "form": "10-Q",
++     "val": 12096000000
++    }
++   },
++   {
++    "concept": "DebtInstrumentUnamortizedDiscountPremiumAndDebtIssuanceCostsNet",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 26,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-09",
++     "form": "10-Q",
++     "val": -9000000
++    }
++   },
++   {
++    "concept": "FuelCosts",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 41,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-09",
++     "form": "10-Q",
++     "val": 11202000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "LongTermDebt",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 26,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-09",
++     "form": "10-Q",
++     "val": 12105000000
++    }
++   },
++   {
++    "concept": "LongTermDebtAndCapitalLeaseObligations",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 26,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-09",
++     "form": "10-Q",
++     "val": 9527000000
++    }
++   },
++   {
++    "concept": "LongTermDebtAndCapitalLeaseObligationsCurrent",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 26,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-09",
++     "form": "10-Q",
++     "val": 3324000000
++    }
++   },
++   {
++    "concept": "LongTermDebtCurrent",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 26,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-09",
++     "form": "10-Q",
++     "val": 2981000000
++    }
++   },
++   {
++    "concept": "LongTermDebtFairValue",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 26,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-09",
++     "form": "10-Q",
++     "val": 11900000000
++    }
++   },
++   {
++    "concept": "LongTermDebtNoncurrent",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 26,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-09",
++     "form": "10-Q",
++     "val": 9124000000
++    }
++   },
++   {
++    "concept": "ProceedsFromIssuanceOfLongTermDebt",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 14,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-09",
++     "form": "10-Q",
++     "val": 103000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "RepaymentsOfLongTermDebtAndCapitalSecurities",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 27,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-09",
++     "form": "10-Q",
++     "val": 3334000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "FinanceLeaseInterestExpense",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 6,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-11",
++     "form": "10-K",
++     "val": 37000000,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalAfterYearFive",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-11",
++     "form": "10-K",
++     "val": 4754000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-11",
++     "form": "10-K",
++     "val": 1367000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-11",
++     "form": "10-K",
++     "val": 1222000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-11",
++     "form": "10-K",
++     "val": 621000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-11",
++     "form": "10-K",
++     "val": 3460000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-11",
++     "form": "10-K",
++     "val": 1878000000
++    }
++   },
++   {
++    "concept": "DebtInstrumentRepaidPrincipal",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 4,
++    "latest": {
++     "end": "2024-12-31",
++     "filed": "2025-02-11",
++     "form": "10-K",
++     "val": 844000000,
++     "start": "2024-01-01"
++    }
++   },
++   {
++    "concept": "AvailableForSaleSecuritiesDebtMaturitiesWithinOneYearFairValue",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2023-09-30",
++     "filed": "2023-10-12",
++     "form": "10-Q",
++     "val": 2100000000
++    }
++   }
++  ],
++  "RCL": [
++   {
++    "concept": "DebtWeightedAverageInterestRate",
++    "taxonomy": "us-gaap",
++    "units": [
++     "pure"
++    ],
++    "recentRecords": 26,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 0.0471
++    }
++   },
++   {
++    "concept": "InterestExpenseNonoperating",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 33,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 805000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "LongTermDebtAndCapitalLeaseObligations",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 26,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 20116000000
++    }
++   },
++   {
++    "concept": "LongTermDebtAndCapitalLeaseObligationsCurrent",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 26,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 2239000000
++    }
++   },
++   {
++    "concept": "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 12,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 22872000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 15,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 2371000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 15,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 1084000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 15,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 1134000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 15,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 3211000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalRemainderOfFiscalYear",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 12,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 579000000
++    }
++   },
++   {
++    "concept": "LongTermDebtPercentageBearingFixedInterestRate",
++    "taxonomy": "us-gaap",
++    "units": [
++     "pure"
++    ],
++    "recentRecords": 26,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 0.97
++    }
++   },
++   {
++    "concept": "OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 41,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": -6000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "ProceedsFromIssuanceOfLongTermDebt",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 27,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 7227000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "RepaymentsOfLongTermDebt",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 27,
++    "latest": {
++     "end": "2026-09-30",
++     "filed": "2026-10-27",
++     "form": "10-Q",
++     "val": 6236000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "FinanceLeaseInterestExpense",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 31,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-11",
++     "form": "10-K",
++     "val": 8000000,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "ForeignCurrencyTransactionGainLossBeforeTax",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 19,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-11",
++     "form": "10-K",
++     "val": -63000000,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalAfterYearFive",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-11",
++     "form": "10-K",
++     "val": 10642000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-11",
++     "form": "10-K",
++     "val": 1089000000
++    }
++   },
++   {
++    "concept": "InterestExpense",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 8,
++    "latest": {
++     "end": "2024-03-31",
++     "filed": "2024-04-25",
++     "form": "10-Q",
++     "val": 424000000,
++     "start": "2024-01-01"
++    }
++   }
++  ],
++  "CVX": [
++   {
++    "concept": "EnergyRelatedInventoryChemicals",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 24,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": 632000000
++    }
++   },
++   {
++    "concept": "ForeignCurrencyTransactionGainLossUnrealized",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 25,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": -168000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "InterestExpenseDebt",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 37,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": 697000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 24,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": 36674000000
++    }
++   },
++   {
++    "concept": "OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 37,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": -92000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "PaymentsToAcquireOilAndGasPropertyAndEquipment",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 25,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": 8340000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "ProceedsFromIssuanceOfLongTermDebt",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 24,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": 99000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "RepaymentsOfLongTermDebtAndCapitalSecurities",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 25,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": 3069000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "DebtInstrumentCarryingAmount",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 5,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 30922000000
++    }
++   },
++   {
++    "concept": "LongTermDebtAndCapitalLeaseObligations",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 5,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 39781000000
++    }
++   },
++   {
++    "concept": "LongTermDebtCurrent",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 5,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 2345000000
++    }
++   },
++   {
++    "concept": "LongTermDebtFairValue",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 5,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 649000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalAfterYearFive",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 11185000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 2345000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 5350000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 1567000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 4752000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 5723000000
++    }
++   },
++   {
++    "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardFairValueAssumptionsRiskFreeInterestRate",
++    "taxonomy": "us-gaap",
++    "units": [
++     "pure"
++    ],
++    "recentRecords": 6,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 0.0434,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "UnrecognizedTaxBenefitsDecreasesResultingFromForeignCurrencyTranslation",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 6,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 0,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "UnrecognizedTaxBenefitsIncomeTaxPenaltiesAndInterestExpense",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-24",
++     "form": "10-K",
++     "val": 37000000,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "DebtInstrumentUnamortizedPremium",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2024-12-31",
++     "filed": "2025-02-21",
++     "form": "10-K",
++     "val": 0
++    }
++   },
++   {
++    "concept": "IncomeTaxExaminationPenaltiesAndInterestExpense",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2024-12-31",
++     "filed": "2025-02-21",
++     "form": "10-K",
++     "val": 40000000,
++     "start": "2024-01-01"
++    }
++   }
++  ],
++  "COP": [
++   {
++    "concept": "ForeignCurrencyTransactionGainLossBeforeTax",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 37,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": 25000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "InventoryCrudeOilProductsAndMerchandise",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 24,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": 1021000000
++    }
++   },
++   {
++    "concept": "LongTermDebtAndCapitalLeaseObligations",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 24,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": 22828000000
++    }
++   },
++   {
++    "concept": "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 24,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": 23300000000
++    }
++   },
++   {
++    "concept": "OtherComprehensiveIncomeForeignCurrencyTransactionAndTranslationGainLossBeforeReclassificationAndTax",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 19,
++    "latest": {
++     "end": "2026-06-30",
++     "filed": "2026-08-06",
++     "form": "10-Q",
++     "val": -271000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "AssetRetirementObligationForeignCurrencyTranslationGainLoss",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 5,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": -216000000,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "DebtInstrumentFaceAmount",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 5,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 23347000000
++    }
++   },
++   {
++    "concept": "DebtInstrumentUnamortizedDiscountPremiumNet",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 5,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 704000000
++    }
++   },
++   {
++    "concept": "FinanceLeaseInterestExpense",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 6,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 24000000,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "ForeignCurrencyTransactionGainLossAfterTax",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 6,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 0,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "InterestExpenseDebt",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 6,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 1176000000,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "InterestExpenseOther",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 6,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 63000000,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 713000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 1599000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 992000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 670000000
++    }
++   },
++   {
++    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 786000000
++    }
++   },
++   {
++    "concept": "OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 21,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 502000000,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "DebtInstrumentRepurchasedFaceAmount",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 8,
++    "latest": {
++     "end": "2024-12-31",
++     "filed": "2026-02-17",
++     "form": "10-K",
++     "val": 3768000000
++    }
++   },
++   {
++    "concept": "OtherComprehensiveIncomeLossForeignCurrencyTranslationAdjustmentTax",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 3,
++    "latest": {
++     "end": "2024-12-31",
++     "filed": "2025-02-18",
++     "form": "10-K",
++     "val": 0,
++     "start": "2024-01-01"
++    }
++   },
++   {
++    "concept": "PercentageOfDebtHedgedByInterestRateDerivatives",
++    "taxonomy": "us-gaap",
++    "units": [
++     "pure"
++    ],
++    "recentRecords": 9,
++    "latest": {
++     "end": "2023-12-31",
++     "filed": "2026-04-30",
++     "form": "10-Q",
++     "val": 0.6
++    }
++   },
++   {
++    "concept": "GainLossOnRepurchaseOfDebtInstrument",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 4,
++    "latest": {
++     "end": "2023-05-25",
++     "filed": "2025-02-18",
++     "form": "10-K",
++     "val": 27000000
++    }
++   }
++  ],
++  "PFE": [
++   {
++    "concept": "DebtInstrumentUnamortizedDiscountPremiumAndDebtIssuanceCostsNet",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 21,
++    "latest": {
++     "end": "2026-06-28",
++     "filed": "2026-08-04",
++     "form": "10-Q",
++     "val": 2000000
++    }
++   },
++   {
++    "concept": "InterestExpense",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 37,
++    "latest": {
++     "end": "2026-06-28",
++     "filed": "2026-08-04",
++     "form": "10-Q",
++     "val": 1336000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "LongTermDebtCurrent",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 24,
++    "latest": {
++     "end": "2026-06-28",
++     "filed": "2026-08-04",
++     "form": "10-Q",
++     "val": 2605000000
++    }
++   },
++   {
++    "concept": "LongTermDebtNoncurrent",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 24,
++    "latest": {
++     "end": "2026-06-28",
++     "filed": "2026-08-04",
++     "form": "10-Q",
++     "val": 60495000000
++    }
++   },
++   {
++    "concept": "OtherComprehensiveIncomeForeignCurrencyTransactionAndTranslationGainLossBeforeReclassificationAndTax",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 37,
++    "latest": {
++     "end": "2026-06-28",
++     "filed": "2026-08-04",
++     "form": "10-Q",
++     "val": 882000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "OtherComprehensiveIncomeLossForeignCurrencyTranslationAdjustmentTax",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 37,
++    "latest": {
++     "end": "2026-06-28",
++     "filed": "2026-08-04",
++     "form": "10-Q",
++     "val": 112000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "ProceedsFromIssuanceOfLongTermDebt",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 18,
++    "latest": {
++     "end": "2026-06-28",
++     "filed": "2026-08-04",
++     "form": "10-Q",
++     "val": 0,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "RepaymentsOfLongTermDebt",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 23,
++    "latest": {
++     "end": "2026-06-28",
++     "filed": "2026-08-04",
++     "form": "10-Q",
++     "val": 1250000000,
++     "start": "2026-01-01"
++    }
++   },
++   {
++    "concept": "GoodwillForeignCurrencyTranslationGainLoss",
++    "taxonomy": "us-gaap",
++    "units": [
++     "USD"
++    ],
++    "recentRecords": 8,
++    "latest": {
++     "end": "2025-12-31",
++     "filed": "2026-02-26",
++     "form": "10-K",
++     "val": 574000000,
++     "start": "2025-01-01"
++    }
++   },
++   {
++    "concept": "DebtInstrumentInterestRateEffectivePercentage",
++    "taxonomy": "us-gaap",
++    "units": [
++     "pure"
++    ],
++    "recentRecords": 7,
++    "latest": {
++     "end": "2025-05-31",
++     "filed": "2025-11-04",
++     "form": "10-Q",
++     "val": 0.03605
++    }
++   }
++  ]
++ }
++}
+\ No newline at end of file
+diff --git a/public/reports/pilot-exposure-evidence.json b/public/reports/pilot-exposure-evidence.json
+new file mode 100644
+index 0000000..d9d64b4
+--- /dev/null
++++ b/public/reports/pilot-exposure-evidence.json
+@@ -0,0 +1,681 @@
++{
++ "schemaVersion": 1,
++ "generatedAt": "2026-11-02T08:32:57.024Z",
++ "asOf": "2026-11-02T08:32:45.536Z",
++ "companies": [
++  {
++   "cik": 27904,
++   "ticker": "DAL",
++   "sourceFactsSha256": "1fc76c7cfaaf40573ff026475ec4e2565027fda09b7a405c2c126977cbd4efd3",
++   "fixedInterestShare": null,
++   "weightedAverageInterestRate": null,
++   "interestRateHedgeShare": null,
++   "effectiveInterestRate": null,
++   "debtMaturities": [
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalAfterYearFive",
++     "value": 4754000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-11T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000027904-26-000013",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/27904/000002790426000013/",
++     "sourceFactsSha256": "1fc76c7cfaaf40573ff026475ec4e2565027fda09b7a405c2c126977cbd4efd3",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
++     "value": 1367000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-11T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000027904-26-000013",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/27904/000002790426000013/",
++     "sourceFactsSha256": "1fc76c7cfaaf40573ff026475ec4e2565027fda09b7a405c2c126977cbd4efd3",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
++     "value": 1222000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-11T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000027904-26-000013",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/27904/000002790426000013/",
++     "sourceFactsSha256": "1fc76c7cfaaf40573ff026475ec4e2565027fda09b7a405c2c126977cbd4efd3",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
++     "value": 621000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-11T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000027904-26-000013",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/27904/000002790426000013/",
++     "sourceFactsSha256": "1fc76c7cfaaf40573ff026475ec4e2565027fda09b7a405c2c126977cbd4efd3",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
++     "value": 3460000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-11T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000027904-26-000013",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/27904/000002790426000013/",
++     "sourceFactsSha256": "1fc76c7cfaaf40573ff026475ec4e2565027fda09b7a405c2c126977cbd4efd3",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
++     "value": 1878000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-11T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000027904-26-000013",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/27904/000002790426000013/",
++     "sourceFactsSha256": "1fc76c7cfaaf40573ff026475ec4e2565027fda09b7a405c2c126977cbd4efd3",
++     "stale": false,
++     "note": null
++    }
++   ],
++   "fuelCost": {
++    "metric": "fuel_cost",
++    "concept": "FuelCosts",
++    "value": 11202000000,
++    "unit": "USD",
++    "periodEnd": "2026-09-30",
++    "availableAt": "2026-10-09T23:59:59.999Z",
++    "form": "10-Q",
++    "accessionNo": "0000027904-26-000038",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/27904/000002790426000038/",
++    "sourceFactsSha256": "1fc76c7cfaaf40573ff026475ec4e2565027fda09b7a405c2c126977cbd4efd3",
++    "stale": false,
++    "note": null
++   },
++   "oilRevenue": null,
++   "oilCost": null,
++   "foreignRevenueShare": null,
++   "foreignDerivativeNotional": null,
++   "missing": [
++    "fixed/floating debt share or interest-rate hedge share",
++    "directly comparable foreign revenue share"
++   ]
++  },
++  {
++   "cik": 884887,
++   "ticker": "RCL",
++   "sourceFactsSha256": "deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720",
++   "fixedInterestShare": {
++    "metric": "fixed_interest_share",
++    "concept": "LongTermDebtPercentageBearingFixedInterestRate",
++    "value": 0.97,
++    "unit": "pure",
++    "periodEnd": "2026-09-30",
++    "availableAt": "2026-10-27T23:59:59.999Z",
++    "form": "10-Q",
++    "accessionNo": "0000884887-26-000044",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/884887/000088488726000044/",
++    "sourceFactsSha256": "deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720",
++    "stale": false,
++    "note": null
++   },
++   "weightedAverageInterestRate": {
++    "metric": "weighted_average_interest_rate",
++    "concept": "DebtWeightedAverageInterestRate",
++    "value": 0.0471,
++    "unit": "pure",
++    "periodEnd": "2026-09-30",
++    "availableAt": "2026-10-27T23:59:59.999Z",
++    "form": "10-Q",
++    "accessionNo": "0000884887-26-000044",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/884887/000088488726000044/",
++    "sourceFactsSha256": "deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720",
++    "stale": false,
++    "note": null
++   },
++   "interestRateHedgeShare": null,
++   "effectiveInterestRate": null,
++   "debtMaturities": [
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalAfterYearFive",
++     "value": 10642000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-11T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000884887-26-000007",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/884887/000088488726000007/",
++     "sourceFactsSha256": "deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
++     "value": 2371000000,
++     "unit": "USD",
++     "periodEnd": "2026-09-30",
++     "availableAt": "2026-10-27T23:59:59.999Z",
++     "form": "10-Q",
++     "accessionNo": "0000884887-26-000044",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/884887/000088488726000044/",
++     "sourceFactsSha256": "deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
++     "value": 1089000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-11T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000884887-26-000007",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/884887/000088488726000007/",
++     "sourceFactsSha256": "deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
++     "value": 1084000000,
++     "unit": "USD",
++     "periodEnd": "2026-09-30",
++     "availableAt": "2026-10-27T23:59:59.999Z",
++     "form": "10-Q",
++     "accessionNo": "0000884887-26-000044",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/884887/000088488726000044/",
++     "sourceFactsSha256": "deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
++     "value": 1134000000,
++     "unit": "USD",
++     "periodEnd": "2026-09-30",
++     "availableAt": "2026-10-27T23:59:59.999Z",
++     "form": "10-Q",
++     "accessionNo": "0000884887-26-000044",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/884887/000088488726000044/",
++     "sourceFactsSha256": "deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
++     "value": 3211000000,
++     "unit": "USD",
++     "periodEnd": "2026-09-30",
++     "availableAt": "2026-10-27T23:59:59.999Z",
++     "form": "10-Q",
++     "accessionNo": "0000884887-26-000044",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/884887/000088488726000044/",
++     "sourceFactsSha256": "deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalRemainderOfFiscalYear",
++     "value": 579000000,
++     "unit": "USD",
++     "periodEnd": "2026-09-30",
++     "availableAt": "2026-10-27T23:59:59.999Z",
++     "form": "10-Q",
++     "accessionNo": "0000884887-26-000044",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/884887/000088488726000044/",
++     "sourceFactsSha256": "deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720",
++     "stale": false,
++     "note": null
++    }
++   ],
++   "fuelCost": {
++    "metric": "fuel_cost",
++    "concept": "FuelCosts",
++    "value": 385322000,
++    "unit": "USD",
++    "periodEnd": "2021-12-31",
++    "availableAt": "2022-03-01T23:59:59.999Z",
++    "form": "10-K",
++    "accessionNo": "0000884887-22-000008",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/884887/000088488722000008/",
++    "sourceFactsSha256": "deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720",
++    "stale": true,
++    "note": null
++   },
++   "oilRevenue": null,
++   "oilCost": null,
++   "foreignRevenueShare": null,
++   "foreignDerivativeNotional": {
++    "metric": "foreign_derivative_notional",
++    "concept": "NotionalAmountOfForeignCurrencyDerivatives",
++    "value": 1600000000,
++    "unit": "USD",
++    "periodEnd": "2013-06-30",
++    "availableAt": "2013-07-26T23:59:59.999Z",
++    "form": "10-Q",
++    "accessionNo": "0001104659-13-057032",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/884887/000110465913057032/",
++    "sourceFactsSha256": "deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720",
++    "stale": true,
++    "note": null
++   },
++   "missing": [
++    "directly comparable foreign revenue share"
++   ]
++  },
++  {
++   "cik": 93410,
++   "ticker": "CVX",
++   "sourceFactsSha256": "c09b160603412cb45acf1bb9bf3732e531dedfb548afa0e275fd8aefd7ab397e",
++   "fixedInterestShare": null,
++   "weightedAverageInterestRate": null,
++   "interestRateHedgeShare": null,
++   "effectiveInterestRate": {
++    "metric": "effective_interest_rate",
++    "concept": "DebtInstrumentInterestRateEffectivePercentage",
++    "value": 0.0015,
++    "unit": "pure",
++    "periodEnd": "2020-12-31",
++    "availableAt": "2022-02-24T23:59:59.999Z",
++    "form": "10-K",
++    "accessionNo": "0000093410-22-000019",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/93410/000009341022000019/",
++    "sourceFactsSha256": "c09b160603412cb45acf1bb9bf3732e531dedfb548afa0e275fd8aefd7ab397e",
++    "stale": true,
++    "note": null
++   },
++   "debtMaturities": [
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalAfterYearFive",
++     "value": 11185000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-24T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000093410-26-000078",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/93410/000009341026000078/",
++     "sourceFactsSha256": "c09b160603412cb45acf1bb9bf3732e531dedfb548afa0e275fd8aefd7ab397e",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
++     "value": 2345000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-24T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000093410-26-000078",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/93410/000009341026000078/",
++     "sourceFactsSha256": "c09b160603412cb45acf1bb9bf3732e531dedfb548afa0e275fd8aefd7ab397e",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
++     "value": 5350000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-24T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000093410-26-000078",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/93410/000009341026000078/",
++     "sourceFactsSha256": "c09b160603412cb45acf1bb9bf3732e531dedfb548afa0e275fd8aefd7ab397e",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
++     "value": 1567000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-24T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000093410-26-000078",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/93410/000009341026000078/",
++     "sourceFactsSha256": "c09b160603412cb45acf1bb9bf3732e531dedfb548afa0e275fd8aefd7ab397e",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
++     "value": 4752000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-24T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000093410-26-000078",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/93410/000009341026000078/",
++     "sourceFactsSha256": "c09b160603412cb45acf1bb9bf3732e531dedfb548afa0e275fd8aefd7ab397e",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
++     "value": 5723000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-24T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0000093410-26-000078",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/93410/000009341026000078/",
++     "sourceFactsSha256": "c09b160603412cb45acf1bb9bf3732e531dedfb548afa0e275fd8aefd7ab397e",
++     "stale": false,
++     "note": null
++    }
++   ],
++   "fuelCost": null,
++   "oilRevenue": {
++    "metric": "oil_revenue",
++    "concept": "OilAndGasRevenue",
++    "value": 35968000000,
++    "unit": "USD",
++    "periodEnd": "2018-03-31",
++    "availableAt": "2018-05-03T23:59:59.999Z",
++    "form": "10-Q",
++    "accessionNo": "0000093410-18-000016",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/93410/000009341018000016/",
++    "sourceFactsSha256": "c09b160603412cb45acf1bb9bf3732e531dedfb548afa0e275fd8aefd7ab397e",
++    "stale": true,
++    "note": null
++   },
++   "oilCost": {
++    "metric": "oil_cost",
++    "concept": "CostOfPurchasedOilAndGas",
++    "value": 21233000000,
++    "unit": "USD",
++    "periodEnd": "2018-03-31",
++    "availableAt": "2018-05-03T23:59:59.999Z",
++    "form": "10-Q",
++    "accessionNo": "0000093410-18-000016",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/93410/000009341018000016/",
++    "sourceFactsSha256": "c09b160603412cb45acf1bb9bf3732e531dedfb548afa0e275fd8aefd7ab397e",
++    "stale": true,
++    "note": null
++   },
++   "foreignRevenueShare": null,
++   "foreignDerivativeNotional": null,
++   "missing": [
++    "fixed/floating debt share or interest-rate hedge share",
++    "directly comparable foreign revenue share"
++   ]
++  },
++  {
++   "cik": 1163165,
++   "ticker": "COP",
++   "sourceFactsSha256": "cccc8afe3602880e8f2909266e778aa195b42e745da669a801925c593720d2fc",
++   "fixedInterestShare": null,
++   "weightedAverageInterestRate": null,
++   "interestRateHedgeShare": {
++    "metric": "interest_rate_hedge_share",
++    "concept": "PercentageOfDebtHedgedByInterestRateDerivatives",
++    "value": 0.6,
++    "unit": "pure",
++    "periodEnd": "2023-12-31",
++    "availableAt": "2026-04-30T23:59:59.999Z",
++    "form": "10-Q",
++    "accessionNo": "0001163165-26-000018",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1163165/000116316526000018/",
++    "sourceFactsSha256": "cccc8afe3602880e8f2909266e778aa195b42e745da669a801925c593720d2fc",
++    "stale": true,
++    "note": null
++   },
++   "effectiveInterestRate": null,
++   "debtMaturities": [
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
++     "value": 713000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-17T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0001163165-26-000009",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1163165/000116316526000009/",
++     "sourceFactsSha256": "cccc8afe3602880e8f2909266e778aa195b42e745da669a801925c593720d2fc",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
++     "value": 1599000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-17T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0001163165-26-000009",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1163165/000116316526000009/",
++     "sourceFactsSha256": "cccc8afe3602880e8f2909266e778aa195b42e745da669a801925c593720d2fc",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
++     "value": 992000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-17T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0001163165-26-000009",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1163165/000116316526000009/",
++     "sourceFactsSha256": "cccc8afe3602880e8f2909266e778aa195b42e745da669a801925c593720d2fc",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
++     "value": 670000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-17T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0001163165-26-000009",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1163165/000116316526000009/",
++     "sourceFactsSha256": "cccc8afe3602880e8f2909266e778aa195b42e745da669a801925c593720d2fc",
++     "stale": false,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
++     "value": 786000000,
++     "unit": "USD",
++     "periodEnd": "2025-12-31",
++     "availableAt": "2026-02-17T23:59:59.999Z",
++     "form": "10-K",
++     "accessionNo": "0001163165-26-000009",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1163165/000116316526000009/",
++     "sourceFactsSha256": "cccc8afe3602880e8f2909266e778aa195b42e745da669a801925c593720d2fc",
++     "stale": false,
++     "note": null
++    }
++   ],
++   "fuelCost": null,
++   "oilRevenue": null,
++   "oilCost": {
++    "metric": "oil_cost",
++    "concept": "CostOfPurchasedOilAndGas",
++    "value": 6778000000,
++    "unit": "USD",
++    "periodEnd": "2018-06-30",
++    "availableAt": "2018-08-01T23:59:59.999Z",
++    "form": "10-Q",
++    "accessionNo": "0001193125-18-233667",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1163165/000119312518233667/",
++    "sourceFactsSha256": "cccc8afe3602880e8f2909266e778aa195b42e745da669a801925c593720d2fc",
++    "stale": true,
++    "note": null
++   },
++   "foreignRevenueShare": null,
++   "foreignDerivativeNotional": null,
++   "missing": [
++    "directly comparable foreign revenue share"
++   ]
++  },
++  {
++   "cik": 78003,
++   "ticker": "PFE",
++   "sourceFactsSha256": "bd072131f9dcf001f22e843fded5910c2c7fc178e2a739ce0c58b1934e84d566",
++   "fixedInterestShare": null,
++   "weightedAverageInterestRate": {
++    "metric": "weighted_average_interest_rate",
++    "concept": "DebtWeightedAverageInterestRate",
++    "value": 0.035,
++    "unit": "pure",
++    "periodEnd": "2017-12-31",
++    "availableAt": "2018-02-22T23:59:59.999Z",
++    "form": "10-K",
++    "accessionNo": "0000078003-18-000027",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/78003/000007800318000027/",
++    "sourceFactsSha256": "bd072131f9dcf001f22e843fded5910c2c7fc178e2a739ce0c58b1934e84d566",
++    "stale": true,
++    "note": null
++   },
++   "interestRateHedgeShare": null,
++   "effectiveInterestRate": {
++    "metric": "effective_interest_rate",
++    "concept": "DebtInstrumentInterestRateEffectivePercentage",
++    "value": 0.03605,
++    "unit": "pure",
++    "periodEnd": "2025-05-31",
++    "availableAt": "2025-11-04T23:59:59.999Z",
++    "form": "10-Q",
++    "accessionNo": "0000078003-25-000150",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/78003/000007800325000150/",
++    "sourceFactsSha256": "bd072131f9dcf001f22e843fded5910c2c7fc178e2a739ce0c58b1934e84d566",
++    "stale": false,
++    "note": null
++   },
++   "debtMaturities": [
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalAfterYearFive",
++     "value": 23162000000,
++     "unit": "USD",
++     "periodEnd": "2017-10-01",
++     "availableAt": "2017-11-09T23:59:59.999Z",
++     "form": "10-Q",
++     "accessionNo": "0000078003-17-000049",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/78003/000007800317000049/",
++     "sourceFactsSha256": "bd072131f9dcf001f22e843fded5910c2c7fc178e2a739ce0c58b1934e84d566",
++     "stale": true,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
++     "value": 4502000000,
++     "unit": "USD",
++     "periodEnd": "2017-10-01",
++     "availableAt": "2017-11-09T23:59:59.999Z",
++     "form": "10-Q",
++     "accessionNo": "0000078003-17-000049",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/78003/000007800317000049/",
++     "sourceFactsSha256": "bd072131f9dcf001f22e843fded5910c2c7fc178e2a739ce0c58b1934e84d566",
++     "stale": true,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
++     "value": 1534000000,
++     "unit": "USD",
++     "periodEnd": "2017-10-01",
++     "availableAt": "2017-11-09T23:59:59.999Z",
++     "form": "10-Q",
++     "accessionNo": "0000078003-17-000049",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/78003/000007800317000049/",
++     "sourceFactsSha256": "bd072131f9dcf001f22e843fded5910c2c7fc178e2a739ce0c58b1934e84d566",
++     "stale": true,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
++     "value": 4825000000,
++     "unit": "USD",
++     "periodEnd": "2017-10-01",
++     "availableAt": "2017-11-09T23:59:59.999Z",
++     "form": "10-Q",
++     "accessionNo": "0000078003-17-000049",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/78003/000007800317000049/",
++     "sourceFactsSha256": "bd072131f9dcf001f22e843fded5910c2c7fc178e2a739ce0c58b1934e84d566",
++     "stale": true,
++     "note": null
++    },
++    {
++     "metric": "debt_maturity",
++     "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
++     "value": 481000000,
++     "unit": "USD",
++     "periodEnd": "2017-10-01",
++     "availableAt": "2017-11-09T23:59:59.999Z",
++     "form": "10-Q",
++     "accessionNo": "0000078003-17-000049",
++     "sourceUrl": "https://www.sec.gov/Archives/edgar/data/78003/000007800317000049/",
++     "sourceFactsSha256": "bd072131f9dcf001f22e843fded5910c2c7fc178e2a739ce0c58b1934e84d566",
++     "stale": true,
++     "note": null
++    }
++   ],
++   "fuelCost": null,
++   "oilRevenue": null,
++   "oilCost": null,
++   "foreignRevenueShare": null,
++   "foreignDerivativeNotional": {
++    "metric": "foreign_derivative_notional",
++    "concept": "NotionalAmountOfForeignCurrencyDerivatives",
++    "value": 44500000000,
++    "unit": "USD",
++    "periodEnd": "2011-04-03",
++    "availableAt": "2011-05-12T23:59:59.999Z",
++    "form": "10-Q",
++    "accessionNo": "0001157523-11-003088",
++    "sourceUrl": "https://www.sec.gov/Archives/edgar/data/78003/000115752311003088/",
++    "sourceFactsSha256": "bd072131f9dcf001f22e843fded5910c2c7fc178e2a739ce0c58b1934e84d566",
++    "stale": true,
++    "note": null
++   },
++   "missing": [
++    "fixed/floating debt share or interest-rate hedge share",
++    "direct fuel or oil exposure",
++    "directly comparable foreign revenue share"
++   ]
++  }
++ ]
++}
+\ No newline at end of file
+diff --git a/public/reports/pilot-exposure-evidence.md b/public/reports/pilot-exposure-evidence.md
+new file mode 100644
+index 0000000..4662ee9
+--- /dev/null
++++ b/public/reports/pilot-exposure-evidence.md
+@@ -0,0 +1,80 @@
++# Pilot macro exposure evidence
++
++As of: 2026-11-02T08:32:45.536Z
++Direct SEC XBRL evidence only. No inferred fixed-rate share, hedges or geographic revenue.
++
++## DAL
++
++- Fixed interest share: —
++- Weighted average interest rate: —
++- Interest-rate hedge share: —
++- Effective interest rate: —
++- Debt maturity concepts: 6
++- Fuel cost: 11202000000 USD · 2026-09-30
++- Oil revenue: —
++- Oil cost: —
++- Foreign revenue share: —
++- Foreign derivative notional: —
++- Missing: fixed/floating debt share or interest-rate hedge share; directly comparable foreign revenue share
++- Source facts SHA256: 1fc76c7cfaaf40573ff026475ec4e2565027fda09b7a405c2c126977cbd4efd3
++
++## RCL
++
++- Fixed interest share: 0.97 pure · 2026-09-30
++- Weighted average interest rate: 0.0471 pure · 2026-09-30
++- Interest-rate hedge share: —
++- Effective interest rate: —
++- Debt maturity concepts: 7
++- Fuel cost: 385322000 USD · 2021-12-31 · stale
++- Oil revenue: —
++- Oil cost: —
++- Foreign revenue share: —
++- Foreign derivative notional: 1600000000 USD · 2013-06-30 · stale
++- Missing: directly comparable foreign revenue share
++- Source facts SHA256: deb91409d270b8cb379468e4067bdaf7407618e406237a092fcd36e27ce60720
++
++## CVX
++
++- Fixed interest share: —
++- Weighted average interest rate: —
++- Interest-rate hedge share: —
++- Effective interest rate: 0.0015 pure · 2020-12-31 · stale
++- Debt maturity concepts: 6
++- Fuel cost: —
++- Oil revenue: 35968000000 USD · 2018-03-31 · stale
++- Oil cost: 21233000000 USD · 2018-03-31 · stale
++- Foreign revenue share: —
++- Foreign derivative notional: —
++- Missing: fixed/floating debt share or interest-rate hedge share; directly comparable foreign revenue share
++- Source facts SHA256: c09b160603412cb45acf1bb9bf3732e531dedfb548afa0e275fd8aefd7ab397e
++
++## COP
++
++- Fixed interest share: —
++- Weighted average interest rate: —
++- Interest-rate hedge share: 0.6 pure · 2023-12-31 · stale
++- Effective interest rate: —
++- Debt maturity concepts: 5
++- Fuel cost: —
++- Oil revenue: —
++- Oil cost: 6778000000 USD · 2018-06-30 · stale
++- Foreign revenue share: —
++- Foreign derivative notional: —
++- Missing: directly comparable foreign revenue share
++- Source facts SHA256: cccc8afe3602880e8f2909266e778aa195b42e745da669a801925c593720d2fc
++
++## PFE
++
++- Fixed interest share: —
++- Weighted average interest rate: 0.035 pure · 2017-12-31 · stale
++- Interest-rate hedge share: —
++- Effective interest rate: 0.03605 pure · 2025-05-31
++- Debt maturity concepts: 5
++- Fuel cost: —
++- Oil revenue: —
++- Oil cost: —
++- Foreign revenue share: —
++- Foreign derivative notional: 44500000000 USD · 2011-04-03 · stale
++- Missing: fixed/floating debt share or interest-rate hedge share; direct fuel or oil exposure; directly comparable foreign revenue share
++- Source facts SHA256: bd072131f9dcf001f22e843fded5910c2c7fc178e2a739ce0c58b1934e84d566
++
+* Unmerged path public/reports/weekly-metrics.json
+diff --git a/scripts/build-company-exposure.mts b/scripts/build-company-exposure.mts
+index aba6b40..6a90f0f 100644
+--- a/scripts/build-company-exposure.mts
++++ b/scripts/build-company-exposure.mts
+@@ -1,11 +1,11 @@
+ /** Build an evidence-only company exposure table from canonical SEC series. No sector inference or production sync. */
+ import "dotenv/config";
+-import { existsSync, writeFileSync } from "node:fs";
++import { existsSync, readFileSync, writeFileSync } from "node:fs";
+ import path from "node:path";
+-import { eq } from "drizzle-orm";
++import { inArray } from "drizzle-orm";
+ import { getDb } from "../api/queries/connection";
+ import { companies as companyRegistry, seriesPoints } from "@db/schema";
+-import { buildCompanyExposureReport, type CompanyExposureInput, type ExposureMetric } from "../api/services/company-exposure";
++import { buildCompanyExposureReport, mergeCompanyExposureReports, type CompanyExposureInput, type CompanyExposureReport, type ExposureMetric } from "../api/services/company-exposure";
+ import { loadEdgarUniverse } from "../worker/lib/edgar";
+ import { writeJsonAtomic } from "../worker/lib/json-file";
+ import { startProgress } from "../worker/lib/progress";
+@@ -19,23 +19,31 @@ const universe = loadEdgarUniverse(universeFile).filter((company) => !only || co
+ if (only && !universe.length) throw new Error(`Unknown ticker ${only}`);
+ const db = getDb();
+ const prog = startProgress("company-exposure", `${universe.length} companies · evidence only · no direction score`);
+-const inputs: CompanyExposureInput[] = [];
+-for (const [index, company] of universe.entries()) {
+-  const [metadata, rows] = await Promise.all([
+-    db.select().from(companyRegistry).where(eq(companyRegistry.cik, company.cik)).limit(1),
+-    db.select().from(seriesPoints).where(eq(seriesPoints.cik, company.cik)),
+-  ]);
+-  inputs.push({
++const ciks = universe.map((company) => company.cik);
++const metadata = await db.select().from(companyRegistry).where(inArray(companyRegistry.cik, ciks));
++const seriesRows: Array<typeof seriesPoints.$inferSelect> = [];
++for (let offset = 0; offset < ciks.length; offset += 5) {
++  const batch = ciks.slice(offset, offset + 5);
++  seriesRows.push(...await db.select().from(seriesPoints).where(inArray(seriesPoints.cik, batch)));
++}
++const metadataByCik = new Map(metadata.map((row) => [row.cik, row]));
++const rowsByCik = new Map<number, typeof seriesRows>();
++for (const row of seriesRows) rowsByCik.set(row.cik, [...(rowsByCik.get(row.cik) ?? []), row]);
++const inputs: CompanyExposureInput[] = universe.map((company, index) => {
++  const rows = rowsByCik.get(company.cik) ?? [];
++  prog.item(index + 1, universe.length, `${company.ticker} · ${rows.length} series rows`);
++  return {
+     cik: company.cik,
+     ticker: company.ticker,
+-    name: metadata[0]?.name ?? company.name ?? company.ticker,
+-    sector: metadata[0]?.sector ?? null,
++    name: metadataByCik.get(company.cik)?.name ?? company.name ?? company.ticker,
++    sector: metadataByCik.get(company.cik)?.sector ?? null,
+     rows,
+-  });
+-  prog.item(index + 1, universe.length, `${company.ticker} · ${rows.length} series rows`);
+-}
+-const report = buildCompanyExposureReport(inputs, asOf, new Date().toISOString());
++  };
++});
+ const jsonPath = path.resolve("public/reports/company-exposures.json");
++const generated = buildCompanyExposureReport(inputs, asOf, new Date().toISOString());
++const previous = only && existsSync(jsonPath) ? JSON.parse(readFileSync(jsonPath, "utf8")) as CompanyExposureReport : null;
++const report = previous ? mergeCompanyExposureReports(previous, generated) : generated;
+ writeJsonAtomic(jsonPath, report, true);
+ const distDir = path.resolve("dist/public/reports");
+ if (existsSync(distDir)) writeJsonAtomic(path.join(distDir, "company-exposures.json"), report, true);
+diff --git a/scripts/build-macro-scenarios.mts b/scripts/build-macro-scenarios.mts
+new file mode 100644
+index 0000000..85fcf4b
+--- /dev/null
++++ b/scripts/build-macro-scenarios.mts
+@@ -0,0 +1,60 @@
++/** Build availability-anchored macro scenarios from FRED baselines and SEC exposure evidence. */
++import { existsSync, readFileSync, writeFileSync } from "node:fs";
++import path from "node:path";
++import { buildMacroScenarioReport, type MacroScenarioDefinition, type ScenarioChannel } from "../api/services/macro-scenarios";
++import type { PilotEvidenceReport } from "../api/services/pilot-exposure-evidence";
++import type { CompanyExposureReport } from "../api/services/company-exposure";
++import type { NormalizedMacroPoint } from "../worker/lib/fred";
++import { writeJsonAtomic } from "../worker/lib/json-file";
++import { startProgress } from "../worker/lib/progress";
++
++const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
++const macroRoot = path.resolve(arg("--macro-root") ?? (process.platform === "win32" ? "D:\\research\\alpha-engine\\macro" : "worker/cache/macro"));
++const asOf = arg("--as-of") ?? new Date().toISOString();
++if (!Number.isFinite(Date.parse(asOf))) throw new Error("--as-of must be an ISO timestamp");
++const numberArg = (name: string, fallback: number): number => {
++  const value = Number(arg(name) ?? fallback);
++  if (!Number.isFinite(value)) throw new Error(`${name} must be numeric`);
++  return value;
++};
++const definitions: MacroScenarioDefinition[] = [
++  { channel: "rates", shock: numberArg("--rate-shock", 0.01) },
++  { channel: "oil", shock: numberArg("--oil-shock", 0.20) },
++  { channel: "usd", shock: numberArg("--usd-shock", 0.05) },
++  { channel: "credit", shock: numberArg("--credit-shock", 0.01) },
++];
++const pilotPath = path.resolve("public/reports/pilot-exposure-evidence.json");
++const exposurePath = path.resolve("public/reports/company-exposures.json");
++for (const file of [pilotPath, exposurePath]) if (!existsSync(file)) throw new Error(`Missing ${file}. Build pilot and company exposure reports first.`);
++const pilotReport = JSON.parse(readFileSync(pilotPath, "utf8")) as PilotEvidenceReport;
++const exposureReport = JSON.parse(readFileSync(exposurePath, "utf8")) as CompanyExposureReport;
++const seriesIds = [...new Set(Object.values({ rates: "DGS10", oil: "DCOILWTICO", usd: "DTWEXBGS", credit: "BAMLH0A0HYM2" }))];
++const macroSeries: Record<string, NormalizedMacroPoint[]> = {};
++for (const seriesId of seriesIds) {
++  const file = path.join(macroRoot, "normalized", "fred", `${seriesId}.json`);
++  if (!existsSync(file)) throw new Error(`Missing FRED series ${seriesId} at ${file}`);
++  macroSeries[seriesId] = JSON.parse(readFileSync(file, "utf8")) as NormalizedMacroPoint[];
++}
++const prog = startProgress("macro-scenarios", `${definitions.length} scenarios · availability anchored`);
++const report = buildMacroScenarioReport({ dataMode: process.argv.includes("--fixture") ? "fixture" : "live", asOf, definitions, macroSeries, pilot: pilotReport.companies, exposures: exposureReport.companies });
++const jsonPath = path.resolve(arg("--out") ?? "public/reports/macro-scenarios.json");
++const markdownPath = jsonPath.replace(/\.json$/i, ".md");
++writeJsonAtomic(jsonPath, report, true);
++const publish = !arg("--out");
++const distDir = path.resolve("dist/public/reports");
++if (publish && existsSync(distDir)) writeJsonAtomic(path.join(distDir, "macro-scenarios.json"), report, true);
++const lines = ["# Macro scenarios", "", `As of: ${report.asOf}`, "Upper bounds and gross exposure are not profit forecasts. Stale evidence is historical only.", ""];
++for (const scenario of report.scenarios) {
++  lines.push(`## ${scenario.channel.toUpperCase()} · shock ${scenario.shock} · ${scenario.status}`, "");
++  if (scenario.baseline) lines.push(`Baseline: ${scenario.baseline.seriesId} ${scenario.baseline.value} → ${scenario.baseline.scenarioValue} ${scenario.baseline.unit} · observation ${scenario.baseline.observationPeriod} · available ${scenario.baseline.availableAt}${scenario.baseline.stale ? " · stale" : ""}`, "");
++  else lines.push(`No baseline: ${scenario.reasons.join(", ")}`, "");
++  for (const impact of scenario.impacts) {
++    lines.push(`- ${impact.ticker}: **${impact.status}**${impact.reasons.length ? ` · ${impact.reasons.join("; ")}` : ""}`);
++    for (const metric of impact.metrics) lines.push(`  - ${metric.name}: ${metric.value} ${metric.unit} · ${metric.impactType} · ${metric.periodStart ? `${metric.periodStart} → ` : ""}${metric.periodEnd}${metric.stale ? " · stale" : ""}`);
++  }
++  lines.push("");
++}
++const markdown = `${lines.join("\n")}\n`;
++writeFileSync(markdownPath, markdown, "utf8");
++if (publish && existsSync(distDir)) writeFileSync(path.join(distDir, "macro-scenarios.md"), markdown, "utf8");
++prog.done(`scenarios ${report.scenarios.length} · ${jsonPath}`);
+diff --git a/scripts/build-pilot-exposure-evidence.mts b/scripts/build-pilot-exposure-evidence.mts
+new file mode 100644
+index 0000000..b14587f
+--- /dev/null
++++ b/scripts/build-pilot-exposure-evidence.mts
+@@ -0,0 +1,45 @@
++/** Build source-linked pilot evidence from fresh SEC companyfacts. No LLM and no sector inference. */
++import path from "node:path";
++import { buildPilotEvidenceReport, type EvidenceCompanyFacts, type ExposureEvidence } from "../api/services/pilot-exposure-evidence";
++import { companyFacts, loadEdgarUniverse } from "../worker/lib/edgar";
++import { writeJsonAtomic } from "../worker/lib/json-file";
++import { startProgress } from "../worker/lib/progress";
++import { existsSync, writeFileSync } from "node:fs";
++
++const PILOTS = ["DAL", "RCL", "CVX", "COP", "PFE"] as const;
++const asOf = new Date().toISOString();
++const universe = loadEdgarUniverse("research-universe-51.json");
++const prog = startProgress("pilot-exposure-evidence", "fresh SEC facts · exact concepts · no LLM");
++const payloads: EvidenceCompanyFacts[] = [];
++for (const [index, ticker] of PILOTS.entries()) {
++  const company = universe.find((item) => item.ticker === ticker);
++  if (!company) throw new Error(`Missing pilot ${ticker}`);
++  payloads.push(await companyFacts(company.cik));
++  prog.item(index + 1, PILOTS.length, ticker);
++}
++const report = buildPilotEvidenceReport(payloads, [...PILOTS], asOf, new Date().toISOString());
++const jsonPath = path.resolve("public/reports/pilot-exposure-evidence.json");
++writeJsonAtomic(jsonPath, report, true);
++const distDir = path.resolve("dist/public/reports");
++if (existsSync(distDir)) writeJsonAtomic(path.join(distDir, "pilot-exposure-evidence.json"), report, true);
++const value = (evidence: ExposureEvidence | null) => evidence?.value === null || !evidence ? "—" : `${evidence.value} ${evidence.unit} · ${evidence.periodEnd}${evidence.stale ? " · stale" : ""}`;
++const lines = ["# Pilot macro exposure evidence", "", `As of: ${report.asOf}`, "Direct SEC XBRL evidence only. No inferred fixed-rate share, hedges or geographic revenue.", ""];
++for (const company of report.companies) {
++  lines.push(`## ${company.ticker}`, "",
++    `- Fixed interest share: ${value(company.fixedInterestShare)}`,
++    `- Weighted average interest rate: ${value(company.weightedAverageInterestRate)}`,
++    `- Interest-rate hedge share: ${value(company.interestRateHedgeShare)}`,
++    `- Effective interest rate: ${value(company.effectiveInterestRate)}`,
++    `- Debt maturity concepts: ${company.debtMaturities.length}`,
++    `- Fuel cost: ${value(company.fuelCost)}`,
++    `- Oil revenue: ${value(company.oilRevenue)}`,
++    `- Oil cost: ${value(company.oilCost)}`,
++    `- Foreign revenue share: ${value(company.foreignRevenueShare)}`,
++    `- Foreign derivative notional: ${value(company.foreignDerivativeNotional)}`,
++    `- Missing: ${company.missing.join("; ") || "none"}`,
++    `- Source facts SHA256: ${company.sourceFactsSha256}`, "");
++}
++const markdown = `${lines.join("\n")}\n`;
++writeFileSync(path.resolve("public/reports/pilot-exposure-evidence.md"), markdown, "utf8");
++if (existsSync(distDir)) writeFileSync(path.join(distDir, "pilot-exposure-evidence.md"), markdown, "utf8");
++prog.done(`companies ${report.companies.length} · ${jsonPath}`);
+diff --git a/scripts/exposure-evidence-probe.mts b/scripts/exposure-evidence-probe.mts
+new file mode 100644
+index 0000000..e9cd6b4
+--- /dev/null
++++ b/scripts/exposure-evidence-probe.mts
+@@ -0,0 +1,37 @@
++/** Probe fresh SEC companyfacts for exposure evidence before changing canonical mappings. */
++import path from "node:path";
++import { companyFacts, loadEdgarUniverse } from "../worker/lib/edgar";
++import { writeJsonAtomic } from "../worker/lib/json-file";
++import { startProgress } from "../worker/lib/progress";
++
++const PILOTS = ["DAL", "RCL", "CVX", "COP", "PFE"] as const;
++const PATTERN = /OilAndGas|CrudeOil|NaturalGas|Fuel|EnergyRelated|ForeignCurrency|GeographicAreasRevenue|ForeignOperations|InternationalRevenue|Domicile|LongTermDebt|DebtInstrument|InterestExpense|InterestRate|Maturities|FixedRate|VariableRate|FloatingRate/i;
++interface Candidate { concept: string; taxonomy: string; units: string[]; recentRecords: number; latest: { end: string; filed?: string; form?: string; val?: number; start?: string } | null }
++const universe = loadEdgarUniverse("research-universe-51.json");
++const prog = startProgress("exposure-evidence-probe", "fresh SEC companyfacts · no mapping changes");
++const output: Record<string, Candidate[]> = {};
++for (const [index, ticker] of PILOTS.entries()) {
++  const company = universe.find((item) => item.ticker === ticker);
++  if (!company) throw new Error(`Missing pilot ${ticker}`);
++  const payload = await companyFacts(company.cik);
++  const candidates: Candidate[] = [];
++  for (const [taxonomy, concepts] of Object.entries<any>(payload.facts ?? {})) {
++    for (const [concept, body] of Object.entries<any>(concepts)) {
++      if (!PATTERN.test(concept)) continue;
++      const records = Object.values<any>(body.units ?? {}).flat().filter((record: any) => record.end >= "2023-01-01");
++      if (!records.length) continue;
++      records.sort((a: any, b: any) => b.end.localeCompare(a.end) || String(b.filed ?? "").localeCompare(String(a.filed ?? "")));
++      const latest = records[0];
++      candidates.push({ concept, taxonomy, units: Object.keys(body.units ?? {}), recentRecords: records.length, latest: { end: latest.end, filed: latest.filed, form: latest.form, val: latest.val, start: latest.start } });
++    }
++  }
++  candidates.sort((a, b) => (b.latest?.end ?? "").localeCompare(a.latest?.end ?? "") || a.concept.localeCompare(b.concept));
++  output[ticker] = candidates;
++  prog.item(index + 1, PILOTS.length, `${ticker} · ${candidates.length} candidate concepts`);
++}
++writeJsonAtomic(path.resolve("public/reports/exposure-evidence-probe.json"), { schemaVersion: 1, generatedAt: new Date().toISOString(), candidates: output }, true);
++for (const ticker of PILOTS) {
++  console.log(`\n${ticker}`);
++  for (const candidate of output[ticker].slice(0, 35)) console.log(`${candidate.latest?.end} · ${candidate.concept} · ${candidate.units.join("/")} · ${candidate.latest?.form} · ${candidate.latest?.val}`);
++}
++prog.done("probe public/reports/exposure-evidence-probe.json");
+diff --git a/src/App.tsx b/src/App.tsx
+index 05a9997..fd029ca 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -19,6 +19,7 @@ const FundFlows = lazy(() => import("./pages/FundFlows"));
+ const Analytics = lazy(() => import("./pages/Analytics"));
+ const Methodology = lazy(() => import("./pages/Methodology"));
+ const VolatilityRiskLab = lazy(() => import("./pages/VolatilityRiskLab"));
++const MacroScenarioLab = lazy(() => import("./pages/MacroScenarioLab"));
+ const Expectations = lazy(() => import("./pages/Expectations"));
+ const MarketData = lazy(() => import("./pages/MarketData"));
+ const Messages = lazy(() => import("./pages/Messages"));
+@@ -74,6 +75,7 @@ export default function App() {
+       <Route path="/analytics" element={<AdminOnly><Analytics /></AdminOnly>} />
+       <Route path="/analytics/methodology" element={<AdminOnly><Methodology /></AdminOnly>} />
+       <Route path="/analytics/risk-lab" element={<AdminOnly><VolatilityRiskLab /></AdminOnly>} />
++      <Route path="/scenario-lab" element={<AdminOnly><MacroScenarioLab /></AdminOnly>} />
+       <Route path="/expectations" element={<AdminOnly><Expectations /></AdminOnly>} />
+       <Route path="/market-data" element={<AdminOnly><MarketData /></AdminOnly>} />
+       <Route path="/login" element={<Login />} />
+diff --git a/src/components/AppLayout.tsx b/src/components/AppLayout.tsx
+index e469d33..b3056a0 100644
+--- a/src/components/AppLayout.tsx
++++ b/src/components/AppLayout.tsx
+@@ -14,6 +14,7 @@ import {
+   Menu,
+   FileSearch,
+   DatabaseZap,
++  SlidersHorizontal,
+ } from "lucide-react";
+ import { useEffect, useRef, useState, type ReactNode } from "react";
+ import { Link, useLocation, useNavigate } from "react-router";
+@@ -53,6 +54,7 @@ const ADMIN_NAV = { icon: ShieldCheck, label: "Admin", path: "/admin" };
+ const WORKERS_NAV = { icon: Activity, label: "Operations", path: "/workers" };
+ const FLOWS_NAV = { icon: Activity, label: "Fund flows", path: "/fundflows" };
+ const ANALYTICS_NAV = { icon: Activity, label: "Analytics", path: "/analytics" };
++const SCENARIO_NAV = { icon: SlidersHorizontal, label: "Scenario Lab", path: "/scenario-lab" };
+ const EXPECTATIONS_NAV = { icon: FileSearch, label: "Expectations", path: "/expectations" };
+ const MARKET_DATA_NAV = { icon: DatabaseZap, label: "Market data", path: "/market-data" };
+ 
+@@ -297,7 +299,7 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
+ 
+   /** Nav items shared by the desktop sidebar and the mobile drawer. */
+   const renderNavItems = (onNavigate?: () => void) =>
+-    [...NAV, ...(isAdmin ? [...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, FLOWS_NAV, ADMIN_NAV] : [])].map((item) => {
++    [...NAV, ...(isAdmin ? [...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, SCENARIO_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, FLOWS_NAV, ADMIN_NAV] : [])].map((item) => {
+       const active = location.pathname === item.path;
+       return (
+         <Link
+* Unmerged path src/data/analytics-snapshot.ts
+diff --git a/src/index.css b/src/index.css
+index d9c6ed2..fb953a4 100644
+--- a/src/index.css
++++ b/src/index.css
+@@ -946,3 +946,98 @@
+ @media (max-width: 520px) {
+   .context-profile { grid-template-columns: 1fr; }
+ }
++
++
++/* Macro Scenario Lab */
++.scenario-page { display: grid; gap: 14px; color: hsl(var(--foreground)); }
++.scenario-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center; overflow: hidden; padding: 24px 26px; border: 1px solid hsl(var(--live) / 0.35); border-left: 2px solid hsl(var(--live)); background: radial-gradient(circle at 12% 0%, hsl(187 86% 53% / 0.12), transparent 42%), linear-gradient(115deg, hsl(222 47% 11%), hsl(var(--card))); }
++.scenario-hero::after { position: absolute; inset: 0; pointer-events: none; content: ""; opacity: 0.12; background: repeating-linear-gradient(0deg, transparent 0 3px, hsl(187 86% 53% / 0.08) 3px 4px); }
++.scenario-hero > * { position: relative; z-index: 1; }
++.scenario-hero .t-label { display: flex; align-items: center; gap: 7px; }
++.scenario-hero h1 { margin: 9px 0 8px; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: clamp(23px, 2.4vw, 33px); letter-spacing: -0.045em; }
++.scenario-hero p { max-width: 790px; margin: 0; color: hsl(var(--muted-foreground)); font-size: 13px; line-height: 1.65; }
++.scenario-hero-status { display: grid; justify-items: end; gap: 7px; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; text-align: right; }
++.scenario-hero-status strong { color: hsl(var(--live)); font-size: 28px; font-weight: 500; }
++.scenario-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr) 380px; gap: 12px; align-items: start; }
++.scenario-panel { border: 1px solid hsl(var(--border)); background: linear-gradient(145deg, hsl(222 47% 11% / 0.96), hsl(var(--card) / 0.96)); box-shadow: 0 18px 46px -32px hsl(222 90% 3% / 0.8); }
++.scenario-controls, .scenario-evidence { position: sticky; top: 12px; padding: 16px; }
++.scenario-main { display: grid; gap: 12px; min-width: 0; }
++.scenario-baseline { padding: 16px; }
++.scenario-panel-heading { display: flex; align-items: center; gap: 7px; margin-bottom: 14px; color: hsl(var(--live)); }
++.scenario-panel-heading h2 { margin: 0; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; font-weight: 500; }
++.scenario-panel-heading > span { margin-left: auto; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 9px; }
++.scenario-channel-nav { display: grid; margin: 0 -5px 18px; }
++.scenario-channel-nav button { display: flex; align-items: center; justify-content: space-between; min-height: 38px; padding: 7px 8px; border: 0; border-left: 2px solid transparent; background: transparent; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; text-align: left; cursor: pointer; transition: background 150ms ease, color 150ms ease; }
++.scenario-channel-nav button > span { color: hsl(var(--muted-foreground)); font-size: 9px; }
++.scenario-channel-nav button:hover { background: hsl(var(--accent) / 0.22); color: hsl(var(--foreground)); }
++.scenario-channel-nav button.active { border-left-color: hsl(var(--live)); background: hsl(var(--accent) / 0.35); color: hsl(var(--live)); }
++.scenario-control-label { display: block; margin: 13px 0 7px; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; }
++.scenario-slider { width: 100%; height: 4px; margin: 10px 0 14px; border-radius: 0; outline: none; appearance: none; background: linear-gradient(90deg, hsl(var(--live) / 0.7), hsl(var(--live) / 0.2)); cursor: pointer; }
++.scenario-slider::-webkit-slider-thumb { width: 14px; height: 14px; border: 2px solid hsl(var(--live)); border-radius: 50%; appearance: none; background: hsl(var(--background)); box-shadow: 0 0 0 3px hsl(var(--live) / 0.18); }
++.scenario-slider::-moz-range-thumb { width: 11px; height: 11px; border: 2px solid hsl(var(--live)); border-radius: 50%; background: hsl(var(--background)); }
++.scenario-number, .scenario-controls select { width: 100%; min-height: 36px; padding: 7px 9px; border: 1px solid hsl(var(--border)); background: hsl(var(--secondary) / 0.5); color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; }
++.scenario-presets { display: flex; gap: 5px; margin: 7px 0 15px; }
++.scenario-presets button { flex: 1; min-height: 29px; padding: 4px 5px; border: 1px solid hsl(var(--border)); background: transparent; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 8px; cursor: pointer; }
++.scenario-presets button.active, .scenario-presets button:hover { border-color: hsl(var(--live) / 0.55); color: hsl(var(--live)); }
++.scenario-download { display: inline-flex; align-items: center; justify-content: center; gap: 7px; width: 100%; min-height: 36px; margin-top: 12px; border: 1px solid hsl(var(--live) / 0.45); background: hsl(var(--live) / 0.07); color: hsl(var(--live)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 9px; cursor: pointer; }
++.scenario-download:hover { background: hsl(var(--live) / 0.14); }
++.scenario-control-note { display: flex; align-items: flex-start; gap: 7px; margin-top: 15px; padding-top: 13px; border-top: 1px solid hsl(var(--border)); color: hsl(var(--muted-foreground)); }
++.scenario-control-note p { margin: 0; font-size: 10px; line-height: 1.55; }
++.scenario-control-note svg { flex: 0 0 auto; margin-top: 2px; }
++.scenario-baseline-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 18px; }
++.scenario-baseline-grid > div { display: grid; gap: 4px; min-width: 0; }
++.scenario-baseline-grid span { color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 8px; text-transform: uppercase; letter-spacing: 0.08em; }
++.scenario-baseline-grid strong { overflow: hidden; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; font-weight: 500; text-overflow: ellipsis; }
++.scenario-impact-panel { overflow: hidden; }
++.scenario-impact-panel .scenario-panel-heading { padding: 16px 16px 0; }
++.scenario-impact-table { overflow-x: auto; }
++.scenario-impact-head, .scenario-impact-row { display: grid; grid-template-columns: 78px 145px minmax(150px, 1.2fr) minmax(145px, 0.8fr) minmax(115px, 0.75fr); gap: 10px; align-items: center; min-width: 660px; }
++.scenario-impact-head { padding: 9px 14px; border-top: 1px solid hsl(var(--border)); border-bottom: 1px solid hsl(var(--border)); color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 8px; text-transform: uppercase; letter-spacing: 0.09em; }
++.scenario-impact-row { width: 100%; padding: 11px 14px; border: 0; border-bottom: 1px solid hsl(var(--border) / 0.65); background: transparent; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 9px; text-align: left; cursor: pointer; transition: background 150ms ease, color 150ms ease; }
++.scenario-impact-row:hover, .scenario-impact-row.active { background: hsl(var(--accent) / 0.24); color: hsl(var(--foreground)); }
++.scenario-impact-row.active { box-shadow: inset 2px 0 0 hsl(var(--live)); }
++.scenario-ticker { color: hsl(var(--live)); font-size: 11px; font-weight: 600; }
++.scenario-status { display: inline-flex; align-items: center; width: fit-content; padding: 3px 5px; border: 1px solid currentColor; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 8px; line-height: 1.2; text-transform: uppercase; letter-spacing: 0.04em; }
++.scenario-status-ok { color: hsl(160 65% 60%); }
++.scenario-status-stale { color: hsl(43 92% 65%); }
++.scenario-status-missing { color: hsl(0 72% 68%); }
++.scenario-status-partial { color: hsl(187 86% 60%); }
++.scenario-number-value { color: hsl(var(--foreground)); font-size: 10px; }
++.scenario-inspector-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
++.scenario-inspector-title > strong { color: hsl(var(--live)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 20px; font-weight: 500; }
++.scenario-reason { margin-bottom: 14px; padding: 11px; border-left: 2px solid hsl(43 92% 65%); background: hsl(43 92% 65% / 0.06); }
++.scenario-reason > span { color: hsl(43 92% 65%); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 8px; text-transform: uppercase; letter-spacing: 0.08em; }
++.scenario-reason p { margin: 5px 0 0; color: hsl(var(--foreground)); font-size: 10px; line-height: 1.55; }
++.scenario-evidence-block { margin-top: 12px; padding-top: 12px; border-top: 1px solid hsl(var(--border)); }
++.scenario-evidence-block h3 { margin: 0 0 8px; color: hsl(var(--live)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; font-weight: 500; }
++.scenario-formula { margin: 0 0 10px; color: hsl(var(--muted-foreground)); font-size: 10px; line-height: 1.55; }
++.scenario-evidence-block dl { margin: 0; }
++.scenario-evidence-block dl > div { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 9px; padding: 6px 0; border-bottom: 1px solid hsl(var(--border) / 0.55); font-size: 9px; line-height: 1.45; }
++.scenario-evidence-block dt { color: hsl(var(--muted-foreground)); }
++.scenario-evidence-block dd { margin: 0; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; overflow-wrap: anywhere; }
++.scenario-hash { font-size: 8px; word-break: break-all; }
++.scenario-empty { display: grid; justify-items: start; gap: 10px; padding: 24px; }
++.scenario-empty h2 { margin: 0; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 18px; }
++.scenario-empty p { max-width: 760px; margin: 0; color: hsl(var(--muted-foreground)); font-size: 12px; line-height: 1.6; }
++.scenario-empty code { display: block; max-width: 100%; padding: 11px; overflow-x: auto; background: hsl(var(--secondary) / 0.6); color: hsl(var(--live)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 9px; line-height: 1.65; white-space: pre-wrap; }
++@media (max-width: 1380px) {
++  .scenario-layout { grid-template-columns: 255px minmax(0, 1fr) 330px; }
++}
++@media (max-width: 1180px) {
++  .scenario-layout { grid-template-columns: 270px minmax(0, 1fr); }
++  .scenario-evidence { position: static; grid-column: 2; }
++}
++@media (max-width: 820px) {
++  .scenario-hero { grid-template-columns: 1fr; padding: 20px 18px; }
++  .scenario-hero-status { justify-items: start; text-align: left; }
++  .scenario-layout { grid-template-columns: 1fr; }
++  .scenario-controls, .scenario-evidence { position: static; }
++  .scenario-evidence { grid-column: auto; }
++  .scenario-baseline-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
++}
++@media (max-width: 560px) {
++  .scenario-baseline-grid { grid-template-columns: 1fr; }
++}
++@media (prefers-reduced-motion: reduce) {
++  .scenario-channel-nav button, .scenario-impact-row { transition: none; }
++}
+diff --git a/src/pages/MacroScenarioLab.test.tsx b/src/pages/MacroScenarioLab.test.tsx
+new file mode 100644
+index 0000000..e9743a8
+--- /dev/null
++++ b/src/pages/MacroScenarioLab.test.tsx
+@@ -0,0 +1,66 @@
++// @vitest-environment jsdom
++import { readFileSync } from "node:fs";
++import { act, type ReactNode } from "react";
++import { createRoot } from "react-dom/client";
++import { MemoryRouter } from "react-router";
++import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
++import MacroScenarioLab from "./MacroScenarioLab";
++
++vi.mock("@/components/AppLayout", () => ({ default: ({ children }: { children: ReactNode }) => <>{children}</> }));
++(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
++
++describe("Macro Scenario Lab", () => {
++  let root: ReturnType<typeof createRoot> | null = null;
++  let host: HTMLDivElement | null = null;
++  beforeEach(async () => {
++    vi.stubGlobal("fetch", async (input: RequestInfo | URL) => {
++      const url = String(input);
++      const file = url === "/reports/macro-scenarios.json" ? "src/test-fixtures/macro-scenarios.json" : `public${url}`;
++      return new Response(readFileSync(file, "utf8"), { status: 200 });
++    });
++    host = document.createElement("div");
++    document.body.appendChild(host);
++    await act(async () => { root = createRoot(host!); root.render(<MemoryRouter><MacroScenarioLab /></MemoryRouter>); });
++  });
++  afterEach(() => {
++    if (root) act(() => root!.unmount());
++    host?.remove();
++    root = null;
++    host = null;
++    vi.unstubAllGlobals();
++  });
++
++  it("recomputes the rate upper bound when the shock changes and exposes evidence", async () => {
++    expect(host!.textContent).toContain("Shock the inputs. Inspect the evidence.");
++    expect(host!.textContent).toContain("Fixture baseline");
++    expect(host!.textContent).toContain("interest_upper_bound");
++    const before = host!.textContent;
++    expect(before).toContain("6.38M USD/year");
++    const input = host!.querySelector('input[aria-label="Shock value"]') as HTMLInputElement;
++    await act(async () => {
++      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!;
++      setter.call(input, "0.02");
++      input.dispatchEvent(new Event("input", { bubbles: true }));
++      input.dispatchEvent(new Event("change", { bubbles: true }));
++    });
++    expect(host!.textContent).toContain("12.76M USD/year");
++    const rcl = [...host!.querySelectorAll(".scenario-impact-row")].find((row) => row.textContent?.includes("RCL")) as HTMLButtonElement;
++    await act(async () => { rcl.click(); });
++    expect(host!.textContent).toContain("assumes immediate full repricing of exposed debt");
++    expect(host!.textContent).toContain("hedge_share_unknown_upper_bound");
++  });
++
++  it("separates current gross fuel exposure from historical and missing channels", async () => {
++    const oil = [...host!.querySelectorAll("button")].find((button) => button.textContent === "OIL+20%") as HTMLButtonElement;
++    await act(async () => { oil.click(); });
++    expect(host!.textContent).toContain("fuel_cost_gross");
++    expect(host!.textContent).toContain("2.24B USD");
++    expect(host!.textContent).toContain("historical_only");
++    const usd = [...host!.querySelectorAll("button")].find((button) => button.textContent === "USD+5%") as HTMLButtonElement;
++    await act(async () => { usd.click(); });
++    expect(host!.textContent).toContain("foreign_revenue_share_missing_or_invalid");
++    const credit = [...host!.querySelectorAll("button")].find((button) => button.textContent === "CREDIT+100 bp") as HTMLButtonElement;
++    await act(async () => { credit.click(); });
++    expect(host!.textContent).toContain("new_issuance_spread_maturity_and_rating_missing");
++  });
++});
+diff --git a/src/pages/MacroScenarioLab.tsx b/src/pages/MacroScenarioLab.tsx
+new file mode 100644
+index 0000000..9dbe1e8
+--- /dev/null
++++ b/src/pages/MacroScenarioLab.tsx
+@@ -0,0 +1,221 @@
++// Shock controls call the same scenario engine as the worker. The UI never
++// changes a displayed number without recomputing all company impacts.
++import { useEffect, useMemo, useState } from "react";
++import { Activity, AlertTriangle, Download, FileCheck2, FlaskConical, Info, SlidersHorizontal } from "lucide-react";
++import AppLayout from "@/components/AppLayout";
++import { buildMacroScenarioReport, type MacroScenarioDefinition, type MacroScenarioReport, type ScenarioChannel } from "../../api/services/macro-scenarios";
++import type { PilotEvidenceReport } from "../../api/services/pilot-exposure-evidence";
++import type { CompanyExposureReport } from "../../api/services/company-exposure";
++import type { NormalizedMacroPoint } from "../../worker/lib/fred";
++
++interface ScenarioBundle {
++  report: MacroScenarioReport;
++  pilot: PilotEvidenceReport;
++  exposure: CompanyExposureReport;
++  macroSeries: Record<string, NormalizedMacroPoint[]>;
++}
++const CHANNELS: ScenarioChannel[] = ["rates", "oil", "usd", "credit"];
++const SHOCK_PRESETS: Record<ScenarioChannel, { label: string; value: number }[]> = {
++  rates: [{ label: "+50 bp", value: 0.005 }, { label: "+100 bp", value: 0.01 }, { label: "+200 bp", value: 0.02 }],
++  oil: [{ label: "+10%", value: 0.10 }, { label: "+20%", value: 0.20 }, { label: "+40%", value: 0.40 }],
++  usd: [{ label: "+2.5%", value: 0.025 }, { label: "+5%", value: 0.05 }, { label: "+10%", value: 0.10 }],
++  credit: [{ label: "+50 bp", value: 0.005 }, { label: "+100 bp", value: 0.01 }, { label: "+200 bp", value: 0.02 }],
++};
++const SHOCK_LIMITS: Record<ScenarioChannel, { min: number; max: number; step: number }> = {
++  rates: { min: -0.02, max: 0.05, step: 0.001 },
++  oil: { min: -0.5, max: 0.9, step: 0.01 },
++  usd: { min: -0.2, max: 0.5, step: 0.01 },
++  credit: { min: -0.01, max: 0.05, step: 0.001 },
++};
++let bundleRequest: Promise<ScenarioBundle> | null = null;
++function requestBundle(): Promise<ScenarioBundle> {
++  if (!bundleRequest) {
++    bundleRequest = Promise.all([
++      fetch("/reports/macro-scenarios.json", { cache: "no-store" }),
++      fetch("/reports/pilot-exposure-evidence.json", { cache: "no-store" }),
++      fetch("/reports/company-exposures.json", { cache: "no-store" }),
++    ]).then(async ([scenarioResponse, pilotResponse, exposureResponse]) => {
++      for (const response of [scenarioResponse, pilotResponse, exposureResponse]) if (!response.ok) throw new Error(`Snapshot HTTP ${response.status}`);
++      const [report, pilot, exposure] = await Promise.all([scenarioResponse.json(), pilotResponse.json(), exposureResponse.json()]) as [MacroScenarioReport, PilotEvidenceReport, CompanyExposureReport];
++      if (report.schemaVersion !== 1 || !Array.isArray(report.scenarios) || !Array.isArray(pilot.companies) || !Array.isArray(exposure.companies)) throw new Error("Unsupported scenario schema");
++      const macroSeries: Record<string, NormalizedMacroPoint[]> = {};
++      for (const scenario of report.scenarios) {
++        if (!scenario.baseline) continue;
++        macroSeries[scenario.baseline.seriesId] = [{ ...scenario.baseline, availablePrecision: "day" }];
++      }
++      return { report, pilot, exposure, macroSeries };
++    }).catch((error: unknown) => { bundleRequest = null; throw error; });
++  }
++  return bundleRequest;
++}
++const money = (value: number) => {
++  const absolute = Math.abs(value);
++  if (absolute >= 1e9) return `${(value / 1e9).toFixed(2)}B`;
++  if (absolute >= 1e6) return `${(value / 1e6).toFixed(2)}M`;
++  if (absolute >= 1e3) return `${(value / 1e3).toFixed(1)}K`;
++  return value.toFixed(2);
++};
++const shockText = (channel: ScenarioChannel, value: number) => channel === "rates" || channel === "credit" ? `${value >= 0 ? "+" : ""}${(value * 10_000).toFixed(0)} bp` : `${value >= 0 ? "+" : ""}${(value * 100).toFixed(0)}%`;
++function statusClass(status: string): string {
++  return status === "computable" ? "scenario-status-ok" : status === "historical_only" ? "scenario-status-stale" : status === "not_computable" ? "scenario-status-missing" : "scenario-status-partial";
++}
++
++export default function MacroScenarioLab() {
++  const [bundle, setBundle] = useState<ScenarioBundle | null>(null);
++  const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">("loading");
++  const [channel, setChannel] = useState<ScenarioChannel>("rates");
++  const [ticker, setTicker] = useState("ALL");
++  const [shocks, setShocks] = useState<Record<ScenarioChannel, number>>({ rates: 0.01, oil: 0.20, usd: 0.05, credit: 0.01 });
++  useEffect(() => {
++    let active = true;
++    void requestBundle()
++      .then((value) => {
++        if (!active) return;
++        setBundle(value);
++        setShocks(Object.fromEntries(value.report.scenarios.map((scenario) => [scenario.channel, scenario.shock])) as Record<ScenarioChannel, number>);
++        setLoadStatus("ready");
++      })
++      .catch(() => { if (active) setLoadStatus("error"); });
++    return () => { active = false; };
++  }, []);
++  const report = useMemo<MacroScenarioReport | null>(() => {
++    if (!bundle) return null;
++    const definitions: MacroScenarioDefinition[] = CHANNELS.map((item) => ({ channel: item, shock: shocks[item] }));
++    return buildMacroScenarioReport({ dataMode: bundle.report.dataMode, asOf: bundle.report.asOf, definitions, macroSeries: bundle.macroSeries, pilot: bundle.pilot.companies, exposures: bundle.exposure.companies });
++  }, [bundle, shocks]);
++  const scenario = report?.scenarios.find((item) => item.channel === channel) ?? null;
++  const impacts = useMemo(() => (scenario?.impacts ?? []).filter((impact) => ticker === "ALL" || impact.ticker === ticker), [scenario, ticker]);
++  const selectedImpact = ticker === "ALL" ? null : impacts[0] ?? null;
++  const updateShock = (value: number) => {
++    const limits = SHOCK_LIMITS[channel];
++    setShocks((current) => ({ ...current, [channel]: Math.max(limits.min, Math.min(limits.max, Number.isFinite(value) ? value : 0)) }));
++  };
++  const download = () => {
++    if (!report) return;
++    const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
++    const url = URL.createObjectURL(blob);
++    const anchor = document.createElement("a");
++    anchor.href = url;
++    anchor.download = `macro-scenario-${channel}-${shockText(channel, shocks[channel]).replace(" ", "")}.json`;
++    anchor.click();
++    URL.revokeObjectURL(url);
++  };
++
++  return (
++    <AppLayout title="Scenario Lab">
++      <div className="scenario-page">
++        <section className="scenario-hero">
++          <div>
++            <div className="t-label"><FlaskConical size={14} /> Availability-anchored macro scenarios</div>
++            <h1>Shock the inputs. Inspect the evidence.</h1>
++            <p>Upper bounds and gross exposure are not profit forecasts. Every number is recomputed locally from FRED baselines and SEC exposure evidence.</p>
++          </div>
++          <div className="scenario-hero-status">
++            <span className={loadStatus === "error" ? "scenario-status-missing" : "scenario-status-ok"}>{loadStatus === "loading" ? "Loading evidence" : loadStatus === "error" ? "Evidence unavailable" : report?.dataMode === "fixture" ? "Fixture baseline" : "Live SEC + FRED"}</span>
++            <strong>{scenario ? shockText(channel, shocks[channel]) : "—"}</strong>
++            <span>{scenario?.status ?? "not_computable"}</span>
++          </div>
++        </section>
++
++        {loadStatus === "error" && (
++          <section className="t-panel scenario-empty">
++            <AlertTriangle size={22} />
++            <h2>Scenario evidence is unavailable</h2>
++            <p>Build the FRED archive, pilot evidence and company exposure reports first. No scenario state is inferred from missing files.</p>
++            <code>npx tsx worker/macro-fred-fetch.mts --group all<br />npx tsx scripts/build-pilot-exposure-evidence.mts<br />npx tsx scripts/build-company-exposure.mts --universe research-universe-51.json<br />npx tsx scripts/build-macro-scenarios.mts --macro-root D:\research\alpha-engine\macro</code>
++          </section>
++        )}
++
++        {loadStatus !== "error" && scenario && report && (
++          <div className="scenario-layout">
++            <aside className="scenario-controls scenario-panel">
++              <div className="scenario-panel-heading"><SlidersHorizontal size={15} /><h2>Shock controls</h2></div>
++              <div className="scenario-channel-nav" role="tablist" aria-label="Scenario channels">
++                {CHANNELS.map((item) => <button key={item} type="button" role="tab" aria-selected={channel === item} className={channel === item ? "active" : ""} onClick={() => setChannel(item)}>{item.toUpperCase()}<span>{shockText(item, shocks[item])}</span></button>)}
++              </div>
++              <label className="scenario-control-label" htmlFor="scenario-shock">Custom shock · {shockText(channel, shocks[channel])}</label>
++              <input id="scenario-shock" className="scenario-slider" type="range" min={SHOCK_LIMITS[channel].min} max={SHOCK_LIMITS[channel].max} step={SHOCK_LIMITS[channel].step} value={shocks[channel]} onChange={(event) => updateShock(Number(event.target.value))} />
++              <input className="scenario-number" aria-label="Shock value" type="number" min={SHOCK_LIMITS[channel].min} max={SHOCK_LIMITS[channel].max} step={SHOCK_LIMITS[channel].step} value={shocks[channel]} onChange={(event) => updateShock(Number(event.target.value))} />
++              <div className="scenario-presets">{SHOCK_PRESETS[channel].map((preset) => <button type="button" key={preset.label} className={shocks[channel] === preset.value ? "active" : ""} onClick={() => updateShock(preset.value)}>{preset.label}</button>)}</div>
++              <label className="scenario-control-label" htmlFor="scenario-ticker">Company</label>
++              <select id="scenario-ticker" value={ticker} onChange={(event) => setTicker(event.target.value)}>
++                <option value="ALL">All pilot companies</option>
++                {bundle?.pilot.companies.map((company) => <option key={company.ticker} value={company.ticker}>{company.ticker}</option>)}
++              </select>
++              <button type="button" className="scenario-download" onClick={download}><Download size={14} /> Export current JSON</button>
++              <div className="scenario-control-note"><Info size={13} /><p>Shocks are assumptions, not FRED forecasts. Rate and credit values are decimal rates; oil and USD values are decimal percentages.</p></div>
++            </aside>
++
++            <main className="scenario-main">
++              <section className="scenario-baseline scenario-panel">
++                <div className="scenario-panel-heading"><Activity size={15} /><h2>{channel.toUpperCase()} baseline → scenario</h2></div>
++                {scenario.baseline ? (
++                  <div className="scenario-baseline-grid">
++                    <div><span>FRED series</span><strong>{scenario.baseline.seriesId}</strong></div>
++                    <div><span>Baseline</span><strong>{scenario.baseline.value} {scenario.baseline.unit}</strong></div>
++                    <div><span>Scenario</span><strong>{scenario.baseline.scenarioValue} {scenario.baseline.unit}</strong></div>
++                    <div><span>Observation</span><strong>{scenario.baseline.observationPeriod}</strong></div>
++                    <div><span>Available</span><strong>{scenario.baseline.availableAt.slice(0, 10)}</strong></div>
++                    <div><span> vintage</span><strong>{scenario.baseline.vintageId}</strong></div>
++                  </div>
++                ) : <p>No baseline is available for this channel.</p>}
++              </section>
++
++              <section className="scenario-panel scenario-impact-panel">
++                <div className="scenario-panel-heading"><FileCheck2 size={15} /><h2>Company impacts</h2><span>{impacts.length} rows</span></div>
++                <div className="scenario-impact-table" role="table" aria-label="Company scenario impacts">
++                  <div className="scenario-impact-head" role="row"><span>Company</span><span>Status</span><span>Metric</span><span>Value</span><span>Period</span></div>
++                  {impacts.map((impact) => {
++                    const first = impact.metrics[0];
++                    return (
++                      <button type="button" role="row" key={impact.ticker} className={`scenario-impact-row ${ticker === impact.ticker ? "active" : ""}`} onClick={() => setTicker(impact.ticker)}>
++                        <span className="scenario-ticker">{impact.ticker}</span>
++                        <span className={`scenario-status ${statusClass(impact.status)}`}>{impact.status}</span>
++                        <span>{first?.name ?? "not_computable"}</span>
++                        <span className="scenario-number-value">{first ? `${money(first.value)} ${first.unit}` : "—"}</span>
++                        <span>{first?.periodEnd ?? impact.reasons[0] ?? "—"}</span>
++                      </button>
++                    );
++                  })}
++                </div>
++              </section>
++            </main>
++
++            <aside className="scenario-evidence scenario-panel">
++              <div className="scenario-panel-heading"><Info size={15} /><h2>Evidence inspector</h2></div>
++              {selectedImpact ? (
++                <>
++                  <div className="scenario-inspector-title"><strong>{selectedImpact.ticker}</strong><span className={`scenario-status ${statusClass(selectedImpact.status)}`}>{selectedImpact.status}</span></div>
++                  {selectedImpact.reasons.length > 0 && <div className="scenario-reason"><span>Reason</span><p>{selectedImpact.reasons.join(" · ")}</p></div>}
++                  {selectedImpact.metrics.map((metric) => (
++                    <article key={metric.name} className="scenario-evidence-block">
++                      <h3>{metric.name} · {metric.impactType}</h3>
++                      <p className="scenario-formula">{metric.formula}</p>
++                      <dl>
++                        <div><dt>Value</dt><dd>{money(metric.value)} {metric.unit}</dd></div>
++                        <div><dt>Concepts</dt><dd>{metric.concepts.join(", ") || "—"}</dd></div>
++                        <div><dt>Period</dt><dd>{metric.periodStart ? `${metric.periodStart} → ` : ""}{metric.periodEnd ?? "—"}</dd></div>
++                        <div><dt>Available</dt><dd>{metric.availableAt ?? "—"}</dd></div>
++                        <div><dt>Stale</dt><dd>{metric.stale ? "true · historical only" : "false"}</dd></div>
++                      </dl>
++                    </article>
++                  ))}
++                </>
++              ) : (
++                <>
++                  <div className="scenario-reason"><span>Method</span><p>Select a company row to inspect its exact formula, concepts, period and availability. `Upper bound` means hedge share is unknown; `gross_exposure` is not net income.</p></div>
++                  <div className="scenario-evidence-block"><h3>Baseline provenance</h3><dl>
++                    <div><dt>Source</dt><dd>{scenario.baseline?.sourceUrl ?? "—"}</dd></div>
++                    <div><dt>SHA256</dt><dd className="scenario-hash">{scenario.baseline?.sourceHash ?? "—"}</dd></div>
++                    <div><dt>Availability basis</dt><dd>{scenario.baseline?.availabilityBasis ?? "—"}</dd></div>
++                    <div><dt>Research eligible</dt><dd>{scenario.baseline?.researchEligibleAt ?? "—"}</dd></div>
++                  </dl></div>
++                </>
++              )}
++            </aside>
++          </div>
++        )}
++      </div>
++    </AppLayout>
++  );
++}
+diff --git a/src/test-fixtures/macro-scenarios.json b/src/test-fixtures/macro-scenarios.json
+new file mode 100644
+index 0000000..4cc313e
+--- /dev/null
++++ b/src/test-fixtures/macro-scenarios.json
+@@ -0,0 +1,371 @@
++{
++ "schemaVersion": 1,
++ "dataMode": "fixture",
++ "generatedAt": "2026-11-02T15:50:48.511Z",
++ "asOf": "2026-11-02T15:50:48.459Z",
++ "policy": {
++  "noSectorInference": true,
++  "upperBoundWhenHedgeUnknown": true,
++  "staleEvidenceIsHistoricalOnly": true,
++  "creditRequiresNewIssuanceTerms": true
++ },
++ "scenarios": [
++  {
++   "channel": "rates",
++   "shock": 0.01,
++   "shockUnit": "decimal",
++   "baseline": {
++    "seriesId": "DGS10",
++    "observationPeriod": "2026-10-29",
++    "value": 0.04,
++    "scenarioValue": 0.05,
++    "unit": "Percent",
++    "availableAt": "2026-10-30T00:00:00.000Z",
++    "researchEligibleAt": "2026-10-30T23:59:59.999Z",
++    "vintageId": "DGS10|2026-10-29|2026-10-30",
++    "frequency": "Daily",
++    "releasedAt": null,
++    "availabilityBasis": "fred_realtime_start",
++    "supersededAt": null,
++    "ingestedAt": "2026-11-01T00:00:00Z",
++    "sourceUrl": "https://fred.stlouisfed.org/series/DGS10",
++    "sourceHash": "fixture",
++    "stale": false
++   },
++   "status": "partial",
++   "reasons": [],
++   "impacts": [
++    {
++     "ticker": "DAL",
++     "status": "not_computable",
++     "reasons": [
++      "fixed_interest_share_missing_or_invalid"
++     ],
++     "metrics": []
++    },
++    {
++     "ticker": "RCL",
++     "status": "computable",
++     "reasons": [
++      "hedge_share_unknown_upper_bound"
++     ],
++     "metrics": [
++      {
++       "name": "interest_upper_bound",
++       "value": 6378900.0000000065,
++       "unit": "USD/year",
++       "impactType": "upper_bound",
++       "formula": "debt × (1 − fixedInterestShare) × (1 − interestRateHedgeShare) × rateShock; assumes immediate full repricing of exposed debt",
++       "concepts": [
++        "LongTermDebtAndCapitalLeaseObligations"
++       ],
++       "periodStart": null,
++       "periodEnd": "2026-06-30",
++       "availableAt": "2026-07-28",
++       "stale": false
++      }
++     ]
++    },
++    {
++     "ticker": "CVX",
++     "status": "not_computable",
++     "reasons": [
++      "fixed_interest_share_missing_or_invalid"
++     ],
++     "metrics": []
++    },
++    {
++     "ticker": "COP",
++     "status": "not_computable",
++     "reasons": [
++      "fixed_interest_share_missing_or_invalid"
++     ],
++     "metrics": []
++    },
++    {
++     "ticker": "PFE",
++     "status": "not_computable",
++     "reasons": [
++      "fixed_interest_share_missing_or_invalid"
++     ],
++     "metrics": []
++    }
++   ]
++  },
++  {
++   "channel": "oil",
++   "shock": 0.2,
++   "shockUnit": "decimal_percentage",
++   "baseline": {
++    "seriesId": "DCOILWTICO",
++    "observationPeriod": "2026-10-29",
++    "value": 80,
++    "scenarioValue": 96,
++    "unit": "Percent",
++    "availableAt": "2026-10-30T00:00:00.000Z",
++    "researchEligibleAt": "2026-10-30T23:59:59.999Z",
++    "vintageId": "DCOILWTICO|2026-10-29|2026-10-30",
++    "frequency": "Daily",
++    "releasedAt": null,
++    "availabilityBasis": "fred_realtime_start",
++    "supersededAt": null,
++    "ingestedAt": "2026-11-01T00:00:00Z",
++    "sourceUrl": "https://fred.stlouisfed.org/series/DCOILWTICO",
++    "sourceHash": "fixture",
++    "stale": false
++   },
++   "status": "partial",
++   "reasons": [],
++   "impacts": [
++    {
++     "ticker": "DAL",
++     "status": "computable",
++     "reasons": [
++      "hedge_and_pass_through_unknown_gross_exposure"
++     ],
++     "metrics": [
++      {
++       "name": "fuel_cost_gross",
++       "value": 2240400000,
++       "unit": "USD",
++       "impactType": "gross_exposure",
++       "formula": "fuelCost × oilShockPct; gross exposure before hedges, basis, pass-through and tax",
++       "concepts": [
++        "FuelCosts"
++       ],
++       "periodStart": null,
++       "periodEnd": "2026-09-30",
++       "availableAt": "2026-10-09T23:59:59.999Z",
++       "stale": false
++      }
++     ]
++    },
++    {
++     "ticker": "RCL",
++     "status": "historical_only",
++     "reasons": [
++      "hedge_and_pass_through_unknown_gross_exposure"
++     ],
++     "metrics": [
++      {
++       "name": "fuel_cost_gross",
++       "value": 77064400,
++       "unit": "USD",
++       "impactType": "gross_exposure",
++       "formula": "fuelCost × oilShockPct; gross exposure before hedges, basis, pass-through and tax",
++       "concepts": [
++        "FuelCosts"
++       ],
++       "periodStart": null,
++       "periodEnd": "2021-12-31",
++       "availableAt": "2022-03-01T23:59:59.999Z",
++       "stale": true
++      }
++     ]
++    },
++    {
++     "ticker": "CVX",
++     "status": "historical_only",
++     "reasons": [
++      "hedge_and_pass_through_unknown_gross_exposure"
++     ],
++     "metrics": [
++      {
++       "name": "oil_revenue_gross",
++       "value": 7193600000,
++       "unit": "USD",
++       "impactType": "gross_exposure",
++       "formula": "oilRevenue × oilShockPct; gross exposure before hedges, basis, pass-through and tax",
++       "concepts": [
++        "OilAndGasRevenue"
++       ],
++       "periodStart": null,
++       "periodEnd": "2018-03-31",
++       "availableAt": "2018-05-03T23:59:59.999Z",
++       "stale": true
++      },
++      {
++       "name": "oil_cost_gross",
++       "value": 4246600000,
++       "unit": "USD",
++       "impactType": "gross_exposure",
++       "formula": "oilCost × oilShockPct; gross exposure before hedges, basis, pass-through and tax",
++       "concepts": [
++        "CostOfPurchasedOilAndGas"
++       ],
++       "periodStart": null,
++       "periodEnd": "2018-03-31",
++       "availableAt": "2018-05-03T23:59:59.999Z",
++       "stale": true
++      }
++     ]
++    },
++    {
++     "ticker": "COP",
++     "status": "historical_only",
++     "reasons": [
++      "hedge_and_pass_through_unknown_gross_exposure"
++     ],
++     "metrics": [
++      {
++       "name": "oil_cost_gross",
++       "value": 1355600000,
++       "unit": "USD",
++       "impactType": "gross_exposure",
++       "formula": "oilCost × oilShockPct; gross exposure before hedges, basis, pass-through and tax",
++       "concepts": [
++        "CostOfPurchasedOilAndGas"
++       ],
++       "periodStart": null,
++       "periodEnd": "2018-06-30",
++       "availableAt": "2018-08-01T23:59:59.999Z",
++       "stale": true
++      }
++     ]
++    },
++    {
++     "ticker": "PFE",
++     "status": "not_computable",
++     "reasons": [
++      "fuel_cost_and_oil_revenue_cost_missing"
++     ],
++     "metrics": []
++    }
++   ]
++  },
++  {
++   "channel": "usd",
++   "shock": 0.05,
++   "shockUnit": "decimal_percentage",
++   "baseline": {
++    "seriesId": "DTWEXBGS",
++    "observationPeriod": "2026-10-29",
++    "value": 100,
++    "scenarioValue": 105,
++    "unit": "Percent",
++    "availableAt": "2026-10-30T00:00:00.000Z",
++    "researchEligibleAt": "2026-10-30T23:59:59.999Z",
++    "vintageId": "DTWEXBGS|2026-10-29|2026-10-30",
++    "frequency": "Daily",
++    "releasedAt": null,
++    "availabilityBasis": "fred_realtime_start",
++    "supersededAt": null,
++    "ingestedAt": "2026-11-01T00:00:00Z",
++    "sourceUrl": "https://fred.stlouisfed.org/series/DTWEXBGS",
++    "sourceHash": "fixture",
++    "stale": false
++   },
++   "status": "not_computable",
++   "reasons": [],
++   "impacts": [
++    {
++     "ticker": "DAL",
++     "status": "not_computable",
++     "reasons": [
++      "foreign_revenue_share_missing_or_invalid"
++     ],
++     "metrics": []
++    },
++    {
++     "ticker": "RCL",
++     "status": "not_computable",
++     "reasons": [
++      "foreign_revenue_share_missing_or_invalid"
++     ],
++     "metrics": []
++    },
++    {
++     "ticker": "CVX",
++     "status": "not_computable",
++     "reasons": [
++      "foreign_revenue_share_missing_or_invalid"
++     ],
++     "metrics": []
++    },
++    {
++     "ticker": "COP",
++     "status": "not_computable",
++     "reasons": [
++      "foreign_revenue_share_missing_or_invalid"
++     ],
++     "metrics": []
++    },
++    {
++     "ticker": "PFE",
++     "status": "not_computable",
++     "reasons": [
++      "foreign_revenue_share_missing_or_invalid"
++     ],
++     "metrics": []
++    }
++   ]
++  },
++  {
++   "channel": "credit",
++   "shock": 0.01,
++   "shockUnit": "decimal",
++   "baseline": {
++    "seriesId": "BAMLH0A0HYM2",
++    "observationPeriod": "2026-10-29",
++    "value": 3,
++    "scenarioValue": 3.01,
++    "unit": "Percent",
++    "availableAt": "2026-10-30T00:00:00.000Z",
++    "researchEligibleAt": "2026-10-30T23:59:59.999Z",
++    "vintageId": "BAMLH0A0HYM2|2026-10-29|2026-10-30",
++    "frequency": "Daily",
++    "releasedAt": null,
++    "availabilityBasis": "fred_realtime_start",
++    "supersededAt": null,
++    "ingestedAt": "2026-11-01T00:00:00Z",
++    "sourceUrl": "https://fred.stlouisfed.org/series/BAMLH0A0HYM2",
++    "sourceHash": "fixture",
++    "stale": false
++   },
++   "status": "not_computable",
++   "reasons": [],
++   "impacts": [
++    {
++     "ticker": "DAL",
++     "status": "not_computable",
++     "reasons": [
++      "new_issuance_spread_maturity_and_rating_missing"
++     ],
++     "metrics": []
++    },
++    {
++     "ticker": "RCL",
++     "status": "not_computable",
++     "reasons": [
++      "new_issuance_spread_maturity_and_rating_missing"
++     ],
++     "metrics": []
++    },
++    {
++     "ticker": "CVX",
++     "status": "not_computable",
++     "reasons": [
++      "new_issuance_spread_maturity_and_rating_missing"
++     ],
++     "metrics": []
++    },
++    {
++     "ticker": "COP",
++     "status": "not_computable",
++     "reasons": [
++      "new_issuance_spread_maturity_and_rating_missing"
++     ],
++     "metrics": []
++    },
++    {
++     "ticker": "PFE",
++     "status": "not_computable",
++     "reasons": [
++      "new_issuance_spread_maturity_and_rating_missing"
++     ],
++     "metrics": []
++    }
++   ]
++  }
++ ]
++}
+\ No newline at end of file
