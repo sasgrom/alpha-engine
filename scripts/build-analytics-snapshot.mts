@@ -37,7 +37,7 @@ const [macro] = await db.execute(sql`SELECT COUNT(*) rowsTotal, COUNT(DISTINCT s
 const [jobs] = await db.execute(sql`SELECT status, COUNT(*) n FROM jobs GROUP BY status`);
 function currentTestCount(): number | null {
   try {
-    const output = execFileSync("npx", ["vitest", "list"], { encoding: "utf8", maxBuffer: 20 * 1024 * 1024 });
+    const output = execFileSync(process.execPath, ["node_modules/vitest/vitest.mjs", "list"], { encoding: "utf8", maxBuffer: 20 * 1024 * 1024 });
     return output.split(/\r?\n/).filter((line) => line.trim().length > 0).length;
   } catch {
     return null; // optional diagnostic; never present a failed count as zero tests
