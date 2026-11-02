@@ -1,0 +1,1369 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-02T08:13:22.406Z",
+ "candidates": {
+  "DAL": [
+   {
+    "concept": "DebtInstrumentCarryingAmount",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 26,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-09",
+     "form": "10-Q",
+     "val": 12096000000
+    }
+   },
+   {
+    "concept": "DebtInstrumentUnamortizedDiscountPremiumAndDebtIssuanceCostsNet",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 26,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-09",
+     "form": "10-Q",
+     "val": -9000000
+    }
+   },
+   {
+    "concept": "FuelCosts",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 41,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-09",
+     "form": "10-Q",
+     "val": 11202000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "LongTermDebt",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 26,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-09",
+     "form": "10-Q",
+     "val": 12105000000
+    }
+   },
+   {
+    "concept": "LongTermDebtAndCapitalLeaseObligations",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 26,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-09",
+     "form": "10-Q",
+     "val": 9527000000
+    }
+   },
+   {
+    "concept": "LongTermDebtAndCapitalLeaseObligationsCurrent",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 26,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-09",
+     "form": "10-Q",
+     "val": 3324000000
+    }
+   },
+   {
+    "concept": "LongTermDebtCurrent",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 26,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-09",
+     "form": "10-Q",
+     "val": 2981000000
+    }
+   },
+   {
+    "concept": "LongTermDebtFairValue",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 26,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-09",
+     "form": "10-Q",
+     "val": 11900000000
+    }
+   },
+   {
+    "concept": "LongTermDebtNoncurrent",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 26,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-09",
+     "form": "10-Q",
+     "val": 9124000000
+    }
+   },
+   {
+    "concept": "ProceedsFromIssuanceOfLongTermDebt",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 14,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-09",
+     "form": "10-Q",
+     "val": 103000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "RepaymentsOfLongTermDebtAndCapitalSecurities",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 27,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-09",
+     "form": "10-Q",
+     "val": 3334000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "FinanceLeaseInterestExpense",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 6,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-11",
+     "form": "10-K",
+     "val": 37000000,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalAfterYearFive",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-11",
+     "form": "10-K",
+     "val": 4754000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-11",
+     "form": "10-K",
+     "val": 1367000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-11",
+     "form": "10-K",
+     "val": 1222000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-11",
+     "form": "10-K",
+     "val": 621000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-11",
+     "form": "10-K",
+     "val": 3460000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-11",
+     "form": "10-K",
+     "val": 1878000000
+    }
+   },
+   {
+    "concept": "DebtInstrumentRepaidPrincipal",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 4,
+    "latest": {
+     "end": "2024-12-31",
+     "filed": "2025-02-11",
+     "form": "10-K",
+     "val": 844000000,
+     "start": "2024-01-01"
+    }
+   },
+   {
+    "concept": "AvailableForSaleSecuritiesDebtMaturitiesWithinOneYearFairValue",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2023-09-30",
+     "filed": "2023-10-12",
+     "form": "10-Q",
+     "val": 2100000000
+    }
+   }
+  ],
+  "RCL": [
+   {
+    "concept": "DebtWeightedAverageInterestRate",
+    "taxonomy": "us-gaap",
+    "units": [
+     "pure"
+    ],
+    "recentRecords": 26,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 0.0471
+    }
+   },
+   {
+    "concept": "InterestExpenseNonoperating",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 33,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 805000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "LongTermDebtAndCapitalLeaseObligations",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 26,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 20116000000
+    }
+   },
+   {
+    "concept": "LongTermDebtAndCapitalLeaseObligationsCurrent",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 26,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 2239000000
+    }
+   },
+   {
+    "concept": "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 12,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 22872000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 15,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 2371000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 15,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 1084000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 15,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 1134000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 15,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 3211000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalRemainderOfFiscalYear",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 12,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 579000000
+    }
+   },
+   {
+    "concept": "LongTermDebtPercentageBearingFixedInterestRate",
+    "taxonomy": "us-gaap",
+    "units": [
+     "pure"
+    ],
+    "recentRecords": 26,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 0.97
+    }
+   },
+   {
+    "concept": "OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 41,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": -6000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "ProceedsFromIssuanceOfLongTermDebt",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 27,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 7227000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "RepaymentsOfLongTermDebt",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 27,
+    "latest": {
+     "end": "2026-09-30",
+     "filed": "2026-10-27",
+     "form": "10-Q",
+     "val": 6236000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "FinanceLeaseInterestExpense",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 31,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-11",
+     "form": "10-K",
+     "val": 8000000,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "ForeignCurrencyTransactionGainLossBeforeTax",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 19,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-11",
+     "form": "10-K",
+     "val": -63000000,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalAfterYearFive",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-11",
+     "form": "10-K",
+     "val": 10642000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-11",
+     "form": "10-K",
+     "val": 1089000000
+    }
+   },
+   {
+    "concept": "InterestExpense",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 8,
+    "latest": {
+     "end": "2024-03-31",
+     "filed": "2024-04-25",
+     "form": "10-Q",
+     "val": 424000000,
+     "start": "2024-01-01"
+    }
+   }
+  ],
+  "CVX": [
+   {
+    "concept": "EnergyRelatedInventoryChemicals",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 24,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": 632000000
+    }
+   },
+   {
+    "concept": "ForeignCurrencyTransactionGainLossUnrealized",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 25,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": -168000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "InterestExpenseDebt",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 37,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": 697000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 24,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": 36674000000
+    }
+   },
+   {
+    "concept": "OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 37,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": -92000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "PaymentsToAcquireOilAndGasPropertyAndEquipment",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 25,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": 8340000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "ProceedsFromIssuanceOfLongTermDebt",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 24,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": 99000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "RepaymentsOfLongTermDebtAndCapitalSecurities",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 25,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": 3069000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "DebtInstrumentCarryingAmount",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 5,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 30922000000
+    }
+   },
+   {
+    "concept": "LongTermDebtAndCapitalLeaseObligations",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 5,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 39781000000
+    }
+   },
+   {
+    "concept": "LongTermDebtCurrent",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 5,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 2345000000
+    }
+   },
+   {
+    "concept": "LongTermDebtFairValue",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 5,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 649000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalAfterYearFive",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 11185000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 2345000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 5350000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 1567000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 4752000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 5723000000
+    }
+   },
+   {
+    "concept": "ShareBasedCompensationArrangementByShareBasedPaymentAwardFairValueAssumptionsRiskFreeInterestRate",
+    "taxonomy": "us-gaap",
+    "units": [
+     "pure"
+    ],
+    "recentRecords": 6,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 0.0434,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "UnrecognizedTaxBenefitsDecreasesResultingFromForeignCurrencyTranslation",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 6,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 0,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "UnrecognizedTaxBenefitsIncomeTaxPenaltiesAndInterestExpense",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-24",
+     "form": "10-K",
+     "val": 37000000,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "DebtInstrumentUnamortizedPremium",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2024-12-31",
+     "filed": "2025-02-21",
+     "form": "10-K",
+     "val": 0
+    }
+   },
+   {
+    "concept": "IncomeTaxExaminationPenaltiesAndInterestExpense",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2024-12-31",
+     "filed": "2025-02-21",
+     "form": "10-K",
+     "val": 40000000,
+     "start": "2024-01-01"
+    }
+   }
+  ],
+  "COP": [
+   {
+    "concept": "ForeignCurrencyTransactionGainLossBeforeTax",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 37,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": 25000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "InventoryCrudeOilProductsAndMerchandise",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 24,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": 1021000000
+    }
+   },
+   {
+    "concept": "LongTermDebtAndCapitalLeaseObligations",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 24,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": 22828000000
+    }
+   },
+   {
+    "concept": "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 24,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": 23300000000
+    }
+   },
+   {
+    "concept": "OtherComprehensiveIncomeForeignCurrencyTransactionAndTranslationGainLossBeforeReclassificationAndTax",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 19,
+    "latest": {
+     "end": "2026-06-30",
+     "filed": "2026-08-06",
+     "form": "10-Q",
+     "val": -271000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "AssetRetirementObligationForeignCurrencyTranslationGainLoss",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 5,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": -216000000,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "DebtInstrumentFaceAmount",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 5,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 23347000000
+    }
+   },
+   {
+    "concept": "DebtInstrumentUnamortizedDiscountPremiumNet",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 5,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 704000000
+    }
+   },
+   {
+    "concept": "FinanceLeaseInterestExpense",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 6,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 24000000,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "ForeignCurrencyTransactionGainLossAfterTax",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 6,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 0,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "InterestExpenseDebt",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 6,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 1176000000,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "InterestExpenseOther",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 6,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 63000000,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 713000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFive",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 1599000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearFour",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 992000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearThree",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 670000000
+    }
+   },
+   {
+    "concept": "LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 786000000
+    }
+   },
+   {
+    "concept": "OtherComprehensiveIncomeLossForeignCurrencyTransactionAndTranslationAdjustmentNetOfTax",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 21,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 502000000,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "DebtInstrumentRepurchasedFaceAmount",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 8,
+    "latest": {
+     "end": "2024-12-31",
+     "filed": "2026-02-17",
+     "form": "10-K",
+     "val": 3768000000
+    }
+   },
+   {
+    "concept": "OtherComprehensiveIncomeLossForeignCurrencyTranslationAdjustmentTax",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 3,
+    "latest": {
+     "end": "2024-12-31",
+     "filed": "2025-02-18",
+     "form": "10-K",
+     "val": 0,
+     "start": "2024-01-01"
+    }
+   },
+   {
+    "concept": "PercentageOfDebtHedgedByInterestRateDerivatives",
+    "taxonomy": "us-gaap",
+    "units": [
+     "pure"
+    ],
+    "recentRecords": 9,
+    "latest": {
+     "end": "2023-12-31",
+     "filed": "2026-04-30",
+     "form": "10-Q",
+     "val": 0.6
+    }
+   },
+   {
+    "concept": "GainLossOnRepurchaseOfDebtInstrument",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 4,
+    "latest": {
+     "end": "2023-05-25",
+     "filed": "2025-02-18",
+     "form": "10-K",
+     "val": 27000000
+    }
+   }
+  ],
+  "PFE": [
+   {
+    "concept": "DebtInstrumentUnamortizedDiscountPremiumAndDebtIssuanceCostsNet",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 21,
+    "latest": {
+     "end": "2026-06-28",
+     "filed": "2026-08-04",
+     "form": "10-Q",
+     "val": 2000000
+    }
+   },
+   {
+    "concept": "InterestExpense",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 37,
+    "latest": {
+     "end": "2026-06-28",
+     "filed": "2026-08-04",
+     "form": "10-Q",
+     "val": 1336000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "LongTermDebtCurrent",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 24,
+    "latest": {
+     "end": "2026-06-28",
+     "filed": "2026-08-04",
+     "form": "10-Q",
+     "val": 2605000000
+    }
+   },
+   {
+    "concept": "LongTermDebtNoncurrent",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 24,
+    "latest": {
+     "end": "2026-06-28",
+     "filed": "2026-08-04",
+     "form": "10-Q",
+     "val": 60495000000
+    }
+   },
+   {
+    "concept": "OtherComprehensiveIncomeForeignCurrencyTransactionAndTranslationGainLossBeforeReclassificationAndTax",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 37,
+    "latest": {
+     "end": "2026-06-28",
+     "filed": "2026-08-04",
+     "form": "10-Q",
+     "val": 882000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "OtherComprehensiveIncomeLossForeignCurrencyTranslationAdjustmentTax",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 37,
+    "latest": {
+     "end": "2026-06-28",
+     "filed": "2026-08-04",
+     "form": "10-Q",
+     "val": 112000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "ProceedsFromIssuanceOfLongTermDebt",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 18,
+    "latest": {
+     "end": "2026-06-28",
+     "filed": "2026-08-04",
+     "form": "10-Q",
+     "val": 0,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "RepaymentsOfLongTermDebt",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 23,
+    "latest": {
+     "end": "2026-06-28",
+     "filed": "2026-08-04",
+     "form": "10-Q",
+     "val": 1250000000,
+     "start": "2026-01-01"
+    }
+   },
+   {
+    "concept": "GoodwillForeignCurrencyTranslationGainLoss",
+    "taxonomy": "us-gaap",
+    "units": [
+     "USD"
+    ],
+    "recentRecords": 8,
+    "latest": {
+     "end": "2025-12-31",
+     "filed": "2026-02-26",
+     "form": "10-K",
+     "val": 574000000,
+     "start": "2025-01-01"
+    }
+   },
+   {
+    "concept": "DebtInstrumentInterestRateEffectivePercentage",
+    "taxonomy": "us-gaap",
+    "units": [
+     "pure"
+    ],
+    "recentRecords": 7,
+    "latest": {
+     "end": "2025-05-31",
+     "filed": "2025-11-04",
+     "form": "10-Q",
+     "val": 0.03605
+    }
+   }
+  ]
+ }
+}

@@ -1,10 +1,10 @@
 # Company macro exposure evidence
 
-As of: 2026-11-02T07:07:29.029Z
-Universe SHA256: f253b8c5622e380bdc0a4e3781157c8d043be756994651b9fb9510eedb27bbbe
+As of: 2026-11-02T09:19:03.204Z
+Universe SHA256: 44f2b1712d27c25ba4b73e02270e234f489d813a7b169baf6ea703fc5df21ea9
 Only directly supported metrics are populated. No sector-derived direction scores. Missing evidence remains missing.
 
-Coverage: debt 47/51 · interest coverage 35 · fuel 2 · oil revenue 1 · oil cost 2 · foreign revenue share 1
+Coverage: debt 47/51 · interest coverage 35 · fuel 2 · oil revenue 1 · oil cost 2 · foreign revenue share 0
 
 | Ticker | Sector | Debt | Debt period | Debt / op. income | Interest coverage | Cash / debt | Fuel / op. income | Fuel period | Oil revenue / cost | Oil period | Foreign revenue share | FX period |
 | --- | --- | ---: | --- | ---: | ---: | ---: | ---: | --- | ---: | --- | ---: | --- |
@@ -47,7 +47,7 @@ Coverage: debt 47/51 · interest coverage 35 · fuel 2 · oil revenue 1 · oil c
 | NFLX | Communication Services | 20,535,734,000 | 2021-09-30 · stale | 1.319 | 22.193 | 0.399 | — | — | — / — | — | — | — |
 | NKE | Consumer Discretionary | 7,942,000,000 | 2026-05-31 | — | — | 0.869 | — | — | — / — | — | — | — |
 | NVDA | Information Technology | 33,366,000,000 | 2026-07-26 | 0.169 | 774.820 | 0.673 | — | — | — / — | — | — | — |
-| PFE | Health Care | 4,000,000,000 | 2020-12-31 · stale | — | — | 0.244 | — | — | — / — | — | 0.533 | 2011-04-03 · stale |
+| PFE | Health Care | 4,000,000,000 | 2020-12-31 · stale | — | — | 0.244 | — | — | — / — | — | — | — |
 | PG | Consumer Staples | 23,127,000,000 | 2015-06-30 · stale | 1.166 | 20.961 | 0.402 | — | — | — / — | — | — | — |
 | PLD | Real Estate | 34,669,592,000 | 2026-03-31 | 7.391 | 6.195 | 0.025 | — | — | — / — | — | — | — |
 | PLTR | Information Technology | 0 | 2021-12-31 · stale | 0.000 | 759.266 | — | — | — | — / — | — | — | — |
@@ -101,7 +101,7 @@ Coverage: debt 47/51 · interest coverage 35 · fuel 2 · oil revenue 1 · oil c
 - NFLX: floating rate share, debt maturity schedule, interest-rate hedge ratio, fuel hedge ratio, foreign revenue share
 - NKE: floating rate share, debt maturity schedule, interest-rate hedge ratio, fuel hedge ratio, foreign revenue share
 - NVDA: floating rate share, debt maturity schedule, interest-rate hedge ratio, fuel hedge ratio, foreign revenue share
-- PFE: floating rate share, debt maturity schedule, interest-rate hedge ratio, fuel hedge ratio
+- PFE: floating rate share, debt maturity schedule, interest-rate hedge ratio, fuel hedge ratio, foreign revenue share
 - PG: floating rate share, debt maturity schedule, interest-rate hedge ratio, fuel hedge ratio, foreign revenue share
 - PLD: floating rate share, debt maturity schedule, interest-rate hedge ratio, fuel hedge ratio, foreign revenue share
 - PLTR: floating rate share, debt maturity schedule, interest-rate hedge ratio, fuel hedge ratio, foreign revenue share

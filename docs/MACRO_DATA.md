@@ -184,4 +184,13 @@ For one company or a historical as-of check:
 npx tsx scripts/build-company-exposure.mts --only DAL --as-of 2026-01-31T00:00:00Z
 ```
 
-Outputs are `public/reports/company-exposures.json` and `.md`. The report computes only directly supported values: debt/operating income, operating income/interest expense, cash/debt, fuel cost/operating income, oil revenue/cost and foreign revenue share when domicile and total revenue are directly comparable. It does not infer sector directions, floating-rate debt share, maturity schedules or hedge ratios. Each metric carries source concepts, period, availability and stale-evidence flags.
+Outputs are `public/reports/company-exposures.json` and `.md`. The report computes only directly supported values: debt/operating income, operating income/interest expense, cash/debt, fuel cost/operating income, oil revenue/cost and foreign revenue share when domicile and total revenue are directly comparable **for the same periodEnd**. It does not infer sector directions, floating-rate debt share, maturity schedules or hedge ratios. Each metric carries source concepts, period, availability and stale-evidence flags.
+
+## 9. Pilot source-linked evidence pack
+
+```powershell
+npx tsx scripts/exposure-evidence-probe.mts
+npx tsx scripts/build-pilot-exposure-evidence.mts
+```
+
+The probe inspects fresh SEC companyfacts for DAL, RCL, CVX, COP and PFE. The builder preserves exact fixed-rate shares, weighted/effective rates, interest-rate hedge shares, maturity concepts, fuel/oil metrics and foreign derivative notionals with accession links and raw-payload hashes. No LLM is used. Staleness is based on the economic period, not on the accession year. If comparable domicile and total revenue do not share `periodEnd`, foreign revenue share remains missing.

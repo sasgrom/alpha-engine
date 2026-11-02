@@ -1,8 +1,8 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-02T07:11:36.418Z",
- "asOf": "2026-11-02T07:07:29.029Z",
- "universeSha256": "f253b8c5622e380bdc0a4e3781157c8d043be756994651b9fb9510eedb27bbbe",
+ "generatedAt": "2026-11-02T09:20:19.397Z",
+ "asOf": "2026-11-02T09:19:03.204Z",
+ "universeSha256": "44f2b1712d27c25ba4b73e02270e234f489d813a7b169baf6ea703fc5df21ea9",
  "policy": {
   "noSectorInference": true,
   "noDirectionScore": true,
@@ -15,7 +15,7 @@
   "fuelCost": 2,
   "oilRevenue": 1,
   "oilCost": 2,
-  "foreignRevenueShare": 1
+  "foreignRevenueShare": 0
  },
  "companies": [
   {
@@ -4813,18 +4813,15 @@
     "stale": false
    },
    "foreignRevenueShare": {
-    "value": 0.5327923373686312,
-    "unit": "ratio",
-    "concepts": [
-     "EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToEntitysCountryOfDomicile",
-     "RevenueFromContractWithCustomerExcludingAssessedTax"
-    ],
-    "periodEnd": "2011-04-03",
-    "sourceFiled": "2011-05-12",
-    "quality": "available",
-    "note": "Computed as 1 − domicile revenue / total revenue for the same period",
-    "evidenceAgeDays": 5692,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "foreignDerivativeNotional": {
     "value": 44500000000,
@@ -4843,7 +4840,8 @@
     "floating rate share",
     "debt maturity schedule",
     "interest-rate hedge ratio",
-    "fuel hedge ratio"
+    "fuel hedge ratio",
+    "foreign revenue share"
    ]
   },
   {

@@ -135,7 +135,7 @@ export function buildCompanyExposure(input: CompanyExposureInput, asOf: string):
   const oilCost = flowMetric(input.rows, ["CostOfPurchasedOilAndGas"], asOf);
   const totalRevenue = stockMetric(input.rows, ["RevenueFromContractWithCustomerExcludingAssessedTax"], asOf);
   const domesticRevenue = stockMetric(input.rows, ["EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToEntitysCountryOfDomicile"], asOf);
-  const foreignRevenueShare = domesticRevenue.quality !== "missing" && totalRevenue.quality !== "missing" && totalRevenue.value! > 0 && domesticRevenue.unit === totalRevenue.unit
+  const foreignRevenueShare = domesticRevenue.quality !== "missing" && totalRevenue.quality !== "missing" && domesticRevenue.periodEnd === totalRevenue.periodEnd && totalRevenue.value! > 0 && domesticRevenue.unit === totalRevenue.unit
     ? available(Math.max(0, 1 - domesticRevenue.value! / totalRevenue.value!), "ratio", [...domesticRevenue.concepts, ...totalRevenue.concepts], domesticRevenue.periodEnd!, domesticRevenue.sourceFiled, "available", "Computed as 1 − domicile revenue / total revenue for the same period")
     : missing("No directly comparable domicile and total revenue");
   const foreignDerivativeNotional = stockMetric(input.rows, ["NotionalAmountOfForeignCurrencyDerivatives"], asOf);
@@ -161,6 +161,25 @@ export function buildCompanyExposure(input: CompanyExposureInput, asOf: string):
     foreignRevenueShare: withEvidenceAge(foreignRevenueShare, asOf),
     foreignDerivativeNotional: withEvidenceAge(foreignDerivativeNotional, asOf),
     missing: missingFields,
+  };
+}
+
+export function mergeCompanyExposureReports(previous: CompanyExposureReport, update: CompanyExposureReport): CompanyExposureReport {
+  const companies = new Map(previous.companies.map((company) => [company.ticker, company]));
+  for (const company of update.companies) companies.set(company.ticker, company);
+  const merged = [...companies.values()].sort((a, b) => a.ticker.localeCompare(b.ticker));
+  return {
+    ...update,
+    companies: merged,
+    coverage: {
+      companies: merged.length,
+      debt: merged.filter((company) => company.debt.quality !== "missing").length,
+      interestCoverage: merged.filter((company) => company.interestCoverage.quality !== "missing").length,
+      fuelCost: merged.filter((company) => company.fuelCostToOperatingIncome.quality !== "missing").length,
+      oilRevenue: merged.filter((company) => company.oilRevenue.quality !== "missing").length,
+      oilCost: merged.filter((company) => company.oilCost.quality !== "missing").length,
+      foreignRevenueShare: merged.filter((company) => company.foreignRevenueShare.quality !== "missing").length,
+    },
   };
 }
 
