@@ -23,10 +23,11 @@ describe("FRED vintage normalization", () => {
     expect(() => normalizeFredObservations("GDP", [observation("2026-08-27", "9999-12-31", "1"), observation("2026-08-27", "9999-12-31", "2")], metadata, "abc", "2026-10-30T12:00:00Z")).toThrow("Duplicate FRED vintage");
   });
 
-  it("chunks long real-time history into bounded five-year requests", () => {
-    expect(realtimeChunks("2019-01-01", "2026-11-02")).toEqual([
-      { start: "2019-01-01", end: "2023-12-31" },
-      { start: "2024-01-01", end: "2026-11-02" },
+  it("chunks long real-time history into one-calendar-year requests", () => {
+    expect(realtimeChunks("2019-01-01", "2021-11-02")).toEqual([
+      { start: "2019-01-01", end: "2019-12-31" },
+      { start: "2020-01-01", end: "2020-12-31" },
+      { start: "2021-01-01", end: "2021-11-02" },
     ]);
     expect(realtimeChunks("2020-01-01", "2020-12-31")).toEqual([{ start: "2020-01-01", end: "2020-12-31" }]);
     expect(mergeVintageDates([["2024-01-01", "2024-02-01"], ["2024-02-01", "2025-01-01"]])).toEqual(["2024-01-01", "2024-02-01", "2025-01-01"]);

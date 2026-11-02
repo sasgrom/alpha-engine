@@ -40,7 +40,7 @@ export const endOfUtcDay = (date: string) => {
   return `${date}T23:59:59.999Z`;
 };
 export interface RealtimeChunk { start: string; end: string }
-export function realtimeChunks(start: string, end: string, years = 5): RealtimeChunk[] {
+export function realtimeChunks(start: string, end: string, years = 1): RealtimeChunk[] {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(start) || !/^\d{4}-\d{2}-\d{2}$/.test(end) || start > end) throw new Error(`Invalid real-time range ${start} → ${end}`);
   if (!Number.isInteger(years) || years < 1 || years > 5) throw new Error("Real-time chunks must use 1..5 years to stay below FRED vintage limits");
   const chunks: RealtimeChunk[] = [];

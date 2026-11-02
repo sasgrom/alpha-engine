@@ -101,7 +101,7 @@ for (const [index, definition] of selected.entries()) {
       if (firstVintage) {
         const researchStart = realtimeResearchStart(firstVintage);
         const chunks = realtimeChunks(researchStart, capturedAt.slice(0, 10));
-        prog.log(`${definition.seriesId}: source vintage ${firstVintage} · research start ${researchStart} · ${chunks.length} five-year real-time chunks`);
+        prog.log(`${definition.seriesId}: source vintage ${firstVintage} · research start ${researchStart} · ${chunks.length} one-year real-time chunks`);
         for (const chunk of chunks) {
           let rawObservations: string;
           let rawVintageDates: string;
