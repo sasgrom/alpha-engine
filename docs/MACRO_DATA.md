@@ -163,3 +163,25 @@ Do not use these day-precision rows to claim intraday release-event alpha. Exact
 - No source is retried silently forever and no raw response is overwritten with a model-generated substitute.
 - ISM Manufacturing/Services PMI is deliberately not included yet. It needs a dedicated official ISM adapter and release-time evidence; no proxy series is passed off as PMI.
 - Exact BLS/BEA/FOMC release timestamps are a separate next milestone, not an assumption made from FRED dates.
+
+## 7. Manifest QA
+
+```powershell
+npx tsx worker/macro-manifest-qa.mts --root D:\research\alpha-engine\macro
+```
+
+Use `--allow-partial` when only some groups were intentionally downloaded. `--fred-only` and `--events-only` isolate one collector's checks. QA validates manifest presence, per-series errors, raw SHA256 hashes, row counts, duplicate vintages/events, availability inversions and the 2000+ research window. Output is `worker/.runs/macro-manifest-qa.json`.
+
+## 8. Company exposure evidence
+
+```powershell
+npx tsx scripts/build-company-exposure.mts --universe research-universe-51.json
+```
+
+For one company or a historical as-of check:
+
+```powershell
+npx tsx scripts/build-company-exposure.mts --only DAL --as-of 2026-01-31T00:00:00Z
+```
+
+Outputs are `public/reports/company-exposures.json` and `.md`. The report computes only directly supported values: debt/operating income, operating income/interest expense, cash/debt, fuel cost/operating income, oil revenue/cost and foreign revenue share when domicile and total revenue are directly comparable. It does not infer sector directions, floating-rate debt share, maturity schedules or hedge ratios. Each metric carries source concepts, period, availability and stale-evidence flags.

@@ -1,0 +1,6198 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-02T07:11:36.418Z",
+ "asOf": "2026-11-02T07:07:29.029Z",
+ "universeSha256": "f253b8c5622e380bdc0a4e3781157c8d043be756994651b9fb9510eedb27bbbe",
+ "policy": {
+  "noSectorInference": true,
+  "noDirectionScore": true,
+  "missingFields": "floating rate share, debt maturity schedule, hedges and foreign revenue share are null unless directly supported"
+ },
+ "coverage": {
+  "companies": 51,
+  "debt": 47,
+  "interestCoverage": 35,
+  "fuelCost": 2,
+  "oilRevenue": 1,
+  "oilCost": 2,
+  "foreignRevenueShare": 1
+ },
+ "companies": [
+  {
+   "cik": 320193,
+   "ticker": "AAPL",
+   "name": "Apple Inc.",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 82300000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-06-27",
+    "sourceFiled": "2026-07-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 128,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 0.5314511910835018,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-06-27",
+    "sourceFiled": "2026-07-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 128,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 39.37426900584796,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-27",
+    "sourceFiled": "2026-07-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 128,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.48048602673147023,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-06-27",
+    "sourceFiled": "2026-07-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 128,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 5272,
+   "ticker": "AIG",
+   "name": "AMERICAN INTERNATIONAL GROUP, INC.",
+   "sector": "Financials",
+   "debt": {
+    "value": 9191000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2025-12-31",
+    "sourceFiled": "2026-02-12",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 306,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 2488,
+   "ticker": "AMD",
+   "name": "ADVANCED MICRO DEVICES INC",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 1632000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2016-09-24",
+    "sourceFiled": "2016-10-26",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 3691,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 0.25154130702836003,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2016-09-24",
+    "sourceFiled": "2016-10-26",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 3691,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 44.136054421768705,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-27",
+    "sourceFiled": "2026-08-05",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 128,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 3.116421568627451,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-27",
+    "sourceFiled": "2026-08-05",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 128,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1053507,
+   "ticker": "AMT",
+   "name": "AMERICAN TOWER CORP /MA/",
+   "sector": "Real Estate",
+   "debt": {
+    "value": 32215200000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-27",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 6.524333191566924,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-27",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 3.4657822699515686,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-27",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.05810611140082942,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-27",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1018724,
+   "ticker": "AMZN",
+   "name": "AMAZON COM INC",
+   "sector": "Consumer Discretionary",
+   "debt": {
+    "value": 132995000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 1.4191885777701896,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 31.206127206127206,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.5880897778111959,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1596532,
+   "ticker": "ANET",
+   "name": "Arista Networks, Inc.",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 0,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtCurrent",
+     "LongTermDebtNoncurrent"
+    ],
+    "periodEnd": "2014-06-30",
+    "sourceFiled": "2014-08-08",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 4508,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 0,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtCurrent",
+     "LongTermDebtNoncurrent",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2014-06-30",
+    "sourceFiled": "2014-08-08",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 4508,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 6878.819969742814,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-05",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: non-positive or missing denominator",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1730168,
+   "ticker": "AVGO",
+   "name": "Broadcom Inc.",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 57167000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-08-02",
+    "sourceFiled": "2026-09-10",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 92,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 1.3352408090811416,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-08-02",
+    "sourceFiled": "2026-09-10",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 92,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 13.540164452877926,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-08-02",
+    "sourceFiled": "2026-09-10",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 92,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.41938530970664895,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-08-02",
+    "sourceFiled": "2026-09-10",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 92,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 12927,
+   "ticker": "BA",
+   "name": "BOEING CO",
+   "sector": "Industrials",
+   "debt": {
+    "value": 41351000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-27",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 4.247663071391885,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-27",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.22969214771105897,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-27",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 18230,
+   "ticker": "CAT",
+   "name": "CATERPILLAR INC",
+   "sector": "Industrials",
+   "debt": {
+    "value": 30696000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtNoncurrent"
+    ],
+    "periodEnd": "2025-12-31",
+    "sourceFiled": "2026-02-13",
+    "quality": "partial",
+    "note": "Only one current/noncurrent debt component is available",
+    "evidenceAgeDays": 306,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 2.3446379468377634,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtNoncurrent",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2025-12-31",
+    "sourceFiled": "2026-02-13",
+    "quality": "partial",
+    "note": null,
+    "evidenceAgeDays": 306,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.21869298931456868,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtNoncurrent"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-05",
+    "quality": "partial",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 927628,
+   "ticker": "COF",
+   "name": "CAPITAL ONE FINANCIAL CORP",
+   "sector": "Financials",
+   "debt": {
+    "value": 44677000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-28",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1163165,
+   "ticker": "COP",
+   "name": "CONOCOPHILLIPS",
+   "sector": "Energy",
+   "debt": {
+    "value": 22828000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-06",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.2879796740844577,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-06",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": 13139000000,
+    "unit": "USD",
+    "concepts": [
+     "CostOfPurchasedOilAndGas"
+    ],
+    "periodEnd": "2018-06-30",
+    "sourceFiled": "2018-08-01",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 3047,
+    "stale": true
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 909832,
+   "ticker": "COST",
+   "name": "COSTCO WHOLESALE CORP /NEW",
+   "sector": "Consumer Staples",
+   "debt": {
+    "value": 6618000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2022-05-08",
+    "sourceFiled": "2022-06-02",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 1639,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 0.5663671373555841,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2022-05-08",
+    "sourceFiled": "2022-06-02",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 1639,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 80.58620689655173,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-08-30",
+    "sourceFiled": "2026-10-07",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 64,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 3.0533393774554245,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-08-30",
+    "sourceFiled": "2026-10-07",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 64,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 93410,
+   "ticker": "CVX",
+   "name": "CHEVRON CORP",
+   "sector": "Energy",
+   "debt": {
+    "value": 39781000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2025-12-31",
+    "sourceFiled": "2026-02-24",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 306,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.10075161509263215,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2024-06-30",
+    "sourceFiled": "2024-08-07",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 855,
+    "stale": true
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": 139118000000,
+    "unit": "USD",
+    "concepts": [
+     "OilAndGasRevenue"
+    ],
+    "periodEnd": "2018-03-31",
+    "sourceFiled": "2018-05-03",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 3138,
+    "stale": true
+   },
+   "oilCost": {
+    "value": 79492000000,
+    "unit": "USD",
+    "concepts": [
+     "CostOfPurchasedOilAndGas"
+    ],
+    "periodEnd": "2018-03-31",
+    "sourceFiled": "2018-05-03",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 3138,
+    "stale": true
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 27904,
+   "ticker": "DAL",
+   "name": "DELTA AIR LINES, INC.",
+   "sector": "Industrials",
+   "debt": {
+    "value": 9527000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-09",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 1.8023079833522513,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-09",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 13.084158415841584,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-09",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.39750183688464363,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-09",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": 2.5694286795308363,
+    "unit": "ratio",
+    "concepts": [
+     "FuelCosts",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-09",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1792789,
+   "ticker": "DASH",
+   "name": "DoorDash, Inc.",
+   "sector": "Consumer Discretionary",
+   "debt": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No DebtInstrumentCarryingAmount",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 237.33333333333334,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-05",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1922641,
+   "ticker": "ENLT",
+   "name": "Enlight Renewable Energy Ltd.",
+   "sector": null,
+   "debt": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No DebtInstrumentCarryingAmount",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 831259,
+   "ticker": "FCX",
+   "name": "FREEPORT-MCMORAN INC",
+   "sector": "Materials",
+   "debt": {
+    "value": 9983000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2020-09-30",
+    "sourceFiled": "2020-11-06",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 2224,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 1.4420049111656796,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2020-09-30",
+    "sourceFiled": "2020-11-06",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 2224,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 22.118210862619808,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-06",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.40869478112791746,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-06",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1274494,
+   "ticker": "FSLR",
+   "name": "FIRST SOLAR, INC.",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 220456000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2020-09-30",
+    "sourceFiled": "2020-10-28",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 2224,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 0.12181895140746929,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2020-09-30",
+    "sourceFiled": "2020-10-28",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 2224,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 84.45895365660148,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-30",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 7.65812225568821,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-30",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1652044,
+   "ticker": "GOOGL",
+   "name": "Alphabet Inc.",
+   "sector": "Communication Services",
+   "debt": {
+    "value": 10886000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2025-03-31",
+    "sourceFiled": "2025-04-25",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 581,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 0.07373939902999431,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2025-03-31",
+    "sourceFiled": "2025-04-25",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 581,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 458.472049689441,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-23",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 5.136046297997428,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-23",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 886982,
+   "ticker": "GS",
+   "name": "GOLDMAN SACHS GROUP INC",
+   "sector": "Financials",
+   "debt": {
+    "value": 228723000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtNoncurrent"
+    ],
+    "periodEnd": "2019-09-30",
+    "sourceFiled": "2019-11-01",
+    "quality": "partial",
+    "note": "Only one current/noncurrent debt component is available",
+    "evidenceAgeDays": 2590,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.8187458191786572,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtNoncurrent"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-03",
+    "quality": "partial",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 354950,
+   "ticker": "HD",
+   "name": "HOME DEPOT, INC.",
+   "sector": "Consumer Discretionary",
+   "debt": {
+    "value": 43951000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-08-02",
+    "sourceFiled": "2026-08-25",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 92,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 2.0907144895823424,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-08-02",
+    "sourceFiled": "2026-08-25",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 92,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 10.758444216990789,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-08-02",
+    "sourceFiled": "2026-08-25",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 92,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.04743919364747105,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-08-02",
+    "sourceFiled": "2026-08-25",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 92,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": 190000000,
+    "unit": "USD",
+    "concepts": [
+     "NotionalAmountOfForeignCurrencyDerivatives"
+    ],
+    "periodEnd": "2013-02-03",
+    "sourceFiled": "2013-03-28",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 5020,
+    "stale": true
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 51143,
+   "ticker": "IBM",
+   "name": "INTERNATIONAL BUSINESS MACHINES CORP",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 56804000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.16254137032603339,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 50863,
+   "ticker": "INTC",
+   "name": "INTEL CORP",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 46585000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2025-12-27",
+    "sourceFiled": "2026-01-23",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 310,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: non-positive or missing denominator",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": -0.0816542948038176,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-27",
+    "sourceFiled": "2026-07-24",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 128,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.2763550499087689,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-06-27",
+    "sourceFiled": "2026-07-24",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 128,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 200406,
+   "ticker": "JNJ",
+   "name": "JOHNSON & JOHNSON",
+   "sector": "Health Care",
+   "debt": {
+    "value": 41438000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2025-12-28",
+    "sourceFiled": "2026-02-11",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 309,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 1.9037074470528783,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2025-12-28",
+    "sourceFiled": "2026-02-11",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 309,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 25.790284360189574,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2015-03-29",
+    "sourceFiled": "2015-05-01",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 4236,
+    "stale": true
+   },
+   "cashToDebt": {
+    "value": 0.40807954051836476,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-09-27",
+    "sourceFiled": "2026-10-21",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 36,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 19617,
+   "ticker": "JPM",
+   "name": "JPMORGAN CHASE & CO",
+   "sector": "Financials",
+   "debt": {
+    "value": 269929000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2014-06-30",
+    "sourceFiled": "2014-08-04",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 4508,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 1.0328382648770602,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2018-12-31",
+    "sourceFiled": "2019-02-26",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 2863,
+    "stale": true
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1506307,
+   "ticker": "KMI",
+   "name": "KINDER MORGAN, INC.",
+   "sector": "Energy",
+   "debt": {
+    "value": 40246000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2014-12-31",
+    "sourceFiled": "2015-02-23",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 4324,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 7.5735792246894995,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2014-12-31",
+    "sourceFiled": "2015-02-23",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 4324,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 3.1443786982248523,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-23",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.022809720220643044,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-23",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1707925,
+   "ticker": "LIN",
+   "name": "LINDE PLC",
+   "sector": "Materials",
+   "debt": {
+    "value": 20678000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 2.204947750053316,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 37.36254980079681,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpenseNonoperating"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.23687010349163362,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 59478,
+   "ticker": "LLY",
+   "name": "ELI LILLY & Co",
+   "sector": "Health Care",
+   "debt": {
+    "value": 29474000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2024-12-31",
+    "sourceFiled": "2025-02-19",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 671,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.3036574608129199,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-05",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 936468,
+   "ticker": "LMT",
+   "name": "LOCKHEED MARTIN CORP",
+   "sector": "Industrials",
+   "debt": {
+    "value": 21700000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2025-12-31",
+    "sourceFiled": "2026-01-29",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 306,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 2.329325890940318,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2025-12-31",
+    "sourceFiled": "2026-01-29",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 306,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 9.614035087719298,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-09-27",
+    "sourceFiled": "2026-10-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 36,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.2746543778801843,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-09-27",
+    "sourceFiled": "2026-10-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 36,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": 1200000000,
+    "unit": "USD",
+    "concepts": [
+     "NotionalAmountOfForeignCurrencyDerivatives"
+    ],
+    "periodEnd": "2013-03-31",
+    "sourceFiled": "2013-04-25",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 4964,
+    "stale": true
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1397187,
+   "ticker": "LULU",
+   "name": "lululemon athletica inc.",
+   "sector": "Consumer Discretionary",
+   "debt": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No DebtInstrumentCarryingAmount",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1141391,
+   "ticker": "MA",
+   "name": "Mastercard Inc",
+   "sector": "Financials",
+   "debt": {
+    "value": 21000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2011-03-31",
+    "sourceFiled": "2011-05-03",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 5695,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 0.0010261421939897386,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2011-03-31",
+    "sourceFiled": "2011-05-03",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 5695,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 33.549180327868854,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-30",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 537.6666666666666,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-30",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1326801,
+   "ticker": "META",
+   "name": "Meta Platforms, Inc.",
+   "sector": "Communication Services",
+   "debt": {
+    "value": 83669000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtCurrent",
+     "LongTermDebtNoncurrent"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 1.0540312421264801,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtCurrent",
+     "LongTermDebtNoncurrent",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 1417.5,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.1341237495368655,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtCurrent",
+     "LongTermDebtNoncurrent"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1682852,
+   "ticker": "MRNA",
+   "name": "Moderna, Inc.",
+   "sector": "Health Care",
+   "debt": {
+    "value": 591000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtNoncurrent"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-31",
+    "quality": "partial",
+    "note": "Only one current/noncurrent debt component is available",
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: non-positive or missing denominator",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 2.9153976311336716,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtNoncurrent"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-31",
+    "quality": "partial",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 789019,
+   "ticker": "MSFT",
+   "name": "MICROSOFT CORP",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 40294000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-29",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 0.2595644079697495,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-29",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 52.891652470187395,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-29",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.5195562614781357,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-29",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 723125,
+   "ticker": "MU",
+   "name": "MICRON TECHNOLOGY INC",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 4688000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-09-03",
+    "sourceFiled": "2026-10-09",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 60,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 0.047191463660157036,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-09-03",
+    "sourceFiled": "2026-10-09",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 60,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 178.99099099099098,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-09-03",
+    "sourceFiled": "2026-10-09",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 60,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 8.183447098976108,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-09-03",
+    "sourceFiled": "2026-10-09",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 60,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 753308,
+   "ticker": "NEE",
+   "name": "NEXTERA ENERGY INC",
+   "sector": "Utilities",
+   "debt": {
+    "value": 97785000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtCurrent",
+     "LongTermDebtNoncurrent"
+    ],
+    "periodEnd": "2026-03-31",
+    "sourceFiled": "2026-04-23",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 216,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 11.878644314868804,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtCurrent",
+     "LongTermDebtNoncurrent",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-03-31",
+    "sourceFiled": "2026-04-23",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 216,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.020432581684307408,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtCurrent",
+     "LongTermDebtNoncurrent"
+    ],
+    "periodEnd": "2026-03-31",
+    "sourceFiled": "2026-04-23",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 216,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1065280,
+   "ticker": "NFLX",
+   "name": "NETFLIX INC",
+   "sector": "Communication Services",
+   "debt": {
+    "value": 20535734000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2021-09-30",
+    "sourceFiled": "2021-10-21",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 1859,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 1.319364312069423,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2021-09-30",
+    "sourceFiled": "2021-10-21",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 1859,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 22.192981455552356,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-21",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.3990251821532164,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-21",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 320187,
+   "ticker": "NKE",
+   "name": "NIKE, Inc.",
+   "sector": "Consumer Discretionary",
+   "debt": {
+    "value": 7942000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-05-31",
+    "sourceFiled": "2026-07-15",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 155,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.8691765298413497,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-08-31",
+    "sourceFiled": "2026-10-02",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 63,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1045810,
+   "ticker": "NVDA",
+   "name": "NVIDIA CORP",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 33366000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-07-26",
+    "sourceFiled": "2026-08-26",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 99,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 0.16887422246291356,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-07-26",
+    "sourceFiled": "2026-08-26",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 99,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 774.8196078431373,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-07-26",
+    "sourceFiled": "2026-08-26",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 99,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.6726308217946413,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-07-26",
+    "sourceFiled": "2026-08-26",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 99,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 78003,
+   "ticker": "PFE",
+   "name": "PFIZER INC",
+   "sector": "Health Care",
+   "debt": {
+    "value": 4000000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2020-12-31",
+    "sourceFiled": "2021-02-25",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 2132,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.244,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-06-28",
+    "sourceFiled": "2026-08-04",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 127,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": 0.5327923373686312,
+    "unit": "ratio",
+    "concepts": [
+     "EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToEntitysCountryOfDomicile",
+     "RevenueFromContractWithCustomerExcludingAssessedTax"
+    ],
+    "periodEnd": "2011-04-03",
+    "sourceFiled": "2011-05-12",
+    "quality": "available",
+    "note": "Computed as 1 − domicile revenue / total revenue for the same period",
+    "evidenceAgeDays": 5692,
+    "stale": true
+   },
+   "foreignDerivativeNotional": {
+    "value": 44500000000,
+    "unit": "USD",
+    "concepts": [
+     "NotionalAmountOfForeignCurrencyDerivatives"
+    ],
+    "periodEnd": "2011-04-03",
+    "sourceFiled": "2011-05-12",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 5692,
+    "stale": true
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio"
+   ]
+  },
+  {
+   "cik": 80424,
+   "ticker": "PG",
+   "name": "PROCTER & GAMBLE Co",
+   "sector": "Consumer Staples",
+   "debt": {
+    "value": 23127000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2015-06-30",
+    "sourceFiled": "2015-10-26",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 4143,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 1.1663220535579202,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2015-06-30",
+    "sourceFiled": "2015-10-26",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 4143,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 20.96088794926004,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.4023003415920785,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2019-09-30",
+    "sourceFiled": "2019-10-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 2590,
+    "stale": true
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1045609,
+   "ticker": "PLD",
+   "name": "Prologis, Inc.",
+   "sector": "Real Estate",
+   "debt": {
+    "value": 34669592000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-03-31",
+    "sourceFiled": "2026-04-30",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 216,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 7.391439644251601,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-03-31",
+    "sourceFiled": "2026-04-30",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 216,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 6.195440436407825,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-03-31",
+    "sourceFiled": "2026-04-30",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 216,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.0248385963122958,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-03-31",
+    "sourceFiled": "2026-04-30",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 216,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1321655,
+   "ticker": "PLTR",
+   "name": "Palantir Technologies Inc.",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 0,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtNoncurrent"
+    ],
+    "periodEnd": "2021-12-31",
+    "sourceFiled": "2022-02-24",
+    "quality": "partial",
+    "note": "Only one current/noncurrent debt component is available",
+    "evidenceAgeDays": 1767,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 0,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtNoncurrent",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2021-12-31",
+    "sourceFiled": "2022-02-24",
+    "quality": "partial",
+    "note": null,
+    "evidenceAgeDays": 1767,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 759.2657060518732,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-04",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: non-positive or missing denominator",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 884887,
+   "ticker": "RCL",
+   "name": "ROYAL CARIBBEAN CRUISES LTD",
+   "sector": "Consumer Discretionary",
+   "debt": {
+    "value": 21263000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-28",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 4.165948275862069,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-28",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 3.4801273410231603,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-28",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.0411512956779382,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-28",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": 0.07549412225705329,
+    "unit": "ratio",
+    "concepts": [
+     "FuelCosts",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2021-12-31",
+    "sourceFiled": "2022-03-01",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 1767,
+    "stale": true
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": 1600000000,
+    "unit": "USD",
+    "concepts": [
+     "NotionalAmountOfForeignCurrencyDerivatives"
+    ],
+    "periodEnd": "2013-06-30",
+    "sourceFiled": "2013-07-26",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 4873,
+    "stale": true
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1874178,
+   "ticker": "RIVN",
+   "name": "Rivian Automotive, Inc. / DE",
+   "sector": null,
+   "debt": {
+    "value": 5526000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2024-06-30",
+    "sourceFiled": "2024-08-06",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 855,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: non-positive or missing denominator",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": -13.747081712062256,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-30",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.6500180962721679,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-30",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1375365,
+   "ticker": "SMCI",
+   "name": "Super Micro Computer, Inc.",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 7233000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2013-03-31",
+    "sourceFiled": "2013-05-10",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 4964,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 0.002610733279287461,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2013-03-31",
+    "sourceFiled": "2013-05-10",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 4964,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 140.2848751835536,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 1039.8830360846123,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-31",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 732717,
+   "ticker": "T",
+   "name": "AT&T INC.",
+   "sector": "Communication Services",
+   "debt": {
+    "value": 134631000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 5.258407217904152,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 3.7590662164146234,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.13050486143607343,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-07-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1318605,
+   "ticker": "TSLA",
+   "name": "Tesla, Inc.",
+   "sector": "Consumer Discretionary",
+   "debt": {
+    "value": 9403672000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2018-12-31",
+    "sourceFiled": "2019-02-19",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 2863,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 2.7131194460473167,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2018-12-31",
+    "sourceFiled": "2019-02-19",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 2863,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 13.279693486590038,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 1.8985136869937616,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebtAndCapitalLeaseObligations"
+    ],
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-10-22",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 33,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": 4900000,
+    "unit": "USD",
+    "concepts": [
+     "NotionalAmountOfForeignCurrencyDerivatives"
+    ],
+    "periodEnd": "2012-09-30",
+    "sourceFiled": "2012-11-07",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 5146,
+    "stale": true
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 731766,
+   "ticker": "UNH",
+   "name": "UNITEDHEALTH GROUP INC",
+   "sector": "Health Care",
+   "debt": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "LongTermDebtCurrent and LongTermDebtNoncurrent have incompatible periods or units",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 5.566512583461736,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-06-30",
+    "sourceFiled": "2026-08-10",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 125,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 1403161,
+   "ticker": "V",
+   "name": "VISA INC.",
+   "sector": "Financials",
+   "debt": {
+    "value": 20920000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2021-12-31",
+    "sourceFiled": "2022-01-28",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 1767,
+    "stale": true
+   },
+   "debtToOperatingIncome": {
+    "value": 0.7955582598113782,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2021-12-31",
+    "sourceFiled": "2022-01-28",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 1767,
+    "stale": true
+   },
+   "interestCoverage": {
+    "value": 153.77777777777777,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpense"
+    ],
+    "periodEnd": "2026-03-31",
+    "sourceFiled": "2026-04-29",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 216,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.5929254302103251,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-03-31",
+    "sourceFiled": "2026-04-29",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 216,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": 651000000,
+    "unit": "USD",
+    "concepts": [
+     "NotionalAmountOfForeignCurrencyDerivatives"
+    ],
+    "periodEnd": "2011-09-30",
+    "sourceFiled": "2011-11-18",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 5512,
+    "stale": true
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 104169,
+   "ticker": "WMT",
+   "name": "Walmart Inc.",
+   "sector": "Consumer Staples",
+   "debt": {
+    "value": 38166000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-01-31",
+    "sourceFiled": "2026-03-13",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 275,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 1.1823420074349442,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-01-31",
+    "sourceFiled": "2026-03-13",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 275,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": 17.36417428725121,
+    "unit": "ratio",
+    "concepts": [
+     "OperatingIncomeLoss",
+     "InterestExpenseDebt"
+    ],
+    "periodEnd": "2026-07-31",
+    "sourceFiled": "2026-08-28",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 94,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.3020751454173872,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-07-31",
+    "sourceFiled": "2026-08-28",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 94,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  }
+ ]
+}
