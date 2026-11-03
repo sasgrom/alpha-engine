@@ -1,4 +1,5 @@
 import { appendBridgeMessage, bridgeStatus, readBridgeHandoff, type BridgeAuthor } from "./alpha-bridge";
+import { ackCommand, completeCommand, postCommand, readCommands, type CommandStatus } from "./alpha-commands";
 
 export interface JsonRpcRequest {
   jsonrpc: string;
@@ -7,7 +8,20 @@ export interface JsonRpcRequest {
   params?: {
     protocolVersion?: string;
     name?: string;
-    arguments?: { limit?: number; from?: BridgeAuthor; message?: string };
+    arguments?: {
+      limit?: number;
+      from?: BridgeAuthor;
+      message?: string;
+      instruction?: string;
+      requestedId?: string;
+      createdBy?: "web-agent" | "owner";
+      requiresReview?: boolean;
+      status?: CommandStatus;
+      id?: string;
+      note?: string;
+      summary?: string;
+      evidence?: string[];
+    };
   };
 }
 export interface JsonRpcResponse { jsonrpc: "2.0"; id: string | number | null; result?: unknown; error?: { code: number; message: string } }
@@ -42,6 +56,58 @@ const tools = [
     description: "Report fixed bridge, Git-ref and daily-health evidence without shell commands or arbitrary file access.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
+  {
+    name: "post_command",
+    description: "Post one idempotent captain instruction for Kimi Code; unsafe instructions fail closed or remain blocked.",
+    inputSchema: {
+      type: "object",
+      required: ["instruction"],
+      properties: {
+        instruction: { type: "string", minLength: 1, maxLength: 4000 },
+        requestedId: { type: "string", minLength: 1, maxLength: 80 },
+        createdBy: { type: "string", enum: ["web-agent", "owner"] },
+        requiresReview: { type: "boolean" },
+      },
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "read_commands",
+    description: "Read captain commands filtered by pending, acknowledged, completed, failed or blocked status.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        status: { type: "string", enum: ["pending", "acknowledged", "completed", "failed", "blocked"] },
+        limit: { type: "integer", minimum: 1, maximum: 50 },
+      },
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "ack_command",
+    description: "Acknowledge one pending command exactly once before execution.",
+    inputSchema: {
+      type: "object",
+      required: ["id"],
+      properties: { id: { type: "string", minLength: 1, maxLength: 80 }, note: { type: "string", maxLength: 1000 } },
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "complete_command",
+    description: "Complete an acknowledged command with terminal status, summary and bounded evidence.",
+    inputSchema: {
+      type: "object",
+      required: ["id", "status", "summary"],
+      properties: {
+        id: { type: "string", minLength: 1, maxLength: 80 },
+        status: { type: "string", enum: ["completed", "failed", "blocked"] },
+        summary: { type: "string", minLength: 1, maxLength: 4000 },
+        evidence: { type: "array", items: { type: "string", maxLength: 2000 }, maxItems: 20 },
+      },
+      additionalProperties: false,
+    },
+  },
 ];
 
 /** Handle one JSON-RPC request using only the bounded Alpha Bridge contract. */
@@ -75,6 +141,10 @@ export function createAlphaBridgeHandler(root: string) {
         return result(id, { ok: true, entry, handoff: readBridgeHandoff(root, 1) });
       }
       if (name === "report_status") return result(id, bridgeStatus(root));
+      if (name === "post_command") return result(id, postCommand(root, args.instruction ?? "", args.createdBy ?? "web-agent", args.requestedId, args.requiresReview ?? false));
+      if (name === "read_commands") return result(id, readCommands(root, args.status, args.limit ?? 50));
+      if (name === "ack_command") return result(id, ackCommand(root, String(args.id ?? ""), args.note));
+      if (name === "complete_command") return result(id, completeCommand(root, String(args.id ?? ""), args.status as "completed" | "failed" | "blocked", String(args.summary ?? ""), args.evidence));
       return failure(id, -32602, `Unknown Alpha Bridge tool: ${String(name)}`);
     } catch (error) {
       return failure(id, -32602, error instanceof Error ? error.message : "Alpha Bridge operation failed");

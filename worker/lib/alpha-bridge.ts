@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { commandStatus } from "./alpha-commands";
 
 export type BridgeAuthor = "kimi-code" | "web-agent" | "owner";
 export interface BridgeMessage { id: string; at: string; from: BridgeAuthor; message: string }
@@ -35,7 +36,7 @@ function atomicWrite(root: string, messages: BridgeMessage[]): void {
     renameSync(tmp, file);
   } finally { rmSync(tmp, { force: true }); }
 }
-function withBridgeLock<T>(root: string, action: () => T): T {
+export function withBridgeLock<T>(root: string, action: () => T): T {
   const lock = lockPath(root);
   mkdirSync(path.dirname(lock), { recursive: true });
   let acquired = false;
@@ -56,7 +57,7 @@ function hasControlCharacters(text: string): boolean {
     return code <= 8 || code === 11 || code === 12 || (code >= 14 && code <= 31) || code === 127;
   });
 }
-function validatedMessage(from: BridgeAuthor, message: string): string {
+export function validatedMessage(from: BridgeAuthor, message: string): string {
   if (!["kimi-code", "web-agent", "owner"].includes(from)) throw new Error("Unknown Alpha Bridge author");
   const text = message.trim();
   if (!text || text.length > 4000) throw new Error("Alpha Bridge message must contain 1..4000 characters");
@@ -122,6 +123,7 @@ export function bridgeStatus(root: string): unknown {
   const originMain = readOriginMain(root);
   return {
     bridge: { messageCount: handoff.count, latestAt: handoff.latestAt },
+    commands: commandStatus(root),
     git: { head, originMain, refsMatch: head && originMain ? head === originMain : null },
     dailyOperations: daily ? {
       generatedAt: daily.generatedAt ?? null,
