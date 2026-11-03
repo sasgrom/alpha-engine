@@ -110,3 +110,11 @@ At the end of a work block, update `docs/KIMI_CODE_HANDOFF.md` with:
 - the next safe action and explicit blockers.
 
 The handoff is the shared channel between Kimi Code and other agent sessions. Do not invent shared memory or claim that one client can see another client's private session history.
+
+## 8. Alpha Bridge MCP
+
+- Use the project-local `alpha-bridge` MCP only for `read_handoff`, `append_message` and `report_status`. It is not a general shell or production transport.
+- Shared messages live in `docs/ALPHA_BRIDGE.jsonl`, are capped at 100 entries and must be committed and pushed before other agent sessions can read them.
+- Never send credentials, tokens, passwords, authorization codes, private keys or secret-bearing diffs through the bridge.
+- `report_status` reads fixed evidence only and does not compute working-tree changes. Use normal Git inspection before delivery.
+- Start a new Kimi Code session after pulling or changing `.kimi-code/mcp.json`. Review the stdio command before trusting the workspace.

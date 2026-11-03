@@ -164,3 +164,11 @@ Deliberately not automatic:
 - Full verification: `npm run check` passed; `npm test -- --run` passed 110 test files / 595 tests; `npm run build` passed with the established chunk-size warnings only.
 - Updated code comments, RU/EN manuals, `docs/LLM_CONTEXT.md`, bundled manuals and this handoff. No production apply, DB rematerialization or factor-IC recomputation was performed. Existing generated reports remain outside the source commit.
 - Next safe action: a separate owner-reviewed local rematerialization and only then a fresh evaluation of affected research results. Do not treat pre-correction factor-IC values as repaired evidence.
+
+## 15. Alpha Bridge MCP — 2026-11-03
+
+- Added project-local `.kimi-code/mcp.json` and a stdio-only server with `read_handoff`, `append_message` and `report_status`. No shell commands, sockets, arbitrary paths or production transport.
+- Shared `docs/ALPHA_BRIDGE.jsonl` is bounded to 100 messages and 4000 characters each. Writes use a bounded lock and atomic rename; corrupt files fail closed and common credential patterns are rejected without echoing secret input.
+- `report_status` reads fixed bridge, Git-ref and daily-health evidence. It does not run `git status`; matching refs alone do not prove a clean tree.
+- Added six unit tests covering storage, retention, corrupt history, secret rejection, protocol calls and unknown tools. A real isolated stdio smoke test completed `initialize → append_message → read_handoff → report_status`. Full suite after merging the F-01/F-02 correction: 111 test files and 601 tests passed; TypeScript check and production build passed.
+- Operator contract is `docs/ALPHA_BRIDGE.md`; comments, `AGENTS.md`, RU/EN manuals, `LLM_CONTEXT` and bundled manuals were updated. Start a new Kimi Code session after pulling and review the command before trusting it. Other agents see bridge messages only after reviewed commit/push.
