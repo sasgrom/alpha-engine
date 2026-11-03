@@ -164,3 +164,19 @@ Deliberately not automatic:
 - Full verification: `npm run check` passed; `npm test -- --run` passed 110 test files / 595 tests; `npm run build` passed with the established chunk-size warnings only.
 - Updated code comments, RU/EN manuals, `docs/LLM_CONTEXT.md`, bundled manuals and this handoff. No production apply, DB rematerialization or factor-IC recomputation was performed. Existing generated reports remain outside the source commit.
 - Next safe action: a separate owner-reviewed local rematerialization and only then a fresh evaluation of affected research results. Do not treat pre-correction factor-IC values as repaired evidence.
+
+## 15. Alpha Bridge MCP — 2026-11-03
+
+- Added project-local `.kimi-code/mcp.json` and a stdio-only server with `read_handoff`, `append_message` and `report_status`. No shell commands, sockets, arbitrary paths or production transport.
+- Shared `docs/ALPHA_BRIDGE.jsonl` is bounded to 100 messages and 4000 characters each. Writes use a bounded lock and atomic rename; corrupt files fail closed and common credential patterns are rejected without echoing secret input.
+- `report_status` reads fixed bridge, Git-ref and daily-health evidence. It does not run `git status`; matching refs alone do not prove a clean tree.
+- Added six unit tests covering storage, retention, corrupt history, secret rejection, protocol calls and unknown tools. A real isolated stdio smoke test completed `initialize → append_message → read_handoff → report_status`. Full suite after merging the F-01/F-02 correction: 111 test files and 601 tests passed; TypeScript check and production build passed.
+- Operator contract is `docs/ALPHA_BRIDGE.md`; comments, `AGENTS.md`, RU/EN manuals, `LLM_CONTEXT` and bundled manuals were updated. Start a new Kimi Code session after pulling and review the command before trusting it. Other agents see bridge messages only after reviewed commit/push.
+
+## 16. Captain command protocol — 2026-11-03
+
+- Added `post_command`, `read_commands`, `ack_command` and `complete_command`: a captain-to-executor protocol with unique IDs and enforced `pending → acknowledged → completed/failed/blocked` transitions. `docs/ALPHA_COMMANDS.jsonl` is capped at 100 commands and validates duplicate IDs and invalid transitions.
+- `alpha-bridge-agent` executes at most one pending instruction through non-interactive `kimi -p`, with a ten-minute timeout, bounded logs, output credential redaction, no hidden retries and no automatic resume of interrupted acknowledged commands.
+- Unsafe production, migration, credential, GDELT, force and history-changing instructions fail closed or remain review-only. The executor is paused by default and requires one-time owner review plus the static deny rules in `docs/ALPHA_BRIDGE.md`.
+- Added seven tests for state transitions, duplicate handling, unsafe instructions, MCP workflow, executor success/failure, interrupted acknowledgement and secret withholding. A separate real stdio smoke completed `post_command → ack_command → complete_command → read_commands`; no live model invocation was run in this workspace. Full suite: 112 test files and 608 tests passed; TypeScript check and production build passed.
+- Updated `AGENTS.md`, `docs/ALPHA_BRIDGE.md`, RU/EN manuals, `LLM_CONTEXT`, operations runbook and bundled manuals. After one-time activation, the captain can post safe routine tasks while terminal evidence remains visible through `read_commands` and `report_status`.

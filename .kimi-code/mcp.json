@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "alpha-bridge": {
+      "command": "npx",
+      "args": ["tsx", "worker/alpha-bridge-mcp.mts"],
+      "enabled": true,
+      "startupTimeoutMs": 10000,
+      "toolTimeoutMs": 10000
+    }
+  }
+}

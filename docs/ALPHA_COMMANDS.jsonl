@@ -1,0 +1,1 @@
+{"type":"command","id":"captain-factor-check","at":"2026-11-03T07:11:09.339Z","instruction":"Review the current F-01/F-02 factor correction and run only the targeted factor tests. Do not modify source code, generated reports or production state. Return the exact targeted test command and its result.","createdBy":"web-agent","status":"pending"}

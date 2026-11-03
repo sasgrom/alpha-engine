@@ -170,6 +170,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local Operations UI only; no production sync.", requirements: [], notes: "Runs independently after the morning jobs so failed parents cannot suppress the health report. A critical report is evidence, not a scheduler process failure.",
   }),
   job({
+    id: "alpha-bridge-agent", name: "Alpha Bridge captain executor", group: "maintenance", mode: "paused", cron: "*/2 * * * *", defaultEnabled: false, dependsOn: [],
+    ...npx("worker/alpha-bridge-agent.mts"), purpose: "Execute at most one pending captain command and record its acknowledged terminal evidence.",
+    input: "Pending bounded commands in docs/ALPHA_COMMANDS.jsonl and the existing owner authorization in AGENTS.md.", output: "Acknowledged commands with completed, failed or blocked status and bounded evidence.",
+    destination: "Local command protocol only; no production transport.", requirements: ["review"], notes: "Paused by default. Enable only after static deny rules are configured for production apply, migrations, credentials, force operations and GDELT. One pending command per run, no automatic resume of interrupted acknowledged commands.",
+  }),
+  job({
     id: "13f-refresh", name: "13F holdings and full-book refresh", group: "fundamentals", mode: "scheduled", cron: "0 5 * * 1,4", defaultEnabled: true, dependsOn: [],
     ...npx("scripts/13f-refresh.mts", ["--quarters", "4"]), purpose: "Check recent 13F-HR filings and amendments without repeating the full historical build.",
     input: "worker/funds-13f.json, SEC XML, cached CUSIP mappings and OpenFIGI only for unknown securities.", output: "fund_quarters, fund_holdings and deterministic share/full-book-weight events for the latest four quarters.",

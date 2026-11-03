@@ -1615,3 +1615,19 @@ Operator manual: `docs/MACRO_DATA.md`.
 - Discovery coefficients and sector levels are learned only on the earliest 70% of events. OOS uses those frozen coefficients and reports MAE, RMSE and R² against the discovery mean; it never refits the model.
 - Fits require 30 rows, 10 events, 5 companies and full rank. `pilot` and `full_sample` are coverage labels, not alpha verdicts. Interaction CI95 uses 500 event-cluster bootstrap replicates.
 - Outputs `macro-transmission-atlas.json` and `.md` include per-record concepts, exposure periods and OOS evidence. Daily Operations checks lineage only; no probability promotion or production sync follows. Protocol: `docs/MACRO_DATA.md` §15.
+
+## 13. Alpha Bridge MCP
+
+- `.kimi-code/mcp.json` starts a local stdio-only Alpha Bridge with `read_handoff`, `append_message` and `report_status`. It has no network listener, shell execution, arbitrary paths or production transport.
+- Shared messages use `docs/ALPHA_BRIDGE.jsonl`, capped at 100 entries and 4000 characters each. Writes are bounded, locked and atomic; corrupt JSONL fails closed. Typical credential markers are rejected without echoing the secret.
+- `report_status` reads fixed bridge, Git-ref and daily-health files. `refsMatch` compares commit IDs only and is not a clean-tree check.
+- Start a new Kimi Code session after pulling the MCP config and review the stdio command before trusting it. Other agents see messages only after a reviewed commit/push.
+- Operator and security contract: `docs/ALPHA_BRIDGE.md`.
+
+## 14. Captain command protocol and bounded executor
+
+- `post_command`, `read_commands`, `ack_command` and `complete_command` implement a captain-to-executor protocol with unique IDs and enforced `pending → acknowledged → completed/failed/blocked` transitions. No arbitrary shell is exposed.
+- Commands and evidence live in `docs/ALPHA_COMMANDS.jsonl`, capped at 100 commands. Unsafe production, migration, credential, GDELT, force and history-changing instructions fail closed or remain review-only.
+- `alpha-bridge-agent` executes at most one pending command through non-interactive `kimi -p`, with a ten-minute timeout, bounded logs and no hidden retries or automatic resume of interrupted acknowledged commands.
+- The executor is paused by default. Enable only after owner review and the static deny rules in `docs/ALPHA_BRIDGE.md`; non-interactive auto actions still honor those deny rules.
+- After one-time activation, the captain can post safe routine tasks without owner interaction. Terminal evidence remains visible through `read_commands` and `report_status`. Protocol tests and a real stdio command smoke passed; no live model invocation was run in this workspace.

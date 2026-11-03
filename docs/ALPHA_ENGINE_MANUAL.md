@@ -1621,3 +1621,19 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 - Коэффициенты и sector levels обучаются только на ранних 70% событий. OOS применяет замороженные коэффициенты и публикует MAE, RMSE и R² относительно discovery mean без повторного обучения.
 - Для fit требуется 30 rows, 10 events, 5 companies и full-rank design. `pilot` и `full_sample` — метки покрытия, а не verdict об alpha. Interaction CI95 использует 500 event-cluster bootstrap replicates.
 - `macro-transmission-atlas.json` и `.md` сохраняют concepts, exposure periods и OOS evidence по каждой записи. Daily Operations проверяет только lineage; probability promotion и production sync автоматически не выполняются. Протокол: `docs/MACRO_DATA.md` §15.
+
+## 13. Alpha Bridge MCP
+
+- `.kimi-code/mcp.json` запускает локальный stdio-only Alpha Bridge с операциями `read_handoff`, `append_message` и `report_status`. Сетевого listener, shell, произвольных путей и production transport нет.
+- Сообщения хранятся в `docs/ALPHA_BRIDGE.jsonl`: не более 100 записей и 4000 символов каждая. Запись ограничена lock и atomic rename; повреждённый JSONL не перезаписывается. Типичные credential markers отклоняются без вывода секрета.
+- `report_status` читает только фиксированные bridge, Git-ref и daily-health файлы. `refsMatch` сравнивает commit IDs и не является проверкой чистого working tree.
+- После получения MCP config открой новую Kimi Code session и проверь stdio command перед доверием workspace. Другие агенты увидят сообщения только после reviewed commit/push.
+- Операционный и security contract: `docs/ALPHA_BRIDGE.md`.
+
+## 14. Captain command protocol и bounded executor
+
+- `post_command`, `read_commands`, `ack_command` и `complete_command` реализуют протокол captain → executor с уникальными ID и переходами `pending → acknowledged → completed/failed/blocked`. Произвольный shell не предоставляется.
+- Команды и evidence хранятся в `docs/ALPHA_COMMANDS.jsonl`, максимум 100 команд. Небезопасные production, migration, credential, GDELT, force и history-changing instructions отклоняются или остаются review-only.
+- `alpha-bridge-agent` выполняет не более одной pending command через non-interactive `kimi -p`: таймаут десять минут, ограниченные логи, никаких скрытых retries или автоматического resume прерванных acknowledged commands.
+- Executor по умолчанию paused. Включение только после owner review и static deny rules из `docs/ALPHA_BRIDGE.md`; non-interactive auto actions продолжают подчиняться deny rules.
+- После однократной активации captain может отправлять безопасные routine tasks без участия владельца. Terminal evidence доступно через `read_commands` и `report_status`. Protocol tests и реальный stdio command smoke пройдены; live model invocation в этой среде не выполнялся.
