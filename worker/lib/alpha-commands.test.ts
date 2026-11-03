@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { ackCommand, commandStatus, completeCommand, postCommand, readCommands } from "./alpha-commands";
 import { createAlphaBridgeHandler } from "./alpha-bridge-protocol";
-import { runNextCommand } from "../alpha-bridge-agent";
+import { runNextCommand, kimiSpawnSpec } from "../alpha-bridge-agent";
 
 const root = () => mkdtempSync(path.join(os.tmpdir(), "alpha-commands-"));
 describe("captain command protocol", () => {
@@ -73,6 +73,15 @@ describe("captain executor", () => {
     ackCommand(directory, "interrupted-command");
     const interrupted = await runNextCommand(directory) as { status: string };
     expect(interrupted.status).toBe("blocked");
+  });
+
+  it("uses a fixed quoted cmd.exe invocation on Windows", () => {
+    const spec = kimiSpawnSpec("line one\nline %PATH% & echo unsafe", "win32");
+    expect(spec.executable).toBe("cmd.exe");
+    expect(spec.shell).toBe(false);
+    expect(spec.args.slice(0, 4)).toEqual(["/d", "/s", "/c", "kimi"]);
+    expect(spec.args[5]).toBe('"line one line %%PATH%% & echo unsafe"');
+    expect(spec.args[5]).not.toContain("\n");
   });
 
   it("withholds sensitive output without blocking the terminal record", async () => {

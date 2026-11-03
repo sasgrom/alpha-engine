@@ -1631,3 +1631,8 @@ Operator manual: `docs/MACRO_DATA.md`.
 - `alpha-bridge-agent` executes at most one pending command through non-interactive `kimi -p`, with a ten-minute timeout, bounded logs and no hidden retries or automatic resume of interrupted acknowledged commands.
 - The executor is paused by default. Enable only after owner review and the static deny rules in `docs/ALPHA_BRIDGE.md`; non-interactive auto actions still honor those deny rules.
 - After one-time activation, the captain can post safe routine tasks without owner interaction. Terminal evidence remains visible through `read_commands` and `report_status`. Protocol tests and a real stdio command smoke passed; no live model invocation was run in this workspace.
+
+## 15. Windows captain executor invocation
+
+- On Windows, `alpha-bridge-agent` invokes `cmd.exe /d /s /c kimi -p ...` with normalized newlines, doubled `%` and escaped `"` instead of spawning `kimi.cmd` directly. This fixes `spawn EINVAL` and keeps instruction text out of shell syntax. Non-Windows uses direct `kimi` with `shell: false`.
+- The regression test covers the executable, fixed arguments and Windows quoting. The first real command failed before Kimi CLI started, so this was an invocation bug rather than a research failure.

@@ -1637,3 +1637,8 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 - `alpha-bridge-agent` выполняет не более одной pending command через non-interactive `kimi -p`: таймаут десять минут, ограниченные логи, никаких скрытых retries или автоматического resume прерванных acknowledged commands.
 - Executor по умолчанию paused. Включение только после owner review и static deny rules из `docs/ALPHA_BRIDGE.md`; non-interactive auto actions продолжают подчиняться deny rules.
 - После однократной активации captain может отправлять безопасные routine tasks без участия владельца. Terminal evidence доступно через `read_commands` и `report_status`. Protocol tests и реальный stdio command smoke пройдены; live model invocation в этой среде не выполнялся.
+
+## 15. Запуск captain executor в Windows
+
+- В Windows `alpha-bridge-agent` вызывает `cmd.exe /d /s /c kimi -p ...` с нормализацией newlines, удвоенным `%` и escaped `"` вместо прямого запуска `kimi.cmd`. Это исправляет `spawn EINVAL` и не позволяет тексту задания стать shell-синтаксисом. На других платформах используется прямой `kimi` с `shell: false`.
+- Regression test проверяет executable, фиксированные аргументы и Windows quoting. Первая реальная команда завершилась до старта Kimi CLI, поэтому это была ошибка invocation, а не исследования.

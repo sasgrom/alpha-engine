@@ -164,3 +164,7 @@ The executor has only been tested with deterministic mock execution in this work
 ## 8. Owner boundaries remain active
 
 Unattended operation does not remove owner policy. Production apply/deployment, cloud collection, credentials, schema/storage migration, deletion, paused GPU lanes, new external services and history-changing Git operations remain stop conditions. Routine code fixes, tests, local collectors, local builds and reviewed source commits may proceed within the existing `AGENTS.md` authorization.
+
+## 9. Windows executor invocation
+
+On Windows the executor uses a fixed `cmd.exe /d /s /c kimi -p ...` invocation rather than spawning `kimi.cmd` directly. The prompt is normalized to one line and quoted with `%` doubled and `"` escaped. This avoids `spawn EINVAL` and prevents instruction text from becoming shell syntax. Non-Windows uses the direct `kimi` executable with `shell: false`. The command, executable and timeout remain fixed; only the bounded prompt varies.

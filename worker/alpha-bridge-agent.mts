@@ -14,10 +14,19 @@ function safeOutput(value: string): string {
   catch { return "Executor output withheld because it may contain sensitive material"; }
 }
 
+function quoteWindowsArg(value: string): string {
+  return `"${value.replace(/%/g, "%%").replace(/"/g, '""').replace(/\r?\n/g, " ")}"`;
+}
+export function kimiSpawnSpec(prompt: string, platform = process.platform): { executable: string; args: string[]; shell: boolean } {
+  return platform === "win32"
+    ? { executable: "cmd.exe", args: ["/d", "/s", "/c", "kimi", "-p", quoteWindowsArg(prompt), "--output-format", "text"], shell: false }
+    : { executable: "kimi", args: ["-p", prompt, "--output-format", "text"], shell: false };
+}
+
 /** Invoke one non-interactive Kimi CLI prompt with bounded process and background limits. */
 export const runKimiPrompt: CommandExecutor = (prompt, root) => new Promise((resolve, reject) => {
-  const executable = process.platform === "win32" ? "kimi.cmd" : "kimi";
-  const child = spawn(executable, ["-p", prompt, "--output-format", "text"], {
+  const spec = kimiSpawnSpec(prompt);
+  const child = spawn(spec.executable, spec.args, {
     cwd: root,
     env: {
       ...process.env,
@@ -27,7 +36,7 @@ export const runKimiPrompt: CommandExecutor = (prompt, root) => new Promise((res
       KIMI_CODE_BACKGROUND_PRINT_WAIT_CEILING_S: "600",
       KIMI_SUBAGENT_TIMEOUT_MS: String(TIMEOUT_MS),
     },
-    shell: false,
+    shell: spec.shell,
     windowsHide: true,
     timeout: TIMEOUT_MS,
     killSignal: "SIGTERM",

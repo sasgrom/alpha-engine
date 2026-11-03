@@ -180,3 +180,9 @@ Deliberately not automatic:
 - Unsafe production, migration, credential, GDELT, force and history-changing instructions fail closed or remain review-only. The executor is paused by default and requires one-time owner review plus the static deny rules in `docs/ALPHA_BRIDGE.md`.
 - Added seven tests for state transitions, duplicate handling, unsafe instructions, MCP workflow, executor success/failure, interrupted acknowledgement and secret withholding. A separate real stdio smoke completed `post_command → ack_command → complete_command → read_commands`; no live model invocation was run in this workspace. Full suite: 112 test files and 608 tests passed; TypeScript check and production build passed.
 - Updated `AGENTS.md`, `docs/ALPHA_BRIDGE.md`, RU/EN manuals, `LLM_CONTEXT`, operations runbook and bundled manuals. After one-time activation, the captain can post safe routine tasks while terminal evidence remains visible through `read_commands` and `report_status`.
+
+## 17. Windows captain executor spawn fix — 2026-11-03
+
+- The first real `captain-factor-check` run failed immediately with `spawn EINVAL` before Kimi CLI started. This was a Windows invocation bug, not a research or command-protocol failure.
+- Replaced direct `kimi.cmd` spawning with fixed `cmd.exe /d /s /c kimi -p ...` invocation and strict Windows quoting: normalized newlines, doubled `%` and escaped `"`. Instruction text cannot become shell syntax. Non-Windows still uses direct `kimi` with `shell: false`.
+- Added a regression test for the executable, fixed arguments and quoting. Targeted factor/probability suites and the command-protocol suite pass; no live model or production action was performed in this workspace.
