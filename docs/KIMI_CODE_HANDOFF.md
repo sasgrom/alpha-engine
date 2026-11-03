@@ -17,7 +17,7 @@ Read `git log -10` for authoritative commit state. Recent completed blocks:
 - `fc1987b` — Availability-anchored shock calibration and unit-safe Scenario Engine baselines.
 - Daily report: `/workers` opens a health view with scheduler heartbeat, per-ticker same-day Schwab evidence, Feature Lab source hash, job outcomes and remediation actions.
 - Daily health artifacts are local and ignored by Git: `public/reports/daily-operations.json` and `.md`.
-- Latest full verification before this handoff: 108 test files, 589 tests passing, TypeScript check and production build successful. See section 12 for the full local audit evidence.
+- Latest full verification before this handoff: 110 test files, 595 tests passing, TypeScript check and production build successful. See section 14 for the F-01/F-02 research vintage correction.
 
 ## 3. Actual evidence caveat
 
@@ -153,3 +153,14 @@ Deliberately not automatic:
 - Coverage gates: 30 rows, 10 events, 5 companies and full-rank design; `pilot` vs `full_sample` is reported separately from predictive value. OOS reports MAE, RMSE and R² against discovery mean, including negative values without suppression.
 - Synthetic end-to-end verification produced 3,840 aligned records and all 16 studies with discovery fit and OOS evaluation. Full combined suite: 109 test files and 592 tests passed; TypeScript check and production build passed.
 - Updated English comments, `docs/MACRO_DATA.md` §15, RU/EN manuals, `docs/LLM_CONTEXT.md`, operations runbook and bundled manuals. No real home Atlas run or production action was taken. Next home action: build the real macro event study, then Atlas, inspect coverage before interpreting coefficients and regenerate daily operations.
+
+## 14. F-01/F-02 research vintage correction — 2026-11-03T06:26:14Z
+
+- Block baseline: `01f846f` (`main` matched `origin/main`). Work was limited to the two assigned audit findings; no new factors, models or broad refactoring were added.
+- Regression tests were written first and produced four expected failures: revised/latest behavior, unrelated early availability and the old +45d fallback. After the minimal implementation and two confirmed implementation fixes, targeted suites passed 5/5 and adjacent factor/probability suites passed 37/37.
+- `computeCompanyFactors(cik, vintage = "latest")` now accepts an explicit vintage while preserving the on-demand latest default. Research materialization calls it with `first` and reads matching `series_points.vintage='first'` rows.
+- `buildFactorPointRows` now requires finite values and computes fundamental availability as MAX(first-filed) across exact required concepts and actual lookback/TTM periods. Preferred shares/cash/debt fallbacks mirror the existing history formulas. Unrelated early facts cannot advance availability; missing required availability emits no research row; the old periodEnd+45d fallback is removed.
+- `probability-engine` now reads `fp.filedAt` directly instead of replacing it with a period-level MIN from unrelated facts.
+- Full verification: `npm run check` passed; `npm test -- --run` passed 110 test files / 595 tests; `npm run build` passed with the established chunk-size warnings only.
+- Updated code comments, RU/EN manuals, `docs/LLM_CONTEXT.md`, bundled manuals and this handoff. No production apply, DB rematerialization or factor-IC recomputation was performed. Existing generated reports remain outside the source commit.
+- Next safe action: a separate owner-reviewed local rematerialization and only then a fresh evaluation of affected research results. Do not treat pre-correction factor-IC values as repaired evidence.

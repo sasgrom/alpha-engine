@@ -1,8 +1,7 @@
 /**
- * 6a — materialize factor_points from computeCompanyFactors histories, then
- * evaluate per-factor IC against forward returns. Availability anchor:
- * max(sourceFiled of the period's concepts; fallback = periodEnd + 45d, the
- * EDGAR lag, flagged in the payload as estimated).
+ * 6a — materialize first-vintage factor_points, then evaluate per-factor IC.
+ * Fundamental availability is MAX(first-filed) across the exact concepts and
+ * periods required by each history formula. Missing availability emits no row.
  */
 import { eq, sql } from "drizzle-orm";
 import { factorPoints } from "@db/schema";
@@ -21,37 +20,141 @@ export interface FactorPointWriteRow {
   value: number | null;
 }
 
-/** Pure availability mapping, shared by tests and the batched writer. */
+type AvailabilityMap = ReadonlyMap<string, string | null>;
+type Requirement = { concepts: readonly string[]; trailing: "point" | "ttm" | "debt" };
+const SHARES = ["CommonStockSharesOutstanding", "WeightedAverageNumberOfDilutedSharesOutstanding"] as const;
+const CASH = ["CashAndCashEquivalentsAtCarryingValue", "CashAndCashEquivalentsAtCarryingValueIncludingRestrictedCash"] as const;
+const LONG_DEBT = ["LongTermDebt", "LongTermDebtNoncurrent", "LongTermDebtAndCapitalLeaseObligations"] as const;
+const CURRENT_DEBT = ["DebtCurrent", "LongTermDebtCurrent"] as const;
+const point = (...concepts: string[]): Requirement => ({ concepts, trailing: "point" });
+const ttm = (...concepts: string[]): Requirement => ({ concepts, trailing: "ttm" });
+const debt = (): Requirement => ({ concepts: [], trailing: "debt" });
+const REQUIREMENTS: Record<string, Requirement[]> = {
+  accruals: [point("NetIncomeLoss"), point("NetCashProvidedByUsedInOperatingActivities"), point("Assets")],
+  grossProfitability: [point("GrossProfit"), point("Assets")],
+  earningsYield: [ttm("NetIncomeLoss"), point(...SHARES)],
+  bookToMarket: [point("StockholdersEquity"), point(...SHARES)],
+  fcfYield: [ttm("NetCashProvidedByUsedInOperatingActivities"), ttm("PaymentsToAcquirePropertyPlantAndEquipment"), point(...SHARES)],
+  salesYield: [ttm("RevenueFromContractWithCustomerExcludingAssessedTax"), point(...SHARES)],
+  ocfYield: [ttm("NetCashProvidedByUsedInOperatingActivities"), point(...SHARES)],
+  evEbitda: [ttm("OperatingIncomeLoss"), ttm("DepreciationDepletionAndAmortization"), point(...SHARES), debt(), point(...CASH)],
+  evEbit: [ttm("OperatingIncomeLoss"), point(...SHARES), debt(), point(...CASH)],
+  netDebtToEbitda: [ttm("OperatingIncomeLoss"), ttm("DepreciationDepletionAndAmortization"), point(...SHARES), debt(), point(...CASH)],
+  peRatio: [ttm("NetIncomeLoss"), point(...SHARES)],
+};
+
+function conceptPeriods(concept: string, availability: AvailabilityMap): string[] {
+  const suffix = `|${concept}`;
+  const periods = new Set<string>();
+  for (const key of availability.keys()) {
+    if (key.startsWith(`${concept}|`)) periods.add(key.slice(concept.length + 1));
+    else if (key.endsWith(suffix)) periods.add(key.slice(0, -suffix.length));
+  }
+  return [...periods].sort();
+}
+
+function maxAvailability(points: { concept: string; periodEnd: string }[], availability: AvailabilityMap): string | null {
+  let latest = "";
+  for (const point of points) {
+    const key = `${point.concept}|${point.periodEnd}`;
+    if (!availability.has(key)) return null;
+    const filedAt = availability.get(key);
+    if (!filedAt) return null;
+    if (filedAt > latest) latest = filedAt;
+  }
+  return latest || null;
+}
+
+function pointAvailability(requirement: Requirement, periodEnd: string, availability: AvailabilityMap): string | null {
+  const concept = requirement.concepts.find((candidate) => availability.has(`${candidate}|${periodEnd}`));
+  return concept ? maxAvailability([{ concept, periodEnd }], availability) : null;
+}
+
+function ttmAvailability(requirement: Requirement, periodEnd: string, availability: AvailabilityMap): string | null {
+  const concept = requirement.concepts[0];
+  const periods = conceptPeriods(concept, availability).filter((candidate) => candidate <= periodEnd).slice(-4);
+  return periods.length === 4 ? maxAvailability(periods.map((candidate) => ({ concept, periodEnd: candidate })), availability) : null;
+}
+
+function debtAvailability(periodEnd: string, availability: AvailabilityMap): string | null {
+  const long = LONG_DEBT.find((concept) => availability.has(`${concept}|${periodEnd}`));
+  const current = CURRENT_DEBT.find((concept) => availability.has(`${concept}|${periodEnd}`));
+  if (!long && !current) return null;
+  return maxAvailability([
+    ...(long ? [{ concept: long, periodEnd }] : []),
+    ...(current ? [{ concept: current, periodEnd }] : []),
+  ], availability);
+}
+
+function requiredAvailability(factor: string, periodEnd: string, availability: AvailabilityMap): string | null {
+  if (factor === "assetGrowth" || factor === "buybackYield") {
+    const concept = factor === "assetGrowth" ? "Assets" : "CommonStockSharesOutstanding";
+    const periods = conceptPeriods(concept, availability);
+    const index = periods.indexOf(periodEnd);
+    if (index < 4) return null;
+    return maxAvailability([
+      { concept, periodEnd },
+      { concept, periodEnd: periods[index - 4] },
+    ], availability);
+  }
+  if (factor === "sue") {
+    const concept = "EarningsPerShareDiluted";
+    const periods = conceptPeriods(concept, availability).reverse();
+    const index = periods.indexOf(periodEnd);
+    if (index < 0 || periods.length - index < 6) return null;
+    return maxAvailability(periods.slice(index).map((candidate) => ({ concept, periodEnd: candidate })), availability);
+  }
+  const requirements = REQUIREMENTS[factor];
+  if (!requirements) return null;
+  let latest = "";
+  for (const requirement of requirements) {
+    const filedAt = requirement.trailing === "ttm"
+      ? ttmAvailability(requirement, periodEnd, availability)
+      : requirement.trailing === "debt"
+        ? debtAvailability(periodEnd, availability)
+        : pointAvailability(requirement, periodEnd, availability);
+    if (!filedAt) return null;
+    if (filedAt > latest) latest = filedAt;
+  }
+  return latest || null;
+}
+
+function displayFiledAt(value: string): string {
+  return (value.length === 10 ? `${value} 00:00:00` : value.slice(0, 19)).replace("T", " ");
+}
+
+/** Map first-vintage history values to research rows without availability fallbacks. */
 export function buildFactorPointRows(
   cik: number,
   detail: Record<string, { history: { t: string; v: number | null }[] }>,
-  firstFiledByPeriod: ReadonlyMap<string, string>,
+  firstFiledByConceptPeriod: AvailabilityMap,
 ): FactorPointWriteRow[] {
   const out: FactorPointWriteRow[] = [];
   for (const [factor, det] of Object.entries(detail)) {
     const isMarketFactor = factor === "momentum122" || factor === "high52";
     for (const pt of det.history) {
-      const firstFiled = firstFiledByPeriod.get(pt.t);
-      const filedAt = isMarketFactor
-        ? `${pt.t} 00:00:00`
-        : firstFiled
-          ? firstFiled.slice(0, 19)
-          : `${new Date(Date.parse(pt.t + "T00:00:00Z") + 45 * 86400_000).toISOString().slice(0, 19).replace("T", " ")}`;
-      out.push({ cik, factor, periodEnd: pt.t, filedAt, value: pt.v });
+      if (pt.v === null || !Number.isFinite(pt.v)) continue;
+      const filedAt = isMarketFactor ? `${pt.t} 00:00:00` : requiredAvailability(factor, pt.t, firstFiledByConceptPeriod);
+      if (!filedAt) continue;
+      out.push({ cik, factor, periodEnd: pt.t, filedAt: displayFiledAt(filedAt), value: pt.v });
     }
   }
   return out;
 }
 
-/** Recompute one company's factor points with one grouped facts query and an
- * atomic per-CIK replacement, so stale histories cannot survive a rebuild. */
+/** Recompute first-vintage factor points with matching first-series availability. */
 export async function materializeFactorPoints(cik: number): Promise<number> {
   const db = getDb();
-  const [f, factDatesRaw]: [any, any] = await Promise.all([
-    computeCompanyFactors(cik),
-    db.execute(sql`SELECT endDate, MIN(filed) m FROM facts WHERE cik=${cik} GROUP BY endDate`),
+  const [f, availabilityRaw]: [any, any] = await Promise.all([
+    computeCompanyFactors(cik, "first"),
+    db.execute(sql`SELECT concept, periodEnd, sourceFiled, val FROM series_points WHERE cik=${cik} AND vintage='first'`),
   ]);
-  const firstFiled = new Map<string, string>((factDatesRaw[0] ?? []).map((r: any) => [String(r.endDate).slice(0, 10), String(r.m).slice(0, 19)]));
+  const firstFiled = new Map<string, string | null>();
+  for (const row of availabilityRaw[0] ?? []) {
+    if (row.val === null || !Number.isFinite(Number(row.val))) continue;
+    const periodEnd = String(row.periodEnd).slice(0, 10);
+    firstFiled.set(`${row.concept}|${periodEnd}`, row.sourceFiled ? String(row.sourceFiled).slice(0, 19) : null);
+  }
   const rows = buildFactorPointRows(cik, f.detail, firstFiled);
   await db.transaction(async (tx) => {
     await tx.delete(factorPoints).where(eq(factorPoints.cik, cik));

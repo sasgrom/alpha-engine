@@ -8,8 +8,8 @@
  *
  * Conventions: flow ratios use TTM sums over quarterly series; growth uses
  * fiscal-year aggregates (annual flows summed per fiscal year, stocks at the
- * FY-end quarter — the statements.ts convention). All factors are computed
- * on the LATEST vintage here; backtests must rebuild on as-of (D2).
+ * FY-end quarter — the statements.ts convention). On-demand snapshots default
+ * to LATEST; research materialization explicitly requests FIRST vintage.
  */
 import { sql } from "drizzle-orm";
 import { getDb } from "../queries/connection";
@@ -196,21 +196,21 @@ export function beneishM(inp: {
 
 interface QPt { periodEnd: string; val: number | null }
 
-/** latest-vintage quarterly series for one concept, desc by periodEnd. */
-async function conceptSeries(cik: number, concept: string, kind: "flow" | "stock"): Promise<QPt[]> {
+/** Quarterly series for one concept in the requested vintage, desc by periodEnd. */
+async function conceptSeries(cik: number, concept: string, kind: "flow" | "stock", vintage: "first" | "latest"): Promise<QPt[]> {
   const rows: any = await getDb().execute(sql`
     SELECT periodEnd, val FROM series_points
-    WHERE cik=${cik} AND concept=${concept} AND kind=${kind} AND vintage='latest'
+    WHERE cik=${cik} AND concept=${concept} AND kind=${kind} AND vintage=${vintage}
     ORDER BY periodEnd DESC LIMIT 60`);
   return (rows[0] as any[]).map((r) => ({ periodEnd: String(r.periodEnd).slice(0, 10), val: r.val === null ? null : Number(r.val) }));
 }
 
 /** Bound DB concurrency as the factor registry grows (28+ concepts). */
-async function conceptSeriesBatch(cik: number, requests: { concept: string; kind: "flow" | "stock" }[]): Promise<QPt[][]> {
+async function conceptSeriesBatch(cik: number, vintage: "first" | "latest", requests: { concept: string; kind: "flow" | "stock" }[]): Promise<QPt[][]> {
   const out: QPt[][] = [];
   for (let i = 0; i < requests.length; i += 8) {
     const chunk = requests.slice(i, i + 8);
-    const rows = await Promise.all(chunk.map((r) => conceptSeries(cik, r.concept, r.kind)));
+    const rows = await Promise.all(chunk.map((r) => conceptSeries(cik, r.concept, r.kind, vintage)));
     out.push(...rows);
   }
   return out;
@@ -224,7 +224,7 @@ const latest = (pts: QPt[]): number | null => pts.find((p) => p.val !== null)?.v
 const yearAgo = (pts: QPt[]): number | null => pts.filter((p) => p.val !== null)[4]?.val ?? null;
 
 /** The per-company factor snapshot (D41). nulls are honest "can't compute". */
-export async function computeCompanyFactors(cik: number): Promise<{
+export async function computeCompanyFactors(cik: number, vintage: "first" | "latest" = "latest"): Promise<{
   asOfQuarter: string | null;
   flowRatios: { accruals: number | null; grossProfitability: number | null };
   growth: { assetGrowthYoY: number | null; buybackYield: number | null };
@@ -237,7 +237,7 @@ export async function computeCompanyFactors(cik: number): Promise<{
   detail: Record<"accruals" | "grossProfitability" | "assetGrowth" | "buybackYield" | "momentum122" | "high52" | "sue" | "earningsYield" | "bookToMarket" | "fcfYield" | "salesYield" | "ocfYield" | "evEbitda" | "evEbit" | "netDebtToEbitda" | "peRatio", FactorDetail>;
 }> {
   const [ni, cfo, assets, gp, rev, liab, ca, cl, ar, ppe, da, sga, retained, ebt, shares, sharesWeighted, eps, div, capex, equity, opInc, cash, cashRestricted, debtCurrent, longTermDebt, longTermDebtCurrent, longTermDebtNoncurrent, longTermDebtLease] =
-    await conceptSeriesBatch(cik, [
+    await conceptSeriesBatch(cik, vintage, [
       { concept: "NetIncomeLoss", kind: "flow" },
       { concept: "NetCashProvidedByUsedInOperatingActivities", kind: "flow" },
       { concept: "Assets", kind: "stock" },

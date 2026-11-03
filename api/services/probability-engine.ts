@@ -151,13 +151,10 @@ export function buildEngineData(
 export async function engineData(cik: number): Promise<EngineData> {
   const db = getDb();
   const asOf = new Date().toISOString().slice(0, 10);
-  // Read-side repair for rows materialized by the old availability rule. New
-  // materialization writes the same effective dates directly.
+  // Research materialization owns first-vintage values and required-concept
+  // availability. Consumers must not substitute an unrelated period-level date.
   const [fundamental]: any = await db.execute(sql`
-    SELECT fp.factor, fp.periodEnd, fp.value,
-      CASE WHEN fp.factor IN ('momentum122','high52') THEN fp.periodEnd
-        ELSE COALESCE((SELECT MIN(f.filed) FROM facts f WHERE f.cik=fp.cik AND f.endDate=fp.periodEnd), fp.filedAt)
-      END AS availableAt
+    SELECT fp.factor, fp.periodEnd, fp.value, fp.filedAt AS availableAt
     FROM factor_points fp WHERE fp.cik=${cik} AND fp.value IS NOT NULL
     ORDER BY fp.factor, availableAt, fp.periodEnd`);
   const base: Pt[] = fundamental.map((p: any) => ({
