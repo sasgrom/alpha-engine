@@ -17,7 +17,7 @@ Read `git log -10` for authoritative commit state. Recent completed blocks:
 - `fc1987b` — Availability-anchored shock calibration and unit-safe Scenario Engine baselines.
 - Daily report: `/workers` opens a health view with scheduler heartbeat, per-ticker same-day Schwab evidence, Feature Lab source hash, job outcomes and remediation actions.
 - Daily health artifacts are local and ignored by Git: `public/reports/daily-operations.json` and `.md`.
-- Latest full verification before this handoff: 106 test files, 582 tests passing, TypeScript check and production build successful. See section 10 for the current Stocktwits/Schwab repair evidence.
+- Latest full verification before this handoff: 108 test files, 589 tests passing, TypeScript check and production build successful. See section 12 for the full local audit evidence.
 
 ## 3. Actual evidence caveat
 
@@ -133,3 +133,14 @@ Deliberately not automatic:
 - Verification completed after rebase onto `f7e5abb` collector fixes: 108 test files and 589 tests passed; `npm run check` and `npm run build` passed. A separate synthetic CLI archive also produced 20 eligible events, 80 observations and chronological 14/6 split; synthetic reports were removed and are not treated as live evidence.
 - Updated English code comments, `docs/MACRO_DATA.md`, RU/EN manuals, `docs/LLM_CONTEXT.md`, generated operations runbook and bundled manuals.
 - No real home FRED/OFAC refresh was run in this workspace and no production action was taken. Next home action: pull this commit, refresh only missing macro inputs, run the Macro Ops chain, inspect `macro-event-study.json` and regenerate the daily operations report with `--macro-root D:\research\alpha-engine\macro`.
+
+## 12. Full local project audit — 2026-11-03T03:53:07Z
+
+- Audited commit: `1b001ce4d0c86b4b86317971f1e23f3353d1f6d7`. The detailed 338-line report is `docs/PROJECT_AUDIT_2026-11-03.md`; it contains 23 confirmed findings (P0 1 / P1 12 / P2 8 / P3 2), four explicitly unconfirmed suspicions and eight intentional/non-bug cases.
+- Highest-priority finding: `computeCompanyFactors` consumes latest-vintage values while `materializeFactorPoints` assigns first-filed availability. This is a confirmed look-ahead mechanism; affected research should be reevaluated only after targeted correction and local reviewed rematerialization.
+- Other confirmed areas: period-level factor availability, 13F and macro vintage dates, composite exposure alignment, public static owner reports, production-default ingest fallback, archive pagination/deduplication, scheduler singleton/child ownership, Statements null/TTM semantics, Stocktwits false-success behavior and weak admin password policy.
+- Verification on the audited commit: `npm run check` passed; `npm test -- --run` passed 108 test files / 589 tests; `npm run build` passed with chunk-size warnings. `npm run lint` failed with 168 errors and one warning. `npm audit` reported 24 advisories (1 low, 11 moderate, 12 high); package manifests were unchanged by the two commits preceding this audit.
+- Pure read-only diagnostics reproduced missing-debt `netDebt=-100`, non-consecutive numeric TTM, early composite availability, mismatched-period ratios, extended-hours Schwab opening range and shrinking Schwab coverage denominator. Anonymous local HTTP checks returned 200 for three owner report JSON paths while `auth.me` returned 401.
+- No source code, tests, configuration, credentials or generated production data were changed. No collectors, GPU jobs, GDELT, DB writes, migrations, production apply/deployment or cloud collection were run.
+- Final status before audit delivery: modified `docs/KIMI_CODE_HANDOFF.md` and pre-existing `public/reports/schwab-context.json`; untracked new `docs/PROJECT_AUDIT_2026-11-03.md` plus pre-existing `public/reports/shock-calibration.json` and `.md`. Only the audit report and this handoff are included in the audit commit; generated reports are excluded.
+- Next action for the following agent: use the report's ordered F-01…F-23 plan. Fix availability/correctness first with targeted regression tests; do not introduce new models/factors or broad refactors, and do not treat suspicions as confirmed without reproduction.
