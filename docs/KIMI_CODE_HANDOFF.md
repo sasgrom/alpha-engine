@@ -144,3 +144,12 @@ Deliberately not automatic:
 - No source code, tests, configuration, credentials or generated production data were changed. No collectors, GPU jobs, GDELT, DB writes, migrations, production apply/deployment or cloud collection were run.
 - Final status before audit delivery: modified `docs/KIMI_CODE_HANDOFF.md` and pre-existing `public/reports/schwab-context.json`; untracked new `docs/PROJECT_AUDIT_2026-11-03.md` plus pre-existing `public/reports/shock-calibration.json` and `.md`. Only the audit report and this handoff are included in the audit commit; generated reports are excluded.
 - Next action for the following agent: use the report's ordered F-01…F-23 plan. Fix availability/correctness first with targeted regression tests; do not introduce new models/factors or broad refactors, and do not treat suspicions as confirmed without reproduction.
+
+## 13. Macro Transmission Atlas — 2026-11-03
+
+- Added `scripts/build-macro-transmission-atlas.mts` and the `macro-transmission-atlas` dependency job after first-release event study and research factors. Registry now contains 65 jobs. Daily Operations also checks Atlas artifact lineage and coverage.
+- Atlas rebuilds available, non-stale exposure at each event eligibility, normalizes oil revenue/cost and fuel through operating income, and computes post-close market-model abnormal returns. Debt burden is explicitly a proxy, not a floating-rate share.
+- Company models include intercept, shock, exposure, shock × exposure and sector fixed effects. Discovery coefficients and sector levels are learned only on the earliest 70% of events and frozen for OOS. Interaction CI95 uses 500 event-cluster bootstrap replicates.
+- Coverage gates: 30 rows, 10 events, 5 companies and full-rank design; `pilot` vs `full_sample` is reported separately from predictive value. OOS reports MAE, RMSE and R² against discovery mean, including negative values without suppression.
+- Synthetic end-to-end verification produced 3,840 aligned records and all 16 studies with discovery fit and OOS evaluation. Full combined suite: 109 test files and 592 tests passed; TypeScript check and production build passed.
+- Updated English comments, `docs/MACRO_DATA.md` §15, RU/EN manuals, `docs/LLM_CONTEXT.md`, operations runbook and bundled manuals. No real home Atlas run or production action was taken. Next home action: build the real macro event study, then Atlas, inspect coverage before interpreting coefficients and regenerate daily operations.

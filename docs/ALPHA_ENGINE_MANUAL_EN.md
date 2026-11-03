@@ -1607,3 +1607,11 @@ Operator manual: `docs/MACRO_DATA.md`.
 - `scripts/build-macro-event-study.mts` measures OFAC responses for DGS10, WTI, broad USD and high-yield OAS over 1/5/21/63 observations. It uses first-release observations only, requires the baseline to be known at event eligibility and starts outcomes on the next observation day.
 - Discovery and out-of-sample sets are chronological 70/30, with at least five events per reported split. Mean, median and 500-replicate moving-block CI95 are shown with per-event vintage evidence.
 - Event-study `ready`, `partial` and `insufficient_events` describe coverage, not predictive value. No directional forecast, probability-engine promotion or production synchronization follows automatically. Full protocol: `docs/MACRO_DATA.md`.
+
+## 12. Macro Transmission Atlas
+
+- `scripts/build-macro-transmission-atlas.mts` joins first-release macro events to point-in-time SEC exposure and post-close market-model abnormal returns. Exposure must be `available`, non-stale and known at event eligibility; partial, stale or missing ratios remain excluded.
+- Atlas estimates `abnormalReturn = intercept + β1 shock + β2 exposure + β3 shock × exposure + sector fixed effects`. Debt burden is a balance-sheet proxy, not a floating-rate share. Oil revenue/cost and fuel are normalized by operating income.
+- Discovery coefficients and sector levels are learned only on the earliest 70% of events. OOS uses those frozen coefficients and reports MAE, RMSE and R² against the discovery mean; it never refits the model.
+- Fits require 30 rows, 10 events, 5 companies and full rank. `pilot` and `full_sample` are coverage labels, not alpha verdicts. Interaction CI95 uses 500 event-cluster bootstrap replicates.
+- Outputs `macro-transmission-atlas.json` and `.md` include per-record concepts, exposure periods and OOS evidence. Daily Operations checks lineage only; no probability promotion or production sync follows. Protocol: `docs/MACRO_DATA.md` §15.

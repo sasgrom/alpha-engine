@@ -7,6 +7,7 @@ export interface MacroOperationsArtifacts {
   scenarios: { generatedAt: string } | null;
   calibration: { generatedAt: string; calibrations: { status: string }[] } | null;
   eventStudy: { generatedAt: string; status: string; events: { eligible: number; withAnyObservation: number } } | null;
+  atlas?: { generatedAt: string; status: string; coverage: { records: number } } | null;
 }
 export interface MacroHealthCheck {
   id: string;
@@ -58,14 +59,16 @@ function qaCheck(artifacts: MacroOperationsArtifacts): MacroHealthCheck {
   return check("macro-qa-evidence", "Macro manifest QA", status, qa.generatedAt, `${qa.status} · ${qa.errors} errors · ${qa.warnings} warnings${stale ? " · report predates current inputs" : ""}.`, status === "ok" ? null : "npx tsx worker/macro-manifest-qa.mts", "macro-manifest-qa");
 }
 
-function derivedCheck(artifacts: MacroOperationsArtifacts, kind: "scenarios" | "calibration" | "eventStudy"): MacroHealthCheck {
+function derivedCheck(artifacts: MacroOperationsArtifacts, kind: "scenarios" | "calibration" | "eventStudy" | "atlas"): MacroHealthCheck {
   const qaAt = artifacts.qa?.generatedAt ?? null;
   const value = artifacts[kind];
   const metadata = kind === "scenarios"
     ? { id: "macro-scenario-lineage", label: "Macro scenario lineage", command: "npx tsx scripts/build-macro-scenarios.mts", jobId: "macro-scenarios" }
     : kind === "calibration"
       ? { id: "macro-calibration-lineage", label: "Shock calibration lineage", command: "npx tsx scripts/build-shock-calibration.mts", jobId: "shock-calibration" }
-      : { id: "macro-event-study-lineage", label: "Macro event study lineage", command: "npx tsx scripts/build-macro-event-study.mts", jobId: "macro-event-study" };
+      : kind === "eventStudy"
+        ? { id: "macro-event-study-lineage", label: "Macro event study lineage", command: "npx tsx scripts/build-macro-event-study.mts", jobId: "macro-event-study" }
+        : { id: "macro-atlas-lineage", label: "Macro Transmission Atlas lineage", command: "npx tsx scripts/build-macro-transmission-atlas.mts", jobId: "macro-transmission-atlas" };
   if (!value) return check(metadata.id, metadata.label, "error", null, "Derived report is missing.", metadata.command, metadata.jobId);
   const stale = !!qaAt && time(value.generatedAt) < time(qaAt);
   let detail = stale ? "Derived report predates the current macro QA gate." : "Derived report is current with macro QA.";
@@ -80,12 +83,17 @@ function derivedCheck(artifacts: MacroOperationsArtifacts, kind: "scenarios" | "
     detail += ` ${study.status} · ${study.events.withAnyObservation}/${study.events.eligible} eligible events have outcomes.`;
     if (study.status !== "ready" && status === "ok") status = "warning";
   }
+  if (kind === "atlas") {
+    const atlas = artifacts.atlas!;
+    detail += ` ${atlas.status} · ${atlas.coverage.records} records.`;
+    if (atlas.status !== "estimated" && status === "ok") status = "warning";
+  }
   return check(metadata.id, metadata.label, status, value.generatedAt, detail, status === "ok" ? null : metadata.command, metadata.jobId);
 }
 
 /** Build artifact-level macro health independently from scheduler run status. */
 export function buildMacroHealth(artifacts: MacroOperationsArtifacts, nowMs: number): { checks: MacroHealthCheck[]; summary: MacroHealthSummary } {
-  const checks = [fredCheck(artifacts, nowMs), eventsCheck(artifacts, nowMs), qaCheck(artifacts), derivedCheck(artifacts, "scenarios"), derivedCheck(artifacts, "calibration"), derivedCheck(artifacts, "eventStudy")];
+  const checks = [fredCheck(artifacts, nowMs), eventsCheck(artifacts, nowMs), qaCheck(artifacts), derivedCheck(artifacts, "scenarios"), derivedCheck(artifacts, "calibration"), derivedCheck(artifacts, "eventStudy"), derivedCheck(artifacts, "atlas")];
   const qaAt = artifacts.qa?.generatedAt ?? null;
   const current = (value: { generatedAt: string } | null) => !!value && (!qaAt || time(value.generatedAt) >= time(qaAt));
   return {
@@ -94,7 +102,7 @@ export function buildMacroHealth(artifacts: MacroOperationsArtifacts, nowMs: num
       fredGeneratedAt: artifacts.fred?.generatedAt ?? null,
       ofacGeneratedAt: artifacts.events?.generatedAt ?? null,
       qaStatus: artifacts.qa?.status ?? null,
-      derivedCurrent: current(artifacts.scenarios) && current(artifacts.calibration) && current(artifacts.eventStudy),
+      derivedCurrent: current(artifacts.scenarios) && current(artifacts.calibration) && current(artifacts.eventStudy) && current(artifacts.atlas ?? null),
     },
   };
 }

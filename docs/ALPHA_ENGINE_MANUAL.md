@@ -1613,3 +1613,11 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 - `scripts/build-macro-event-study.mts` измеряет реакции DGS10, WTI, broad USD и high-yield OAS на события OFAC за 1/5/21/63 observations. Используются только first-release observations; baseline должен быть известен на момент research eligibility события, а outcomes начинаются со следующего observation day.
 - Discovery и out-of-sample формируются хронологически 70/30, минимум пять событий для каждого опубликованного split. Mean, median и moving-block CI95 с 500 replicates сопровождаются vintage evidence по каждому событию.
 - Статусы `ready`, `partial` и `insufficient_events` описывают покрытие, а не предсказательную силу. Направленный прогноз, probability-engine promotion и production sync автоматически не выполняются. Полный протокол: `docs/MACRO_DATA.md`.
+
+## 12. Macro Transmission Atlas
+
+- `scripts/build-macro-transmission-atlas.mts` соединяет first-release macro events с point-in-time SEC exposure и post-close market-model abnormal returns. Exposure должен быть `available`, non-stale и известен на момент research eligibility события; partial, stale и missing ratios исключаются.
+- Модель: `abnormalReturn = intercept + β1 shock + β2 exposure + β3 shock × exposure + sector fixed effects`. Debt burden — балансовый proxy, а не floating-rate share. Oil revenue/cost и fuel нормализуются через operating income.
+- Коэффициенты и sector levels обучаются только на ранних 70% событий. OOS применяет замороженные коэффициенты и публикует MAE, RMSE и R² относительно discovery mean без повторного обучения.
+- Для fit требуется 30 rows, 10 events, 5 companies и full-rank design. `pilot` и `full_sample` — метки покрытия, а не verdict об alpha. Interaction CI95 использует 500 event-cluster bootstrap replicates.
+- `macro-transmission-atlas.json` и `.md` сохраняют concepts, exposure periods и OOS evidence по каждой записи. Daily Operations проверяет только lineage; probability promotion и production sync автоматически не выполняются. Протокол: `docs/MACRO_DATA.md` §15.

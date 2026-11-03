@@ -18,7 +18,7 @@ const DEFAULT_CONFIG: Config = Object.fromEntries(OPERATION_JOBS.map((job) => [j
 const DAILY_FLOW = [
   "edgar-fetch-daily", "edgar-exhibits-daily", "facts-fetch-daily", "research-series", "research-factors", "analytics-snapshot",
   "schwab-fetch-daily", "schwab-snapshot", "schwab-feature-lab", "expectations-report",
-  "macro-fred-weekly", "macro-events-daily", "macro-manifest-qa", "company-exposure-evidence", "pilot-exposure-evidence", "macro-scenarios", "shock-calibration", "macro-event-study",
+  "macro-fred-weekly", "macro-events-daily", "macro-manifest-qa", "company-exposure-evidence", "pilot-exposure-evidence", "macro-scenarios", "shock-calibration", "macro-event-study", "macro-transmission-atlas",
   "ui-production-build", "daily-digest", "daily-operations-report",
 ];
 const laneNames = { service: "Services", collect: "Collect", research: "Research", review: "Review", delivery: "Deliver" };

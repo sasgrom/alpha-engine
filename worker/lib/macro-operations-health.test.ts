@@ -10,6 +10,7 @@ const healthy = (): MacroOperationsArtifacts => ({
   scenarios: { generatedAt: "2026-11-03T06:10:00.000Z" },
   calibration: { generatedAt: "2026-11-03T06:11:00.000Z", calibrations: [{ status: "ready" }] },
   eventStudy: { generatedAt: "2026-11-03T06:12:00.000Z", status: "ready", events: { eligible: 47, withAnyObservation: 40 } },
+  atlas: { generatedAt: "2026-11-03T06:13:00.000Z", status: "estimated", coverage: { records: 3840 } },
 });
 
 describe("macro operations health", () => {

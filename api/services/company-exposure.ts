@@ -31,6 +31,8 @@ export interface CompanyExposureRow {
   fuelCostToOperatingIncome: ExposureMetric;
   oilRevenue: ExposureMetric;
   oilCost: ExposureMetric;
+  oilRevenueToOperatingIncome?: ExposureMetric;
+  oilCostToOperatingIncome?: ExposureMetric;
   foreignRevenueShare: ExposureMetric;
   foreignDerivativeNotional: ExposureMetric;
   missing: string[];
@@ -167,6 +169,8 @@ export function buildCompanyExposure(input: CompanyExposureInput, asOf: string):
     fuelCostToOperatingIncome: withEvidenceAge(ratio(fuel, operatingIncome, "Fuel cost / operating income is unavailable"), asOf),
     oilRevenue: withEvidenceAge(oilRevenue, asOf),
     oilCost: withEvidenceAge(oilCost, asOf),
+    oilRevenueToOperatingIncome: withEvidenceAge(ratio(oilRevenue, operatingIncome, "Oil revenue / operating income is unavailable"), asOf),
+    oilCostToOperatingIncome: withEvidenceAge(ratio(oilCost, operatingIncome, "Oil cost / operating income is unavailable"), asOf),
     foreignRevenueShare: withEvidenceAge(foreignRevenueShare, asOf),
     foreignDerivativeNotional: withEvidenceAge(foreignDerivativeNotional, asOf),
     missing: missingFields,

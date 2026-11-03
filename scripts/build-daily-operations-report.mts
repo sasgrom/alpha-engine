@@ -31,6 +31,7 @@ const macro: MacroOperationsArtifacts = {
   scenarios: readJson<MacroOperationsArtifacts["scenarios"]>(path.resolve("public/reports/macro-scenarios.json"), (value) => value?.schemaVersion === 1),
   calibration: readJson<MacroOperationsArtifacts["calibration"]>(path.resolve("public/reports/shock-calibration.json"), (value) => value?.schemaVersion === 1 && Array.isArray(value.calibrations)),
   eventStudy: readJson<MacroOperationsArtifacts["eventStudy"]>(path.resolve("public/reports/macro-event-study.json"), (value) => value?.schemaVersion === 1 && !!value.events),
+  atlas: readJson<MacroOperationsArtifacts["atlas"]>(path.resolve("public/reports/macro-transmission-atlas.json"), (value) => value?.schemaVersion === 1 && !!value.coverage),
 };
 const report = buildDailyOperationsReport({
   now,

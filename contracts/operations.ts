@@ -146,6 +146,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local research artifact only; no production write or probability promotion.", requirements: ["driveD", "review"], notes: "Baseline must be known at event eligibility and outcomes start on the next observation day. No directional forecast is inferred.",
   }),
   job({
+    id: "macro-transmission-atlas", name: "Macro Transmission Atlas", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["macro-event-study", "research-factors"],
+    ...npx("scripts/build-macro-transmission-atlas.mts"), purpose: "Estimate company-level macro transmission with point-in-time SEC exposure, market-model returns and frozen discovery-only OOS evaluation.",
+    input: "First-release macro event observations, canonical series, daily company and SPY prices.", output: "macro-transmission-atlas.json and .md with sector FE interactions, event-bootstrap CI95 and OOS metrics.",
+    destination: "Local research artifact only; no production write or probability promotion.", requirements: ["mysql", "driveD", "review"], notes: "Exposure must be available and non-stale at event eligibility. Debt burden is a proxy, not a floating-rate share. OOS coefficients are never refit.",
+  }),
+  job({
     id: "ui-production-build", name: "Production UI rebuild", group: "delivery", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["analytics-snapshot", "schwab-feature-lab", "expectations-report"],
     executable: "npm", args: ["run", "build"], command: "npm run build", purpose: "Compile newly generated static snapshots and the server into dist for normal production-mode operation.",
     input: "Current source and freshly generated report artifacts.", output: "dist/public and dist/boot.js.",

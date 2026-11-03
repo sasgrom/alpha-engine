@@ -261,6 +261,7 @@ The operations registry automates the existing local macro pipeline without addi
 | `macro-scenarios` | After QA + both evidence reports | Recompute Scenario Lab baselines and impacts |
 | `shock-calibration` | After QA | Recompute historical shock distributions and CIs |
 | `macro-event-study` | After QA | Recompute the first-release OFAC event study |
+| `macro-transmission-atlas` | After event study + research factors | Estimate company-level shock × exposure transmission with frozen OOS |
 
 `macro-manifest-qa` deliberately has no parent dependency. A weekly FRED refresh must not block daily OFAC QA through the scheduler's 48-hour dependency freshness window. Derived builders still require successful current QA and evidence parents.
 
@@ -283,6 +284,7 @@ npx tsx scripts/build-pilot-exposure-evidence.mts
 npx tsx scripts/build-macro-scenarios.mts --macro-root D:\research\alpha-engine\macro
 npx tsx scripts/build-shock-calibration.mts --macro-root D:\research\alpha-engine\macro
 npx tsx scripts/build-macro-event-study.mts --macro-root D:\research\alpha-engine\macro
+npx tsx scripts/build-macro-transmission-atlas.mts
 npx tsx scripts/build-daily-operations-report.mts --macro-root D:\research\alpha-engine\macro
 ```
 
@@ -305,3 +307,39 @@ Availability policy is stricter than calibration:
 Events are split chronologically into the earliest 70% `discovery` and latest 30% `out_of_sample`. A summary is emitted only with at least five observations in the relevant split. Mean, median and a 500-replicate moving-block bootstrap CI95 are reported for each series, horizon and split; blocks contain at most three events.
 
 Outputs are `public/reports/macro-event-study.json` and `.md`, including per-event baseline and outcome vintage IDs. `ready`, `partial` and `insufficient_events` describe coverage only. These measurements are not directional forecasts, trading signals or a promoted probability model.
+
+## 15. Macro Transmission Atlas
+
+```powershell
+npx tsx scripts/build-macro-transmission-atlas.mts
+```
+
+Atlas joins the first-release macro event observations to canonical SEC exposure and market-model abnormal returns. Use `--universe research-universe-50.json` for the evaluated S&P panel or `--only TICKER` for a bounded diagnostic run. The CLI reads `public/reports/macro-event-study.json`, local `series_points` and daily prices; it does not fetch production data.
+
+### Exposure panel
+
+Exposure is rebuilt at every event's `researchEligibleAt`, using only `quality=available`, non-stale evidence:
+
+- `debt_burden`: debt / operating income. This is a balance-sheet rate-sensitivity proxy, **not** a floating-rate share or a maturity-specific repricing schedule;
+- `fuel_cost`: fuel cost / operating income;
+- `oil_revenue`: oil and gas revenue / operating income;
+- `oil_cost`: purchased oil and gas cost / operating income;
+- `foreign_revenue`: directly comparable foreign revenue share.
+
+Partial, stale, negative or missing ratios are excluded and counted. No sector means, zero imputation or current-exposure backfill is allowed. Oil ratios use additive optional fields, so older exposure reports without them simply produce missing evidence.
+
+### Price and company models
+
+Company price response uses the existing post-close market-model OLS with 120 estimation returns, a minimum of 60, and SPY as the benchmark. The company model is fitted independently for every series, exposure kind and horizon:
+
+```text
+abnormalReturn = intercept + β1 shock + β2 exposure + β3 shock × exposure + sector fixed effects + ε
+```
+
+`β3` is the conditional transmission coefficient. It is not automatically a causal effect.
+
+Discovery contains the earliest 70% of events. The model and sector levels are fitted only on discovery. The later 30% is evaluated with those frozen coefficients; OOS is never refit. OOS reports MAE, RMSE and R² against the discovery mean, which may be negative.
+
+A fit requires at least 30 rows, 10 events, 5 companies and a full-rank design. `pilot` means 5–19 companies or 10–29 events; `full_sample` requires at least 20 companies and 30 events. `insufficient_coverage` is returned instead of a fabricated coefficient. Interaction CI95 uses 500 event-cluster bootstrap replicates with a maximum block length of three.
+
+Outputs are `public/reports/macro-transmission-atlas.json` and `.md`. Daily Operations checks Atlas lineage and research coverage but does not treat `estimated` as alpha validation or authorize production promotion.
