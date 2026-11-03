@@ -3,7 +3,7 @@ import "dotenv/config";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statfsSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { isSchwabTokenFresh, loadSchwabToken, refreshSchwabToken, saveSchwabToken, schwabGet, schwabTokenDirectory } from "./lib/schwab";
-import { buildSchwabContextReport, contextSourceHash, type SchwabContextFile } from "./lib/schwab-context";
+import { buildSchwabContextReport, contextSourceHash, schwabMarketHoursPath, type SchwabContextFile } from "./lib/schwab-context";
 import { writeSchwabJsonOutputs } from "./lib/schwab-output";
 import { loadEdgarUniverse, realCacheRoot } from "./lib/edgar";
 import { startProgress } from "./lib/progress";
@@ -39,8 +39,8 @@ async function request(pathname: string): Promise<string> {
   return result.body;
 }
 const tasks = [
-  { kind: "hours/equity", pathname: "markets/equity", file: `context/${today}/hours-equity.json` },
-  { kind: "hours/option", pathname: "markets/option", file: `context/${today}/hours-option.json` },
+  { kind: "hours/equity", pathname: schwabMarketHoursPath("equity"), file: `context/${today}/hours-equity.json` },
+  { kind: "hours/option", pathname: schwabMarketHoursPath("option"), file: `context/${today}/hours-option.json` },
   { kind: "movers/SPX", pathname: `movers/${encodeURIComponent("$SPX")}`, file: `context/${today}/movers-SPX.json` },
   { kind: "movers/COMPX", pathname: `movers/${encodeURIComponent("$COMPX")}`, file: `context/${today}/movers-COMPX.json` },
   { kind: "movers/DJI", pathname: `movers/${encodeURIComponent("$DJI")}`, file: `context/${today}/movers-DJI.json` },

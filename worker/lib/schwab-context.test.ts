@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { buildSchwabContextReport, parseInstrument, parseMarketHours, parseMovers, summarizeIntraday } from "./schwab-context";
+import { buildSchwabContextReport, parseInstrument, parseMarketHours, parseMovers, schwabMarketHoursPath, summarizeIntraday } from "./schwab-context";
 
 describe("Schwab Context Pack", () => {
+  it("maps market hours to the required markets query parameter", () => {
+    expect(schwabMarketHoursPath("option")).toBe("markets?markets=option");
+    expect(schwabMarketHoursPath("equity")).toBe("markets?markets=equity");
+  });
+
   it("parses market sessions without inventing open times", () => {
     const raw = JSON.stringify({ equity: { EQ: { date: "2026-10-31", isOpen: false, isHoliday: true, sessionHours: { regularMarket: [{ start: "2026-10-31T09:30:00-04:00", end: "2026-10-31T16:00:00-04:00" }] } } } });
     const session = parseMarketHours(raw, "2026-10-31T12:00:00Z");

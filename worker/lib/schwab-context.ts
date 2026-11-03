@@ -21,6 +21,11 @@ const num = (value: unknown): number | null => { const n = Number(value); return
 const text = (value: unknown): string | null => typeof value === "string" && value.trim() ? value : null;
 const sourceHash = (raw: string) => sha256Text(raw);
 
+/** Build the market-hours request with the query parameter required by Schwab. */
+export function schwabMarketHoursPath(market: "equity" | "option"): string {
+  return `markets?markets=${encodeURIComponent(market)}`;
+}
+
 export function parseMarketHours(raw: string, capturedAt: string): SchwabMarketSession {
   const doc = JSON.parse(raw) as Record<string, unknown>;
   const equity = (doc.equity ?? {}) as Record<string, unknown>;

@@ -17,7 +17,7 @@ Read `git log -10` for authoritative commit state. Recent completed blocks:
 - `fc1987b` — Availability-anchored shock calibration and unit-safe Scenario Engine baselines.
 - Daily report: `/workers` opens a health view with scheduler heartbeat, per-ticker same-day Schwab evidence, Feature Lab source hash, job outcomes and remediation actions.
 - Daily health artifacts are local and ignored by Git: `public/reports/daily-operations.json` and `.md`.
-- Latest full verification before this handoff: 105 test files, 580 tests passing, TypeScript check and production build successful.
+- Latest full verification before this handoff: 106 test files, 582 tests passing, TypeScript check and production build successful. See section 10 for the current Stocktwits/Schwab repair evidence.
 
 ## 3. Actual evidence caveat
 
@@ -108,3 +108,20 @@ Deliberately not automatic:
 - Retry the same failing step at most twice, then diagnose the evidence instead of blindly retrying. Never start duplicate schedulers, servers or collectors.
 - Immediate authorized work: fix the Stocktwits `loadUniverse` export mismatch and Schwab `hours/option` request mapping as separate changes; run their targeted tests and collectors; regenerate the daily report; complete the full verification gates; update this handoff and push the source changes.
 - Production apply/deployment, cloud collection, credentials, schema/storage migration, deletion, paused GPU lanes, new external services and history-changing Git operations still require an explicit owner decision.
+
+## 10. Return handoff — Stocktwits and Schwab Context repair
+
+### 2026-11-03T02:17:50Z — verified and ready for source delivery
+
+- Block baseline: `963e6bc` (`main` matched `origin/main` at inspection). No production apply/deployment, schema/storage change, paused lane or GDELT action was performed.
+- Stocktwits: restored `UniverseEntry` and `loadUniverse()` in `worker/lib/universe.ts` while preserving `dedupeExpectationUniverse`. Added `worker/lib/universe.test.ts`, which imports and loads the real committed snapshot. The collector now sends both deterministic and LLM probation rows to the home ingest endpoint instead of forcing deterministic rows to production.
+- Schwab: added the production-used `schwabMarketHoursPath()` mapping and changed both context tasks to `markets?markets=equity|option`; `hours/option` no longer uses the failing `/markets/option` path. Updated `docs/SCHWAB_STREAMING_TZ.md` and added a regression assertion for both mappings.
+- Targeted verification passed: Stocktwits/universe suites `79/79`; Schwab context/request suites `10/10`.
+- The running scheduler predated the current registry and had no active job or queued work. Restarted the existing `AlphaEngine-Operations-Scheduler` task after terminating its detached old process tree; the new state started at `2026-11-03T02:07:05.040Z` with 56 registered jobs and one execution lane. No duplicate scheduler was started.
+- Stocktwits manual run `1793671775058-stocktwits-hourly`: exit 0, `2026-11-03T02:09:35.058Z` → `2026-11-03T02:11:02.213Z`. Log confirms 10 deterministic and 5 LLM probation rows accepted by local ingest, zero duplicates.
+- Schwab Context manual run `1793671865062-schwab-context-hourly`: exit 0, `2026-11-03T02:11:05.062Z` → `2026-11-03T02:11:09.695Z`; 58/58 endpoints complete, zero errors. The existing collector refreshed its access token normally; no credential value was inspected or printed.
+- Final daily report generated at `2026-11-03T02:17:48.982Z`: status `ok`, 7 OK / 0 warning / 0 error / 13 not-yet-due or parent-waiting checks. Scheduler heartbeat `2026-11-03T02:17:35.100Z`, no current job and zero queued jobs.
+- Schwab evidence for UTC date `2026-11-03`: 51/51 tickers captured today, 51/51 readable latest chains, 122,218 contracts and zero manifest errors; latest capture `2026-11-03T00:10:50.992Z`. Feature Lab generated `2026-11-03T00:10:58.298Z` and matches the normalized source hash. Context generated `2026-11-03T02:11:09.615Z` with 58/58 coverage and zero errors. No failed checks remain; pending checks are future schedule/dependency work, not failures.
+- Full gates passed: `npm run check`; `npm test -- --run` with 106 test files and 582 tests; `npm run build` with only the established chunk-size warnings; `git diff --check` with no whitespace errors.
+- Source delivery is limited to the two collector fixes, their regression tests, the Schwab technical note and this handoff. `public/reports/schwab-context.json`, untracked `public/reports/shock-calibration.json` / `.md`, ignored daily reports, raw archives and build outputs are intentionally excluded from the source commit. No additional uncommitted source work remains outside this block.
+- Next safe action: leave the single scheduler running its normal registry. No immediate collector repair remains. Production transfer still requires a separate explicit owner review.

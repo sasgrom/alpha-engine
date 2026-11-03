@@ -5,18 +5,19 @@ dns.setDefaultResultOrder("ipv4first");
  * Stocktwits collector (home worker, Variant C). Run: npx tsx worker/stocktwits.mts
  *
  * Public per-symbol stream (30 latest messages) → aggregate buzz + sentiment
- * label per company → cloud ingest. payloadKey = newest message id + count,
+ * label per company → local ingest. payloadKey = newest message id + count,
  * so reruns without new messages dedupe to zero. Anonymous API is rate-limited
  * per IP (~200 req/h): we serialize with a 2s pause, 5 tickers stay far below.
  */
 import "dotenv/config";
 import { fetchJson } from "./lib/http";
-import { postSignals, PROD_INGEST_URL, type SignalRow } from "./lib/ingest";
+import { postSignals, type SignalRow } from "./lib/ingest";
 import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from "./lib/stocktwits";
 import { loadUniverse } from "./lib/universe";
 import { extractVerdict, generate, LLM_MODEL, status as ollamaStatus } from "./lib/ollama";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const ingestUrl = process.env.INGEST_URL ?? "http://127.0.0.1:3000/api/worker/ingest";
 
 // 5d: LLM crowd read is OPTIONAL — the GPU is never a point of failure for
 // the deterministic rows. Daemon down/model missing → crowd rows skipped.
@@ -58,16 +59,15 @@ if (rows.length === 0) {
   console.log("[stocktwits] nothing collected, exiting");
   process.exit(0);
 }
-// 5d doctrine: deterministic rows (buzz/label — proven in 4o) go STRAIGHT to
-// prod even in dev mode; LLM-generated crowd rows (llm: keys) follow the
-// local-first probation switch (INGEST_URL) until their quality is eyeballed.
+// Keep both deterministic and LLM probation rows on the home ingest endpoint.
+// Production promotion remains a separate reviewed operation.
 const det = rows.filter((r) => !r.payloadKey?.startsWith("llm:"));
 const llmRows = rows.filter((r) => r.payloadKey?.startsWith("llm:"));
 if (det.length > 0) {
-  const res = await postSignals(det, { url: PROD_INGEST_URL });
-  console.log(`[stocktwits] deterministic → prod: ${res.accepted} new, ${res.skippedDupes} dupes (${res.batches} batch(es))`);
+  const res = await postSignals(det, { url: ingestUrl });
+  console.log(`[stocktwits] deterministic → local: ${res.accepted} new, ${res.skippedDupes} dupes (${res.batches} batch(es))`);
 }
 if (llmRows.length > 0) {
-  const res = await postSignals(llmRows);
-  console.log(`[stocktwits] llm crowd → ${process.env.INGEST_URL ? "local (probation)" : "prod"}: ${res.accepted} new, ${res.skippedDupes} dupes`);
+  const res = await postSignals(llmRows, { url: ingestUrl });
+  console.log(`[stocktwits] llm crowd → local (probation): ${res.accepted} new, ${res.skippedDupes} dupes`);
 }
