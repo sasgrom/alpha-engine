@@ -100,3 +100,11 @@ Deliberately not automatic:
 - Stocktwits was not blindly rerun: its failed-job log shows a deterministic startup error because `./lib/universe` does not export `loadUniverse`; no network request can fix that code error.
 - Verification: `npm run check` passed; `npm test -- --run` passed with 105 test files and 580 tests; `npm run build` passed with chunk-size warnings only.
 - Next safe action: review the Stocktwits export mismatch and Schwab `hours/option` request mapping as separate code changes before further reruns. Do not start GDELT, paused lanes, a duplicate scheduler or any production action.
+
+## 9. Owner autonomy directive — 2026-11-03
+
+- The owner explicitly authorized autonomous routine work: diagnose and fix bugs, add tests, run local collectors and builders, verify evidence, update documentation, and make verified source commits with ordinary fast-forward pushes to `main`.
+- Do not ask for confirmation for routine implementation choices, collector execution, local builds or source delivery. Use short progress updates and stop only for the explicit boundaries in `AGENTS.md` section 6.
+- Retry the same failing step at most twice, then diagnose the evidence instead of blindly retrying. Never start duplicate schedulers, servers or collectors.
+- Immediate authorized work: fix the Stocktwits `loadUniverse` export mismatch and Schwab `hours/option` request mapping as separate changes; run their targeted tests and collectors; regenerate the daily report; complete the full verification gates; update this handoff and push the source changes.
+- Production apply/deployment, cloud collection, credentials, schema/storage migration, deletion, paused GPU lanes, new external services and history-changing Git operations still require an explicit owner decision.
