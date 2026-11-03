@@ -126,3 +126,11 @@ The handoff is the shared channel between Kimi Code and other agent sessions. Do
 - The `alpha-bridge-agent` registry job remains paused until the owner configures the documented static deny rules and explicitly enables it.
 - Never blindly resume an acknowledged command whose process was interrupted. Inspect the outcome first to avoid duplicate collectors or side effects.
 - Unsafe production, migration, credential, GDELT, force and history-changing instructions remain blocked even in unattended mode.
+
+## 10. Live Alpha Bridge via Kimi web
+
+- Prefer `runLiveInstruction` and `worker/alpha-live-execute.mts` for direct commands. Use `post_command` only when a Git-backed audit channel is specifically required.
+- `kimi web` requires bearer authentication for sessions, prompts and WebSocket subscriptions. Never expose it publicly or use `--dangerous-bypass-auth`.
+- Remote HTTP is allowed only through a private Tailscale address with explicit `ALPHA_KIMI_WEB_ALLOW_PRIVATE_HTTP=1`; all other non-loopback endpoints require HTTPS.
+- One isolated session and one `turn.ended` per live instruction, followed by transcript evidence. No hidden retries and no duplicate live executor for the same command ID.
+- Git remains a source-delivery mechanism only; it is not a live command transport.

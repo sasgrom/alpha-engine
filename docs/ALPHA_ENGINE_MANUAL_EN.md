@@ -1636,3 +1636,10 @@ Operator manual: `docs/MACRO_DATA.md`.
 
 - On Windows, `alpha-bridge-agent` invokes `cmd.exe /d /s /c kimi -p ...` with normalized newlines, doubled `%` and escaped `"` instead of spawning `kimi.cmd` directly. This fixes `spawn EINVAL` and keeps instruction text out of shell syntax. Non-Windows uses direct `kimi` with `shell: false`.
 - The regression test covers the executable, fixed arguments and Windows quoting. The first real command failed before Kimi CLI started, so this was an invocation bug rather than a research failure.
+
+## 16. Live Alpha Bridge via Kimi web
+
+- `runLiveInstruction` uses Kimi web REST and WebSocket instead of Git-synchronized commands. It creates an isolated session, submits a bounded prompt, waits for `turn.ended` and reads transcript evidence.
+- `worker/alpha-live-execute.mts` executes direct instructions or the oldest pending local command. Git remains source delivery only, not a live command channel.
+- Bearer tokens stay in local environment/secret storage. Remote HTTP requires a private Tailscale address and explicit `ALPHA_KIMI_WEB_ALLOW_PRIVATE_HTTP=1`; other remote endpoints require HTTPS. Never use `--dangerous-bypass-auth`.
+- One session and one turn per instruction, with a ten-minute default timeout and no hidden retries. Mock integration tests cover REST, WebSocket completion, transcript, liveness and private HTTP rules; no live model was invoked here. Activation contract: `docs/ALPHA_LIVE.md`.

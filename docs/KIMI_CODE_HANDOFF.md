@@ -186,3 +186,11 @@ Deliberately not automatic:
 - The first real `captain-factor-check` run failed immediately with `spawn EINVAL` before Kimi CLI started. This was a Windows invocation bug, not a research or command-protocol failure.
 - Replaced direct `kimi.cmd` spawning with fixed `cmd.exe /d /s /c kimi -p ...` invocation and strict Windows quoting: normalized newlines, doubled `%` and escaped `"`. Instruction text cannot become shell syntax. Non-Windows still uses direct `kimi` with `shell: false`.
 - Added a regression test for the executable, fixed arguments and quoting. Targeted factor/probability suites and the command-protocol suite pass; no live model or production action was performed in this workspace.
+
+## 18. Live Alpha Bridge via Kimi web — 2026-11-03
+
+- Added `runLiveInstruction` and `worker/alpha-live-execute.mts`: direct captain instructions now create an isolated Kimi web session, submit a bounded prompt, wait for `turn.ended` over WebSocket and read transcript evidence. Git is no longer a live command transport; `ALPHA_COMMANDS.jsonl` is optional audit only.
+- Bearer tokens stay in local environment/secret storage. Remote HTTP requires a private Tailscale address and explicit `ALPHA_KIMI_WEB_ALLOW_PRIVATE_HTTP=1`; other remote endpoints require HTTPS. Never use `--dangerous-bypass-auth`.
+- One session and one turn per instruction, with a ten-minute default timeout and no hidden retries or duplicate executor for the same command ID.
+- Mock integration tests cover session creation, prompt authorization/content, `turn.ended`, transcript, liveness, token requirements and private HTTP opt-in. No live model invocation was performed in this workspace. Full suite: 113 test files and 613 tests passed; TypeScript check and production build passed.
+- Added `docs/ALPHA_LIVE.md`, `AGENTS.md`, RU/EN manuals, `LLM_CONTEXT` and bundled manuals. Activation: start `kimi web` locally or through a private Tailscale address, configure URL/token, then run `worker/alpha-live-execute.mts`.

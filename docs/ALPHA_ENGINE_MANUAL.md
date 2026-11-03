@@ -1642,3 +1642,10 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 - В Windows `alpha-bridge-agent` вызывает `cmd.exe /d /s /c kimi -p ...` с нормализацией newlines, удвоенным `%` и escaped `"` вместо прямого запуска `kimi.cmd`. Это исправляет `spawn EINVAL` и не позволяет тексту задания стать shell-синтаксисом. На других платформах используется прямой `kimi` с `shell: false`.
 - Regression test проверяет executable, фиксированные аргументы и Windows quoting. Первая реальная команда завершилась до старта Kimi CLI, поэтому это была ошибка invocation, а не исследования.
+
+## 16. Live Alpha Bridge через Kimi web
+
+- `runLiveInstruction` использует Kimi web REST и WebSocket вместо Git-синхронизации команд. Создаётся изолированная сессия, отправляется bounded prompt, ожидается `turn.ended` и читается transcript evidence.
+- `worker/alpha-live-execute.mts` выполняет прямые инструкции или старейшую pending локальную команду. Git остаётся только механизмом доставки кода, а не live-каналом команд.
+- Bearer tokens хранятся только в локальном environment/secret storage. Remote HTTP разрешён только через private Tailscale address с явным `ALPHA_KIMI_WEB_ALLOW_PRIVATE_HTTP=1`; остальные remote endpoints требуют HTTPS. `--dangerous-bypass-auth` не используется.
+- Одна сессия и один turn на инструкцию, десятиминутный timeout и никаких скрытых retries. Mock integration tests покрывают REST, WebSocket completion, transcript, liveness и private HTTP rules; live model здесь не вызывался. Контракт активации: `docs/ALPHA_LIVE.md`.
