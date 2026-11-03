@@ -1649,3 +1649,8 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 - `worker/alpha-live-execute.mts` выполняет прямые инструкции или старейшую pending локальную команду. Git остаётся только механизмом доставки кода, а не live-каналом команд.
 - Bearer tokens хранятся только в локальном environment/secret storage. Remote HTTP разрешён только через private Tailscale address с явным `ALPHA_KIMI_WEB_ALLOW_PRIVATE_HTTP=1`; остальные remote endpoints требуют HTTPS. `--dangerous-bypass-auth` не используется.
 - Одна сессия и один turn на инструкцию, десятиминутный timeout и никаких скрытых retries. Mock integration tests покрывают REST, WebSocket completion, transcript, liveness и private HTTP rules; live model здесь не вызывался. Контракт активации: `docs/ALPHA_LIVE.md`.
+
+## 17. Порядок WebSocket subscription
+
+- `runLiveInstruction` сначала подписывается на session WebSocket и только затем отправляет prompt. Прежний порядок prompt-first мог потерять `turn.ended` на коротких командах.
+- Close events теперь содержат numeric code и reason, а regression test доказывает, что `subscribe` предшествует prompt request. Это исправление порядка событий, а не изменение модели или исследования.

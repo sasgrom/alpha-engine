@@ -4,6 +4,7 @@ import { createKimiSession, kimiWebConfigFromEnv, kimiWebHealth, runLiveInstruct
 
 class FakeWebSocket {
   static instances: FakeWebSocket[] = [];
+  static timeline: string[] = [];
   onopen: (() => void) | null = null;
   onmessage: ((event: { data: string }) => void) | null = null;
   onerror: (() => void) | null = null;
@@ -16,7 +17,7 @@ class FakeWebSocket {
       this.onclose?.();
     });
   }
-  send(): void { /* subscription is verified by the open handler */ }
+  send(): void { FakeWebSocket.timeline.push("subscribe"); }
   close(): void { /* idempotent test close */ }
 }
 
@@ -26,12 +27,14 @@ describe("Kimi web live bridge", () => {
   const calls: { method: string; url: string; body: string; authorization: string | undefined }[] = [];
   beforeEach(async () => {
     FakeWebSocket.instances = [];
+    FakeWebSocket.timeline = [];
     calls.length = 0;
     vi.stubGlobal("WebSocket", FakeWebSocket);
     server = createServer((req, res) => {
       let body = "";
       req.on("data", (chunk) => { body += chunk; });
       req.on("end", () => {
+        FakeWebSocket.timeline.push(req.url!);
         calls.push({ method: req.method!, url: req.url!, body, authorization: req.headers.authorization });
         res.setHeader("content-type", "application/json");
         if (req.url === "/api/v1/healthz") return res.end(JSON.stringify({ code: 0, data: { ok: true } }));
@@ -60,6 +63,7 @@ describe("Kimi web live bridge", () => {
     expect(calls.every((call) => call.authorization === "Bearer secret-token")).toBe(true);
     expect(FakeWebSocket.instances[0].url).toBe(`${baseUrl.replace("http://", "ws://")}/api/v1/ws`);
     expect(FakeWebSocket.instances[0].protocols).toEqual(["kimi-code.bearer.secret-token"]);
+    expect(FakeWebSocket.timeline.indexOf("subscribe")).toBeLessThan(FakeWebSocket.timeline.indexOf("/api/v1/sessions/session_test/prompts"));
   });
 
   it("checks liveness and requires a token only for authenticated calls", async () => {

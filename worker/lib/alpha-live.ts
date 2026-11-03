@@ -77,18 +77,18 @@ export function waitForTurnEnded(sessionId: string, config: KimiWebConfig, timeo
       ws.close();
       resolve(frame.payload ?? frame);
     };
-    ws.onerror = () => {
+    ws.onerror = (event) => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
       ws.close();
-      reject(new Error("Kimi WebSocket connection failed"));
+      reject(new Error(`Kimi WebSocket connection failed: ${event.message || "unknown error"}`));
     };
-    ws.onclose = () => {
+    ws.onclose = (event) => {
       if (!settled) {
         settled = true;
         clearTimeout(timer);
-        reject(new Error("Kimi WebSocket closed before turn.ended"));
+        reject(new Error(`Kimi WebSocket closed before turn.ended: code ${event.code} · reason ${event.reason || "unspecified"}`));
       }
     };
   });
@@ -103,8 +103,9 @@ export function readKimiMessages(sessionId: string, config: KimiWebConfig, pageS
 /** Run one isolated live instruction end-to-end without Git or a second prompt channel. */
 export async function runLiveInstruction(cwd: string, instruction: string, config: KimiWebConfig, timeoutMs = 600_000): Promise<unknown> {
   const sessionId = await createKimiSession(cwd, config);
+  const turnPromise = waitForTurnEnded(sessionId, config, timeoutMs);
   await submitKimiPrompt(sessionId, instruction, config);
-  const turn = await waitForTurnEnded(sessionId, config, timeoutMs);
+  const turn = await turnPromise;
   const messages = await readKimiMessages(sessionId, config);
   return { status: "completed", sessionId, turn, messages };
 }

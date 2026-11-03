@@ -194,3 +194,10 @@ Deliberately not automatic:
 - One session and one turn per instruction, with a ten-minute default timeout and no hidden retries or duplicate executor for the same command ID.
 - Mock integration tests cover session creation, prompt authorization/content, `turn.ended`, transcript, liveness, token requirements and private HTTP opt-in. No live model invocation was performed in this workspace. Full suite: 113 test files and 613 tests passed; TypeScript check and production build passed.
 - Added `docs/ALPHA_LIVE.md`, `AGENTS.md`, RU/EN manuals, `LLM_CONTEXT` and bundled manuals. Activation: start `kimi web` locally or through a private Tailscale address, configure URL/token, then run `worker/alpha-live-execute.mts`.
+
+## 19. Live WebSocket subscription ordering fix — 2026-11-03
+
+- The first real `hello-live` run failed with `Kimi WebSocket closed before turn.ended`. Root cause: prompt was submitted before subscription, so a short command could finish before the listener was attached.
+- `runLiveInstruction` now opens the WebSocket subscription **before** submitting the prompt. This prevents missed `turn.ended` events on fast completions.
+- Close events now include numeric code and reason instead of an opaque failure. Regression coverage verifies that `subscribe` precedes the prompt request.
+- No live model or production action was performed in this workspace. Full suite: 113 test files and 613 tests passed; TypeScript check and production build passed.

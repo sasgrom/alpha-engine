@@ -1643,3 +1643,8 @@ Operator manual: `docs/MACRO_DATA.md`.
 - `worker/alpha-live-execute.mts` executes direct instructions or the oldest pending local command. Git remains source delivery only, not a live command channel.
 - Bearer tokens stay in local environment/secret storage. Remote HTTP requires a private Tailscale address and explicit `ALPHA_KIMI_WEB_ALLOW_PRIVATE_HTTP=1`; other remote endpoints require HTTPS. Never use `--dangerous-bypass-auth`.
 - One session and one turn per instruction, with a ten-minute default timeout and no hidden retries. Mock integration tests cover REST, WebSocket completion, transcript, liveness and private HTTP rules; no live model was invoked here. Activation contract: `docs/ALPHA_LIVE.md`.
+
+## 17. Live WebSocket subscription ordering
+
+- `runLiveInstruction` subscribes to the session WebSocket before submitting the prompt. The previous prompt-first order could miss `turn.ended` on short commands.
+- Close events now carry numeric code and reason, and a regression test asserts that `subscribe` precedes the prompt request. This is an event-ordering fix, not a model or research change.

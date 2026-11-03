@@ -7,13 +7,13 @@ Alpha Live replaces Git-synchronized commands with the live Kimi web REST + WebS
 ```text
 Captain instruction
   → POST /api/v1/sessions
-  → POST /api/v1/sessions/{id}/prompts
   → subscribe /api/v1/ws
+  → POST /api/v1/sessions/{id}/prompts
   → turn.ended
   → GET /api/v1/sessions/{id}/messages
 ```
 
-`worker/lib/alpha-live.ts` implements session creation, prompt submission, turn waiting and transcript reads. `worker/alpha-live-execute.mts` executes a direct instruction or the oldest pending local command. Git is not a command transport; `ALPHA_COMMANDS.jsonl` remains optional audit evidence only.
+`worker/lib/alpha-live.ts` implements session creation, WebSocket subscription **before prompt submission**, turn waiting and transcript reads. Subscribing first prevents short commands from completing before the `turn.ended` listener is attached. Close events include their numeric code and reason. `worker/alpha-live-execute.mts` executes a direct instruction or the oldest pending local command. Git is not a command transport; `ALPHA_COMMANDS.jsonl` remains optional audit evidence only.
 
 ## 2. Start Kimi web locally
 
