@@ -1605,3 +1605,11 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 - Ручная пересборка: `npx tsx scripts/build-daily-operations-report.mts`. В реестре также включён ежедневный запуск в 07:20 по локальному времени домашней машины после утренних задач.
 - Результаты: `public/reports/daily-operations.json` и `.md`; существующая копия в `dist/public/reports` обновляется без пересборки приложения. Машинные health-артефакты исключены из Git и остаются локальными до отдельного reviewed delivery.
 - Успешный cron не доказывает свежесть данных. Для каждого ожидаемого тикера Schwab требуется complete capture за дату отчёта, а Feature Lab должен совпадать по SHA256 с текущим normalized snapshot.
+
+## 11. Macro Ops и first-release event studies
+
+- В реестре операций FRED/ALFRED обновляется еженедельно, OFAC и manifest QA — ежедневно; SEC exposure, сценарии, shock calibration и macro event study запускаются по dependency chain. Ежедневный QA намеренно не зависит от еженедельного FRED, но производные отчёты ждут успешного QA и актуальных доказательств.
+- Daily Operations проверяет не только cron, но и lineage артефактов: полный FRED не старше восьми дней, OFAC не старше 36 часов, актуальный QA и отчёты scenarios/calibration/event study, созданные не раньше QA. Успешный запуск job сам по себе не доказывает свежесть.
+- `scripts/build-macro-event-study.mts` измеряет реакции DGS10, WTI, broad USD и high-yield OAS на события OFAC за 1/5/21/63 observations. Используются только first-release observations; baseline должен быть известен на момент research eligibility события, а outcomes начинаются со следующего observation day.
+- Discovery и out-of-sample формируются хронологически 70/30, минимум пять событий для каждого опубликованного split. Mean, median и moving-block CI95 с 500 replicates сопровождаются vintage evidence по каждому событию.
+- Статусы `ready`, `partial` и `insufficient_events` описывают покрытие, а не предсказательную силу. Направленный прогноз, probability-engine promotion и production sync автоматически не выполняются. Полный протокол: `docs/MACRO_DATA.md`.

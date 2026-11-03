@@ -3,6 +3,7 @@ import type { OperationConfig, OperationsState } from "./operations-scheduler";
 import type { SchwabMarketSnapshot } from "./schwab-normalize";
 import type { SchwabFeatureReport } from "./schwab-features";
 import type { SchwabContextReport } from "./schwab-context";
+import { buildMacroHealth, type MacroOperationsArtifacts, type MacroHealthSummary } from "./macro-operations-health";
 
 export const DAILY_OPERATIONS_REPORT_JOB_ID = "daily-operations-report";
 const SCHEDULER_COMMAND = "schtasks /Run /TN AlphaEngine-Operations-Scheduler";
@@ -10,6 +11,7 @@ const SCHWAB_FETCH_COMMAND = "npx tsx worker/schwab-fetch.mts --universe researc
 const SCHWAB_FEATURE_COMMAND = "npx tsx worker/build-schwab-market-data.mts && npx tsx worker/schwab-features.mts";
 const SCHWAB_CONTEXT_COMMAND = "npx tsx worker/schwab-context.mts";
 const HOURLY_JOBS = new Set(["stocktwits-hourly", "schwab-context-hourly"]);
+const EMPTY_MACRO: MacroOperationsArtifacts = { fred: null, events: null, qa: null, scenarios: null, calibration: null, eventStudy: null };
 
 export type DailyCheckStatus = "ok" | "warning" | "error" | "pending";
 export interface DailyOperationCheck {
@@ -71,6 +73,7 @@ export interface DailyOperationsReport {
     contextGeneratedAt: string | null;
     contextErrors: number;
   };
+  macro: MacroHealthSummary;
   summary: {
     checksOk: number;
     checksWarning: number;
@@ -94,6 +97,7 @@ export interface DailyOperationsInput {
   snapshotSha256: string | null;
   features: SchwabFeatureReport | null;
   context: SchwabContextReport | null;
+  macro?: MacroOperationsArtifacts;
   dataMode?: "live" | "fixture";
 }
 
@@ -214,9 +218,11 @@ export function buildDailyOperationsReport(input: DailyOperationsInput): DailyOp
     schedulerStatus === "online" ? null : SCHEDULER_COMMAND,
   );
   const schwab = schwabChecks(input, nowMs, date);
+  const macro = buildMacroHealth(input.macro ?? EMPTY_MACRO, nowMs);
   const checks = [
     schedulerCheck,
     ...schwab.checks,
+    ...macro.checks,
     ...OPERATION_JOBS.filter((job) => job.id !== DAILY_OPERATIONS_REPORT_JOB_ID && job.mode === "scheduled" && input.config[job.id]?.enabled).map((job) => jobCheck(job, input, nowMs, date)),
   ];
   const jobs = OPERATION_JOBS.map((job): DailyOperationJobRow => {
@@ -268,6 +274,7 @@ export function buildDailyOperationsReport(input: DailyOperationsInput): DailyOp
       configurationSource: input.configurationSource,
     },
     schwab: schwab.summary,
+    macro: macro.summary,
     summary,
     checks,
     jobs,
@@ -286,6 +293,7 @@ export function dailyOperationsMarkdown(report: DailyOperationsReport): string {
     "",
     `- Scheduler: ${report.scheduler.status}; heartbeat: ${report.scheduler.heartbeatAt ?? "missing"}`,
     `- Schwab: ${report.schwab.tickersCapturedToday}/${report.schwab.tickersExpected} tickers captured today; latest capture: ${report.schwab.latestCapture ?? "missing"}`,
+    `- Macro QA: ${report.macro.qaStatus ?? "missing"}; derived reports current: ${report.macro.derivedCurrent}`,
     `- Checks: ${report.summary.checksOk} ok, ${report.summary.checksWarning} warning, ${report.summary.checksError} error, ${report.summary.checksPending} pending`,
     `- Jobs: ${report.summary.jobsDoneToday} completed today, ${report.summary.jobsFailedToday} failed today, ${report.summary.jobsEnabled} enabled`,
     "",

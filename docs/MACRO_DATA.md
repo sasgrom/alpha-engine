@@ -246,3 +246,62 @@ Scenario Lab uses calibrated presets when present:
 - `Extreme p99`.
 
 Without calibration it falls back to illustrative presets. Percentiles are not directional forecasts. The evidence inspector includes p50/p90 confidence intervals when available.
+
+## 13. Macro Ops scheduling and health evidence
+
+The operations registry automates the existing local macro pipeline without adding production collection:
+
+| Job | Trigger | Purpose |
+|---|---|---|
+| `macro-fred-weekly` | Sunday 05:30 | Refresh all FRED/ALFRED vintages and raw yearly chunks |
+| `macro-events-daily` | Daily 05:40 | Merge the latest OFAC Recent Actions page |
+| `macro-manifest-qa` | Daily 05:55 | Audit hashes, rows, required coverage and availability |
+| `company-exposure-evidence` | After `research-factors` | Rebuild aligned company exposure evidence |
+| `pilot-exposure-evidence` | Daily 06:05 | Refresh five pilots from SEC companyfacts |
+| `macro-scenarios` | After QA + both evidence reports | Recompute Scenario Lab baselines and impacts |
+| `shock-calibration` | After QA | Recompute historical shock distributions and CIs |
+| `macro-event-study` | After QA | Recompute the first-release OFAC event study |
+
+`macro-manifest-qa` deliberately has no parent dependency. A weekly FRED refresh must not block daily OFAC QA through the scheduler's 48-hour dependency freshness window. Derived builders still require successful current QA and evidence parents.
+
+Daily Operations reads artifact evidence in addition to scheduler status:
+
+- FRED must cover every registered series and be no more than eight days old;
+- OFAC must be no more than 36 hours old and contain parsed events;
+- QA must not fail or predate current inputs;
+- scenarios, calibration and event study must not predate QA;
+- `partial` or `insufficient_events` remains visible as a research coverage warning, not a false healthy completion.
+
+Manual chain:
+
+```powershell
+npx tsx worker/macro-fred-fetch.mts --group all
+npx tsx worker/macro-events-fetch.mts --pages 1
+npx tsx worker/macro-manifest-qa.mts
+npx tsx scripts/build-company-exposure.mts --universe research-universe-51.json
+npx tsx scripts/build-pilot-exposure-evidence.mts
+npx tsx scripts/build-macro-scenarios.mts --macro-root D:\research\alpha-engine\macro
+npx tsx scripts/build-shock-calibration.mts --macro-root D:\research\alpha-engine\macro
+npx tsx scripts/build-macro-event-study.mts --macro-root D:\research\alpha-engine\macro
+npx tsx scripts/build-daily-operations-report.mts --macro-root D:\research\alpha-engine\macro
+```
+
+## 14. First-release OFAC macro event study
+
+```powershell
+npx tsx scripts/build-macro-event-study.mts --macro-root D:\research\alpha-engine\macro
+```
+
+The event study measures signed changes in `DGS10`, `DCOILWTICO`, `DTWEXBGS` and `BAMLH0A0HYM2` over 1, 5, 21 and 63 observations after eligible OFAC publications. Rates and credit use decimal absolute differences; oil and USD use log returns.
+
+Availability policy is stricter than calibration:
+
+1. Only one **first-release** observation is retained per economic period. Later revisions are never substituted.
+2. Events must satisfy `publishedAt`, `researchEligibleAt` and `ingestedAt <= asOf`.
+3. The baseline must have been available by the event's `researchEligibleAt`.
+4. Outcomes start on the first observation **after** the publication day, never on an ambiguous same-day window.
+5. Outcomes and source rows must be available by the report `asOf`; events ingested after that cutoff are excluded.
+
+Events are split chronologically into the earliest 70% `discovery` and latest 30% `out_of_sample`. A summary is emitted only with at least five observations in the relevant split. Mean, median and a 500-replicate moving-block bootstrap CI95 are reported for each series, horizon and split; blocks contain at most three events.
+
+Outputs are `public/reports/macro-event-study.json` and `.md`, including per-event baseline and outcome vintage IDs. `ready`, `partial` and `insufficient_events` describe coverage only. These measurements are not directional forecasts, trading signals or a promoted probability model.

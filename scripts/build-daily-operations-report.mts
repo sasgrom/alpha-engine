@@ -6,6 +6,7 @@ import { loadOperationConfig, loadOperationsState, OPERATIONS_CONFIG_FILE } from
 import { sha256Text, type SchwabMarketSnapshot } from "../worker/lib/schwab-normalize";
 import type { SchwabFeatureReport } from "../worker/lib/schwab-features";
 import type { SchwabContextReport } from "../worker/lib/schwab-context";
+import type { MacroOperationsArtifacts } from "../worker/lib/macro-operations-health";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 
 const arg = (name: string) => { const index = process.argv.indexOf(name); return index > -1 ? process.argv[index + 1] : null; };
@@ -22,6 +23,15 @@ function readJson<T>(file: string, valid: (value: any) => boolean): T | null {
 const snapshot = readJson<SchwabMarketSnapshot>(path.resolve("public/reports/schwab-market-data.json"), (value) => value?.schemaVersion === 1 && Array.isArray(value.files) && !!value.coverage && !!value.qa);
 const features = readJson<SchwabFeatureReport>(path.resolve("public/reports/schwab-features.json"), (value) => value?.schemaVersion === 1 && typeof value.sourceSnapshotSha256 === "string" && !!value.coverage);
 const context = readJson<SchwabContextReport>(path.resolve("public/reports/schwab-context.json"), (value) => value?.schemaVersion === 1 && !!value.coverage);
+const macroRoot = path.resolve(arg("--macro-root") ?? (process.platform === "win32" ? "D:\\research\\alpha-engine\\macro" : "worker/cache/macro"));
+const macro: MacroOperationsArtifacts = {
+  fred: readJson<MacroOperationsArtifacts["fred"]>(path.join(macroRoot, "manifest-fred.json"), (value) => value?.schemaVersion === 1 && Array.isArray(value.entries)),
+  events: readJson<MacroOperationsArtifacts["events"]>(path.join(macroRoot, "manifest-events.json"), (value) => value?.schemaVersion === 1 && Array.isArray(value.pages)),
+  qa: readJson<MacroOperationsArtifacts["qa"]>(path.resolve("worker/.runs/macro-manifest-qa.json"), (value) => value?.schemaVersion === 1 && typeof value.status === "string"),
+  scenarios: readJson<MacroOperationsArtifacts["scenarios"]>(path.resolve("public/reports/macro-scenarios.json"), (value) => value?.schemaVersion === 1),
+  calibration: readJson<MacroOperationsArtifacts["calibration"]>(path.resolve("public/reports/shock-calibration.json"), (value) => value?.schemaVersion === 1 && Array.isArray(value.calibrations)),
+  eventStudy: readJson<MacroOperationsArtifacts["eventStudy"]>(path.resolve("public/reports/macro-event-study.json"), (value) => value?.schemaVersion === 1 && !!value.events),
+};
 const report = buildDailyOperationsReport({
   now,
   date,
@@ -32,6 +42,7 @@ const report = buildDailyOperationsReport({
   snapshotSha256: snapshot ? sha256Text(JSON.stringify(snapshot)) : null,
   features,
   context,
+  macro,
   dataMode: "live",
 });
 const markdown = dailyOperationsMarkdown(report);

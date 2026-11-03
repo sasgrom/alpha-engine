@@ -19,6 +19,8 @@ const checks: Check[] = [
     present: false,
     action: `npx tsx worker/macro-fred-fetch.mts --series ${seriesId}`,
   })),
+  { id: "shock-calibration", file: "public/reports/shock-calibration.json", required: false, present: false, action: "npx tsx scripts/build-shock-calibration.mts --macro-root D:\\research\\alpha-engine\\macro" },
+  { id: "macro-event-study", file: "public/reports/macro-event-study.json", required: false, present: false, action: "npx tsx scripts/build-macro-event-study.mts --macro-root D:\\research\\alpha-engine\\macro" },
   { id: "production-bundle", file: "dist/public/index.html", required: false, present: false, action: "npm run build" },
 ];
 const evaluated = checks.map((check) => ({ ...check, present: existsSync(check.file) }));

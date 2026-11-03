@@ -88,13 +88,15 @@ function latestByPeriod(rows: NormalizedMacroPoint[], asOf: string): NormalizedM
   }
   return [...byPeriod.values()].sort((a, b) => a.observationPeriod.localeCompare(b.observationPeriod));
 }
-function decimalRate(point: NormalizedMacroPoint): number {
+/** Convert a FRED rate observation to the decimal unit used by scenario and event-study calculations. */
+export function decimalRate(point: NormalizedMacroPoint): number {
   const unit = point.unit.trim().toLowerCase();
   if (unit === "percent" || unit === "%") return point.value! / 100;
   if (unit === "decimal" || unit === "ratio") return point.value!;
   throw new Error(`Unsupported rate unit for ${point.seriesId}: ${point.unit}`);
 }
-function delta(current: NormalizedMacroPoint, previous: NormalizedMacroPoint, channel: CalibrationChannel): number | null {
+/** Signed absolute rate/credit change or oil/USD log return between two observations. */
+export function delta(current: NormalizedMacroPoint, previous: NormalizedMacroPoint, channel: CalibrationChannel): number | null {
   if (channel === "rates" || channel === "credit") return decimalRate(current) - decimalRate(previous);
   return previous.value! > 0 && current.value! > 0 ? Math.log(current.value! / previous.value!) : null;
 }

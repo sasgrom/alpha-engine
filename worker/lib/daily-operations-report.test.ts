@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { OPERATION_JOBS } from "../../contracts/operations";
+import { MACRO_SERIES } from "./macro-sources";
 import { buildDailyOperationsReport, dailyOperationsMarkdown, type DailyOperationsInput } from "./daily-operations-report";
 import { defaultOperationConfig, type OperationRun, type OperationsState } from "./operations-scheduler";
 import type { SchwabMarketSnapshot } from "./schwab-normalize";
@@ -49,6 +50,14 @@ const input = (): DailyOperationsInput => ({
   snapshotSha256: "snapshot-hash",
   features: features(),
   context: context(),
+  macro: {
+    fred: { generatedAt: "2026-11-03T05:30:00.000Z", entries: MACRO_SERIES.map((series) => ({ seriesId: series.seriesId, status: "complete" })) },
+    events: { generatedAt: "2026-11-03T05:40:00.000Z", events: 47 },
+    qa: { generatedAt: "2026-11-03T05:55:00.000Z", status: "pass", errors: 0, warnings: 0 },
+    scenarios: { generatedAt: "2026-11-03T06:10:00.000Z" },
+    calibration: { generatedAt: "2026-11-03T06:11:00.000Z", calibrations: [{ status: "ready" }] },
+    eventStudy: { generatedAt: "2026-11-03T06:12:00.000Z", status: "ready", events: { eligible: 47, withAnyObservation: 40 } },
+  },
 });
 
 describe("daily operations report", () => {

@@ -1599,3 +1599,11 @@ Operator manual: `docs/MACRO_DATA.md`.
 - Rebuild on demand with `npx tsx scripts/build-daily-operations-report.mts`. The registry also schedules it at 07:20 local home time after the morning jobs.
 - Outputs are `public/reports/daily-operations.json` and `.md`; an existing `dist/public/reports` copy is updated without an application rebuild. These machine-specific health artifacts are ignored by Git and remain local unless separately reviewed for delivery.
 - A completed cron job does not prove fresh evidence. Every expected Schwab ticker must have a complete capture for the report date, and Feature Lab must match the current normalized snapshot SHA256.
+
+## 11. Macro Ops and first-release event studies
+
+- The operations registry schedules FRED/ALFRED weekly, OFAC and manifest QA daily, SEC exposure refresh, and dependency-triggered scenarios, shock calibration and macro event studies. Daily QA deliberately has no weekly FRED parent; derived reports still wait for successful QA and evidence.
+- Daily Operations validates artifact lineage: complete FRED coverage within eight days, OFAC within 36 hours, current QA, and scenario/calibration/event-study outputs that do not predate QA. A successful cron run alone is not freshness evidence.
+- `scripts/build-macro-event-study.mts` measures OFAC responses for DGS10, WTI, broad USD and high-yield OAS over 1/5/21/63 observations. It uses first-release observations only, requires the baseline to be known at event eligibility and starts outcomes on the next observation day.
+- Discovery and out-of-sample sets are chronological 70/30, with at least five events per reported split. Mean, median and 500-replicate moving-block CI95 are shown with per-event vintage evidence.
+- Event-study `ready`, `partial` and `insufficient_events` describe coverage, not predictive value. No directional forecast, probability-engine promotion or production synchronization follows automatically. Full protocol: `docs/MACRO_DATA.md`.

@@ -101,8 +101,9 @@ lines.push(
   "3. Open Activity for failed jobs; inspect the log rather than blindly rerunning the whole universe. Use the Schwab Feature Lab chain when raw chains, normalized data and features must be refreshed together.",
   "4. Check `/market-data` coverage, manifest errors and duplicate OSI counts after the Schwab chain.",
   "5. Check Analytics and Expectations freshness after report builders and the production UI rebuild.",
-  "6. Run dry-review jobs before any production transfer. Apply commands remain in the terminal and are never cron jobs.",
-  "7. Do not start both dev and production web servers. Do not start a second scheduler or re-enable legacy overlapping tasks.",
+  "6. Check Macro Ops artifact lineage: weekly FRED coverage, daily OFAC and QA, then scenarios, shock calibration and the first-release event study. Do not require daily FRED collection merely to make the weekly schedule appear healthy.",
+  "7. Run dry-review jobs before any production transfer. Apply commands remain in the terminal and are never cron jobs.",
+  "8. Do not start both dev and production web servers. Do not start a second scheduler or re-enable legacy overlapping tasks.",
   "",
 );
 writeFileSync("docs/OPERATIONS.md", `${lines.join("\n").trimEnd()}\n`);
