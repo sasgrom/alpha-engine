@@ -1,6 +1,6 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-03T08:10:14.238Z",
+ "generatedAt": "2026-11-03T09:10:14.628Z",
  "provider": "schwab",
  "coverage": {
   "expected": 58,
@@ -24280,349 +24280,349 @@
  "files": [
   {
    "kind": "hours/equity",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "c70e7f998f95838622b12abb78e2bac329c404b358801bc6474a019a8811cfe8",
    "status": "complete"
   },
   {
    "kind": "hours/option",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "e52d2848690011f793c23101fb9ca3d09b4f9851faf4e1a77876734aec7e46ed",
    "status": "complete"
   },
   {
    "kind": "movers/SPX",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
-   "sourceHash": "23f924ebe87b83b25a216497dfa24041d497601be5353ab73bb287aaf18c99b3",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
+   "sourceHash": "1a142eeb3ecd4047f1caecbed82cfa25fde34f55796ed6e984e6d87440738937",
    "status": "complete"
   },
   {
    "kind": "movers/COMPX",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
-   "sourceHash": "7a714f56b2bbb74b7bde4b74fdb5329817e004977a41815675dc9c153a874537",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
+   "sourceHash": "4fbb5918254ae61ba53fd53cf63917e37873f3cc4c2dcaefd7d0f2fa775e9547",
    "status": "complete"
   },
   {
    "kind": "movers/DJI",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
-   "sourceHash": "21ff61587b5f0ccbaf2ae8f175d4d7981a6a663187a7b1df49b69396fe612468",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
+   "sourceHash": "3aa0747ea74c32c8cef8e5d45b8948b225f0c284888aed331faea0e7846321ad",
    "status": "complete"
   },
   {
    "kind": "intraday/AAPL",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "05a8065bdc7fe7bacc5a9211bc5457156c0a2bbacc4a8944882bb8170fe76117",
    "status": "complete"
   },
   {
    "kind": "intraday/SPY",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "fee3c9b5e4e677c7d77ad76c7e60b0e477eee315302c4e63f038babb6d4cbd64",
    "status": "complete"
   },
   {
    "kind": "instrument/NVDA",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "67233de32c267c67483c13f5bac781ffa4ff0687c0c21ff0acba37306b9c6683",
    "status": "complete"
   },
   {
    "kind": "instrument/AMD",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "ed27c2e54299abd031308bec692df246915dddc0152638695b248910b9b54720",
    "status": "complete"
   },
   {
    "kind": "instrument/INTC",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "8e18a484464dbec76f090be960905b88ac5e041e43f26d7dc79c892f69f50523",
    "status": "complete"
   },
   {
    "kind": "instrument/PLTR",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "4d39b791abdfad92d57a6e619e3592bc118042d645bf76bd529d772f75edb4e5",
    "status": "complete"
   },
   {
    "kind": "instrument/META",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "9bd8de373ee9e000acd952a8b6981f7a8e482c401fa2031c0be2c3ddd30d7d00",
    "status": "complete"
   },
   {
    "kind": "instrument/NFLX",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "b3164af4693448a7643829dad6b43c4741324d9c6affb1d661fa5284816334db",
    "status": "complete"
   },
   {
    "kind": "instrument/AMZN",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "f7c72ad06a6aa03e022fac015147a0052a3acb5733041d2eaf0880ad0a36bb86",
    "status": "complete"
   },
   {
    "kind": "instrument/TSLA",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "901a3e38de868ef7cc0c8ea3a229f74740df5d1614deca59c055991956177750",
    "status": "complete"
   },
   {
    "kind": "instrument/NKE",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "3d101ee063600ad69a25b2e64524e7eb3febd24b20b6ec56a46dba1f4b43ae7f",
    "status": "complete"
   },
   {
    "kind": "instrument/LULU",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "6f80b876b735457e4217d9f9ab91760d6fc919e89c437d1d138041d5d902f349",
    "status": "complete"
   },
   {
    "kind": "instrument/RCL",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "8fd3650160d1a6752ffb090a23e3c89bc197df1962d8fa9239a81907bc5b5d58",
    "status": "complete"
   },
   {
    "kind": "instrument/GS",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "14a22f7f5a27af10476cbd7e938dd24c4985530a8a43fe5f8b369a8df6de3dce",
    "status": "complete"
   },
   {
    "kind": "instrument/COF",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "f1e55145283537deddf1951fb12cc468f40cabdf36804b8a011ecfe8c11213ae",
    "status": "complete"
   },
   {
    "kind": "instrument/UNH",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "ee880a2fd18a1c9ca61feaec81494d637f78eda05c568ba00dab0ae7d789a7d0",
    "status": "complete"
   },
   {
    "kind": "instrument/PFE",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "394eadc8cbe1248cf8363987ffd71d15c35a9e0ba2cda060826cbe3811eec800",
    "status": "complete"
   },
   {
    "kind": "instrument/FCX",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "42f74de5709425111a47e9d755a1e1742df3b3158db5b402aebe16bca0825e3c",
    "status": "complete"
   },
   {
    "kind": "instrument/BA",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "892a643a6f5d197e4d974341939879ac8dbd8beba38fca49b9ce66a4ae5202f9",
    "status": "complete"
   },
   {
    "kind": "instrument/PLD",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "58e8570f96ddcfbc084e511c03cac9050eac7d6f5338a7a12b483849c9edbe6b",
    "status": "complete"
   },
   {
    "kind": "instrument/NEE",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "aa374a5635044a6cec424e781e4a4ab70706356eda01c749a0ea00e6788c7a03",
    "status": "complete"
   },
   {
    "kind": "instrument/MSFT",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "e6ffd1fff9c5c65b9e3dc7f769c043c8ba682c26c945727f08581fa76d5be2c7",
    "status": "complete"
   },
   {
    "kind": "instrument/AVGO",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "92f091a64ed282e757d890361a95623518279af1337e8a0f98c5627de0059c99",
    "status": "complete"
   },
   {
    "kind": "instrument/ANET",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "5858db1bc57eb79cbd60a09b12c38fdf5e292ca733e2e9730b03ffc77838a4c5",
    "status": "complete"
   },
   {
    "kind": "instrument/MU",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "c70dd41ed678c31d02aacfc32ad05f07567861fed743cba61f328e2dcf637bc9",
    "status": "complete"
   },
   {
    "kind": "instrument/SMCI",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "ffe5882404f901c1d62da2e97f3b62c424d991698232246d76eae4884a8e723c",
    "status": "complete"
   },
   {
    "kind": "instrument/FSLR",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "f4c995ab5910febe9ecb0316d57e4c231dd184826357e781cc0519c767a88408",
    "status": "complete"
   },
   {
    "kind": "instrument/MRNA",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "015a8d429fb3ac95b8aab0a1828f4f7d8b7aa65ec7781fe9d6e373bda4e69981",
    "status": "complete"
   },
   {
    "kind": "instrument/LLY",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "f084e229166d5727d531e6b30e6760a41907a1ba1563502d286cc6bf1f981f9c",
    "status": "complete"
   },
   {
    "kind": "instrument/DAL",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "cca83cb35c35859ed0d742508db85a718bff90dfce273eb29c1fadc22c301c09",
    "status": "complete"
   },
   {
    "kind": "instrument/DASH",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "ba9df682dfc097de7efd4308cb2c0744b8ac2d489b9ceadb5ad4af3927350f22",
    "status": "complete"
   },
   {
    "kind": "instrument/HD",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "483b67351c487889de105ff549c0a0635ef3b0b3300127beafa9c64e148e21ea",
    "status": "complete"
   },
   {
    "kind": "instrument/CAT",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "c6eb4356d618946ba782265fd802041ea7fa03496475a73d1d9b3f4725f835bc",
    "status": "complete"
   },
   {
    "kind": "instrument/AMT",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "865632bb4c41dce96971c0e446acf97a5a14e49b9c76d53cdf7ce7289b959f77",
    "status": "complete"
   },
   {
    "kind": "instrument/JPM",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "9ca8f09ea3a272941f2e0e844cb56a4d1e1877b71e1aaf9bf64187aa2732772e",
    "status": "complete"
   },
   {
    "kind": "instrument/KMI",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "c7cc755394bacc4c4b6f14d7de9bceb32f33ff7790be7e7f086f79b66164f942",
    "status": "complete"
   },
   {
    "kind": "instrument/AAPL",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "ee7de2adfdf9518d2577cdd851ef79f266f11cd4ba6e11e830ec53bccf6c6eef",
    "status": "complete"
   },
   {
    "kind": "instrument/IBM",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "d767eec7666583f07286f8edd485580ca8e398f8667d31c2bd787a93aa6cee16",
    "status": "complete"
   },
   {
    "kind": "instrument/LMT",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "af38f4507d1c01f7a109ca74a29705ef2694fee4485faf52dc6d7bc4f4ba6720",
    "status": "complete"
   },
   {
    "kind": "instrument/T",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "832880d534ee34ab11afef9856c211a4105bd8946b740cc52da1bdec7e341dd2",
    "status": "complete"
   },
   {
    "kind": "instrument/GOOGL",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "c86272e702399d294f37e26a8566de2c554ee7044d1ef0703878e7c9fe2365b2",
    "status": "complete"
   },
   {
    "kind": "instrument/JNJ",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "00b4696f5147c750ceee733573fc821711e3146ca463cd4290e58a39ea134d6f",
    "status": "complete"
   },
   {
    "kind": "instrument/PG",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "3c7a32f70f8979e325704bba882e4efd3114465a953c98f875df0bbea9838f70",
    "status": "complete"
   },
   {
    "kind": "instrument/WMT",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "3d3c5a0e4d724d06b9f2c266f2d75b85fd9c2e9fbc1605e05274a573fadff24f",
    "status": "complete"
   },
   {
    "kind": "instrument/CVX",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "e4688d0a3d31571a1f4c1aeaeebc4cc7f08ff98ab1efa1e4f2c222970143ab43",
    "status": "complete"
   },
   {
    "kind": "instrument/MA",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "737b91924f3310149b347fa7e7a5d9e94516ee2d36cde59509c2699930767ca6",
    "status": "complete"
   },
   {
    "kind": "instrument/V",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "55d70deee58ca9a308bb54e43c71cb8675cab08c755da9c46c5d96fc36115972",
    "status": "complete"
   },
   {
    "kind": "instrument/COST",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "b9594e39baa065f20caf1409ca0a0cb9e2ea613313574a52a2ac7699e204e9e6",
    "status": "complete"
   },
   {
    "kind": "instrument/AIG",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "135141159812d172de7285547db8a42f5054f43b32fb3dfdfde857f92c95166a",
    "status": "complete"
   },
   {
    "kind": "instrument/COP",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "20e6e084cbf0ee42da5edcb2376a08c0604b5107c939179560da459bca7240ed",
    "status": "complete"
   },
   {
    "kind": "instrument/LIN",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "ce3f1707cad900a2640fea5bdd61ff5a624a3bfa0c6ac267a25ec718107b529b",
    "status": "complete"
   },
   {
    "kind": "instrument/RIVN",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "2b59cb8b7f29b8325eb44a5aaa04a7cb822c89c1fac155044433b7ec1a455bf5",
    "status": "complete"
   },
   {
    "kind": "instrument/ENLT",
-   "capturedAt": "2026-11-03T08:10:11.650Z",
+   "capturedAt": "2026-11-03T09:10:11.729Z",
    "sourceHash": "52d5f0ea077ff187007a53495ac86a3072b4d17362925a4909c5e40105225484",
    "status": "complete"
   }
