@@ -116,3 +116,73 @@ describe("daily operations report", () => {
     expect(check?.jobId).toBe("sp500-facts-daily");
   });
 });
+
+describe("schedule-aware Schwab evidence", () => {
+  const scheduledInput = (now: string): DailyOperationsInput => {
+    const value = input();
+    value.now = now;
+    value.state.heartbeatAt = new Date(Date.parse(now) - 5000).toISOString();
+    value.state.nextRuns["schwab-fetch-daily"] = "2026-11-04T12:00:00.000Z";
+    value.state.lastRuns = Object.fromEntries(OPERATION_JOBS.filter((job) => job.defaultEnabled && job.mode === "scheduled").map((job) => [job.id, {
+      ...run(job.id), startedAt: "2026-11-04T07:10:00.000Z", endedAt: "2026-11-04T07:15:00.000Z",
+    }]));
+    value.state.lastRuns["schwab-fetch-daily"] = {
+      ...run("schwab-fetch-daily"), startedAt: "2026-11-03T12:00:14.096Z", endedAt: "2026-11-03T12:00:16.171Z",
+    };
+    value.snapshot!.generatedAt = "2026-11-03T12:00:45.440Z";
+    for (const file of value.snapshot!.files) file.capturedAt = "2026-11-03T00:10:50.992Z";
+    value.snapshot!.coverage.latestCapture = "2026-11-03T00:10:50.992Z";
+    value.features!.generatedAt = "2026-11-03T12:01:00.904Z";
+    value.context!.generatedAt = new Date(Date.parse(now) - 15 * 60_000).toISOString();
+    return value;
+  };
+
+  it("keeps a pre-schedule missing capture pending with a readable previous complete snapshot", () => {
+    const report = buildDailyOperationsReport(scheduledInput("2026-11-04T08:32:00.000Z"));
+    const check = report.checks.find((item) => item.id === "schwab-daily-evidence");
+    expect(check?.status).toBe("pending");
+    expect(check?.detail).toContain("awaiting_scheduled_capture");
+    expect(check?.detail).toContain("2026-11-04T12:00:00.000Z");
+    expect(report.schwab.tickersCapturedToday).toBe(0);
+    expect(report.status).not.toBe("critical");
+    expect(report.status).toBe("degraded");
+  });
+
+  it("turns a missed scheduled slot into an error after the documented grace period", () => {
+    const report = buildDailyOperationsReport(scheduledInput("2026-11-04T13:01:00.000Z"));
+    const check = report.checks.find((item) => item.id === "schwab-daily-evidence");
+    expect(check?.status).toBe("error");
+    expect(check?.detail).toContain("60-minute grace period");
+    expect(report.status).toBe("critical");
+  });
+
+  it("marks full current-day coverage ok", () => {
+    const value = scheduledInput("2026-11-04T08:32:00.000Z");
+    for (const file of value.snapshot!.files) file.capturedAt = "2026-11-04T08:00:00.000Z";
+    value.snapshot!.generatedAt = "2026-11-04T08:30:00.000Z";
+    value.snapshot!.coverage.latestCapture = "2026-11-04T08:00:00.000Z";
+    value.features!.generatedAt = "2026-11-04T08:31:00.000Z";
+    value.state.nextRuns["schwab-fetch-daily"] = "2026-11-05T12:00:00.000Z";
+    const report = buildDailyOperationsReport(value);
+    expect(report.checks.find((item) => item.id === "schwab-daily-evidence")?.status).toBe("ok");
+    expect(report.schwab.tickersCapturedToday).toBe(2);
+  });
+
+  it("does not let readable previous chains or same-day normalization hide a missed current capture", () => {
+    const value = scheduledInput("2026-11-04T13:01:00.000Z");
+    value.snapshot!.generatedAt = "2026-11-04T12:30:00.000Z";
+    const report = buildDailyOperationsReport(value);
+    expect(report.schwab.tickersCompleted).toBe(2);
+    expect(report.schwab.tickersCapturedToday).toBe(0);
+    expect(report.checks.find((item) => item.id === "schwab-daily-evidence")?.status).toBe("error");
+  });
+
+  it("keeps hourly context success independent from daily pending or missed evidence", () => {
+    const before = buildDailyOperationsReport(scheduledInput("2026-11-04T08:32:00.000Z"));
+    expect(before.checks.find((item) => item.id === "schwab-context-freshness")?.status).toBe("ok");
+    expect(before.checks.find((item) => item.id === "schwab-daily-evidence")?.status).toBe("pending");
+    const after = buildDailyOperationsReport(scheduledInput("2026-11-04T13:01:00.000Z"));
+    expect(after.checks.find((item) => item.id === "schwab-context-freshness")?.status).toBe("ok");
+    expect(after.checks.find((item) => item.id === "schwab-daily-evidence")?.status).toBe("error");
+  });
+});

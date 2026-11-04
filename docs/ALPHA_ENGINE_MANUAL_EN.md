@@ -1651,6 +1651,7 @@ Operator manual: `docs/MACRO_DATA.md`.
 - Rebuild on demand with `npx tsx scripts/build-daily-operations-report.mts`. The registry also schedules it at 07:20 local home time after the morning jobs.
 - Outputs are `public/reports/daily-operations.json` and `.md`; an existing `dist/public/reports` copy is updated without an application rebuild. These machine-specific health artifacts are ignored by Git and remain local unless separately reviewed for delivery.
 - A completed cron job does not prove fresh evidence. Every expected Schwab ticker must have a complete capture for the report date, and Feature Lab must match the current normalized snapshot SHA256.
+- Full daily options chains and hourly Schwab Context are independent evidence. With an online scheduler, a valid same-day next run and a readable previous complete snapshot, zero current captures is `pending` / `awaiting_scheduled_capture` through the scheduled run plus a **60-minute grace period** (`SCHWAB_CAPTURE_GRACE_MS`). After that grace period, missing capture is an error. Partial or absent coverage is never `ok`; hourly context success cannot mask daily missing evidence. Pending checks make overall health `degraded`, not `ok`, and do not create a manual collection request before the scheduled slot.
 
 ## 11. Macro Ops and first-release event studies
 

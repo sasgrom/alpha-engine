@@ -1657,6 +1657,7 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 - Ручная пересборка: `npx tsx scripts/build-daily-operations-report.mts`. В реестре также включён ежедневный запуск в 07:20 по локальному времени домашней машины после утренних задач.
 - Результаты: `public/reports/daily-operations.json` и `.md`; существующая копия в `dist/public/reports` обновляется без пересборки приложения. Машинные health-артефакты исключены из Git и остаются локальными до отдельного reviewed delivery.
 - Успешный cron не доказывает свежесть данных. Для каждого ожидаемого тикера Schwab требуется complete capture за дату отчёта, а Feature Lab должен совпадать по SHA256 с текущим normalized snapshot.
+- Полный daily options snapshot и hourly Schwab Context — независимые evidence. При online scheduler, валидном same-day next run и читаемом previous complete snapshot нулевой capture сегодня обозначается `pending` / `awaiting_scheduled_capture` до scheduled run плюс **60-минутный grace period** (`SCHWAB_CAPTURE_GRACE_MS`). После grace period отсутствие capture — error. Partial или missing coverage никогда не `ok`; успех hourly context не маскирует missing daily evidence. Pending checks делают overall health `degraded`, а не `ok`, и не создают manual collection request до scheduled slot.
 
 ## 11. Macro Ops и first-release event studies
 

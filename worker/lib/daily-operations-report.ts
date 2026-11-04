@@ -144,6 +144,8 @@ function jobCheck(job: OperationJob, input: DailyOperationsInput, nowMs: number,
   return baseCheck(job.id, job.name, "error", observedAt, last ? `No successful run today; latest status ${last.status}.` : "No scheduler run recorded.", job.command, job.id);
 }
 
+export const SCHWAB_CAPTURE_GRACE_MS = 60 * 60_000;
+
 function schwabChecks(input: DailyOperationsInput, nowMs: number, date: string): { checks: DailyOperationCheck[]; summary: DailyOperationsReport["schwab"] } {
   const { snapshot, features, context } = input;
   const files = snapshot?.files ?? [];
@@ -152,14 +154,29 @@ function schwabChecks(input: DailyOperationsInput, nowMs: number, date: string):
   const capturedToday = files.filter((file) => file.status === "complete" && sameDay(file.capturedAt, date)).length;
   const manifestErrors = snapshot?.qa.manifestErrors ?? 0;
   const latestCapture = snapshot?.coverage.latestCapture ?? null;
+  const nextRunAt = input.state.nextRuns["schwab-fetch-daily"] ?? null;
+  const nextRunMs = timestamp(nextRunAt);
+  const heartbeatAge = (nowMs - timestamp(input.state.heartbeatAt)) / 60_000;
+  const schedulerOnline = heartbeatAge >= 0 && heartbeatAge <= 1.5;
+  const previousCompleteSnapshot = expected > 0 && completed === expected && manifestErrors === 0;
+  const nextRunToday = sameDay(nextRunAt, date) && Number.isFinite(nextRunMs);
+  const awaitingCapture = schedulerOnline && previousCompleteSnapshot && nextRunToday && nowMs <= nextRunMs + SCHWAB_CAPTURE_GRACE_MS;
+  const pastCaptureGrace = nextRunToday && nowMs > nextRunMs + SCHWAB_CAPTURE_GRACE_MS;
   let dailyStatus: DailyCheckStatus = "error";
   let dailyDetail = "No normalized Schwab snapshot is available.";
   if (snapshot) {
     dailyDetail = `${capturedToday}/${expected} tickers captured today · ${completed}/${expected} readable latest chains · ${snapshot.coverage.contracts} contracts · ${manifestErrors} manifest errors.`;
     if (expected > 0 && capturedToday === expected && completed === expected && manifestErrors === 0) dailyStatus = "ok";
-    else if (capturedToday > 0 || sameDay(snapshot.generatedAt, date)) dailyStatus = "warning";
+    else if (pastCaptureGrace) {
+      dailyStatus = "error";
+      dailyDetail += ` · scheduled capture ${nextRunAt} is past the 60-minute grace period`;
+    } else if (capturedToday > 0) dailyStatus = "warning";
+    else if (awaitingCapture) {
+      dailyStatus = "pending";
+      dailyDetail = `awaiting_scheduled_capture · next full snapshot ${nextRunAt} with a 60-minute grace period · ${dailyDetail}`;
+    } else if (sameDay(snapshot.generatedAt, date)) dailyStatus = "warning";
   }
-  const dailyCheck = baseCheck("schwab-daily-evidence", "Schwab daily raw evidence", dailyStatus, latestCapture ?? snapshot?.generatedAt ?? null, dailyDetail, dailyStatus === "ok" ? null : SCHWAB_FETCH_COMMAND);
+  const dailyCheck = baseCheck("schwab-daily-evidence", "Schwab daily raw evidence", dailyStatus, latestCapture ?? snapshot?.generatedAt ?? null, dailyDetail, dailyStatus === "ok" || dailyStatus === "pending" ? null : SCHWAB_FETCH_COMMAND);
 
   const sourceCurrent = !!snapshot && !!features && !!input.snapshotSha256 && features.sourceSnapshotSha256 === input.snapshotSha256;
   let featureStatus: DailyCheckStatus = "error";
@@ -275,7 +292,7 @@ export function buildDailyOperationsReport(input: DailyOperationsInput): DailyOp
     generatedAt: input.now,
     date,
     dateBasis: "UTC",
-    status: summary.checksError > 0 ? "critical" : summary.checksWarning > 0 ? "degraded" : "ok",
+    status: summary.checksError > 0 ? "critical" : summary.checksWarning > 0 || summary.checksPending > 0 ? "degraded" : "ok",
     scheduler: {
       status: schedulerStatus,
       heartbeatAt,
