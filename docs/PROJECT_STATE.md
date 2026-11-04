@@ -104,7 +104,60 @@ The existing research-51 companyfacts job remains independent at 03:00 home loca
 5. **Atlas coverage:** add new documented exposure evidence instead of repeating runs or tuning thresholds.
 6. Production/security findings and the remaining audit queue.
 
-## 7. Where to look
+## 7. Deferred model and data strategy — after the current remediation tails
+
+The owner’s working hypothesis is a **pooled statistical law across companies**, not an independent physical model fitted separately to every company. That distinction determines how much history we actually need.
+
+### Default model family: pooled statistical regularities
+
+We may train and evaluate on a limited research universe that has complete evidence (currently research-51 for factors and research-universe-50 for Atlas) **without first collecting complete history for every other company**. This is valid only when the model is pooled: shared coefficients and allowed sector effects are learned on discovery data and frozen for out-of-sample evaluation. Company-specific intercepts or separately fitted company models are not part of this default.
+
+The hypothesis is not considered proven merely because 51 companies are available. Statistical power depends on independent companies, events, sectors and market regimes, not on a large row count created by repeatedly measuring the same observations.
+
+Required evaluation protocol:
+
+- discovery-fit pooled coefficients, with any sector levels learned only on discovery and frozen for OOS;
+- chronological OOS plus held-out companies, not only a time split of the same companies;
+- leave-one-sector-out and independent-company universes;
+- explicit model-complexity budget relative to effective independent observations;
+- simple pooled models first, with shrinkage/regularization rather than company-specific parameters;
+- availability-anchored evidence and honest `not_available_before` for sources that cannot be backfilled;
+- economic risk and OOS robustness, not only IC or a positive in-sample mean.
+
+### Forward-only insurance: S&P 500 collection
+
+Continue building S&P 500 forward history now, independently of the pooled-model decision. This is insurance against two possibilities: the pooled hypothesis later fails, or per-company analysis becomes necessary. Do not wait for that decision before collecting fresh evidence.
+
+This collection is bounded:
+
+- SEC companyfacts continues incrementally by CIK;
+- Schwab and Stocktwits expand only after source-hardening, security-identity and rate-budget checks;
+- per-source manifests record `historyStart`, `availabilityMode=backfill|forward_only`, captures, ingest and permanent-missing states;
+- there is no automatic expansion into research or production;
+- there is no immediate requirement to backfill every US ticker or to launch an LLM for the full universe.
+
+### When retrospective backfill is actually required
+
+Start a targeted retrospective backfill only for a documented research need:
+
+1. a company-specific model or case is explicitly approved;
+2. pooled coefficients or regime effects prove unstable across held-out companies or sectors and heterogeneity is a credible explanation;
+3. missing history prevents a required evaluation or creates a demonstrated bias;
+4. the source officially supports the required history and the API/rate budget allows it.
+
+If a source cannot provide retrospective data, record `forward_only` and its start date. Never substitute zero sentiment, zero exposure or a current snapshot for missing history.
+
+### Decision gates after the current remediation tails
+
+1. Finish the active 13F, macro vintage, Statements, Schwab correctness and production/security remediation queue.
+2. Run the pooled hypothesis evaluation with company, sector and chronological holdouts on the existing complete-evidence universe.
+3. If pooled results are robust across unseen companies, sectors and regimes with acceptable economic risk, expand research in reviewed batches. Long per-company history is not a prerequisite for this pooled model family.
+4. If pooled results fail or credible company-specific structure dominates, stop broad scaling and open a small per-company pilot. Backfill only the target companies and only to the depth required by that pilot.
+5. Use the already accumulating S&P 500 history as the fallback baseline; expand to the wider US universe organically when the model and evidence justify it.
+
+**Default now:** pooled statistical hypothesis plus full S&P 500 forward collection. **Not default now:** full retrospective backfill for every ticker or full-universe LLM processing.
+
+## 8. Where to look
 
 - **`/project-state`** — simple owner workflow, current block, data meanings and next queue.
 - **`/workers`** — registered jobs, current scheduler state, logs, Daily Operations and remediation.

@@ -1364,6 +1364,10 @@ Run: `npx tsx worker/edgar-fetch.mts --universe edgar-universe-35.json`, then `n
 
 **Operations graph.** The command is `npx tsx worker/facts-fetch.mts --universe edgar-universe.json`, cron `30 23 * * *` home local time, with one scheduler and a shared per-CIK cache/manifest. The job is independent of research-51: its failure never blocks facts-fetch-daily → research-series → research-factors, and it has no downstream research dependencies. Research universe 51, factor IC, Atlas and factor/model/regime universes are not expanded. Daily Operations reads the manifests for unique CIKs, refreshed/unchanged/failed/missing counts and the latest check time.
 
+### 4.46 Deferred model/data strategy: pooled law versus per-company models
+
+After the current remediation tails, the default hypothesis is a **pooled statistical law across companies**, not a separate physical model for every company. Full retrospective history for every ticker is therefore not an upfront requirement. Training and company/sector/time holdouts run on a limited complete-evidence universe, while S&P 500 forward collection continues as insurance for possible per-company models. Retrospective backfill is reserved for a documented research need and officially supported sources. Full contract and decision gates: [PROJECT_STATE.md §7](PROJECT_STATE.md#7-deferred-model-and-data-strategy--after-the-current-remediation-tails).
+
 ### F-04: realtime-window-aware macro vintage selection
 
 **Shared production contract.** `api/services/macro-vintage.ts` serves both `probability-engine.macroPriorAt` and the dashboard's `latestMacro(asOf?)`. For anchor `T`, an eligible row has `date <= T`, a non-null `realtimeStart <= T`, and `(realtimeEnd IS NULL OR realtimeEnd >= T)`. Each series independently selects one row ordered by `date DESC, realtimeStart DESC, id DESC` with `LIMIT 1`. The old MAX(date)-only prior join could select a revision published after the anchor and duplicate one observation across vintages; date-only dashboard ordering had the same availability defect.

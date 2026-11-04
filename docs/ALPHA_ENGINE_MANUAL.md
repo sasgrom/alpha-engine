@@ -1361,6 +1361,10 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 **Operations graph.** Команда `npx tsx worker/facts-fetch.mts --universe edgar-universe.json`, cron `30 23 * * *` домашнего локального времени, один scheduler и общий per-CIK cache/manifest. Job независим от research-51: его ошибка не блокирует facts-fetch-daily → research-series → research-factors и не имеет собственных downstream research dependencies. Research universe 51, IC, Atlas и factor/model/regime universes не расширяются. Daily Operations читает manifests для unique CIK, refreshed/unchanged/failed/missing counts и последнего check time.
 
+### 4.46 Deferred model/data strategy: pooled law против per-company models
+
+После завершения текущих remediation-хвостов основной проверяемой моделью является **pooled statistical law across companies**, а не отдельная физическая модель для каждой компании. Поэтому полная ретроспективная история по всем тикерам заранее не требуется. Обучение и OOB/company/sector/time holdouts выполняются на ограниченном universe с полным evidence, а S&P 500 forward collection продолжается как страховка на случай per-company моделей. Ретроспективный backfill запускается только для конкретной исследовательской необходимости и поддерживаемых источников. Полный контракт и decision gates: [PROJECT_STATE.md §7](PROJECT_STATE.md#7-deferred-model-and-data-strategy--after-the-current-remediation-tails).
+
 ### F-04: выбор macro vintage по realtime window
 
 **Единый production-контракт.** `api/services/macro-vintage.ts` используется обоими readers: `probability-engine.macroPriorAt` и dashboard `latestMacro(asOf?)`. Для якоря `T` допустима только строка с `date <= T`, non-null `realtimeStart <= T` и `(realtimeEnd IS NULL OR realtimeEnd >= T)`. Для каждой серии независимо выбирается одна строка в порядке `date DESC, realtimeStart DESC, id DESC` с `LIMIT 1`. Прежний MAX(date)-only join в prior мог выбрать ревизию, опубликованную после якоря, и вернуть дубли одной observation по разным vintages; date-only ordering на dashboard имел тот же дефект доступности.

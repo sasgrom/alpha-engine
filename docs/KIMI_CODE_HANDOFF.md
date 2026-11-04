@@ -367,3 +367,13 @@ Deliberately not automatic:
 - Added a separate completed phase for corrected-CIK collection and manifest verification, merged the duplicated S&P 500 mapping/collection bullets and clarified that Schwab's 04:00 home-local full-snapshot slot is pending before capture, not a failure.
 - Expanded the next queue so it no longer drops required work: reviewed 13F rebuild, macro vintage-data remediation, reviewed Statements netDebt/ROE/ROA historical rebuild/evaluation, F-15/F-16, Atlas coverage from new documented exposure evidence rather than repeated runs, and production/security findings.
 - Synchronized `docs/PROJECT_STATE.md`, `src/data/project-state.ts`, `docs/LLM_CONTEXT.md` and this handoff. No collector, rebuild, scheduler reload, migration or production action was performed.
+
+
+## 36. Deferred pooled-model and data strategy — 2026-11-04
+
+- Recorded the owner's refined hypothesis in `docs/PROJECT_STATE.md` §7 and linked it from RU/EN manuals and `docs/LLM_CONTEXT.md`. It is a deferred plan after the active remediation tails, not a replacement for the current 13F/macro/Statements/security queue.
+- Default: pooled statistical regularities across companies with shared discovery-fitted coefficients and frozen OOS evaluation. A limited complete-evidence universe is acceptable only with company/sector/chronological holdouts, availability discipline and an explicit complexity budget; 51 companies alone do not prove a universal law or sufficient statistical power.
+- Continue S&P 500 forward collection as insurance, with per-source `historyStart` and `availabilityMode=backfill|forward_only`. This does not automatically expand research or production and does not imply full-universe LLM work.
+- Do not launch full retrospective backfill for every ticker. Backfill only for an approved per-company case, credible pooled-model heterogeneity, demonstrated history bias or a required evaluation, and only when the source officially supports it. Otherwise mark `forward_only`, never zero sentiment/exposure or a current snapshot as history.
+- If pooled evidence passes company, sector and chronological holdouts with acceptable economic risk, expand research in reviewed batches. If it fails or company-specific structure dominates, stop broad scaling and run a small target-company pilot with only the required historical depth.
+- No collector, rebuild, model training, migration or production action was performed while recording this strategy.
