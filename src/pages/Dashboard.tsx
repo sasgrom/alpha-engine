@@ -74,6 +74,11 @@ export default function Dashboard() {
           jobs; users add coverage from the Universe page */}
       {isAdmin && (
       <div className="flex flex-wrap gap-2 mt-5">
+        <Link to="/project-state">
+          <Button size="sm" variant="outline" className="t-mono text-[11px] uppercase tracking-[0.12em] gap-2">
+            <ArrowRight size={13} /> Project state
+          </Button>
+        </Link>
         <Button
           size="sm"
           variant="outline"

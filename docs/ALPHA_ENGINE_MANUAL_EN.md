@@ -5,6 +5,8 @@
 > Document version: **v2-en** (iteration 3b state; English edition of the Russian master).
 >
 > **Current operations:** use `/workers` and [OPERATIONS.md](OPERATIONS.md) for the single scheduler, current commands, dependencies and startup instructions. Historical scheduler commands elsewhere in this manual are superseded.
+>
+> **Simple project map:** `/project-state` and [PROJECT_STATE.md](PROJECT_STATE.md) separate code readiness, actual data collection, research evidence and reviewed delivery. They also show the `home collection → local QA → owner review → reviewed production` workflow. A commit does not prove backfill completion, and a collector run does not authorize production sync.
 
 ---
 

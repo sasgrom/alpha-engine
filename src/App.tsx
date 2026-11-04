@@ -24,6 +24,7 @@ const Expectations = lazy(() => import("./pages/Expectations"));
 const MarketData = lazy(() => import("./pages/MarketData"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Wiki = lazy(() => import("./pages/Wiki"));
+const ProjectState = lazy(() => import("./pages/ProjectState"));
 
 /**
  * Route guard for owner-only instruments (Database browser, Sentiment Lab).
@@ -71,6 +72,7 @@ export default function App() {
       <Route path="/lab" element={<AdminOnly><Lab /></AdminOnly>} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/workers" element={<AdminOnly><Workers /></AdminOnly>} />
+      <Route path="/project-state" element={<AdminOnly><ProjectState /></AdminOnly>} />
       <Route path="/fundflows" element={<AdminOnly><FundFlows /></AdminOnly>} />
       <Route path="/analytics" element={<AdminOnly><Analytics /></AdminOnly>} />
       <Route path="/analytics/methodology" element={<AdminOnly><Methodology /></AdminOnly>} />

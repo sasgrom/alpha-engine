@@ -5,6 +5,8 @@
 > Версия документа: **v2** (итерация 2: documents + series + company page).
 >
 > **Текущая эксплуатация:** используйте `/workers` и [OPERATIONS.md](OPERATIONS.md) — единый scheduler, актуальные команды, зависимости и инструкции запуска. Исторические scheduler-команды ниже в этом руководстве заменены новым контуром.
+>
+> **Простая карта проекта:** `/project-state` и [PROJECT_STATE.md](PROJECT_STATE.md) разделяют готовность кода, фактический сбор данных, research evidence и reviewed delivery. Там же текущая схема `home collection → local QA → owner review → reviewed production`. Не считайте commit завершением backfill, а collector run — разрешением на production sync.
 
 ---
 
