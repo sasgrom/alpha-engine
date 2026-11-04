@@ -265,3 +265,12 @@ Deliberately not automatic:
 - New independent registry job `sp500-facts-daily` uses `edgar-universe.json` at `30 23 * * *` home local time, with no research-series/factors downstream. Its failure does not block the research-51 chain. Daily Operations now reports manifest-backed unique-CIK coverage. Research universe 51, IC, Atlas and factor/model/regime universes were not expanded.
 - Mocked SEC integration and registry/health tests pass 26/26; full gates passed: TypeScript, 116 test files / 633 tests and production build with chunk-size warnings only. Operations runbook, MACRO_DATA, RU/EN manuals, `docs/LLM_CONTEXT.md` and bundled manuals were updated through existing workflows. Real smoke and initial full backfill have not run yet.
 - Next: limited real smoke, then one controlled scheduler reload for the new registry and one canonical initial `sp500-facts-daily` request if smoke passes. No production action, migration or collector was performed during this code-ready block.
+
+
+## 26. Project State owner workflow — 2026-11-04
+
+- Added the owner-only read-only `/project-state` page and a Dashboard shortcut. It separates code readiness, actual home collection, research evidence and reviewed delivery instead of presenting one misleading completion percentage.
+- The page shows the reviewed-only flow `external sources → home collection → local evidence/QA → owner review → separate production decision`, the current S&P 500 block phases, live scheduler state when available, dated Daily Operations evidence, per-workflow destinations and the next correctness queue.
+- S&P 500 implementation and smoke/reload are durable confirmed facts; backfill and final evidence remain separate. The UI uses live home scheduler state when available and otherwise says that live state is unavailable rather than inferring collection completion.
+- Added `docs/PROJECT_STATE.md`, linked it from RU/EN manuals and refreshed `docs/LLM_CONTEXT.md`. Research remains on research-universe-51; production apply/deploy/sync and full-S&P research expansion remain owner-gated.
+- This block changes UI/tests/docs only. It does not run or modify the SEC backfill, collectors, local MySQL, migrations, production state or generated research evidence.

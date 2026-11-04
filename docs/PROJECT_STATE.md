@@ -1,0 +1,102 @@
+# Alpha Engine — Project State and Owner Workflow
+
+> Reviewed snapshot: **2026-11-04**. This document explains the operating model and the current implementation queue. Live collection status belongs to `/project-state` and `/workers`; do not treat this snapshot as a live manifest.
+
+## 1. One project, four kinds of progress
+
+Alpha Engine must not collapse these into one “done” percentage:
+
+| Layer | Question | Current reviewed state |
+|---|---|---|
+| **Code** | Is the implementation committed and tested? | F-01/F-02/F-03 complete. S&P 500 incremental collector committed as `f196acf`. F-04/F-05 are next. |
+| **Data** | Which collectors have actually run and what is their coverage? | Research-51 is covered. S&P 500 initial backfill is a separate run/evidence stage. Schwab, FRED and OFAC have independent schedules and evidence times. |
+| **Research** | Are derived artifacts current and strong enough to use? | Research-51 has 21,489 factor points and 51/51 coverage. IC changed after fresh facts. Event Study is ready; Atlas remains partial. No promotion is supported. |
+| **Delivery** | Has the owner reviewed and explicitly authorized a destination change? | Production apply/deploy/sync and full-S&P research expansion remain separate owner decisions. |
+
+## 2. Reviewed-only data flow
+
+```text
+SEC / Schwab / FRED / OFAC
+            │
+            ▼
+HOME COLLECTION
+raw archives + local MySQL
+            │
+            ▼
+AVAILABILITY + VINTAGE QA
+coverage, source hashes, first-filed/realtime anchors
+            │
+            ▼
+LOCAL RESEARCH + OWNER REVIEW
+factors, event study, Atlas, scenarios, dry-runs
+            │
+            ▼
+SEPARATE OWNER DECISION
+reviewed production sync only — never a collector default
+```
+
+There is no default direct-to-production collection. A successful collector run does not authorize production sync, a research-universe expansion or model promotion.
+
+## 3. Current implementation block — S&P 500 companyfacts
+
+The implementation and real smoke/scheduler reload are confirmed. The initial backfill must be reported separately from code readiness.
+
+Approximate phases, not an exact completion percentage:
+
+```text
+[done] Code + tests
+[done] Real smoke
+[done] Controlled scheduler reload
+[....] Initial backfill — inspect the live scheduler and per-CIK manifests
+[....] Coverage/health evidence + final documentation commit
+```
+
+Collection contract:
+
+- Snapshot: `edgar-universe.json`, GICS as of `2026-10-11`; 502 rows / **499 unique CIKs** after deduplication.
+- New job: independent `sp500-facts-daily`, **23:30 home local time**.
+- Destination: local raw cache and local MySQL only.
+- Per-CIK atomic manifests support resume and next-day retry of missing/failed companies.
+- The job does **not** parent `research-series` or `research-factors`; its failures do not block the research-51 chain.
+- The current S&P 500 snapshot is a **collection universe**, not historical point-in-time index membership.
+
+The existing research-51 companyfacts job remains independent at 03:00 home local time and feeds `research-series → research-factors`.
+
+## 4. What updates where
+
+| Workflow | Schedule / trigger | Destination | What it does not mean |
+|---|---|---|---|
+| S&P 500 companyfacts | 23:30 home local + reviewed initial backfill | Raw cache + local MySQL | Full-S&P research or production promotion |
+| Research-51 companyfacts | 03:00 home local | Local MySQL → canonical series → factors | A claim of predictive alpha |
+| Schwab REST/options | Daily collection; context has its own hourly job | Local raw snapshots, normalized reports and Feature Lab | Accounts, orders or production sync |
+| FRED | Weekly refresh plus artifact freshness checks | Local macro archive with realtime vintages | Automatic scenario/probability changes |
+| OFAC Recent Actions | Daily incremental collection | Local event archive | A complete historical OFAC archive or causal forecast |
+| Macro derived research | After successful QA and dependency gates | Local Scenarios, Calibration, Event Study and Atlas reports | Investable alpha or model promotion |
+| Production delivery | Separate reviewed owner action only | Explicit reviewed destination | Never a scheduled collector side effect |
+
+## 5. Research state that must stay visible
+
+- Latest reviewed factor rematerialization: **51 companies / 21,489 factor points / 51/51 current-universe coverage**.
+- Latest post-facts IC comparison: 2,840 → 2,834 rows, 58 changed Spearman values and 3 sign flips. This is changed descriptive evidence, not repaired alpha.
+- Macro Event Study: ready; 47/47 eligible events have outcomes.
+- Macro Transmission Atlas: partial; 1,462 records, 24 studies, only two OOS evaluations. Coverage improvement must come from documented exposure evidence, not repeated runs or parameter tuning.
+- Historical 13F events and probability/flow evaluations require a separate reviewed rebuild after F-03.
+
+## 6. Next queue
+
+1. **F-04:** realtime-window-aware macro vintage selection.
+2. **F-05:** MAX availability across composite exposure inputs and strict period alignment.
+3. Reviewed 13F, macro and exposure rebuilds, each separately authorized.
+4. Numeric correctness: F-10, F-11, F-15, F-16.
+5. Production/local boundary and access: F-06, F-07, F-13.
+6. Operational reliability and later audit findings.
+
+## 7. Where to look
+
+- **`/project-state`** — simple owner workflow, current block, data meanings and next queue.
+- **`/workers`** — registered jobs, current scheduler state, logs, Daily Operations and remediation.
+- **`/scenario-lab`** — availability-anchored scenarios and calibrated shocks.
+- **`docs/OPERATIONS.md`** — exact operational commands and job registry.
+- **`docs/PROJECT_AUDIT_2026-11-03.md`** — correctness/security findings and recommended order.
+
+If live home state is unavailable, the UI must say so. It must not invent a completion percentage, healthy status or successful collection run.

@@ -15,6 +15,7 @@ import {
   FileSearch,
   DatabaseZap,
   SlidersHorizontal,
+  Workflow,
 } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
@@ -51,6 +52,7 @@ const NAV = [
  * who guesses /admin gets FORBIDDEN from every procedure.
  */
 const ADMIN_NAV = { icon: ShieldCheck, label: "Admin", path: "/admin" };
+const PROJECT_STATE_NAV = { icon: Workflow, label: "Project State", path: "/project-state" };
 const WORKERS_NAV = { icon: Activity, label: "Operations", path: "/workers" };
 const FLOWS_NAV = { icon: Activity, label: "Fund flows", path: "/fundflows" };
 const ANALYTICS_NAV = { icon: Activity, label: "Analytics", path: "/analytics" };
@@ -299,7 +301,7 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
 
   /** Nav items shared by the desktop sidebar and the mobile drawer. */
   const renderNavItems = (onNavigate?: () => void) =>
-    [...NAV, ...(isAdmin ? [...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, SCENARIO_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, FLOWS_NAV, ADMIN_NAV] : [])].map((item) => {
+    [...NAV, ...(isAdmin ? [PROJECT_STATE_NAV, ...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, SCENARIO_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, FLOWS_NAV, ADMIN_NAV] : [])].map((item) => {
       const active = location.pathname === item.path;
       return (
         <Link
