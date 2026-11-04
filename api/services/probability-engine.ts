@@ -17,6 +17,7 @@ import {
   linearIdentityGroups,
   type Reliability,
 } from "./probability";
+import { normalizeFilingDate } from "../../worker/lib/thirteenf";
 
 export interface Bar { date: string; close: number }
 export interface Pt { factor: string; periodEnd: string; filedAt: string; value: number }
@@ -70,26 +71,86 @@ function plusDays(date: string, days: number): string {
   return new Date(Date.parse(`${date}T00:00:00Z`) + days * 86400_000).toISOString().slice(0, 10);
 }
 
-/** Extra streams. 13F flow is computed from share counts, not valueUsd, so a
- * price rally cannot masquerade as institutional buying. Availability uses the
- * legal 45-day lag until accession filingDate is persisted; quarter-end itself
- * is never used as availability. */
+export interface FundFlowBookAvailability {
+  fundCik: number;
+  quarterDate: string;
+  shares: number | null;
+  filingDate: string | null | undefined;
+}
+
+export interface FundFlowAvailabilityIssue {
+  quarterDate: string;
+  missingFundCiks: number[];
+}
+
+/** Aggregate flow needs actual availability for every included book and both quarters.
+ * Missing metadata fails closed with a diagnostic instead of a calendar fallback. */
+export function buildSmartMoneyFlowPoints(
+  cik: number,
+  books: FundFlowBookAvailability[],
+  onSkip: (issue: FundFlowAvailabilityIssue) => void = (issue) => {
+    console.warn(`[probability-engine] ${cik} smartMoneyFlow ${issue.quarterDate}: MISSING_13F_FILING_DATE for fundCik(s) ${issue.missingFundCiks.join(",")}`);
+  },
+): Pt[] {
+  const quarters = new Map<string, { shares: number; availableAt: string; missingFundCiks: number[] }>();
+  for (const book of books) {
+    const quarter = dateOnly(book.quarterDate);
+    const row = quarters.get(quarter) ?? { shares: 0, availableAt: "", missingFundCiks: [] };
+    row.shares += Number(book.shares ?? 0);
+    const availableAt = normalizeFilingDate(book.filingDate);
+    if (!availableAt) row.missingFundCiks.push(book.fundCik);
+    else if (availableAt > row.availableAt) row.availableAt = availableAt;
+    quarters.set(quarter, row);
+  }
+  const entries = [...quarters.entries()].sort(([a], [b]) => a.localeCompare(b));
+  const reported = new Set<string>();
+  const report = (quarterDate: string, missingFundCiks: number[]) => {
+    if (reported.has(quarterDate)) return;
+    reported.add(quarterDate);
+    onSkip({ quarterDate, missingFundCiks: [...new Set(missingFundCiks)].sort((a, b) => a - b) });
+  };
+  for (const [quarterDate, row] of entries) if (row.missingFundCiks.length > 0) report(quarterDate, row.missingFundCiks);
+  const out: Pt[] = [];
+  for (let i = 1; i < entries.length; i++) {
+    const [periodEnd, cur] = entries[i];
+    const [, prev] = entries[i - 1];
+    const missingFundCiks = [...prev.missingFundCiks, ...cur.missingFundCiks];
+    if (missingFundCiks.length > 0) {
+      report(periodEnd, missingFundCiks);
+      continue;
+    }
+    out.push({
+      factor: "smartMoneyFlow",
+      periodEnd,
+      filedAt: cur.availableAt > prev.availableAt ? cur.availableAt : prev.availableAt,
+      value: prev.shares === 0 ? 0 : (cur.shares - prev.shares) / prev.shares,
+    });
+  }
+  return out;
+}
+
+/** Extra streams use actual filing availability; no quarter+45d or estimated fallback. */
 async function signalSeries(cik: number): Promise<Pt[]> {
   const db = getDb();
   const [tone]: any = await db.execute(sql`SELECT eventTs, score FROM signals WHERE cik=${cik} AND source='edgar' AND signalType='tone' AND score IS NOT NULL ORDER BY eventTs`);
   const [flows]: any = await db.execute(sql`
-    SELECT quarterDate, SUM(shares) v FROM fund_holdings
-    WHERE heldCik=${cik} AND secClass='COM' GROUP BY quarterDate ORDER BY quarterDate`);
+    SELECT h.fundCik, h.quarterDate, SUM(h.shares) shares, q.filingDate
+    FROM fund_holdings h
+    LEFT JOIN fund_quarters q ON q.fundCik=h.fundCik AND q.quarterDate=h.quarterDate
+    WHERE h.heldCik=${cik} AND h.secClass='COM'
+    GROUP BY h.fundCik, h.quarterDate, q.filingDate
+    ORDER BY h.quarterDate`);
   const out: Pt[] = [];
   for (const t of tone) {
     const a = dateOnly(t.eventTs);
     out.push({ factor: "edgarTone", periodEnd: a, filedAt: a, value: Number(t.score) });
   }
-  for (let i = 1; i < flows.length; i++) {
-    const q = dateOnly(flows[i].quarterDate);
-    const cur = Number(flows[i].v ?? 0), prev = Number(flows[i - 1].v ?? 0);
-    out.push({ factor: "smartMoneyFlow", periodEnd: q, filedAt: plusDays(q, 45), value: prev === 0 ? 0 : (cur - prev) / prev });
-  }
+  out.push(...buildSmartMoneyFlowPoints(cik, flows.map((row: any): FundFlowBookAvailability => ({
+    fundCik: Number(row.fundCik),
+    quarterDate: dateOnly(row.quarterDate),
+    shares: Number(row.shares ?? 0),
+    filingDate: row.filingDate ?? null,
+  }))));
   return out.filter((p) => Number.isFinite(p.value));
 }
 

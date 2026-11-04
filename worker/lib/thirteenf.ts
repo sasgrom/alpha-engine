@@ -111,6 +111,27 @@ export function amendmentKindFromPrimary(primaryXml: string, form: string): Amen
   return kind === "RESTATEMENT" || kind === "NEW HOLDINGS" ? kind : "UNKNOWN";
 }
 
+/** Normalize an actual filing/publication date without inferring it from the quarter. */
+export function normalizeFilingDate(value: unknown): string | null {
+  const date = String(value ?? "").slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+  const parsed = new Date(`${date}T00:00:00.000Z`);
+  return Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== date ? null : date;
+}
+
+/** Research events require real filing metadata; no quarter-end or estimated fallback is allowed. */
+export function requireFilingDate(value: unknown, accessionNo = "unknown"): string {
+  const date = normalizeFilingDate(value);
+  if (!date) throw new Error(`MISSING_13F_FILING_DATE: actual filing/amendment date is required (${accessionNo})`);
+  return date;
+}
+
+/** A merged book becomes available only after every required original/amendment is public. */
+export function maxFilingDate(parts: Pick<QuarterFilingPart, "filingDate" | "accessionNo">[]): string {
+  if (parts.length === 0) throw new Error("MISSING_13F_FILING_METADATA: no filing components");
+  return parts.map((part) => requireFilingDate(part.filingDate, part.accessionNo)).sort().at(-1)!;
+}
+
 /** Merge one quarter chronologically: a restatement replaces the current book;
  * NEW HOLDINGS adds rows to it. Duplicate cusip:class keys use the latest row. */
 export function mergeQuarterFilings(parts: QuarterFilingPart[]): {
@@ -118,6 +139,7 @@ export function mergeQuarterFilings(parts: QuarterFilingPart[]): {
   latestAccessionNo: string;
   latestFilingDate: string;
 } {
+  const latestFilingDate = maxFilingDate(parts);
   const ordered = [...parts].sort((a, b) =>
     a.filingDate.localeCompare(b.filingDate) ||
     Number(a.form.endsWith("/A")) - Number(b.form.endsWith("/A")) ||
@@ -132,7 +154,7 @@ export function mergeQuarterFilings(parts: QuarterFilingPart[]): {
   return {
     holdings: [...book.values()],
     latestAccessionNo: ordered.at(-1)?.accessionNo ?? "",
-    latestFilingDate: ordered.at(-1)?.filingDate ?? "",
+    latestFilingDate,
   };
 }
 
@@ -207,6 +229,7 @@ export function eventNote(fundName: string, ev: PositionEvent, secClass = "COM",
  * against a big long book is insurance, not a bet. Commons score full.
  */
 export function buildPositionRow(fundCik: number, heldCik: number, filing: Filing13F, ev: PositionEvent, note: string, secClass = "COM") {
+  const filingDate = requireFilingDate(filing.filingDate, filing.accessionNo);
   const dir = ev.kind === "change" ? Math.max(-1, Math.min(1, ev.deltaPct / 100)) : ev.kind === "new" ? 1 : -1;
   const clsSign = secClass === "PUT" ? -1 : 1;
   const weight = secClass === "COM" ? 1 : 0.5;
@@ -216,7 +239,9 @@ export function buildPositionRow(fundCik: number, heldCik: number, filing: Filin
     cik: heldCik,
     source: "13f" as const,
     signalType: "position" as const,
-    eventTs: `${filing.filingDate} 00:00:00`,
+    // reportDate is the observation quarter; eventTs is actual publication availability.
+    // ingestedAt is stamped independently on receipt and never substitutes filingDate.
+    eventTs: `${filingDate} 00:00:00`,
     score,
     magnitude,
     note,

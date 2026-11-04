@@ -244,7 +244,7 @@ async function insertEvents(rows: any[]): Promise<number> {
 }
 
 /** Events for one fund-quarter pair from holdings maps (shared by both modes). */
-async function eventsForQuarter(fund: { cik: number; name: string }, prev: Map<string, { shares: number; valueUsd: number | null }>, cur: Map<string, { cik: number; cls: string; shares: number; valueUsd: number | null; accn: string }>, curQ: string, prevQ: string | null, filingDate = curQ, accessionNo?: string): Promise<number> {
+async function eventsForQuarter(fund: { cik: number; name: string }, prev: Map<string, { shares: number; valueUsd: number | null }>, cur: Map<string, { cik: number; cls: string; shares: number; valueUsd: number | null; accn: string }>, curQ: string, prevQ: string | null, filingDate: string, accessionNo?: string): Promise<number> {
   const rows: any[] = [];
   const filing = { accessionNo: accessionNo ?? cur.values().next().value?.accn ?? "", form: "13F-HR", filingDate, reportDate: curQ };
   const totalUsd = await fundTotal(fund.cik, curQ);
@@ -285,7 +285,7 @@ const ourCiks = new Set<number>(companies.map((c: any) => Number(c.cik)));
 
 // ---- --rebuild-events: DB-only regeneration (no network at all) ------------
 if (REBUILD) {
-  let rebuilt = 0;
+  let rebuilt = 0, missingAvailability = 0;
   for (const fund of funds.filter((f) => SIGNAL_TIERS.has(f.tier))) {
     const [qs]: any = await db.execute(sql`SELECT DISTINCT quarterDate FROM fund_holdings WHERE fundCik=${fund.cik} ORDER BY quarterDate`);
     const quarters = qs.map((r: any) => String(r.quarterDate).slice(0, 10));
@@ -301,14 +301,18 @@ if (REBUILD) {
         cur.set(k, c);
       }
       const [meta]: any = await db.execute(sql`SELECT accessionNo, filingDate FROM fund_quarters WHERE fundCik=${fund.cik} AND quarterDate=${curQ}`);
-      const eventDate = meta[0]?.filingDate ? String(meta[0].filingDate).slice(0, 10) : curQ;
-      if (!meta[0]?.filingDate) prog.log(`! ${fund.name} ${curQ}: filingDate missing, quarter-end fallback`);
-      if (prev) rebuilt += await eventsForQuarter(fund, prev, cur, curQ, quarters[quarters.indexOf(curQ) - 1], eventDate, meta[0]?.accessionNo ? String(meta[0].accessionNo) : undefined);
+      if (!meta[0]?.filingDate) {
+        missingAvailability++;
+        prog.log(`! ${fund.name} ${curQ}: MISSING_13F_FILING_DATE — research events skipped; remediation: backfill actual filing/amendment dates`);
+      } else {
+        const eventDate = String(meta[0].filingDate).slice(0, 10);
+        if (prev) rebuilt += await eventsForQuarter(fund, prev, cur, curQ, quarters[quarters.indexOf(curQ) - 1], eventDate, meta[0]?.accessionNo ? String(meta[0].accessionNo) : undefined);
+      }
       prev = new Map([...cur].map(([k, v]) => [k, { shares: v.shares, valueUsd: v.valueUsd }]));
     }
     prog.log(`${fund.name}: events rebuilt so far ${rebuilt}`);
   }
-  prog.done(`rebuild-events: ${rebuilt} rows inserted`);
+  prog.done(`rebuild-events: ${rebuilt} rows inserted; ${missingAvailability} quarter(s) skipped for missing filing availability`);
   process.exit(0);
 }
 
