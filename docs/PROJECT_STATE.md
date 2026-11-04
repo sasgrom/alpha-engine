@@ -8,7 +8,7 @@ Alpha Engine must not collapse these into one “done” percentage:
 
 | Layer | Question | Current reviewed state |
 |---|---|---|
-| **Code** | Is the implementation committed and tested? | F-01/F-02/F-03/F-04/F-05/F-10/F-11 and the reviewed Company Exposure → Macro Scenarios → Atlas rebuild are complete. Reviewed macro prior/probability rebuild is next. |
+| **Code** | Is the implementation committed and tested? | F-01/F-02/F-03/F-04/F-05/F-10/F-11 and the reviewed exposure/macro evaluations are complete. Reviewed 13F event/flow/probability rebuild is next. |
 | **Data** | Which collectors have actually run and what is their coverage? | Research-51 is covered. S&P 500 initial backfill is a separate run/evidence stage. Schwab, FRED and OFAC have independent schedules and evidence times. |
 | **Research** | Are derived artifacts current and strong enough to use? | Research-51 has 21,489 factor points and 51/51 coverage. IC changed after fresh facts. Event Study is ready; Atlas remains partial. No promotion is supported. |
 | **Delivery** | Has the owner reviewed and explicitly authorized a destination change? | Production apply/deploy/sync and full-S&P research expansion remain separate owner decisions. |
@@ -41,7 +41,7 @@ There is no default direct-to-production collection. A successful collector run 
 
 The implementation, real smoke/scheduler reload and initial backfill evidence are complete. The initial run processed **499/499 CIKs: 490 refreshed + 3 unchanged + 6 failed**. Final documentation was integrated and pushed as `b951f5c`; task completion does not mean 100% successful CIK coverage.
 
-The six HTTP 404 failures were subsequently traced to **incorrect ticker/CIK mappings**, not missing SEC companies. All 502 ticker mappings were checked against the official SEC `company_tickers_exchange.json` directory on 2026-11-04; exactly those six were wrong and have been corrected. The next daily incremental run will collect the corrected CIKs instead of repeating the same invalid requests.
+The six HTTP 404 failures were subsequently traced to **incorrect ticker/CIK mappings**, not missing SEC companies. All 502 ticker mappings were checked against the official SEC `company_tickers_exchange.json` directory on 2026-11-04; exactly those six were wrong and have been corrected. A later scheduled incremental run collected the corrected CIKs. Integrated verification confirmed all six as **collected/valid** through manifests, expected payload CIKs, non-empty `factsToRows`, successful ingest and matching SHA256; no additional collector or reload was needed. Initial-backfill failures remain historical evidence.
 
 ```text
 [done] Code + tests
@@ -90,15 +90,16 @@ The existing research-51 companyfacts job remains independent at 03:00 home loca
 - F-11 requires four existing, non-null finite and calendar-consecutive quarters for quarterly TTM; a grid hole now returns null. Actual period ends support 53-week calendars without a day-count gate. Annual mode, ROE/ROA formulas, YoY and company-exposure F-05 behavior are unchanged. Historical ROE/ROA TTM history requires a reviewed rebuild where applicable.
 - F-10/F-11 verification: F-10 targeted Statements passed **17 tests**; F-11 targeted Statements/company-exposure passed **2 files / 38 tests**. The final full suite passed **118 files / 668 tests**; `npm run check`, `npm run build` and `git diff --check` passed. Build retains the established chunk-size warnings. These gates verify code, not rebuilt historical evidence or production readiness.
 - The reviewed manual Company Exposure → Macro Scenarios → Atlas rebuild completed once after both numeric fixes. Company Exposure has 51 companies, debt 47, interestCoverage 6, fuelCost 1 and foreignRevenueShare 0; 64 available→missing transitions are documented period mismatches. Scenario statuses are unchanged. Manual runs did not change registered scheduler lastRuns, and the evidence index passes 36/36 SHA256 checks. Full report: `docs/EXPOSURE_REBUILD_2026-11-04.md`.
-- Daily Operations at `2026-11-04T08:02:57.472Z` is critical: 14 OK / 1 warning / 1 error / 22 pending, macro derivedCurrent=true, Schwab 0/51 and Atlas partial warning. Local readiness ready/missing=[] is only a file gate.
-- S&P 500 mapping remediation and daily collection remain separate operational work. A pre-existing scheduled daily run completed before this rebuild; no additional collection was requested by F-04, F-05, F-10, F-11 or this evidence rebuild.
+- Daily Operations at `2026-11-04T08:58:55.248Z` is **degraded**, 14 OK / 1 warning / 0 errors / 23 pending. Schwab is **awaiting_scheduled_capture** for the 04:00 home-local slot with a 60-minute grace period, not a failure and not ok. Hourly context is independently healthy; Atlas partial/904 remains a warning and macro derivedCurrent=true. No pre-slot collector was started.
+- S&P 500 mapping remediation and daily collection remain separate operational work. Integrated operational verification confirmed all six corrected CIKs as **collected/valid**, with per-CIK manifest, payload, row-count and SHA256 evidence. The initial backfill's six failures remain historical evidence; old wrong-CIK manifests were not deleted. No additional collector or reload was required.
+- Macro evaluation completed with three company reports and six nested bayes/logistic reports over 485 evaluated anchors. Accuracy, balanced accuracy, costs, holdouts, regimes and pooling are reported in `docs/INTEGRATED_VERIFICATION_2026-11-04.md`; comparison with older results is historical only, not direct same-DB pre/post. Current macro prior is the neutral 0.5 fallback because all 1,455 anchor/series checks lack eligible vintages; selected-after-anchor is zero. This is a macro coverage limitation, not repaired alpha or promotion.
+- S&P 500 mapping remediation and daily collection remain separate operational work. A pre-existing scheduled daily run completed before this verification; no additional collection was requested by F-04, F-05, F-10, F-11 or this evidence rebuild.
 
 ## 6. Next queue
 
-1. **Reviewed macro prior/probability rebuild:** separately authorized after F-04.
-2. **Reviewed 13F event/flow/probability rebuild:** separately authorized after F-03.
-3. Numeric correctness: F-15, F-16.
-4. Production/security findings and the remaining audit queue.
+1. **Reviewed 13F event/flow/probability rebuild:** separately authorized after F-03.
+2. Numeric correctness: F-15, F-16.
+3. Production/security findings and the remaining audit queue.
 
 ## 7. Where to look
 

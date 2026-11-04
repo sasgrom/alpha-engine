@@ -11,6 +11,7 @@ export const PROJECT_STATE_REVIEW = {
     sp500FinalEvidenceCommit: "b951f5c7c6b677e052f5679b9770a5df0b8c1394",
     sp500CikMappingsVerifiedOn: "2026-11-04",
     sp500InitialBackfill: { processed: 499, refreshed: 490, unchanged: 3, failed: 6 },
+    sp500CorrectedCiks: { status: "collected_valid", count: 6, verifiedOn: "2026-11-04" },
   },
   correctness: [
     { id: "F-01/F-02", title: "First-vintage factors and required-concept availability", status: "done" as const },
@@ -28,9 +29,10 @@ export const PROJECT_STATE_REVIEW = {
     eventStudy: "Ready · 47/47 eligible events with outcomes",
     atlas: "Partial · 904 records · 24 studies · 2 OOS evaluations",
     ic: "Changed after fresh facts; descriptive evidence only, no factor/model/regime promotion",
+    schwab: "Awaiting scheduled capture · 0/51 today · next run 2026-11-04T12:00:00Z",
+    macroPriorEvaluation: "Complete · 3 company / 6 nested reports · 485 anchors · no eligible current macro vintage",
   },
   nextQueue: [
-    "Reviewed macro prior/probability rebuild",
     "Reviewed 13F event/flow/probability rebuild",
     "F-15 / F-16 numeric correctness",
     "Production/security findings and remaining audit queue",
