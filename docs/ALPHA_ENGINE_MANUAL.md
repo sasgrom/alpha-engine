@@ -1439,6 +1439,14 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 Frozen evaluation теперь содержит **794/1,455 eligible checks**, **84 complete three-series anchors** и selected-after-anchor=0. Curve coverage — 322/163 eligible/missing; HY — 84/401, VIX — 388/97 из-за ограничений official history. Prior values 0.50/0.54/0.42/0.47/0.39 встречаются на 195/189/31/66/4 anchors; current prior остаётся 0.50. Metrics приведены только как historical comparison, без causal attribution или promotion. Полные evidence: `docs/MACRO_VINTAGE_FEDFUNDS_COMPLETION_2026-11-04.md`. Следующий блок — Statements historical rebuild/evaluation, а не alpha или production claim.
 
+### Exact macro source remediation и BAML quarantine — 2026-11-04
+
+**Exact-ID решения.** У FEDFUNDS legacy id 47763 существует canonical row id 410405 с observation `2026-09-01`, value 3.75, availability start `2026-10-01` и open-ended end. У CPIAUCSL legacy id 47832 существует canonical id 31824 со значением 336.298, start `2026-10-14` и open-ended end. Одна reviewed transaction удалила только две noncanonical legacy rows, сохранив canonical rows и все остальные данные. Если canonical FEDFUNDS отсутствует, utility разрешает только exact-ID availability update; missing/mismatched CPI canonical row полностью блокирует transaction. Dry-run, complete-table backup, exact fingerprint и rollback tests обязательны.
+
+**Классификация BAML.** Targeted read-only FRED/ALFRED verification вернул 41 observations и 40 vintage dates с firstVintage `2023-11-06`, что совпадает с существующим `2023-11-06` chunk. Дополнительный `2023-10-31` chunk с 45 rows/44 dates поэтому классифицирован как `UNVERIFIED_OR_STALE_CHUNK`, а не official evidence для normalized data. Файл и hash сохранены в quarantine; manifest и normalized data не изменены. Full collector, full backfill, schema changes и production actions не использовались.
+
+**Проверка.** Post-check подтверждает 408,860 rows, zero duplicates/inversions/new IDs, canonical FEDFUNDS/CPIAUCSL selection, 8/8 current eligible series и selected-after-anchor=0. Macro QA прошёл для 22 series. Новая frozen evaluation сохраняет 794/1,455 eligible checks, 661 missing, 84 complete three-series anchors и прежнее prior distribution. Это исправление evidence, а не repaired alpha или model promotion. Полный отчёт: `docs/MACRO_SOURCE_REMEDIATION_2026-11-04.md`.
+
 ### 4.43 Итерация 6d: magnitude-ядро и read-side защита 13F
 
 **Статус: исследовательское ядро и безопасность отображения, не новая торговая модель и не доказательство альфы.** Полный контракт находится в `docs/DESIGN_MAGNITUDE.md` (зарегистрирован в Admin → Manuals): availability-инварианты, математика, допустимые и запрещённые выводы, acceptance gates и дальнейшие этапы зафиксированы ДО кода.

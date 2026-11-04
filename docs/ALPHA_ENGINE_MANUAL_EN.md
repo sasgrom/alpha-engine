@@ -1442,6 +1442,14 @@ The final table has **408,862 rows**. Independent verification proves all 133,38
 
 Frozen evaluation now has **794/1,455 eligible checks**, **84 complete three-series anchors** and selected-after-anchor=0. Curve coverage is 322/163 eligible/missing; HY remains 84/401 and VIX 388/97 due to official history limits. Prior values include 0.50, 0.54, 0.42, 0.47 and 0.39 on 195/189/31/66/4 anchors respectively; current prior remains 0.50. Metrics are historical comparisons only, not causal attribution or promotion. Full evidence: `docs/MACRO_VINTAGE_FEDFUNDS_COMPLETION_2026-11-04.md`. Next: Statements historical rebuild/evaluation, not an alpha or production claim.
 
+### Exact macro source remediation and BAML quarantine — 2026-11-04
+
+**Exact-ID decisions.** FEDFUNDS legacy id 47763 had a valid canonical row id 410405 with observation `2026-09-01`, value 3.75, availability start `2026-10-01` and open-ended end. CPIAUCSL legacy id 47832 had canonical id 31824 with value 336.298, start `2026-10-14` and open-ended end. One reviewed transaction deleted only the two noncanonical legacy rows, preserving both canonical rows and every other row. If a FEDFUNDS canonical row is absent, the utility permits only an exact-ID availability update; a missing/mismatched CPI canonical row blocks the entire transaction. A dry-run, complete-table backup, exact fingerprint and rollback tests are mandatory.
+
+**BAML classification.** Targeted read-only FRED/ALFRED verification returned 41 observations and 40 vintage dates with firstVintage `2023-11-06`, matching the existing `2023-11-06` chunk. The additional 45-row/44-date `2023-10-31` chunk is therefore `UNVERIFIED_OR_STALE_CHUNK`, not official evidence for normalized data. Its file and hash are preserved in quarantine; manifest and normalized data remain unchanged. No full collector, full backfill, schema change or production action was used.
+
+**Verification.** Post-check proves 408,860 rows, zero duplicates/inversions/new IDs, canonical FEDFUNDS/CPIAUCSL selection, 8/8 current eligible series and selected-after-anchor=0. Macro QA passes for 22 series. A new frozen evaluation preserves 794/1,455 eligible checks, 661 missing, 84 complete three-series anchors and the previous prior distribution. This is evidence correction, not repaired alpha or model promotion. Full report: `docs/MACRO_SOURCE_REMEDIATION_2026-11-04.md`.
+
 ### 4.43 Iteration 6d: magnitude kernel and 13F read-side guard
 
 **Status: research kernel and presentation safety, not a new trading model and not evidence of alpha.** The full contract lives in `docs/DESIGN_MAGNITUDE.md` (registered under Admin → Manuals): availability invariants, mathematics, allowed/forbidden conclusions, acceptance gates, and later stages were fixed BEFORE implementation.
