@@ -100,6 +100,7 @@ export function readKimiMessages(sessionId: string, config: KimiWebConfig, pageS
   return request(config, `/api/v1/sessions/${sessionId}/messages?page_size=${pageSize}`, { headers: jsonHeaders(token(config)) });
 }
 
+// Establish the WebSocket subscription before prompt submission so fast turns cannot be missed.
 /** Run one isolated live instruction end-to-end without Git or a second prompt channel. */
 export async function runLiveInstruction(cwd: string, instruction: string, config: KimiWebConfig, timeoutMs = 600_000): Promise<unknown> {
   const sessionId = await createKimiSession(cwd, config);
