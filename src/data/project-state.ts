@@ -8,7 +8,9 @@ export const PROJECT_STATE_REVIEW = {
     sp500CodeCommit: "f196acf1e38888c9ae145f8f1fc4a5bd0cfba9fc",
     sp500CodeReady: true,
     sp500SmokeAndReloadConfirmed: true,
-    sp500FinalEvidenceCommit: null as string | null,
+    sp500FinalEvidenceCommit: "b951f5c7c6b677e052f5679b9770a5df0b8c1394",
+    sp500CikMappingsVerifiedOn: "2026-11-04",
+    sp500InitialBackfill: { processed: 499, refreshed: 490, unchanged: 3, failed: 6 },
   },
   correctness: [
     { id: "F-01/F-02", title: "First-vintage factors and required-concept availability", status: "done" as const },

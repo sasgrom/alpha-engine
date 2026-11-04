@@ -18,6 +18,8 @@
  * (CIK without leading zeros — a number, as in companies.cik).
  */
 export const GICS_SNAPSHOT_AS_OF = "2026-10-11";
+/** Ticker/CIK pairs were checked against SEC company_tickers_exchange.json on 2026-11-04. */
+export const GICS_CIK_VERIFIED_ON = "2026-11-04";
 
 const RAW = `MMM|66740|Industrials|Industrial Conglomerates
 AOS|91142|Industrials|Building Products
@@ -243,7 +245,7 @@ GDDY|1609711|Information Technology|Internet Services & Infrastructure
 GS|886982|Financials|Investment Banking & Brokerage
 HAL|45012|Energy|Oil & Gas Equipment & Services
 HIG|874766|Financials|Property & Casualty Insurance
-HAS|49280|Consumer Discretionary|Leisure Products
+HAS|46080|Consumer Discretionary|Leisure Products
 HCA|860730|Health Care|Health Care Facilities
 DOC|765880|Real Estate|Health Care REITs
 HSIC|1000228|Health Care|Health Care Distributors
@@ -375,7 +377,7 @@ PCAR|75362|Industrials|Construction Machinery & Heavy Transportation Equipment
 PKG|75677|Materials|Paper & Plastic Packaging Products & Materials
 PLTR|1321655|Information Technology|Application Software
 PANW|1327567|Information Technology|Systems Software
-PH|773634|Industrials|Industrial Machinery & Supplies & Components
+PH|76334|Industrials|Industrial Machinery & Supplies & Components
 PAYX|723531|Industrials|Human Resource & Employment Services
 PYPL|1633917|Financials|Transaction & Payment Processing Services
 PNR|77360|Industrials|Industrial Machinery & Supplies & Components
@@ -447,11 +449,11 @@ SYF|1601712|Financials|Consumer Finance
 SNPS|883241|Information Technology|Application Software
 SYY|96021|Consumer Staples|Food Distributors
 TMUS|1283699|Communication Services|Wireless Telecommunication Services
-TROW|1006367|Financials|Asset Management & Custody Banks
+TROW|1113169|Financials|Asset Management & Custody Banks
 TTWO|946581|Communication Services|Interactive Home Entertainment
-TPR|1077205|Consumer Discretionary|Apparel, Accessories & Luxury Goods
+TPR|1116132|Consumer Discretionary|Apparel, Accessories & Luxury Goods
 TRGP|1389170|Energy|Oil & Gas Storage & Transportation
-TGT|27474|Consumer Staples|Consumer Staples Merchandise Retail
+TGT|27419|Consumer Staples|Consumer Staples Merchandise Retail
 TEL|1385157|Information Technology|Electronic Manufacturing Services
 TDY|1094285|Information Technology|Electronic Equipment & Instruments
 TER|97210|Information Technology|Semiconductor Materials & Equipment
@@ -506,7 +508,7 @@ WM|823768|Industrials|Environmental & Facilities Services
 WAT|1000697|Health Care|Life Sciences Tools & Services
 WEC|783325|Utilities|Electric Utilities
 WFC|72971|Financials|Diversified Banks
-WELL|704808|Real Estate|Health Care REITs
+WELL|766704|Real Estate|Health Care REITs
 WST|105770|Health Care|Health Care Supplies
 WDC|106040|Information Technology|Technology Hardware, Storage & Peripherals
 WY|106535|Real Estate|Timber REITs

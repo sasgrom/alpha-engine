@@ -81,6 +81,9 @@ export default function ProjectState() {
   const sp500Running = liveState?.current?.jobId === "sp500-facts-daily" || (!liveState && report?.scheduler.currentJobId === "sp500-facts-daily");
   const sp500Status = sp500Running ? "running" : sp500Run?.status ?? "unknown";
   const finalEvidenceReady = Boolean(PROJECT_STATE_REVIEW.implementation.sp500FinalEvidenceCommit);
+  const mappingVerified = Boolean(PROJECT_STATE_REVIEW.implementation.sp500CikMappingsVerifiedOn);
+  const sp500DisplayStatus = sp500Status === "error" && finalEvidenceReady ? (mappingVerified ? "remediated" : "completed_with_failures") : sp500Status;
+  const sp500PillTone = sp500DisplayStatus === "running" ? "running" : ["done", "remediated"].includes(sp500DisplayStatus) ? "done" : sp500DisplayStatus === "completed_with_failures" ? "warning" : sp500DisplayStatus === "unknown" ? "unknown" : "error";
   const collectionPhase: ProjectPhaseStatus = finalEvidenceReady || sp500Status === "done" ? "done" : ["error", "killed"].includes(sp500Status) ? "attention" : sp500Status === "running" ? "current" : "unknown";
   const evidenceMode = liveState ? "home scheduler" : report ? "dated Daily Operations" : "reviewed snapshot";
   const sp500Health = report?.facts?.sp500;
@@ -122,20 +125,23 @@ export default function ProjectState() {
 
         <section className="project-current-block">
           <div className="project-section-heading">
-            <div><span className="t-label">Current implementation block</span><h2>S&P 500 incremental companyfacts</h2></div>
-            <StatePill status={sp500Status === "running" ? "running" : sp500Status === "done" ? "done" : sp500Status === "unknown" ? "unknown" : "error"}>{sp500Status}</StatePill>
+            <div><span className="t-label">{finalEvidenceReady ? "Latest collection block" : "Current implementation block"}</span><h2>S&P 500 incremental companyfacts</h2></div>
+            <StatePill status={sp500PillTone}>{sp500DisplayStatus}</StatePill>
           </div>
           <p className="project-current-lead">
             {sp500Status === "running" && "Collection is running in the single home scheduler. The code commit does not mean the backfill is complete."}
+            {sp500Status === "error" && finalEvidenceReady && mappingVerified && "The initial backfill processed all 499 CIKs. Six HTTP 404 failures were traced to incorrect ticker/CIK mappings and corrected against the official SEC directory; the next daily run will collect the corrected CIKs."}
+            {sp500Status === "error" && finalEvidenceReady && !mappingVerified && "The initial backfill processed all 499 CIKs with six failed CIKs. Final evidence is published; the failures remain separate from task completion."}
             {sp500Status === "done" && "The latest registered collection run completed. Missing and failed CIKs remain separate coverage findings, not a hidden success percentage."}
-            {["error", "killed"].includes(sp500Status) && "The latest registered run needs attention. Do not start a duplicate collector; inspect its log and manifest first."}
+            {["error", "killed"].includes(sp500Status) && !finalEvidenceReady && "The latest registered run needs attention. Do not start a duplicate collector; inspect its log and manifest first."}
+            {sp500Status === "killed" && "The latest registered run was killed. Do not start a duplicate collector; inspect its log and manifest first."}
             {sp500Status === "unknown" && "Implementation is committed, but this view cannot verify the live collection state. No completion is inferred."}
           </p>
           <PhaseRail collection={collectionPhase} finalEvidence={finalEvidenceReady ? "done" : "current"} />
           <div className="project-current-facts">
             <div><span>Scope</span><strong>499 unique CIKs</strong><small>Current collection snapshot, not historical index membership</small></div>
             <div><span>Schedule</span><strong>23:30 home local</strong><small>Independent of the research-51 dependency chain</small></div>
-            <div><span>Manifest evidence</span><strong>{sp500Health ? `${sp500Health.refreshed + sp500Health.unchanged + sp500Health.failed} entries` : "Unavailable"}</strong><small>{sp500Health ? `${sp500Health.refreshed} refreshed · ${sp500Health.unchanged} unchanged · ${sp500Health.failed} failed · ${sp500Health.missing} missing` : "Build Daily Operations after the run"}</small></div>
+            <div><span>Manifest evidence</span><strong>{sp500Health ? `${sp500Health.refreshed + sp500Health.unchanged + sp500Health.failed} entries` : "Unavailable"}</strong><small>{sp500Health ? `${sp500Health.refreshed} refreshed · ${sp500Health.unchanged} unchanged · ${sp500Health.failed} failed · ${sp500Health.missing} missing${mappingVerified ? " · six ticker/CIK mappings corrected for the next daily run" : ""}` : "Build Daily Operations after the run"}</small></div>
             <div><span>Scheduler now</span><strong>{jobName(activeJob)}</strong><small>{queuedJobs === null ? "Queue unavailable" : `${queuedJobs} queued · no duplicate run inferred`}</small></div>
           </div>
         </section>
@@ -163,7 +169,7 @@ export default function ProjectState() {
           <div className="project-data-table" role="table" aria-label="Current data workflows">
             <div className="project-data-header" role="row"><span>Workflow</span><span>Evidence</span><span>Destination</span><span>Current meaning</span></div>
             <div className="project-data-row" role="row">
-              <strong>S&P 500 companyfacts</strong><span>{sp500Status}{sp500Health ? ` · ${sp500Health.missing} missing` : ""}</span><span>Raw cache + local MySQL</span><p>Collection only. Research-51, IC, Atlas and production are not expanded automatically.</p>
+              <strong>S&P 500 companyfacts</strong><span>{sp500Status}{sp500Health ? ` · ${sp500Health.missing} missing` : ""}</span><span>Raw cache + local MySQL</span><p>{mappingVerified ? "The six historical 404s were CIK mapping errors, now corrected. " : ""}Collection only. Research-51, IC, Atlas and production are not expanded automatically.</p>
             </div>
             <div className="project-data-row" role="row">
               <strong>Research-51 companyfacts</strong><span>{run("facts-fetch-daily")?.status ?? "unknown"}</span><span>Local MySQL → Series → Factors</span><p>Independent 03:00 home-local chain; its coverage remains 51/51.</p>

@@ -1110,7 +1110,7 @@
   "name": "HAL"
  },
  {
-  "cik": 49280,
+  "cik": 46080,
   "ticker": "HAS",
   "name": "HAS"
  },
@@ -1820,7 +1820,7 @@
   "name": "PGR"
  },
  {
-  "cik": 773634,
+  "cik": 76334,
   "ticker": "PH",
   "name": "PH"
  },
@@ -2160,7 +2160,7 @@
   "name": "TFC"
  },
  {
-  "cik": 27474,
+  "cik": 27419,
   "ticker": "TGT",
   "name": "TGT"
  },
@@ -2190,7 +2190,7 @@
   "name": "TPL"
  },
  {
-  "cik": 1077205,
+  "cik": 1116132,
   "ticker": "TPR",
   "name": "TPR"
  },
@@ -2205,7 +2205,7 @@
   "name": "TRMB"
  },
  {
-  "cik": 1006367,
+  "cik": 1113169,
   "ticker": "TROW",
   "name": "TROW"
  },
@@ -2415,7 +2415,7 @@
   "name": "WEC"
  },
  {
-  "cik": 704808,
+  "cik": 766704,
   "ticker": "WELL",
   "name": "WELL"
  },

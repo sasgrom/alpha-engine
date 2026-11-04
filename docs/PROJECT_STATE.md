@@ -39,16 +39,17 @@ There is no default direct-to-production collection. A successful collector run 
 
 ## 3. Current implementation block — S&P 500 companyfacts
 
-The implementation and real smoke/scheduler reload are confirmed. The initial backfill must be reported separately from code readiness.
+The implementation, real smoke/scheduler reload and initial backfill evidence are complete. The initial run processed **499/499 CIKs: 490 refreshed + 3 unchanged + 6 failed**. Final documentation was integrated and pushed as `b951f5c`; task completion does not mean 100% successful CIK coverage.
 
-Approximate phases, not an exact completion percentage:
+The six HTTP 404 failures were subsequently traced to **incorrect ticker/CIK mappings**, not missing SEC companies. All 502 ticker mappings were checked against the official SEC `company_tickers_exchange.json` directory on 2026-11-04; exactly those six were wrong and have been corrected. The next daily incremental run will collect the corrected CIKs instead of repeating the same invalid requests.
 
 ```text
 [done] Code + tests
 [done] Real smoke
 [done] Controlled scheduler reload
-[....] Initial backfill — inspect the live scheduler and per-CIK manifests
-[....] Coverage/health evidence + final documentation commit
+[done] Initial backfill — 493 successful, 6 failed
+[done] Coverage/health evidence + final documentation
+[done] CIK mapping remediation against the SEC directory
 ```
 
 Collection contract:

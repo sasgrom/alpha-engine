@@ -15,7 +15,7 @@ import {
 } from "./facts-incremental";
 import { sha256Text } from "./fred";
 import { loadEdgarUniverse, type EdgarFiling } from "./edgar";
-import { GICS_SNAPSHOT_AS_OF } from "../../api/services/gics-snapshot";
+import { GICS_BY_TICKER, GICS_CIK_VERIFIED_ON, GICS_SNAPSHOT_AS_OF } from "../../api/services/gics-snapshot";
 
 const dirs: string[] = [];
 afterEach(() => { for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true }); });
@@ -200,7 +200,16 @@ describe("incremental companyfacts collection", () => {
     expect(GICS_SNAPSHOT_AS_OF).toBe("2026-10-11");
     expect(rows).toHaveLength(502);
     expect(dedupeFactsUniverse(rows)).toHaveLength(499);
-    expect(factsUniverseSha256(rows)).toBe("9db32591ad570e51e4e9902417a5152414c2d27a5d73e2b9f7365b4d75809c9b");
+    expect(factsUniverseSha256(rows)).toBe("cede4a6dfb3b3f20aecf08bd60ed7cad634e6ac146bfa8d6089cd4ba3a6a28ac");
+    expect(GICS_CIK_VERIFIED_ON).toBe("2026-11-04");
+    expect(Object.fromEntries(["TGT", "HAS", "WELL", "PH", "TROW", "TPR"].map((ticker) => [ticker, GICS_BY_TICKER.get(ticker)?.cik]))).toEqual({
+      TGT: 27419,
+      HAS: 46080,
+      WELL: 766704,
+      PH: 76334,
+      TROW: 1113169,
+      TPR: 1116132,
+    });
     const byCik = new Map<number, string[]>();
     for (const row of rows) byCik.set(row.cik, [...(byCik.get(row.cik) ?? []), row.ticker]);
     expect([...byCik.values()].filter((tickers) => tickers.length > 1)).toHaveLength(3);

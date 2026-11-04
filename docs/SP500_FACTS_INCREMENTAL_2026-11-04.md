@@ -180,3 +180,27 @@ Scheduler process chain остаётся одна: 5216 → 15548 → 16164. Web
 `worker/.runs/sp500-facts-final-evidence-index.json` содержит 8 artifacts: initial/verification smoke logs, backfill monitor, initial run log, factor coverage, Daily Operations log/json и manifest summary. Проверка: **8/8 SHA256 match, 0 mismatches**.
 
 На момент этого отчёта выполнены terminal scheduler state и coverage/health checks. Progress остаётся ≈90% до documentation commit/push. После commit/push прогресс будет 100% выполнения задания, но **не 100% успешного CIK coverage**: six failed CIK остаются для следующего daily incremental run.
+
+
+## 11. Post-backfill CIK mapping remediation — 2026-11-04
+
+Первичный run остаётся историческим evidence и не переписывается. После него шесть HTTP 404 были проверены против официальной SEC [`company_tickers_exchange.json`](https://www.sec.gov/files/company_tickers_exchange.json) directory. Результат: все шесть failures вызваны неправильными ticker/CIK mappings в статическом GICS snapshot, а не отсутствием компаний в SEC.
+
+Проверены **все 502 ticker mappings**: mismatches ровно шесть, missing tickers в SEC directory нет.
+
+| Ticker | Неверный CIK в initial backfill | Правильный CIK по SEC |
+|---|---:|---:|
+| TGT | 27474 | **27419** |
+| HAS | 49280 | **46080** |
+| WELL | 704808 | **766704** |
+| PH | 773634 | **76334** |
+| TROW | 1006367 | **1113169** |
+| TPR | 1077205 | **1116132** |
+
+Исправлены `api/services/gics-snapshot.ts` и regenerated `worker/edgar-universe.json`. Membership snapshot остаётся `GICS_SNAPSHOT_AS_OF=2026-10-11`; добавлена отдельная дата `GICS_CIK_VERIFIED_ON=2026-11-04`, чтобы не выдавать CIK verification за пересъёмку состава индекса.
+
+Новый sorted-unique-CIK universe SHA256: `cede4a6dfb3b3f20aecf08bd60ed7cad634e6ac146bfa8d6089cd4ba3a6a28ac`.
+
+Regression test фиксирует все шесть правильных mappings, counts 502 rows / 499 unique CIKs, три ожидаемые duplicate-CIK pairs и новый universe hash. Изменение universe hash не вызывает полный backfill: refresh decision использует per-CIK raw/manifest state, а не universeHash как причину скачивания.
+
+Старые manifests неправильных CIK сохранены как исторические failure evidence и не входят в текущий universe. Для правильных CIK отсутствуют raw/manifests, поэтому следующий daily incremental run сделает targeted backfill только этих и других due CIK. Немедленный второй run не выполнялся и не выполняется.

@@ -78,6 +78,17 @@ describe("Project State workflow", () => {
     expect(host!.textContent).toContain("not expanded automatically");
   });
 
+  it("distinguishes a completed backfill from corrected CIK mapping failures", async () => {
+    mocks.current = null;
+    mocks.lastStatus = "error";
+    await act(async () => { root!.render(<MemoryRouter><ProjectState /></MemoryRouter>); });
+    expect(host!.textContent).toContain("remediated");
+    expect(host!.textContent).toContain("initial backfill processed all 499 CIKs");
+    expect(host!.textContent).toContain("incorrect ticker/CIK mappings");
+    expect(host!.textContent).toContain("next daily run will collect the corrected CIKs");
+    expect(host!.textContent).not.toContain("latest registered run needs attention");
+  });
+
   it("fails closed when live home state is unavailable", async () => {
     if (root) await act(async () => { root!.unmount(); });
     mocks.local = false;
