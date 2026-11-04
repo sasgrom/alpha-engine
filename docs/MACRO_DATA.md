@@ -62,6 +62,14 @@ npx tsx worker/macro-fred-fetch.mts --group credit
 
 Includes ICE BofA investment-grade and high-yield OAS. FRED currently notes that, starting in April 2026, these series include only three years of observations. The warning is preserved in the series registry and manifest. Longer history requires an authorized source; it is not silently backfilled.
 
+### Volatility
+
+```powershell
+npx tsx worker/macro-fred-fetch.mts --group volatility
+```
+
+Includes the CBOE VIX close (`VIXCLS`) as a separate `volatility` / `vix_close` channel. It is not silently included in rates. The registry now expects **21 series** for a complete manifest, QA and Daily Operations coverage. The four Event Study series (`DGS10`, `DCOILWTICO`, `DTWEXBGS`, `BAMLH0A0HYM2`) and Shock Calibration inputs are unchanged.
+
 ### Inflation
 
 ```powershell
@@ -361,3 +369,18 @@ The independent `sp500-facts-daily` job collects SEC companyfacts for the curren
 - `--cached` remains the offline recovery path for an existing valid raw payload and never bypasses local ingest validation. `INGEST_URL` must be loopback-only; production ingest is rejected before collection.
 
 Daily Operations reads these manifests for unique-CIK coverage, refreshed/unchanged/failed/missing counts and latest check time. Research universe 51, factor/IC evaluation, Atlas and factor/model/regime universes are not expanded by this collection job.
+
+## 17. Normalized FRED/ALFRED → legacy macro_points
+
+`scripts/backfill-macro-vintages.mts` restores the eight curated probability/dashboard series from `normalized/fred/<SERIES>.json` into local `macro_points`. It does not collect data, alter schemas or run a production action. The default mode is a dry-run. A local apply requires `--apply` and `--backup-manifest <path>` for a complete pre-write table backup; its SHA256 and current database fingerprint must match before any write.
+
+```powershell
+npx tsx scripts/backfill-macro-vintages.mts --out worker/.runs/macro-vintage-dry-run
+npx tsx scripts/backfill-macro-vintages.mts --apply --backup-manifest worker/.runs/<reviewed-backup>/backup-manifest.json --out worker/.runs/<reviewed-apply>
+```
+
+The exact availability mapping is `observationPeriod → date`, `value → value`, `availableAt → realtimeStart`, `supersededAt → realtimeEnd`, and the actual new ingest timestamp → `fetchedAt`. Null values remain null. Null `supersededAt` is open-ended. Missing `availableAt` is skipped with a diagnostic; `fetchedAt`, `researchEligibleAt` and `ingestedAt` never substitute for official availability.
+
+Deduplication is limited to identical `(seriesId, observationPeriod, realtimeStart)` rows. An identical key with a different value or `realtimeEnd` is a conflict error, never a silent upsert. A conflict-bearing series is wholly preserved; an independent valid series may still be ingested, producing an explicit `partial` result and nonzero exit code. `ingestMacroPoints` inserts in batches of at most 500. There are no DELETE/DROP/TRUNCATE operations, and live idempotency is checked read-only rather than by repeating an apply.
+
+`FEDFUNDS` (monthly effective federal funds rate) is not interchangeable with regular collector series `DFF` (daily rate). A missing normalized archive therefore remains a blocker, not an invitation to substitute another series. Current legacy rows with `realtimeStart = realtimeEnd` that disagree with official open-ended evidence also require separate reviewed resolution; they are not overwritten by this adapter.

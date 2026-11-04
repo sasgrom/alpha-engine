@@ -1,5 +1,5 @@
 export const MACRO_RESEARCH_START = "2000-01-01";
-export type MacroGroup = "rates" | "oil" | "usd" | "credit" | "inflation" | "labor" | "growth";
+export type MacroGroup = "rates" | "oil" | "usd" | "credit" | "volatility" | "inflation" | "labor" | "growth";
 export interface MacroSeriesDefinition {
   seriesId: string;
   group: MacroGroup;
@@ -7,7 +7,7 @@ export interface MacroSeriesDefinition {
   notes?: string;
 }
 
-export const MACRO_GROUP_ORDER: MacroGroup[] = ["rates", "oil", "usd", "credit", "inflation", "labor", "growth"];
+export const MACRO_GROUP_ORDER: MacroGroup[] = ["rates", "oil", "usd", "credit", "volatility", "inflation", "labor", "growth"];
 export const MACRO_SERIES: MacroSeriesDefinition[] = [
   { seriesId: "DGS2", group: "rates", channel: "treasury_2y" },
   { seriesId: "DGS10", group: "rates", channel: "treasury_10y" },
@@ -21,6 +21,7 @@ export const MACRO_SERIES: MacroSeriesDefinition[] = [
   { seriesId: "DTWEXBGS", group: "usd", channel: "fed_broad_dollar" },
   { seriesId: "BAMLC0A0CM", group: "credit", channel: "investment_grade_oas", notes: "FRED notes that starting in April 2026 this series includes only three years of observations; use the source for longer history." },
   { seriesId: "BAMLH0A0HYM2", group: "credit", channel: "high_yield_oas", notes: "FRED notes that starting in April 2026 this series includes only three years of observations; use the source for longer history." },
+  { seriesId: "VIXCLS", group: "volatility", channel: "vix_close" },
   { seriesId: "CPIAUCSL", group: "inflation", channel: "cpi_headline" },
   { seriesId: "CPILFESL", group: "inflation", channel: "cpi_core" },
   { seriesId: "PCEPI", group: "inflation", channel: "pce_headline" },

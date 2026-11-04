@@ -55,7 +55,7 @@ export function parseFredCsv(csvText: string): { date: string; value: number | n
 /** Ingest parsed points (idempotent via the UQ key; chunked ≤500). */
 export async function ingestMacroPoints(
   seriesId: string,
-  points: ReturnType<typeof parseFredCsv>
+  points: (ReturnType<typeof parseFredCsv>[number] & { fetchedAt?: string | Date })[]
 ): Promise<number> {
   const db = getDb();
   let n = 0;
@@ -64,7 +64,7 @@ export async function ingestMacroPoints(
     const slice = points.slice(i, i + CHUNK);
     await db
       .insert(macroPoints)
-      .values(slice.map((p) => ({ seriesId, date: p.date, value: p.value, realtimeStart: p.realtimeStart, realtimeEnd: p.realtimeEnd })))
+      .values(slice.map((p) => ({ seriesId, date: p.date, value: p.value, realtimeStart: p.realtimeStart, realtimeEnd: p.realtimeEnd, fetchedAt: p.fetchedAt ? new Date(p.fetchedAt) : new Date() })))
       .onDuplicateKeyUpdate({ set: { value: sql`VALUES(\`value\`)`, realtimeEnd: sql`VALUES(\`realtimeEnd\`)` } });
     n += slice.length;
   }
