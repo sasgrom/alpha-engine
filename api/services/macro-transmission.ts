@@ -244,8 +244,9 @@ export function buildMacroTransmissionAtlas(input: MacroTransmissionInput): Macr
         const metric = exposureMetric(exposure, exposureKind);
         if (!metric || metric.quality === "missing" || metric.value === null || !Number.isFinite(metric.value)) { coverage.exposureMissing++; continue; }
         if (metric.quality === "partial") { coverage.exposurePartial++; continue; }
+        if (!metric.sourceFiled || !metric.periodEnd || metric.sourceFiled > macro.researchEligibleAt || metric.periodEnd > macro.researchEligibleAt.slice(0, 10)) { coverage.exposureMissing++; continue; }
         if (metric.stale) { coverage.exposureStale++; continue; }
-        if (metric.value < 0 || !metric.periodEnd) { coverage.exposureMissing++; continue; }
+        if (metric.value < 0) { coverage.exposureMissing++; continue; }
         if (!result) { coverage.priceMissing++; continue; }
         for (const horizon of HORIZONS) {
           const shock = macro.outcomes[horizon]?.change;

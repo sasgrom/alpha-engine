@@ -16,7 +16,7 @@ export const PROJECT_STATE_REVIEW = {
     { id: "F-01/F-02", title: "First-vintage factors and required-concept availability", status: "done" as const },
     { id: "F-03", title: "13F event and aggregate-flow publication availability", status: "done" as const },
     { id: "F-04", title: "Realtime-window-aware macro vintages", status: "done" as const },
-    { id: "F-05", title: "Composite exposure availability and period alignment", status: "next" as const },
+    { id: "F-05", title: "Composite exposure availability and period alignment", status: "done" as const },
   ],
   research: {
     universe: "research-universe-51.json",
@@ -28,7 +28,6 @@ export const PROJECT_STATE_REVIEW = {
     ic: "Changed after fresh facts; descriptive evidence only, no factor/model/regime promotion",
   },
   nextQueue: [
-    "F-05 — composite exposure availability and periods",
     "Reviewed rebuilds for 13F, macro and exposure evidence",
     "F-10 / F-11 / F-15 / F-16 numeric correctness",
     "F-06 / F-07 / F-13 production boundary and access control",

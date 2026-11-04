@@ -121,4 +121,19 @@ describe("macro scenarios", () => {
     expect(missing.scenarios[0].status).toBe("not_computable");
     expect(missing.scenarios[0].reasons).toContain("fred_baseline_missing");
   });
+
+  it("rejects partial debt and unknown availability instead of turning display evidence into a scenario", () => {
+    const partial = exposure("RCL", 100);
+    partial.debt.quality = "partial";
+    const partialReport = buildMacroScenarioReport(input([pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) })], [partial]));
+    expect(partialReport.scenarios[0].impacts[0].status).toBe("not_computable");
+    expect(partialReport.scenarios[0].impacts[0].reasons).toContain("debt_missing_invalid_or_partial");
+    expect(partialReport.scenarios[0].impacts[0].metrics).toEqual([]);
+
+    const unknown = exposure("RCL", 100);
+    unknown.debt.sourceFiled = null;
+    const unknownReport = buildMacroScenarioReport(input([pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) })], [unknown]));
+    expect(unknownReport.scenarios[0].impacts[0].status).toBe("not_computable");
+    expect(unknownReport.scenarios[0].impacts[0].reasons).toContain("debt_unavailable_asof");
+  });
 });

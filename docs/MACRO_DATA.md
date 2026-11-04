@@ -186,6 +186,10 @@ npx tsx scripts/build-company-exposure.mts --only DAL --as-of 2026-01-31T00:00:0
 
 Outputs are `public/reports/company-exposures.json` and `.md`. The report computes only directly supported values: debt/operating income, operating income/interest expense, cash/debt, fuel cost/operating income, oil revenue/cost and foreign revenue share when domicile and total revenue are directly comparable **for the same periodEnd**. It does not infer sector directions, floating-rate debt share, maturity schedules or hedge ratios. Each metric carries source concepts, period, availability and stale-evidence flags.
 
+After F-05, every derived metric receives `MAX(sourceFiled)` across all required inputs: four TTM points, current+noncurrent debt, both ratio sides and domestic+total revenue. A null required date fails closed; it cannot displace a known eligible vintage or become `quality=available`. PIT selection requires `sourceFiled <= asOf` and `periodEnd <= asOf`, so later revisions do not affect earlier anchors. Ratios require identical `periodEnd` and units, finite values and a positive denominator; incompatible evidence is missing with a diagnostic rather than a numeric ratio.
+
+Non-consecutive TTM remains partial for display with its explicit note. Scenario debt requires `quality=available` plus valid as-of availability, and Atlas additionally requires known availability at or before event eligibility. Partial/missing evidence produces no research row. Existing Company Exposure, Scenario and Atlas reports require a separate reviewed rebuild; lower available coverage after this correction is a valid fail-closed outcome.
+
 ## 9. Pilot source-linked evidence pack
 
 ```powershell

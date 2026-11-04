@@ -124,4 +124,26 @@ describe("macro transmission atlas", () => {
     expect(oil.exposure).toBeCloseTo(0.64);
     expect(oil.concepts).toContain("OilAndGasRevenue");
   });
+
+  it("keeps non-consecutive TTM partial for diagnostics but out of research records", () => {
+    const macro = buildMacroEventStudyReport({
+      events: Array.from({ length: 40 }, (_, index) => macroEvent(10 + index * 2)),
+      series: [{ seriesId: "DGS10", channel: "rates", rows: macroRows("DGS10", 2) }],
+      asOf: AS_OF,
+      generatedAt: AS_OF,
+    });
+    const rows = fundamentals(1).filter((row) => row.concept !== "OperatingIncomeLoss" || row.periodEnd !== "2019-09-30");
+    const report = buildMacroTransmissionAtlas({
+      macroObservations: macro.observations,
+      companies: [{ cik: 1, ticker: "GAP", sector: null, rows, bars: bars(1) }],
+      spyBars,
+      asOf: AS_OF,
+      generatedAt: AS_OF,
+      dataMode: "fixture",
+    });
+    expect(report.coverage.candidatePairs).toBeGreaterThan(0);
+    expect(report.coverage.exposurePartial).toBe(report.coverage.candidatePairs);
+    expect(report.records).toEqual([]);
+    expect(report.studies.every((study) => study.status === "insufficient_coverage")).toBe(true);
+  });
 });

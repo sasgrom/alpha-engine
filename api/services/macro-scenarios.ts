@@ -104,7 +104,7 @@ function rateImpact(pilot: PilotEvidence | undefined, exposure: CompanyExposureR
   const debt = exposure.debt;
   if (!fixed || !validShare(fixed.value)) return notComputable(pilot.ticker, ["fixed_interest_share_missing_or_invalid"]);
   if (!availabilityDate(fixed, asOf)) return notComputable(pilot.ticker, ["fixed_interest_share_unavailable_asof"]);
-  if (debt.quality === "missing" || debt.value === null || debt.value < 0) return notComputable(pilot.ticker, ["debt_missing_or_invalid"]);
+  if (debt.quality !== "available" || debt.value === null || !Number.isFinite(debt.value) || debt.value < 0) return notComputable(pilot.ticker, ["debt_missing_invalid_or_partial"]);
   if (!availabilityDate(debt, asOf)) return notComputable(pilot.ticker, ["debt_unavailable_asof"]);
   const isHistorical = stale(fixed.periodEnd, asOf) || stale(debt.periodEnd, asOf);
   const hedge = pilot.interestRateHedgeShare;

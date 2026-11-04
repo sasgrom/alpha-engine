@@ -60,15 +60,25 @@ export interface CompanyExposureReport {
 }
 
 const missing = (note: string): ExposureMetric => ({ value: null, unit: null, concepts: [], periodEnd: null, sourceFiled: null, quality: "missing", note });
-const available = (value: number, unit: string, concepts: string[], periodEnd: string, sourceFiled: string | null, quality: ExposureMetric["quality"] = "available", note: string | null = null): ExposureMetric => ({ value, unit, concepts, periodEnd, sourceFiled, quality, note });
+const available = (value: number, unit: string, concepts: string[], periodEnd: string, sourceFiled: string, quality: ExposureMetric["quality"] = "available", note: string | null = null): ExposureMetric => ({ value, unit, concepts, periodEnd, sourceFiled, quality, note });
 const metricUnit = (unit: string | null) => unit ?? "unknown";
 
+// A derived metric cannot predate any required input; unknown availability fails closed.
+function maxAvailability(inputs: Pick<ExposureMetric, "sourceFiled">[]): string | null {
+  let latest: string | null = null;
+  for (const input of inputs) {
+    if (!input.sourceFiled) return null;
+    if (!latest || input.sourceFiled > latest) latest = input.sourceFiled;
+  }
+  return latest;
+}
+
 function latestByConcept(rows: FundamentalSeriesRow[], concept: string, asOf: string): FundamentalSeriesRow[] {
-  const eligible = rows.filter((row) => row.concept === concept && row.vintage === "latest" && row.val !== null && Number.isFinite(row.val) && row.periodEnd <= asOf.slice(0, 10) && (!row.sourceFiled || row.sourceFiled <= asOf));
+  const eligible = rows.filter((row) => row.concept === concept && row.vintage === "latest" && row.val !== null && Number.isFinite(row.val) && row.periodEnd <= asOf.slice(0, 10) && row.sourceFiled && row.sourceFiled <= asOf);
   const byPeriod = new Map<string, FundamentalSeriesRow>();
   for (const row of eligible) {
     const prior = byPeriod.get(row.periodEnd);
-    if (!prior || (row.sourceFiled ?? "") > (prior.sourceFiled ?? "") || row.id > prior.id) byPeriod.set(row.periodEnd, row);
+    if (!prior || row.sourceFiled! > prior.sourceFiled! || (row.sourceFiled === prior.sourceFiled && row.id > prior.id)) byPeriod.set(row.periodEnd, row);
   }
   return [...byPeriod.values()].sort((a, b) => b.periodEnd.localeCompare(a.periodEnd));
 }
@@ -84,19 +94,21 @@ function flowMetric(rows: FundamentalSeriesRow[], concepts: string[], asOf: stri
     if (!points.length) continue;
     const unit = metricUnit(points[0].unit);
     if (points.some((point) => metricUnit(point.unit) !== unit)) return missing(`${concept}: unit conflict`);
+    const sourceFiled = maxAvailability(points);
+    if (!sourceFiled) return missing(`${concept}: missing required sourceFiled`);
     const indices = points.map((point) => quarterIndex(point.periodEnd));
     const nonConsecutive = indices.some((value, index) => value === null || (index > 0 && indices[index - 1]! - value! !== 1));
     const value = points.reduce((total, point) => total + (point.val ?? 0), 0);
     const quality = points.length === 4 && !nonConsecutive ? "available" : "partial";
     const note = nonConsecutive ? "Non-consecutive quarterly points" : points.length < 4 ? `Only ${points.length} quarterly points` : null;
-    return available(value, unit, [concept], points[0].periodEnd, points[0].sourceFiled, quality, note);
+    return available(value, unit, [concept], points[0].periodEnd, sourceFiled, quality, note);
   }
   return missing(`No ${concepts.join(" or ")}`);
 }
 function stockMetric(rows: FundamentalSeriesRow[], concepts: string[], asOf: string): ExposureMetric {
   for (const concept of concepts) {
     const point = latestByConcept(rows, concept, asOf)[0];
-    if (point) return available(point.val!, metricUnit(point.unit), [concept], point.periodEnd, point.sourceFiled);
+    if (point) return available(point.val!, metricUnit(point.unit), [concept], point.periodEnd, point.sourceFiled!);
   }
   return missing(`No ${concepts.join(" or ")}`);
 }
@@ -107,7 +119,9 @@ function debtMetric(rows: FundamentalSeriesRow[], asOf: string): ExposureMetric 
   const noncurrent = stockMetric(rows, ["LongTermDebtNoncurrent"], asOf);
   if (current.quality !== "missing" && noncurrent.quality !== "missing") {
     if (current.periodEnd !== noncurrent.periodEnd || current.unit !== noncurrent.unit) return missing("LongTermDebtCurrent and LongTermDebtNoncurrent have incompatible periods or units");
-    return available(current.value! + noncurrent.value!, current.unit!, ["LongTermDebtCurrent", "LongTermDebtNoncurrent"], current.periodEnd!, current.sourceFiled);
+    const sourceFiled = maxAvailability([current, noncurrent]);
+    if (!sourceFiled) return missing("Current and noncurrent debt require known sourceFiled for both components");
+    return available(current.value! + noncurrent.value!, current.unit!, ["LongTermDebtCurrent", "LongTermDebtNoncurrent"], current.periodEnd!, sourceFiled);
   }
   if (current.quality !== "missing" || noncurrent.quality !== "missing") {
     const partial = current.quality !== "missing" ? current : noncurrent;
@@ -117,14 +131,20 @@ function debtMetric(rows: FundamentalSeriesRow[], asOf: string): ExposureMetric 
 }
 function ratio(numerator: ExposureMetric, denominator: ExposureMetric, note: string): ExposureMetric {
   if (numerator.quality === "missing" || denominator.quality === "missing") return missing(note);
+  if (numerator.periodEnd !== denominator.periodEnd) return missing(`${note}: incompatible periods ${numerator.periodEnd ?? "unknown"} vs ${denominator.periodEnd ?? "unknown"}`);
   if (numerator.unit !== denominator.unit) return missing(`${note}: incompatible units ${numerator.unit} vs ${denominator.unit}`);
   if (denominator.value === null || denominator.value <= 0 || numerator.value === null) return missing(`${note}: non-positive or missing denominator`);
+  if (!Number.isFinite(numerator.value) || !Number.isFinite(denominator.value)) return missing(`${note}: non-finite numeric value`);
+  const sourceFiled = maxAvailability([numerator, denominator]);
+  if (!sourceFiled) return missing(`${note}: missing required sourceFiled`);
+  const value = numerator.value / denominator.value;
+  if (!Number.isFinite(value)) return missing(`${note}: non-finite ratio`);
   return {
-    value: numerator.value / denominator.value,
+    value,
     unit: "ratio",
     concepts: [...numerator.concepts, ...denominator.concepts],
-    periodEnd: numerator.periodEnd ?? denominator.periodEnd,
-    sourceFiled: numerator.sourceFiled ?? denominator.sourceFiled,
+    periodEnd: numerator.periodEnd,
+    sourceFiled,
     quality: numerator.quality === "partial" || denominator.quality === "partial" ? "partial" : "available",
     note: numerator.note ?? denominator.note,
   };
@@ -146,9 +166,10 @@ export function buildCompanyExposure(input: CompanyExposureInput, asOf: string):
   const oilCost = flowMetric(input.rows, ["CostOfPurchasedOilAndGas"], asOf);
   const totalRevenue = stockMetric(input.rows, ["RevenueFromContractWithCustomerExcludingAssessedTax"], asOf);
   const domesticRevenue = stockMetric(input.rows, ["EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToEntitysCountryOfDomicile"], asOf);
-  const foreignRevenueShare = domesticRevenue.quality !== "missing" && totalRevenue.quality !== "missing" && domesticRevenue.periodEnd === totalRevenue.periodEnd && totalRevenue.value! > 0 && domesticRevenue.unit === totalRevenue.unit
-    ? available(Math.max(0, 1 - domesticRevenue.value! / totalRevenue.value!), "ratio", [...domesticRevenue.concepts, ...totalRevenue.concepts], domesticRevenue.periodEnd!, domesticRevenue.sourceFiled, "available", "Computed as 1 − domicile revenue / total revenue for the same period")
-    : missing("No directly comparable domicile and total revenue");
+  const domicileToTotalRevenue = ratio(domesticRevenue, totalRevenue, "Domicile / total revenue is unavailable");
+  const foreignRevenueShare = domicileToTotalRevenue.quality !== "missing"
+    ? available(Math.max(0, 1 - domicileToTotalRevenue.value!), "ratio", domicileToTotalRevenue.concepts, domicileToTotalRevenue.periodEnd!, domicileToTotalRevenue.sourceFiled!, domicileToTotalRevenue.quality, "Computed as 1 − domicile revenue / total revenue for the same period")
+    : missing(`No directly comparable domicile and total revenue: ${domicileToTotalRevenue.note}`);
   const foreignDerivativeNotional = stockMetric(input.rows, ["NotionalAmountOfForeignCurrencyDerivatives"], asOf);
   const missingFields = [
     "floating rate share",
