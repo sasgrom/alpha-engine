@@ -1431,6 +1431,14 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 Единственный FEDFUNDS fetch завершился **до network collection** из-за отсутствия monthly mapping в registry. Повторного запуска и подмены DFF не было. Source теперь содержит отдельный monthly channel, но official archive, post-fetch QA и six-series backfill в этом блоке отсутствуют. Текущее coverage — **7/8**, missing только FEDFUNDS; follow-up inserted rows равны нулю для всех шести серий. Frozen evaluation сохраняет 472/1,455 eligible checks, 0 complete three-series anchors и selected-after-anchor=0; historical metrics сравниваются без causal attribution. Macro remediation остаётся **partial**, не complete и не promoted. Source commit: `ed939f307be66d5120193a914ae0ad6abd2c173f`.
 
+### FEDFUNDS и six-series restoration complete — 2026-11-04
+
+После registry correction в `ed939f3` один targeted FEDFUNDS collection дал **4,510 official ALFRED rows** с observations 2000-01-01→2026-10-01 и vintages 2000-02-08→2026-11-02. QA прошёл для **22 серий** с zero errors/warnings. Один comma-separated apply вставил **275,481 строку** для DGS10, DGS2, T10Y2Y, FEDFUNDS, CPIAUCSL и UNRATE с zero conflicts/errors. VIXCLS/BAMLH0A0HYM2 и пять exact-ID repairs повторно не выполнялись.
+
+Итоговая таблица содержит **408,862 rows**. Независимая проверка подтверждает 133,381 unchanged preexisting rows, только пять ранее разрешённых realtimeEnd изменений среди original IDs, zero new-row source mismatches и **8/8 current eligible series**. Final backup SHA256: `21bbff9dc427a94b9e28f83ff0a3253bf91a28273f5f27f8fb785a4292e03319`; fingerprint `ad14687c6161a8f0ffd518139f7ebce57c3e385d620ec8bf54e385514af2ef63`. Оба collection/apply guards прошли без повторного shell-chain incident.
+
+Frozen evaluation теперь содержит **794/1,455 eligible checks**, **84 complete three-series anchors** и selected-after-anchor=0. Curve coverage — 322/163 eligible/missing; HY — 84/401, VIX — 388/97 из-за ограничений official history. Prior values 0.50/0.54/0.42/0.47/0.39 встречаются на 195/189/31/66/4 anchors; current prior остаётся 0.50. Metrics приведены только как historical comparison, без causal attribution или promotion. Полные evidence: `docs/MACRO_VINTAGE_FEDFUNDS_COMPLETION_2026-11-04.md`. Следующий блок — Statements historical rebuild/evaluation, а не alpha или production claim.
+
 ### 4.43 Итерация 6d: magnitude-ядро и read-side защита 13F
 
 **Статус: исследовательское ядро и безопасность отображения, не новая торговая модель и не доказательство альфы.** Полный контракт находится в `docs/DESIGN_MAGNITUDE.md` (зарегистрирован в Admin → Manuals): availability-инварианты, математика, допустимые и запрещённые выводы, acceptance gates и дальнейшие этапы зафиксированы ДО кода.

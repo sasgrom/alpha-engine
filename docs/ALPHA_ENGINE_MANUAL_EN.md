@@ -1434,6 +1434,14 @@ Five exact legacy rows (DGS10 44671, DGS2 46182, T10Y2Y 47694, CPIAUCSL 31824, U
 
 The single FEDFUNDS fetch failed **before network collection** because monthly FEDFUNDS was absent from the registry. It was not retried and DFF was not substituted. The source now has a separate monthly channel, but no official archive, post-fetch QA or six-series backfill exists in this block. Current coverage is **7/8**, with only FEDFUNDS missing; follow-up inserted rows are zero for all six requested series. Frozen evaluation remains at 472/1,455 eligible checks, zero complete three-series anchors and selected-after-anchor=0; historical metrics are compared without causal attribution. Macro remediation is still **partial**, not complete or promoted. Source commit: `ed939f307be66d5120193a914ae0ad6abd2c173f`.
 
+### FEDFUNDS and six-series restoration complete — 2026-11-04
+
+After the registry correction in `ed939f3`, one targeted FEDFUNDS collection produced **4,510 official ALFRED rows** with observations 2000-01-01→2026-10-01 and vintages 2000-02-08→2026-11-02. QA passed for **22 series** with zero errors/warnings. One comma-separated apply inserted **275,481 rows** across DGS10, DGS2, T10Y2Y, FEDFUNDS, CPIAUCSL and UNRATE with zero conflicts/errors. VIXCLS/BAMLH0A0HYM2 were not repeated and the five exact-ID repairs were not reapplied.
+
+The final table has **408,862 rows**. Independent verification proves all 133,381 preexisting rows unchanged, only the five previously approved realtimeEnd differences among original IDs, zero new-row source mismatches and **8/8 current eligible series**. Final backup SHA256 is `21bbff9dc427a94b9e28f83ff0a3253bf91a28273f5f27f8fb785a4292e03319`; fingerprint `ad14687c6161a8f0ffd518139f7ebce57c3e385d620ec8bf54e385514af2ef63`. Both collection/apply guards passed without another shell-chain incident.
+
+Frozen evaluation now has **794/1,455 eligible checks**, **84 complete three-series anchors** and selected-after-anchor=0. Curve coverage is 322/163 eligible/missing; HY remains 84/401 and VIX 388/97 due to official history limits. Prior values include 0.50, 0.54, 0.42, 0.47 and 0.39 on 195/189/31/66/4 anchors respectively; current prior remains 0.50. Metrics are historical comparisons only, not causal attribution or promotion. Full evidence: `docs/MACRO_VINTAGE_FEDFUNDS_COMPLETION_2026-11-04.md`. Next: Statements historical rebuild/evaluation, not an alpha or production claim.
+
 ### 4.43 Iteration 6d: magnitude kernel and 13F read-side guard
 
 **Status: research kernel and presentation safety, not a new trading model and not evidence of alpha.** The full contract lives in `docs/DESIGN_MAGNITUDE.md` (registered under Admin → Manuals): availability invariants, mathematics, allowed/forbidden conclusions, acceptance gates, and later stages were fixed BEFORE implementation.
