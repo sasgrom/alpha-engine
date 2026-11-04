@@ -1395,6 +1395,12 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 **Проверка и stale evidence.** Targeted Statements и Company Exposure suites прошли **2 files / 38 tests**: четыре последовательных квартала, grid holes, null required cells, окно из пяти кварталов, 53-week calendar и annual mode; существующий YoY hole regression остаётся зелёным. TypeScript check прошёл. Исторические Statements ROE/ROA TTM из непоследовательных кварталов требуют reviewed rebuild там, где применимо. Company Exposure, Scenario и Atlas reports остаются stale и будут перестроены один раз после F-05/F-10/F-11, без повторных runs. Rebuild и collectors не запускались.
 
+### Reviewed rebuild exposure evidence — 2026-11-04
+
+**Фактические evidence.** После F-05/F-10/F-11 выполнен один manual reviewed Company Exposure → Macro Scenarios → Atlas rebuild, по одному run на builder без collectors, scheduler request или production actions. Company Exposure использовал research-universe-51; Atlas сохранил default research-universe-50. Результат Company Exposure: 51 companies, debt 47, interestCoverage 6, fuelCost 1, oilRevenue 1, oilCost 2, foreignRevenueShare 0. Шестьдесят четыре ранее available ratios стали missing из-за несовпадающих periods; это fail-closed evidence, а не причина для повторного run или ослабления gates. Scenario channel statuses не изменились. Atlas `partial`: **904 records**, 24 studies, 6 estimated / 18 insufficient, 0 full_sample и 2 OOS evaluations. Evidence index прошёл 36/36 SHA256 checks. Полный ledger и pre/post анализ: `docs/EXPOSURE_REBUILD_2026-11-04.md`.
+
+**Operations note.** Manual runs не создавали и не меняли registered scheduler `lastRuns`. Daily Operations остаётся critical: Schwab 0/51 captures сегодня; Atlas partial — warning при текущем lineage. `production-readiness=ready` — только file gate. При запуске health builder из Git Bash передавай macro root как `D:/research/alpha-engine/macro`: unquoted Windows backslashes могут быть удалены Bash и изменить путь. Существующие PowerShell-команды не изменены. Следующий reviewed блок: macro prior/probability rebuild.
+
 ### 4.43 Итерация 6d: magnitude-ядро и read-side защита 13F
 
 **Статус: исследовательское ядро и безопасность отображения, не новая торговая модель и не доказательство альфы.** Полный контракт находится в `docs/DESIGN_MAGNITUDE.md` (зарегистрирован в Admin → Manuals): availability-инварианты, математика, допустимые и запрещённые выводы, acceptance gates и дальнейшие этапы зафиксированы ДО кода.

@@ -26,11 +26,10 @@ export const PROJECT_STATE_REVIEW = {
     factorPoints: 21_489,
     factorCoverage: "51/51 companies",
     eventStudy: "Ready · 47/47 eligible events with outcomes",
-    atlas: "Partial · 1,462 records · 24 studies · 2 OOS evaluations",
+    atlas: "Partial · 904 records · 24 studies · 2 OOS evaluations",
     ic: "Changed after fresh facts; descriptive evidence only, no factor/model/regime promotion",
   },
   nextQueue: [
-    "Reviewed Company Exposure → Macro Scenarios → Atlas rebuild",
     "Reviewed macro prior/probability rebuild",
     "Reviewed 13F event/flow/probability rebuild",
     "F-15 / F-16 numeric correctness",
