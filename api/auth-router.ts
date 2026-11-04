@@ -11,6 +11,7 @@ import { hashPassword, passwordPolicyError, usernamePolicyError, verifyPassword 
 import { issueCaptcha, verifyCaptcha } from "./services/captcha";
 import { loginFailed, loginGate, loginSucceeded, signupAllowed } from "./services/login-guard";
 import { clientIp, recordEvent } from "./services/activity";
+import { bindReviewerIp } from "./services/reviewer-access";
 
 /** Serialize the session cookie exactly like the OAuth callback does. */
 function sessionCookie(ctx: { req: Request; resHeaders: Headers }, unionId: string, token: string) {
@@ -94,6 +95,7 @@ export const authRouter = createRouter({
         throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid username or password" });
       }
       loginSucceeded(ip, input.username);
+      await bindReviewerIp(user.id, ip);
       await touchSignIn(user.id);
       await recordEvent(user.id, "login", { ip }); // D35: activity collection
       const token = await signSessionToken({ unionId: user.unionId, clientId: env.appId });

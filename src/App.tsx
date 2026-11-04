@@ -5,6 +5,8 @@ import { useAuth } from "@/hooks/useAuth";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
+import ReviewerGate from "./components/ReviewerGate";
+import PresentationOnly from "./components/PresentationOnly";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Universe = lazy(() => import("./pages/Universe"));
@@ -60,7 +62,7 @@ function AdminOnly({ children }: { children: ReactNode }) {
 export default function App() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="radar" /></div>}>
-      <Routes>
+      <ReviewerGate><Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/universe" element={<Universe />} />
       <Route path="/screener" element={<Screener />} />
@@ -72,18 +74,18 @@ export default function App() {
       <Route path="/lab" element={<AdminOnly><Lab /></AdminOnly>} />
       <Route path="/admin" element={<Admin />} />
       <Route path="/workers" element={<AdminOnly><Workers /></AdminOnly>} />
-      <Route path="/project-state" element={<AdminOnly><ProjectState /></AdminOnly>} />
-      <Route path="/fundflows" element={<AdminOnly><FundFlows /></AdminOnly>} />
-      <Route path="/analytics" element={<AdminOnly><Analytics /></AdminOnly>} />
-      <Route path="/analytics/methodology" element={<AdminOnly><Methodology /></AdminOnly>} />
-      <Route path="/analytics/risk-lab" element={<AdminOnly><VolatilityRiskLab /></AdminOnly>} />
-      <Route path="/scenario-lab" element={<AdminOnly><MacroScenarioLab /></AdminOnly>} />
-      <Route path="/expectations" element={<AdminOnly><Expectations /></AdminOnly>} />
-      <Route path="/market-data" element={<AdminOnly><MarketData /></AdminOnly>} />
+      <Route path="/project-state" element={<PresentationOnly><ProjectState /></PresentationOnly>} />
+      <Route path="/fundflows" element={<PresentationOnly><FundFlows /></PresentationOnly>} />
+      <Route path="/analytics" element={<PresentationOnly><Analytics /></PresentationOnly>} />
+      <Route path="/analytics/methodology" element={<PresentationOnly><Methodology /></PresentationOnly>} />
+      <Route path="/analytics/risk-lab" element={<PresentationOnly><VolatilityRiskLab /></PresentationOnly>} />
+      <Route path="/scenario-lab" element={<PresentationOnly><MacroScenarioLab /></PresentationOnly>} />
+      <Route path="/expectations" element={<PresentationOnly><Expectations /></PresentationOnly>} />
+      <Route path="/market-data" element={<PresentationOnly><MarketData /></PresentationOnly>} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="*" element={<NotFound />} />
-      </Routes>
+      </Routes></ReviewerGate>
     </Suspense>
   )
 }

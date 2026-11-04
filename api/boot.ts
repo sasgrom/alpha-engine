@@ -7,10 +7,14 @@ import { createContext } from "./context";
 import { env } from "./lib/env";
 import { createOAuthCallbackHandler } from "./kimi/auth";
 import { Paths } from "@contracts/constants";
+import { reviewerReportAccess, reviewerSecurityHeaders } from "./services/reviewer-http";
 
 const app = new Hono<{ Bindings: HttpBindings }>();
 
 app.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
+app.use("*", reviewerSecurityHeaders);
+app.use("/reports/*", reviewerReportAccess);
+app.get("/robots.txt", (c) => c.text("User-agent: *\nDisallow: /\n"));
 app.get(Paths.oauthCallback, createOAuthCallbackHandler());
 
 // Stage 1.7 (3g): browser-uploaded chunks of the Stooq bulk zip (32 MB each —

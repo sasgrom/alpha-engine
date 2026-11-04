@@ -1,6 +1,7 @@
 import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import type { User } from "@db/schema";
 import { authenticateRequest } from "./kimi/auth";
+import { getReviewerAccess, type ReviewerAccess } from "./services/reviewer-access";
 
 export type TrpcContext = {
   req: Request;
@@ -14,6 +15,7 @@ export type TrpcContext = {
    * never impersonates a write.
    */
   viewAsUserId: number | null;
+  reviewerAccess?: ReviewerAccess | null;
 };
 
 export async function createContext(
@@ -22,6 +24,7 @@ export async function createContext(
   const ctx: TrpcContext = { req: opts.req, resHeaders: opts.resHeaders, viewAsUserId: null };
   try {
     ctx.user = await authenticateRequest(opts.req.headers);
+    if (ctx.user) ctx.reviewerAccess = await getReviewerAccess(ctx.user.id);
     if (ctx.user?.role === "admin") {
       const raw = opts.req.headers.get("x-view-as");
       const n = raw ? Number(raw) : NaN;

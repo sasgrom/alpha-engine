@@ -855,3 +855,38 @@ export const metricHistory = mysqlTable(
   (t) => [uniqueIndex("uq_metric_history").on(t.cik, t.metric, t.date), index("idx_metric_history").on(t.cik, t.metric, t.date)]
 );
 export type MetricHistory = typeof metricHistory.$inferSelect;
+
+
+// ---------------------------------------------------------------------------
+// Reviewer presentation access: NDA gate, first-IP binding and tour state.
+// users.role remains unchanged; a separate profile prevents privilege drift.
+// ---------------------------------------------------------------------------
+export const reviewerAccess = mysqlTable(
+  "reviewer_access",
+  {
+    userId: bigint("userId", { mode: "number", unsigned: true }).primaryKey(),
+    firstIpHash: varchar("firstIpHash", { length: 64 }),
+    ndaVersion: varchar("ndaVersion", { length: 32 }).notNull(),
+    acceptedAt: timestamp("acceptedAt"),
+    acceptedIpHash: varchar("acceptedIpHash", { length: 64 }),
+    acceptedUserAgent: text("acceptedUserAgent"),
+    acceptedSessionUnionId: varchar("acceptedSessionUnionId", { length: 255 }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull().$onUpdate(() => new Date()),
+  },
+);
+export type ReviewerAccess = typeof reviewerAccess.$inferSelect;
+
+export const reviewerTourPreferences = mysqlTable(
+  "reviewer_tour_preferences",
+  {
+    id: serial("id").primaryKey(),
+    userId: bigint("userId", { mode: "number", unsigned: true }).notNull(),
+    track: varchar("track", { length: 16 }).notNull(),
+    currentStep: int("currentStep").default(0).notNull(),
+    status: varchar("status", { length: 24 }).default("not_started").notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull().$onUpdate(() => new Date()),
+  },
+  (t) => [uniqueIndex("uq_reviewer_tour_user_track").on(t.userId, t.track)],
+);
+export type ReviewerTourPreference = typeof reviewerTourPreferences.$inferSelect;

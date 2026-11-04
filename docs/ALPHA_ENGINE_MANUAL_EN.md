@@ -1368,6 +1368,10 @@ Run: `npx tsx worker/edgar-fetch.mts --universe edgar-universe-35.json`, then `n
 
 After the current remediation tails, the default hypothesis is a **pooled statistical law across companies**, not a separate physical model for every company. Full retrospective history for every ticker is therefore not an upfront requirement. Training and company/sector/time holdouts run on a limited complete-evidence universe, while S&P 500 forward collection continues as insurance for possible per-company models. Retrospective backfill is reserved for a documented research need and officially supported sources. Full contract and decision gates: [PROJECT_STATE.md §7](PROJECT_STATE.md#7-deferred-model-and-data-strategy--after-the-current-remediation-tails).
 
+### 4.47 Private reviewer presentation
+
+A separate read-only reviewer experience for academic review: 50 presentation companies, NDA, first-IP HMAC binding and two guided tours (geography/technical). Consent stores timestamp, IP hash, user agent and session identity, never raw IP or credentials. `/reports/*` and tRPC are gated until NDA acceptance, and all reviewer mutations remain read-only afterwards. Migration and account creation are owner-run separately through `apply-ddl-029.mts` and the env-based `scripts/seed-reviewer-account.mts`. Full contract: [REVIEWER_EXPERIENCE.md](REVIEWER_EXPERIENCE.md).
+
 ### F-04: realtime-window-aware macro vintage selection
 
 **Shared production contract.** `api/services/macro-vintage.ts` serves both `probability-engine.macroPriorAt` and the dashboard's `latestMacro(asOf?)`. For anchor `T`, an eligible row has `date <= T`, a non-null `realtimeStart <= T`, and `(realtimeEnd IS NULL OR realtimeEnd >= T)`. Each series independently selects one row ordered by `date DESC, realtimeStart DESC, id DESC` with `LIMIT 1`. The old MAX(date)-only prior join could select a revision published after the anchor and duplicate one observation across vintages; date-only dashboard ordering had the same availability defect.
@@ -1441,14 +1445,6 @@ After the registry correction in `ed939f3`, one targeted FEDFUNDS collection pro
 The final table has **408,862 rows**. Independent verification proves all 133,381 preexisting rows unchanged, only the five previously approved realtimeEnd differences among original IDs, zero new-row source mismatches and **8/8 current eligible series**. Final backup SHA256 is `21bbff9dc427a94b9e28f83ff0a3253bf91a28273f5f27f8fb785a4292e03319`; fingerprint `ad14687c6161a8f0ffd518139f7ebce57c3e385d620ec8bf54e385514af2ef63`. Both collection/apply guards passed without another shell-chain incident.
 
 Frozen evaluation now has **794/1,455 eligible checks**, **84 complete three-series anchors** and selected-after-anchor=0. Curve coverage is 322/163 eligible/missing; HY remains 84/401 and VIX 388/97 due to official history limits. Prior values include 0.50, 0.54, 0.42, 0.47 and 0.39 on 195/189/31/66/4 anchors respectively; current prior remains 0.50. Metrics are historical comparisons only, not causal attribution or promotion. Full evidence: `docs/MACRO_VINTAGE_FEDFUNDS_COMPLETION_2026-11-04.md`. Next: Statements historical rebuild/evaluation, not an alpha or production claim.
-
-### Exact macro source remediation and BAML quarantine — 2026-11-04
-
-**Exact-ID decisions.** FEDFUNDS legacy id 47763 had a valid canonical row id 410405 with observation `2026-09-01`, value 3.75, availability start `2026-10-01` and open-ended end. CPIAUCSL legacy id 47832 had canonical id 31824 with value 336.298, start `2026-10-14` and open-ended end. One reviewed transaction deleted only the two noncanonical legacy rows, preserving both canonical rows and every other row. If a FEDFUNDS canonical row is absent, the utility permits only an exact-ID availability update; a missing/mismatched CPI canonical row blocks the entire transaction. A dry-run, complete-table backup, exact fingerprint and rollback tests are mandatory.
-
-**BAML classification.** Targeted read-only FRED/ALFRED verification returned 41 observations and 40 vintage dates with firstVintage `2023-11-06`, matching the existing `2023-11-06` chunk. The additional 45-row/44-date `2023-10-31` chunk is therefore `UNVERIFIED_OR_STALE_CHUNK`, not official evidence for normalized data. Its file and hash are preserved in quarantine; manifest and normalized data remain unchanged. No full collector, full backfill, schema change or production action was used.
-
-**Verification.** Post-check proves 408,860 rows, zero duplicates/inversions/new IDs, canonical FEDFUNDS/CPIAUCSL selection, 8/8 current eligible series and selected-after-anchor=0. Macro QA passes for 22 series. A new frozen evaluation preserves 794/1,455 eligible checks, 661 missing, 84 complete three-series anchors and the previous prior distribution. This is evidence correction, not repaired alpha or model promotion. Full report: `docs/MACRO_SOURCE_REMEDIATION_2026-11-04.md`.
 
 ### 4.43 Iteration 6d: magnitude kernel and 13F read-side guard
 

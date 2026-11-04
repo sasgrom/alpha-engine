@@ -1365,6 +1365,10 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 После завершения текущих remediation-хвостов основной проверяемой моделью является **pooled statistical law across companies**, а не отдельная физическая модель для каждой компании. Поэтому полная ретроспективная история по всем тикерам заранее не требуется. Обучение и OOB/company/sector/time holdouts выполняются на ограниченном universe с полным evidence, а S&P 500 forward collection продолжается как страховка на случай per-company моделей. Ретроспективный backfill запускается только для конкретной исследовательской необходимости и поддерживаемых источников. Полный контракт и decision gates: [PROJECT_STATE.md §7](PROJECT_STATE.md#7-deferred-model-and-data-strategy--after-the-current-remediation-tails).
 
+### 4.47 Private reviewer presentation
+
+Отдельный read-only reviewer experience для академического обзора: 50 presentation companies, NDA, first-IP HMAC binding и две guided tours (geography/technical). Consent хранит timestamp, IP hash, user agent и session identity, но не raw IP или credentials. `/reports/*` и tRPC закрыты до NDA; любые reviewer mutations после него запрещены. Миграция и создание аккаунта выполняются владельцем отдельно через `apply-ddl-029.mts` и env-based `scripts/seed-reviewer-account.mts`. Полный контракт: [REVIEWER_EXPERIENCE.md](REVIEWER_EXPERIENCE.md).
+
 ### F-04: выбор macro vintage по realtime window
 
 **Единый production-контракт.** `api/services/macro-vintage.ts` используется обоими readers: `probability-engine.macroPriorAt` и dashboard `latestMacro(asOf?)`. Для якоря `T` допустима только строка с `date <= T`, non-null `realtimeStart <= T` и `(realtimeEnd IS NULL OR realtimeEnd >= T)`. Для каждой серии независимо выбирается одна строка в порядке `date DESC, realtimeStart DESC, id DESC` с `LIMIT 1`. Прежний MAX(date)-only join в prior мог выбрать ревизию, опубликованную после якоря, и вернуть дубли одной observation по разным vintages; date-only ordering на dashboard имел тот же дефект доступности.
@@ -1438,14 +1442,6 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 Итоговая таблица содержит **408,862 rows**. Независимая проверка подтверждает 133,381 unchanged preexisting rows, только пять ранее разрешённых realtimeEnd изменений среди original IDs, zero new-row source mismatches и **8/8 current eligible series**. Final backup SHA256: `21bbff9dc427a94b9e28f83ff0a3253bf91a28273f5f27f8fb785a4292e03319`; fingerprint `ad14687c6161a8f0ffd518139f7ebce57c3e385d620ec8bf54e385514af2ef63`. Оба collection/apply guards прошли без повторного shell-chain incident.
 
 Frozen evaluation теперь содержит **794/1,455 eligible checks**, **84 complete three-series anchors** и selected-after-anchor=0. Curve coverage — 322/163 eligible/missing; HY — 84/401, VIX — 388/97 из-за ограничений official history. Prior values 0.50/0.54/0.42/0.47/0.39 встречаются на 195/189/31/66/4 anchors; current prior остаётся 0.50. Metrics приведены только как historical comparison, без causal attribution или promotion. Полные evidence: `docs/MACRO_VINTAGE_FEDFUNDS_COMPLETION_2026-11-04.md`. Следующий блок — Statements historical rebuild/evaluation, а не alpha или production claim.
-
-### Exact macro source remediation и BAML quarantine — 2026-11-04
-
-**Exact-ID решения.** У FEDFUNDS legacy id 47763 существует canonical row id 410405 с observation `2026-09-01`, value 3.75, availability start `2026-10-01` и open-ended end. У CPIAUCSL legacy id 47832 существует canonical id 31824 со значением 336.298, start `2026-10-14` и open-ended end. Одна reviewed transaction удалила только две noncanonical legacy rows, сохранив canonical rows и все остальные данные. Если canonical FEDFUNDS отсутствует, utility разрешает только exact-ID availability update; missing/mismatched CPI canonical row полностью блокирует transaction. Dry-run, complete-table backup, exact fingerprint и rollback tests обязательны.
-
-**Классификация BAML.** Targeted read-only FRED/ALFRED verification вернул 41 observations и 40 vintage dates с firstVintage `2023-11-06`, что совпадает с существующим `2023-11-06` chunk. Дополнительный `2023-10-31` chunk с 45 rows/44 dates поэтому классифицирован как `UNVERIFIED_OR_STALE_CHUNK`, а не official evidence для normalized data. Файл и hash сохранены в quarantine; manifest и normalized data не изменены. Full collector, full backfill, schema changes и production actions не использовались.
-
-**Проверка.** Post-check подтверждает 408,860 rows, zero duplicates/inversions/new IDs, canonical FEDFUNDS/CPIAUCSL selection, 8/8 current eligible series и selected-after-anchor=0. Macro QA прошёл для 22 series. Новая frozen evaluation сохраняет 794/1,455 eligible checks, 661 missing, 84 complete three-series anchors и прежнее prior distribution. Это исправление evidence, а не repaired alpha или model promotion. Полный отчёт: `docs/MACRO_SOURCE_REMEDIATION_2026-11-04.md`.
 
 ### 4.43 Итерация 6d: magnitude-ядро и read-side защита 13F
 

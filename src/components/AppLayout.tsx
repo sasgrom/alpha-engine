@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { describeJob } from "@/lib/job-describe";
+import { useReviewer } from "@/hooks/useReviewer";
 
 /**
  * Decluttered navigation (iteration 3c, owner decision): regular users get
@@ -208,6 +209,8 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
   const location = useLocation();
   const navigate = useNavigate();
   const isAdmin = user?.role === "admin";
+  const reviewer = useReviewer();
+  const isPresentationReviewer = isAdmin || (reviewer.status.data?.isReviewer && reviewer.status.data.ndaAccepted);
   // 4p: Workers nav entry only on the home machine (LOCAL_WORKER_UI=1 server-side)
   const workersUi = trpc.workersLocal.enabled.useQuery(undefined, { retry: false, enabled: isAdmin });
   const stats = trpc.dashboard.stats.useQuery(undefined, {
@@ -301,7 +304,7 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
 
   /** Nav items shared by the desktop sidebar and the mobile drawer. */
   const renderNavItems = (onNavigate?: () => void) =>
-    [...NAV, ...(isAdmin ? [PROJECT_STATE_NAV, ...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, SCENARIO_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, FLOWS_NAV, ADMIN_NAV] : [])].map((item) => {
+    [...NAV, ...(isPresentationReviewer ? [PROJECT_STATE_NAV, ...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, SCENARIO_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, FLOWS_NAV, ...(isAdmin ? [ADMIN_NAV] : [])] : [])].map((item) => {
       const active = location.pathname === item.path;
       return (
         <Link

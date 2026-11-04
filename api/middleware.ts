@@ -20,6 +20,15 @@ const requireAuth = t.middleware(async (opts) => {
     });
   }
 
+  const access = ctx.reviewerAccess;
+  const isReviewerLifecycle = opts.path === "auth.me" || opts.path === "auth.logout" || opts.path.startsWith("reviewer.");
+  if (access && !access.acceptedAt && !isReviewerLifecycle) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "NDA required before accessing reviewer content" });
+  }
+  if (access && opts.type === "mutation" && !isReviewerLifecycle) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Reviewer access is read-only" });
+  }
+
   return next({ ctx: { ...ctx, user: ctx.user } });
 });
 

@@ -12,6 +12,7 @@ import { activityRouter } from "./routers/activity";
 import { workersLocalRouter } from "./routers/workers-local";
 import { digestsRouter } from "./routers/digests";
 import { workersMonitorRouter } from "./routers/workers-monitor";
+import { reviewerRouter } from "./routers/reviewer";
 
 export const appRouter = createRouter({
   ping: publicQuery.query(() => ({ ok: true, ts: Date.now() })),
@@ -36,6 +37,7 @@ export const appRouter = createRouter({
   workersLocal: workersLocalRouter,
   workersMonitor: workersMonitorRouter,
   digests: digestsRouter,
+  reviewer: reviewerRouter,
 });
 
 export type AppRouter = typeof appRouter;
