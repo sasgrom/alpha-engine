@@ -12,9 +12,10 @@
  *   (CPI index; YoY computed) · UNRATE · BAMLH0A0HYM2 (HY OAS credit
  *   spread) · VIXCLS (VIX close).
  */
-import { desc, eq, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { getDb } from "../queries/connection";
 import { macroPoints } from "@db/schema";
+import { latestEligibleMacroPoint, type MacroVintageDatabase } from "./macro-vintage";
 
 export interface MacroSeriesDef {
   id: string;
@@ -70,17 +71,14 @@ export async function ingestMacroPoints(
   return n;
 }
 
-/** Latest value per series for the dashboard card (Stage 4 seed). */
-export async function latestMacro(): Promise<{ seriesId: string; label: string; unit: string; date: string; value: number | null }[]> {
-  const db = getDb();
+/** Latest eligible value per series for the dashboard at the optional as-of day. */
+export async function latestMacro(
+  asOf: string = new Date().toISOString().slice(0, 10),
+  db: MacroVintageDatabase = getDb(),
+): Promise<{ seriesId: string; label: string; unit: string; date: string; value: number | null }[]> {
   const out = [];
   for (const s of MACRO_SERIES) {
-    const [row] = await db
-      .select()
-      .from(macroPoints)
-      .where(eq(macroPoints.seriesId, s.id))
-      .orderBy(desc(macroPoints.date))
-      .limit(1);
+    const row = await latestEligibleMacroPoint(s.id, asOf, db);
     if (row) out.push({ seriesId: s.id, label: s.label, unit: s.unit, date: row.date, value: row.value });
   }
   return out;

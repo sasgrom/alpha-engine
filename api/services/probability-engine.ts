@@ -18,6 +18,7 @@ import {
   type Reliability,
 } from "./probability";
 import { normalizeFilingDate } from "../../worker/lib/thirteenf";
+import { latestEligibleMacroPoint, type MacroVintageDatabase } from "./macro-vintage";
 
 export interface Bar { date: string; close: number }
 export interface Pt { factor: string; periodEnd: string; filedAt: string; value: number }
@@ -209,6 +210,16 @@ export function buildEngineData(
   return { cik, asOf, anchors, byFactor, values, zValues, outcomes, bars, spyBars, macroPriorAt };
 }
 
+/** Compute the existing macro prior from the three eligible as-of vintages. */
+export async function macroPriorAt(anchor: string, db: MacroVintageDatabase = getDb()): Promise<number> {
+  const [vix, hySpread, t10y2y] = await Promise.all([
+    latestEligibleMacroPoint("VIXCLS", anchor, db),
+    latestEligibleMacroPoint("BAMLH0A0HYM2", anchor, db),
+    latestEligibleMacroPoint("T10Y2Y", anchor, db),
+  ]);
+  return macroPrior({ vix: vix?.value ?? null, hySpread: hySpread?.value ?? null, t10y2y: t10y2y?.value ?? null });
+}
+
 export async function engineData(cik: number): Promise<EngineData> {
   const db = getDb();
   const asOf = new Date().toISOString().slice(0, 10);
@@ -229,21 +240,7 @@ export async function engineData(cik: number): Promise<EngineData> {
     .sort((a, b) => a.date.localeCompare(b.date));
   const [bars, spyBars] = await Promise.all([cleanBars(cik), cleanBars(0)]);
 
-  async function macroPriorAt(anchor: string): Promise<number> {
-    const [mac]: any = await db.execute(sql`
-      SELECT m.seriesId, m.value, m.date FROM macro_points m
-      INNER JOIN (
-        SELECT seriesId, MAX(date) md FROM macro_points
-        WHERE seriesId IN ('VIXCLS','BAMLH0A0HYM2','T10Y2Y') AND date <= ${anchor}
-        GROUP BY seriesId
-      ) q ON q.seriesId=m.seriesId AND q.md=m.date`);
-    const value = (id: string) => {
-      const v = mac.find((m: any) => m.seriesId === id)?.value;
-      return v === null || v === undefined ? null : Number(v);
-    };
-    return macroPrior({ vix: value("VIXCLS"), hySpread: value("BAMLH0A0HYM2"), t10y2y: value("T10Y2Y") });
-  }
-  return buildEngineData(cik, asOf, [...base, ...extra], bars, spyBars, macroPriorAt);
+  return buildEngineData(cik, asOf, [...base, ...extra], bars, spyBars, (anchor) => macroPriorAt(anchor, db));
 }
 
 function labelKnownBy(outcome: ForwardReturnInfo, predictionDate: string): boolean {

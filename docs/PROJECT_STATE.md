@@ -8,7 +8,7 @@ Alpha Engine must not collapse these into one “done” percentage:
 
 | Layer | Question | Current reviewed state |
 |---|---|---|
-| **Code** | Is the implementation committed and tested? | F-01/F-02/F-03 complete. S&P 500 incremental collector committed as `f196acf`. F-04/F-05 are next. |
+| **Code** | Is the implementation committed and tested? | F-01/F-02/F-03/F-04 complete. S&P 500 incremental collector committed as `f196acf`. F-05 is next. |
 | **Data** | Which collectors have actually run and what is their coverage? | Research-51 is covered. S&P 500 initial backfill is a separate run/evidence stage. Schwab, FRED and OFAC have independent schedules and evidence times. |
 | **Research** | Are derived artifacts current and strong enough to use? | Research-51 has 21,489 factor points and 51/51 coverage. IC changed after fresh facts. Event Study is ready; Atlas remains partial. No promotion is supported. |
 | **Delivery** | Has the owner reviewed and explicitly authorized a destination change? | Production apply/deploy/sync and full-S&P research expansion remain separate owner decisions. |
@@ -82,15 +82,17 @@ The existing research-51 companyfacts job remains independent at 03:00 home loca
 - Macro Event Study: ready; 47/47 eligible events have outcomes.
 - Macro Transmission Atlas: partial; 1,462 records, 24 studies, only two OOS evaluations. Coverage improvement must come from documented exposure evidence, not repeated runs or parameter tuning.
 - Historical 13F events and probability/flow evaluations require a separate reviewed rebuild after F-03.
+- F-04 replaces the MAX(date)-only macro prior join and date-only dashboard read with one shared bounded selector: `date <= T`, non-null `realtimeStart <= T`, and `(realtimeEnd IS NULL OR realtimeEnd >= T)`, ordered by `date DESC, realtimeStart DESC, id DESC`. Unknown null starts and future revisions are excluded; open-ended vintages and inclusive endpoints are supported; the newest eligible null value stays missing. Historical macro prior, probability and nested evaluations are stale until a separate reviewed rebuild, which was not run.
+- F-04 verification: targeted macro/probability suites passed **3 files / 28 tests**; the full suite passed **118 files / 648 tests**; `npm run check`, `npm run build` and `git diff --check` passed. Build retains the established chunk-size warnings. These gates verify correctness code, not refreshed historical research evidence or production readiness.
+- S&P 500 mapping remediation is committed separately. The corrected CIKs still belong to the next scheduled daily incremental run; no collection was triggered by F-04.
 
 ## 6. Next queue
 
-1. **F-04:** realtime-window-aware macro vintage selection.
-2. **F-05:** MAX availability across composite exposure inputs and strict period alignment.
-3. Reviewed 13F, macro and exposure rebuilds, each separately authorized.
-4. Numeric correctness: F-10, F-11, F-15, F-16.
-5. Production/local boundary and access: F-06, F-07, F-13.
-6. Operational reliability and later audit findings.
+1. **F-05:** MAX availability across composite exposure inputs and strict period alignment.
+2. Reviewed 13F, macro and exposure rebuilds, each separately authorized.
+3. Numeric correctness: F-10, F-11, F-15, F-16.
+4. Production/local boundary and access: F-06, F-07, F-13.
+5. Operational reliability and later audit findings.
 
 ## 7. Where to look
 
