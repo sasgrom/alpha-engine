@@ -1390,6 +1390,14 @@ Run: `npx tsx worker/edgar-fetch.mts --universe edgar-universe-35.json`, then `n
 
 **Verification and stale evidence.** The targeted Statements suite passes **17 tests**, including missing debt/cash, explicit zeros, partial components and curated-total precedence; TypeScript check passes. Historical Statements netDebt values created by zero substitution require a reviewed rebuild where applicable. No rebuild or collector was run. Project State queue finalization waits for the separate F-11 TTM correction.
 
+### F-11: TTM requires four consecutive quarters
+
+**Consecutive-window rule.** Quarterly Statements TTM now requires four existing grid positions at `i … i+3`, non-null finite values in every required cell, and calendar-quarter indices descending in steps of exactly one. Four non-null values spread across a wider range are not TTM. The same `qIdx` is shared with calendar-aligned YoY; no incompatible quarter-index formula was introduced. A missing quarter or required cell returns null.
+
+**53-week and unchanged behavior.** Actual period ends and quarter indices determine eligibility; a longer quarter on a 53-week fiscal calendar remains valid without a 365-day or equal-duration gate. Annual mode still uses the FY column itself. ROE/ROA formulas, calendar-aligned YoY, the quarterly grid/popularity threshold and company-exposure F-05 partial diagnostics are unchanged.
+
+**Verification and stale evidence.** Targeted Statements and Company Exposure suites pass **2 files / 38 tests**, covering four consecutive quarters, grid holes, null required cells, a five-quarter window, a 53-week calendar and annual mode; the existing YoY hole regression remains green. TypeScript check passes. Historical Statements ROE/ROA TTM values produced from non-consecutive quarters require a reviewed rebuild where applicable. Company Exposure, Scenario and Atlas reports remain stale and receive one reviewed rebuild after F-05/F-10/F-11, not repeated runs. No rebuild or collector was run.
+
 ### 4.43 Iteration 6d: magnitude kernel and 13F read-side guard
 
 **Status: research kernel and presentation safety, not a new trading model and not evidence of alpha.** The full contract lives in `docs/DESIGN_MAGNITUDE.md` (registered under Admin → Manuals): availability invariants, mathematics, allowed/forbidden conclusions, acceptance gates, and later stages were fixed BEFORE implementation.

@@ -414,23 +414,29 @@ export function buildStatements(opts: {
   put("netMargin", (i) => div(num("ni", i), num("rev", i)));
   put("fcfMargin", (i) => div(num("fcf", i), num("rev", i)));
   put("currentRatio", (i) => div(num("ca", i), num("cl", i)));
-  // TTM returns: quarterly = sum of the 4 latest quarters ending at i /
-  // year-end balance; annual = the FY column itself (grid is desc: i+1..i+3
-  // are the OLDER quarters)
+  const qIdx = (pe: string) => {
+    const y = Number(pe.slice(0, 4));
+    const m = Number(pe.slice(5, 7));
+    return y * 4 + (Math.ceil(m / 3) - 1);
+  };
+  // TTM returns: quarterly = four consecutive quarters ending at i / year-end
+  // balance; annual = the FY column itself (the grid is descending).
   const ttm = (key: string, i: number): number | null => {
     const row = resolved.get(key);
     if (!row) return null;
     if (mode === "annual") return row.cells[i]?.v ?? null;
+    const window = periods.slice(i, i + 4);
+    // Four non-null cells are insufficient: popularity filtering can leave a calendar-quarter hole.
+    if (window.length < 4) return null;
+    const indices = window.map((period) => qIdx(period.end));
+    if (indices.some((value, index) => index > 0 && indices[index - 1] - value !== 1)) return null;
     let sum = 0;
-    let have = 0;
-    for (let j = i; j < Math.min(i + 4, periods.length); j++) {
-      const v = row.cells[j]?.v;
-      if (v != null) {
-        sum += v;
-        have++;
-      }
+    for (let j = i; j < i + 4; j++) {
+      const value = row.cells[j]?.v;
+      if (value == null || !Number.isFinite(value)) return null;
+      sum += value;
     }
-    return have === 4 ? sum : null;
+    return sum;
   };
   put("roeTtm", (i) => div(ttm("ni", i), num("equity", i)));
   put("roaTtm", (i) => div(ttm("ni", i), num("assets", i)));
@@ -440,11 +446,6 @@ export function buildStatements(opts: {
   // grid has a hole — a quarter below the 8-point popularity threshold drops
   // out and "4 positions back" stops being "one year back". Match periods by
   // quarter index / fiscal year instead; no same-period-last-year → null.)
-  const qIdx = (pe: string) => {
-    const y = Number(pe.slice(0, 4));
-    const m = Number(pe.slice(5, 7));
-    return y * 4 + (Math.ceil(m / 3) - 1);
-  };
   const periodKey = periods.map((p) =>
     mode === "quarterly" ? qIdx(p.end) : fiscalYearOf(p.end, fyEnd)
   );

@@ -212,3 +212,59 @@ describe("buildStatements — debt evidence", () => {
     expect(latestDerived(withGrid([stock("LongTermDebt", 100)]), "netDebt")).toBeNull();
   });
 });
+
+describe("buildStatements — consecutive TTM quarters", () => {
+  type QuarterValue = [string, number | null];
+  const fourQuarters: QuarterValue[] = [["2025-03-31", 10], ["2025-06-30", 20], ["2025-09-30", 30], ["2025-12-31", 40]];
+  const pointsFor = (quarters: QuarterValue[]): PointRow[] => quarters.flatMap(([periodEnd, value]) => [
+    ...dense(periodEnd),
+    ...pt("NetIncomeLoss", periodEnd, value ?? 0, { val: value }),
+    ...pt("StockholdersEquity", periodEnd, 1000, { kind: "stock" }),
+    ...pt("Assets", periodEnd, 2000, { kind: "stock" }),
+  ]);
+  const ratios = (quarters: QuarterValue[], mode: "quarterly" | "annual" = "quarterly") => {
+    const view = buildStatements({ points: pointsFor(quarters), fyEnd: null, mode, vintage: "latest", periods: mode === "annual" ? 1 : 6 });
+    const value = (key: string) => view.sections.flatMap((section) => section.rows).find((row) => row.key === key)?.cells[0]?.v ?? null;
+    return { view, roe: value("roeTtm"), roa: value("roaTtm") };
+  };
+
+  it("sums exactly four consecutive quarters", () => {
+    const result = ratios(fourQuarters);
+    expect(result.roe).toBeCloseTo(0.1);
+    expect(result.roa).toBeCloseTo(0.05);
+  });
+
+  it("returns null when the visible grid skips a calendar quarter", () => {
+    const result = ratios([["2025-03-31", 10], ["2025-06-30", 20], ["2025-09-30", 30], ["2026-03-31", 40]]);
+    expect(result.view.periods.map((period) => period.end)).not.toContain("2025-12-31");
+    expect(result.roe).toBeNull();
+    expect(result.roa).toBeNull();
+  });
+
+  it("returns null when any required cell is null even if four grid positions exist", () => {
+    const result = ratios([["2025-03-31", 10], ["2025-06-30", 20], ["2025-09-30", null], ["2025-12-31", 40]]);
+    expect(result.view.periods).toHaveLength(4);
+    expect(result.roe).toBeNull();
+    expect(result.roa).toBeNull();
+  });
+
+  it("uses only the latest four of more than four consecutive quarters", () => {
+    const result = ratios([...fourQuarters, ["2026-03-31", 50]]);
+    expect(result.roe).toBeCloseTo(0.14);
+    expect(result.roa).toBeCloseTo(0.07);
+  });
+
+  it("accepts consecutive quarter indices on a 53-week fiscal calendar without a day-count gate", () => {
+    const result = ratios([["2025-01-04", 10], ["2025-04-05", 20], ["2025-07-05", 30], ["2025-10-11", 40]]);
+    expect(Date.parse("2025-10-11") - Date.parse("2025-07-05")).toBe(98 * 86_400_000);
+    expect(result.roe).toBeCloseTo(0.1);
+    expect(result.roa).toBeCloseTo(0.05);
+  });
+
+  it("preserves annual ROE and ROA behavior", () => {
+    const result = ratios(fourQuarters, "annual");
+    expect(result.view.periods.map((period) => period.label)).toEqual(["FY25"]);
+    expect(result.roe).toBeCloseTo(0.1);
+    expect(result.roa).toBeCloseTo(0.05);
+  });
+});

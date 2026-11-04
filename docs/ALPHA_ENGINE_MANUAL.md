@@ -1387,6 +1387,14 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 **Проверка и stale evidence.** Targeted Statements suite прошёл **17 tests**, включая missing debt/cash, explicit zeros, partial components и curated-total precedence; TypeScript check прошёл. Исторические Statements netDebt, полученные через zero substitution, требуют reviewed rebuild там, где применимо. Rebuild и collectors не запускались. Окончательное Project State queue обновляется после отдельного F-11 TTM исправления.
 
+### F-11: TTM только из четырёх последовательных кварталов
+
+**Правило последовательного окна.** Quarterly Statements TTM теперь требует четыре существующие grid positions `i … i+3`, non-null finite values во всех required cells и calendar-quarter indices, убывающие ровно с шагом один. Четыре non-null значения из более широкого диапазона не являются TTM. Тот же `qIdx` используется в calendar-aligned YoY; несовместимая quarter-index formula не добавлялась. Пропущенный квартал или required cell возвращает null.
+
+**53-week и неизменное поведение.** Допустимость определяется фактическими period ends и quarter indices; более длинный квартал 53-week fiscal calendar допустим без 365-day или equal-duration gate. Annual mode по-прежнему использует сам FY column. ROE/ROA formulas, calendar-aligned YoY, quarterly grid/popularity threshold и company-exposure F-05 partial diagnostics не изменялись.
+
+**Проверка и stale evidence.** Targeted Statements и Company Exposure suites прошли **2 files / 38 tests**: четыре последовательных квартала, grid holes, null required cells, окно из пяти кварталов, 53-week calendar и annual mode; существующий YoY hole regression остаётся зелёным. TypeScript check прошёл. Исторические Statements ROE/ROA TTM из непоследовательных кварталов требуют reviewed rebuild там, где применимо. Company Exposure, Scenario и Atlas reports остаются stale и будут перестроены один раз после F-05/F-10/F-11, без повторных runs. Rebuild и collectors не запускались.
+
 ### 4.43 Итерация 6d: magnitude-ядро и read-side защита 13F
 
 **Статус: исследовательское ядро и безопасность отображения, не новая торговая модель и не доказательство альфы.** Полный контракт находится в `docs/DESIGN_MAGNITUDE.md` (зарегистрирован в Admin → Manuals): availability-инварианты, математика, допустимые и запрещённые выводы, acceptance gates и дальнейшие этапы зафиксированы ДО кода.

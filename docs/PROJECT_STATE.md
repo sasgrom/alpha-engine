@@ -8,7 +8,7 @@ Alpha Engine must not collapse these into one “done” percentage:
 
 | Layer | Question | Current reviewed state |
 |---|---|---|
-| **Code** | Is the implementation committed and tested? | F-01/F-02/F-03/F-04/F-05 complete. S&P 500 incremental collector committed as `f196acf`. Reviewed evidence rebuilds are next. |
+| **Code** | Is the implementation committed and tested? | F-01/F-02/F-03/F-04/F-05/F-10/F-11 complete. S&P 500 incremental collector committed as `f196acf`. One reviewed Company Exposure → Macro Scenarios → Atlas rebuild is next. |
 | **Data** | Which collectors have actually run and what is their coverage? | Research-51 is covered. S&P 500 initial backfill is a separate run/evidence stage. Schwab, FRED and OFAC have independent schedules and evidence times. |
 | **Research** | Are derived artifacts current and strong enough to use? | Research-51 has 21,489 factor points and 51/51 coverage. IC changed after fresh facts. Event Study is ready; Atlas remains partial. No promotion is supported. |
 | **Delivery** | Has the owner reviewed and explicitly authorized a destination change? | Production apply/deploy/sync and full-S&P research expansion remain separate owner decisions. |
@@ -86,14 +86,19 @@ The existing research-51 companyfacts job remains independent at 03:00 home loca
 - F-04 verification: targeted macro/probability suites passed **3 files / 28 tests**; the full suite passed **118 files / 648 tests**; `npm run check`, `npm run build` and `git diff --check` passed. Build retains the established chunk-size warnings. These gates verify correctness code, not refreshed historical research evidence or production readiness.
 - F-05 replaces single-component exposure dates with `MAX(sourceFiled)` across every required TTM, debt, ratio and foreign-revenue input. Unknown dates and future revisions fail closed; ratios require identical periods and units. Non-consecutive TTM remains partial for display only, while Scenario and Atlas accept only genuinely available evidence with valid availability. Existing Company Exposure, Scenario and Atlas reports are stale until a separate reviewed rebuild; lower available coverage is a valid result, not a defect to hide.
 - F-05 verification: targeted Company Exposure/Scenario/Atlas suites passed **3 files / 31 tests**; the full suite passed **118 files / 657 tests**; `npm run check`, `npm run build` and `git diff --check` passed. Build retains the established chunk-size warnings. These results verify the corrected code, not refreshed research evidence or production readiness.
-- S&P 500 mapping remediation is committed separately. The corrected CIKs still belong to the next scheduled daily incremental run; no collection was triggered by F-04 or F-05.
+- F-10 makes missing debt or cash unknown rather than zero; explicit reported zero remains valid. Complete current+noncurrent components take precedence, while curated total debt is a single fallback rather than an extra addend. Historical Statements netDebt history requires a reviewed rebuild where zero substitution was used.
+- F-11 requires four existing, non-null finite and calendar-consecutive quarters for quarterly TTM; a grid hole now returns null. Actual period ends support 53-week calendars without a day-count gate. Annual mode, ROE/ROA formulas, YoY and company-exposure F-05 behavior are unchanged. Historical ROE/ROA TTM history requires a reviewed rebuild where applicable.
+- F-10/F-11 verification: F-10 targeted Statements passed **17 tests**; F-11 targeted Statements/company-exposure passed **2 files / 38 tests**. The final full suite passed **118 files / 668 tests**; `npm run check`, `npm run build` and `git diff --check` passed. Build retains the established chunk-size warnings. These gates verify code, not rebuilt historical evidence or production readiness.
+- Company Exposure, Scenarios and Atlas remain stale after F-05 and receive **one** reviewed Company Exposure → Macro Scenarios → Atlas rebuild after both numeric fixes. No such rebuild was run in either commit.
+- S&P 500 mapping remediation is committed separately. The corrected CIKs still belong to the next scheduled daily incremental run; no collection was triggered by F-04, F-05, F-10 or F-11.
 
 ## 6. Next queue
 
-1. Reviewed 13F, macro and exposure rebuilds, each separately authorized.
-2. Numeric correctness: F-10, F-11, F-15, F-16.
-3. Production/local boundary and access: F-06, F-07, F-13.
-4. Operational reliability and later audit findings.
+1. **Reviewed Company Exposure → Macro Scenarios → Atlas rebuild:** one coordinated run after F-05/F-10/F-11.
+2. **Reviewed macro prior/probability rebuild:** separately authorized after F-04.
+3. **Reviewed 13F event/flow/probability rebuild:** separately authorized after F-03.
+4. Numeric correctness: F-15, F-16.
+5. Production/security findings and the remaining audit queue.
 
 ## 7. Where to look
 

@@ -17,6 +17,8 @@ export const PROJECT_STATE_REVIEW = {
     { id: "F-03", title: "13F event and aggregate-flow publication availability", status: "done" as const },
     { id: "F-04", title: "Realtime-window-aware macro vintages", status: "done" as const },
     { id: "F-05", title: "Composite exposure availability and period alignment", status: "done" as const },
+    { id: "F-10", title: "Missing debt and cash remain unknown, not zero", status: "done" as const },
+    { id: "F-11", title: "TTM requires four consecutive quarters", status: "done" as const },
   ],
   research: {
     universe: "research-universe-51.json",
@@ -28,9 +30,11 @@ export const PROJECT_STATE_REVIEW = {
     ic: "Changed after fresh facts; descriptive evidence only, no factor/model/regime promotion",
   },
   nextQueue: [
-    "Reviewed rebuilds for 13F, macro and exposure evidence",
-    "F-10 / F-11 / F-15 / F-16 numeric correctness",
-    "F-06 / F-07 / F-13 production boundary and access control",
+    "Reviewed Company Exposure → Macro Scenarios → Atlas rebuild",
+    "Reviewed macro prior/probability rebuild",
+    "Reviewed 13F event/flow/probability rebuild",
+    "F-15 / F-16 numeric correctness",
+    "Production/security findings and remaining audit queue",
   ],
 } as const;
 
