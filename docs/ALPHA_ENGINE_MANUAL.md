@@ -1405,6 +1405,14 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 **Operations note.** Manual runs не создавали и не меняли registered scheduler `lastRuns`. Daily Operations остаётся critical: Schwab 0/51 captures сегодня; Atlas partial — warning при текущем lineage. `production-readiness=ready` — только file gate. При запуске health builder из Git Bash передавай macro root как `D:/research/alpha-engine/macro`: unquoted Windows backslashes могут быть удалены Bash и изменить путь. Существующие PowerShell-команды не изменены. Следующий reviewed блок: macro prior/probability rebuild.
 
+### Reviewed 13F event/flow remediation и evaluation — 2026-11-04
+
+**Backup и audit contract.** До любой записи сохранены полные position rows и fund_quarters с SHA256: **16,912 events / 879,289 holdings / 3,416 quarters**. Audit подтвердил **16,912 VALID / 0 STALE_FALLBACK / 0 MISSING_REQUIRED_AVAILABILITY / 0 DUPLICATE / 0 UNKNOWN**. Reviewed utility по умолчанию выполняет dry-run, требует matching backup и row fingerprint для `--apply`, удаляет только доказанные exact IDs в transaction с ≤500 batches, сохраняет VALID/UNKNOWN и показывает before/after. Apply — **0 affected rows**. Другие sources не затрагивались.
+
+**Rebuild и post-verification.** Один DB-only `scripts/13f-refresh.mts --rebuild-events` завершился с exit 0: **1 inserted event и 0 skipped/missing availability**. Post-audit: **16,913 VALID / 0 duplicates / 0 missing availability / 0 pending changes**. Новая строка Soros id 168239 использует фактический accession `0000902664-26-003507` и filingDate `2026-08-14`, а не quarter-end или quarter+45d fallback. Backups сохранены в `worker/.runs/thirteenf-remediation-20261104T094500Z`.
+
+**Evaluation и ограничения.** `buildSmartMoneyFlowPoints` вычислил 14 points на компанию с latest actual MAX availability `2026-10-22`, zero skipped quarters и zero missing fund CIKs. Для 393/485 evaluated company anchors нет eligible flow. `evaluateCompany` и `nestedEvaluate` завершили три company и шесть nested bayes/logistic reports с frozen protocol и historical-only сравнением; direct same-DB pre/post и causal attribution не заявляются. Macro prior остаётся neutral 0.5 из-за отсутствия eligible macro vintages. Полный suite: **119 files / 681 tests**, TypeScript и build успешны. Source commits: `9381059`, `29acca9`. Подробные evidence: `docs/THIRTEENF_REBUILD_2026-11-04.md`. Следующий reviewed блок: macro vintage-data remediation, а не model promotion.
+
 ### 4.43 Итерация 6d: magnitude-ядро и read-side защита 13F
 
 **Статус: исследовательское ядро и безопасность отображения, не новая торговая модель и не доказательство альфы.** Полный контракт находится в `docs/DESIGN_MAGNITUDE.md` (зарегистрирован в Admin → Manuals): availability-инварианты, математика, допустимые и запрещённые выводы, acceptance gates и дальнейшие этапы зафиксированы ДО кода.

@@ -8,7 +8,7 @@ Alpha Engine must not collapse these into one “done” percentage:
 
 | Layer | Question | Current reviewed state |
 |---|---|---|
-| **Code** | Is the implementation committed and tested? | F-01/F-02/F-03/F-04/F-05/F-10/F-11 and the reviewed exposure rebuild and macro evaluation runs are complete. Macro prior currently uses a neutral fallback because no eligible vintage is available; this is not repaired macro evidence. Reviewed 13F event/flow/probability rebuild is next. |
+| **Code** | Is the implementation committed and tested? | F-01/F-02/F-03/F-04/F-05/F-10/F-11, the reviewed exposure rebuild, macro evaluation and 13F event/flow/probability remediation are complete. Macro prior remains a neutral fallback because no eligible vintage is available; this is not repaired macro evidence. Macro vintage-data remediation is next. |
 | **Data** | Which collectors have actually run and what is their coverage? | Research-51 is covered. S&P 500 initial backfill is a separate run/evidence stage. Schwab, FRED and OFAC have independent schedules and evidence times. |
 | **Research** | Are derived artifacts current and strong enough to use? | Research-51 has 21,489 factor points and 51/51 coverage. IC changed after fresh facts. Event Study is ready; Atlas remains partial. No promotion is supported. |
 | **Delivery** | Has the owner reviewed and explicitly authorized a destination change? | Production apply/deploy/sync and full-S&P research expansion remain separate owner decisions. |
@@ -82,7 +82,9 @@ The existing research-51 companyfacts job remains independent at 03:00 home loca
 - Latest post-facts IC comparison: 2,840 → 2,834 rows, 58 changed Spearman values and 3 sign flips. This is changed descriptive evidence, not repaired alpha.
 - Macro Event Study: ready; 47/47 eligible events have outcomes.
 - Macro Transmission Atlas: partial; **904 records**, 24 studies, 6 estimated / 18 insufficient, no full_sample and two OOS evaluations. The reviewed fail-closed rebuild reduced records from 1,462; no universe or threshold was changed.
-- Historical 13F events and probability/flow evaluations require a separate reviewed rebuild after F-03.
+- Reviewed 13F event/flow/probability remediation is complete. Backup covers 16,912 position rows / 879,289 holdings / 3,416 fund_quarters. Audit found **16,912 VALID / 0 STALE_FALLBACK / 0 MISSING_REQUIRED_AVAILABILITY / 0 DUPLICATE / 0 UNKNOWN** and apply affected zero rows. One DB-only rebuild inserted one event with zero missing availability. Post-rebuild: **16,913 VALID / 0 duplicates / 0 missing availability**. Source commits `9381059` and `29acca9` are pushed. Full evidence: `docs/THIRTEENF_REBUILD_2026-11-04.md`.
+- The 13F evaluation completed with three company and six nested reports. Each company has 14 flow points with actual MAX availability `2026-10-22`, zero skipped quarters and zero missing funds; 393/485 evaluated anchors per company lack eligible flow. Macro prior remains a neutral fallback because eligible macro vintages are absent. Historical comparison only, not direct same-DB pre/post or repaired alpha.
+- 13F verification: targeted remediation suites passed **3 files / 15 tests**; the final full suite passed **119 files / 681 tests**; `npm run check`, `npm run build` and `git diff --check` passed. Build retains the established chunk-size warnings. These gates verify the utility and evidence, not production readiness or alpha.
 - F-04 replaces the MAX(date)-only macro prior join and date-only dashboard read with one shared bounded selector: `date <= T`, non-null `realtimeStart <= T`, and `(realtimeEnd IS NULL OR realtimeEnd >= T)`, ordered by `date DESC, realtimeStart DESC, id DESC`. Unknown null starts and future revisions are excluded; open-ended vintages and inclusive endpoints are supported; the newest eligible null value stays missing. A reviewed macro evaluation was subsequently completed; its neutral-fallback coverage limitation is described below.
 - F-04 verification: targeted macro/probability suites passed **3 files / 28 tests**; the full suite passed **118 files / 648 tests**; `npm run check`, `npm run build` and `git diff --check` passed. Build retains the established chunk-size warnings. These gates verify correctness code, not refreshed historical research evidence or production readiness.
 - F-05 replaces single-component exposure dates with `MAX(sourceFiled)` across every required TTM, debt, ratio and foreign-revenue input. Unknown dates and future revisions fail closed; ratios require identical periods and units. Non-consecutive TTM remains partial for display only, while Scenario and Atlas accept only genuinely available evidence with valid availability. The reviewed rebuild below refreshed these reports; lower available coverage is retained, not hidden.
@@ -97,12 +99,11 @@ The existing research-51 companyfacts job remains independent at 03:00 home loca
 
 ## 6. Next queue
 
-1. **Reviewed 13F event/flow/probability rebuild:** separately authorized after F-03.
-2. **Macro vintage-data remediation:** required before macro prior can move beyond the neutral fallback; the evaluation is complete, but eligible macro evidence is still missing.
-3. **Reviewed Statements netDebt/ROE/ROA historical rebuild or evaluation:** required where missing debt was replaced by zero or non-consecutive quarters produced TTM.
-4. Numeric correctness: F-15, F-16.
-5. **Atlas coverage:** add new documented exposure evidence instead of repeating runs or tuning thresholds.
-6. Production/security findings and the remaining audit queue.
+1. **Macro vintage-data remediation:** required before macro prior can move beyond the neutral fallback; the evaluation is complete, but eligible macro evidence is still missing.
+2. **Reviewed Statements netDebt/ROE/ROA historical rebuild or evaluation:** required where missing debt was replaced by zero or non-consecutive quarters produced TTM.
+3. Numeric correctness: F-15, F-16.
+4. **Atlas coverage:** add new documented exposure evidence instead of repeating runs or tuning thresholds.
+5. Production/security findings and the remaining audit queue.
 
 ## 7. Deferred model and data strategy — after the current remediation tails
 

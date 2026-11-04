@@ -12,6 +12,7 @@ export const PROJECT_STATE_REVIEW = {
     sp500CikMappingsVerifiedOn: "2026-11-04",
     sp500InitialBackfill: { processed: 499, refreshed: 490, unchanged: 3, failed: 6 },
     sp500CorrectedCiks: { status: "collected_valid", count: 6, verifiedOn: "2026-11-04" },
+    thirteenFCodeCommits: ["938105969950956e08f36cb99949ca2c3f56323b", "29acca94d978aca8cc559739afc2a199d5f3dc22"],
   },
   correctness: [
     { id: "F-01/F-02", title: "First-vintage factors and required-concept availability", status: "done" as const },
@@ -31,9 +32,10 @@ export const PROJECT_STATE_REVIEW = {
     ic: "Changed after fresh facts; descriptive evidence only, no factor/model/regime promotion",
     schwab: "Awaiting scheduled capture · 0/51 today · next run 2026-11-04T12:00:00Z",
     macroPriorEvaluation: "Complete · 3 company / 6 nested reports · 485 anchors · no eligible current macro vintage",
+    thirteenF: "Reviewed · 16,913 valid events · 1 rebuilt · 0 missing metadata · 0 duplicates · 14 flow points/company",
+    thirteenFEvaluation: "Complete · 3 company / 6 nested reports · historical comparison only · no promotion",
   },
   nextQueue: [
-    "Reviewed 13F event/flow/probability rebuild",
     "Macro vintage-data remediation before relying on macro prior",
     "Reviewed Statements netDebt/ROE/ROA historical rebuild or evaluation",
     "F-15 / F-16 numeric correctness",
