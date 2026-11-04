@@ -8,7 +8,7 @@ Alpha Engine must not collapse these into one “done” percentage:
 
 | Layer | Question | Current reviewed state |
 |---|---|---|
-| **Code** | Is the implementation committed and tested? | F-01/F-02/F-03/F-04/F-05/F-10/F-11 and the reviewed exposure/macro evaluations are complete. Reviewed 13F event/flow/probability rebuild is next. |
+| **Code** | Is the implementation committed and tested? | F-01/F-02/F-03/F-04/F-05/F-10/F-11 and the reviewed exposure rebuild and macro evaluation runs are complete. Macro prior currently uses a neutral fallback because no eligible vintage is available; this is not repaired macro evidence. Reviewed 13F event/flow/probability rebuild is next. |
 | **Data** | Which collectors have actually run and what is their coverage? | Research-51 is covered. S&P 500 initial backfill is a separate run/evidence stage. Schwab, FRED and OFAC have independent schedules and evidence times. |
 | **Research** | Are derived artifacts current and strong enough to use? | Research-51 has 21,489 factor points and 51/51 coverage. IC changed after fresh facts. Event Study is ready; Atlas remains partial. No promotion is supported. |
 | **Delivery** | Has the owner reviewed and explicitly authorized a destination change? | Production apply/deploy/sync and full-S&P research expansion remain separate owner decisions. |
@@ -50,6 +50,7 @@ The six HTTP 404 failures were subsequently traced to **incorrect ticker/CIK map
 [done] Initial backfill — 493 successful, 6 failed
 [done] Coverage/health evidence + final documentation
 [done] CIK mapping remediation against the SEC directory
+[done] Corrected-CIK collection and manifest verification
 ```
 
 Collection contract:
@@ -69,7 +70,7 @@ The existing research-51 companyfacts job remains independent at 03:00 home loca
 |---|---|---|---|
 | S&P 500 companyfacts | 23:30 home local + reviewed initial backfill | Raw cache + local MySQL | Full-S&P research or production promotion |
 | Research-51 companyfacts | 03:00 home local | Local MySQL → canonical series → factors | A claim of predictive alpha |
-| Schwab REST/options | Daily collection; context has its own hourly job | Local raw snapshots, normalized reports and Feature Lab | Accounts, orders or production sync |
+| Schwab REST/options | 04:00 home local for the full daily snapshot; independent hourly context; pre-slot is pending, not failure | Local raw snapshots, normalized reports and Feature Lab | Accounts, orders, production sync or a successful capture before it happens |
 | FRED | Weekly refresh plus artifact freshness checks | Local macro archive with realtime vintages | Automatic scenario/probability changes |
 | OFAC Recent Actions | Daily incremental collection | Local event archive | A complete historical OFAC archive or causal forecast |
 | Macro derived research | After successful QA and dependency gates | Local Scenarios, Calibration, Event Study and Atlas reports | Investable alpha or model promotion |
@@ -82,7 +83,7 @@ The existing research-51 companyfacts job remains independent at 03:00 home loca
 - Macro Event Study: ready; 47/47 eligible events have outcomes.
 - Macro Transmission Atlas: partial; **904 records**, 24 studies, 6 estimated / 18 insufficient, no full_sample and two OOS evaluations. The reviewed fail-closed rebuild reduced records from 1,462; no universe or threshold was changed.
 - Historical 13F events and probability/flow evaluations require a separate reviewed rebuild after F-03.
-- F-04 replaces the MAX(date)-only macro prior join and date-only dashboard read with one shared bounded selector: `date <= T`, non-null `realtimeStart <= T`, and `(realtimeEnd IS NULL OR realtimeEnd >= T)`, ordered by `date DESC, realtimeStart DESC, id DESC`. Unknown null starts and future revisions are excluded; open-ended vintages and inclusive endpoints are supported; the newest eligible null value stays missing. Historical macro prior, probability and nested evaluations are stale until a separate reviewed rebuild, which was not run.
+- F-04 replaces the MAX(date)-only macro prior join and date-only dashboard read with one shared bounded selector: `date <= T`, non-null `realtimeStart <= T`, and `(realtimeEnd IS NULL OR realtimeEnd >= T)`, ordered by `date DESC, realtimeStart DESC, id DESC`. Unknown null starts and future revisions are excluded; open-ended vintages and inclusive endpoints are supported; the newest eligible null value stays missing. A reviewed macro evaluation was subsequently completed; its neutral-fallback coverage limitation is described below.
 - F-04 verification: targeted macro/probability suites passed **3 files / 28 tests**; the full suite passed **118 files / 648 tests**; `npm run check`, `npm run build` and `git diff --check` passed. Build retains the established chunk-size warnings. These gates verify correctness code, not refreshed historical research evidence or production readiness.
 - F-05 replaces single-component exposure dates with `MAX(sourceFiled)` across every required TTM, debt, ratio and foreign-revenue input. Unknown dates and future revisions fail closed; ratios require identical periods and units. Non-consecutive TTM remains partial for display only, while Scenario and Atlas accept only genuinely available evidence with valid availability. The reviewed rebuild below refreshed these reports; lower available coverage is retained, not hidden.
 - F-05 verification: targeted Company Exposure/Scenario/Atlas suites passed **3 files / 31 tests**; the full suite passed **118 files / 657 tests**; `npm run check`, `npm run build` and `git diff --check` passed. Build retains the established chunk-size warnings. These results verify the corrected code, not refreshed research evidence or production readiness.
@@ -91,15 +92,17 @@ The existing research-51 companyfacts job remains independent at 03:00 home loca
 - F-10/F-11 verification: F-10 targeted Statements passed **17 tests**; F-11 targeted Statements/company-exposure passed **2 files / 38 tests**. The final full suite passed **118 files / 668 tests**; `npm run check`, `npm run build` and `git diff --check` passed. Build retains the established chunk-size warnings. These gates verify code, not rebuilt historical evidence or production readiness.
 - The reviewed manual Company Exposure → Macro Scenarios → Atlas rebuild completed once after both numeric fixes. Company Exposure has 51 companies, debt 47, interestCoverage 6, fuelCost 1 and foreignRevenueShare 0; 64 available→missing transitions are documented period mismatches. Scenario statuses are unchanged. Manual runs did not change registered scheduler lastRuns, and the evidence index passes 36/36 SHA256 checks. Full report: `docs/EXPOSURE_REBUILD_2026-11-04.md`.
 - Daily Operations at `2026-11-04T08:58:55.248Z` is **degraded**, 14 OK / 1 warning / 0 errors / 23 pending. Schwab is **awaiting_scheduled_capture** for the 04:00 home-local slot with a 60-minute grace period, not a failure and not ok. Hourly context is independently healthy; Atlas partial/904 remains a warning and macro derivedCurrent=true. No pre-slot collector was started.
-- S&P 500 mapping remediation and daily collection remain separate operational work. Integrated operational verification confirmed all six corrected CIKs as **collected/valid**, with per-CIK manifest, payload, row-count and SHA256 evidence. The initial backfill's six failures remain historical evidence; old wrong-CIK manifests were not deleted. No additional collector or reload was required.
+- S&P 500 mapping remediation and daily collection remain separate operational work. Integrated operational verification confirmed all six corrected CIKs as **collected/valid**, with per-CIK manifest, payload, row-count and SHA256 evidence. The initial backfill's six failures remain historical evidence; old wrong-CIK manifests were not deleted. A pre-existing scheduled daily run completed before this verification; no additional collector or reload was required.
 - Macro evaluation completed with three company reports and six nested bayes/logistic reports over 485 evaluated anchors. Accuracy, balanced accuracy, costs, holdouts, regimes and pooling are reported in `docs/INTEGRATED_VERIFICATION_2026-11-04.md`; comparison with older results is historical only, not direct same-DB pre/post. Current macro prior is the neutral 0.5 fallback because all 1,455 anchor/series checks lack eligible vintages; selected-after-anchor is zero. This is a macro coverage limitation, not repaired alpha or promotion.
-- S&P 500 mapping remediation and daily collection remain separate operational work. A pre-existing scheduled daily run completed before this verification; no additional collection was requested by F-04, F-05, F-10, F-11 or this evidence rebuild.
 
 ## 6. Next queue
 
 1. **Reviewed 13F event/flow/probability rebuild:** separately authorized after F-03.
-2. Numeric correctness: F-15, F-16.
-3. Production/security findings and the remaining audit queue.
+2. **Macro vintage-data remediation:** required before macro prior can move beyond the neutral fallback; the evaluation is complete, but eligible macro evidence is still missing.
+3. **Reviewed Statements netDebt/ROE/ROA historical rebuild or evaluation:** required where missing debt was replaced by zero or non-consecutive quarters produced TTM.
+4. Numeric correctness: F-15, F-16.
+5. **Atlas coverage:** add new documented exposure evidence instead of repeating runs or tuning thresholds.
+6. Production/security findings and the remaining audit queue.
 
 ## 7. Where to look
 

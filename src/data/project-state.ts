@@ -34,7 +34,10 @@ export const PROJECT_STATE_REVIEW = {
   },
   nextQueue: [
     "Reviewed 13F event/flow/probability rebuild",
+    "Macro vintage-data remediation before relying on macro prior",
+    "Reviewed Statements netDebt/ROE/ROA historical rebuild or evaluation",
     "F-15 / F-16 numeric correctness",
+    "Atlas coverage from new documented exposure evidence, not repeated runs",
     "Production/security findings and remaining audit queue",
   ],
 } as const;
