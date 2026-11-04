@@ -399,11 +399,15 @@ export function buildStatements(opts: {
     return cfo + capex;
   });
   put("netDebt", (i) => {
-    const st = num("stDebt", i) ?? 0;
-    const lt = num("ltDebt", i) ?? 0;
+    const st = num("stDebt", i);
+    const noncurrent = seriesFor("LongTermDebtNoncurrent", "stock")[i]?.v ?? null;
+    const curatedTotal = seriesFor("LongTermDebt", "stock")[i]?.v ?? null;
     const cash = num("cash", i);
-    if (cash == null && st === 0 && lt === 0) return null;
-    return st + lt - (cash ?? 0);
+    // Missing debt/cash is unknown, not zero; explicit reported zero remains valid.
+    // Complete components win; the curated total is a fallback, never an extra addend.
+    if (cash == null) return null;
+    if (st != null && noncurrent != null) return st + noncurrent - cash;
+    return curatedTotal == null ? null : curatedTotal - cash;
   });
   put("grossMargin", (i) => div(num("gp", i), num("rev", i)));
   put("opMargin", (i) => div(num("opInc", i), num("rev", i)));

@@ -1379,6 +1379,14 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 **Проверка и stale evidence.** Targeted Company Exposure, Scenario и Atlas suites прошли **3 files / 31 tests**, TypeScript check прошёл. Tests покрывают late TTM revisions, pre-revision anchors, debt/ratio/foreign MAX dates, period/unit mismatches, null availability, non-positive denominators, non-consecutive TTM и rejection в production consumers. Существующие Company Exposure, Scenario и Atlas reports требуют отдельного reviewed rebuild; rebuild, collectors, rematerialization и production actions не выполнялись. Модели Scenario/Atlas, thresholds, shock formulas и research universe не изменялись.
 
+### F-10: missing debt не равен нулю
+
+**Семантика evidence.** Statements больше не применяет `stDebt ?? 0` или `ltDebt ?? 0` в net debt. Missing required debt возвращает null даже при известном cash; missing cash тоже остаётся unknown, а не становится нулём. Explicit reported zero допустим: cash 100 с нулевыми current и noncurrent debt по-прежнему даёт net debt −100.
+
+**Curated precedence.** Сначала используются полные current+noncurrent components. Существующий `LongTermDebt` — curated total-debt fallback при неполных components; он применяется один раз и никогда не прибавляется к ним. Неполный набор components без curated total завершается fail closed. Candidate precedence сохранён, double counting total+components исключён. Valuation formulas, другие ratios и research parameters не изменялись.
+
+**Проверка и stale evidence.** Targeted Statements suite прошёл **17 tests**, включая missing debt/cash, explicit zeros, partial components и curated-total precedence; TypeScript check прошёл. Исторические Statements netDebt, полученные через zero substitution, требуют reviewed rebuild там, где применимо. Rebuild и collectors не запускались. Окончательное Project State queue обновляется после отдельного F-11 TTM исправления.
+
 ### 4.43 Итерация 6d: magnitude-ядро и read-side защита 13F
 
 **Статус: исследовательское ядро и безопасность отображения, не новая торговая модель и не доказательство альфы.** Полный контракт находится в `docs/DESIGN_MAGNITUDE.md` (зарегистрирован в Admin → Manuals): availability-инварианты, математика, допустимые и запрещённые выводы, acceptance gates и дальнейшие этапы зафиксированы ДО кода.

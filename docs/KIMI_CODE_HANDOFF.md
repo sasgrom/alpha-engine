@@ -316,3 +316,12 @@ Deliberately not automatic:
 - Existing Company Exposure, Scenario and Atlas reports are stale until a separate reviewed rebuild; that rebuild was **not run**. No collectors, historical 13F/macro rebuilds, DB rematerialization, factor/IC/probability reevaluation, migrations or production actions were run. Scenario/Atlas models, thresholds, shock formulas and research universe remain unchanged.
 - Project State marks F-05 done and starts the queue with separately reviewed 13F, macro and exposure rebuilds. S&P 500 corrected-CIK collection remains a separate scheduled daily operational task and was not triggered.
 - Next: owner-reviewed evidence rebuilds, or **F-10** according to the agreed correctness queue; no rebuild is implicitly authorized by this code fix.
+
+## 31. F-10 missing debt is not zero — 2026-11-04
+
+- Baseline: `f4c37cc8cb858ee4171e69a34baa1f1b690d9239`. Scope is limited to `api/services/statements.ts`, targeted regressions and documentation; valuation formulas and other consumers were not changed.
+- Root cause: `stDebt ?? 0` and `ltDebt ?? 0` converted missing debt evidence into zero, allowing `cash=100` with no debt facts to produce `netDebt=-100`. Missing cash could also be treated as zero.
+- New semantics: missing cash or missing required debt returns null. Explicit reported zero remains valid: cash 100 plus zero current/noncurrent debt gives -100. Complete current+noncurrent components have precedence; existing `LongTermDebt` is a curated total-debt fallback used once, never added to those components. A partial debt without a curated total returns null.
+- Synthetic regressions cover missing components, explicit zeros, one-component debt, curated-total precedence without double counting, missing cash and existing Statements behavior. Final targeted result: **1 file / 17 tests passed**; `npm run check` passed. An initial nested-array fixture error was diagnosed and corrected before the green run; no source behavior was changed to mask it.
+- Existing Statements netDebt history derived with zero substitution requires a reviewed rebuild where applicable. No collectors, rebuilds, rematerialization or production actions were run. Full suite/build and final Project State queue updates are intentionally deferred until the separate F-11 commit.
+- Next: **F-11**, consecutive-quarter TTM, followed by one separately reviewed Company Exposure → Macro Scenarios → Atlas rebuild after both fixes.

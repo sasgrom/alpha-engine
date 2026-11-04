@@ -1382,6 +1382,14 @@ Run: `npx tsx worker/edgar-fetch.mts --universe edgar-universe-35.json`, then `n
 
 **Verification and stale evidence.** Targeted Company Exposure, Scenario and Atlas suites pass **3 files / 31 tests**, and TypeScript check passes. Tests cover late TTM revisions, pre-revision anchors, debt/ratio/foreign MAX dates, period and unit mismatches, null availability, non-positive denominators, non-consecutive TTM and production consumer rejection. Existing Company Exposure, Scenario and Atlas reports require a separate reviewed rebuild; no rebuild, collector, rematerialization or production action was run. Scenario/Atlas models, thresholds, shock formulas and research universe are unchanged.
 
+### F-10: missing debt is not zero
+
+**Evidence semantics.** Statements no longer applies `stDebt ?? 0` or `ltDebt ?? 0` in net debt. Missing required debt returns null even when cash is known; missing cash also remains unknown rather than becoming zero. Explicit reported zero is valid, so cash 100 with zero current and noncurrent debt still computes net debt −100.
+
+**Curated precedence.** Complete current+noncurrent components are preferred. The existing `LongTermDebt` concept is the curated total-debt fallback and is used once when those components are incomplete; it is never added to them. A partial component set without a curated total fails closed. This preserves candidate precedence and avoids total-plus-components double counting. Valuation formulas, other ratios and research parameters are unchanged.
+
+**Verification and stale evidence.** The targeted Statements suite passes **17 tests**, including missing debt/cash, explicit zeros, partial components and curated-total precedence; TypeScript check passes. Historical Statements netDebt values created by zero substitution require a reviewed rebuild where applicable. No rebuild or collector was run. Project State queue finalization waits for the separate F-11 TTM correction.
+
 ### 4.43 Iteration 6d: magnitude kernel and 13F read-side guard
 
 **Status: research kernel and presentation safety, not a new trading model and not evidence of alpha.** The full contract lives in `docs/DESIGN_MAGNITUDE.md` (registered under Admin → Manuals): availability invariants, mathematics, allowed/forbidden conclusions, acceptance gates, and later stages were fixed BEFORE implementation.

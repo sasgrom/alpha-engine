@@ -175,3 +175,40 @@ describe("buildStatements — derivations and YoY", () => {
     expect(v.periods.map((p) => p.label)).toEqual(["FY26", "FY25"]);
   });
 });
+
+describe("buildStatements — debt evidence", () => {
+  const periodEnd = "2025-12-31";
+  const stock = (concept: string, value: number) => pt(concept, periodEnd, value, { kind: "stock" });
+  const withGrid = (rows: PointRow[][]) => [...dense(periodEnd), ...rows.flat()];
+  const cash = stock("CashAndCashEquivalentsAtCarryingValue", 100);
+  const latestDerived = (points: PointRow[], key: string): number | null => {
+    const view = buildStatements({ points, fyEnd: null, mode: "quarterly", vintage: "latest", periods: 4 });
+    const row = view.sections.flatMap((section) => section.rows).find((candidate) => candidate.key === key);
+    return row?.cells[0]?.v ?? null;
+  };
+
+  it("returns null rather than negative cash when both debt components are missing", () => {
+    expect(latestDerived(withGrid([cash]), "netDebt")).toBeNull();
+  });
+
+  it("preserves explicit reported zero debt", () => {
+    const points = withGrid([cash, stock("ShortTermBorrowings", 0), stock("LongTermDebtNoncurrent", 0)]);
+    expect(latestDerived(points, "netDebt")).toBe(-100);
+  });
+
+  it("fails closed when only one debt component is known and no curated total exists", () => {
+    expect(latestDerived(withGrid([cash, stock("ShortTermBorrowings", 50)]), "netDebt")).toBeNull();
+    expect(latestDerived(withGrid([cash, stock("LongTermDebtNoncurrent", 50)]), "netDebt")).toBeNull();
+  });
+
+  it("uses curated total debt once without adding current or noncurrent components", () => {
+    const fallback = withGrid([cash, stock("ShortTermBorrowings", 25), stock("LongTermDebt", 100)]);
+    expect(latestDerived(fallback, "netDebt")).toBe(0);
+    const complete = withGrid([cash, stock("ShortTermBorrowings", 25), stock("LongTermDebtNoncurrent", 75), stock("LongTermDebt", 1000)]);
+    expect(latestDerived(complete, "netDebt")).toBe(0);
+  });
+
+  it("keeps missing cash unknown instead of treating it as zero", () => {
+    expect(latestDerived(withGrid([stock("LongTermDebt", 100)]), "netDebt")).toBeNull();
+  });
+});
