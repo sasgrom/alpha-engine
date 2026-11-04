@@ -1,5 +1,13 @@
 export const CURATED_MACRO_SERIES = ["DGS10", "DGS2", "T10Y2Y", "FEDFUNDS", "CPIAUCSL", "UNRATE", "BAMLH0A0HYM2", "VIXCLS"] as const;
 
+export function parseMacroSeriesList(requested: string | null): string[] {
+  const parts = requested === null ? [...CURATED_MACRO_SERIES] : requested.split(",").map((value) => value.trim().toUpperCase());
+  if (parts.some((value) => !value)) throw new Error("Series list contains an empty series ID");
+  if (new Set(parts).size !== parts.length) throw new Error("Series list contains a duplicate series ID");
+  for (const seriesId of parts) if (!CURATED_MACRO_SERIES.includes(seriesId as (typeof CURATED_MACRO_SERIES)[number])) throw new Error(`Unsupported curated series ${seriesId}`);
+  return parts;
+}
+
 export interface NormalizedMacroVintageRow {
   seriesId: string;
   observationPeriod: string;

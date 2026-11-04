@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { backfillMacroVintageSeries, MacroVintageConflictError, prepareMacroVintageBackfill, type NormalizedMacroVintageRow } from "./macro-vintage-backfill";
+import { backfillMacroVintageSeries, MacroVintageConflictError, parseMacroSeriesList, prepareMacroVintageBackfill, type NormalizedMacroVintageRow } from "./macro-vintage-backfill";
 
 const NOW = "2026-11-04T12:30:00.000Z";
 const row = (overrides: Partial<NormalizedMacroVintageRow> = {}): NormalizedMacroVintageRow => ({
@@ -71,5 +71,14 @@ describe("normalized FRED to macro_points backfill", () => {
     const secondIngest = vi.fn();
     expect(await backfillMacroVintageSeries(second, secondIngest)).toMatchObject({ insertedRows: 0 });
     expect(secondIngest).not.toHaveBeenCalled();
+  });
+
+  it("parses a reviewed comma-separated series list without duplicates", () => {
+    expect(parseMacroSeriesList("DGS10,DGS2,T10Y2Y,FEDFUNDS,CPIAUCSL,UNRATE")).toEqual(["DGS10", "DGS2", "T10Y2Y", "FEDFUNDS", "CPIAUCSL", "UNRATE"]);
+    expect(parseMacroSeriesList("dgs10, dgs2")).toEqual(["DGS10", "DGS2"]);
+    expect(parseMacroSeriesList("DGS10")).toEqual(["DGS10"]);
+    expect(() => parseMacroSeriesList("DGS10,DGS10")).toThrow("duplicate");
+    expect(() => parseMacroSeriesList("DGS10,")).toThrow("empty");
+    expect(() => parseMacroSeriesList("DGS10,UNKNOWN")).toThrow("Unsupported curated series");
   });
 });

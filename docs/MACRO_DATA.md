@@ -36,7 +36,7 @@ The collector enforces D:-only output on Windows, resolves the real path and req
 npx tsx worker/macro-fred-fetch.mts --group rates
 ```
 
-Includes 2Y/10Y/30Y Treasury, 10Y−2Y curve, SOFR, effective fed funds and 30Y mortgage rate.
+Includes 2Y/10Y/30Y Treasury, 10Y−2Y curve, SOFR, effective fed funds and 30Y mortgage rate. `DFF` is the daily effective rate channel; `FEDFUNDS` is the distinct monthly `effective_federal_funds_monthly` channel. They are not interchangeable.
 
 ### Oil
 
@@ -68,7 +68,7 @@ Includes ICE BofA investment-grade and high-yield OAS. FRED currently notes that
 npx tsx worker/macro-fred-fetch.mts --group volatility
 ```
 
-Includes the CBOE VIX close (`VIXCLS`) as a separate `volatility` / `vix_close` channel. It is not silently included in rates. The registry now expects **21 series** for a complete manifest, QA and Daily Operations coverage. The four Event Study series (`DGS10`, `DCOILWTICO`, `DTWEXBGS`, `BAMLH0A0HYM2`) and Shock Calibration inputs are unchanged.
+Includes the CBOE VIX close (`VIXCLS`) as a separate `volatility` / `vix_close` channel. It is not silently included in rates. The registry now expects **22 series** for a complete manifest, QA and Daily Operations coverage. The four Event Study series (`DGS10`, `DCOILWTICO`, `DTWEXBGS`, `BAMLH0A0HYM2`) and Shock Calibration inputs are unchanged.
 
 ### Inflation
 
@@ -383,4 +383,10 @@ The exact availability mapping is `observationPeriod → date`, `value → value
 
 Deduplication is limited to identical `(seriesId, observationPeriod, realtimeStart)` rows. An identical key with a different value or `realtimeEnd` is a conflict error, never a silent upsert. A conflict-bearing series is wholly preserved; an independent valid series may still be ingested, producing an explicit `partial` result and nonzero exit code. `ingestMacroPoints` inserts in batches of at most 500. There are no DELETE/DROP/TRUNCATE operations, and live idempotency is checked read-only rather than by repeating an apply.
 
-`FEDFUNDS` (monthly effective federal funds rate) is not interchangeable with regular collector series `DFF` (daily rate). A missing normalized archive therefore remains a blocker, not an invitation to substitute another series. Current legacy rows with `realtimeStart = realtimeEnd` that disagree with official open-ended evidence also require separate reviewed resolution; they are not overwritten by this adapter.
+`FEDFUNDS` (monthly effective federal funds rate) is not interchangeable with regular collector series `DFF` (daily rate). It has a deliberate `rates` / `effective_federal_funds_monthly` registry entry, but a missing normalized archive remains a blocker until a real targeted collection and clean QA complete. A failed fetch is not retried in the same reviewed block and no substitute series is used.
+
+`--series` accepts a comma-separated curated subset, so one reviewed apply can cover multiple series without sequential applies. Empty, duplicate or unknown IDs fail before reading source files or writing data.
+
+`scripts/remediate-macro-window-conflicts.mts` provides the separate exact-ID repair path for the five reviewed legacy one-day closures. It validates each ID's series, observationPeriod, realtimeStart, value and official `supersededAt=null`. Default is dry-run with an exact diff and plan fingerprint. Apply requires the matching saved plan and a fresh complete backup with SHA256 and current-table fingerprint. One transaction locks all five IDs and changes only `realtimeEnd` to NULL; any mismatch or failed row rolls back the whole transaction. Raw MySQL UTC timestamp strings are normalized for comparison with Date instances, not rewritten. Post-check requires exactly five changed rows and all other rows unchanged.
+
+Every collector or apply requires a separate fail-closed scheduler/preflight guard. A failed guard means no command continuation and no state mutation; after natural scheduler idle, the entire guard must pass again. Never chain an apply after a failed check with a shell semicolon.

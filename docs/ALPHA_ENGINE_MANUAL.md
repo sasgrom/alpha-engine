@@ -1415,7 +1415,7 @@ T10Y2Y/FEDFUNDS/CPIAUCSL/UNRATE/BAMLH0A0HYM2/VIXCLS), окна 2021→сейча
 
 ### Macro vintage adapter и регулярный сбор VIX — 2026-11-04
 
-**Реестр и health.** `VIXCLS` зарегистрирован как отдельный канал `volatility` / `vix_close` в `worker/lib/macro-sources.ts`, а не неявная часть rates. Полные FRED manifest, manifest QA и Daily Operations теперь ожидают **21 серию**. Существующий weekly `macro-fred-weekly` использует этот реестр; scheduler и модели не меняются. Состав серий Event Study и Shock Calibration сохранён.
+**Реестр и health.** `VIXCLS` зарегистрирован как отдельный канал `volatility` / `vix_close` в `worker/lib/macro-sources.ts`, а не неявная часть rates. `FEDFUNDS` отдельно зарегистрирован как `rates` / `effective_federal_funds_monthly` и не совпадает с daily `DFF`; этот mapping не означает, что monthly archive уже собран. Полные FRED manifest, manifest QA и Daily Operations теперь ожидают **22 серии**. Существующий weekly `macro-fred-weekly` использует этот реестр; scheduler и модели не меняются. Состав серий Event Study и Shock Calibration сохранён.
 
 **Adapter с сохранением availability.** `scripts/backfill-macro-vintages.mts` отображает normalized official FRED/ALFRED `observationPeriod`, `value`, `availableAt` и `supersededAt` в legacy `macro_points.date`, `value`, `realtimeStart` и `realtimeEnd`. Фактическое новое время ingest записывается только в `fetchedAt`. Missing `availableAt` пропускается с diagnostic, null value сохраняется, null `supersededAt` означает open-ended; ingestion/research timestamps никогда не подменяют availability. Default — dry-run; apply требует проверенный backup всей таблицы и совпадение текущего fingerprint. Новые строки проходят через `ingestMacroPoints` batches ≤500, без deletes и schema changes.
 

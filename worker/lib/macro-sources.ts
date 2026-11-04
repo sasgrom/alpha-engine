@@ -15,6 +15,7 @@ export const MACRO_SERIES: MacroSeriesDefinition[] = [
   { seriesId: "T10Y2Y", group: "rates", channel: "yield_curve_10y_2y" },
   { seriesId: "SOFR", group: "rates", channel: "secured_overnight_financing" },
   { seriesId: "DFF", group: "rates", channel: "effective_federal_funds" },
+  { seriesId: "FEDFUNDS", group: "rates", channel: "effective_federal_funds_monthly", notes: "Monthly effective federal funds rate; distinct from DFF daily observations." },
   { seriesId: "MORTGAGE30US", group: "rates", channel: "mortgage_30y" },
   { seriesId: "DCOILWTICO", group: "oil", channel: "wti_spot" },
   { seriesId: "DCOILBRENTEU", group: "oil", channel: "brent_spot" },

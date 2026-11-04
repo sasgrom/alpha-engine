@@ -8,7 +8,7 @@ import { asc } from "drizzle-orm";
 import { getDb } from "../api/queries/connection";
 import { ingestMacroPoints } from "../api/services/macro";
 import { macroPoints } from "@db/schema";
-import { backfillMacroVintageSeries, CURATED_MACRO_SERIES, MacroVintageConflictError, prepareMacroVintageBackfill, type MacroVintageBackfillPlan, type NormalizedMacroVintageRow } from "../worker/lib/macro-vintage-backfill";
+import { backfillMacroVintageSeries, MacroVintageConflictError, parseMacroSeriesList, prepareMacroVintageBackfill, type MacroVintageBackfillPlan, type NormalizedMacroVintageRow } from "../worker/lib/macro-vintage-backfill";
 
 const arg = (name: string) => {
   const index = process.argv.indexOf(name);
@@ -16,9 +16,7 @@ const arg = (name: string) => {
 };
 const apply = process.argv.includes("--apply");
 const macroRoot = path.resolve(arg("--macro-root") ?? (process.platform === "win32" ? "D:\\research\\alpha-engine\\macro" : "worker/cache/macro"));
-const requestedSeries = arg("--series")?.toUpperCase();
-const seriesIds = requestedSeries ? [requestedSeries] : [...CURATED_MACRO_SERIES];
-for (const seriesId of seriesIds) if (!CURATED_MACRO_SERIES.includes(seriesId as (typeof CURATED_MACRO_SERIES)[number])) throw new Error(`Unsupported curated series ${seriesId}`);
+const seriesIds = parseMacroSeriesList(arg("--series"));
 const outDir = path.resolve(arg("--out") ?? `worker/.runs/macro-vintage-backfill-${new Date().toISOString().replaceAll(":", "").replaceAll(".", "")}`);
 const resultPath = path.join(outDir, "backfill-result.json");
 if (existsSync(resultPath)) throw new Error(`Refusing to overwrite an existing backfill result: ${resultPath}`);
