@@ -103,4 +103,16 @@ describe("daily operations report", () => {
     expect(report.schwab.featuresSourceCurrent).toBe(false);
     expect(report.checks.find((item) => item.id === "schwab-feature-lineage")?.status).toBe("error");
   });
+
+  it("reports manifest-backed S&P companyfacts coverage independently of research-51", () => {
+    const value = input();
+    value.facts = { sp500: { universeHash: "universe-hash", uniqueCiks: 499, refreshed: 480, unchanged: 10, failed: 2, missing: 7, lastCheckedAt: NOW } };
+    const report = buildDailyOperationsReport(value);
+    const check = report.checks.find((item) => item.id === "sp500-facts-coverage");
+    expect(report.facts?.sp500?.uniqueCiks).toBe(499);
+    expect(check?.status).toBe("warning");
+    expect(check?.detail).toContain("480 refreshed");
+    expect(check?.detail).toContain("7 missing");
+    expect(check?.jobId).toBe("sp500-facts-daily");
+  });
 });

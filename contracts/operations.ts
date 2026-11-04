@@ -50,6 +50,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local MySQL through the local factsSnapshot ingest route; no production write.", requirements: ["network", "server", "mysql", "driveD"], notes: "Requires exactly one reachable local web server on port 3000 and INGEST_URL pointing to it.",
   }),
   job({
+    id: "sp500-facts-daily", name: "S&P 500 incremental companyfacts", group: "sec", mode: "scheduled", cron: "30 23 * * *", defaultEnabled: true, dependsOn: [],
+    ...npx("worker/facts-fetch.mts", ["--universe", "edgar-universe.json"]), purpose: "Collect relevant new SEC companyfacts for the deduplicated S&P 500 snapshot without redundant full downloads.",
+    input: "Deduplicated edgar-universe.json, recent financial/XBRL forms and amendments, shared per-CIK raw cache and atomic manifests.", output: "Resumable per-CIK raw snapshots and manifest transitions with a staggered seven-day full reconciliation baseline.",
+    destination: "Local MySQL and the D:-only raw cache; no production write and no research-universe expansion.", requirements: ["network", "server", "mysql", "driveD"], notes: "Independent from research-51: failures never block its dependency chain, and this job has no research-series/factors downstream.",
+  }),
+  job({
     id: "research-series", name: "Canonical research series", group: "fundamentals", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["facts-fetch-daily"],
     ...npx("scripts/build-research-series.mts", ["--universe", "research-universe-51.json"]), purpose: "Convert current local facts into canonical vintage-aware series points.",
     input: "Local facts snapshots written by facts-fetch-daily.", output: "Atomically replaced series_points per CIK.",

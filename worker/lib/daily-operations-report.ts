@@ -4,6 +4,7 @@ import type { SchwabMarketSnapshot } from "./schwab-normalize";
 import type { SchwabFeatureReport } from "./schwab-features";
 import type { SchwabContextReport } from "./schwab-context";
 import { buildMacroHealth, type MacroOperationsArtifacts, type MacroHealthSummary } from "./macro-operations-health";
+import type { FactsManifestHealth } from "./facts-incremental";
 
 export const DAILY_OPERATIONS_REPORT_JOB_ID = "daily-operations-report";
 const SCHEDULER_COMMAND = "schtasks /Run /TN AlphaEngine-Operations-Scheduler";
@@ -74,6 +75,7 @@ export interface DailyOperationsReport {
     contextErrors: number;
   };
   macro: MacroHealthSummary;
+  facts?: { sp500: FactsManifestHealth | null };
   summary: {
     checksOk: number;
     checksWarning: number;
@@ -98,6 +100,7 @@ export interface DailyOperationsInput {
   features: SchwabFeatureReport | null;
   context: SchwabContextReport | null;
   macro?: MacroOperationsArtifacts;
+  facts?: { sp500: FactsManifestHealth | null };
   dataMode?: "live" | "fixture";
 }
 
@@ -219,10 +222,20 @@ export function buildDailyOperationsReport(input: DailyOperationsInput): DailyOp
   );
   const schwab = schwabChecks(input, nowMs, date);
   const macro = buildMacroHealth(input.macro ?? EMPTY_MACRO, nowMs);
+  const factsChecks = input.facts?.sp500 ? [baseCheck(
+    "sp500-facts-coverage",
+    "S&P 500 companyfacts coverage",
+    input.facts.sp500.failed > 0 || input.facts.sp500.missing > 0 ? "warning" : "ok",
+    input.facts.sp500.lastCheckedAt,
+    `${input.facts.sp500.uniqueCiks} unique CIKs · ${input.facts.sp500.refreshed} refreshed · ${input.facts.sp500.unchanged} unchanged · ${input.facts.sp500.failed} failed · ${input.facts.sp500.missing} missing`,
+    input.facts.sp500.failed > 0 || input.facts.sp500.missing > 0 ? "npx tsx worker/facts-fetch.mts --universe edgar-universe.json" : null,
+    "sp500-facts-daily",
+  )] : [];
   const checks = [
     schedulerCheck,
     ...schwab.checks,
     ...macro.checks,
+    ...factsChecks,
     ...OPERATION_JOBS.filter((job) => job.id !== DAILY_OPERATIONS_REPORT_JOB_ID && job.mode === "scheduled" && input.config[job.id]?.enabled).map((job) => jobCheck(job, input, nowMs, date)),
   ];
   const jobs = OPERATION_JOBS.map((job): DailyOperationJobRow => {
@@ -275,6 +288,7 @@ export function buildDailyOperationsReport(input: DailyOperationsInput): DailyOp
     },
     schwab: schwab.summary,
     macro: macro.summary,
+    ...(input.facts ? { facts: input.facts } : {}),
     summary,
     checks,
     jobs,
@@ -294,6 +308,7 @@ export function dailyOperationsMarkdown(report: DailyOperationsReport): string {
     `- Scheduler: ${report.scheduler.status}; heartbeat: ${report.scheduler.heartbeatAt ?? "missing"}`,
     `- Schwab: ${report.schwab.tickersCapturedToday}/${report.schwab.tickersExpected} tickers captured today; latest capture: ${report.schwab.latestCapture ?? "missing"}`,
     `- Macro QA: ${report.macro.qaStatus ?? "missing"}; derived reports current: ${report.macro.derivedCurrent}`,
+    ...(report.facts?.sp500 ? [`- S&P 500 facts: ${report.facts.sp500.uniqueCiks} unique CIKs; refreshed ${report.facts.sp500.refreshed}; unchanged ${report.facts.sp500.unchanged}; failed ${report.facts.sp500.failed}; missing ${report.facts.sp500.missing}`] : []),
     `- Checks: ${report.summary.checksOk} ok, ${report.summary.checksWarning} warning, ${report.summary.checksError} error, ${report.summary.checksPending} pending`,
     `- Jobs: ${report.summary.jobsDoneToday} completed today, ${report.summary.jobsFailedToday} failed today, ${report.summary.jobsEnabled} enabled`,
     "",

@@ -8,6 +8,8 @@ import type { SchwabFeatureReport } from "../worker/lib/schwab-features";
 import type { SchwabContextReport } from "../worker/lib/schwab-context";
 import type { MacroOperationsArtifacts } from "../worker/lib/macro-operations-health";
 import { writeJsonAtomic } from "../worker/lib/json-file";
+import { loadEdgarUniverse } from "../worker/lib/edgar";
+import { summarizeFactsManifest } from "../worker/lib/facts-incremental";
 
 const arg = (name: string) => { const index = process.argv.indexOf(name); return index > -1 ? process.argv[index + 1] : null; };
 const now = new Date().toISOString();
@@ -33,6 +35,7 @@ const macro: MacroOperationsArtifacts = {
   eventStudy: readJson<MacroOperationsArtifacts["eventStudy"]>(path.resolve("public/reports/macro-event-study.json"), (value) => value?.schemaVersion === 1 && !!value.events),
   atlas: readJson<MacroOperationsArtifacts["atlas"]>(path.resolve("public/reports/macro-transmission-atlas.json"), (value) => value?.schemaVersion === 1 && !!value.coverage),
 };
+const facts = { sp500: summarizeFactsManifest(path.resolve("worker/cache/companyfacts"), loadEdgarUniverse("edgar-universe.json")) };
 const report = buildDailyOperationsReport({
   now,
   date,
@@ -44,6 +47,7 @@ const report = buildDailyOperationsReport({
   features,
   context,
   macro,
+  facts,
   dataMode: "live",
 });
 const markdown = dailyOperationsMarkdown(report);

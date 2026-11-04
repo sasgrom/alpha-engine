@@ -343,3 +343,17 @@ Discovery contains the earliest 70% of events. The model and sector levels are f
 A fit requires at least 30 rows, 10 events, 5 companies and a full-rank design. `pilot` means 5–19 companies or 10–29 events; `full_sample` requires at least 20 companies and 30 events. `insufficient_coverage` is returned instead of a fabricated coefficient. Interaction CI95 uses 500 event-cluster bootstrap replicates with a maximum block length of three.
 
 Outputs are `public/reports/macro-transmission-atlas.json` and `.md`. Daily Operations checks Atlas lineage and research coverage but does not treat `estimated` as alpha validation or authorize production promotion.
+
+## 16. Incremental S&P 500 companyfacts collection
+
+The independent `sp500-facts-daily` job collects SEC companyfacts for the current documented S&P snapshot, not for a historical point-in-time index membership. The collection snapshot is `edgar-universe.json` plus `GICS_SNAPSHOT_AS_OF=2026-10-11`, sourced from the documented Wikipedia `List of S&P 500 companies` constituents table. It has 502 rows and 499 unique CIKs; FOX/FOXA, GOOG/GOOGL and NWS/NWSA are deduplicated by CIK, never downloaded twice for share classes. The sorted-unique-CIK universe SHA256 is `9db32591ad570e51e4e9902417a5152414c2d27a5d73e2b9f7365b4d75809c9b`. No live scrape is performed during collection; snapshot changes require a separate documented source/asOf diff.
+
+- The scheduler command is `npx tsx worker/facts-fetch.mts --universe edgar-universe.json`, cron `30 23 * * *` home local time. The job has no research-series/research-factors dependencies and its failures do not block the independent research-51 chain.
+- Recent submissions are checked for 10-K, 10-Q, 20-F, 40-F, 10-KT and 10-QT forms plus their amendments. Form 4, 13D/G and other irrelevant forms never trigger a companyfacts refresh.
+- Refresh occurs for a new relevant accession, missing/corrupt raw, missing/failed previous ingest, previous failure or due full reconciliation. Unchanged valid raw with successful previous ingest and the same filing signature is skipped.
+- The full reconciliation baseline is seven days with a deterministic 0–6-day CIK stagger, so the whole index is not downloaded every week in one run.
+- A new payload is validated and ingested before the previous raw is replaced. Failed download/ingest therefore preserves previous good raw, raw SHA256 and successful capture/ingest timestamps. One company's failure does not cancel other completed snapshots.
+- Each CIK has an atomic credential-free manifest at `worker/cache/companyfacts/manifest/<cik>.json` with checked/success timestamps, latest relevant accession/filingDate/form/signature, last full reconciliation, raw SHA256, status, bounded error and universe hash. Completed CIKs resume from that manifest after interruption; missing/failed CIKs retry on the next daily run.
+- `--cached` remains the offline recovery path for an existing valid raw payload and never bypasses local ingest validation. `INGEST_URL` must be loopback-only; production ingest is rejected before collection.
+
+Daily Operations reads these manifests for unique-CIK coverage, refreshed/unchanged/failed/missing counts and latest check time. Research universe 51, factor/IC evaluation, Atlas and factor/model/regime universes are not expanded by this collection job.
