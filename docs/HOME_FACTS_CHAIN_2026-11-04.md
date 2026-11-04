@@ -250,7 +250,7 @@ AssetGrowth comparison:
 | Post-chain state | `worker/.runs/20261104T000730Z-operations-state-after-facts-chain.json` |
 | Post-chain Daily Operations | `worker/.runs/20261104T000730Z-daily-operations-after-facts-chain.json` |
 
-IC lifecycle caveat: предоставленная заданием `npx tsx -e` команда сформировала полный валидный JSON, но её Node wrapper оставался активным после 300s и был переведён tool runtime в background. Вычисление `crossSectionFactorIc()` уже завершилось и вывод parsed успешно; повторный snapshot не запускался. Процесс не убивался в соответствии с запретом owner kill. Это не мешает terminal scheduler state `current=null` / `queue=[]`, но остаётся operational caveat для будущего cleanup отдельным owner-разрешённым действием.
+IC lifecycle evidence: предоставленная заданием `npx tsx -e` команда завершила вычисление и записала полный валидный JSON до истечения 600-second timeout. Tool runtime затем завершил wrapper со `terminal status=timed_out` и `exit code=1`; процесс больше не активен. Ручного kill не было. `worker/.runs/factor-ic-after-facts-chain.json` имеет **454 188 bytes и 2 834 rows**, успешно parsed и остаётся валидным research artifact. Повторный snapshot не запускался. Поэтому terminal timeout wrapper не отменяет корректность IC comparison и не относится к chain failure.
 
 ## 14. Git delivery scope и подтверждение ограничений
 
