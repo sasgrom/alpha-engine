@@ -48,9 +48,13 @@ try {
   write("audit.json", { ...plan, applyRequested: apply, backup: backupManifest, expectedAfterApplyBeforeRebuild: rows.length - plan.deleteCandidates.length });
 
   if (apply) {
-    if (!existsSync(path.join(outDir, "audit-backup-signals.json")) throw new Error("Refusing apply without a machine backup");
+    if (!existsSync(path.join(outDir, "audit-backup-signals.json"))) {
+      throw new Error("Refusing apply without a machine backup");
+    }
     const currentPlan = buildThirteenFRemediationPlan(await positionRows(), quarters, accessions);
-    if (currentPlan.fingerprint !== plan.fingerprint) throw new Error("Position rows changed after audit; refusing stale apply");
+    if (currentPlan.fingerprint !== plan.fingerprint) {
+      throw new Error("Position rows changed after audit; refusing stale apply");
+    }
     const result = await applyThirteenFRemediationPlan(db, plan);
     write("repair-apply.json", { generatedAt: new Date().toISOString(), ...result, before: plan.counts, backup: backupManifest });
     console.log(JSON.stringify({ mode: "apply", ...result, after: currentPlan.counts }, null, 2));
