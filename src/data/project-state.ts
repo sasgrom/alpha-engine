@@ -42,6 +42,9 @@ export const PROJECT_STATE_REVIEW = {
     ndaVersion: "2026-11-04",
     firstIpBinding: true,
     guidedTourTracks: ["geography", "technical"],
+    terminalDefault: true,
+    terminalLegacyToggle: true,
+    terminalDayNightThemes: true,
     migrationRequired: true,
     accountSeedRequired: true,
   },
@@ -50,6 +53,8 @@ export const PROJECT_STATE_REVIEW = {
     "F-15 / F-16 numeric correctness",
     "Atlas coverage from new documented exposure evidence, not repeated runs",
     "Production/security findings and remaining audit queue",
+    "Fix the blank Fund Flows 3D view, then re-enable it for reviewers (temporarily admin-only)",
+    "Audit Legacy Dashboard redundancy after the new retail Terminal experience",
   ],
 } as const;
 

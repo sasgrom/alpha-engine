@@ -109,6 +109,8 @@ The existing research-51 companyfacts job remains independent at 03:00 home loca
 2. Numeric correctness: F-15, F-16.
 3. **Atlas coverage:** add new documented exposure evidence instead of repeating runs or tuning thresholds.
 4. Production/security findings and the remaining audit queue.
+5. **Fund Flows 3D repair:** the view is blank for presentation users and is temporarily admin-only. Reproduce the rendering failure, restore a verified view, then re-enable reviewer access.
+6. **Legacy Dashboard audit:** the new `/terminal` now provides the retail universe/portfolio-style snapshot, sector/risk charts and disclosure timeline, while `/dashboard` remains a legacy surface. Decide later whether any redundant legacy content should be retained, consolidated or retired.
 
 ## 7. Deferred model and data strategy — after the current remediation tails
 

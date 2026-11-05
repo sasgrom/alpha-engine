@@ -1,5 +1,5 @@
 import { lazy, Suspense, type ReactNode } from "react";
-import { Routes, Route, Link } from "react-router";
+import { Routes, Route, Link, Navigate } from "react-router";
 import { ShieldAlert } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import Login from "./pages/Login";
@@ -9,6 +9,7 @@ import ReviewerGate from "./components/ReviewerGate";
 import PresentationOnly from "./components/PresentationOnly";
 
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Terminal = lazy(() => import("./pages/Terminal"));
 const Universe = lazy(() => import("./pages/Universe"));
 const Company = lazy(() => import("./pages/Company"));
 const Jobs = lazy(() => import("./pages/Jobs"));
@@ -63,7 +64,9 @@ export default function App() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="radar" /></div>}>
       <ReviewerGate><Routes>
-      <Route path="/" element={<Dashboard />} />
+      <Route path="/" element={<Navigate to="/terminal" replace />} />
+      <Route path="/terminal" element={<Terminal />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/universe" element={<Universe />} />
       <Route path="/screener" element={<Screener />} />
       <Route path="/company/:ticker" element={<Company />} />
@@ -75,7 +78,7 @@ export default function App() {
       <Route path="/admin" element={<Admin />} />
       <Route path="/workers" element={<AdminOnly><Workers /></AdminOnly>} />
       <Route path="/project-state" element={<PresentationOnly><ProjectState /></PresentationOnly>} />
-      <Route path="/fundflows" element={<PresentationOnly><FundFlows /></PresentationOnly>} />
+      <Route path="/fundflows" element={<AdminOnly><FundFlows /></AdminOnly>} />
       <Route path="/analytics" element={<PresentationOnly><Analytics /></PresentationOnly>} />
       <Route path="/analytics/methodology" element={<PresentationOnly><Methodology /></PresentationOnly>} />
       <Route path="/analytics/risk-lab" element={<PresentationOnly><VolatilityRiskLab /></PresentationOnly>} />

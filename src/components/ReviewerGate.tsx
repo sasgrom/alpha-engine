@@ -4,6 +4,8 @@ import { useReviewer } from "@/hooks/useReviewer";
 import ReviewerNdaGate from "./ReviewerNdaGate";
 import ReviewerTour from "./ReviewerTour";
 import ReviewerRestrictions from "./ReviewerRestrictions";
+import ReviewerGuideLayer from "./ReviewerGuideLayer";
+import { ReviewerGuideProvider } from "@/hooks/useReviewerGuide";
 
 export default function ReviewerGate({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -22,5 +24,5 @@ export default function ReviewerGate({ children }: { children: ReactNode }) {
   );
   if (!status.data?.isReviewer) return <>{children}</>;
   if (!status.data.ndaAccepted) return <ReviewerNdaGate />;
-  return <><ReviewerTour /><ReviewerRestrictions />{children}</>;
+  return <ReviewerGuideProvider userId={user.id}><ReviewerTour /><ReviewerRestrictions />{children}<ReviewerGuideLayer /></ReviewerGuideProvider>;
 }

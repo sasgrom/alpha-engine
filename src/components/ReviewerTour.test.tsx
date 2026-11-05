@@ -3,6 +3,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import ReviewerTour from "./ReviewerTour";
+import { ReviewerGuideProvider } from "@/hooks/useReviewerGuide";
 
 const mocks = vi.hoisted(() => ({
   action: vi.fn(),
@@ -23,6 +24,8 @@ describe("Reviewer guided tours", () => {
   let host: HTMLDivElement | null = null;
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
+    sessionStorage.clear();
     mocks.status.data = { isReviewer: true, ndaAccepted: true, tours };
     host = document.createElement("div");
     document.body.appendChild(host);
@@ -31,7 +34,7 @@ describe("Reviewer guided tours", () => {
   afterEach(() => { if (root) act(() => root!.unmount()); host?.remove(); root = null; host = null; });
 
   it("offers both presentation tracks and starts the technical tour", async () => {
-    await act(async () => { root!.render(<ReviewerTour />); });
+    await act(async () => { root!.render(<ReviewerGuideProvider userId={42}><ReviewerTour /></ReviewerGuideProvider>); });
     expect(host!.textContent).toContain("Choose the presentation that fits your review.");
     const option = [...host!.querySelectorAll("button")].find((button) => button.textContent?.includes("Alpha Engine — technical briefing"))!;
     await act(async () => { option!.click(); });
@@ -40,7 +43,7 @@ describe("Reviewer guided tours", () => {
 
   it("advances steps and supports never-show-again", async () => {
     mocks.status.data = { isReviewer: true, ndaAccepted: true, tours: [{ track: "technical", currentStep: 0, status: "in_progress" }, { track: "geography", currentStep: 0, status: "not_started" }] };
-    await act(async () => { root!.render(<ReviewerTour />); });
+    await act(async () => { root!.render(<ReviewerGuideProvider userId={42}><ReviewerTour /></ReviewerGuideProvider>); });
     expect(host!.textContent).toContain("Availability before alpha");
     const next = [...host!.querySelectorAll("button")].find((button) => button.textContent === "Next")!;
     await act(async () => { next.click(); });
@@ -50,9 +53,19 @@ describe("Reviewer guided tours", () => {
     expect(mocks.action).toHaveBeenCalledWith({ track: "technical", action: "dismiss_forever" });
   });
 
+  it("finishes the last step into the full website instead of reopening another track", async () => {
+    mocks.status.data = { isReviewer: true, ndaAccepted: true, tours: [{ track: "technical", currentStep: 8, status: "in_progress" }, { track: "geography", currentStep: 0, status: "not_started" }] };
+    await act(async () => { root!.render(<ReviewerGuideProvider userId={42}><ReviewerTour /></ReviewerGuideProvider>); });
+    const finish = [...host!.querySelectorAll("button")].find((button) => button.textContent === "Finish")!;
+    await act(async () => { finish.click(); });
+    expect(mocks.action).toHaveBeenCalledWith({ track: "technical", action: "next" });
+    expect(host!.querySelector(".reviewer-tour-backdrop")).toBeNull();
+    expect(host!.textContent).not.toContain("Choose the presentation that fits your review.");
+  });
+
   it("does not show after completion or permanent dismissal", async () => {
     mocks.status.data = { isReviewer: true, ndaAccepted: true, tours: [{ track: "technical", currentStep: 0, status: "completed" }, { track: "geography", currentStep: 0, status: "dismissed_forever" }] };
-    await act(async () => { root!.render(<ReviewerTour />); });
+    await act(async () => { root!.render(<ReviewerGuideProvider userId={42}><ReviewerTour /></ReviewerGuideProvider>); });
     expect(host!.textContent).not.toContain("Choose the presentation that fits your review.");
   });
 });

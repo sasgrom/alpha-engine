@@ -2,6 +2,7 @@
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router";
 import ReviewerGate from "./ReviewerGate";
 
 const mocks = vi.hoisted(() => ({
@@ -33,14 +34,14 @@ describe("Reviewer access gate", () => {
 
   it("shows NDA instead of content until accepted", async () => {
     mocks.status.data = { isReviewer: true, ndaAccepted: false, tours: [] };
-    await act(async () => { root!.render(<ReviewerGate><div>Secret research</div></ReviewerGate>); });
+    await act(async () => { root!.render(<MemoryRouter><ReviewerGate><div>Secret research</div></ReviewerGate></MemoryRouter>); });
     expect(host!.textContent).toContain("Confidential research preview");
     expect(host!.textContent).not.toContain("Secret research");
   });
 
   it("unlocks the presentation after NDA acceptance", async () => {
     mocks.status.data = { isReviewer: true, ndaAccepted: true, tours: [{ track: "technical", currentStep: 0, status: "completed" }, { track: "geography", currentStep: 0, status: "completed" }] };
-    await act(async () => { root!.render(<ReviewerGate><div>Secret research</div></ReviewerGate>); });
+    await act(async () => { root!.render(<MemoryRouter><ReviewerGate><div>Secret research</div></ReviewerGate></MemoryRouter>); });
     expect(host!.textContent).toContain("Secret research");
     expect(host!.textContent).not.toContain("Confidential research preview");
   });
@@ -48,7 +49,7 @@ describe("Reviewer access gate", () => {
   it("renders children without reviewer controls for an authenticated admin", async () => {
     mocks.user = { id: 1, role: "admin", name: "Admin" };
     mocks.status.data = { isReviewer: false, ndaAccepted: false, tours: defaultTours };
-    await act(async () => { root!.render(<ReviewerGate><div>Secret research</div></ReviewerGate>); });
+    await act(async () => { root!.render(<MemoryRouter><ReviewerGate><div>Secret research</div></ReviewerGate></MemoryRouter>); });
     expect(host!.textContent).toContain("Secret research");
     expect(host!.textContent).not.toContain("Two ways to explore");
     expect(host!.querySelector(".reviewer-tour-backdrop")).toBeNull();
@@ -57,7 +58,7 @@ describe("Reviewer access gate", () => {
 
   it("keeps the tour for a reviewer with not_started tracks", async () => {
     mocks.status.data = { isReviewer: true, ndaAccepted: true, tours: defaultTours };
-    await act(async () => { root!.render(<ReviewerGate><div>Secret research</div></ReviewerGate>); });
+    await act(async () => { root!.render(<MemoryRouter><ReviewerGate><div>Secret research</div></ReviewerGate></MemoryRouter>); });
     expect(host!.textContent).toContain("Secret research");
     expect(host!.textContent).toContain("Two ways to explore");
     expect(host!.querySelector(".reviewer-tour-backdrop")).not.toBeNull();

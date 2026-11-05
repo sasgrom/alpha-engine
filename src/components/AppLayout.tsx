@@ -16,6 +16,8 @@ import {
   DatabaseZap,
   SlidersHorizontal,
   Workflow,
+  BookOpen,
+  Sparkles,
 } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
@@ -30,6 +32,10 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { describeJob } from "@/lib/job-describe";
 import { useReviewer } from "@/hooks/useReviewer";
+import { useReviewerGuide } from "@/hooks/useReviewerGuide";
+import { REVIEWER_NAV_GUIDE } from "@/content/reviewer-guide";
+import ReviewerInfoHint from "./ReviewerInfoHint";
+import { Switch } from "@/components/ui/switch";
 
 /**
  * Decluttered navigation (iteration 3c, owner decision): regular users get
@@ -38,7 +44,7 @@ import { useReviewer } from "@/hooks/useReviewer";
  * service section.
  */
 const NAV = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/" },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
   { icon: Globe2, label: "Universe", path: "/universe" },
   // 4a (D28): the daily working surface — universe-wide metrics table
   { icon: Table2, label: "Screener", path: "/screener" },
@@ -210,7 +216,9 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
   const navigate = useNavigate();
   const isAdmin = user?.role === "admin";
   const reviewer = useReviewer();
+  const guide = useReviewerGuide();
   const isPresentationReviewer = isAdmin || (reviewer.status.data?.isReviewer && reviewer.status.data.ndaAccepted);
+  const showReviewerGuide = Boolean(reviewer.status.data?.isReviewer && reviewer.status.data.ndaAccepted);
   // 4p: Workers nav entry only on the home machine (LOCAL_WORKER_UI=1 server-side)
   const workersUi = trpc.workersLocal.enabled.useQuery(undefined, { retry: false, enabled: isAdmin });
   const stats = trpc.dashboard.stats.useQuery(undefined, {
@@ -261,14 +269,14 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
   const track = trpc.activity.track.useMutation();
   const lastTracked = useRef<Map<string, number>>(new Map());
   useEffect(() => {
-    if (!user) return;
+    if (!user || reviewer.status.isLoading || reviewer.status.data?.isReviewer) return;
     const path = location.pathname;
     const now = Date.now();
     if (now - (lastTracked.current.get(path) ?? 0) < 60_000) return;
     lastTracked.current.set(path, now);
     track.mutate({ path });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname, user?.id]);
+  }, [location.pathname, user?.id, reviewer.status.isLoading, reviewer.status.data?.isReviewer]);
 
   // 4c (D32): unread-message badge + a toast when the count GROWS while the
   // user is not on /messages (on the page itself the conversation is already
@@ -304,28 +312,32 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
 
   /** Nav items shared by the desktop sidebar and the mobile drawer. */
   const renderNavItems = (onNavigate?: () => void) =>
-    [...NAV, ...(isPresentationReviewer ? [PROJECT_STATE_NAV, ...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, SCENARIO_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, FLOWS_NAV, ...(isAdmin ? [ADMIN_NAV] : [])] : [])].map((item) => {
+    [...NAV, ...(isPresentationReviewer ? [PROJECT_STATE_NAV, ...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, SCENARIO_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, ...(isAdmin ? [FLOWS_NAV, ADMIN_NAV] : [])] : [])].map((item) => {
       const active = location.pathname === item.path;
       return (
-        <Link
-          key={item.path}
-          to={item.path}
-          onClick={onNavigate}
-          className={`flex items-center gap-3 px-4 py-2.5 border-l-2 transition-colors ${
-            active
-              ? "border-[hsl(var(--live))] text-[hsl(var(--live))] bg-[hsl(var(--accent)/0.35)]"
-              : "border-transparent text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--accent)/0.2)]"
-          }`}
-        >
-          <item.icon size={15} strokeWidth={1.75} />
-          <span className="t-mono text-[11px] uppercase tracking-[0.14em]">{item.label}</span>
-          {/* unread badge on Messages (4c, D32) — the messenger cue */}
-          {item.path === "/messages" && unreadMsgs > 0 && (
-            <span className="ml-auto t-mono text-[9px] px-1.5 py-0.5 rounded-full bg-[hsl(var(--live))] text-[hsl(var(--primary-foreground))]">
-              {unreadMsgs}
-            </span>
+        <div key={item.path} className="reviewer-nav-item" data-guide-block>
+          <Link
+            to={item.path}
+            onClick={onNavigate}
+            className={`flex items-center gap-3 px-4 py-2.5 border-l-2 transition-colors ${
+              active
+                ? "border-[hsl(var(--live))] text-[hsl(var(--live))] bg-[hsl(var(--accent)/0.35)]"
+                : "border-transparent text-muted-foreground hover:text-foreground hover:bg-[hsl(var(--accent)/0.2)]"
+            } ${showReviewerGuide ? "pr-10" : ""}`}
+          >
+            <item.icon size={15} strokeWidth={1.75} />
+            <span className="t-mono text-[11px] uppercase tracking-[0.14em]">{item.label}</span>
+            {/* unread badge on Messages (4c, D32) — the messenger cue */}
+            {item.path === "/messages" && unreadMsgs > 0 && (
+              <span className="ml-auto t-mono text-[9px] px-1.5 py-0.5 rounded-full bg-[hsl(var(--live))] text-[hsl(var(--primary-foreground))]">
+                {unreadMsgs}
+              </span>
+            )}
+          </Link>
+          {showReviewerGuide && REVIEWER_NAV_GUIDE[item.path] && (
+            <ReviewerInfoHint id={`nav:${item.path}`} content={REVIEWER_NAV_GUIDE[item.path]} navigation />
           )}
-        </Link>
+        </div>
       );
     });
 
@@ -394,7 +406,17 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
             <Activity size={14} className="text-[hsl(var(--live))] shrink-0 hidden sm:block" />
             <h1 className="t-mono text-[13px] font-medium uppercase tracking-[0.18em] truncate">{title}</h1>
           </div>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-3 md:gap-5">
+            <Link to="/terminal" title="Open the new terminal experience" className="inline-flex min-h-9 items-center gap-2 rounded-md border border-[hsl(var(--border))] px-2.5 text-[hsl(var(--live))] hover:bg-[hsl(var(--accent)/0.35)]">
+              <Sparkles size={14} /><span className="hidden sm:inline t-mono text-[10px] uppercase tracking-[0.1em]">Terminal</span>
+            </Link>
+            {showReviewerGuide && (
+              <label className="reviewer-guide-toggle" title="Show or hide all evidence information controls">
+                <BookOpen size={14} aria-hidden="true" />
+                <span className="hidden sm:inline">Guide</span>
+                <Switch checked={guide.enabled} onCheckedChange={guide.setEnabled} aria-label="Toggle evidence guide" />
+              </label>
+            )}
             <span className="hidden sm:inline"><UtcClock /></span>
             <DropdownMenu>
               <DropdownMenuTrigger className="outline-none">

@@ -3,18 +3,25 @@ import { REVIEWER_TOURS, type ReviewerTourTrack } from "@contracts/reviewer";
 import { useReviewer } from "@/hooks/useReviewer";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, BookOpen, Map, X } from "lucide-react";
+import { useReviewerGuide } from "@/hooks/useReviewerGuide";
 
 export default function ReviewerTour() {
   const { status, tourAction } = useReviewer();
+  const { enabled, tourDismissed, dismissTour } = useReviewerGuide();
   const [activeTrack, setActiveTrack] = useState<ReviewerTourTrack | null>(null);
   const tours = status.data?.tours ?? [];
   const inProgress = tours.find((tour) => tour.status === "in_progress");
   const suggested = tours.find((tour) => tour.status === "not_started");
   useEffect(() => { if (inProgress) setActiveTrack(inProgress.track as ReviewerTourTrack); }, [inProgress?.track]);
-  if (!inProgress && !suggested) return null;
+  if (!enabled || tourDismissed || (!inProgress && !suggested)) return null;
 
   const act = (track: ReviewerTourTrack, action: "start" | "next" | "previous" | "skip_now" | "dismiss_forever" | "restart") => {
-    if (action === "skip_now" || action === "dismiss_forever") setActiveTrack(null);
+    const currentStep = tours.find((tour) => tour.track === track)?.currentStep ?? 0;
+    const finished = action === "next" && currentStep >= REVIEWER_TOURS[track].steps.length - 1;
+    if (finished || action === "skip_now" || action === "dismiss_forever") {
+      setActiveTrack(null);
+      dismissTour();
+    }
     tourAction.mutate({ track, action });
   };
   const track = (activeTrack ?? inProgress?.track ?? null) as ReviewerTourTrack | null;

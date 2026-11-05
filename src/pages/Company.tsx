@@ -901,10 +901,10 @@ export default function Company() {
 
   return (
     <AppLayout title={`Company · ${ticker.toUpperCase()}`}>
-      <Tabs defaultValue="overview">
-        <TabsList className="t-panel !bg-[hsl(var(--secondary)/0.4)] h-9 mb-4">
+      <Tabs defaultValue="overview" className="min-w-0">
+        <TabsList className="t-panel !bg-[hsl(var(--secondary)/0.4)] h-9 mb-4 w-full max-w-full overflow-x-auto justify-start">
           {tabs.map((t) => (
-            <TabsTrigger key={t} value={t} className="t-mono text-[10px] uppercase tracking-[0.12em]">{t}</TabsTrigger>
+            <TabsTrigger key={t} value={t} className="t-mono text-[10px] uppercase tracking-[0.12em] shrink-0">{t}</TabsTrigger>
           ))}
         </TabsList>
         {/* Layout (3f): price block (quote header + chart + stats grid) on
