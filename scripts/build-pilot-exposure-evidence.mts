@@ -8,7 +8,7 @@ import { existsSync, writeFileSync } from "node:fs";
 
 const PILOTS = ["DAL", "RCL", "CVX", "COP", "PFE"] as const;
 const asOf = new Date().toISOString();
-const universe = loadEdgarUniverse("research-universe-51.json");
+const universe = loadEdgarUniverse("research-universe-50.json");
 const prog = startProgress("pilot-exposure-evidence", "fresh SEC facts · exact concepts · no LLM");
 const payloads: EvidenceCompanyFacts[] = [];
 for (const [index, ticker] of PILOTS.entries()) {

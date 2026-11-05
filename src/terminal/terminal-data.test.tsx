@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculatePriceAnalytics, formatTerminalCompact, formatTerminalMoney, formatTerminalPct, movingAverage } from "./terminal-data";
+import { calculatePriceAnalytics, formatTerminalCompact, formatTerminalMoney, formatTerminalPct, movingAverage, terminalChangePct } from "./terminal-data";
 
 const bars = [
   { date: "2026-01-01", close: 100 },
@@ -49,5 +49,11 @@ describe("terminal price analytics", () => {
     expect(formatTerminalCompact(5.06e12)).toBe("5.06T");
     expect(formatTerminalPct(0.1234, 1, true)).toBe("+12.3%");
     expect(formatTerminalPct(null)).toBe("—");
+  });
+
+  it("does not replace a missing official change with a stale screener value", () => {
+    expect(terminalChangePct({ available: true, changePct: null }, 0.08)).toBeNull();
+    expect(terminalChangePct({ available: true, changePct: -0.01 }, 0.08)).toBe(-0.01);
+    expect(terminalChangePct({ available: false }, 0.08)).toBe(0.08);
   });
 });

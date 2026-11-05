@@ -96,3 +96,7 @@ export function formatTerminalPct(value: number | null | undefined, digits = 1, 
   const sign = signed && value > 0 ? "+" : "";
   return `${sign}${(value * 100).toFixed(digits)}%`;
 }
+
+export function terminalChangePct(quote: { available: boolean; changePct?: number | null } | undefined, screenerChangePct: number | null | undefined): number | null {
+  return quote?.available ? quote.changePct ?? null : screenerChangePct ?? null;
+}

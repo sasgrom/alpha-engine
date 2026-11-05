@@ -1,21 +1,105 @@
 [
   {
-    "cik": 320193,
-    "ticker": "AAPL",
-    "name": "Apple Inc.",
-    "gdeltQuery": "\"Apple\""
+    "cik": 1045810,
+    "ticker": "NVDA",
+    "name": "NVIDIA CORP",
+    "gdeltQuery": "\"NVIDIA\""
   },
   {
-    "cik": 732717,
-    "ticker": "T",
-    "name": "AT&T INC.",
-    "gdeltQuery": "\"AT&T\""
+    "cik": 2488,
+    "ticker": "AMD",
+    "name": "ADVANCED MICRO DEVICES INC",
+    "gdeltQuery": "\"ADVANCED MICRO DEVICES\""
   },
   {
-    "cik": 789019,
-    "ticker": "MSFT",
-    "name": "MICROSOFT CORP",
-    "gdeltQuery": "\"Microsoft\""
+    "cik": 50863,
+    "ticker": "INTC",
+    "name": "INTEL CORP",
+    "gdeltQuery": "\"INTEL\""
+  },
+  {
+    "cik": 1321655,
+    "ticker": "PLTR",
+    "name": "Palantir Technologies Inc.",
+    "gdeltQuery": "\"Palantir Technologies\""
+  },
+  {
+    "cik": 1326801,
+    "ticker": "META",
+    "name": "Meta Platforms, Inc.",
+    "gdeltQuery": "\"Meta Platforms\""
+  },
+  {
+    "cik": 1065280,
+    "ticker": "NFLX",
+    "name": "NETFLIX INC",
+    "gdeltQuery": "\"NETFLIX\""
+  },
+  {
+    "cik": 1018724,
+    "ticker": "AMZN",
+    "name": "AMAZON COM INC",
+    "gdeltQuery": "\"AMAZON COM\""
+  },
+  {
+    "cik": 1318605,
+    "ticker": "TSLA",
+    "name": "Tesla, Inc.",
+    "gdeltQuery": "\"Tesla\""
+  },
+  {
+    "cik": 320187,
+    "ticker": "NKE",
+    "name": "NIKE, Inc.",
+    "gdeltQuery": "\"NIKE\""
+  },
+  {
+    "cik": 1397187,
+    "ticker": "LULU",
+    "name": "lululemon athletica inc.",
+    "gdeltQuery": "\"lululemon athletica\""
+  },
+  {
+    "cik": 884887,
+    "ticker": "RCL",
+    "name": "ROYAL CARIBBEAN CRUISES LTD",
+    "gdeltQuery": "\"ROYAL CARIBBEAN CRUISES\""
+  },
+  {
+    "cik": 886982,
+    "ticker": "GS",
+    "name": "GOLDMAN SACHS GROUP INC",
+    "gdeltQuery": "\"GOLDMAN SACHS GROUP\""
+  },
+  {
+    "cik": 927628,
+    "ticker": "COF",
+    "name": "CAPITAL ONE FINANCIAL CORP",
+    "gdeltQuery": "\"CAPITAL ONE FINANCIAL\""
+  },
+  {
+    "cik": 731766,
+    "ticker": "UNH",
+    "name": "UNITEDHEALTH GROUP INC",
+    "gdeltQuery": "\"UNITEDHEALTH GROUP\""
+  },
+  {
+    "cik": 78003,
+    "ticker": "PFE",
+    "name": "PFIZER INC",
+    "gdeltQuery": "\"PFIZER\""
+  },
+  {
+    "cik": 831259,
+    "ticker": "FCX",
+    "name": "FREEPORT-MCMORAN INC",
+    "gdeltQuery": "\"FREEPORT-MCMORAN\""
+  },
+  {
+    "cik": 12927,
+    "ticker": "BA",
+    "name": "BOEING CO",
+    "gdeltQuery": "\"BOEING CO\""
   },
   {
     "cik": 1045609,
@@ -24,9 +108,195 @@
     "gdeltQuery": "\"Prologis\""
   },
   {
-    "cik": 1045810,
-    "ticker": "NVDA",
-    "name": "NVIDIA CORP",
-    "gdeltQuery": "\"NVIDIA\""
+    "cik": 753308,
+    "ticker": "NEE",
+    "name": "NEXTERA ENERGY INC",
+    "gdeltQuery": "\"NEXTERA ENERGY\""
+  },
+  {
+    "cik": 789019,
+    "ticker": "MSFT",
+    "name": "MICROSOFT CORP",
+    "gdeltQuery": "\"Microsoft\""
+  },
+  {
+    "cik": 1730168,
+    "ticker": "AVGO",
+    "name": "Broadcom Inc.",
+    "gdeltQuery": "\"Broadcom\""
+  },
+  {
+    "cik": 1596532,
+    "ticker": "ANET",
+    "name": "Arista Networks, Inc.",
+    "gdeltQuery": "\"Arista Networks\""
+  },
+  {
+    "cik": 723125,
+    "ticker": "MU",
+    "name": "MICRON TECHNOLOGY INC",
+    "gdeltQuery": "\"MICRON TECHNOLOGY\""
+  },
+  {
+    "cik": 1375365,
+    "ticker": "SMCI",
+    "name": "Super Micro Computer, Inc.",
+    "gdeltQuery": "\"Super Micro Computer\""
+  },
+  {
+    "cik": 1274494,
+    "ticker": "FSLR",
+    "name": "FIRST SOLAR, INC.",
+    "gdeltQuery": "\"FIRST SOLAR\""
+  },
+  {
+    "cik": 1682852,
+    "ticker": "MRNA",
+    "name": "Moderna, Inc.",
+    "gdeltQuery": "\"Moderna\""
+  },
+  {
+    "cik": 59478,
+    "ticker": "LLY",
+    "name": "ELI LILLY & Co",
+    "gdeltQuery": "\"ELI LILLY & Co\""
+  },
+  {
+    "cik": 27904,
+    "ticker": "DAL",
+    "name": "DELTA AIR LINES, INC.",
+    "gdeltQuery": "\"DELTA AIR LINES\""
+  },
+  {
+    "cik": 1792789,
+    "ticker": "DASH",
+    "name": "DoorDash, Inc.",
+    "gdeltQuery": "\"DoorDash\""
+  },
+  {
+    "cik": 354950,
+    "ticker": "HD",
+    "name": "HOME DEPOT, INC.",
+    "gdeltQuery": "\"HOME DEPOT\""
+  },
+  {
+    "cik": 18230,
+    "ticker": "CAT",
+    "name": "CATERPILLAR INC",
+    "gdeltQuery": "\"CATERPILLAR\""
+  },
+  {
+    "cik": 1053507,
+    "ticker": "AMT",
+    "name": "AMERICAN TOWER CORP /MA/",
+    "gdeltQuery": "\"AMERICAN TOWER CORP /MA/\""
+  },
+  {
+    "cik": 19617,
+    "ticker": "JPM",
+    "name": "JPMORGAN CHASE & CO",
+    "gdeltQuery": "\"JPMORGAN CHASE & CO\""
+  },
+  {
+    "cik": 1506307,
+    "ticker": "KMI",
+    "name": "KINDER MORGAN, INC.",
+    "gdeltQuery": "\"KINDER MORGAN\""
+  },
+  {
+    "cik": 320193,
+    "ticker": "AAPL",
+    "name": "Apple Inc.",
+    "gdeltQuery": "\"Apple Inc\" OR \"Apple\" sourcecountry:US"
+  },
+  {
+    "cik": 51143,
+    "ticker": "IBM",
+    "name": "INTERNATIONAL BUSINESS MACHINES CORP",
+    "gdeltQuery": "\"INTERNATIONAL BUSINESS MACHINES\""
+  },
+  {
+    "cik": 936468,
+    "ticker": "LMT",
+    "name": "LOCKHEED MARTIN CORP",
+    "gdeltQuery": "\"LOCKHEED MARTIN\""
+  },
+  {
+    "cik": 732717,
+    "ticker": "T",
+    "name": "AT&T INC.",
+    "gdeltQuery": "\"AT&T\""
+  },
+  {
+    "cik": 1652044,
+    "ticker": "GOOGL",
+    "name": "Alphabet Inc.",
+    "gdeltQuery": "\"Alphabet\""
+  },
+  {
+    "cik": 200406,
+    "ticker": "JNJ",
+    "name": "JOHNSON & JOHNSON",
+    "gdeltQuery": "\"JOHNSON & JOHNSON\""
+  },
+  {
+    "cik": 80424,
+    "ticker": "PG",
+    "name": "PROCTER & GAMBLE Co",
+    "gdeltQuery": "\"PROCTER & GAMBLE Co\""
+  },
+  {
+    "cik": 104169,
+    "ticker": "WMT",
+    "name": "Walmart Inc.",
+    "gdeltQuery": "\"Walmart\""
+  },
+  {
+    "cik": 93410,
+    "ticker": "CVX",
+    "name": "CHEVRON CORP",
+    "gdeltQuery": "\"CHEVRON\""
+  },
+  {
+    "cik": 1141391,
+    "ticker": "MA",
+    "name": "Mastercard Inc",
+    "gdeltQuery": "\"Mastercard\""
+  },
+  {
+    "cik": 1403161,
+    "ticker": "V",
+    "name": "VISA INC.",
+    "gdeltQuery": "\"VISA\""
+  },
+  {
+    "cik": 909832,
+    "ticker": "COST",
+    "name": "COSTCO WHOLESALE CORP /NEW",
+    "gdeltQuery": "\"COSTCO WHOLESALE CORP /NEW\""
+  },
+  {
+    "cik": 5272,
+    "ticker": "AIG",
+    "name": "AMERICAN INTERNATIONAL GROUP, INC.",
+    "gdeltQuery": "\"AMERICAN INTERNATIONAL GROUP\""
+  },
+  {
+    "cik": 1163165,
+    "ticker": "COP",
+    "name": "CONOCOPHILLIPS",
+    "gdeltQuery": "\"CONOCOPHILLIPS\""
+  },
+  {
+    "cik": 1707925,
+    "ticker": "LIN",
+    "name": "LINDE PLC",
+    "gdeltQuery": "\"LINDE\""
+  },
+  {
+    "cik": 858877,
+    "ticker": "CSCO",
+    "name": "CISCO SYSTEMS, INC.",
+    "gdeltQuery": "\"CISCO SYSTEMS\""
   }
 ]

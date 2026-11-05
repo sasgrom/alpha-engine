@@ -75,11 +75,6 @@
     "name": "PFE"
   },
   {
-    "cik": 2115436,
-    "ticker": "XOM",
-    "name": "XOM"
-  },
-  {
     "cik": 831259,
     "ticker": "FCX",
     "name": "FCX"
@@ -248,5 +243,10 @@
     "cik": 1707925,
     "ticker": "LIN",
     "name": "LIN"
+  },
+  {
+    "cik": 858877,
+    "ticker": "CSCO",
+    "name": "CISCO SYSTEMS, INC."
   }
 ]

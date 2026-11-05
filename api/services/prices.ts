@@ -1,18 +1,17 @@
 /**
  * Stage 1.7 — Historical daily price bars from free providers.
  *
- * Provider abstraction (D22): two interchangeable fetchers behind one
- * interface, tried in priority order:
- *   1. stooq  — free CSV endpoint, no API key, lenient rate limits;
- *               daily bars are already split/dividend-adjusted (adjClose =
- *               close by construction — kept explicit for schema uniformity)
- *   2. yahoo  — unofficial v8 chart JSON (browser UA, conservative backoff);
- *               carries a separate adjclose series and volume on every bar
+ * Provider abstraction (D22): legacy incremental fetchers are Stooq CSV and
+ * unofficial Yahoo v8 chart JSON. Stooq supplies adjusted historical bars;
+ * Yahoo carries its own adjustment series. The presentation worker stores
+ * Schwab daily candles separately with adjClose=null until corporate-action
+ * semantics are reviewed.
  *
  * Bars from different providers NEVER overwrite each other: `source` is part
- * of the unique key, so a Yahoo bar and a Stooq bar for the same day coexist
- * and can be reconciled later. Read paths pick one preferred source
- * (stooq first, then yahoo) via pickPreferredBars().
+ * of the unique key. getBars merges whole bars per date with Schwab preferred,
+ * then Stooq, then Yahoo. dailyPrice independently enforces fetchedAt<=asOf,
+ * selecting eligible Schwab before Stooq and returning stale/missing rather
+ * than fabricating a current close.
  *
  * Accumulation model (user directive, 3f): history is loaded once (backfill)
  * and then grown incrementally day by day. A sync is resumable — since 3h
@@ -41,7 +40,7 @@ export interface PriceBar {
   volume: number | null;
 }
 
-export type PriceSource = "stooq" | "yahoo";
+export type PriceSource = "stooq" | "yahoo" | "schwab";
 
 const BROWSER_UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36";
@@ -332,14 +331,15 @@ export function mergeBars(primary: StoredBar[], fallback: StoredBar[]): StoredBa
 }
 
 /**
- * Bars for a company, merged across sources (stooq preferred per date —
- * it is the more consistent of the two; yahoo fills dates stooq lacks).
+ * Bars for a company with one source per date. Stored Schwab daily candles
+ * win on their dates; Stooq supplies history and Yahoo fills only remaining
+ * gaps. Point-in-time eligibility is enforced separately by dailyPrice.
  * `from`/`to` are inclusive ISO dates.
  */
 export async function getBars(cik: number, from?: string, to?: string): Promise<StoredBar[]> {
   const db = getDb();
   const bySource = new Map<PriceSource, StoredBar[]>();
-  for (const source of ["stooq", "yahoo"] as const) {
+  for (const source of ["schwab", "stooq", "yahoo"] as const) {
     const conds = [eq(prices.cik, cik), eq(prices.source, source)];
     if (from) conds.push(sql`${prices.date} >= ${from}`);
     if (to) conds.push(sql`${prices.date} <= ${to}`);
@@ -365,8 +365,10 @@ export async function getBars(cik: number, from?: string, to?: string): Promise<
       );
     }
   }
+  const w = bySource.get("schwab");
   const s = bySource.get("stooq");
   const y = bySource.get("yahoo");
+  if (w) return mergeBars(w, mergeBars(s ?? [], y ?? []));
   if (!s) return y ?? [];
   if (!y) return s;
   return mergeBars(s, y);

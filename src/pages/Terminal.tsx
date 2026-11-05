@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { Activity, ArrowDownRight, ArrowUpRight, BookOpen, ChevronDown, Command, Download, Gauge, Layers, LogOut, Moon, ShieldCheck, Sparkles, Sun, TrendingDown, TrendingUp } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { trpc } from "@/providers/trpc";
-import { calculatePriceAnalytics, formatTerminalMoney, formatTerminalPct, type PriceAnalytics, type TerminalPriceBar } from "@/terminal/terminal-data";
+import { calculatePriceAnalytics, formatTerminalMoney, formatTerminalPct, terminalChangePct, type PriceAnalytics, type TerminalPriceBar } from "@/terminal/terminal-data";
 import { DisclosureTimeline, DrawdownChart, MarketLeaders, ReturnHistogram, ScenarioPanel, SectorDonut, TerminalPriceChart, WatchlistTable, type ScenarioReport } from "@/terminal/TerminalCharts";
 import "@/terminal/terminal.css";
 
@@ -125,7 +125,7 @@ export default function Terminal() {
   }, [companies]);
   const latestPrice = quote.data?.price ?? focusRow?.price ?? null;
   const animatedPrice = useCountUp(latestPrice);
-  const changePct = quote.data?.changePct ?? focusRow?.changePct ?? null;
+  const changePct = terminalChangePct(quote.data, focusRow?.changePct);
   const positive = (changePct ?? 0) >= 0;
   const tableDate = screener.data?.asOf?.slice(0, 16).replace("T", " ");
 
@@ -167,7 +167,7 @@ export default function Terminal() {
             <span className="terminal-quote-label">{focus} · {focusCompany?.name ?? focusRow?.name ?? "Company"}</span>
             <div className="terminal-quote-price"><span>$</span>{latestPrice === null ? "—" : formatTerminalMoney(animatedPrice)}</div>
             <div className={`terminal-quote-change ${positive ? "positive" : "negative"}`}>{positive ? <TrendingUp size={17} /> : <TrendingDown size={17} />}<strong>{formatTerminalPct(changePct, 2, true)}</strong><span>today</span></div>
-            <small>{quote.data?.source ?? "Latest available"} · end of day</small>
+            <small>{quote.data?.quality ?? "Latest available"} · {quote.data?.currency ?? "USD"} · end of day</small>
             <div className="terminal-quote-spark"><TerminalPriceSpark bars={bars.slice(-32)} positive={(analytics.totalReturn ?? 0) >= 0} /></div>
           </div>
         </Reveal>
@@ -182,10 +182,10 @@ export default function Terminal() {
         <div className="terminal-grid">
           <Reveal className="terminal-card span-8" index={2}>
             <section id="focus-chart">
-              <CardHeading eyebrow={`${focus} · PRICE STRUCTURE`} title="Trend, volume and earnings in one frame" subtitle={`${focusCompany?.name ?? focusRow?.name ?? "Company"} · adjusted daily history · hover to inspect`} aside={<InfoNote>The area shows closing price, the dashed line the 20-day average, and shaded bars relative volume. Earnings markers are dated disclosures, not trade signals.</InfoNote>} />
+              <CardHeading eyebrow={`${focus} · PRICE STRUCTURE`} title="Trend, volume and earnings in one frame" subtitle={`${focusCompany?.name ?? focusRow?.name ?? "Company"} · daily close history · hover to inspect`} aside={<InfoNote>The area shows closing price, the dashed line the 20-day average, and shaded bars relative volume. Earnings markers are dated disclosures, not trade signals.</InfoNote>} />
               <div className="terminal-range-tabs" role="tablist" aria-label="Price range">{(["3M", "1Y", "ALL"] as Range[]).map((item) => <button key={item} type="button" role="tab" aria-selected={range === item} className={range === item ? "active" : ""} onClick={() => setRange(item)}>{item}</button>)}</div>
               {history.isLoading ? <TerminalSkeleton /> : bars.length ? <TerminalPriceChart bars={bars} events={eventDates} reducedMotion={reducedMotion} /> : <div className="terminal-empty"><strong>No price history for {focus} yet</strong><p>Select another company or review its other evidence in Legacy.</p></div>}
-              <div className="terminal-source-line"><span>Source {quote.data?.source ?? "provider"} · {quote.data?.asOf ?? "latest available"}</span><Link to={`/company/${focus}`}>Full price detail <ArrowUpRight size={12} /></Link></div>
+              <div className="terminal-source-line"><span>{quote.data?.quality ?? "Latest available"} · {quote.data?.currency ?? "USD"} · {quote.data?.asOf ?? "latest available"}</span><Link to={`/company/${focus}`}>Full price detail <ArrowUpRight size={12} /></Link></div>
             </section>
           </Reveal>
 

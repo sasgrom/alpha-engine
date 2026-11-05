@@ -14,6 +14,7 @@ import { getDb } from "../queries/connection";
 import { metricHistory } from "@db/schema";
 import { createJob } from "../services/runner";
 import { avgVolume, beta5y, changePct, fundamentalsFromSeries, getBars, week52 } from "../services/prices";
+import { dailyPrice } from "../services/daily-price";
 
 export const PRICE_RANGES = ["1M", "3M", "6M", "YTD", "1Y", "5Y", "ALL"] as const;
 export type PriceRange = (typeof PRICE_RANGES)[number];
@@ -42,23 +43,29 @@ export const pricesRouter = createRouter({
       return { bars, source: bars[0]?.source ?? null };
     }),
 
+  /** Point-in-time canonical daily close; legacy providers are not substitutes. */
+  daily: authedQuery.input(z.object({ cik: z.number(), date: z.string(), asOf: z.string().optional() })).query(async ({ input }) => {
+    return dailyPrice(input.cik, input.date, input.asOf ?? new Date().toISOString());
+  }),
+
   /**
    * Quote header + stats grid for the company Overview tab.
-   * last/prev bar → change; 52-week extremes; 3-month average volume;
-   * market cap = last close × latest diluted shares (our series);
-   * P/E (TTM) = last close / Σ last 4 quarterly diluted EPS (our series);
+   * Canonical last/same-source previous close → change; 52-week extremes;
+   * 3-month average volume; market cap and P/E use our canonical series;
    * beta = 5-year monthly regression vs our SPY series.
    */
   quote: authedQuery.input(z.object({ cik: z.number() })).query(async ({ input }) => {
     // 5Y+ of bars covers beta and the 52w window in one read
     const bars = await getBars(input.cik, rangeStart("5Y"));
-    if (bars.length === 0) {
-      return { available: false as const };
-    }
-    const last = bars[bars.length - 1];
-    const prev = bars.length > 1 ? bars[bars.length - 2] : null;
-    const lastClose = last.adjClose ?? last.close;
-    const prevClose = prev ? (prev.adjClose ?? prev.close) : null;
+    const asOf = new Date().toISOString();
+    const last = bars.at(-1);
+    const previous = bars.at(-2);
+    const daily = last ? await dailyPrice(input.cik, last.date, asOf) : null;
+    if (!last || daily?.status !== "ready") return { available: false as const };
+    const previousDaily = previous ? await dailyPrice(input.cik, previous.date, asOf) : null;
+    const lastClose = daily.price;
+    const previousClose = previousDaily?.status === "ready" && previousDaily.source === daily.source ? previousDaily.price : null;
+    const lastBar = daily.bar!;
     const w52 = week52(bars);
     const { epsTtm, sharesDiluted } = await fundamentalsFromSeries(input.cik);
     const bench = await getBars(0, rangeStart("5Y")); // SPY pseudo-cik
@@ -66,16 +73,20 @@ export const pricesRouter = createRouter({
 
     return {
       available: true as const,
-      asOf: last.date,
-      source: last.source,
+      asOf: daily.actualAsOf,
+      actualAsOf: daily.actualAsOf,
+      fetchedAt: daily.fetchedAt,
+      source: daily.source,
+      quality: daily.quality,
+      currency: "USD",
       price: lastClose,
-      open: last.open,
-      dayHigh: last.high,
-      dayLow: last.low,
-      volume: last.volume,
-      prevClose,
-      change: lastClose !== null && prevClose !== null ? lastClose - prevClose : null,
-      changePct: lastClose !== null && prevClose !== null ? changePct(lastClose, prevClose) : null,
+      open: lastBar.open,
+      dayHigh: lastBar.high,
+      dayLow: lastBar.low,
+      volume: lastBar.volume,
+      prevClose: previousClose,
+      change: lastClose !== null && previousClose !== null ? lastClose - previousClose : null,
+      changePct: lastClose !== null && previousClose !== null ? changePct(lastClose, previousClose) : null,
       week52High: w52.high,
       week52Low: w52.low,
       avgVolume3m: avgVolume(bars, 92),

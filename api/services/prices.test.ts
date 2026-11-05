@@ -143,6 +143,15 @@ describe("mergeBars (3h: per-date stooq priority, yahoo fills gaps)", () => {
     expect(m[2].source).toBe("yahoo"); // yahoo-only date survives
   });
 
+  it("prefers Schwab per date while preserving historical fallbacks", () => {
+    const history = mergeBars([bar("2026-01-02", 100, "stooq")], [bar("2026-01-05", 999, "yahoo")]);
+    const merged = mergeBars([bar("2026-01-05", 103.61, "schwab")], history);
+    expect(merged.map((b) => b.date)).toEqual(["2026-01-02", "2026-01-05"]);
+    expect(merged[0].source).toBe("stooq");
+    expect(merged[1].source).toBe("schwab");
+    expect(merged[1].close).toBe(103.61);
+  });
+
   it("handles empty inputs", () => {
     expect(mergeBars([], [bar("2026-01-02", 1, "yahoo")])).toHaveLength(1);
     expect(mergeBars([bar("2026-01-02", 1, "stooq")], [])).toHaveLength(1);
