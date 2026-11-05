@@ -39,6 +39,7 @@ import {
   setUserPassword,
   setUserRole,
 } from "../queries/users";
+import { createReviewerAccount, listReviewerProfiles, resetReviewerFirstIp, resetReviewerNda, resetReviewerTour } from "../services/reviewer-access";
 
 /**
  * Candidate docs directories, tried in order. Dev (vite/tsx) resolves via
@@ -220,6 +221,21 @@ export const adminRouter = createRouter({
       await setUserRole(input.userId, input.role);
       return { ok: true };
     }),
+
+  /** Reviewer access administration: list without IP hashes or credentials. */
+  reviewerList: adminQuery.query(() => listReviewerProfiles()),
+
+  createReviewer: adminQuery
+    .input(z.object({ username: z.string().min(3).max(32), password: z.string().min(1).max(200), name: z.string().max(255).optional() }))
+    .mutation(async ({ input }) => {
+      const uErr = usernamePolicyError(input.username);
+      if (uErr) throw new TRPCError({ code: "BAD_REQUEST", message: uErr });
+      return createReviewerAccount(input);
+    }),
+
+  resetReviewerFirstIp: adminQuery.input(z.object({ userId: z.number() })).mutation(async ({ input }) => resetReviewerFirstIp(input.userId)),
+  resetReviewerNda: adminQuery.input(z.object({ userId: z.number() })).mutation(async ({ input }) => resetReviewerNda(input.userId)),
+  resetReviewerTour: adminQuery.input(z.object({ userId: z.number() })).mutation(async ({ input }) => resetReviewerTour(input.userId)),
 
   /**
    * Per-user info summary (4e, D35): account + universe size + message count

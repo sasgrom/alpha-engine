@@ -3,6 +3,7 @@ import * as schema from "@db/schema";
 import type { InsertUser } from "@db/schema";
 import { getDb } from "./connection";
 import { env } from "../lib/env";
+import { deleteReviewerProfileData } from "../services/reviewer-access";
 
 export async function findUserByUnionId(unionId: string) {
   const rows = await getDb()
@@ -109,6 +110,7 @@ export async function deleteUserCascade(userId: number) {
   const db = getDb();
   await db.execute(sql`DELETE FROM user_universe WHERE userId = ${userId}`);
   await db.execute(sql`DELETE FROM messages WHERE recipientId = ${userId} OR authorId = ${userId} OR threadUserId = ${userId}`);
+  await deleteReviewerProfileData(userId);
   await db.execute(sql`DELETE FROM activity_events WHERE userId = ${userId}`);
   await db.delete(schema.users).where(eq(schema.users.id, userId));
 }

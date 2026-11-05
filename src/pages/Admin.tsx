@@ -31,6 +31,7 @@ import { jobToast } from "@/lib/job-toast";
 import { PriceImportCard } from "@/components/PriceImportCard";
 import { WorkersIntakeCard } from "@/components/WorkersIntakeCard";
 import { FactorIcMonitor } from "@/components/FactorIcMonitor";
+import ReviewerAdminTab from "@/components/ReviewerAdminTab";
 
 type ManualId = "engine-manual-en" | "engine-manual-ru" | "llm-context" | "design-value-signals";
 
@@ -217,11 +218,16 @@ export default function Admin() {
           <TabsTrigger value="manuals">Manuals</TabsTrigger>
           <TabsTrigger value="logs">Job Logs</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="reviewer">Reviewer</TabsTrigger>
           <TabsTrigger value="tools">Tools</TabsTrigger>
         </TabsList>
 
         <TabsContent value="users" className="mt-4">
           <UsersTab selfId={user?.id ?? null} />
+        </TabsContent>
+
+        <TabsContent value="reviewer" className="mt-4">
+          <ReviewerAdminTab />
         </TabsContent>
 
         <TabsContent value="manuals" className="mt-4">

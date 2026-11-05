@@ -65,6 +65,19 @@ Copying, context menus, drag/copy shortcuts and printing are deterred for review
 
 3. On the reviewer's first login, bind the original network. If the network changes legitimately, use an owner-reviewed reset of that binding rather than disabling the check.
 
+## Owner administration
+
+**Admin → Reviewer** provides the same account lifecycle locally and in the owner-controlled deployment:
+
+- create a reviewer with an owner-provided username, password and optional display name;
+- inspect NDA state, first-IP binding state, presentation-universe size and both tour states without exposing credentials or IP hashes;
+- **Reset IP+NDA** clears the network binding and all NDA acceptance metadata, so the next login binds a new network and requires consent again;
+- **Reset NDA** clears only consent metadata and preserves the existing first-IP binding;
+- **Reset tour** returns both tracks to step 0 / `not_started` without changing NDA or network state;
+- **Delete** removes the reviewer account and its per-user data, including reviewer access, tour preferences and universe memberships.
+
+Creating a reviewer uses one transaction for the local `user` account, reviewer profile, two tour preferences and exactly 50 unique presentation-company memberships. The account keeps `users.role=user`; reviewer access never grants administrator privileges. API list responses omit password hashes, raw IPs and IP HMAC values.
+
 ## Verification
 
 - NDA before/after acceptance, including direct tRPC and report access.
@@ -73,6 +86,8 @@ Copying, context menus, drag/copy shortcuts and printing are deterred for review
 - NDA idempotency and tour state transitions.
 - Both tour tracks, step navigation, completion and permanent dismissal.
 - Responsive NDA/tour layouts and reduced-motion behavior.
-- Full suite: **129 test files / 716 tests**, TypeScript and production build.
+- Sequential DDL regression: **4/4 tests**; local migration/table/index checks and typed NDA/first-IP smoke passed in commit `53e4e82`.
+- Reviewer administration service/UI and DDL targeted suite: **3 files / 9 tests**.
+- Final integrated suite: **133 test files / 733 tests**, TypeScript and production build.
 
-Production migration, account creation and production deployment were not performed by this change.
+Local migration and one local reviewer account were created and smoked by Kimi Code as recorded in `docs/KIMI_CODE_HANDOFF.md` §42. Production migration, production account creation and production deployment were not performed by this change.

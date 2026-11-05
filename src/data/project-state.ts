@@ -3,7 +3,7 @@
  * are layered on top in ProjectState.tsx; this file records only durable facts.
  */
 export const PROJECT_STATE_REVIEW = {
-  reviewedOn: "2026-11-04",
+  reviewedOn: "2026-11-05",
   implementation: {
     sp500CodeCommit: "f196acf1e38888c9ae145f8f1fc4a5bd0cfba9fc",
     sp500CodeReady: true,
@@ -32,7 +32,7 @@ export const PROJECT_STATE_REVIEW = {
     ic: "Changed after fresh facts; descriptive evidence only, no factor/model/regime promotion",
     schwab: "Awaiting scheduled capture · 0/51 today · next run 2026-11-04T12:00:00Z",
     macroPriorEvaluation: "Complete · 794/1,455 eligible checks · 84 complete three-series anchors · 290 non-neutral anchors",
-    macroVintageRemediation: "Complete · 408,862 rows · 8/8 current eligible · 275,481 follow-up rows · 0 selected-after-anchor",
+    macroVintageRemediation: "Complete · 408,860 rows · 8/8 current eligible · 2 noncanonical duplicates removed · 0 selected-after-anchor",
     thirteenF: "Reviewed · 16,913 valid events · 1 rebuilt · 0 missing metadata · 0 duplicates · 14 flow points/company",
     thirteenFEvaluation: "Complete · 3 company / 6 nested reports · historical comparison only · no promotion",
   },
