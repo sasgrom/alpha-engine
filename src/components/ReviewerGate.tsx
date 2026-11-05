@@ -20,6 +20,7 @@ export default function ReviewerGate({ children }: { children: ReactNode }) {
       </section>
     </div>
   );
-  if (status.data?.isReviewer && !status.data.ndaAccepted) return <ReviewerNdaGate />;
+  if (!status.data?.isReviewer) return <>{children}</>;
+  if (!status.data.ndaAccepted) return <ReviewerNdaGate />;
   return <><ReviewerTour /><ReviewerRestrictions />{children}</>;
 }
