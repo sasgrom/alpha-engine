@@ -30,6 +30,7 @@ import {
   type Filing13F, type QuarterFilingPart,
 } from "../worker/lib/thirteenf";
 import { startProgress } from "../worker/lib/progress";
+import { chunkFigiIds, formatFigiError, shouldRetryFigi429 } from "../worker/lib/figi";
 
 // ---------------------------------------------------------------------------
 const FORMS_13F = new Set(["13F-HR", "13F-HR/A"]);
@@ -116,7 +117,9 @@ async function loadQuarterBook(fund: { cik: number; name: string }, q: QuarterPa
 // CUSIP → company resolution. All batched; FIGI only for unknown cusips.
 // ---------------------------------------------------------------------------
 const FIGI_KEY = process.env.OPENFIGI_API_KEY ?? null;
-const FIGI_CHUNK = FIGI_KEY ? 100 : 25;
+// OpenFIGI accepts at most 10 mapping jobs per request. Keep this bound even
+// when an API key is configured; larger requests fail with HTTP 413.
+const FIGI_CHUNK = 10;
 const retriedNegativeCache = new Set<string>();
 
 async function mapCusips(cusips: string[]): Promise<{ map: Map<string, { cik: number | null; ticker: string | null }>; failed: boolean }> {
@@ -160,17 +163,24 @@ async function mapCusips(cusips: string[]): Promise<{ map: Map<string, { cik: nu
     if (cached) retriedNegativeCache.add(c);
   }
 
-  // 3) OpenFIGI only for the unknown
-  for (let i = 0; i < missing.length; i += FIGI_CHUNK) {
-    const chunk = missing.slice(i, i + FIGI_CHUNK);
-    try {
-      const res = await fetch("https://api.openfigi.com/v3/mapping", {
-        method: "POST",
-        headers: { "content-type": "application/json", ...(FIGI_KEY ? { "X-OPENFIGI-APIKEY": FIGI_KEY } : {}) },
-        body: JSON.stringify(chunk.map((c) => ({ idType: "ID_CUSIP", idValue: c }))),
-      });
-      if (res.status === 429) { await SLEEP(15_000); i -= FIGI_CHUNK; continue; }
-      if (!res.ok) throw new Error(`figi HTTP ${res.status}`);
+  // 3) OpenFIGI only for the unknown. Each chunk is a separate request, with
+  // bounded 429 retries instead of an infinite retry loop.
+  for (const [chunkStart, chunk] of chunkFigiIds(missing, FIGI_CHUNK).entries()) {
+    let rateLimitedRetries = 0;
+    while (true) {
+      try {
+        const res = await fetch("https://api.openfigi.com/v3/mapping", {
+          method: "POST",
+          headers: { "content-type": "application/json", ...(FIGI_KEY ? { "X-OPENFIGI-APIKEY": FIGI_KEY } : {}) },
+          body: JSON.stringify(chunk.map((c) => ({ idType: "ID_CUSIP", idValue: c }))),
+        });
+        if (res.status === 429) {
+          if (!shouldRetryFigi429(rateLimitedRetries)) throw new Error("figi HTTP 429 after 2 retries");
+          rateLimitedRetries++;
+          await SLEEP(15_000);
+          continue;
+        }
+        if (!res.ok) throw new Error(`figi HTTP ${res.status}`);
       const data = (await res.json()) as any[];
       const values: any[] = [];
       for (let j = 0; j < chunk.length; j++) {
@@ -197,10 +207,12 @@ async function mapCusips(cusips: string[]): Promise<{ map: Map<string, { cik: nu
         }
       }
       await SLEEP(3000);
+      break;
     } catch (err) {
       failed = true;
-      prog.log(`! figi chunk failed: ${String(err).slice(0, 120)} — those cusips stay unmapped this run`);
+      prog.log(`! figi chunk failed: ${formatFigiError(err, { start: chunkStart * FIGI_CHUNK, size: chunk.length, firstCusips: chunk.slice(0, 3) })}`);
       for (const c of chunk) out.set(c, { cik: null, ticker: null });
+      break;
     }
   }
   return { map: out, failed };
