@@ -5,7 +5,7 @@ import { createLocalUser, findUserByUsername } from "../api/queries/users";
 import { hashPassword } from "../api/services/passwords";
 import { reviewerAccess, reviewerTourPreferences, userUniverse } from "@db/schema";
 import { NDA_VERSION, REVIEWER_TOURS, type ReviewerTourTrack } from "@contracts/reviewer";
-import { loadEdgarUniverse } from "../worker/lib/edgar";
+import { loadReviewerUniverse } from "../worker/lib/edgar";
 
 const username = process.env.REVIEWER_USERNAME?.trim();
 const password = process.env.REVIEWER_PASSWORD;
@@ -18,8 +18,7 @@ if (!user) throw new Error("Reviewer account creation failed");
 const db = getDb();
 await db.insert(reviewerAccess).values({ userId: user.id, ndaVersion: NDA_VERSION });
 await db.insert(reviewerTourPreferences).values((Object.keys(REVIEWER_TOURS) as ReviewerTourTrack[]).map((track) => ({ userId: user.id, track, ...{ currentStep: 0, status: "not_started" } })));
-const universe = loadEdgarUniverse("research-universe-50.json");
-if (universe.length !== 50 || new Set(universe.map((row) => row.cik)).size !== 50) throw new Error("Expected exactly 50 unique presentation CIKs");
+const universe = loadReviewerUniverse();
 await db.insert(userUniverse).values(universe.map((row) => ({ userId: user.id, cik: row.cik, ticker: row.ticker, name: row.name, active: true })));
 console.log(JSON.stringify({ reviewerId: user.id, presentationCompanies: universe.length, ndaRequired: true, firstIpBound: false }));
 process.exit(0);

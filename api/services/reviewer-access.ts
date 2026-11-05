@@ -7,7 +7,7 @@ import { env } from "../lib/env";
 import { NDA_TEXT, NDA_VERSION, REVIEWER_TOURS, type ReviewerTourStatus, type ReviewerTourTrack } from "@contracts/reviewer";
 import { createHash } from "node:crypto";
 import { hashPassword } from "./passwords";
-import { loadEdgarUniverse } from "../../worker/lib/edgar";
+import { loadReviewerUniverse } from "../../worker/lib/edgar";
 import { users, userUniverse } from "@db/schema";
 
 export type { ReviewerAccess } from "@db/schema";
@@ -137,8 +137,7 @@ export async function createReviewerAccount(input: { username: string; password:
   const [existing] = await db.select().from(users).where(eq(users.username, username)).limit(1);
   if (existing) throw new Error("username is taken");
   const passwordHash = await hashPassword(input.password);
-  const universe = loadEdgarUniverse("research-universe-50.json");
-  if (universe.length !== 50 || new Set(universe.map((row) => row.cik)).size !== 50) throw new Error("Expected exactly 50 unique presentation CIKs");
+  const universe = loadReviewerUniverse();
   return db.transaction(async (tx) => {
     await tx.insert(users).values({ unionId: `local:${username}`, username, passwordHash, name: input.name?.trim() || username, role: "user", lastSignInAt: new Date() });
     const [user] = await tx.select().from(users).where(eq(users.username, username)).limit(1);

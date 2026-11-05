@@ -16,6 +16,7 @@
  */
 import { readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
+import reviewerUniverseJson from "../research-universe-50.json";
 
 const SEC_BASE = "https://www.sec.gov";
 const SEC_DATA_BASE = "https://data.sec.gov";
@@ -92,6 +93,16 @@ export interface EdgarCompany { cik: number; ticker: string; name: string }
 export function loadEdgarUniverse(file = "edgar-universe.json"): EdgarCompany[] {
   const filePath = path.resolve(import.meta.dirname, "..", file);
   return (JSON.parse(readFileSync(filePath, "utf8")) as EdgarCompany[]).filter((r) => r.cik && r.ticker);
+}
+
+export function loadReviewerUniverse(): EdgarCompany[] {
+  const universe = reviewerUniverseJson.filter(
+    (row) => Number.isInteger(row.cik) && row.cik > 0 && row.ticker && row.name
+  );
+  if (universe.length !== 50 || new Set(universe.map((row) => row.cik)).size !== 50) {
+    throw new Error("Expected exactly 50 unique presentation CIKs");
+  }
+  return universe.map((row) => ({ ...row }));
 }
 
 /** Resolve junctions/symlinks so the disk guard measures the real cache volume. */

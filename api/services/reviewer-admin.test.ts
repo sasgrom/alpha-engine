@@ -51,9 +51,6 @@ const db: any = {
   transaction: async (fn: (tx: typeof db) => Promise<unknown>) => fn(db),
 };
 vi.mock("../queries/connection", () => ({ getDb: () => db }));
-vi.mock("../../worker/lib/edgar", () => ({
-  loadEdgarUniverse: () => Array.from({ length: 50 }, (_, index) => ({ cik: index + 1, ticker: `T${index + 1}`, name: `Company ${index + 1}` })),
-}));
 
 describe("reviewer account management", () => {
   beforeEach(() => {
