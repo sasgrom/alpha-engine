@@ -103,7 +103,7 @@ describe("Populated expectations report", () => {
     expect(host!.textContent).toContain("$240.0B–247.0B");
     expect(host!.textContent).toContain("$108.0B ± 2%");
     expect(host!.textContent).toContain("Reviewed research snapshot");
-    const details = host!.querySelector("details")!;
+    const details = [...host!.querySelectorAll("details")].find((element) => element.textContent?.includes("AMZN revenue guidance"))!;
     await act(async () => { details.querySelector("summary")!.click(); });
     expect(details.open).toBe(true);
     expect(details.textContent).toContain("AMZN revenue guidance is stated explicitly");

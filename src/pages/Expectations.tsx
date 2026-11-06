@@ -38,6 +38,10 @@ function basisText(statement: ExpectationReportStatement): string {
   return statement.currencyBasis === "constant_currency" ? `${accounting} · constant currency` : accounting;
 }
 
+function latestFirst<T extends { filingDate: string; accessionNo: string }>(rows: T[]): T[] {
+  return [...rows].sort((a, b) => b.filingDate.localeCompare(a.filingDate) || b.accessionNo.localeCompare(a.accessionNo));
+}
+
 function statusCopy() {
   if (report.status === "reviewed") return { title: "Reviewed research snapshot", tone: "ok" };
   if (report.status === "partial") return { title: "Local results · review required", tone: "warn" };
@@ -59,20 +63,20 @@ export default function Expectations() {
   }, [fallbacks]);
   const metrics = useMemo(() => [...new Set(report.statements.map((statement) => statement.metricRaw))].sort(), []);
   const revisions = useMemo(() => [...new Set(report.statements.map((statement) => statement.revision))].sort(), []);
-  const filtered = useMemo(() => report.statements.filter((statement) => {
+  const filtered = useMemo(() => latestFirst(report.statements.filter((statement) => {
     const haystack = `${statement.ticker} ${statement.metricRaw} ${statement.scopeRaw} ${statement.periodRaw} ${statement.cohortId ?? ""} ${statement.evidence}`.toLowerCase();
     return (!query || haystack.includes(query.toLowerCase()))
       && (ticker === "all" || statement.ticker === ticker)
       && (cohort === "all" || statement.cohortId === cohort)
       && (metric === "all" || statement.metricRaw === metric)
       && (revision === "all" || statement.revision === revision);
-  }), [query, ticker, cohort, metric, revision]);
-  const filteredFallbacks = useMemo(() => fallbacks.filter((fallback) => {
+  })), [query, ticker, cohort, metric, revision]);
+  const filteredFallbacks = useMemo(() => latestFirst(fallbacks.filter((fallback) => {
     const haystack = `${fallback.ticker} ${fallback.summary} ${fallback.limitations.join(" ")} ${fallback.evidence} ${fallback.cohortId ?? ""}`.toLowerCase();
     return (!query || haystack.includes(query.toLowerCase()))
       && (ticker === "all" || fallback.ticker === ticker)
       && (cohort === "all" || fallback.cohortId === cohort);
-  }), [fallbacks, query, ticker, cohort]);
+  })), [fallbacks, query, ticker, cohort]);
   const status = statusCopy();
   const coverage = report.coverage;
   const coverageRate = coverage.companiesExpected ? coverage.companiesWithResults / coverage.companiesExpected : 0;

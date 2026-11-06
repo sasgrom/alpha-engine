@@ -35,6 +35,16 @@ describe("Expectations report", () => {
     expect(host!.querySelectorAll(".expectation-card")).toHaveLength(Math.min(120, expectationsReport.statements.length));
   });
 
+  it("orders statement cards by latest filing date instead of oldest first", () => {
+    const cards = [...host!.querySelectorAll(".expectation-card")];
+    const actualDates = cards.map((card) => card.textContent?.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? "");
+    const expectedDates = expectationsReport.statements.map((statement) => statement.filingDate).sort((a, b) => b.localeCompare(a)).slice(0, 120);
+    expect(actualDates).toEqual(expectedDates);
+    const latest = expectationsReport.statements.map((statement) => statement.filingDate).sort().at(-1)!;
+    expect(cards[0].textContent).toContain(latest);
+    expect(cards[0].textContent).not.toContain("1999-12-10");
+  });
+
   it("offers real SEC reference examples in a separate, clearly labeled tab", async () => {
     const tab = [...host!.querySelectorAll("button")].find((button) => button.textContent?.includes("SEC reference examples"))!;
     await act(async () => { tab.click(); });

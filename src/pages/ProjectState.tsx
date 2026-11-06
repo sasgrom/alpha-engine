@@ -78,7 +78,7 @@ export default function ProjectState() {
   const liveRun = (jobId: string): RunView => liveState?.lastRuns[jobId] ?? null;
   const run = (jobId: string): RunView => liveRun(jobId) ?? reportRun(jobId);
   const sp500Run = run("sp500-facts-daily");
-  const sp500Running = liveState?.current?.jobId === "sp500-facts-daily" || (!liveState && report?.scheduler.currentJobId === "sp500-facts-daily");
+  const sp500Running = liveState?.current?.jobId === "sp500-facts-daily" || (!liveState && report?.scheduler?.currentJobId === "sp500-facts-daily");
   const sp500Status = sp500Running ? "running" : sp500Run?.status ?? "unknown";
   const finalEvidenceReady = Boolean(PROJECT_STATE_REVIEW.implementation.sp500FinalEvidenceCommit);
   const mappingVerified = Boolean(PROJECT_STATE_REVIEW.implementation.sp500CikMappingsVerifiedOn);
@@ -87,10 +87,10 @@ export default function ProjectState() {
   const collectionPhase: ProjectPhaseStatus = finalEvidenceReady || sp500Status === "done" ? "done" : ["error", "killed"].includes(sp500Status) ? "attention" : sp500Status === "running" ? "current" : "unknown";
   const evidenceMode = liveState ? "home scheduler" : report ? "dated Daily Operations" : "reviewed snapshot";
   const sp500Health = report?.facts?.sp500;
-  const activeJob = liveState?.current?.jobId ?? report?.scheduler.currentJobId ?? null;
-  const queuedJobs = liveState?.queue.length ?? report?.scheduler.queuedJobs ?? null;
-  const macroEvent = report?.checks.find((check) => check.id === "macro-event-study-lineage");
-  const macroAtlas = report?.checks.find((check) => check.id === "macro-atlas-lineage");
+  const activeJob = liveState?.current?.jobId ?? report?.scheduler?.currentJobId ?? null;
+  const queuedJobs = liveState?.queue.length ?? report?.scheduler?.queuedJobs ?? null;
+  const macroEvent = report?.checks?.find((check) => check.id === "macro-event-study-lineage");
+  const macroAtlas = report?.checks?.find((check) => check.id === "macro-atlas-lineage");
 
   return (
     <AppLayout title="Project State">
@@ -175,10 +175,10 @@ export default function ProjectState() {
               <strong>Research-51 companyfacts</strong><span>{run("facts-fetch-daily")?.status ?? "unknown"}</span><span>Local MySQL → Series → Factors</span><p>Independent 03:00 home-local chain; its coverage remains 51/51.</p>
             </div>
             <div className="project-data-row" role="row">
-              <strong>Schwab options and context</strong><span>{report ? `${report.schwab.tickersCapturedToday}/${report.schwab.tickersExpected} today` : "No dated report"}</span><span>Local snapshots + Feature Lab</span><p>{report ? `${report.schwab.contracts.toLocaleString("en-US")} contracts · latest capture ${timeText(report.schwab.latestCapture)}` : "Live coverage is not inferred."}</p>
+              <strong>Schwab options and context</strong><span>{report?.schwab ? `${report.schwab.tickersCapturedToday}/${report.schwab.tickersExpected} today` : "No dated report"}</span><span>Local snapshots + Feature Lab</span><p>{report?.schwab ? `${report.schwab.contracts.toLocaleString("en-US")} contracts · latest capture ${timeText(report.schwab.latestCapture)}` : "Live coverage is not inferred."}</p>
             </div>
             <div className="project-data-row" role="row">
-              <strong>FRED + OFAC</strong><span>{report?.macro.qaStatus ? `QA ${report.macro.qaStatus}` : "No dated report"}</span><span>Local macro archive</span><p>{report ? `FRED ${timeText(report.macro.fredGeneratedAt)} · OFAC ${timeText(report.macro.ofacGeneratedAt)}` : "Availability and vintage QA are required before derived research."}</p>
+              <strong>FRED + OFAC</strong><span>{report?.macro?.qaStatus ? `QA ${report.macro.qaStatus}` : "No dated report"}</span><span>Local macro archive</span><p>{report?.macro ? `FRED ${timeText(report.macro.fredGeneratedAt)} · OFAC ${timeText(report.macro.ofacGeneratedAt)}` : "Availability and vintage QA are required before derived research."}</p>
             </div>
             <div className="project-data-row" role="row">
               <strong>Event Study + Atlas</strong><span>{macroAtlas?.status ?? macroEvent?.status ?? "unknown"}</span><span>Local research artifacts</span><p>{macroAtlas?.detail ?? PROJECT_STATE_REVIEW.research.atlas} {macroEvent ? `Event Study: ${macroEvent.detail}` : ""}</p>
@@ -208,7 +208,7 @@ export default function ProjectState() {
         <footer className="project-state-footer">
           {loadState === "error" ? <AlertTriangle size={14} /> : loadState === "ready" ? <CheckCircle2 size={14} /> : <CircleDashed size={14} />}
           <span>{liveState ? "Live scheduler evidence is active on the home console." : "Live home scheduler state is unavailable here; dated report and reviewed snapshot only."}</span>
-          {report && <span>Daily health: {report.status} · {report.summary.checksError} errors · {report.summary.checksWarning} warnings · {report.summary.checksPending} pending.</span>}
+          {report && <span>Daily health: {report.status} · {report.summary?.checksError ?? 0} errors · {report.summary?.checksWarning ?? 0} warnings · {report.summary?.checksPending ?? 0} pending.</span>}
           {!report && <Activity size={14} />}
         </footer>
       </div>

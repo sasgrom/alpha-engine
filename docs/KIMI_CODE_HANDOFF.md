@@ -585,3 +585,12 @@ Deliberately not automatic:
 - Independent post-check `independent-postcheck.json` is **pass**: all counts match, zero duplicate exact keys, zero original storage mismatches, all 23 conflicts unchanged, all 139 outside documents preserved. Final roles: primary 23,375 / exhibit 16,537 / other 28.
 - Actual routers: META 347 documents/347 fetched, BA 836/836, CSCO 717/717. SEC `rawUrl` and `text` fallback returned the same canonical SEC URL for CSCO with storageKey=null and location=none. Runtime version **`f18c77b`** (`Full metadata documents and SEC links`) was saved.
 - Evidence root `worker/.runs/documents-metadata-apply-2026-11-06T184130337Z/`. This is runtime evidence, excluded from source delivery.
+
+
+## 55. Expectations ordering and ProjectState crash fixed — 2026-11-06
+
+- Expectations now orders structured statements and fallback notes by actual `filingDate` descending, with accessionNo as the deterministic tie-breaker. The first visible cards are the latest filings rather than 1999/2001 history. Coverage remains **27/53 = 50.9%**; this is a partial extraction snapshot, not a completed universe.
+- `/project-state` crashed because a valid schema-v1 `daily-operations.json` had `macro=undefined`. Nested macro/scheduler/summary/Schwab reads now use optional chaining and zero-safe defaults. The page renders `No dated report` instead of a blue screen.
+- Added regressions for latest-first statement ordering and for a schema-v1 report without macro. Updated populated evidence tests to select the intended company card rather than relying on its old position.
+- Verification passed: **3 files / 12 tests**, TypeScript and production build. Runtime version **`b6beb53`** (`Latest-first expectations and ProjectState fix`) was saved.
+- Scenario Lab evidence limits were also read from the live artifacts: rates fail on missing fixed-interest share, oil depends on fuel/oil revenue/cost, USD has no directly comparable foreign revenue share, and credit still lacks new-issuance spread/maturity/rating terms. Pilot expansion is not authorized as a cosmetic selector change; evidence must be collected and rebuilt locally first.

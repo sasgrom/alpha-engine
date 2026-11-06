@@ -89,6 +89,16 @@ describe("Project State workflow", () => {
     expect(host!.textContent).not.toContain("latest registered run needs attention");
   });
 
+  it("renders a schema-v1 report without macro instead of crashing", async () => {
+    if (root) await act(async () => { root!.unmount(); });
+    const { macro: _macro, ...withoutMacro } = dailyReport as any;
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify(withoutMacro), { status: 200, headers: { "content-type": "application/json" } })));
+    await act(async () => { root = createRoot(host!); root.render(<MemoryRouter><ProjectState /></MemoryRouter>); });
+    expect(host!.textContent).toContain("FRED + OFAC");
+    expect(host!.textContent).toContain("No dated report");
+    expect(host!.textContent).toContain("One project. Four different kinds of progress.");
+  });
+
   it("fails closed when live home state is unavailable", async () => {
     if (root) await act(async () => { root!.unmount(); });
     mocks.local = false;
