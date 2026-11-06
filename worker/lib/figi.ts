@@ -1,6 +1,12 @@
 export const FIGI_MAX_JOBS_PER_REQUEST = 10;
 export const FIGI_MAX_429_RETRIES = 2;
 
+/** Preserve the complete provider label; company resolution still uses exact ticker matches. */
+export function normalizeFigiTicker(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  return value.trim() || null;
+}
+
 /** Split mapping jobs without crossing OpenFIGI's documented request limit. */
 export function chunkFigiIds<T>(ids: T[], size = FIGI_MAX_JOBS_PER_REQUEST): Array<{ start: number; items: T[] }> {
   if (!Number.isInteger(size) || size < 1 || size > FIGI_MAX_JOBS_PER_REQUEST) {

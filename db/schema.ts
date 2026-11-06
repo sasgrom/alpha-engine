@@ -678,7 +678,7 @@ export const cusipMap = mysqlTable(
   {
     cusip: varchar("cusip", { length: 12 }).primaryKey(),
     cik: int("cik"),
-    ticker: varchar("ticker", { length: 20 }),
+    ticker: text("ticker"),
     exchCode: varchar("exchCode", { length: 16 }),
     secType: varchar("secType", { length: 48 }),
     mappedAt: timestamp("mappedAt").defaultNow().notNull(),

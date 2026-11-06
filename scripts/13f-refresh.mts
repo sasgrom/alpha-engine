@@ -30,7 +30,7 @@ import {
   type Filing13F, type QuarterFilingPart,
 } from "../worker/lib/thirteenf";
 import { startProgress } from "../worker/lib/progress";
-import { chunkFigiIds, formatFigiError, shouldRetryFigi429 } from "../worker/lib/figi";
+import { chunkFigiIds, formatFigiError, normalizeFigiTicker, shouldRetryFigi429 } from "../worker/lib/figi";
 
 // ---------------------------------------------------------------------------
 const FORMS_13F = new Set(["13F-HR", "13F-HR/A"]);
@@ -185,8 +185,9 @@ async function mapCusips(cusips: string[]): Promise<{ map: Map<string, { cik: nu
       const values: any[] = [];
       for (let j = 0; j < chunk.length; j++) {
         const hit = data[j]?.data?.[0];
-        values.push({ cusip: chunk[j], ticker: hit?.ticker ?? null, exchCode: hit?.exchCode ?? null, secType: hit?.securityType ?? hit?.securityType2 ?? null });
-        out.set(chunk[j], { cik: null, ticker: hit?.ticker ?? null });
+        const ticker = normalizeFigiTicker(hit?.ticker);
+        values.push({ cusip: chunk[j], ticker, exchCode: hit?.exchCode ?? null, secType: hit?.securityType ?? hit?.securityType2 ?? null });
+        out.set(chunk[j], { cik: null, ticker });
       }
       for (let k = 0; k < values.length; k += 500) {
         const vc = values.slice(k, k + 500);

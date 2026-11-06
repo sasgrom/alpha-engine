@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chunkFigiIds, FIGI_MAX_429_RETRIES, FIGI_MAX_JOBS_PER_REQUEST, formatFigiError, shouldRetryFigi429 } from "./figi";
+import { chunkFigiIds, FIGI_MAX_429_RETRIES, FIGI_MAX_JOBS_PER_REQUEST, formatFigiError, normalizeFigiTicker, shouldRetryFigi429 } from "./figi";
 
 describe("OpenFIGI request guardrails", () => {
   it("chunks mapping jobs at exactly the provider maximum", () => {
@@ -51,5 +51,18 @@ describe("OpenFIGI request guardrails", () => {
     const message = formatFigiError(new Error("figi HTTP 429 after 2 retries"), { start: 0, size: 10, firstCusips: ["037833100"] });
     expect(message).toContain("figi HTTP 429 after 2 retries");
     expect(message).toContain("chunkStart=0");
+  });
+
+  it("normalizes valid ticker labels and rejects empty or non-string values", () => {
+    expect(normalizeFigiTicker(" AAPL ")).toBe("AAPL");
+    expect(normalizeFigiTicker("A".repeat(512))).toHaveLength(512);
+    expect(normalizeFigiTicker(" ")).toBeNull();
+    expect(normalizeFigiTicker(undefined)).toBeNull();
+  });
+
+  it("preserves the complete provider bond descriptor without truncation", () => {
+    const bondDescriptor = "MNDT 1.625 06/01/35 B";
+    expect(bondDescriptor).toHaveLength(21);
+    expect(normalizeFigiTicker(bondDescriptor)).toBe(bondDescriptor);
   });
 });
