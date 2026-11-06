@@ -631,3 +631,12 @@ Deliberately not automatic:
 - Full 50-company run evaluated **22 factor-registry factors**, including six explicit insufficient-data factors. Most OLS specifications collapse to almost one-class UP. Balanced accuracy and company/sector holdout medians are around **0.50**, so there is no evidence of useful OLS factor classification and no justification for feeding these betas into Bayes.
 - The sealed holdout has only four anchors and cannot support a confident probability table. The generated report explicitly says to use rolling IC/rank-IC with conditional forecast errors next instead of parameter tuning. `public/reports/factor-ols-evaluation.json` and `.md` are generated evidence, excluded from source delivery.
 - Verification: **7 OLS tests + 3 probability tests + 3 nested-eval tests**, TypeScript and production build. Updated RU/EN manuals, LLM_CONTEXT and this handoff.
+
+
+## 60. Expanding log-log Market Cap / Revenue OLS — methodology corrected — 2026-11-06
+
+- The earlier nested factor-direction OLS did not match the owner's requested time-series task. Added a separate `ln(MarketCap_t) = α + β·ln(Revenue_{t-1}) + ε` expanding-window implementation with minimum 20 quarters and one-step-ahead predictions only.
+- Corrected availability logic: availability-aware latest/first vintage fallback, latest available shares at or before each anchor with diluted fallback, and one eligible price source per date with observation date <= anchor and fetchedAt <= evaluation asOf. Historical backfill ingestion time is not treated as market availability time.
+- Full 50-company evaluation: **1,547 OOS predictions across 45 companies**. Median R² **−0.172**, median log RMSE **0.870**, median ei+ **0.204**, median ei- **0.723**, median balanced accuracy **0.551**. NVDA R²=0.953, but high individual R² is not causal evidence or a production model. Negative R² values remain visible.
+- Generated `public/reports/market-cap-ols-evaluation.json` and `.md`, including per-company and sector summaries. Generated evidence is excluded from source delivery.
+- Verification: **3 market-cap OLS tests + 7 factor OLS tests + 3 nested-eval tests + 13 probability tests**, TypeScript and production build. Runtime version **`c3fd711`** (`Expanding Market Cap OLS evaluation`) was saved.
