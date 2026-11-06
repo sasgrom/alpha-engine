@@ -61,6 +61,25 @@ function canonicalConcept(name: string): { canonical: string; aliased: boolean }
 }
 
 // ---------------------------------------------------------------------------
+// Financial-statement form gate.
+// Registration, proxy and offering documents also publish XBRL facts. Their
+// filing-date instants (for example S-3ASR fee tags) are not company fiscal
+// periods and must never enter canonical statement series. Earnings 8-K/6-K
+// remain eligible because their real duration windows can establish first-filed
+// availability before the later 10-Q/10-K arrives.
+// ---------------------------------------------------------------------------
+const FINANCIAL_STATEMENT_BASE_FORMS = new Set([
+  "10-K", "10-Q", "10-KT", "10-QT", "10-K405", "10-KSB", "10-QSB",
+  "20-F", "40-F", "8-K", "6-K",
+]);
+
+export function isFinancialStatementFactForm(form: string | null): boolean {
+  if (!form) return false;
+  const normalized = form.trim().toUpperCase().replace(/\/A$/, "");
+  return FINANCIAL_STATEMENT_BASE_FORMS.has(normalized);
+}
+
+// ---------------------------------------------------------------------------
 // Duration classification (flow concepts only).
 // Window lengths in days observed in practice: Q≈90, H1≈180, 9M≈270, FY≈365.
 // ---------------------------------------------------------------------------
@@ -142,6 +161,7 @@ interface FactRow {
   startDate: string | null;
   endDate: string | null;
   val: number | null;
+  form: string | null;
   filed: string | null;
   accn: string | null;
 }
@@ -190,7 +210,7 @@ export function deriveQuarterFromYtd(
  * the input (facts) is cumulative, so derived series are rebuilt from scratch
  * on each run — deterministic and idempotent.
  */
-export async function buildCompanySeries(cik: number): Promise<SeriesBuildResult> {
+export async function buildCompanySeries(cik: number, options: { write?: boolean } = {}): Promise<SeriesBuildResult> {
   const db = getDb();
   const raw = await db
     .select({
@@ -199,6 +219,7 @@ export async function buildCompanySeries(cik: number): Promise<SeriesBuildResult
       startDate: facts.startDate,
       endDate: facts.endDate,
       val: facts.val,
+      form: facts.form,
       filed: facts.filed,
       accn: facts.accn,
     })
@@ -208,7 +229,7 @@ export async function buildCompanySeries(cik: number): Promise<SeriesBuildResult
   // --- group raw facts by canonical concept ------------------------------
   const byConcept = new Map<string, { rows: FactRow[]; aliasedFrom: Set<string> }>();
   for (const r of raw) {
-    if (r.val === null || !r.endDate) continue;
+    if (r.val === null || !r.endDate || !isFinancialStatementFactForm(r.form)) continue;
     const { canonical, aliased } = canonicalConcept(r.concept);
     let bucket = byConcept.get(canonical);
     if (!bucket) { bucket = { rows: [], aliasedFrom: new Set() }; byConcept.set(canonical, bucket); }
@@ -522,6 +543,21 @@ export async function buildCompanySeries(cik: number): Promise<SeriesBuildResult
     });
   }
 
+  const avg = (xs: (number | null | undefined)[]) => {
+    const v = xs.filter((x): x is number => x !== null && x !== undefined);
+    return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null;
+  };
+
+  // Reviewed dry-runs execute the complete deterministic computation without
+  // mutating canonical tables or the company-level health rollup.
+  if (options.write === false) {
+    return {
+      series: outHealth.length,
+      points: outPoints.length,
+      avgCoverage: avg(outHealth.map((h) => h.gridCoverage)) ?? 0,
+    };
+  }
+
   // Atomic per-CIK replacement (hosted MySQL packet limits: <= 500 rows).
   // A failed build or insert can no longer leave a company with empty series.
   await db.transaction(async (tx) => {
@@ -536,10 +572,6 @@ export async function buildCompanySeries(cik: number): Promise<SeriesBuildResult
   });
 
   // --- company-level rollup (Stage 4 features) ----------------------------
-  const avg = (xs: (number | null | undefined)[]) => {
-    const v = xs.filter((x): x is number => x !== null && x !== undefined);
-    return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null;
-  };
   const amendCount = await db
     .select({ n: sql<number>`count(*)` })
     .from(filings)

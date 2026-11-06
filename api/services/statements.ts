@@ -229,15 +229,17 @@ export function buildStatements(opts: {
 
   // cell lookup: concept|kind|periodEnd|vintage → row
   const cellMap = new Map<string, PointRow[]>();
-  // period popularity: a grid period must carry a meaningful amount of data
-  // (filters oddball monthly stock-only instants like share-count updates)
+  // Period popularity is driven only by economic flow periods. Filing-date
+  // stock instants (cover-page shares, registration fees, offering tags) may
+  // remain valid balance-sheet evidence, but they must never create a fiscal
+  // quarter column of their own.
   const periodCounts = new Map<string, number>();
   for (const p of points) {
     const k = `${p.concept}|${p.kind}|${p.periodEnd}|${p.vintage}`;
     const arr = cellMap.get(k);
     if (arr) arr.push(p);
     else cellMap.set(k, [p]);
-    periodCounts.set(p.periodEnd, (periodCounts.get(p.periodEnd) ?? 0) + 1);
+    if (p.kind === "flow") periodCounts.set(p.periodEnd, (periodCounts.get(p.periodEnd) ?? 0) + 1);
   }
 
   const qGrid = [...periodCounts.entries()]

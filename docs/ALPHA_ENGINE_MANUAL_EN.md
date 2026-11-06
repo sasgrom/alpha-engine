@@ -105,6 +105,8 @@ Raw facts are unfit for math: one `end_date` carries values of different duratio
   (no Q4 10-Q exists). The point is marked `derivation = reported | derived_q4`;
 - stock concepts (balance sheet): instant values at quarter-end dates, as-is.
 
+**Form and fiscal-period gates (2026-11-06).** Canonical series accept financial-statement forms and their amendments (10-K/10-Q/20-F/40-F and transition/legacy variants) plus earnings 8-K/6-K with real duration windows. Registration, proxy and offering forms (for example S-3ASR, S-8, 424B2 and DEF 14A) are excluded before concept grouping; their fee/offering instants are not company fiscal periods. Raw facts remain preserved for lineage. Statements independently builds its quarterly grid from flow periods only, so even a dense stock-only filing date cannot create a blank quarter column. Reviewed rebuilds support `--dry-run`; production rebuilds are atomic per company and use scoped backups.
+
 **Concept aliases** (two layers):
 1. *Static map* — unambiguous global renames (ASC 606: `Revenues` →
    `RevenueFromContractWithCustomerExcludingAssessedTax` in 2018, etc.).
@@ -801,6 +803,8 @@ of <date> · EOD". The chart card shows the selected window's Δabs/Δ% + hi/lo
 (computed in the browser from the shipped bars — the answer to the owner's
 1b: on the fly, no tables). A recharts Brush selects an arbitrary sub-range
 → the stats strip switches to SELECTION mode (1c).
+
+**Official daily-bar transport (2026-11-06).** The reviewed price artifact now carries the latest two complete Schwab daily candles with OHLCV and their actual ingest timestamps. The previous close and day change are computed only within Schwab; Stooq is never substituted across sources. Production apply inserts the missing previous bars and fills close-only OHLCV nulls, while conflicting confirmed values are rejected and the original `fetchedAt` is preserved. `adjClose` remains null pending the corporate-action review. Missing change data is rendered as a plain em dash rather than `+— (+—%)`.
 
 QA: t_4f_repair.mts + a prod probe via the admin session (FQ4 cells populate
 on live data before the code publish), 102/102 unit tests (+5 derivation).
@@ -1752,9 +1756,3 @@ Operator manual: `docs/MACRO_DATA.md`.
 - The shared `prices` table retains Stooq as historical backfill and adds Schwab daily candles as `source=schwab`. `dailyPrice(cik,date,asOf)` admits only fetchedAt-eligible valid closes, prefers Schwab, otherwise uses Stooq and returns an explicit stale or missing state. A `(cik,date)` result contains one complete source bar; OHLC fields are never assembled from different providers. Options intraday spot is not a daily close. Schwab `adjClose` stays null until corporate-action and raw/adjusted-close semantics are separately reviewed.
 - `prices.quote` exposes actual price date, currency and quality and does not infer a previous close across providers. A legacy Yahoo row cannot substitute for a missing canonical quote; the endpoint returns unavailable instead. The Terminal displays price, actual asOf, USD and quality rather than provider branding. Provider names and raw hashes remain in admin/QA evidence. Per-user universe semantics remain unchanged; the admin read-only view-as lens can inspect reviewer presentation memberships without changing an account.
 - Local coverage evidence contains explicit results for all 50 companies across Stocktwits, Form 4, short interest, earnings, Schwab close and SEC facts. CSCO has canonical series/factors and an official close of 103.61 USD on 2026-11-04. Scenario Lab uses current reviewed inputs and retains partial/not_computable channels honestly. The eight-series macro and Schwab-context package is prepared for owner-reviewed selective sync only: no production apply, deployment or automatic data promotion is implied by local coverage or a source commit.
-
-## 19. OpenFIGI labels and `cusip_map.ticker` TEXT
-
-- CUSIP is the primary instrument key. OpenFIGI `ticker` is nullable metadata used for exact company-ticker matching, not a unique key or proof of equity identity. Provider labels can contain bond/option coupon and maturity information. The API does not document a maximum length; a real 21-character bond descriptor exceeded the former VARCHAR(20) column.
-- Local reviewed DDL 030 changes `ticker` to TEXT after a complete fingerprinted backup of 32,440 rows. It does not recreate the table, change the primary CUSIP index, delete history or infer issuer mapping from truncated labels. The ordered row-payload SHA256 is unchanged, and repeat application skips safely. `normalizeFigiTicker` preserves all nonempty labels.
-- The local migration and production-agent instructions are in `docs/PRODUCTION_CUSIP_MAP_TICKER_TEXT_2026-11-06.md`. Production DDL is a separate owner action. Previously discarded labels are not reconstructed by the type change; a negative-cache repair/re-fetch must be reviewed separately.

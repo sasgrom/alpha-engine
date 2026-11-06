@@ -105,6 +105,8 @@ Earnings call transcripts SEC не публикует — эксперимент
   (отдельного 10-Q за Q4 не существует). Точка помечается `derivation = reported | derived_q4`;
 - stock-концепты (баланс): instant-значения на даты кварталов, как есть.
 
+**Фильтры форм и фискальных периодов (2026-11-06).** В canonical series принимаются формы финансовой отчётности и поправки (10-K/10-Q/20-F/40-F, transition/legacy-варианты), а также earnings 8-K/6-K с реальными duration-окнами. Регистрационные, proxy и offering-формы (например, S-3ASR, S-8, 424B2 и DEF 14A) исключаются до группировки концептов: их fee/offering-даты не являются фискальными периодами компании. Сырые facts сохраняются для lineage. Независимо от этого Statements строит квартальную сетку только по flow-периодам, поэтому даже плотная stock-only дата отчётности не может создать пустую квартальную колонку. Reviewed rebuild поддерживает `--dry-run`; production rebuild атомарен по компании и требует scoped backup.
+
 **Алиасы концептов** (два слоя):
 1. *Статическая карта* — однозначные глобальные переименования (ASC 606: `Revenues` →
    `RevenueFromContractWithCustomerExcludingAssessedTax` в 2018 и т.п.).
@@ -797,6 +799,8 @@ statements.ts («x»-unit) и Statements.tsx.
 браузере из уже загруженных баров — ответ на вопрос 1б: на лету, таблицы не
 нужны). recharts Brush выделяет произвольный поддиапазон → полоса статистики
 переключается в режим SELECTION (1в).
+
+**Transport официальных daily-баров (2026-11-06).** Reviewed price-артефакт теперь содержит два последних полных Schwab daily candle с OHLCV и фактическими ingest timestamps. Previous close и day change считаются только внутри Schwab; Stooq между источниками не подставляется. Production apply добавляет недостающие предыдущие бары и заполняет OHLCV-нули в close-only записях; конфликт подтверждённых значений запрещает apply, исходный `fetchedAt` сохраняется. `adjClose` остаётся null до отдельного corporate-action review. Отсутствующее изменение отображается обычным прочерком, а не `+— (+—%)`.
 
 QA: t_4f_repair.mts + проба на проде админской сессией (FQ4-ячейки заполнены
 на живых данных до публикации кода), 102/102 юнит-теста (+5 деривации).
@@ -1758,9 +1762,3 @@ Frozen evaluation теперь содержит **794/1,455 eligible checks**, *
 - Общая таблица `prices` сохраняет Stooq как historical backfill и добавляет Schwab daily candles с `source=schwab`. `dailyPrice(cik,date,asOf)` принимает только valid close с `fetchedAt <= asOf`, предпочитает Schwab, затем использует Stooq, а при отсутствии eligible данных возвращает stale или missing. На `(cik,date)` выбирается один целый source bar; OHLC не собирается из разных провайдеров. Options intraday spot не считается daily close. Schwab `adjClose` остаётся null до отдельной проверки corporate-action policy и raw/adjusted semantics.
 - `prices.quote` возвращает фактическую дату цены, валюту и quality и не вычисляет previous close между разными провайдерами. Legacy Yahoo row не заменяет отсутствующий canonical quote: endpoint возвращает unavailable. Terminal показывает price, actual asOf, USD и quality вместо названия провайдера. Provider names и raw hashes остаются в admin/QA evidence. Per-user universe semantics не изменены: admin read-only view-as lens позволяет проверить presentation memberships reviewer'а без изменения аккаунта.
 - Локальные coverage evidence содержат явный результат для каждой из 50 компаний по Stocktwits, Form 4, short interest, earnings, Schwab close и SEC facts. Для CSCO materialized canonical series/factors и подтверждён official close 103.61 USD на 2026-11-04. Scenario Lab использует текущие reviewed inputs и честно сохраняет partial/not_computable channels. Пакет из восьми macro series и Schwab context подготовлен только для owner-reviewed selective sync: локальное покрытие и source commit не означают production apply, deployment или автоматическое продвижение данных.
-
-## 19. OpenFIGI labels и поле `cusip_map.ticker` TEXT
-
-- CUSIP остаётся первичным идентификатором инструмента. OpenFIGI `ticker` — nullable metadata для точного сопоставления с `companies.ticker`, а не уникальный ключ и не доказательство equity identity. Provider labels могут содержать coupon/maturity для bonds/options. API не задаёт максимальную длину; реальный 21-character bond descriptor превысил прежний VARCHAR(20).
-- Локальный reviewed DDL 030 меняет `ticker` на TEXT после полного fingerprinted backup 32,440 rows. Таблица не пересоздаётся, primary CUSIP index не меняется, история не удаляется, issuer mapping не выводится из усечённых labels. Ordered row-payload SHA256 до и после совпадает, повторный apply пропускается. `normalizeFigiTicker` сохраняет все nonempty labels.
-- Локальная миграция и инструкции production agent находятся в `docs/PRODUCTION_CUSIP_MAP_TICKER_TEXT_2026-11-06.md`. Production DDL — отдельное решение владельца. Ранее отброшенные labels не восстанавливаются сменой типа; repair/re-fetch negative cache требует отдельного reviewed решения.

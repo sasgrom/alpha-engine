@@ -1,9 +1,23 @@
 // Unit tests for the 4f (D37) generalized quarter derivation.
 import { describe, it, expect } from "vitest";
-import { deriveQuarterFromYtd } from "./series";
+import { deriveQuarterFromYtd, isFinancialStatementFactForm } from "./series";
 
 const row = (startDate: string, endDate: string, val: number | null, unit = "USD") => ({
   startDate, endDate, val, unit, accn: "0001-x", filed: "2026-01-30",
+});
+
+describe("isFinancialStatementFactForm", () => {
+  it("keeps financial statements, amendments and earnings releases", () => {
+    for (const form of ["10-K", "10-Q/A", "20-F", "40-F", "8-K", "8-K/A", "6-K"]) {
+      expect(isFinancialStatementFactForm(form)).toBe(true);
+    }
+  });
+
+  it("rejects registration, proxy and offering facts before canonical series", () => {
+    for (const form of ["S-3ASR", "S-8", "424B2", "424B5", "DEF 14A", "PRE 14A", null]) {
+      expect(isFinancialStatementFactForm(form)).toBe(false);
+    }
+  });
 });
 
 describe("deriveQuarterFromYtd (D37)", () => {
