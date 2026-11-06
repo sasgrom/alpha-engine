@@ -1764,8 +1764,9 @@ Frozen evaluation теперь содержит **794/1,455 eligible checks**, *
 - Локальные coverage evidence содержат явный результат для каждой из 50 компаний по Stocktwits, Form 4, short interest, earnings, Schwab close и SEC facts. Для CSCO materialized canonical series/factors и подтверждён official close 103.61 USD на 2026-11-04. Scenario Lab использует текущие reviewed inputs и честно сохраняет partial/not_computable channels. Пакет из восьми macro series и Schwab context подготовлен только для owner-reviewed selective sync: локальное покрытие и source commit не означают production apply, deployment или автоматическое продвижение данных.
 
 
-## 21. Локальные EDGAR documents и documentsSnapshot
+## 21. Локальные EDGAR documents и metadata-only documentsSnapshot
 
-- `worker/documents-presentation.mts` читает только локальные EDGAR manifests и raw-файлы. Он регистрирует максимум пять последних 10-K primary documents на компанию с exact `(cik, accessionNo, docName)` upsert, локальным plaintext и `location=local`. Cloud harvest, object storage и полный EDGAR-сбор не вызываются.
-- Reviewed `documentsSnapshot` использует существующую worker-key авторизацию и один документ на запрос. Raw передаётся как gzip+base64, SHA256 проверяется после распаковки. Production загружает raw и plaintext под canonical storage keys и делает exact-key upsert без DELETE и SEC-запросов. Base64 ограничен и не пишется в логи.
-- Dry mode только создаёт и проверяет snapshot без отправки. Production documents push требует явно подтверждённой версии endpoint. Перед production push локальные Documents API и plaintext должны работать.
+- `worker/documents-presentation.mts` читает локальные EDGAR manifests и raw-файлы для всех шести форм, amendments, primary documents и exhibits. Exact `(cik, accessionNo, docName)` upsert сохраняет историю и локальный plaintext. Cloud harvest и полный EDGAR-сбор не используются.
+- Transport работает только в режиме **metadata-only**: cik, accession, form, даты, docType, role, sizeBytes, SHA256, textLength, parserVersion и fetch metadata. HTML, plaintext, gzip/base64 и ZIP документов не передаются. Object storage не вызывается. Production сохраняет registry с `storageKey=null`, `textKey=null` и `location=none`; прежние cloud keys сохраняются exact-key upsert.
+- Production Documents API возвращает canonical SEC Archives URL для metadata-only записей. `rawUrl` использует SEC URL при `storageKey=null`; `text` возвращает `source=sec` и тот же URL при `textKey=null`. Существующие storage и local-cache fallbacks сохраняются.
+- Push разрешён только с явным `--mode metadata-only`; без него он отклоняется, чтобы случайно не отправить raw. Dry mode проверяет все 50 компаний, все формы и exact-key deduplication до любой production-записи.

@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { documents, filings, workerKeys } from "@db/schema";
 import { ingestDocumentsSnapshot, workerDocumentsSnapshotBodyZ } from "./document-ingest";
 import { verifyWorkerKey } from "./worker";
-import { snapshotDocument, type PresentationFiling } from "../../worker/lib/document-presentation";
+import { metadataDocument, snapshotDocument, type PresentationFiling } from "../../worker/lib/document-presentation";
 
 const mocks = vi.hoisted(() => ({
   documents: [] as any[],
@@ -12,15 +12,17 @@ const mocks = vi.hoisted(() => ({
 }));
 
 function upsert(table: unknown, row: any) {
-  if (table === documents) {
-    const index = mocks.documents.findIndex((item) => item.cik === row.cik && item.accessionNo === row.accessionNo && item.docName === row.docName);
-    if (index >= 0) mocks.documents[index] = { ...mocks.documents[index], ...row };
-    else mocks.documents.push(row);
-  } else if (table === filings) {
-    const index = mocks.filings.findIndex((item) => item.cik === row.cik && item.accessionNo === row.accessionNo);
-    if (index >= 0) mocks.filings[index] = { ...mocks.filings[index], ...row };
-    else mocks.filings.push(row);
-  } else if (table === workerKeys) mocks.keys.push(row);
+  for (const item of Array.isArray(row) ? row : [row]) {
+    if (table === documents) {
+      const index = mocks.documents.findIndex((existing) => existing.cik === item.cik && existing.accessionNo === item.accessionNo && existing.docName === item.docName);
+      if (index >= 0) mocks.documents[index] = { ...mocks.documents[index], ...item };
+      else mocks.documents.push(item);
+    } else if (table === filings) {
+      const index = mocks.filings.findIndex((existing) => existing.cik === item.cik && existing.accessionNo === item.accessionNo);
+      if (index >= 0) mocks.filings[index] = { ...mocks.filings[index], ...item };
+      else mocks.filings.push(item);
+    } else if (table === workerKeys) mocks.keys.push(item);
+  }
 }
 
 function textOf(value: unknown, seen = new WeakSet<object>()): string {
@@ -41,6 +43,7 @@ const db = {
         return {
           where: (condition: unknown) => ({
             limit: async (limit: number) => {
+              if (table === documents) return mocks.documents.filter((doc) => textOf(condition).includes(doc.docName)).slice(0, limit);
               const text = textOf(condition);
               return mocks.keys.filter((row) => text.includes(row.keyHash)).slice(0, limit);
             },
@@ -64,53 +67,40 @@ const filing: PresentationFiling = {
   primaryDoc: "aapl-20251231.htm",
 };
 
-function uploadRecorder() {
-  const calls: { fileName: string; bytes: number }[] = [];
-  return {
-    calls,
-    uploadFile: async ({ fileContent, fileName }: { fileContent: Uint8Array; fileName: string; contentType?: string }) => {
-      calls.push({ fileName, bytes: fileContent.length });
-      return { key: `stored:${fileName}` };
-    },
-  };
-}
-
 beforeEach(() => {
   mocks.documents = [];
   mocks.filings = [];
   mocks.keys = [];
 });
 
-describe("documentsSnapshot production ingest", () => {
-  it("validates raw SHA256, stores canonical keys and upserts exact keys without SEC requests", async () => {
-    const raw = Buffer.from("<html><body><h1>Annual report</h1></body></html>");
-    const row = snapshotDocument(filing, raw);
+describe("metadata-only documentsSnapshot production ingest", () => {
+  it("upserts exact keys without object storage or SEC requests", async () => {
+    const row = metadataDocument(snapshotDocument(filing, Buffer.from("<html><body><h1>Annual report</h1></body></html>")));
     expect(workerDocumentsSnapshotBodyZ.parse({ kind: "documentsSnapshot", rows: [row] }).kind).toBe("documentsSnapshot");
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
-    const recorder = uploadRecorder();
-    await ingestDocumentsSnapshot([row], { uploadFile: recorder.uploadFile });
-    await ingestDocumentsSnapshot([row], { uploadFile: recorder.uploadFile });
+    await ingestDocumentsSnapshot([row]);
+    await ingestDocumentsSnapshot([row]);
     expect(fetchMock).not.toHaveBeenCalled();
     expect(mocks.documents).toHaveLength(1);
     expect(mocks.documents[0].sha256).toBe(row.sha256);
-    expect(mocks.documents[0].storageKey).toBe(`stored:CIK0000320193/000032019326000001/aapl-20251231.htm`);
-    expect(mocks.documents[0].textKey).toBe(`stored:CIK0000320193/000032019326000001/aapl-20251231.htm.txt`);
+    expect(mocks.documents[0].storageKey).toBeNull();
+    expect(mocks.documents[0].textKey).toBeNull();
+    expect(mocks.documents[0].location).toBe("none");
     expect(mocks.filings).toHaveLength(1);
-    expect(recorder.calls).toHaveLength(4);
-    expect(recorder.calls[0].bytes).toBe(raw.length);
-    expect(recorder.calls[1].bytes).toBe(row.plaintext.length);
     vi.unstubAllGlobals();
   });
 
-  it("rejects a raw hash mismatch before storage and preserves existing documents", async () => {
-    const row = snapshotDocument(filing, Buffer.from("<p>raw</p>"));
-    mocks.documents.push({ cik: 1, accessionNo: "existing", docName: "keep.htm" });
-    const recorder = uploadRecorder();
-    await expect(ingestDocumentsSnapshot([{ ...row, sha256: "0".repeat(64) }], { uploadFile: recorder.uploadFile })).rejects.toThrow("SHA256 mismatch");
-    expect(recorder.calls).toHaveLength(0);
+  it("rejects raw payloads and preserves existing cloud documents", async () => {
+    const row = metadataDocument(snapshotDocument(filing, Buffer.from("<p>raw</p>")));
+    mocks.documents.push({ cik: 1, accessionNo: "existing", docName: "keep.htm", storageKey: "cloud-key", textKey: "cloud-text", location: "cloud" });
+    expect(() => workerDocumentsSnapshotBodyZ.parse({ kind: "documentsSnapshot", rows: [{ ...row, rawGzipBase64: "eA==", plaintext: "raw" }] })).toThrow();
     expect(mocks.documents).toHaveLength(1);
     expect(mocks.documents[0].docName).toBe("keep.htm");
+    await ingestDocumentsSnapshot([row]);
+    expect(mocks.documents[0].storageKey).toBe("cloud-key");
+    expect(mocks.documents[0].textKey).toBe("cloud-text");
+    expect(mocks.documents[0].location).toBe("cloud");
   });
 
   it("rejects incorrect worker authorization", async () => {

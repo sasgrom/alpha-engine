@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { registerLocalDocument, sha256Document, snapshotDocument, unpackDocumentSnapshot, type PresentationFiling } from "./document-presentation";
+import { metadataDocument, registerLocalDocument, sha256Document, snapshotDocument, unpackDocumentSnapshot, type PresentationFiling } from "./document-presentation";
 import { documents } from "@db/schema";
 
 const filing: PresentationFiling = {
@@ -20,14 +20,16 @@ function database() {
         values(row: any) {
           return {
             onDuplicateKeyUpdate: async () => {
-              if (table === documents) {
-                const index = state.documents.findIndex((item) => item.cik === row.cik && item.accessionNo === row.accessionNo && item.docName === row.docName);
-                if (index >= 0) state.documents[index] = { ...state.documents[index], ...row };
-                else state.documents.push(row);
-              } else {
-                const index = state.filings.findIndex((item) => item.cik === row.cik && item.accessionNo === row.accessionNo);
-                if (index >= 0) state.filings[index] = { ...state.filings[index], ...row };
-                else state.filings.push(row);
+              for (const item of Array.isArray(row) ? row : [row]) {
+                if (table === documents) {
+                  const index = state.documents.findIndex((existing) => existing.cik === item.cik && existing.accessionNo === item.accessionNo && existing.docName === item.docName);
+                  if (index >= 0) state.documents[index] = { ...state.documents[index], ...item };
+                  else state.documents.push(item);
+                } else {
+                  const index = state.filings.findIndex((existing) => existing.cik === item.cik && existing.accessionNo === item.accessionNo);
+                  if (index >= 0) state.filings[index] = { ...state.filings[index], ...item };
+                  else state.filings.push(item);
+                }
               }
             },
           };
@@ -59,4 +61,29 @@ describe("local document presentation", () => {
     const row = snapshotDocument(filing, Buffer.from("<p>raw</p>"));
     expect(() => unpackDocumentSnapshot({ ...row, sha256: "0".repeat(64) })).toThrow("SHA256 mismatch");
   });
+});
+
+it("keeps DEF 14A exhibit documents under their own exact key and role", () => {
+  const row = snapshotDocument(filing, Buffer.from("<p>Proxy statement</p>"), {
+    docName: "def14a-exhibit.htm",
+    docType: "DEF 14A",
+    role: "exhibit",
+  });
+  expect(row.docType).toBe("DEF 14A");
+  expect(row.role).toBe("exhibit");
+  expect(row.textKey).toBe(`local:plaintext:${filing.cik}:${filing.accessionNo}:def14a-exhibit.htm`);
+  expect(unpackDocumentSnapshot(row).toString()).toContain("Proxy statement");
+});
+
+it("keeps only metadata in the transport snapshot while preserving local proof", () => {
+  const row = metadataDocument(snapshotDocument(filing, Buffer.from("<p>Local raw</p>")));
+  expect(row.rawGzipBase64).toBeUndefined();
+  expect(row.plaintext).toBeUndefined();
+  expect(row.storageKey).toBeNull();
+  expect(row.textKey).toBeNull();
+  expect(row.location).toBe("none");
+  expect(row.fetchStatus).toBe("fetched");
+  expect(row.fetchError).toBeNull();
+  expect(row.sha256).toBe(sha256Document(Buffer.from("<p>Local raw</p>")));
+  expect(row.textLength).toBeGreaterThan(0);
 });

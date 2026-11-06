@@ -6,7 +6,7 @@
  */
 import { fetchJson } from "./http";
 import type { CompanyFactRow } from "./edgar";
-import type { DocumentSnapshotRow } from "./document-presentation";
+import type { DocumentMetadataSnapshotRow } from "./document-presentation";
 
 export interface SignalRow {
   cik: number;
@@ -103,9 +103,10 @@ export async function postFactsSnapshot(
 
 /** One local EDGAR document per request, preserving the bounded platform body size. */
 export async function postDocumentsSnapshot(
-  row: DocumentSnapshotRow,
-  opts: { url?: string } = {},
+  row: DocumentMetadataSnapshotRow,
+  opts: { url?: string; mode: "metadata-only" },
 ): Promise<{ upserted: number }> {
+  if (opts.mode !== "metadata-only") throw new Error("documentsSnapshot push requires --mode metadata-only");
   const key = process.env.WORKER_KEY;
   if (!key) throw new Error("WORKER_KEY missing from environment (.env)");
   const url = opts.url ?? process.env.INGEST_URL ?? PROD_INGEST_URL;
