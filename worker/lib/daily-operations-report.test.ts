@@ -37,6 +37,10 @@ const features = (): SchwabFeatureReport => ({
   schemaVersion: 1, generatedAt: "2026-11-03T07:17:00.000Z", provider: "schwab", sourceSnapshotSha256: "snapshot-hash",
   coverage: { tickers: 2, contracts: 100, rv20Available: 2 }, tickers: [],
 });
+const dailyPrices = (): DailyOperationsInput["dailyPrices"] => ({
+  schemaVersion: 1, generatedAt: "2026-11-03T07:18:00.000Z", universeSize: 2,
+  companies: ["AAPL", "MSFT"].map((ticker) => ({ ticker, status: "collected", date: "2026-11-03", capturedAt: "2026-11-03T07:14:00.000Z" })),
+});
 const context = (): SchwabContextReport => ({
   schemaVersion: 1, generatedAt: "2026-11-03T07:18:00.000Z", provider: "schwab",
   coverage: { expected: 58, complete: 58, errors: 0 }, hours: {}, movers: [], instruments: [], intraday: [], files: [],
@@ -49,6 +53,7 @@ const input = (): DailyOperationsInput => ({
   snapshot: snapshot(),
   snapshotSha256: "snapshot-hash",
   features: features(),
+  dailyPrices: dailyPrices(),
   context: context(),
   macro: {
     fred: { generatedAt: "2026-11-03T05:30:00.000Z", entries: MACRO_SERIES.map((series) => ({ seriesId: series.seriesId, status: "complete" })) },
@@ -62,12 +67,14 @@ const input = (): DailyOperationsInput => ({
 });
 
 describe("daily operations report", () => {
-  it("proves scheduler, same-day Schwab coverage and feature lineage", () => {
+  it("proves scheduler, same-day Schwab coverage, feature and daily-price lineage", () => {
     const report = buildDailyOperationsReport(input());
     expect(report.status).toBe("ok");
     expect(report.scheduler.status).toBe("online");
     expect(report.schwab.tickersCapturedToday).toBe(2);
     expect(report.schwab.featuresSourceCurrent).toBe(true);
+    expect(report.schwab.dailyPricesCurrent).toBe(true);
+    expect(report.schwab.dailyPricesCollected).toBe(2);
     expect(report.summary.checksError).toBe(0);
     expect(dailyOperationsMarkdown(report)).toContain("Status: OK");
   });
@@ -75,6 +82,7 @@ describe("daily operations report", () => {
   it("does not let one current ticker mask another ticker's stale chain", () => {
     const value = input();
     value.snapshot!.files[1].capturedAt = "2026-11-02T21:00:00.000Z";
+    value.dailyPrices!.companies[1].capturedAt = "2026-11-02T21:00:00.000Z";
     const report = buildDailyOperationsReport(value);
     const check = report.checks.find((item) => item.id === "schwab-daily-evidence");
     expect(check?.status).toBe("warning");
@@ -88,11 +96,13 @@ describe("daily operations report", () => {
     value.state.heartbeatAt = "2026-11-03T04:00:00.000Z";
     value.snapshot = null;
     value.features = null;
+    value.dailyPrices = null;
     value.context = null;
     const report = buildDailyOperationsReport(value);
     expect(report.status).toBe("critical");
     expect(report.scheduler.status).toBe("offline");
     expect(report.checks.find((item) => item.id === "schwab-daily-evidence")?.status).toBe("error");
+    expect(report.checks.find((item) => item.id === "schwab-daily-price-lineage")?.status).toBe("error");
     expect(report.actions.some((action) => action.includes("schwab-fetch.mts"))).toBe(true);
   });
 
@@ -102,6 +112,34 @@ describe("daily operations report", () => {
     const report = buildDailyOperationsReport(value);
     expect(report.schwab.featuresSourceCurrent).toBe(false);
     expect(report.checks.find((item) => item.id === "schwab-feature-lineage")?.status).toBe("error");
+  });
+
+  it("rejects canonical daily prices linked to an earlier Schwab capture", () => {
+    const value = input();
+    value.snapshot!.files[0].capturedAt = "2026-11-03T07:19:00.000Z";
+    const report = buildDailyOperationsReport(value);
+    expect(report.schwab.dailyPricesCurrent).toBe(false);
+    expect(report.checks.find((item) => item.id === "schwab-daily-price-lineage")?.status).toBe("error");
+  });
+
+  it("requires complete canonical daily-price coverage", () => {
+    const value = input();
+    value.dailyPrices!.companies[1].status = "missing";
+    const report = buildDailyOperationsReport(value);
+    expect(report.schwab.dailyPricesCollected).toBe(1);
+    expect(report.checks.find((item) => item.id === "schwab-daily-price-lineage")?.status).toBe("error");
+  });
+
+  it("rejects a prior-session candle after Schwab reports the regular session has ended", () => {
+    const value = input();
+    value.context!.hours.equity = {
+      date: "2026-11-03", isOpen: false, isHoliday: false,
+      regularMarket: [{ start: "2026-11-03T01:00:00.000Z", end: "2026-11-03T06:00:00.000Z" }],
+    };
+    for (const company of value.dailyPrices!.companies) company.date = "2026-11-02";
+    const report = buildDailyOperationsReport(value);
+    expect(report.schwab.dailyPricesCurrent).toBe(false);
+    expect(report.checks.find((item) => item.id === "schwab-daily-price-lineage")?.detail).toContain("Expected the completed 2026-11-03 market session");
   });
 
   it("reports manifest-backed S&P companyfacts coverage independently of research-51", () => {
@@ -131,6 +169,7 @@ describe("schedule-aware Schwab evidence", () => {
     };
     value.snapshot!.generatedAt = "2026-11-03T12:00:45.440Z";
     for (const file of value.snapshot!.files) file.capturedAt = "2026-11-03T00:10:50.992Z";
+    for (const company of value.dailyPrices!.companies) company.capturedAt = "2026-11-03T00:10:50.992Z";
     value.snapshot!.coverage.latestCapture = "2026-11-03T00:10:50.992Z";
     value.features!.generatedAt = "2026-11-03T12:01:00.904Z";
     value.context!.generatedAt = new Date(Date.parse(now) - 15 * 60_000).toISOString();
@@ -159,6 +198,7 @@ describe("schedule-aware Schwab evidence", () => {
   it("marks full current-day coverage ok", () => {
     const value = scheduledInput("2026-11-04T08:32:00.000Z");
     for (const file of value.snapshot!.files) file.capturedAt = "2026-11-04T08:00:00.000Z";
+    for (const company of value.dailyPrices!.companies) company.capturedAt = "2026-11-04T08:00:00.000Z";
     value.snapshot!.generatedAt = "2026-11-04T08:30:00.000Z";
     value.snapshot!.coverage.latestCapture = "2026-11-04T08:00:00.000Z";
     value.features!.generatedAt = "2026-11-04T08:31:00.000Z";

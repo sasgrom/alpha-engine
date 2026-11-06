@@ -75,6 +75,11 @@ export function isSchwabTokenFresh(token: SchwabTokenFile, marginSeconds = 60): 
   return Date.parse(token.expiresAt) > Date.now() + marginSeconds * 1000;
 }
 
+export function schwabDailyPriceHistoryPath(ticker: string, endDateMs: number): string {
+  if (!Number.isFinite(endDateMs) || endDateMs <= 0) throw new Error("Schwab daily price history requires a valid endDate");
+  return `pricehistory?symbol=${encodeURIComponent(ticker)}&periodType=month&period=1&frequencyType=daily&frequency=1&endDate=${Math.trunc(endDateMs)}`;
+}
+
 async function getJson(baseUrl: string, path: string, accessToken: string): Promise<{ status: number; body: string }> {
   const response = await fetch(`${baseUrl}/${path}`, {
     headers: { authorization: `Bearer ${accessToken}`, accept: "application/json" },

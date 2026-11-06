@@ -67,18 +67,18 @@ describe("Operations center", () => {
     mocks.local = true;
     await act(async () => { root!.render(<MemoryRouter><Workers /></MemoryRouter>); });
     await click(button(host!, "Jobs & schedules")!);
-    await click(button(host!, "Schwab REST daily snapshot")!);
+    await click(button(host!, "Schwab REST post-close snapshot")!);
     const run = button(host!, "Run chain now")!;
     await click(run);
     expect(mocks.run).toHaveBeenCalledWith({ jobId: "schwab-fetch-daily" });
-    const input = host!.querySelector('input[aria-label="Cron for Schwab REST daily snapshot"]') as HTMLInputElement;
+    const input = host!.querySelector('input[aria-label="Cron for Schwab REST post-close snapshot"]') as HTMLInputElement;
     await act(async () => {
       const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!;
-      setter.call(input, "15 4 * * *");
+      setter.call(input, "15 13 * * *");
       input.dispatchEvent(new Event("input", { bubbles: true }));
       input.dispatchEvent(new Event("change", { bubbles: true }));
     });
     await click(button(host!, "Save cron")!);
-    expect(mocks.set).toHaveBeenCalledWith({ jobId: "schwab-fetch-daily", enabled: true, cron: "15 4 * * *" });
+    expect(mocks.set).toHaveBeenCalledWith({ jobId: "schwab-fetch-daily", enabled: true, cron: "15 13 * * *" });
   });
 });
