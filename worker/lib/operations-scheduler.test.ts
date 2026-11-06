@@ -31,21 +31,6 @@ describe("operations registry", () => {
     expect(OPERATION_JOBS.length).toBeGreaterThanOrEqual(30);
   });
 
-  it("schedules forced post-close and evening chains through canonical daily prices", () => {
-    expect(OPERATION_JOB_MAP["schwab-fetch-daily"].cron).toBe("10 13 * * *");
-    expect(OPERATION_JOB_MAP["schwab-fetch-evening"].cron).toBe("0 18 * * *");
-    expect(OPERATION_JOB_MAP["schwab-fetch-daily"].args).toContain("--force");
-    expect(OPERATION_JOB_MAP["schwab-fetch-evening"].args).toContain("--force");
-    expect(OPERATION_JOB_MAP["schwab-presentation-supplement"].args).toEqual(expect.arrayContaining(["--only", "CSCO", "--force"]));
-    expect(OPERATION_JOB_MAP["schwab-presentation-supplement-evening"].args).toEqual(expect.arrayContaining(["--only", "CSCO", "--force"]));
-    expect(operationChain("schwab-daily-prices").map((job) => job.id)).toEqual([
-      "schwab-fetch-daily", "schwab-presentation-supplement", "schwab-snapshot", "schwab-feature-lab", "schwab-daily-prices",
-    ]);
-    expect(operationChain("schwab-daily-prices-evening").map((job) => job.id)).toEqual([
-      "schwab-fetch-evening", "schwab-presentation-supplement-evening", "schwab-snapshot-evening", "schwab-feature-lab-evening", "schwab-daily-prices-evening",
-    ]);
-  });
-
   it("points every executable job at a real script", () => {
     for (const job of OPERATION_JOBS) {
       if (job.executable === "npx") expect(existsSync(path.join(OPERATIONS_ROOT, job.args[1])), job.id).toBe(true);

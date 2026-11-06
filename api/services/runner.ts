@@ -12,7 +12,6 @@ import { companies, filings, facts, jobs, jobLogs } from "@db/schema";
 import * as edgar from "./edgar";
 import { harvestCompanyDocuments, DOCUMENT_FORM_SCOPE } from "./documents";
 import { resolveScope, enrichClassification } from "./scope";
-import { canonicalTicker } from "./canonical-ticker";
 
 const cancelFlags = new Map<number, { cancelled: boolean }>();
 
@@ -348,14 +347,13 @@ async function ingestOneCompany(
   withFacts: boolean
 ) {
   const db = getDb();
-  const companyTicker = canonicalTicker(cik, ticker);
   // company row
   const payload = await edgar.submissions(cik);
   await db
     .insert(companies)
     .values({
       cik,
-      ticker: companyTicker,
+      ticker,
       name: payload?.name ?? name,
       sic: payload?.sic ?? null,
       sicDescription: payload?.sicDescription ?? null,
@@ -368,7 +366,7 @@ async function ingestOneCompany(
     })
     .onDuplicateKeyUpdate({
       set: {
-        ticker: companyTicker,
+        ticker,
         name: payload?.name ?? name,
         sic: payload?.sic ?? null,
         sicDescription: payload?.sicDescription ?? null,

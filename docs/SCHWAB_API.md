@@ -41,7 +41,7 @@ The refresh script uses the saved refresh token, updates the access token and ru
 
 ## Unattended refresh and history collection
 
-The Operations registry schedules `worker/schwab-refresh.mts` every two days at 02:00 local time. Each successful refresh rotates and saves the local tokens, so the approximately seven-day refresh-token window stays alive during normal operation. The REST collector runs separately with forced fresh snapshots at **13:10** after the regular NYSE close and **18:00** for evening verification, using the home machine's Pacific local time. It can also refresh an expiring access token when credentials are available.
+The Operations registry schedules `worker/schwab-refresh.mts` every two days at 02:00 local time. Each successful refresh rotates and saves the local tokens, so the approximately seven-day refresh-token window stays alive during normal operation. The REST collector runs separately every day and can also refresh an expiring access token when credentials are available.
 
 A PowerShell `$env:` assignment exists only in that terminal and is not inherited by Windows Task Scheduler. For unattended operation on the private home machine, set the same credentials once in the Windows user environment of the account that runs the task:
 
@@ -52,21 +52,19 @@ A PowerShell `$env:` assignment exists only in that terminal and is not inherite
 
 These values stay in the local user profile and never enter Git or browser code. User-scoped environment variables are configuration, not an encrypted password vault; use this only on the private home account. After setting them, sign out/in or restart Windows once so the task process inherits the new environment. Do not place secrets in the scheduled task action or command line.
 
-The daily collector and the keepalive job share `D:\research\alpha-engine\schwab\token.json`. Browser authorization should be unnecessary unless the refresh token is revoked, the app credentials/permissions change, or the machine remains offline beyond the refresh window. Both scheduled chains run normalization, Feature Lab and `worker/daily-prices-presentation.mts`, so the latest official daily candle also reaches canonical local prices. Normalized coverage expects 51 options tickers plus the bounded CSCO presentation supplement, 52 in total. The snapshot builders update both `public/reports` and an existing `dist/public/reports`, so a production rebuild is not required for new Schwab data. A build is required only for application code changes. Daily Operations checks canonical-price coverage, per-ticker capture lineage and the completed market-session date.
+The daily collector and the keepalive job share `D:\research\alpha-engine\schwab\token.json`. Browser authorization should be unnecessary unless the refresh token is revoked, the app credentials/permissions change, or the machine remains offline beyond the refresh window. The collector also writes normalized snapshots to both `public/reports` and an existing `dist/public/reports`, so a production rebuild is not required for new Schwab data. A build is required only for application code changes.
 
 ## Force a fresh same-day snapshot
 
-Normal same-day execution resumes complete tickers and does not create a new chain. Both scheduled runs therefore use `--force`. To intentionally run the same sequence manually and preserve the earlier evidence:
+Normal same-day execution resumes complete tickers and does not create a new chain. To intentionally download a fresh snapshot now and preserve the earlier one:
 
 ```powershell
 npx tsx worker/schwab-fetch.mts --universe research-universe-51.json --force
-npx tsx worker/schwab-fetch.mts --universe research-universe-50.json --only CSCO --force
 npx tsx worker/build-schwab-market-data.mts
 npx tsx worker/schwab-features.mts
-npx tsx worker/daily-prices-presentation.mts
 ```
 
-`--force` bypasses resume, appends a new manifest entry with a fresh `capturedAt`, and writes chain/quote files into unique timestamped paths. Chunked chains receive the same snapshot-specific directory, so force mode does not overwrite earlier evidence. Price history and instruments remain current-history files. Every daily-history request includes an explicit capture-time `endDate`; omitting it can make Schwab omit the just-completed session. No application rebuild is required for the new data.
+`--force` bypasses resume, appends a new manifest entry with a fresh `capturedAt`, and writes chain/quote files into unique timestamped paths. Chunked chains receive the same snapshot-specific directory, so force mode does not overwrite earlier evidence. Price history and instruments remain current-history files. No application rebuild is required for the new data.
 
 ## Oversized option chains
 

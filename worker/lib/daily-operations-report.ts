@@ -8,9 +8,8 @@ import type { FactsManifestHealth } from "./facts-incremental";
 
 export const DAILY_OPERATIONS_REPORT_JOB_ID = "daily-operations-report";
 const SCHEDULER_COMMAND = "schtasks /Run /TN AlphaEngine-Operations-Scheduler";
-const SCHWAB_FETCH_COMMAND = "npx tsx worker/schwab-fetch.mts --universe research-universe-51.json --force";
+const SCHWAB_FETCH_COMMAND = "npx tsx worker/schwab-fetch.mts --universe research-universe-51.json";
 const SCHWAB_FEATURE_COMMAND = "npx tsx worker/build-schwab-market-data.mts && npx tsx worker/schwab-features.mts";
-const SCHWAB_DAILY_PRICE_COMMAND = "npx tsx worker/daily-prices-presentation.mts";
 const SCHWAB_CONTEXT_COMMAND = "npx tsx worker/schwab-context.mts";
 const HOURLY_JOBS = new Set(["stocktwits-hourly", "schwab-context-hourly"]);
 const EMPTY_MACRO: MacroOperationsArtifacts = { fred: null, events: null, qa: null, scenarios: null, calibration: null, eventStudy: null };
@@ -72,10 +71,6 @@ export interface DailyOperationsReport {
     manifestErrors: number;
     featuresGeneratedAt: string | null;
     featuresSourceCurrent: boolean;
-    dailyPricesGeneratedAt: string | null;
-    dailyPricesExpected: number;
-    dailyPricesCollected: number;
-    dailyPricesCurrent: boolean;
     contextGeneratedAt: string | null;
     contextErrors: number;
   };
@@ -94,17 +89,6 @@ export interface DailyOperationsReport {
   jobs: DailyOperationJobRow[];
   actions: string[];
 }
-export interface SchwabDailyPriceArtifact {
-  schemaVersion: 1 | 2;
-  generatedAt: string;
-  universeSize: number;
-  companies: {
-    ticker: string;
-    status: string;
-    date?: string | null;
-    capturedAt?: string | null;
-  }[];
-}
 export interface DailyOperationsInput {
   now: string;
   date?: string;
@@ -114,7 +98,6 @@ export interface DailyOperationsInput {
   snapshot: SchwabMarketSnapshot | null;
   snapshotSha256: string | null;
   features: SchwabFeatureReport | null;
-  dailyPrices: SchwabDailyPriceArtifact | null;
   context: SchwabContextReport | null;
   macro?: MacroOperationsArtifacts;
   facts?: { sp500: FactsManifestHealth | null };
@@ -164,7 +147,7 @@ function jobCheck(job: OperationJob, input: DailyOperationsInput, nowMs: number,
 export const SCHWAB_CAPTURE_GRACE_MS = 60 * 60_000;
 
 function schwabChecks(input: DailyOperationsInput, nowMs: number, date: string): { checks: DailyOperationCheck[]; summary: DailyOperationsReport["schwab"] } {
-  const { snapshot, features, dailyPrices, context } = input;
+  const { snapshot, features, context } = input;
   const files = snapshot?.files ?? [];
   const expected = snapshot?.coverage.tickersExpected ?? 0;
   const completed = snapshot?.coverage.tickersCompleted ?? 0;
@@ -206,28 +189,6 @@ function schwabChecks(input: DailyOperationsInput, nowMs: number, date: string):
   }
   const featureCheck = baseCheck("schwab-feature-lineage", "Schwab Feature Lab lineage", featureStatus, features?.generatedAt ?? null, featureDetail, featureStatus === "ok" ? null : SCHWAB_FEATURE_COMMAND);
 
-  const priceCompanies = dailyPrices?.companies ?? [];
-  const dailyPricesExpected = dailyPrices?.universeSize ?? 0;
-  const dailyPricesCollected = priceCompanies.filter((company) => company.status === "collected").length;
-  const captureByTicker = new Map(files.map((file) => [file.ticker, file.capturedAt]));
-  const latestPriceDate = priceCompanies.map((company) => company.date).filter((value): value is string => !!value).sort().at(-1) ?? null;
-  const equitySession = context?.hours.equity;
-  const expectedPriceDate = equitySession?.date && equitySession.regularMarket.some((session) => timestamp(session.end) <= nowMs) ? equitySession.date : null;
-  const dailyPriceSessionCurrent = !expectedPriceDate || priceCompanies.every((company) => company.date === expectedPriceDate);
-  const dailyPricesCurrent = !!dailyPrices && dailyPricesExpected > 0 && priceCompanies.length === dailyPricesExpected && dailyPricesCollected === dailyPricesExpected && dailyPriceSessionCurrent && priceCompanies.every((company) =>
-    company.capturedAt === captureByTicker.get(company.ticker) && timestamp(dailyPrices.generatedAt) >= timestamp(company.capturedAt)
-  );
-  let dailyPriceStatus: DailyCheckStatus = "error";
-  let dailyPriceDetail = "Canonical Schwab daily-price evidence is missing.";
-  if (dailyPrices) {
-    dailyPriceDetail = `${dailyPricesCollected}/${dailyPricesExpected} collected · latest bar ${latestPriceDate ?? "missing"}.`;
-    if (dailyPricesCurrent) dailyPriceDetail += " Every company matches the latest normalized Schwab capture and completed market session.";
-    else if (!dailyPriceSessionCurrent) dailyPriceDetail += ` Expected the completed ${expectedPriceDate} market session.`;
-    else dailyPriceDetail += " Coverage is incomplete or the evidence belongs to an earlier Schwab capture.";
-    dailyPriceStatus = dailyPricesCurrent ? "ok" : "error";
-  }
-  const dailyPriceCheck = baseCheck("schwab-daily-price-lineage", "Canonical Schwab daily prices", dailyPriceStatus, dailyPrices?.generatedAt ?? null, dailyPriceDetail, dailyPriceStatus === "ok" ? null : SCHWAB_DAILY_PRICE_COMMAND);
-
   let contextStatus: DailyCheckStatus = "error";
   let contextDetail = "Schwab hourly context is missing.";
   if (context) {
@@ -238,7 +199,7 @@ function schwabChecks(input: DailyOperationsInput, nowMs: number, date: string):
   }
   const contextCheck = baseCheck("schwab-context-freshness", "Schwab hourly context", contextStatus, context?.generatedAt ?? null, contextDetail, contextStatus === "ok" ? null : SCHWAB_CONTEXT_COMMAND);
   return {
-    checks: [dailyCheck, featureCheck, dailyPriceCheck, contextCheck],
+    checks: [dailyCheck, featureCheck, contextCheck],
     summary: {
       status: dailyStatus,
       snapshotGeneratedAt: snapshot?.generatedAt ?? null,
@@ -250,10 +211,6 @@ function schwabChecks(input: DailyOperationsInput, nowMs: number, date: string):
       manifestErrors,
       featuresGeneratedAt: features?.generatedAt ?? null,
       featuresSourceCurrent: sourceCurrent,
-      dailyPricesGeneratedAt: dailyPrices?.generatedAt ?? null,
-      dailyPricesExpected,
-      dailyPricesCollected,
-      dailyPricesCurrent,
       contextGeneratedAt: context?.generatedAt ?? null,
       contextErrors: context?.coverage.errors ?? 0,
     },
@@ -367,7 +324,6 @@ export function dailyOperationsMarkdown(report: DailyOperationsReport): string {
     "",
     `- Scheduler: ${report.scheduler.status}; heartbeat: ${report.scheduler.heartbeatAt ?? "missing"}`,
     `- Schwab: ${report.schwab.tickersCapturedToday}/${report.schwab.tickersExpected} tickers captured today; latest capture: ${report.schwab.latestCapture ?? "missing"}`,
-    `- Canonical Schwab daily prices: ${report.schwab.dailyPricesCollected}/${report.schwab.dailyPricesExpected} collected; latest capture lineage current: ${report.schwab.dailyPricesCurrent}`,
     `- Macro QA: ${report.macro.qaStatus ?? "missing"}; derived reports current: ${report.macro.derivedCurrent}`,
     ...(report.facts?.sp500 ? [`- S&P 500 facts: ${report.facts.sp500.uniqueCiks} unique CIKs; refreshed ${report.facts.sp500.refreshed}; unchanged ${report.facts.sp500.unchanged}; failed ${report.facts.sp500.failed}; missing ${report.facts.sp500.missing}`] : []),
     `- Checks: ${report.summary.checksOk} ok, ${report.summary.checksWarning} warning, ${report.summary.checksError} error, ${report.summary.checksPending} pending`,

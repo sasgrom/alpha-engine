@@ -551,3 +551,14 @@ Deliberately not automatic:
 - The home guard stopped because local MySQL `127.0.0.1 / alpha_engine` contains CIK 19617 as VYLD. The owner independently confirmed current production contains JPM. This proves the home snapshot differs from production; it is not evidence for expanding scope. Guard behavior remains unchanged. No production connection, backup, dry-run or apply was performed from home, and no local backup is represented as production evidence.
 - Verification: targeted **2 files / 16 tests**, full **141 files / 794 tests**, TypeScript check, production build and `git diff --check`. Regression cases include all six preferred/common pairs, non-GICS explicit ticker preservation, GOOG/GOOGL, FOX/FOXA, NWS/NWSA, missing exact GICS+SEC pair, extra/missing mismatches and non-ticker/row-count change rejection.
 - Source and documentation delivery is a separate commit; exact commit ID is authoritative in `git log`. Next cloud-only actions: read-only production guard for the approved six, full production companies backup, one-transaction apply and independent post-check in the same environment. No backup/apply was run in this source stage.
+
+
+## 52. Canonical ticker production apply verified — 2026-11-06
+
+- Cloud consumed delivered `67b4f3f` and `217a092`; no home local snapshot was accepted as production evidence. Production read-only guard matched exactly the approved six. JPM was absent from the mismatch list and was not modified.
+- Before mutation, an independent full `companies` backup was written and re-read: **495 rows / 184,495 bytes**, SHA256 `e251c1291014a4e1c69ff67b20a1ba29a85810eef6d3b8281d617e8e5b67a055`. The remediation script created a byte-identical second backup.
+- One transaction updated exactly six rows: BA-PA→BA (12927), GS-PD→GS (886982), COF-PN→COF (927628), NEE-PW→NEE (753308), SMCIP→SMCI (1375365), EP-PC→KMI (1506307). Companies count stayed 495. Related counts stayed `user_universe=6`, `facts=196,400`, `series_points=162,625`, `prices=40,372`.
+- Independent post-check `independent-postcheck.json` is `pass`: only approved ticker fields changed, no new/missing rows, presentation mismatches=0, JPM unchanged. Actual authenticated routers returned BA, GS, COF, NEE, SMCI and KMI with their correct CIKs and existing series/signals counts.
+- Delivered regression tests independently passed **2 files / 16 tests**. TypeScript and production build passed; `canonicalTicker` is present in `dist/boot.js`. Runtime version **`8099451`** (`Canonical ticker routes repaired`) was saved.
+- Evidence roots: `worker/.runs/preferred-ticker-remediation/2026-11-06T054358304Z/` and `worker/.runs/preferred-ticker-remediation/2026-11-06T054506501Z/`. These are runtime evidence, not source-delivery files.
+- Stage boundary: OHLCV/previous close, documents and CSCO fundamentals were not changed or claimed complete by this stage. Next stage starts only after a separate owner-scoped instruction.

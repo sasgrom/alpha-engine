@@ -44,7 +44,7 @@ Initial requests:
 
 1. `GET /marketdata/v1/chains?symbol=<ticker>&contractType=ALL&includeQuotes=TRUE`
 2. `GET /marketdata/v1/quotes?symbols=<ticker>`
-3. `GET /marketdata/v1/pricehistory?symbol=<ticker>&periodType=month&period=1&frequencyType=daily&frequency=1&endDate=<capture-time-ms>` — the explicit `endDate` is required because the provider default can omit the just-completed session.
+3. `GET /marketdata/v1/pricehistory?symbol=<ticker>&periodType=month&frequencyType=daily&frequency=1`
 4. `GET /marketdata/v1/instruments?symbol=<ticker>&projection=fundamental`
 5. `GET /trader/v1/userPreference` before streaming.
 
@@ -64,9 +64,8 @@ Rules:
 - A failed ticker does not abort the universe. Two consecutive transport failures checkpoint and stop the run.
 - User Preference is required only for streaming setup. Its failure is recorded in `user-preference-status.json` and does not invalidate completed REST snapshots or trigger a full-universe rerun.
 - Token keepalive runs every two days from the central Operations scheduler. Scheduled-task credentials must be present in the process environment; browser authorization is only a recovery path after revocation or an extended outage.
-- Forced REST captures run at 13:10 after the regular NYSE close and 18:00 for evening verification in the home machine's Pacific local time. Each chain adds a bounded `--only CSCO` presentation supplement, then rebuilds normalized data, Feature Lab and canonical daily prices; the second run cannot be skipped by same-day resume. The supplement does not expand or rename the separate options universe. Normalized coverage expects 52 captures: 51 options tickers plus the CSCO presentation supplement.
 - A full-chain `TooBigBody` response has one bounded fallback of at most 60 monthly windows. Raw chunks and merged hashes are preserved; any failed window keeps the ticker partial.
-- The snapshot builder updates both source `public/reports` and an existing `dist/public/reports`, so Schwab-only data refreshes do not require an application rebuild. Daily Operations also rejects canonical daily-price evidence that is incomplete or linked to an earlier capture.
+- The snapshot builder updates both source `public/reports` and an existing `dist/public/reports`, so Schwab-only data refreshes do not require an application rebuild.
 
 ### 4.3 Streaming client
 

@@ -7,7 +7,7 @@ import { writeSchwabJsonOutputs } from "./lib/schwab-output";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const root = path.resolve(arg("--root") ?? schwabTokenDirectory());
-const tickersExpected = Number(arg("--expected") ?? 52);
+const tickersExpected = Number(arg("--expected") ?? 51);
 if (!Number.isInteger(tickersExpected) || tickersExpected < 1) throw new Error("--expected must be a positive integer");
 const manifestPath = path.join(root, "manifest.json");
 let manifest: SchwabManifest = { schemaVersion: 1, tickers: [] };
