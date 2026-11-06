@@ -622,3 +622,12 @@ Deliberately not automatic:
 - Guard at 2026-11-06 selects **2026-06-30 vs 2026-03-31**, skips open 2026-09-30, has **302 stable funds, 6 missing, 0 suspect and `partial=true`**. Latest-quarter flow was not evaluated and events were not rebuilt; position events remain 16,422 with last event 2026-09-02.
 - Consolidated evidence: `worker/.runs/13f-production-postcheck-2026-11-06.json` and `worker/.runs/13f-production-backup-2026-11-06T195754508Z/preservation-postcheck.json`.
 - Project State and Analytics were regenerated to mark 13F transport done while keeping flow evaluation separate. ProjectState tests **1 file / 5 tests**, TypeScript and production build passed. Runtime version **`ca3f206`** was saved.
+
+
+## 59. Fundamental factor OLS evaluation — negative but useful result — 2026-11-06
+
+- Added `api/services/factor-ols.ts` and `scripts/evaluate-factor-ols.mts`: pooled OLS for every factor in the current registry, robust trailing-16 z-scores, chronological 50% fit / 25% calibration / 25% evaluation, sealed four-anchor holdout, leave-one-company-out and leave-one-sector-out. Target is **63-session excess return vs SPY**. Availability anchors and known-label exits are enforced by the existing engine.
+- Added exact `ei+ = P(wrong up | actual down)` and `ei- = P(wrong down | actual up)`, false counts, Wilson 95% intervals and block-bootstrap accuracy intervals. `lpp/lmm` use the existing Beta(1,1) smoothing for Bayes compatibility, not raw confidence. No new factors, no holdout tuning and no probability promotion.
+- Full 50-company run evaluated **22 factor-registry factors**, including six explicit insufficient-data factors. Most OLS specifications collapse to almost one-class UP. Balanced accuracy and company/sector holdout medians are around **0.50**, so there is no evidence of useful OLS factor classification and no justification for feeding these betas into Bayes.
+- The sealed holdout has only four anchors and cannot support a confident probability table. The generated report explicitly says to use rolling IC/rank-IC with conditional forecast errors next instead of parameter tuning. `public/reports/factor-ols-evaluation.json` and `.md` are generated evidence, excluded from source delivery.
+- Verification: **7 OLS tests + 3 probability tests + 3 nested-eval tests**, TypeScript and production build. Updated RU/EN manuals, LLM_CONTEXT and this handoff.

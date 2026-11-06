@@ -118,14 +118,14 @@ export function classificationMetrics(
   };
 }
 
-interface Split {
-  fit: AnchorPoint[];
-  cal: AnchorPoint[];
-  evaluation: AnchorPoint[];
-  holdout: AnchorPoint[];
+interface Split<T extends AnchorPoint = AnchorPoint> {
+  fit: T[];
+  cal: T[];
+  evaluation: T[];
+  holdout: T[];
 }
 
-export function splitNested(points: AnchorPoint[]): Split | null {
+export function splitNested<T extends AnchorPoint>(points: T[]): Split<T> | null {
   if (points.length < 24) return null;
   const holdout = points.slice(-HOLDOUT_N);
   const development = points.slice(0, -HOLDOUT_N);
@@ -138,7 +138,7 @@ export function splitNested(points: AnchorPoint[]): Split | null {
   return { fit, cal, evaluation, holdout };
 }
 
-export function knownBefore(points: AnchorPoint[], cutoff: string): AnchorPoint[] {
+export function knownBefore<T extends AnchorPoint>(points: T[], cutoff: string): T[] {
   return points.filter((p) => p.exitDate < cutoff);
 }
 
