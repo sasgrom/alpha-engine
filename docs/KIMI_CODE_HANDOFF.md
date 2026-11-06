@@ -594,3 +594,12 @@ Deliberately not automatic:
 - Added regressions for latest-first statement ordering and for a schema-v1 report without macro. Updated populated evidence tests to select the intended company card rather than relying on its old position.
 - Verification passed: **3 files / 12 tests**, TypeScript and production build. Runtime version **`b6beb53`** (`Latest-first expectations and ProjectState fix`) was saved.
 - Scenario Lab evidence limits were also read from the live artifacts: rates fail on missing fixed-interest share, oil depends on fuel/oil revenue/cost, USD has no directly comparable foreign revenue share, and credit still lacks new-issuance spread/maturity/rating terms. Pilot expansion is not authorized as a cosmetic selector change; evidence must be collected and rebuilt locally first.
+
+
+## 56. Project State and Analytics refreshed to actual state — 2026-11-06
+
+- Durable Project State now records the actual completed blocks: canonical ticker repair, fiscal-form filtering, official Schwab OHLCV/day change for all 50, CSCO facts/series/factors, metadata-only EDGAR corpus and latest-first UI. Reviewer migration and account seed are no longer marked required.
+- Research is explicitly 50 companies with **21,297 factor points**. Event Study, Atlas and old macro prior evaluations are marked historical/stale rather than fresh evidence. 13F is explicitly in progress: fund_quarters **6,517 upserted / 14 batches**, fund_holdings transport unfinished, no events/flow rebuild and no latest-quarter evaluation.
+- Next queue is accurate: 13F post-check, missing EX-99/cohort companies including CSCO, Scenario Lab evidence, remaining EDGAR tone and Fund Flows 3D.
+- Analytics regenerated from production at `2026-11-06T21:39:52.021Z`: companies 495, facts 1,390,442 / 54 CIKs, factor points 22,169 / 54 CIKs, prices 447,382 / 55 series through 2026-11-05, macro 408,862 / 8 series, fund_holdings 937,500 / 311 funds / 371 held companies, fund_quarters 6,517 with zero missing filingDate, and 795 tests listed. Options 250 snapshots / 310,634 normalized rows.
+- Verification: ProjectState tests **1 file / 5 tests**, TypeScript and production build. Runtime version **`df4e5c6`** (`Current project and analytics status`) was saved.

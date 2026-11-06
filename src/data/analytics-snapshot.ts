@@ -4,38 +4,38 @@
  */
 export const analyticsSnapshot = {
   "week": "2026-W45",
-  "generatedAt": "2026-11-02T22:19:28.478Z",
+  "generatedAt": "2026-11-06T21:39:52.021Z",
   "metrics": {
-    "companies": 496,
+    "companies": 495,
     "sectors": 11,
-    "factsRows": 1353727,
-    "factsCompanies": 53,
-    "factorPoints": 21438,
-    "factorCompanies": 51,
+    "factsRows": 1390442,
+    "factsCompanies": 54,
+    "factorPoints": 22169,
+    "factorCompanies": 54,
     "factorTypes": 16,
-    "priceRows": 447282,
-    "priceTickers": 54,
-    "latestPriceDate": "2026-10-26",
-    "edgarToneRows": 34459,
-    "edgarToneCompanies": 102,
-    "edgarFirstEvent": "1994-01-05 00:00:00",
+    "priceRows": 447382,
+    "priceTickers": 55,
+    "latestPriceDate": "2026-11-05",
+    "edgarToneRows": 16133,
+    "edgarToneCompanies": 53,
+    "edgarFirstEvent": "1994-01-21 00:00:00",
     "edgarLastEvent": "2026-10-23 00:00:00",
-    "fundHoldings": 879289,
+    "fundHoldings": 937500,
     "funds": 311,
     "fundCompanies": 371,
-    "fundQuarters": 16,
-    "fundQuarterRows": 3416,
+    "fundQuarters": 26,
+    "fundQuarterRows": 6517,
     "fundQuarterMissingDates": 0,
-    "positionEvents": 16912,
-    "firstPositionEvent": "2020-02-14 00:00:00",
+    "positionEvents": 16422,
+    "firstPositionEvent": "2024-02-13 00:00:00",
     "lastPositionEvent": "2026-09-02 00:00:00",
-    "macroRows": 47901,
+    "macroRows": 408862,
     "macroSeries": 8,
-    "macroLastDate": "2026-10-19",
-    "jobsError": 0,
-    "testCount": 567,
-    "optionsSnapshots": 621,
-    "normalizedOptionRows": 771988
+    "macroLastDate": "2026-11-03",
+    "jobsError": 8,
+    "testCount": 795,
+    "optionsSnapshots": 250,
+    "normalizedOptionRows": 310634
   },
   "actual": [
     {
@@ -49,42 +49,42 @@ export const analyticsSnapshot = {
       "id": "tone",
       "title": "EDGAR tone",
       "status": "partial",
-      "detail": "34,459 tone rows from 102 CIKs. Prompt v1 has positive 126-session IC, but short-horizon and yearly evidence is unstable.",
+      "detail": "16,133 tone rows from 53 CIKs. Prompt v1 has positive 126-session IC, but short-horizon and yearly evidence is unstable.",
       "next": "Finish the remaining universe, review skip/failure/token summaries, then sync only reviewed rows."
     },
     {
       "id": "raw13f",
       "title": "13F holdings",
-      "status": "done",
-      "detail": "879,289 holdings, 311 funds, 371 companies, 3416 fund_quarters, 16,912 events.",
-      "next": "Move from USD value changes to shares and weights."
+      "status": "partial",
+      "detail": "937,500 holdings, 311 funds, 371 companies, 6517 fund_quarters. fund_quarters upsert 6,517/14 batches completed; full holdings transport is still running and events/flow have not been rebuilt.",
+      "next": "Finish the full snapshot, verify counts and comparable-fund guards, then evaluate events and flow."
     },
     {
       "id": "fundamentals",
       "title": "Fundamentals / XBRL",
       "status": "partial",
-      "detail": "1,353,727 facts and 21,438 factor points from 53/51 CIKs, including XOM_PRE.",
-      "next": "Reconcile per-CIK lineage and preserve first-filed availability while expanding departed names."
+      "detail": "1,390,442 facts and 22,169 factor points from 54/54 CIKs. CSCO is now materialized with 41,576 facts, 37,204 canonical points and 275 factor points; registration/proxy/offering facts no longer create fiscal columns.",
+      "next": "Keep first-filed availability and expand missing expectations evidence rather than adding cosmetic coverage."
     },
     {
       "id": "prices",
       "title": "Prices / corporate actions",
       "status": "partial",
-      "detail": "447,282 bars from 54 series; latest date 2026-10-26.",
-      "next": "Automate daily updates and extend delisted and corporate-action coverage beyond the current panel."
+      "detail": "447,382 bars from 55 series; latest date 2026-11-05. All 50 presentation companies now have official Schwab OHLCV and same-source previous close/day change; Stooq remains historical backfill only.",
+      "next": "Keep daily Schwab refresh and reviewed corporate-action policy separate; do not mix sources for previous close."
     },
     {
       "id": "macro",
       "title": "Macro / FRED",
       "status": "partial",
-      "detail": "47,901 points from 8 series; bounded macro prior only.",
+      "detail": "408,862 points from 8 series; bounded macro prior only.",
       "next": "Add rates, credit, dollar, inflation and liquidity regimes."
     },
     {
       "id": "optionsRaw",
       "title": "Options raw data",
       "status": "partial",
-      "detail": "621 snapshots and 771,988 normalized rows from Cboe, EODHD, ORATS and samples. Breadth is not long history.",
+      "detail": "250 snapshots and 310,634 normalized rows from Cboe, EODHD, ORATS and samples. Breadth is not long history.",
       "next": "Backfill mid-DTE IV on D: via DoltHub and keep volume/OI proxies separate from full-chain evidence."
     },
     {
@@ -104,9 +104,9 @@ export const analyticsSnapshot = {
     {
       "id": "shareFlows",
       "title": "Share / weight flows",
-      "status": "done",
-      "detail": "Direction and thickness use share-count changes; full-book portfolio-weight changes are display context, not USD-price proxies.",
-      "next": "Run the next-quarter smoke test and monitor CUSIP repair and comparable-fund guards."
+      "status": "partial",
+      "detail": "Share-count and full-book weight logic is implemented, but the new 24-quarter sync is still transporting holdings and latest-quarter comparable flow has not been evaluated.",
+      "next": "Finish transport and pass the comparable-fund guard before rebuilding events or using latest-quarter flow."
     },
     {
       "id": "optionFeatures",
@@ -119,15 +119,15 @@ export const analyticsSnapshot = {
       "id": "macroPrior",
       "title": "Macro prior",
       "status": "partial",
-      "detail": "Bounded 0.35–0.65 with per-anchor as-of. It is a prior, not a full regime model.",
-      "next": "Measure whether macro adds value after fundamentals and flows, or only noise."
+      "detail": "Eight curated macro series are restored with availability anchors, but the previous 794/1,455 evaluation is historical only and was not recomputed after the current sync.",
+      "next": "Re-evaluate after current QA without treating the prior as a full regime model."
     },
     {
       "id": "guidance",
       "title": "Structured guidance",
       "status": "partial",
-      "detail": "Expectations-v4 covers ranges, revisions, floors, assumptions and non-disclosure. A 27-statement independent gold benchmark, complete multi-EX-99 routing, full-history 53-company extraction, bounded cohort packs, accession/reportDate/eventTs cohort rules and a reviewed UI report now exist. No extraction accuracy result or event study has run.",
-      "next": "Run and review the independent extraction benchmark, then match guidance vintages to actuals and test post-event CAR, drift and reversal."
+      "detail": "Expectations currently covers 27/53 companies with 5,025 statements and 12,017 documents. Another 22 companies are zero in the report and CSCO is absent; independent benchmark has not run, so full reviewed coverage is not claimed.",
+      "next": "Finish missing EX-99/cohort inputs and CSCO without repeating completed sources, then run the independent benchmark and review accuracy."
     },
     {
       "id": "qa",
@@ -189,8 +189,8 @@ export const analyticsSnapshot = {
       "id": "panel",
       "title": "Cross-section panel",
       "status": "partial",
-      "detail": "The research panel now covers 53 CIKs with facts, canonical series and factor points, but this is not proof of alpha.",
-      "next": "Expand to 300+ with departed names and validate sector-neutral and independent universes."
+      "detail": "The presentation panel now has factor points for all 50 companies, including CSCO, plus a metadata-only EDGAR document corpus. Breadth is not proof of alpha.",
+      "next": "Complete expectation evidence and out-of-sample validation before expanding further."
     },
     {
       "id": "crossValidation",
@@ -223,9 +223,9 @@ export const analyticsSnapshot = {
     {
       "id": "ui",
       "title": "UI / monitoring",
-      "status": "done",
-      "detail": "Workers intake, Institutional, FundFlows, manuals and browser QA.",
-      "next": "Add alerts for data-quality and signal drift, not just tables."
+      "status": "partial",
+      "detail": "Workers intake, Institutional, FundFlows, manuals and browser QA now include canonical ticker routes, latest-first Expectations and a ProjectState fallback for a report without macro.",
+      "next": "Keep coverage/error status visible and add alerts for data-quality and signal drift."
     },
     {
       "id": "scheduler",
@@ -416,38 +416,38 @@ export const analyticsSnapshot = {
     },
     {
       "week": "2026-W45",
-      "generatedAt": "2026-11-02T22:19:28.478Z",
+      "generatedAt": "2026-11-06T21:39:52.021Z",
       "metrics": {
-        "companies": 496,
+        "companies": 495,
         "sectors": 11,
-        "factsRows": 1353727,
-        "factsCompanies": 53,
-        "factorPoints": 21438,
-        "factorCompanies": 51,
+        "factsRows": 1390442,
+        "factsCompanies": 54,
+        "factorPoints": 22169,
+        "factorCompanies": 54,
         "factorTypes": 16,
-        "priceRows": 447282,
-        "priceTickers": 54,
-        "latestPriceDate": "2026-10-26",
-        "edgarToneRows": 34459,
-        "edgarToneCompanies": 102,
-        "edgarFirstEvent": "1994-01-05 00:00:00",
+        "priceRows": 447382,
+        "priceTickers": 55,
+        "latestPriceDate": "2026-11-05",
+        "edgarToneRows": 16133,
+        "edgarToneCompanies": 53,
+        "edgarFirstEvent": "1994-01-21 00:00:00",
         "edgarLastEvent": "2026-10-23 00:00:00",
-        "fundHoldings": 879289,
+        "fundHoldings": 937500,
         "funds": 311,
         "fundCompanies": 371,
-        "fundQuarters": 16,
-        "fundQuarterRows": 3416,
+        "fundQuarters": 26,
+        "fundQuarterRows": 6517,
         "fundQuarterMissingDates": 0,
-        "positionEvents": 16912,
-        "firstPositionEvent": "2020-02-14 00:00:00",
+        "positionEvents": 16422,
+        "firstPositionEvent": "2024-02-13 00:00:00",
         "lastPositionEvent": "2026-09-02 00:00:00",
-        "macroRows": 47901,
+        "macroRows": 408862,
         "macroSeries": 8,
-        "macroLastDate": "2026-10-19",
-        "jobsError": 0,
-        "testCount": 567,
-        "optionsSnapshots": 621,
-        "normalizedOptionRows": 771988
+        "macroLastDate": "2026-11-03",
+        "jobsError": 8,
+        "testCount": 795,
+        "optionsSnapshots": 250,
+        "normalizedOptionRows": 310634
       }
     }
   ]
