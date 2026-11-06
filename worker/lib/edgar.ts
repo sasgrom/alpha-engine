@@ -95,10 +95,12 @@ export function loadEdgarUniverse(file = "edgar-universe.json"): EdgarCompany[] 
   return (JSON.parse(readFileSync(filePath, "utf8")) as EdgarCompany[]).filter((r) => r.cik && r.ticker);
 }
 
+/**
+ * Presentation accounts use a statically bundled manifest so production never
+ * depends on process.cwd(), import.meta.dirname or a copied worker JSON file.
+ */
 export function loadReviewerUniverse(): EdgarCompany[] {
-  const universe = reviewerUniverseJson.filter(
-    (row) => Number.isInteger(row.cik) && row.cik > 0 && row.ticker && row.name
-  );
+  const universe = reviewerUniverseJson.filter((row) => Number.isInteger(row.cik) && row.cik > 0 && row.ticker && row.name);
   if (universe.length !== 50 || new Set(universe.map((row) => row.cik)).size !== 50) {
     throw new Error("Expected exactly 50 unique presentation CIKs");
   }

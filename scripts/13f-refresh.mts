@@ -215,6 +215,7 @@ async function mapCusips(cusips: string[]): Promise<{ map: Map<string, { cik: nu
       break;
     }
   }
+  }
   return { map: out, failed };
 }
 
