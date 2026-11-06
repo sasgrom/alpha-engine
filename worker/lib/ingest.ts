@@ -6,6 +6,7 @@
  */
 import { fetchJson } from "./http";
 import type { CompanyFactRow } from "./edgar";
+import type { DocumentSnapshotRow } from "./document-presentation";
 
 export interface SignalRow {
   cik: number;
@@ -97,4 +98,24 @@ export async function postFactsSnapshot(
   });
   if (!res.ok) throw new Error(`facts ingest failed for CIK ${cik}: ${JSON.stringify(res)}`);
   return { replaced: res.replaced ?? 0 };
+}
+
+
+/** One local EDGAR document per request, preserving the bounded platform body size. */
+export async function postDocumentsSnapshot(
+  row: DocumentSnapshotRow,
+  opts: { url?: string } = {},
+): Promise<{ upserted: number }> {
+  const key = process.env.WORKER_KEY;
+  if (!key) throw new Error("WORKER_KEY missing from environment (.env)");
+  const url = opts.url ?? process.env.INGEST_URL ?? PROD_INGEST_URL;
+  const res = await fetchJson<IngestResult>(url, {
+    method: "POST",
+    headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
+    body: JSON.stringify({ kind: "documentsSnapshot", rows: [row] }),
+    timeoutMs: 120_000,
+    retries: 2,
+  });
+  if (!res.ok) throw new Error(`documents ingest failed for ${row.accessionNo}: ${JSON.stringify(res)}`);
+  return { upserted: res.upserted ?? 0 };
 }

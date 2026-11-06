@@ -21,6 +21,7 @@ import { and, eq, isNull, sql } from "drizzle-orm";
 import { getDb } from "../queries/connection";
 import { digests, facts, signals, workerKeys } from "@db/schema";
 import { SIGNAL_NOTE_MAX_LENGTH } from "@contracts/signals";
+import { workerDocumentsSnapshotBodyZ } from "./document-ingest";
 
 const keyHashOf = (key: string) => createHash("sha256").update(key).digest("hex");
 
@@ -143,6 +144,7 @@ export const workerIngestBodyZ = z.discriminatedUnion("kind", [
     cik: z.number().int(),
     rows: z.array(workerFactRowZ).min(1).max(100_000),
   }),
+  workerDocumentsSnapshotBodyZ,
 ]);
 
 /** Upsert-free insert (INSERT IGNORE on the uq) — redeliveries are free. */

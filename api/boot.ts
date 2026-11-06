@@ -69,6 +69,11 @@ app.post("/api/worker/ingest", async (c) => {
     const r = await ingestFundQuarters(parsed.data.rows);
     return c.json({ ok: true, worker: label, ...r });
   }
+  if (parsed.data.kind === "documentsSnapshot") {
+    const { ingestDocumentsSnapshot } = await import("./services/document-ingest");
+    const r = await ingestDocumentsSnapshot(parsed.data.rows);
+    return c.json({ ok: true, worker: label, ...r });
+  }
   if (parsed.data.kind === "factsSnapshot") {
     const r = await ingestFactsSnapshot(parsed.data.cik, parsed.data.rows);
     return c.json({ ok: true, worker: label, ...r });
