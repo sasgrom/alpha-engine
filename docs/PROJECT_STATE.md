@@ -111,6 +111,7 @@ The existing research-51 companyfacts job remains independent at 03:00 home loca
 4. Production/security findings and the remaining audit queue.
 5. **Fund Flows 3D repair:** the view is blank for presentation users and is temporarily admin-only. Reproduce the rendering failure, restore a verified view, then re-enable reviewer access.
 6. **Legacy Dashboard audit:** the new `/terminal` now provides the retail universe/portfolio-style snapshot, sector/risk charts and disclosure timeline, while `/dashboard` remains a legacy surface. Decide later whether any redundant legacy content should be retained, consolidated or retired.
+7. **Deferred 13F manager-aware aggregation evaluation:** after the current 24-quarter run, review the proposed entry ledger and separate economic aggregate for combination reports. This is not active implementation work and does not authorize a collector, rebuild, schema change or production action. TODO and evidence: `docs/THIRTEENF_MANAGER_AGGREGATION_TODO.md`.
 
 ## 7. Deferred model and data strategy — after the current remediation tails
 
