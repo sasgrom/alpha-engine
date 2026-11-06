@@ -9,6 +9,17 @@ describe("OpenFIGI request guardrails", () => {
     expect(chunks.map((chunk) => chunk.start)).toEqual([0, 10, 20]);
   });
 
+  it("iterates chunks as { start, items } records used by the refresh runner", () => {
+    const chunks = chunkFigiIds(["037833100", "67066G104", "857477103"], 2);
+    const [index, { start, items: chunk }] = chunks.entries().next().value;
+    expect(index).toBe(0);
+    expect(start).toBe(0);
+    expect(chunk).toEqual(["037833100", "67066G104"]);
+    const [, second] = chunks;
+    expect(second.start).toBe(2);
+    expect(second.items).toEqual(["857477103"]);
+  });
+
   it("rejects oversized or invalid chunks instead of issuing HTTP 413", () => {
     expect(() => chunkFigiIds(["A"], 11)).toThrow("FIGI chunk size");
     expect(() => chunkFigiIds(["A"], 0)).toThrow("FIGI chunk size");

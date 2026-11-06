@@ -165,7 +165,7 @@ async function mapCusips(cusips: string[]): Promise<{ map: Map<string, { cik: nu
 
   // 3) OpenFIGI only for the unknown. Each chunk is a separate request, with
   // bounded 429 retries instead of an infinite retry loop.
-  for (const [chunkStart, chunk] of chunkFigiIds(missing, FIGI_CHUNK).entries()) {
+  for (const [index, { start, items: chunk }] of chunkFigiIds(missing, FIGI_CHUNK).entries()) {
     let rateLimitedRetries = 0;
     while (true) {
       try {
@@ -210,7 +210,7 @@ async function mapCusips(cusips: string[]): Promise<{ map: Map<string, { cik: nu
       break;
     } catch (err) {
       failed = true;
-      prog.log(`! figi chunk failed: ${formatFigiError(err, { start: chunkStart * FIGI_CHUNK, size: chunk.length, firstCusips: chunk.slice(0, 3) })}`);
+      prog.log(`! figi chunk failed: ${formatFigiError(err, { start, size: chunk.length, firstCusips: chunk.slice(0, 3) })}`);
       for (const c of chunk) out.set(c, { cik: null, ticker: null });
       break;
     }
