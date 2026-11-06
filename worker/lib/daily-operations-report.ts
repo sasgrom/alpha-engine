@@ -95,7 +95,7 @@ export interface DailyOperationsReport {
   actions: string[];
 }
 export interface SchwabDailyPriceArtifact {
-  schemaVersion: 1;
+  schemaVersion: 1 | 2;
   generatedAt: string;
   universeSize: number;
   companies: {

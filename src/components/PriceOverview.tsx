@@ -171,6 +171,7 @@ export default function PriceOverview({ cik }: { cik: number }) {
   }
 
   const q = quote.data;
+  const hasDayChange = q.change !== null && q.changePct !== null;
   const up = (q.change ?? 0) >= 0;
   const toneCls = up ? "text-[hsl(var(--live))]" : "text-[hsl(var(--crit))]";
 
@@ -194,8 +195,8 @@ export default function PriceOverview({ cik }: { cik: number }) {
       <div className="t-panel px-5 py-4">
         <div className="flex items-baseline gap-4 flex-wrap">
           <span className="t-mono text-[26px] font-semibold">{money(q.price)}</span>
-          <span className={`t-mono text-[14px] ${toneCls}`}>
-            {up ? "+" : ""}{money(q.change)} ({up ? "+" : ""}{q.changePct !== null ? (q.changePct * 100).toFixed(2) : "—"}%)
+          <span className={`t-mono text-[14px] ${hasDayChange ? toneCls : "text-muted-foreground"}`}>
+            {hasDayChange ? `${up ? "+" : ""}${money(q.change)} (${up ? "+" : ""}${(q.changePct! * 100).toFixed(2)}%)` : "—"}
           </span>
           <span className="t-mono text-[9px] text-muted-foreground uppercase tracking-[0.08em]">
             day change · last close vs prev close

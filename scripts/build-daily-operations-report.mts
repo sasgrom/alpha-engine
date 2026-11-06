@@ -24,7 +24,7 @@ function readJson<T>(file: string, valid: (value: any) => boolean): T | null {
 }
 const snapshot = readJson<SchwabMarketSnapshot>(path.resolve("public/reports/schwab-market-data.json"), (value) => value?.schemaVersion === 1 && Array.isArray(value.files) && !!value.coverage && !!value.qa);
 const features = readJson<SchwabFeatureReport>(path.resolve("public/reports/schwab-features.json"), (value) => value?.schemaVersion === 1 && typeof value.sourceSnapshotSha256 === "string" && !!value.coverage);
-const dailyPrices = readJson<SchwabDailyPriceArtifact>(path.resolve("worker/.runs/local-generated/daily-prices-50.json"), (value) => value?.schemaVersion === 1 && Number.isInteger(value.universeSize) && Array.isArray(value.companies));
+const dailyPrices = readJson<SchwabDailyPriceArtifact>(path.resolve("worker/.runs/local-generated/daily-prices-50.json"), (value) => [1, 2].includes(value?.schemaVersion) && Number.isInteger(value.universeSize) && Array.isArray(value.companies));
 const context = readJson<SchwabContextReport>(path.resolve("public/reports/schwab-context.json"), (value) => value?.schemaVersion === 1 && !!value.coverage);
 const macroRoot = path.resolve(arg("--macro-root") ?? (process.platform === "win32" ? "D:\\research\\alpha-engine\\macro" : "worker/cache/macro"));
 const macro: MacroOperationsArtifacts = {

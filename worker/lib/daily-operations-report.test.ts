@@ -38,7 +38,7 @@ const features = (): SchwabFeatureReport => ({
   coverage: { tickers: 2, contracts: 100, rv20Available: 2 }, tickers: [],
 });
 const dailyPrices = (): DailyOperationsInput["dailyPrices"] => ({
-  schemaVersion: 1, generatedAt: "2026-11-03T07:18:00.000Z", universeSize: 2,
+  schemaVersion: 2, generatedAt: "2026-11-03T07:18:00.000Z", universeSize: 2,
   companies: ["AAPL", "MSFT"].map((ticker) => ({ ticker, status: "collected", date: "2026-11-03", capturedAt: "2026-11-03T07:14:00.000Z" })),
 });
 const context = (): SchwabContextReport => ({
@@ -77,6 +77,14 @@ describe("daily operations report", () => {
     expect(report.schwab.dailyPricesCollected).toBe(2);
     expect(report.summary.checksError).toBe(0);
     expect(dailyOperationsMarkdown(report)).toContain("Status: OK");
+  });
+
+  it("keeps schema v1 daily-price evidence compatible during the v2 rollout", () => {
+    const value = input();
+    value.dailyPrices!.schemaVersion = 1;
+    const report = buildDailyOperationsReport(value);
+    expect(report.schwab.dailyPricesCurrent).toBe(true);
+    expect(report.checks.find((item) => item.id === "schwab-daily-price-lineage")?.status).toBe("ok");
   });
 
   it("does not let one current ticker mask another ticker's stale chain", () => {

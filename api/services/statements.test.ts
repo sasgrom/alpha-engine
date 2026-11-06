@@ -176,6 +176,27 @@ describe("buildStatements — derivations and YoY", () => {
   });
 });
 
+describe("buildStatements — fiscal grid periods", () => {
+  it("never creates a quarter from stock-only filing or registration dates", () => {
+    const economicPeriod = "2026-09-30";
+    const stockOnlyDates = ["2026-10-22", "2026-10-27"];
+    const points: PointRow[] = [
+      ...dense(economicPeriod),
+      ...pt("RevenueFromContractWithCustomerExcludingAssessedTax", economicPeriod, 64_601_000_000),
+      ...pt("Assets", economicPeriod, 300_000_000_000, { kind: "stock" }),
+      ...stockOnlyDates.flatMap((periodEnd, dateIndex) =>
+        Array.from({ length: 5 }, (_, conceptIndex) =>
+          pt(`RegistrationFee${dateIndex}${conceptIndex}`, periodEnd, conceptIndex + 1, { kind: "stock" })
+        ).flat()
+      ),
+    ];
+    const view = buildStatements({ points, fyEnd: null, mode: "quarterly", vintage: "latest", periods: 12 });
+    expect(view.periods.map((period) => period.end)).toEqual([economicPeriod]);
+    expect(view.periods.map((period) => period.end)).not.toContain("2026-10-22");
+    expect(view.periods.map((period) => period.end)).not.toContain("2026-10-27");
+  });
+});
+
 describe("buildStatements — debt evidence", () => {
   const periodEnd = "2025-12-31";
   const stock = (concept: string, value: number) => pt(concept, periodEnd, value, { kind: "stock" });
