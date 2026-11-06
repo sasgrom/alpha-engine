@@ -603,3 +603,10 @@ Deliberately not automatic:
 - Next queue is accurate: 13F post-check, missing EX-99/cohort companies including CSCO, Scenario Lab evidence, remaining EDGAR tone and Fund Flows 3D.
 - Analytics regenerated from production at `2026-11-06T21:39:52.021Z`: companies 495, facts 1,390,442 / 54 CIKs, factor points 22,169 / 54 CIKs, prices 447,382 / 55 series through 2026-11-05, macro 408,862 / 8 series, fund_holdings 937,500 / 311 funds / 371 held companies, fund_quarters 6,517 with zero missing filingDate, and 795 tests listed. Options 250 snapshots / 310,634 normalized rows.
 - Verification: ProjectState tests **1 file / 5 tests**, TypeScript and production build. Runtime version **`df4e5c6`** (`Current project and analytics status`) was saved.
+
+
+## 57. Fundamentals status corrected to done — 2026-11-06
+
+- Production read-back confirms **50/50 companies with facts, 50/50 with canonical series and 50/50 with factor points**. The previous hardcoded `fundamentals / XBRL = partial` was stale rather than evidence of a pipeline failure.
+- Analytics now marks `fundamentals / XBRL` as **done**. The detail explicitly limits green to presentation materialization, including CSCO and fiscal-form filtering. Research evaluation, Expectations coverage and Atlas validation remain separate unfinished work.
+- Regenerated Analytics from production, then TypeScript and production build passed. Runtime version **`c2e9c40`** (`Fundamentals pipeline marked complete`) was saved.

@@ -4,7 +4,7 @@
  */
 export const analyticsSnapshot = {
   "week": "2026-W45",
-  "generatedAt": "2026-11-06T21:39:52.021Z",
+  "generatedAt": "2026-11-06T21:52:42.316Z",
   "metrics": {
     "companies": 495,
     "sectors": 11,
@@ -20,7 +20,7 @@ export const analyticsSnapshot = {
     "edgarToneCompanies": 53,
     "edgarFirstEvent": "1994-01-21 00:00:00",
     "edgarLastEvent": "2026-10-23 00:00:00",
-    "fundHoldings": 937500,
+    "fundHoldings": 1165500,
     "funds": 311,
     "fundCompanies": 371,
     "fundQuarters": 26,
@@ -56,15 +56,15 @@ export const analyticsSnapshot = {
       "id": "raw13f",
       "title": "13F holdings",
       "status": "partial",
-      "detail": "937,500 holdings, 311 funds, 371 companies, 6517 fund_quarters. fund_quarters upsert 6,517/14 batches completed; full holdings transport is still running and events/flow have not been rebuilt.",
+      "detail": "1,165,500 holdings, 311 funds, 371 companies, 6517 fund_quarters. fund_quarters upsert 6,517/14 batches completed; full holdings transport is still running and events/flow have not been rebuilt.",
       "next": "Finish the full snapshot, verify counts and comparable-fund guards, then evaluate events and flow."
     },
     {
       "id": "fundamentals",
       "title": "Fundamentals / XBRL",
-      "status": "partial",
-      "detail": "1,390,442 facts and 22,169 factor points from 54/54 CIKs. CSCO is now materialized with 41,576 facts, 37,204 canonical points and 275 factor points; registration/proxy/offering facts no longer create fiscal columns.",
-      "next": "Keep first-filed availability and expand missing expectations evidence rather than adding cosmetic coverage."
+      "status": "done",
+      "detail": "1,390,442 facts and 22,169 factor points from 54/54 CIKs. All 50 presentation companies have canonical series and factor points; CSCO is materialized and registration/proxy/offering facts no longer create fiscal columns.",
+      "next": "Pipeline materialization is complete for the presentation universe. Keep daily collection and evaluate research, expectations and Atlas separately."
     },
     {
       "id": "prices",
@@ -416,7 +416,7 @@ export const analyticsSnapshot = {
     },
     {
       "week": "2026-W45",
-      "generatedAt": "2026-11-06T21:39:52.021Z",
+      "generatedAt": "2026-11-06T21:52:42.316Z",
       "metrics": {
         "companies": 495,
         "sectors": 11,
@@ -432,7 +432,7 @@ export const analyticsSnapshot = {
         "edgarToneCompanies": 53,
         "edgarFirstEvent": "1994-01-21 00:00:00",
         "edgarLastEvent": "2026-10-23 00:00:00",
-        "fundHoldings": 937500,
+        "fundHoldings": 1165500,
         "funds": 311,
         "fundCompanies": 371,
         "fundQuarters": 26,

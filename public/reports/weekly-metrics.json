@@ -1,6 +1,6 @@
 {
   "week": "2026-W45",
-  "generatedAt": "2026-11-06T21:39:52.021Z",
+  "generatedAt": "2026-11-06T21:52:42.316Z",
   "metrics": {
     "companies": 495,
     "sectors": 11,
@@ -16,7 +16,7 @@
     "edgarToneCompanies": 53,
     "edgarFirstEvent": "1994-01-21 00:00:00",
     "edgarLastEvent": "2026-10-23 00:00:00",
-    "fundHoldings": 937500,
+    "fundHoldings": 1165500,
     "funds": 311,
     "fundCompanies": 371,
     "fundQuarters": 26,
