@@ -39,7 +39,7 @@ export const PROJECT_STATE_REVIEW = {
     schwab: "Verified · 50/50 official closes with OHLCV and same-source previous close/day change · latest 2026-11-05",
     macroPriorEvaluation: "Historical only · 794/1,455 eligible checks · not recomputed after current sync",
     macroVintageRemediation: "Complete · 408,862 rows · 8/8 current eligible · 0 selected-after-anchor",
-    thirteenF: "In progress · fund_quarters 6,517 upserted / 14 batches · fund_holdings 1,617,277 rows transporting · no events/flow rebuild",
+    thirteenF: "Complete · fund_quarters 6,517 upserted / 14 batches · fund_holdings 1,617,277 upserted / 3,235 batches · production post-check pass",
     thirteenFEvaluation: "Not run after the 24-quarter sync; latest-quarter flow remains unevaluated",
   },
   reviewerExperience: {
@@ -55,7 +55,7 @@ export const PROJECT_STATE_REVIEW = {
     accountSeedRequired: false,
   },
   nextQueue: [
-    "Finish fund_holdings transport and run the 13F production post-check; no latest-quarter flow without a passing guard",
+    "Evaluate the existing fundamental factor library and IC, then share weights after the comparable-fund guard",
     "Add CSCO and the other missing companies to EX-99/cohort extraction; independent benchmark before reviewed coverage",
     "Expand Scenario Lab evidence, not only the pilot selector: fixed rates, fuel/oil, foreign revenue and issuance terms",
     "Complete EDGAR tone for the remaining 47 companies after the current GPU run",

@@ -610,3 +610,15 @@ Deliberately not automatic:
 - Production read-back confirms **50/50 companies with facts, 50/50 with canonical series and 50/50 with factor points**. The previous hardcoded `fundamentals / XBRL = partial` was stale rather than evidence of a pipeline failure.
 - Analytics now marks `fundamentals / XBRL` as **done**. The detail explicitly limits green to presentation materialization, including CSCO and fiscal-form filtering. Research evaluation, Expectations coverage and Atlas validation remain separate unfinished work.
 - Regenerated Analytics from production, then TypeScript and production build passed. Runtime version **`c2e9c40`** (`Fundamentals pipeline marked complete`) was saved.
+
+
+## 58. 13F production push and independent post-check complete — 2026-11-06
+
+- Kimi completed `fund_quarters`: **6,517 upserted / 14 batches** and `fund_holdings`: **1,617,277 upserted / 3,235 batches**, watermark **6,672,309**, with zero errors and no reset/resume. Events/flow, factor rematerialization and latest-quarter flow were not run.
+- Production matches the local counts exactly: **1,617,277 holdings / 6,517 quarters / 311 funds / 377 held companies / 2019-12-31…2026-09-30**. Canonical fund_quarters confirms **251 funds with 24 quarters and 60 with fewer**, with no fund above 24.
+- Duplicate exact keys are zero for both tables. filingDate/accessionNo required fields are present everywhere; no filingDate before/equal to quarterDate, no missing/negative totalValueUsd, no missing positions, no missing/negative valueUsd/shares and no missing/zero heldCik.
+- Pre-push backup: **875,860 holdings / 293,990,612 bytes / 300 files** and **3,372 quarters / 550,019 bytes**. fund_quarters SHA256 `ff5b3f33d9fd4fea74bbf83db3abad277d3134c85dedfc7c5b58458735975e67`; backup manifest `9ca969fda8d452e9c9254b55cb6407ab1432347ba75c407b2c1f5c6a79d2f721`.
+- Independent preservation check: **0 missing original holding keys / 0 missing original quarter keys**. New keys are 741,417 holdings and 3,145 quarters. positions and totalValueUsd are not below the mapped subset in any book.
+- Guard at 2026-11-06 selects **2026-06-30 vs 2026-03-31**, skips open 2026-09-30, has **302 stable funds, 6 missing, 0 suspect and `partial=true`**. Latest-quarter flow was not evaluated and events were not rebuilt; position events remain 16,422 with last event 2026-09-02.
+- Consolidated evidence: `worker/.runs/13f-production-postcheck-2026-11-06.json` and `worker/.runs/13f-production-backup-2026-11-06T195754508Z/preservation-postcheck.json`.
+- Project State and Analytics were regenerated to mark 13F transport done while keeping flow evaluation separate. ProjectState tests **1 file / 5 tests**, TypeScript and production build passed. Runtime version **`ca3f206`** was saved.

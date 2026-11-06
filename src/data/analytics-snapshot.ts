@@ -4,7 +4,7 @@
  */
 export const analyticsSnapshot = {
   "week": "2026-W45",
-  "generatedAt": "2026-11-06T21:52:42.316Z",
+  "generatedAt": "2026-11-06T22:37:11.354Z",
   "metrics": {
     "companies": 495,
     "sectors": 11,
@@ -20,10 +20,10 @@ export const analyticsSnapshot = {
     "edgarToneCompanies": 53,
     "edgarFirstEvent": "1994-01-21 00:00:00",
     "edgarLastEvent": "2026-10-23 00:00:00",
-    "fundHoldings": 1165500,
+    "fundHoldings": 1617277,
     "funds": 311,
-    "fundCompanies": 371,
-    "fundQuarters": 26,
+    "fundCompanies": 377,
+    "fundQuarters": 28,
     "fundQuarterRows": 6517,
     "fundQuarterMissingDates": 0,
     "positionEvents": 16422,
@@ -55,9 +55,9 @@ export const analyticsSnapshot = {
     {
       "id": "raw13f",
       "title": "13F holdings",
-      "status": "partial",
-      "detail": "1,165,500 holdings, 311 funds, 371 companies, 6517 fund_quarters. fund_quarters upsert 6,517/14 batches completed; full holdings transport is still running and events/flow have not been rebuilt.",
-      "next": "Finish the full snapshot, verify counts and comparable-fund guards, then evaluate events and flow."
+      "status": "done",
+      "detail": "1,617,277 holdings, 311 funds, 377 companies, 6517 fund_quarters. Production push and post-check passed with zero duplicates and zero missing original keys; events/flow were not rebuilt.",
+      "next": "Keep comparable-fund guards active and evaluate events and flow separately from the completed transport."
     },
     {
       "id": "fundamentals",
@@ -416,7 +416,7 @@ export const analyticsSnapshot = {
     },
     {
       "week": "2026-W45",
-      "generatedAt": "2026-11-06T21:52:42.316Z",
+      "generatedAt": "2026-11-06T22:37:11.354Z",
       "metrics": {
         "companies": 495,
         "sectors": 11,
@@ -432,10 +432,10 @@ export const analyticsSnapshot = {
         "edgarToneCompanies": 53,
         "edgarFirstEvent": "1994-01-21 00:00:00",
         "edgarLastEvent": "2026-10-23 00:00:00",
-        "fundHoldings": 1165500,
+        "fundHoldings": 1617277,
         "funds": 311,
-        "fundCompanies": 371,
-        "fundQuarters": 26,
+        "fundCompanies": 377,
+        "fundQuarters": 28,
         "fundQuarterRows": 6517,
         "fundQuarterMissingDates": 0,
         "positionEvents": 16422,
