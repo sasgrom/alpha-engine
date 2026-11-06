@@ -10,7 +10,7 @@ import { ingestMacroPoints } from "../api/services/macro";
 import { dailyPrice } from "../api/services/daily-price";
 import { completeOfficialDailyBar, officialBarEnrichment, type OfficialDailyBar } from "../worker/lib/schwab-daily";
 
-const root = path.resolve("worker/.runs/reviewed-sync-2026-11-05/package");
+const root = path.resolve(process.env.REVIEWED_SYNC_ROOT ?? "worker/.runs/reviewed-sync-2026-11-05/package");
 const db = getDb();
 const sha256 = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
 const outDir = path.resolve(`worker/.runs/reviewed-sync-apply-${new Date().toISOString().replaceAll(":", "").replaceAll(".", "")}`);
@@ -18,6 +18,7 @@ mkdirSync(outDir, { recursive: true });
 const manifest = JSON.parse(readFileSync(path.join(root, "manifest.json"), "utf8"));
 const context = JSON.parse(readFileSync(path.join(root, "worker/.runs/local-generated/reviewed-sync-context-macro.json"), "utf8"));
 const apply = process.argv.includes("--apply");
+const pricesOnly = process.argv.includes("--prices-only");
 const results: Record<string, unknown> = {};
 
 for (const file of manifest.files) {
@@ -66,12 +67,17 @@ for (const row of daily.companies) {
   }
 }
 
-if (apply) {
+if (apply && !pricesOnly) {
   for (const series of context.macroSeries) {
     const archiveRows = JSON.parse(readFileSync(path.join(root, "normalized/fred", `${series.seriesId}.json`), "utf8")) as NormalizedMacroVintageRow[];
     const plan = prepareMacroVintageBackfill(series.seriesId, archiveRows, currentMacro.filter((row) => row.seriesId === series.seriesId), new Date().toISOString());
     results[series.seriesId] = await backfillMacroVintageSeries(plan, ingestMacroPoints);
   }
+}
+if (apply && pricesOnly) {
+  results.macroSeriesSkipped = { reason: "Previously applied and independently verified; artifact hashes revalidated", series: context.macroSeries.map((row: any) => row.seriesId) };
+}
+if (apply) {
   results.dailyPrices = await db.transaction(async (tx) => {
     let inserted = 0;
     let enriched = 0;

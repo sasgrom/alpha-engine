@@ -562,3 +562,14 @@ Deliberately not automatic:
 - Delivered regression tests independently passed **2 files / 16 tests**. TypeScript and production build passed; `canonicalTicker` is present in `dist/boot.js`. Runtime version **`8099451`** (`Canonical ticker routes repaired`) was saved.
 - Evidence roots: `worker/.runs/preferred-ticker-remediation/2026-11-06T054358304Z/` and `worker/.runs/preferred-ticker-remediation/2026-11-06T054506501Z/`. These are runtime evidence, not source-delivery files.
 - Stage boundary: OHLCV/previous close, documents and CSCO fundamentals were not changed or claimed complete by this stage. Next stage starts only after a separate owner-scoped instruction.
+
+
+## 53. Official Schwab OHLCV and day change applied — 2026-11-06
+
+- Used `daily-ohlcv-handoff-20261106T060344-781Z.zip` from `a3745a7`. SHA256 matched the owner report: `a3a2ac542b4539a6c363beac2abe04627573ace0826005cd01df0a363fdeaa0`. The archive has exactly three files; all manifest byte counts and hashes passed. Validation reports 50 companies / 100 bars / errors=[].
+- Merged the schema-v2 daily artifact and new validation into the reviewed package. Stale close-only QA and smoke evidence were excluded; all other artifacts were rehashed. Merged ZIP has 16 artifacts + manifest = 17 entries, SHA256 `99c13f797b0c83344ecbd2e9e967b15b8bb43e858b0b5e59c71093a664c5a8f3`; generated package is not included in this source commit.
+- First apply attempt timed out without changing production while redundantly rechecking the already applied macro history. Added `--prices-only`; macro artifact hashes are still validated, but the completed backfill is not repeated. TypeScript passed before both attempts.
+- Successful apply inserted **50 new 2026-11-05 bars** and enriched **50 existing 2026-11-04 bars** with official OHLCV. `prices` 447,332 → 447,382; `macro_points` remained 408,862. No rows were deleted.
+- Independent `independent-postcheck.json` is `pass`: all original IDs preserved, exactly 50 expected enrichments and 50 matching new rows, zero unexpected changes and duplicate price keys. All five copied artifact hashes match, including daily artifact `bf8950cc64ebddc4887ab615eb27dd9a11ebb36ef4315ffb2539afe63555628e`.
+- Actual authenticated `prices.quote` passed **50/50** with previous close, OHLCV, change and changePct. Examples: AAPL 344.17 vs 349.51 = −5.34; META 605.08 vs 630.00 = −24.92; BA 172.50 vs 177.00 = −4.50. All include full OHLCV for 2026-11-05.
+- Runtime version **`ab91c2e`** (`Official OHLCV and day change`) was saved. Documents and CSCO fundamentals remain outside this stage and are not claimed complete.
