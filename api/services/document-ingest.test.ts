@@ -103,6 +103,15 @@ describe("metadata-only documentsSnapshot production ingest", () => {
     expect(mocks.documents[0].location).toBe("cloud");
   });
 
+  it("accepts bounded metadata batches and rejects oversized ones", async () => {
+    const first = metadataDocument(snapshotDocument(filing, Buffer.from("<p>first</p>")));
+    const second = { ...first, docName: "second.htm" };
+    expect(workerDocumentsSnapshotBodyZ.parse({ kind: "documentsSnapshot", rows: [first, second] }).rows).toHaveLength(2);
+    await ingestDocumentsSnapshot([first, second]);
+    expect(mocks.documents).toHaveLength(2);
+    expect(() => workerDocumentsSnapshotBodyZ.parse({ kind: "documentsSnapshot", rows: Array.from({ length: 101 }, () => first) })).toThrow();
+  });
+
   it("rejects incorrect worker authorization", async () => {
     const goodKey = "good-test-key";
     mocks.keys.push({ id: 1, keyHash: createHash("sha256").update(goodKey).digest("hex"), label: "test", revokedAt: null });

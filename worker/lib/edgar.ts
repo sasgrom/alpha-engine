@@ -164,11 +164,12 @@ export interface EdgarFiling {
 
 // 5e expansion (owner pick): + amendments (10-K/A, 10-Q/A, 8-K/A — restatement
 // content lives there) and activist-ownership schedules in both SEC spellings.
-// S-1/424B skipped (no IPO flow in the S&P 500), Form 4 = the cloud insiders
-// pipeline, 13F = its own iteration (fund-side universe + CUSIP map, not a tone row).
+// DEF 14A skipped (neutral boilerplate by design), S-1/424B skipped (no IPO
+// flow in the S&P 500), Form 4 = the cloud insiders pipeline, 13F = its own
+// iteration (fund-side universe + CUSIP map, not a tone row).
 export const EDGAR_FORMS = new Set([
   "10-K", "10-Q", "8-K",
-  "10-K/A", "10-Q/A", "8-K/A", "DEF 14A",
+  "10-K/A", "10-Q/A", "8-K/A",
   "SC 13D", "SC 13D/A", "SC 13G", "SC 13G/A",
   "SCHEDULE 13D", "SCHEDULE 13D/A", "SCHEDULE 13G", "SCHEDULE 13G/A",
 ]);

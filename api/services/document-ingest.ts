@@ -28,7 +28,7 @@ export const workerDocumentSnapshotRowZ = z.object({
 export type WorkerDocumentSnapshotRow = z.infer<typeof workerDocumentSnapshotRowZ>;
 export const workerDocumentsSnapshotBodyZ = z.object({
   kind: z.literal("documentsSnapshot"),
-  rows: z.array(workerDocumentSnapshotRowZ).min(1).max(1),
+  rows: z.array(workerDocumentSnapshotRowZ).min(1).max(100),
 }).strict();
 
 export async function ingestDocumentsSnapshot(rows: WorkerDocumentSnapshotRow[], dependencies: { db?: any } = {}) {

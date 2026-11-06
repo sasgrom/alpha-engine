@@ -23,10 +23,6 @@ export default defineConfig({
     // fine, but local worker POSTs to literal 127.0.0.1 get ECONNREFUSED.
     // Pin the loopback IPv4 bind; the page stays reachable at localhost too.
     host: "127.0.0.1",
-    watch: {
-      ignored: ["**/worker/cache/**", "**/worker/.runs/**"],
-      followSymlinks: false,
-    },
   },
   resolve: {
     alias: {

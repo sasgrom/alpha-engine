@@ -105,13 +105,7 @@ export const documentsRouter = createRouter({
       const db = getDb();
       const [doc] = await db.select().from(documents).where(eq(documents.id, input.id)).limit(1);
       if (!doc) throw new Error("document not found");
-      if (!doc.textKey) {
-        return {
-          docName: doc.docName, form: doc.form, length: 0,
-          excerpt: "", truncated: false, source: "sec" as const,
-          secUrl: secArchivesDocUrl(doc.cik, doc.accessionNo, doc.docName),
-        };
-      }
+      if (!doc.textKey) throw new Error("no derived text available");
       try {
         const bytes = await storage.readFile({ fileKey: doc.textKey });
         const text = Buffer.from(bytes).toString("utf-8");
@@ -146,8 +140,7 @@ export const documentsRouter = createRouter({
     .query(async ({ input }) => {
       const db = getDb();
       const [doc] = await db.select().from(documents).where(eq(documents.id, input.id)).limit(1);
-      if (!doc) throw new Error("document not found");
-      if (!doc.storageKey) return { url: secArchivesDocUrl(doc.cik, doc.accessionNo, doc.docName) };
+      if (!doc?.storageKey) throw new Error("raw document not in cloud storage");
       try {
         const { url } = await storage.getPresignedUrl({ key: doc.storageKey });
         return { url };

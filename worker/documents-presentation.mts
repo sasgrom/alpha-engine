@@ -160,7 +160,9 @@ console.log(JSON.stringify({ status: validation.status, mode: validation.mode, c
 if (errors.length || !documentsSelected || !storageQuotaSufficient) throw new Error(`Local document registration failed; production push is forbidden. Required storage ${storageRequiredBytes} bytes`);
 if (push) {
   let upserted = 0;
-  for (const row of snapshotRows!) upserted += (await postDocumentsSnapshot(row, { mode: "metadata-only" })).upserted;
+  for (let start = 0; start < snapshotRows!.length; start += 100) {
+    upserted += (await postDocumentsSnapshot(snapshotRows!.slice(start, start + 100), { mode: "metadata-only" })).upserted;
+  }
   console.log(JSON.stringify({ mode: "push", upserted }, null, 2));
 }
 await db.$client.end();

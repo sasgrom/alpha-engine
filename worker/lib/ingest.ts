@@ -101,22 +101,24 @@ export async function postFactsSnapshot(
 }
 
 
-/** One local EDGAR document per request, preserving the bounded platform body size. */
+/** Small metadata-only batches keep the full-corpus transport below the request-size limit. */
 export async function postDocumentsSnapshot(
-  row: DocumentMetadataSnapshotRow,
+  input: DocumentMetadataSnapshotRow | DocumentMetadataSnapshotRow[],
   opts: { url?: string; mode: "metadata-only" },
 ): Promise<{ upserted: number }> {
   if (opts.mode !== "metadata-only") throw new Error("documentsSnapshot push requires --mode metadata-only");
   const key = process.env.WORKER_KEY;
   if (!key) throw new Error("WORKER_KEY missing from environment (.env)");
+  const rows = Array.isArray(input) ? input : [input];
+  if (rows.length === 0 || rows.length > 100) throw new Error("documentsSnapshot batch must contain 1..100 rows");
   const url = opts.url ?? process.env.INGEST_URL ?? PROD_INGEST_URL;
   const res = await fetchJson<IngestResult>(url, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
-    body: JSON.stringify({ kind: "documentsSnapshot", rows: [row] }),
+    body: JSON.stringify({ kind: "documentsSnapshot", rows }),
     timeoutMs: 120_000,
     retries: 2,
   });
-  if (!res.ok) throw new Error(`documents ingest failed for ${row.accessionNo}: ${JSON.stringify(res)}`);
+  if (!res.ok) throw new Error(`documents ingest failed for ${rows[0].accessionNo}: ${JSON.stringify(res)}`);
   return { upserted: res.upserted ?? 0 };
 }
