@@ -149,13 +149,13 @@ export default function ProjectState() {
         <section className="project-state-section">
           <div className="project-section-heading"><div><span className="t-label">Orientation</span><h2>Where the project stands</h2></div></div>
           <div className="project-lanes">
-            <Lane label="01 · Code" status="current" title="F-01/F-02/F-03 are complete; F-04/F-05 are next">
-              S&P 500 collection code and real smoke are confirmed. Correctness work is not the same as a historical evidence rebuild.
+            <Lane label="01 · Code" status="done" title="Correctness, fiscal forms, documents and Scenario Lab are complete">
+              S&P 500 collection code and real smoke are confirmed. Completed implementation still does not prove fresh historical evidence or model validity.
             </Lane>
             <Lane label="02 · Data" status={sp500Status === "running" ? "current" : sp500Status === "unknown" ? "unknown" : "done"} title="Home collection and scoring stay local">
               SEC companyfacts, Schwab, FRED and OFAC update different artifacts on different schedules. Each row below has its own evidence time.
             </Lane>
-            <Lane label="03 · Research" status="attention" title="Research-51 is materialized; Atlas is partial and IC is not promoted">
+            <Lane label="03 · Research" status="attention" title="Research-50 and Scenario Lab are materialized; Atlas and IC are not promoted">
               {PROJECT_STATE_REVIEW.research.factorCoverage} · {PROJECT_STATE_REVIEW.research.factorPoints.toLocaleString("en-US")} factor points. {PROJECT_STATE_REVIEW.research.ic}.
             </Lane>
             <Lane label="04 · Delivery" status="pending" title="Production remains a separate owner decision">
@@ -179,6 +179,9 @@ export default function ProjectState() {
             </div>
             <div className="project-data-row" role="row">
               <strong>FRED + OFAC</strong><span>{report?.macro?.qaStatus ? `QA ${report.macro.qaStatus}` : "No dated report"}</span><span>Local macro archive</span><p>{report?.macro ? `FRED ${timeText(report.macro.fredGeneratedAt)} · OFAC ${timeText(report.macro.ofacGeneratedAt)}` : "Availability and vintage QA are required before derived research."}</p>
+            </div>
+            <div className="project-data-row" role="row">
+              <strong>Scenario Lab</strong><span>50 companies · reviewed</span><span>Production presentation</span><p>{PROJECT_STATE_REVIEW.research.scenarioLab}. Upper bounds are not earnings forecasts; new issuance, Event Study, Atlas and Bayes were not rebuilt.</p>
             </div>
             <div className="project-data-row" role="row">
               <strong>Event Study + Atlas</strong><span>{macroAtlas?.status ?? macroEvent?.status ?? "unknown"}</span><span>Local research artifacts</span><p>{macroAtlas?.detail ?? PROJECT_STATE_REVIEW.research.atlas} {macroEvent ? `Event Study: ${macroEvent.detail}` : ""}</p>

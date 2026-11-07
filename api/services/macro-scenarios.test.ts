@@ -52,8 +52,37 @@ describe("macro scenarios", () => {
     const report = buildMacroScenarioReport(input([
       pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) }),
       pilot("PFE"),
-    ], [exposure("RCL", 22_872_000_000), exposure("PFE", 4_000_000_000)]));
+    ], [exposure("RCL", 22_872_000_000), exposure("PFE", null)]));
     expect(report.scenarios[0].status).toBe("partial");
+  });
+
+  it("uses total debt only as an explicit upper bound when the rate split is unknown", () => {
+    const report = buildMacroScenarioReport(input([pilot("PFE")], [exposure("PFE", 4_000_000_000)]));
+    const impact = report.scenarios[0].impacts[0];
+    expect(impact.status).toBe("computable");
+    expect(impact.metrics[0].impactType).toBe("upper_bound");
+    expect(impact.metrics[0].value).toBeCloseTo(40_000_000);
+    expect(impact.reasons).toContain("fixed_floating_share_unknown_total_debt_upper_bound");
+  });
+
+  it("keeps a known hedge multiplier visible in a total-debt upper-bound formula", () => {
+    const report = buildMacroScenarioReport(input([
+      pilot("COP", { interestRateHedgeShare: evidence("hedge", 0.6) }),
+    ], [exposure("COP", 22_828_000_000)]));
+    const impact = report.scenarios[0].impacts[0];
+    expect(impact.metrics[0].impactType).toBe("upper_bound");
+    expect(impact.metrics[0].value).toBeCloseTo(91_312_000);
+    expect(impact.metrics[0].formula).toContain("debt × (1 − interestRateHedgeShare) × rateShock");
+  });
+
+  it("uses a directly reported variable-rate share", () => {
+    const report = buildMacroScenarioReport(input([
+      pilot("RCL", { variableInterestShare: evidence("variable", 0.25), interestRateHedgeShare: evidence("hedge", 0.5) }),
+    ], [exposure("RCL", 22_872_000_000)]));
+    const impact = report.scenarios[0].impacts[0];
+    expect(impact.metrics[0].impactType).toBe("estimate");
+    expect(impact.metrics[0].value).toBeCloseTo(28_590_000);
+    expect(impact.metrics[0].formula).toContain("variableInterestShare");
   });
 
   it("uses a known current hedge share instead of an upper bound", () => {
@@ -82,6 +111,20 @@ describe("macro scenarios", () => {
     const report = buildMacroScenarioReport({ ...input([pilot("RCL", { fixedInterestShare: evidence("fixed", 0.97) })], [exposure("RCL", 22_872_000_000)]), definitions: [{ channel: "credit", shock: 0.01 }] });
     expect(report.scenarios[0].impacts[0].status).toBe("not_computable");
     expect(report.scenarios[0].impacts[0].reasons).toContain("new_issuance_spread_maturity_and_rating_missing");
+  });
+
+  it("computes a credit refinancing upper bound from scheduled twelve-month maturities", () => {
+    const maturity = evidence("LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths", 1_367_000_000);
+    const report = buildMacroScenarioReport({
+      ...input([pilot("DAL", { debtMaturities: [maturity] })], []),
+      definitions: [{ channel: "credit", shock: 0.01 }],
+    });
+    const impact = report.scenarios[0].impacts[0];
+    expect(impact.status).toBe("computable");
+    expect(impact.metrics[0].name).toBe("credit_refinancing_upper_bound");
+    expect(impact.metrics[0].impactType).toBe("upper_bound");
+    expect(impact.metrics[0].value).toBeCloseTo(13_670_000);
+    expect(impact.reasons).toContain("new_issuance_estimate_not_evaluated");
   });
 
   it("excludes future FRED observations from the baseline", () => {

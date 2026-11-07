@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Activity, AlertTriangle, Download, FileCheck2, FlaskConical, Info, SlidersHorizontal } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
-import { buildMacroScenarioReport, type MacroScenarioDefinition, type MacroScenarioReport, type ScenarioChannel } from "../../api/services/macro-scenarios";
+import { buildMacroScenarioReport, type MacroScenarioDefinition, type MacroScenarioReport, type ScenarioChannel, type ScenarioStatus } from "../../api/services/macro-scenarios";
 import type { ShockCalibrationReport } from "../../api/services/shock-calibration";
 import type { PilotEvidenceReport } from "../../api/services/pilot-exposure-evidence";
 import type { CompanyExposureReport } from "../../api/services/company-exposure";
@@ -73,6 +73,7 @@ export default function MacroScenarioLab() {
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">("loading");
   const [channel, setChannel] = useState<ScenarioChannel>("rates");
   const [ticker, setTicker] = useState("ALL");
+  const [statusFilter, setStatusFilter] = useState<"ALL" | ScenarioStatus>("ALL");
   const [shocks, setShocks] = useState<Record<ScenarioChannel, number>>({ rates: 0.01, oil: 0.20, usd: 0.05, credit: 0.01 });
   useEffect(() => {
     let active = true;
@@ -92,8 +93,20 @@ export default function MacroScenarioLab() {
     return buildMacroScenarioReport({ dataMode: bundle.report.dataMode, asOf: bundle.report.asOf, definitions, macroSeries: bundle.macroSeries, pilot: bundle.pilot.companies, exposures: bundle.exposure.companies });
   }, [bundle, shocks]);
   const scenario = report?.scenarios.find((item) => item.channel === channel) ?? null;
-  const impacts = useMemo(() => (scenario?.impacts ?? []).filter((impact) => ticker === "ALL" || impact.ticker === ticker), [scenario, ticker]);
-  const selectedImpact = ticker === "ALL" ? null : impacts[0] ?? null;
+  const impacts = useMemo(() => (scenario?.impacts ?? []).filter((impact) =>
+    (ticker === "ALL" || impact.ticker === ticker) && (statusFilter === "ALL" || impact.status === statusFilter),
+  ), [scenario, ticker, statusFilter]);
+  const selectedImpact = ticker === "ALL" ? null : scenario?.impacts.find((impact) => impact.ticker === ticker) ?? null;
+  const coverage = useMemo(() => {
+    const rows = scenario?.impacts ?? [];
+    return {
+      total: rows.length,
+      current: rows.filter((impact) => impact.status === "computable").length,
+      historical: rows.filter((impact) => impact.status === "historical_only").length,
+      missing: rows.filter((impact) => impact.status === "not_computable").length,
+      upperBounds: rows.reduce((total, impact) => total + impact.metrics.filter((metric) => metric.impactType === "upper_bound").length, 0),
+    };
+  }, [scenario]);
   const channelSeries: Record<ScenarioChannel, string> = { rates: "DGS10", oil: "DCOILWTICO", usd: "DTWEXBGS", credit: "BAMLH0A0HYM2" };
   const calibration = bundle?.calibration?.calibrations.find((item) => item.seriesId === channelSeries[channel] && item.status === "ready") ?? null;
   const presets = calibration?.presets
@@ -139,7 +152,7 @@ export default function MacroScenarioLab() {
             <AlertTriangle size={22} />
             <h2>Scenario evidence is unavailable</h2>
             <p>Build the FRED archive, pilot evidence and company exposure reports first. No scenario state is inferred from missing files.</p>
-            <code>npx tsx worker/macro-fred-fetch.mts --group all<br />npx tsx scripts/build-pilot-exposure-evidence.mts<br />npx tsx scripts/build-company-exposure.mts --universe research-universe-51.json<br />npx tsx scripts/build-macro-scenarios.mts --macro-root D:\research\alpha-engine\macro</code>
+            <code>npx tsx scripts/build-pilot-exposure-evidence.mts --source db --universe research-universe-50.json<br />npx tsx scripts/build-company-exposure.mts --universe research-universe-50.json --pilot-evidence public/reports/pilot-exposure-evidence.json<br />npx tsx scripts/build-macro-scenarios.mts --macro-source file --macro-root D:\research\alpha-engine\macro</code>
           </section>
         )}
 
@@ -154,11 +167,18 @@ export default function MacroScenarioLab() {
               <input id="scenario-shock" className="scenario-slider" type="range" min={SHOCK_LIMITS[channel].min} max={SHOCK_LIMITS[channel].max} step={SHOCK_LIMITS[channel].step} value={shocks[channel]} onChange={(event) => updateShock(Number(event.target.value))} />
               <input className="scenario-number" aria-label="Shock value" type="number" min={SHOCK_LIMITS[channel].min} max={SHOCK_LIMITS[channel].max} step={SHOCK_LIMITS[channel].step} value={shocks[channel]} onChange={(event) => updateShock(Number(event.target.value))} />
               <div className="scenario-presets">{presets.map((preset) => <button type="button" key={preset.label} className={shocks[channel] === preset.value ? "active" : ""} onClick={() => updateShock(preset.value)}>{preset.label}</button>)}</div>
-              <div className="scenario-preset-source">{calibration?.presets ? "Calibrated from FRED daily changes" : "Illustrative presets · build shock calibration for historical presets"}</div>
+              <div className="scenario-preset-source">{calibration?.presets ? `Calibrated from FRED daily changes · as of ${bundle?.calibration?.asOf.slice(0, 10) ?? "unknown"}` : "Illustrative presets · build shock calibration for historical presets"}</div>
               <label className="scenario-control-label" htmlFor="scenario-ticker">Company</label>
               <select id="scenario-ticker" value={ticker} onChange={(event) => setTicker(event.target.value)}>
-                <option value="ALL">All pilot companies</option>
+                <option value="ALL">All {bundle?.pilot.companies.length ?? 0} companies</option>
                 {bundle?.pilot.companies.map((company) => <option key={company.ticker} value={company.ticker}>{company.ticker}</option>)}
+              </select>
+              <label className="scenario-control-label" htmlFor="scenario-status-filter">Evidence status</label>
+              <select id="scenario-status-filter" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as "ALL" | ScenarioStatus)}>
+                <option value="ALL">All statuses</option>
+                <option value="computable">Current · computable</option>
+                <option value="historical_only">Historical only</option>
+                <option value="not_computable">Not computable</option>
               </select>
               <button type="button" className="scenario-download" onClick={download}><Download size={14} /> Export current JSON</button>
               <div className="scenario-control-note"><Info size={13} /><p>Shocks are assumptions, not FRED forecasts. Rate and credit values are decimal rates; oil and USD values are decimal percentages.</p></div>
@@ -174,13 +194,21 @@ export default function MacroScenarioLab() {
                     <div><span>Scenario</span><strong>{scenario.baseline.scenarioValue} {scenario.baseline.unit}</strong></div>
                     <div><span>Observation</span><strong>{scenario.baseline.observationPeriod}</strong></div>
                     <div><span>Available</span><strong>{scenario.baseline.availableAt.slice(0, 10)}</strong></div>
-                    <div><span> vintage</span><strong>{scenario.baseline.vintageId}</strong></div>
+                    <div><span>Vintage</span><strong>{scenario.baseline.vintageId}</strong></div>
+                    <div><span>Provenance</span><strong>{scenario.baseline.provenance ?? "official_normalized_archive"}</strong></div>
                   </div>
                 ) : <p>No baseline is available for this channel.</p>}
               </section>
 
+              <section className="scenario-coverage" aria-label="Scenario evidence coverage">
+                <div><strong>{coverage.current}/{coverage.total}</strong><span>current computable</span></div>
+                <div><strong>{coverage.historical}</strong><span>historical only</span></div>
+                <div><strong>{coverage.missing}</strong><span>not computable</span></div>
+                <div><strong>{coverage.upperBounds}</strong><span>explicit upper bounds</span></div>
+              </section>
+
               <section className="scenario-panel scenario-impact-panel">
-                <div className="scenario-panel-heading"><FileCheck2 size={15} /><h2>Company impacts</h2><span>{impacts.length} rows</span></div>
+                <div className="scenario-panel-heading"><FileCheck2 size={15} /><h2>Company impacts</h2><span>{impacts.length} shown · {coverage.total} total</span></div>
                 <div className="scenario-impact-table" role="table" aria-label="Company scenario impacts">
                   <div className="scenario-impact-head" role="row"><span>Company</span><span>Status</span><span>Metric</span><span>Value</span><span>Period</span></div>
                   {impacts.map((impact) => {
@@ -189,7 +217,7 @@ export default function MacroScenarioLab() {
                       <button type="button" role="row" key={impact.ticker} className={`scenario-impact-row ${ticker === impact.ticker ? "active" : ""}`} onClick={() => setTicker(impact.ticker)}>
                         <span className="scenario-ticker">{impact.ticker}</span>
                         <span className={`scenario-status ${statusClass(impact.status)}`}>{impact.status}</span>
-                        <span>{first?.name ?? "not_computable"}</span>
+                        <span>{first?.name ?? "not_computable"}{first && <small className="scenario-impact-type">{first.impactType}</small>}</span>
                         <span className="scenario-number-value">{first ? `${money(first.value)} ${first.unit}` : "—"}</span>
                         <span>{first?.periodEnd ?? impact.reasons[0] ?? "—"}</span>
                       </button>
@@ -221,9 +249,10 @@ export default function MacroScenarioLab() {
                 </>
               ) : (
                 <>
-                  <div className="scenario-reason"><span>Method</span><p>Select a company row to inspect its exact formula, concepts, period and availability. `Upper bound` means hedge share is unknown; `gross_exposure` is not net income.</p></div>
+                  <div className="scenario-reason"><span>Method</span><p>Select a company row to inspect its exact formula, concepts, period and availability. Upper bounds may use total debt when the rate split is unknown or scheduled twelve-month maturities for credit. They are not earnings forecasts; gross_exposure is not net income.</p></div>
                   <div className="scenario-evidence-block"><h3>Baseline provenance</h3><dl>
                     <div><dt>Source</dt><dd>{scenario.baseline?.sourceUrl ?? "—"}</dd></div>
+                    <div><dt>Transport</dt><dd>{scenario.baseline?.provenance ?? "official_normalized_archive"}</dd></div>
                     <div><dt>SHA256</dt><dd className="scenario-hash">{scenario.baseline?.sourceHash ?? "—"}</dd></div>
                     <div><dt>Availability basis</dt><dd>{scenario.baseline?.availabilityBasis ?? "—"}</dd></div>
                     <div><dt>Research eligible</dt><dd>{scenario.baseline?.researchEligibleAt ?? "—"}</dd></div>

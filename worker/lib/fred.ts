@@ -31,6 +31,7 @@ export interface NormalizedMacroPoint {
   ingestedAt: string;
   sourceUrl: string;
   sourceHash: string;
+  provenance?: "official_normalized_archive" | "production_macro_points_extract" | "reviewed_scenario_snapshot";
 }
 
 export const sha256Text = (text: string) => createHash("sha256").update(text).digest("hex");

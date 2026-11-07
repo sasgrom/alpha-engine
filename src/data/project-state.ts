@@ -3,7 +3,7 @@
  * are layered on top in ProjectState.tsx; this file records only durable facts.
  */
 export const PROJECT_STATE_REVIEW = {
-  reviewedOn: "2026-11-06",
+  reviewedOn: "2026-11-07",
   implementation: {
     sp500CodeCommit: "f196acf1e38888c9ae145f8f1fc4a5bd0cfba9fc",
     sp500CodeReady: true,
@@ -27,6 +27,7 @@ export const PROJECT_STATE_REVIEW = {
     { id: "CSCO", title: "CSCO facts, canonical series and factor points materialized", status: "done" as const },
     { id: "DOCUMENTS", title: "Metadata-only EDGAR corpus for 50 companies with SEC external links", status: "done" as const },
     { id: "UI", title: "Latest-first Expectations and ProjectState rendering without macro", status: "done" as const },
+    { id: "SCENARIO", title: "Fifty-company Scenario Lab with explicit upper bounds and availability", status: "done" as const },
   ],
   research: {
     universe: "research-universe-50.json",
@@ -38,7 +39,8 @@ export const PROJECT_STATE_REVIEW = {
     ic: "Historical only · no factor/model/regime promotion",
     schwab: "Verified · 50/50 official closes with OHLCV and same-source previous close/day change · latest 2026-11-05",
     macroPriorEvaluation: "Historical only · 794/1,455 eligible checks · not recomputed after current sync",
-    macroVintageRemediation: "Complete · 408,862 rows · 8/8 current eligible · 0 selected-after-anchor",
+    macroVintageRemediation: "Complete · 408,878 rows · 8/8 current eligible · 0 selected-after-anchor",
+    scenarioLab: "Fifty companies · rates 26 current + 17 historical · credit 36 current + 6 historical · oil/USD direct evidence only · channel status remains evidence-partial",
     thirteenF: "Complete · fund_quarters 6,517 upserted / 14 batches · fund_holdings 1,617,277 upserted / 3,235 batches · production post-check pass",
     thirteenFEvaluation: "Not run after the 24-quarter sync; latest-quarter flow remains unevaluated",
   },
@@ -57,8 +59,8 @@ export const PROJECT_STATE_REVIEW = {
   nextQueue: [
     "Evaluate the existing fundamental factor library and IC, then share weights after the comparable-fund guard",
     "Add CSCO and the other missing companies to EX-99/cohort extraction; independent benchmark before reviewed coverage",
-    "Expand Scenario Lab evidence, not only the pilot selector: fixed rates, fuel/oil, foreign revenue and issuance terms",
-    "Complete EDGAR tone for the remaining 47 companies after the current GPU run",
+    "Review fresh direct SEC evidence for the remaining Scenario Lab gaps; never infer fixed rates, fuel/oil, foreign revenue or issuance terms",
+    "Deliver the completed EDGAR tone run through reviewed backup, exact-key apply and independent post-check",
     "Fix the blank Fund Flows 3D view, then re-enable it for reviewers (temporarily admin-only)",
     "Audit Legacy Dashboard redundancy after the new retail Terminal experience",
   ],

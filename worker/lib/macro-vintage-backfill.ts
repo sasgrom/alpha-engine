@@ -112,9 +112,16 @@ export function prepareMacroVintageBackfill(
     candidates.set(key, point);
   }
   const points: MacroVintageIngestPoint[] = [];
+  const existingByKey = new Map<string, ExistingMacroVintageRow[]>();
+  for (const row of existingRows) {
+    const key = keyOf(row.seriesId, row.date, row.realtimeStart ?? "<null>");
+    const group = existingByKey.get(key) ?? [];
+    group.push(row);
+    existingByKey.set(key, group);
+  }
   let unchangedExistingRows = 0;
   for (const [key, point] of candidates) {
-    const existing = existingRows.filter((row) => row.seriesId === seriesId && row.date === point.date && row.realtimeStart === point.realtimeStart);
+    const existing = existingByKey.get(`${seriesId}|${point.date}|${point.realtimeStart}`) ?? [];
     // Identical keys with different values or ends are conflicts, never an upsert/deduplication opportunity.
     for (const row of existing) {
       if (row.value !== point.value || row.realtimeEnd !== point.realtimeEnd) {

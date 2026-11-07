@@ -6,7 +6,7 @@ export type ScenarioChannel = "rates" | "oil" | "usd" | "credit";
 export type ScenarioStatus = "computable" | "historical_only" | "not_computable";
 export interface MacroScenarioDefinition { channel: ScenarioChannel; shock: number }
 export interface ScenarioMetric {
-  name: "interest_upper_bound" | "interest_estimate" | "fuel_cost_gross" | "oil_revenue_gross" | "oil_cost_gross" | "usd_translation_elasticity";
+  name: "interest_upper_bound" | "interest_estimate" | "fuel_cost_gross" | "oil_revenue_gross" | "oil_cost_gross" | "usd_translation_elasticity" | "credit_refinancing_upper_bound";
   value: number;
   unit: "USD/year" | "USD" | "ratio";
   impactType: "upper_bound" | "estimate" | "gross_exposure";
@@ -43,6 +43,7 @@ export interface MacroScenario {
     ingestedAt: string;
     sourceUrl: string;
     sourceHash: string;
+    provenance?: NormalizedMacroPoint["provenance"];
     stale: boolean;
   } | null;
   status: "complete" | "partial" | "historical_only" | "not_computable";
@@ -59,6 +60,8 @@ export interface MacroScenarioReport {
     upperBoundWhenHedgeUnknown: true;
     staleEvidenceIsHistoricalOnly: true;
     creditRequiresNewIssuanceTerms: true;
+    totalDebtUpperBoundWhenRateShareUnknown: true;
+    creditRefinancingUpperBound: true;
   };
   scenarios: MacroScenario[];
 }
@@ -86,7 +89,9 @@ export function latestMacroPoint(rows: NormalizedMacroPoint[], asOf: string): No
   return [...byPeriod.values()].sort((a, b) => b.observationPeriod.localeCompare(a.observationPeriod) || b.availableAt.localeCompare(a.availableAt))[0] ?? null;
 }
 function metricDetails(metric: ExposureMetric | ExposureEvidence, asOf: string): { concepts: string[]; periodStart: string | null; periodEnd: string | null; availableAt: string | null; stale: boolean } {
-  const concepts = "concept" in metric && metric.concept ? [metric.concept] : "concepts" in metric ? metric.concepts : [];
+  const concepts = Array.isArray((metric as ExposureEvidence).concepts)
+    ? (metric as ExposureEvidence).concepts!
+    : "concept" in metric && metric.concept ? [metric.concept] : "concepts" in metric ? metric.concepts : [];
   const availableAt = "availableAt" in metric ? metric.availableAt : "sourceFiled" in metric ? metric.sourceFiled : null;
   const periodStart = "periodStart" in metric ? metric.periodStart : null;
   return { concepts, periodStart, periodEnd: metric.periodEnd, availableAt, stale: metric.stale === true || stale(metric.periodEnd, asOf) };
@@ -101,30 +106,55 @@ function notComputable(ticker: string, reasons: string[]): CompanyScenarioImpact
 function rateImpact(pilot: PilotEvidence | undefined, exposure: CompanyExposureRow | undefined, shock: number, asOf: string): CompanyScenarioImpact {
   if (!pilot || !exposure) return notComputable(pilot?.ticker ?? exposure?.ticker ?? "UNKNOWN", ["pilot_or_exposure_evidence_missing"]);
   const fixed = pilot.fixedInterestShare;
+  const variable = pilot.variableInterestShare ?? null;
   const debt = exposure.debt;
-  if (!fixed || !validShare(fixed.value)) return notComputable(pilot.ticker, ["fixed_interest_share_missing_or_invalid"]);
-  if (!availabilityDate(fixed, asOf)) return notComputable(pilot.ticker, ["fixed_interest_share_unavailable_asof"]);
+  if (fixed && !validShare(fixed.value)) return notComputable(pilot.ticker, ["fixed_interest_share_missing_or_invalid"]);
+  if (variable && !validShare(variable.value)) return notComputable(pilot.ticker, ["variable_interest_share_missing_or_invalid"]);
+  if (fixed && !availabilityDate(fixed, asOf)) return notComputable(pilot.ticker, ["fixed_interest_share_unavailable_asof"]);
+  if (variable && !availabilityDate(variable, asOf)) return notComputable(pilot.ticker, ["variable_interest_share_unavailable_asof"]);
   if (debt.quality !== "available" || debt.value === null || !Number.isFinite(debt.value) || debt.value < 0) return notComputable(pilot.ticker, ["debt_missing_invalid_or_partial"]);
   if (!availabilityDate(debt, asOf)) return notComputable(pilot.ticker, ["debt_unavailable_asof"]);
-  const isHistorical = stale(fixed.periodEnd, asOf) || stale(debt.periodEnd, asOf);
+
+  const share = [
+    ...(fixed ? [{ kind: "fixed" as const, evidence: fixed }] : []),
+    ...(variable ? [{ kind: "variable" as const, evidence: variable }] : []),
+  ].sort((a, b) => (b.evidence.periodEnd ?? "").localeCompare(a.evidence.periodEnd ?? "")
+    || (b.evidence.availableAt ?? "").localeCompare(a.evidence.availableAt ?? ""))[0] ?? null;
   const hedge = pilot.interestRateHedgeShare;
   if (hedge && !validShare(hedge.value)) return notComputable(pilot.ticker, ["interest_rate_hedge_share_invalid"]);
   const hedgeAvailable = hedge ? availabilityDate(hedge, asOf) : null;
   const hedgeValue = hedge && hedgeAvailable ? hedge.value! : 0;
-  const exposedDebt = debt.value * (1 - fixed.value!) * (1 - hedgeValue);
-  const impactType = hedgeAvailable ? "estimate" : "upper_bound";
-  const status = isHistorical || (hedge && stale(hedge.periodEnd, asOf)) ? "historical_only" : "computable";
+  const exposedFraction = share?.kind === "fixed" ? 1 - share.evidence.value! : share?.kind === "variable" ? share.evidence.value! : 1;
+  const exposedDebt = debt.value * exposedFraction * (1 - hedgeValue);
+  // Without a directly reported fixed/floating split, total debt is a valid
+  // conservative upper bound, never an estimate of rate-sensitive debt.
+  const impactType = share && hedgeAvailable ? "estimate" : "upper_bound";
+  const isHistorical = stale(share?.evidence.periodEnd ?? null, asOf)
+    || stale(debt.periodEnd, asOf)
+    || Boolean(hedge && stale(hedge.periodEnd, asOf));
   const details = metricDetails(debt, asOf);
+  const evidenceInputs = [debt, share?.evidence, hedge].filter((item): item is ExposureMetric | ExposureEvidence => Boolean(item));
+  details.concepts = [...new Set(evidenceInputs.flatMap((item) => metricDetails(item, asOf).concepts))];
+  details.availableAt = evidenceInputs.map((item) => availabilityDate(item, asOf)).filter((item): item is string => Boolean(item)).sort().at(-1) ?? null;
+  const reasons = [
+    ...(!share ? ["fixed_floating_share_unknown_total_debt_upper_bound"] : []),
+    ...(share?.kind === "variable" ? ["variable_interest_share_direct"] : []),
+    ...(!hedgeAvailable ? ["hedge_share_unknown_upper_bound"] : []),
+  ];
   return {
     ticker: pilot.ticker,
-    status,
-    reasons: hedgeAvailable ? [] : ["hedge_share_unknown_upper_bound"],
+    status: isHistorical ? "historical_only" : "computable",
+    reasons,
     metrics: [{
       name: impactType === "estimate" ? "interest_estimate" : "interest_upper_bound",
       value: exposedDebt * shock,
       unit: "USD/year",
       impactType,
-      formula: "debt × (1 − fixedInterestShare) × (1 − interestRateHedgeShare) × rateShock; assumes immediate full repricing of exposed debt",
+      formula: share?.kind === "fixed"
+        ? "debt × (1 − fixedInterestShare) × (1 − interestRateHedgeShare) × rateShock; assumes immediate full repricing of exposed debt"
+        : share?.kind === "variable"
+          ? "debt × variableInterestShare × (1 − interestRateHedgeShare) × rateShock; assumes immediate full repricing of exposed debt"
+          : `debt${hedgeAvailable ? " × (1 − interestRateHedgeShare)" : ""} × rateShock; total-debt upper bound because the fixed/floating split is unknown, assumes immediate full repricing and is not an interest forecast`,
       ...details,
     }],
   };
@@ -170,7 +200,38 @@ function usdImpact(pilot: PilotEvidence | undefined, shock: number, asOf: string
     }],
   };
 }
-// "complete" means every pilot computes; "partial" means only a subset does.
+
+const NEXT_TWELVE_MONTH_MATURITY_CONCEPTS = new Set([
+  "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+  "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextRollingTwelveMonths",
+]);
+
+function creditImpact(pilot: PilotEvidence | undefined, shock: number, asOf: string): CompanyScenarioImpact {
+  if (!pilot) return notComputable("UNKNOWN", ["pilot_evidence_missing"]);
+  const maturity = pilot.debtMaturities
+    .filter((item) => item.concept && NEXT_TWELVE_MONTH_MATURITY_CONCEPTS.has(item.concept))
+    .sort((a, b) => (b.periodEnd ?? "").localeCompare(a.periodEnd ?? "") || (b.availableAt ?? "").localeCompare(a.availableAt ?? ""))[0] ?? null;
+  if (!maturity) return notComputable(pilot.ticker, ["next_twelve_month_debt_maturities_missing", "new_issuance_spread_maturity_and_rating_missing"]);
+  if (maturity.value === null || !Number.isFinite(maturity.value) || maturity.value < 0 || maturity.unit !== "USD") {
+    return notComputable(pilot.ticker, ["next_twelve_month_debt_maturities_invalid"]);
+  }
+  if (!availabilityDate(maturity, asOf)) return notComputable(pilot.ticker, ["next_twelve_month_debt_maturities_unavailable_asof"]);
+  return {
+    ticker: pilot.ticker,
+    status: stale(maturity.periodEnd, asOf) ? "historical_only" : "computable",
+    reasons: ["full_refinancing_and_spread_pass_through_upper_bound", "new_issuance_estimate_not_evaluated"],
+    metrics: [{
+      name: "credit_refinancing_upper_bound",
+      value: maturity.value * shock,
+      unit: "USD/year",
+      impactType: "upper_bound",
+      formula: "nextTwelveMonthDebtMaturities × creditSpreadShock; assumes all scheduled debt is refinanced immediately with full spread pass-through; not a new-issuance or earnings forecast",
+      ...metricDetails(maturity, asOf),
+    }],
+  };
+}
+
+// "complete" means every company computes a current bound/estimate; "partial" means only a subset does.
 // A stale FRED baseline moves the whole scenario to historical-only context.
 function scenarioStatus(impacts: CompanyScenarioImpact[], baselineStale: boolean): MacroScenario["status"] {
   if (baselineStale) return "historical_only";
@@ -219,13 +280,14 @@ export function buildMacroScenarioReport(input: MacroScenarioInput): MacroScenar
       ingestedAt: point.ingestedAt,
       sourceUrl: point.sourceUrl,
       sourceHash: point.sourceHash,
+      ...(point.provenance ? { provenance: point.provenance } : {}),
       stale: baselineStale,
     };
     const impacts = input.pilot.map((pilot) => {
       if (definition.channel === "rates") return rateImpact(pilot, exposures.get(pilot.ticker), definition.shock, input.asOf);
       if (definition.channel === "oil") return oilImpact(pilot, definition.shock, input.asOf);
       if (definition.channel === "usd") return usdImpact(pilot, definition.shock, input.asOf);
-      return notComputable(pilot.ticker, ["new_issuance_spread_maturity_and_rating_missing"]);
+      return creditImpact(pilot, definition.shock, input.asOf);
     });
     return { channel: definition.channel, shock: definition.shock, shockUnit: UNIT[definition.channel], baseline, status: scenarioStatus(impacts, baselineStale), reasons: [], impacts };
   });
@@ -234,7 +296,14 @@ export function buildMacroScenarioReport(input: MacroScenarioInput): MacroScenar
     ...(input.dataMode ? { dataMode: input.dataMode } : {}),
     generatedAt: new Date().toISOString(),
     asOf: input.asOf,
-    policy: { noSectorInference: true, upperBoundWhenHedgeUnknown: true, staleEvidenceIsHistoricalOnly: true, creditRequiresNewIssuanceTerms: true },
+    policy: {
+      noSectorInference: true,
+      upperBoundWhenHedgeUnknown: true,
+      staleEvidenceIsHistoricalOnly: true,
+      creditRequiresNewIssuanceTerms: true,
+      totalDebtUpperBoundWhenRateShareUnknown: true,
+      creditRefinancingUpperBound: true,
+    },
     scenarios,
   };
 }
