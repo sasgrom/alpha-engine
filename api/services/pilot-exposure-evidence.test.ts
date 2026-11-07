@@ -48,6 +48,33 @@ describe("pilot exposure evidence", () => {
     expect(company.interestRateHedgeShare?.stale).toBe(true);
   });
 
+  it("uses direct foreign-country revenue and rejects cross-accession ratios", () => {
+    const direct = buildPilotEvidence(facts({
+      Revenues: { USD: [record("2025-12-31", 200, "2026-02-01", "2025-01-01")] },
+      EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToForeignCountries: { USD: [record("2025-12-31", 80, "2026-02-01", "2025-01-01")] },
+    }), "PFE", "2026-11-02T00:00:00Z");
+    expect(direct.foreignRevenueShare?.value).toBeCloseTo(0.4);
+    expect(direct.foreignRevenueShare?.concepts).toEqual([
+      "EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToForeignCountries",
+      "Revenues",
+    ]);
+
+    const mismatched = buildPilotEvidence(facts({
+      Revenues: { USD: [{ ...record("2025-12-31", 200, "2026-02-01", "2025-01-01"), accn: "0001-26-000001" }] },
+      EntityWideDisclosureOnGeographicAreasRevenueFromExternalCustomersAttributedToForeignCountries: { USD: [{ ...record("2025-12-31", 80, "2026-02-01", "2025-01-01"), accn: "0001-26-000002" }] },
+    }), "PFE", "2026-11-02T00:00:00Z");
+    expect(mismatched.foreignRevenueShare).toBeNull();
+  });
+
+  it("keeps direct variable-rate evidence and long-term weighted-average aliases", () => {
+    const company = buildPilotEvidence(facts({
+      LongTermDebtPercentageBearingVariableInterestRate: { pure: [record("2026-09-30", 0.25, "2026-10-30")] },
+      LongtermDebtWeightedAverageInterestRate: { pure: [record("2026-09-30", 0.05, "2026-10-30")] },
+    }), "RCL", "2026-11-02T00:00:00Z");
+    expect(company.variableInterestShare?.value).toBe(0.25);
+    expect(company.weightedAverageInterestRate?.concept).toBe("LongtermDebtWeightedAverageInterestRate");
+  });
+
   it("does not invent missing fuel, oil or rate-hedge evidence", () => {
     const company = buildPilotEvidence(facts({}), "CVX", "2026-11-02T00:00:00Z");
     expect(company.fuelCost).toBeNull();

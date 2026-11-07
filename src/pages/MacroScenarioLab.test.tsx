@@ -70,6 +70,7 @@ describe("Macro Scenario Lab", () => {
     expect(host!.textContent).toContain("foreign_revenue_share_missing_or_invalid");
     const credit = [...host!.querySelectorAll("button")].find((button) => button.textContent === "CREDIT+100 bp") as HTMLButtonElement;
     await act(async () => { credit.click(); });
-    expect(host!.textContent).toContain("new_issuance_spread_maturity_and_rating_missing");
+    expect(host!.textContent).toContain("credit_refinancing_upper_bound");
+    expect(host!.textContent).toContain("next_twelve_month_debt_maturities_missing");
   });
 });
