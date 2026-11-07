@@ -28,6 +28,7 @@ export const PROJECT_STATE_REVIEW = {
     { id: "DOCUMENTS", title: "Metadata-only EDGAR corpus for 50 companies with SEC external links", status: "done" as const },
     { id: "UI", title: "Latest-first Expectations and ProjectState rendering without macro", status: "done" as const },
     { id: "SCENARIO", title: "Fifty-company Scenario Lab with explicit upper bounds and availability", status: "done" as const },
+    { id: "TONE", title: "EDGAR tone reviewed production sync for all 50 companies", status: "done" as const },
   ],
   research: {
     universe: "research-universe-50.json",
@@ -41,6 +42,7 @@ export const PROJECT_STATE_REVIEW = {
     macroPriorEvaluation: "Historical only · 794/1,455 eligible checks · not recomputed after current sync",
     macroVintageRemediation: "Complete · 408,878 rows · 8/8 current eligible · 0 selected-after-anchor",
     scenarioLab: "Fifty companies · rates 26 current + 17 historical · credit 36 current + 6 historical · oil/USD direct evidence only · channel status remains evidence-partial",
+    edgarTone: "Complete · 18,030 reviewed versioned tone rows / 50 companies · 6,570 inserted + 11,460 exact-ID rekeys · independent production post-check pass",
     thirteenF: "Complete · fund_quarters 6,517 upserted / 14 batches · fund_holdings 1,617,277 upserted / 3,235 batches · production post-check pass",
     thirteenFEvaluation: "Not run after the 24-quarter sync; latest-quarter flow remains unevaluated",
   },
@@ -60,7 +62,6 @@ export const PROJECT_STATE_REVIEW = {
     "Evaluate the existing fundamental factor library and IC, then share weights after the comparable-fund guard",
     "Add CSCO and the other missing companies to EX-99/cohort extraction; independent benchmark before reviewed coverage",
     "Review fresh direct SEC evidence for the remaining Scenario Lab gaps; never infer fixed rates, fuel/oil, foreign revenue or issuance terms",
-    "Deliver the completed EDGAR tone run through reviewed backup, exact-key apply and independent post-check",
     "Fix the blank Fund Flows 3D view, then re-enable it for reviewers (temporarily admin-only)",
     "Audit Legacy Dashboard redundancy after the new retail Terminal experience",
   ],
