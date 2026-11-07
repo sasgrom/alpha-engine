@@ -640,3 +640,14 @@ Deliberately not automatic:
 - Full 50-company evaluation: **1,547 OOS predictions across 45 companies**. Median R² **−0.172**, median log RMSE **0.870**, median ei+ **0.204**, median ei- **0.723**, median balanced accuracy **0.551**. NVDA R²=0.953, but high individual R² is not causal evidence or a production model. Negative R² values remain visible.
 - Generated `public/reports/market-cap-ols-evaluation.json` and `.md`, including per-company and sector summaries. Generated evidence is excluded from source delivery.
 - Verification: **3 market-cap OLS tests + 7 factor OLS tests + 3 nested-eval tests + 13 probability tests**, TypeScript and production build. Runtime version **`c3fd711`** (`Expanding Market Cap OLS evaluation`) was saved.
+
+
+## 61. FRED reviewed sync complete — 2026-11-07
+
+- Uploaded handoff SHA256 `0e28534732b3805bc84ab56be547a722b4462c75b7224cc979aae03824d41` contains 18 entries. All manifest bytes/hashes pass. The eight required raw `observations.json` files were supplied separately and match the reviewed raw hashes exactly.
+- Production backup before mutation: **408,862 rows / 85,308,483 bytes**, SHA256 `d77800f0b182e6eccb4056757431e090a663d5d8dfff8e6da599950049671121`, fingerprint `8f5be8acc4bc347bc15742d8dbe23374b5a1f5c14eb438ec39149b08b5b4e86d`. `backupFingerprintVerified=true`.
+- Backfill inserted exactly **16 rows**: DGS10 3, DGS2 3, T10Y2Y 3, FEDFUNDS 0, CPIAUCSL 0, UNRATE 1, BAMLH0A0HYM2 3, VIXCLS 3. No conflicts and no errors. Final `macro_points` = **408,878**.
+- Independent post-check `pass`: all 16 new rows match normalized archive, zero missing original IDs, zero duplicate groups, zero availability inversions, zero selected-after-anchor. `latestMacro` returns current eligible values for all eight curated series.
+- Scope remains **partial**: 14 other series are QA-only and were not synced. Four BAML quarantined rows were not applied.
+- Optimized existing-row lookup in `worker/lib/macro-vintage-backfill.ts` from repeated per-row filtering to exact-key Map lookup, preserving semantics while avoiding tens of billions of comparisons. Targeted macro backfill tests **1 file / 8 tests** passed.
+- Runtime version **`c3fd711`** was saved.
