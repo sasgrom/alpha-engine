@@ -142,8 +142,8 @@ export function buildFactorPointRows(
   return out;
 }
 
-/** Recompute first-vintage factor points with matching first-series availability. */
-export async function materializeFactorPoints(cik: number): Promise<number> {
+/** Compute current first-vintage factor rows without any database writes. */
+export async function computeFactorPointRows(cik: number): Promise<FactorPointWriteRow[]> {
   const db = getDb();
   const [f, availabilityRaw]: [any, any] = await Promise.all([
     computeCompanyFactors(cik, "first"),
@@ -155,7 +155,13 @@ export async function materializeFactorPoints(cik: number): Promise<number> {
     const periodEnd = String(row.periodEnd).slice(0, 10);
     firstFiled.set(`${row.concept}|${periodEnd}`, row.sourceFiled ? String(row.sourceFiled).slice(0, 19) : null);
   }
-  const rows = buildFactorPointRows(cik, f.detail, firstFiled);
+  return buildFactorPointRows(cik, f.detail, firstFiled);
+}
+
+/** Recompute first-vintage factor points with matching first-series availability. */
+export async function materializeFactorPoints(cik: number): Promise<number> {
+  const db = getDb();
+  const rows = await computeFactorPointRows(cik);
   await db.transaction(async (tx) => {
     await tx.delete(factorPoints).where(eq(factorPoints.cik, cik));
     for (let i = 0; i < rows.length; i += 500) {

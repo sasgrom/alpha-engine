@@ -71,6 +71,15 @@ describe("fundamental integrity and continuity", () => {
     expect(auditFactorPoints([earlyFactor], [fact("Assets", "2024-03-31")]).some((issue) => issue.type === "factor_before_fact")).toBe(true);
   });
 
+  it("does not compare market factors with unrelated fundamental fact availability", () => {
+    const marketRows = [
+      factor("2024-03-31", { factor: "momentum122", filedAt: "2024-03-31 00:00:00" }),
+      factor("2024-03-31", { factor: "high52", filedAt: "2024-03-31 00:00:00" }),
+    ];
+    const issues = auditFactorPoints(marketRows, [fact("Assets", "2024-03-31", { filed: "2024-04-30" })]);
+    expect(issues.some((issue) => issue.type === "factor_before_fact")).toBe(false);
+  });
+
   it("flags duplicate series, series availability inversion and large revisions", () => {
     const duplicate = series("Assets", "2024-03-31", "first");
     const issues = auditSeriesPoints([

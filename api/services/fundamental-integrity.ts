@@ -165,7 +165,10 @@ export function auditFactorPoints(rows: FundamentalFactorRow[], facts: Fundament
     if (row.filedAt < row.periodEnd) add("error", "availability_inversion", row.cik, row.factor, row.periodEnd, `Factor filedAt ${row.filedAt} precedes periodEnd ${row.periodEnd}`);
     if (row.value !== null && !Number.isFinite(row.value)) add("error", "invalid_period", row.cik, row.factor, row.periodEnd, "Non-finite factor value");
     const firstFact = firstFiledByPeriod.get(`${row.cik}|${row.periodEnd}`);
-    if (firstFact && row.filedAt.slice(0, 10) < firstFact) add("error", "factor_before_fact", row.cik, row.factor, row.periodEnd, `Factor availability ${row.filedAt.slice(0, 10)} precedes first fact availability ${firstFact}`);
+    const isMarketFactor = row.factor === "momentum122" || row.factor === "high52";
+    // Market factors are anchored by their own price observation date, not by
+    // the filing date of an unrelated fundamental fact.
+    if (!isMarketFactor && firstFact && row.filedAt.slice(0, 10) < firstFact) add("error", "factor_before_fact", row.cik, row.factor, row.periodEnd, `Factor availability ${row.filedAt.slice(0, 10)} precedes first fact availability ${firstFact}`);
     const key = `${row.cik}|${row.factor}|${row.periodEnd}`;
     if (unique.has(key)) add("error", "duplicate_factor_point", row.cik, row.factor, row.periodEnd, `Duplicate factor point also appears as id ${unique.get(key)!.id}`);
     else unique.set(key, row);

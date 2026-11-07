@@ -181,6 +181,9 @@ export default function ProjectState() {
               <strong>FRED + OFAC</strong><span>{report?.macro?.qaStatus ? `QA ${report.macro.qaStatus}` : "No dated report"}</span><span>Local macro archive</span><p>{report?.macro ? `FRED ${timeText(report.macro.fredGeneratedAt)} · OFAC ${timeText(report.macro.ofacGeneratedAt)}` : "Availability and vintage QA are required before derived research."}</p>
             </div>
             <div className="project-data-row" role="row">
+              <strong>Fundamentals Data QA</strong><span>Partial · active anchors clean</span><span>Research exclusions</span><p>{PROJECT_STATE_REVIEW.research.fundamentalsReadiness}. This is a data-quality gate, not IC, OLS or probability-model promotion.</p>
+            </div>
+            <div className="project-data-row" role="row">
               <strong>EDGAR tone</strong><span>50/50 companies · post-check pass</span><span>Reviewed production signals</span><p>{PROJECT_STATE_REVIEW.research.edgarTone}. Legacy rows outside the reviewed package and all other signal sources were preserved.</p>
             </div>
             <div className="project-data-row" role="row">
