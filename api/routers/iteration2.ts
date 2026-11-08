@@ -18,6 +18,7 @@ function secArchivesDocUrl(cik: number, accessionNo: string, docName: string): s
   return `https://www.sec.gov/Archives/edgar/data/${cik}/${accessionNo.replace(/-/g, "")}/${docName}`;
 }
 import { computeCompanyFactors } from "../services/factors";
+import { readWorkerCacheDoc } from "./document-cache";
 import { computeCompanyValue } from "../services/valuation";
 import { cachedExternal } from "../services/ext-cache";
 import { latestShortInterest } from "../services/short-interest";
@@ -105,7 +106,13 @@ export const documentsRouter = createRouter({
       const db = getDb();
       const [doc] = await db.select().from(documents).where(eq(documents.id, input.id)).limit(1);
       if (!doc) throw new Error("document not found");
-      if (!doc.textKey) throw new Error("no derived text available");
+      if (!doc.textKey) {
+        return {
+          docName: doc.docName, form: doc.form, length: 0,
+          excerpt: "", truncated: false, source: "sec" as const,
+          secUrl: secArchivesDocUrl(doc.cik, doc.accessionNo, doc.docName),
+        };
+      }
       try {
         const bytes = await storage.readFile({ fileKey: doc.textKey });
         const text = Buffer.from(bytes).toString("utf-8");
@@ -140,7 +147,8 @@ export const documentsRouter = createRouter({
     .query(async ({ input }) => {
       const db = getDb();
       const [doc] = await db.select().from(documents).where(eq(documents.id, input.id)).limit(1);
-      if (!doc?.storageKey) throw new Error("raw document not in cloud storage");
+      if (!doc) throw new Error("document not found");
+      if (!doc.storageKey) return { url: secArchivesDocUrl(doc.cik, doc.accessionNo, doc.docName) };
       try {
         const { url } = await storage.getPresignedUrl({ key: doc.storageKey });
         return { url };
@@ -150,30 +158,6 @@ export const documentsRouter = createRouter({
       }
     }),
 });
-
-// ---------------------------------------------------------------------------
-// 5f local document fallback helpers — read the worker EDGAR cache on the
-// home box. Kept here (not api/lib) per the read-only api/lib rule.
-// ---------------------------------------------------------------------------
-import { existsSync, readFileSync } from "node:fs";
-import path from "node:path";
-
-/** Match a documents row to a cached worker file via the cache manifest. */
-function readWorkerCacheDoc(cik: number, accessionNo: string, docName: string): string | null {
-  try {
-    const dir = path.resolve(process.cwd(), "worker", "cache", "edgar", String(cik));
-    const manifest = JSON.parse(readFileSync(path.join(dir, "manifest.json"), "utf8")) as any[];
-    const entry = manifest.find((m) => m.accessionNo === accessionNo);
-    const base = accessionNo.replace(/-/g, "");
-    let file: string | null = null;
-    if (entry?.docName === docName) file = path.join(dir, `${base}.htm`);
-    else if (entry?.exFile === docName) file = path.join(dir, `${base}.ex.htm`);
-    if (file && existsSync(file)) return readFileSync(file, "utf8");
-    return null;
-  } catch {
-    return null;
-  }
-}
 
 // ---------------------------------------------------------------------------
 // series — canonical quarterly time series
