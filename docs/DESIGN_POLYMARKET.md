@@ -32,6 +32,45 @@ keys, order placement and account operations are permanently out of scope.
   and limits change — re-verify against official docs before implementation, do not
   trust this file over the live docs.
 
+
+## 2a. Multi-venue design (added after venue survey, 2026-11)
+
+The module is **venue-agnostic by construction**. A `VenueAdapter` interface
+(`fetchMarkets`, `fetchSnapshot`, `fetchResolution`, `normalize`) produces one
+canonical snapshot format (§4); downstream features, gates and QA never touch
+venue-specific shapes.
+
+Venue registry (priority order):
+
+| Venue | Status | Why |
+|---|---|---|
+| **Polymarket** (US gateway + intl gamma/CLOB) | venue #1 | Widest macro catalogue, rich metadata, keyless reads, price history incl. resolved markets |
+| **Kalshi** | venue #2 | CFTC-regulated, USD-settled, keyless public REST (`https://external-api.kalshi.com/trade-api/v2`: markets, order books, trades, historical candlesticks via `/historical/*` tiers). Token-bucket limits (~200 read tokens/s Basic, ~10 tokens/call). Caveats: ~90% of markets are sports — macro liquidity thinner than headline volume; prices are decimal **strings** (`yes_bid_dollars`), parse as decimals; the NO side of the book is implicit (yes ask = 1 − no bid) |
+| PredictIt | rejected (for now) | Read-only keyless JSON API, but political-only focus (our default-OFF namespace), non-commercial data license, structurally thin markets ($850 position caps) |
+| Novig / ProphetX / OG Predictive | rejected | Sports-native; no macro priors for Scenario Lab |
+| Limitless (Base) | deferred | No simple public read API (off-chain metadata + Base RPC + CLOB glue); fast crypto/price markets. Revisit only if crypto-sentiment becomes a goal |
+
+**Why two venues are worth more than 2x one:**
+
+1. **Cross-venue divergence is itself a signal.** The same macro event priced on
+   Kalshi (KYC'd, USD, CFTC crowd — closer to institutional) and Polymarket
+   (crypto-native, global) gives |P_kalshi − P_polymarket| as an inter-crowd
+   consensus/divergence measure. No single venue provides this.
+2. **Twice the resolved labels.** Calibration history (Brier/log loss per topic)
+   accumulates per venue, letting us measure which crowd is better calibrated on
+   which topics, and weight them accordingly.
+
+Cross-venue matching is **manual and curated**: the watchlist entry links one
+canonical topic to per-venue market IDs (`venues: { polymarket: "...", kalshi:
+"..." }`). No fuzzy auto-matching of contract texts — resolution rules differ
+subtly between venues and a wrong pair silently poisons calibration.
+
+Kalshi implementation notes for the executor: read-only integration needs NO key
+and NO account (verify against live docs at implementation time — base URLs have
+migrated before: `api.elections.kalshi.com` vs `external-api.kalshi.com`);
+WebSocket requires a key and is out of scope; mind the live/historical cutoff
+(`GET /historical/cutoff`) when a settled market disappears from live endpoints.
+
 ## 3. Scope boundaries (non-negotiable)
 
 - Read-only public endpoints only. No authentication anywhere in this module; if an
