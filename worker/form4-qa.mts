@@ -6,10 +6,11 @@ import { form4ExclusionReason, supersedeForm4Transactions } from "./lib/form4-fe
 import { parseForm4Xml } from "./lib/form4-xml";
 import { form4FixtureXml } from "./lib/form4-test-fixtures";
 import { writeJsonAtomic } from "./lib/json-file";
+import { form4CacheRoot, form4QaRunsRoot } from "./lib/cache-root";
 
 const strictQa = process.argv.includes("--strict-qa");
 const from = process.argv.includes("--from") ? process.argv[process.argv.indexOf("--from") + 1] : "2020-01-01";
-const root = path.resolve("worker/cache/edgar-form4");
+const root = form4CacheRoot();
 const qaRoot = path.join(root, "qa");
 const external = [
   { cik: 1108524, ticker: "CRM" },
@@ -110,6 +111,6 @@ const summary = {
   })),
   issues,
 };
-writeJsonAtomic(path.resolve("worker/.runs/form4-qa/summary.json"), summary, true);
+writeJsonAtomic(path.join(form4QaRunsRoot(), "summary.json"), summary, true);
 console.log(JSON.stringify(summary, null, 2));
 if (strictQa && issues.length) throw new Error(`Strict Form 4 QA failed with ${issues.length} issues`);

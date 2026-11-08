@@ -2,6 +2,7 @@ import path from "node:path";
 import { isForm4Placeholder, loadForm4Universe, loadReviewedPriceBars, readJsonFile, type Form4Transaction, type PriceBar } from "./lib/form4-core";
 import { buildInsiderBuyClusters, type InsiderBuyCluster } from "./lib/form4-features";
 import { writeJsonAtomic } from "./lib/json-file";
+import { form4CacheRoot } from "./lib/cache-root";
 
 const arg = (name: string) => {
   const index = process.argv.indexOf(name);
@@ -10,7 +11,7 @@ const arg = (name: string) => {
 const universeFile = arg("--universe") ?? "research-universe-53.json";
 const tickers = arg("--tickers") ?? "";
 const universe = loadForm4Universe(path.resolve("worker", universeFile), tickers);
-const root = path.resolve("worker/cache/edgar-form4");
+const root = form4CacheRoot();
 const summary: { ticker: string; status: string; clusters: number; computed: number; partial: number; exclusionCounts: Record<string, number> }[] = [];
 
 for (const company of universe) {

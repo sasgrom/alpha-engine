@@ -4,6 +4,7 @@ import path from "node:path";
 import { fetchDoc, listFilingDocs, listFilings } from "./lib/edgar";
 import { assertForm4DiskSpace, fetchSecAcceptanceDateTime, isForm4Placeholder, loadForm4Universe, readJsonFile, sha256Text, writeTextAtomic, type Form4ManifestEntry } from "./lib/form4-core";
 import { writeJsonAtomic } from "./lib/json-file";
+import { form4CacheRoot } from "./lib/cache-root";
 
 const arg = (name: string) => {
   const index = process.argv.indexOf(name);
@@ -14,7 +15,7 @@ const tickers = arg("--tickers") ?? "";
 const from = arg("--from");
 const force = process.argv.includes("--force");
 const universe = loadForm4Universe(path.resolve("worker", universeFile), tickers);
-const root = path.resolve("worker/cache/edgar-form4");
+const root = form4CacheRoot();
 assertForm4DiskSpace(root);
 const secErrors: { ticker: string; accessionNo?: string; error: string }[] = [];
 const summary: { ticker: string; status: string; filings: number; fetched: number; resumed: number; missingOwnershipXml: number; placeholders: number }[] = [];

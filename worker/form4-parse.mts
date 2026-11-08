@@ -3,6 +3,7 @@ import path from "node:path";
 import { isForm4Placeholder, loadForm4Universe, readJsonFile, sha256Text, type Form4ManifestEntry, type Form4Transaction } from "./lib/form4-core";
 import { parseForm4Xml } from "./lib/form4-xml";
 import { writeJsonAtomic } from "./lib/json-file";
+import { form4CacheRoot } from "./lib/cache-root";
 
 const arg = (name: string) => {
   const index = process.argv.indexOf(name);
@@ -12,7 +13,7 @@ const universeFile = arg("--universe") ?? "research-universe-53.json";
 const tickers = arg("--tickers") ?? "";
 const from = arg("--from");
 const universe = loadForm4Universe(path.resolve("worker", universeFile), tickers);
-const root = path.resolve("worker/cache/edgar-form4");
+const root = form4CacheRoot();
 const summary: { ticker: string; status: string; accessions: number; transactions: number; errors: string[] }[] = [];
 const errors: string[] = [];
 

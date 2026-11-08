@@ -7,8 +7,27 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$root = Resolve-Path (Join-Path $PSScriptRoot "..")
-Set-Location $root
+$expectedCodeRoot = "C:\dev\alpha-engine"
+$codeRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+if ($codeRoot -ine $expectedCodeRoot) { throw "Canonical code root is $expectedCodeRoot; actual root is $codeRoot" }
+if (-not $env:ALPHA_CACHE_ROOT) { $env:ALPHA_CACHE_ROOT = "D:\alpha-engine\worker\cache" }
+if (-not $env:ALPHA_RUNS_ROOT) { $env:ALPHA_RUNS_ROOT = "D:\alpha-engine\worker\.runs" }
+Write-Host "codeRoot = $codeRoot"
+Write-Host "cacheRoot = $env:ALPHA_CACHE_ROOT"
+Write-Host "runsRoot = $env:ALPHA_RUNS_ROOT"
+Set-Location $codeRoot
+
+$cCache = Join-Path $codeRoot "worker\cache\edgar-form4"
+if (Test-Path -LiteralPath $cCache) {
+  $item = Get-Item -LiteralPath $cCache -Force
+  if ($item.LinkType -notin @("Junction", "SymbolicLink")) {
+    throw "C cache is a normal directory and may split Form 4 state. Run scripts/form4-cache-doctor.ps1 first."
+  }
+  $target = @($item.Target)[0]
+  if (-not $target -or [IO.Path]::GetFullPath($target) -ine [IO.Path]::GetFullPath((Join-Path $env:ALPHA_CACHE_ROOT "edgar-form4"))) {
+    throw "C cache link target $target does not match canonical D cache. Run scripts/form4-cache-doctor.ps1 first."
+  }
+}
 
 if (Get-Command git -ErrorAction SilentlyContinue) {
   $changes = git status --short
@@ -18,7 +37,7 @@ foreach ($command in @("node", "npm", "npx")) {
   if (-not (Get-Command $command -ErrorAction SilentlyContinue)) { throw "$command is required" }
 }
 
-$universeArgs = @("--universe", "research-universe-53.json")
+$universeArgs = @("--universe", "research-universe-50.json")
 if ($Tickers) { $universeArgs += @("--tickers", $Tickers) }
 if ($From) { $universeArgs += @("--from", $From) }
 
@@ -40,9 +59,9 @@ if ($StrictQa) { $qaArgs += "--strict-qa" }
 Invoke-Step "Synthetic and golden EDGAR QA" "worker/form4-qa.mts" $qaArgs
 Invoke-Step "Dry-run benchmark" "worker/form4-benchmark.mts" ($universeArgs + "--dry-run")
 
-$features = Get-Content "worker/cache/edgar-form4/features-summary.json" -Raw | ConvertFrom-Json
-$benchmark = Get-Content "worker/.runs/form4-qa/benchmark-summary.json" -Raw | ConvertFrom-Json
-$qa = Get-Content "worker/.runs/form4-qa/summary.json" -Raw | ConvertFrom-Json
+$features = Get-Content (Join-Path $env:ALPHA_CACHE_ROOT "edgar-form4\features-summary.json") -Raw | ConvertFrom-Json
+$benchmark = Get-Content (Join-Path $env:ALPHA_RUNS_ROOT "form4-qa\benchmark-summary.json") -Raw | ConvertFrom-Json
+$qa = Get-Content (Join-Path $env:ALPHA_RUNS_ROOT "form4-qa\summary.json") -Raw | ConvertFrom-Json
 $clusterCount = ($features.companies | Measure-Object -Property clusters -Sum).Sum
 $notComputable = @($features.companies | Where-Object { $_.clusters -eq 0 } | ForEach-Object { $_.ticker })
 

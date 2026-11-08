@@ -14,6 +14,8 @@ powershell -ExecutionPolicy Bypass -File scripts/form4-mvp.ps1 -Tickers INTC,NVD
 
 `-Force` refetches already cached filings without deleting the cache. `-StrictQa` stops on any QA mismatch. The default universe is `worker/research-universe-53.json`; `XOM_PRE` and other synthetic placeholders return `not_computable` and are never replaced with XOM.
 
+Canonical roots: code lives at `C:\dev\alpha-engine`; Form 4 cache defaults to `D:\alpha-engine\worker\cache\edgar-form4`; QA/benchmark summaries default to `D:\alpha-engine\worker\.runs\form4-qa`. Override only through `ALPHA_CACHE_ROOT` and `ALPHA_RUNS_ROOT`. `scripts/form4-cache-doctor.ps1` reports roots and stops on split-brain without merging, backing up or deleting anything. Delete the old C cache directory manually before a fresh run.
+
 Pipeline:
 
 1. `worker/form4-fetch.mts` reads EDGAR submissions, official `index-headers.html` acceptance timestamps and ownership XML with serialized fair access (`SEC_RPS=7`, hard cap 8). Manifests and raw cache are atomic and resumable under `worker/cache/edgar-form4/`; no midnight acceptance fallback is used.
