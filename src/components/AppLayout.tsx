@@ -312,7 +312,7 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
 
   /** Nav items shared by the desktop sidebar and the mobile drawer. */
   const renderNavItems = (onNavigate?: () => void) =>
-    [...NAV, ...(isPresentationReviewer ? [PROJECT_STATE_NAV, ...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, SCENARIO_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, ...(isAdmin ? [FLOWS_NAV, ADMIN_NAV] : [])] : [])].map((item) => {
+    [...NAV, ...(isPresentationReviewer ? [PROJECT_STATE_NAV, ...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, SCENARIO_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, FLOWS_NAV, ...(isAdmin ? [ADMIN_NAV] : [])] : [])].map((item) => {
       const active = location.pathname === item.path;
       return (
         <div key={item.path} className="reviewer-nav-item" data-guide-block>

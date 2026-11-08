@@ -1293,3 +1293,40 @@
   body.reviewer-restricted * { visibility: hidden !important; }
   body.reviewer-restricted .reviewer-print-block { display: flex !important; visibility: visible !important; position: fixed; inset: 0; align-items: center; justify-content: center; padding: 40px; background: white; color: black; font: 14pt/1.5 monospace; text-align: center; }
 }
+
+/* Fund Flows — 3D plus accessible evidence table */
+.flows-panel { display: flex; flex-direction: column; gap: 12px; height: calc(100dvh - 150px); min-height: 560px; overflow: hidden; }
+.flows-toolbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.flows-view-buttons { display: flex; flex: 0 0 auto; gap: 6px; }
+.flows-view-buttons button { display: inline-flex; align-items: center; gap: 5px; min-height: 36px; padding: 6px 10px; border: 1px solid hsl(var(--border)); background: transparent; color: hsl(var(--muted-foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; cursor: pointer; transition: border-color 150ms ease, color 150ms ease, background 150ms ease; }
+.flows-view-buttons button:hover { border-color: hsl(var(--live) / 0.55); color: hsl(var(--live)); }
+.flows-view-buttons button.active { border-color: hsl(var(--live) / 0.55); background: hsl(var(--live) / 0.08); color: hsl(var(--live)); }
+.flows-view-buttons button:disabled { opacity: 0.45; cursor: default; }
+.flows-scene-caption { position: absolute; top: 72px; left: 12px; z-index: 2; }
+.flows-canvas { position: absolute; inset: 88px 0 0; }
+.flows-state { position: absolute; inset: 88px 0 0; display: grid; place-items: center; padding: 24px; color: hsl(var(--muted-foreground)); font-size: 12px; text-align: center; }
+.flows-error { color: hsl(0 72% 68%); }
+.flows-table-wrap { display: grid; flex: 1; gap: 10px; min-height: 0; }
+.flows-webgl-note { padding: 10px 12px; border-left: 2px solid hsl(43 92% 65%); background: hsl(43 92% 65% / 0.07); color: hsl(43 92% 65%); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; line-height: 1.5; }
+.flows-search { display: flex; align-items: center; gap: 7px; width: min(100%, 420px); min-height: 38px; padding: 0 10px; border: 1px solid hsl(var(--border)); background: hsl(var(--secondary) / 0.45); color: hsl(var(--muted-foreground)); }
+.flows-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: hsl(var(--foreground)); font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; }
+.flows-search:focus-within { border-color: hsl(var(--live) / 0.55); }
+.flows-table-scroll { flex: 1; min-height: 0; overflow: auto; border: 1px solid hsl(var(--border)); }
+.flows-table { width: 100%; min-width: 850px; border-collapse: collapse; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 10px; }
+.flows-table th { position: sticky; top: 0; z-index: 1; padding: 10px; border-bottom: 1px solid hsl(var(--border)); background: hsl(var(--card)); color: hsl(var(--muted-foreground)); font-size: 8px; font-weight: 400; text-align: left; text-transform: uppercase; letter-spacing: 0.07em; }
+.flows-table td { max-width: 390px; padding: 10px; overflow: hidden; border-bottom: 1px solid hsl(var(--border) / 0.62); color: hsl(var(--foreground) / 0.86); text-overflow: ellipsis; white-space: nowrap; }
+.flows-table tbody tr:hover { background: hsl(var(--accent) / 0.16); }
+.flows-table .numeric { text-align: right; font-variant-numeric: tabular-nums; }
+.flow-positive { color: hsl(160 65% 60%); }
+.flow-negative { color: hsl(0 72% 68%); }
+.flows-sector { display: block; margin-top: 2px; color: hsl(var(--muted-foreground)); font-size: 8px; }
+@media (max-width: 820px) {
+  .flows-panel { height: calc(100dvh - 110px); min-height: 520px; }
+  .flows-toolbar { flex-direction: column; }
+  .flows-scene-caption { top: 116px; }
+  .flows-canvas { inset: 132px 0 0; }
+  .flows-state { inset: 132px 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flows-view-buttons button { transition: none; }
+}

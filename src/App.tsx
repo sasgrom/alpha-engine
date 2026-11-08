@@ -78,7 +78,7 @@ export default function App() {
       <Route path="/admin" element={<Admin />} />
       <Route path="/workers" element={<AdminOnly><Workers /></AdminOnly>} />
       <Route path="/project-state" element={<PresentationOnly><ProjectState /></PresentationOnly>} />
-      <Route path="/fundflows" element={<AdminOnly><FundFlows /></AdminOnly>} />
+      <Route path="/fundflows" element={<PresentationOnly><FundFlows /></PresentationOnly>} />
       <Route path="/analytics" element={<PresentationOnly><Analytics /></PresentationOnly>} />
       <Route path="/analytics/methodology" element={<PresentationOnly><Methodology /></PresentationOnly>} />
       <Route path="/analytics/risk-lab" element={<PresentationOnly><VolatilityRiskLab /></PresentationOnly>} />

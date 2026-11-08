@@ -1,192 +1,273 @@
 /**
- * /fundflows (owner-only) — 3D graph of tracked-fund flows into S&P 500 names.
- * Outer ring: funds by tier (activist/quant/fundamental/passive/institutional).
- * Inner ring: companies by GICS sector. Edge = QoQ share-count change; green =
- * increased, red = decreased; thickness ~ |Δshares|. Hover = details, click = focus.
- * Data: admin.fundFlows (deterministic from fund_holdings).
+ * /fundflows — 3D graph plus an accessible tabular view of comparable fund flows.
+ * The graph is an enhancement, never the only way to inspect the evidence.
  */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AlertTriangle, Table2, Rotate3D, Search } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { trpc } from "@/providers/trpc";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { flowEdgeText, groupCompaniesBySector, groupFundsByTier, selectFlowEdges, signed, supportsWebGL, type FlowEdge } from "./fund-flows-utils";
 
 const TIER_COLOR: Record<string, number> = {
-  activist: 0xff5a5a, quant: 0x7cc7ff, fundamental: 0x4ade80, passive: 0xc084fc, institutional: 0x9ca3af,
+  activist: 0xfb7185, quant: 0x7cc7ff, fundamental: 0x4ade80, passive: 0xc084fc, institutional: 0x9ca3af,
 };
 const SECTOR_COLOR: Record<string, number> = {
   "Information Technology": 0x22d3ee, "Health Care": 0x4ade80, Financials: 0xfacc15,
   "Consumer Discretionary": 0xfb923c, "Consumer Staples": 0xf472b6, Industrials: 0xa3a3a3,
   Energy: 0xf87171, Utilities: 0x60a5fa, "Real Estate": 0x2dd4bf, Materials: 0xd4a373,
-  "Communication Services": 0xe879f9,
+  "Communication Services": 0xe879f9, Unclassified: 0x94a3b8,
 };
-
-interface GFund { cik: number; name: string; tier: string | null }
-interface GCompany { cik: number; ticker: string; sector: string | null }
-interface GEdge { fundCik: number; cik: number; curUsd: number; deltaUsd: number; curShares: number; deltaShares: number; deltaWeightPp: number | null }
+const MAX_SCENE_EDGES = 150;
 
 export default function FundFlows() {
   const q = trpc.admin.fundFlows.useQuery({ limit: 400 }, { retry: false });
   const hostRef = useRef<HTMLDivElement>(null);
+  const [viewMode, setViewMode] = useState<"scene" | "table">("scene");
+  const [webglFailed, setWebglFailed] = useState(false);
   const [hover, setHover] = useState<{ text: string; x: number; y: number } | null>(null);
   const [focusLabel, setFocusLabel] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const data = q.data;
+  const funds = data?.funds ?? [];
+  const companies = data?.companies ?? [];
+  const edges = useMemo(() => data?.edges ?? [], [data]);
+  const byCikFund = useMemo(() => new Map(funds.map((fund) => [fund.cik, fund])), [funds]);
+  const byCikCo = useMemo(() => new Map(companies.map((company) => [company.cik, company])), [companies]);
+  const filteredEdges = useMemo(() => selectFlowEdges(edges.filter((edge) => {
+    if (!query.trim()) return true;
+    return flowEdgeText(edge, byCikFund.get(edge.fundCik), byCikCo.get(edge.cik)).includes(query.trim().toLowerCase());
+  }), 100), [edges, query, byCikFund, byCikCo]);
 
   useEffect(() => {
-    const d = q.data;
     const host = hostRef.current;
-    if (!d || !host) return;
-
-    const funds: GFund[] = d.funds;
-    const companies: GCompany[] = d.companies;
-    const edges: GEdge[] = d.edges;
-    const byCikFund = new Map(funds.map((f) => [f.cik, f]));
-    const byCikCo = new Map(companies.map((c) => [c.cik, c]));
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(host.clientWidth, host.clientHeight);
-    host.appendChild(renderer.domElement);
-
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x070b12);
-    const camera = new THREE.PerspectiveCamera(55, host.clientWidth / host.clientHeight, 0.1, 2000);
-    camera.position.set(0, 26, 62);
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.6;
-    controls.enableDamping = true;
-
-    // node positions
-    const pos = new Map<number, THREE.Vector3>();
-    const tierOrder = ["activist", "quant", "fundamental", "passive", "institutional"];
-    const fundsSorted = [...funds].sort((a, b) => tierOrder.indexOf(a.tier ?? "institutional") - tierOrder.indexOf(b.tier ?? "institutional"));
-    fundsSorted.forEach((f, i) => {
-      const a = (i / fundsSorted.length) * Math.PI * 2;
-      pos.set(f.cik, new THREE.Vector3(Math.cos(a) * 30, 0, Math.sin(a) * 30));
-    });
-    const sectorOrder = [...new Set(companies.map((c) => c.sector ?? "?"))].sort();
-    companies.forEach((c, i) => {
-      const sectorIdx = sectorOrder.indexOf(c.sector ?? "?");
-      const perSector = companies.filter((x) => x.sector === c.sector).length;
-      const idxInSector = companies.slice(0, i).filter((x) => x.sector === c.sector).length;
-      const a = (sectorIdx / sectorOrder.length) * Math.PI * 2 + (idxInSector / perSector) * 0.5;
-      pos.set(c.cik, new THREE.Vector3(Math.cos(a) * 15, 0, Math.sin(a) * 15));
-    });
-
-    // nodes (instanced spheres, two meshes)
-    const mkNodes = (ciks: number[], colorOf: (cik: number) => number, sizeOf: (cik: number) => number) => {
-      const geo = new THREE.SphereGeometry(1, 12, 12);
-      const mat = new THREE.MeshBasicMaterial({ vertexColors: true });
-      const mesh = new THREE.InstancedMesh(geo, mat, ciks.length);
-      const m = new THREE.Matrix4();
-      const col = new THREE.Color();
-      ciks.forEach((cik, i) => {
-        const p = pos.get(cik)!;
-        const s = sizeOf(cik);
-        m.makeScale(s, s, s).setPosition(p.x, p.y, p.z);
-        mesh.setMatrixAt(i, m);
-        col.setHex(colorOf(cik));
-        mesh.setColorAt(i, col);
-      });
-      mesh.instanceMatrix.needsUpdate = true;
-      if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-      (mesh as any).userData.ciks = ciks;
-      scene.add(mesh);
-      return mesh;
-    };
-    mkNodes(fundsSorted.map((f) => f.cik), (cik) => TIER_COLOR[byCikFund.get(cik)?.tier ?? "institutional"] ?? 0x9ca3af, () => 0.85);
-    mkNodes(companies.map((c) => c.cik), (cik) => SECTOR_COLOR[byCikCo.get(cik)?.sector ?? ""] ?? 0x60a5fa, () => 0.45);
-
-    // edges
-    const verts: number[] = [], colors: number[] = [];
-    const maxAbs = Math.max(...edges.map((e) => Math.abs(e.deltaShares)), 1);
-    for (const e of edges) {
-      const a = pos.get(e.fundCik)!, b = pos.get(e.cik)!;
-      verts.push(a.x, a.y, a.z, b.x, b.y, b.z);
-      const up = e.deltaShares >= 0;
-      const k = Math.min(1, Math.abs(e.deltaShares) / maxAbs);
-      const c = new THREE.Color(up ? 0x22c55e : 0xef4444).multiplyScalar(0.25 + 0.75 * k);
-      colors.push(c.r, c.g, c.b, c.r, c.g, c.b);
+    if (!data || !host || viewMode !== "scene" || webglFailed) return;
+    if (!supportsWebGL()) {
+      setWebglFailed(true);
+      setViewMode("table");
+      return;
     }
-    const eg = new THREE.BufferGeometry();
-    eg.setAttribute("position", new THREE.Float32BufferAttribute(verts, 3));
-    eg.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-    const lines = new THREE.LineSegments(eg, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.55 }));
-    scene.add(lines);
-
-    // hover / focus
-    const ray = new THREE.Raycaster();
-    const ndc = new THREE.Vector2();
-    const onMove = (ev: PointerEvent) => {
-      const r = renderer.domElement.getBoundingClientRect();
-      ndc.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
-      ray.setFromCamera(ndc, camera);
-      const meshes = scene.children.filter((c): c is THREE.InstancedMesh => (c as any).isInstancedMesh);
-      const hit = ray.intersectObjects(meshes)[0];
-      if (hit && (hit as any).instanceId !== undefined) {
-        const mesh = hit.object as THREE.InstancedMesh;
-        const cik = (mesh as any).userData.ciks[(hit as any).instanceId];
-        const f = byCikFund.get(cik), co = byCikCo.get(cik);
-        if (f) setHover({ text: `${f.name} [${f.tier}]`, x: ev.clientX - r.left, y: ev.clientY - r.top });
-        else if (co) setHover({ text: `${co.ticker} — ${co.sector ?? ""}`, x: ev.clientX - r.left, y: ev.clientY - r.top });
-      } else setHover(null);
-    };
-    const onClick = () => {
-      const meshes = scene.children.filter((c): c is THREE.InstancedMesh => (c as any).isInstancedMesh);
-      const hit = ray.intersectObjects(meshes)[0];
-      if (hit && (hit as any).instanceId !== undefined) {
-        const mesh = hit.object as THREE.InstancedMesh;
-        const cik = (mesh as any).userData.ciks[(hit as any).instanceId];
-        const p = pos.get(cik)!;
-        controls.target.copy(p);
-        setFocusLabel(byCikFund.get(cik)?.name ?? byCikCo.get(cik)?.ticker ?? null);
-      }
-    };
-    renderer.domElement.addEventListener("pointermove", onMove);
-    renderer.domElement.addEventListener("click", onClick);
-
-    const onResize = () => {
-      camera.aspect = host.clientWidth / host.clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(host.clientWidth, host.clientHeight);
-    };
-    window.addEventListener("resize", onResize);
-    const raf = { id: 0 };
-    const tick = () => { raf.id = requestAnimationFrame(tick); controls.update(); renderer.render(scene, camera); };
-    tick();
-
-    return () => {
-      cancelAnimationFrame(raf.id);
+    let renderer: THREE.WebGLRenderer | null = null;
+    let controls: OrbitControls | null = null;
+    let frame = 0;
+    let lastFrame = 0;
+    let disposed = false;
+    const scene = new THREE.Scene();
+    const geometry = new THREE.SphereGeometry(1, 16, 16);
+    const materials: THREE.Material[] = [];
+    const onMove = () => undefined;
+    const onResize = () => undefined;
+    const cleanup = () => {
+      disposed = true;
+      cancelAnimationFrame(frame);
       window.removeEventListener("resize", onResize);
-      renderer.domElement.removeEventListener("pointermove", onMove);
-      renderer.domElement.removeEventListener("click", onClick);
-      controls.dispose();
-      renderer.dispose();
-      host.removeChild(renderer.domElement);
-      scene.traverse((o: any) => { o.geometry?.dispose?.(); if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m: any) => m.dispose?.()); });
+      if (controls) controls.dispose();
+      if (renderer) {
+        renderer.domElement.removeEventListener("pointermove", onMove);
+        renderer.domElement.removeEventListener("click", onMove);
+        renderer.dispose();
+        if (host.contains(renderer.domElement)) host.removeChild(renderer.domElement);
+      }
+      scene.traverse((object: any) => {
+        if (object.material) (Array.isArray(object.material) ? object.material : [object.material]).forEach((material: any) => material.dispose?.());
+      });
+      geometry.dispose();
     };
-  }, [q.data]);
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(host.clientWidth, host.clientHeight);
+      renderer.domElement.setAttribute("aria-label", "Interactive three-dimensional fund flow graph");
+      host.appendChild(renderer.domElement);
+      renderer.domElement.addEventListener("webglcontextlost", () => {
+        setWebglFailed(true);
+        setViewMode("table");
+      });
 
+      scene.background = new THREE.Color(0x070b12);
+      scene.fog = new THREE.Fog(0x070b12, 85, 180);
+      const camera = new THREE.PerspectiveCamera(55, host.clientWidth / Math.max(1, host.clientHeight), 0.1, 2000);
+      camera.position.set(0, 26, 62);
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.autoRotate = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      controls.autoRotateSpeed = 0.35;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+
+      const ground = new THREE.Mesh(new THREE.CircleGeometry(75, 72), new THREE.MeshBasicMaterial({ color: 0x09111d, side: THREE.DoubleSide }));
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.y = -0.65;
+      scene.add(ground);
+
+      const pos = new Map<number, THREE.Vector3>();
+      const tierGroups = groupFundsByTier(funds);
+      const tierOrder = [...tierGroups.keys()];
+      tierOrder.forEach((tier, tierIndex) => {
+        const group = tierGroups.get(tier)!;
+        const tierAngle = (tierIndex / Math.max(1, tierOrder.length)) * Math.PI * 2;
+        group.forEach((fund, index) => {
+          const angle = tierAngle + (index / group.length) * (Math.PI * 0.62);
+          pos.set(fund.cik, new THREE.Vector3(Math.cos(angle) * 30, 0, Math.sin(angle) * 30));
+        });
+        const material = new THREE.MeshBasicMaterial({ color: TIER_COLOR[tier] ?? TIER_COLOR.institutional });
+        materials.push(material);
+        const mesh = new THREE.InstancedMesh(geometry, material, group.length);
+        const matrix = new THREE.Matrix4();
+        group.forEach((fund, index) => {
+          const point = pos.get(fund.cik)!;
+          matrix.makeScale(0.9, 0.9, 0.9).setPosition(point.x, point.y, point.z);
+          mesh.setMatrixAt(index, matrix);
+        });
+        mesh.instanceMatrix.needsUpdate = true;
+        (mesh as any).userData.ciks = group.map((fund) => fund.cik);
+        scene.add(mesh);
+      });
+
+      const sectorGroups = groupCompaniesBySector(companies);
+      const sectorOrder = [...sectorGroups.keys()].sort();
+      sectorOrder.forEach((sector, sectorIndex) => {
+        const group = sectorGroups.get(sector)!;
+        const sectorAngle = (sectorIndex / Math.max(1, sectorOrder.length)) * Math.PI * 2;
+        group.forEach((company, index) => {
+          const angle = sectorAngle + (index / group.length) * 0.48;
+          pos.set(company.cik, new THREE.Vector3(Math.cos(angle) * 15, 0, Math.sin(angle) * 15));
+        });
+        const material = new THREE.MeshBasicMaterial({ color: SECTOR_COLOR[sector] ?? SECTOR_COLOR.Unclassified });
+        materials.push(material);
+        const mesh = new THREE.InstancedMesh(geometry, material, group.length);
+        const matrix = new THREE.Matrix4();
+        group.forEach((company, index) => {
+          const point = pos.get(company.cik)!;
+          matrix.makeScale(0.55, 0.55, 0.55).setPosition(point.x, point.y, point.z);
+          mesh.setMatrixAt(index, matrix);
+        });
+        mesh.instanceMatrix.needsUpdate = true;
+        (mesh as any).userData.ciks = group.map((company) => company.cik);
+        scene.add(mesh);
+      });
+
+      const flowEdges = selectFlowEdges(edges, MAX_SCENE_EDGES);
+      const vertices: number[] = [], colors: number[] = [];
+      const maxAbs = Math.max(...flowEdges.map((edge) => Math.abs(edge.deltaShares)), 1);
+      for (const edge of flowEdges) {
+        const from = pos.get(edge.fundCik)!, to = pos.get(edge.cik)!;
+        vertices.push(from.x, from.y, from.z, to.x, to.y, to.z);
+        const magnitude = Math.min(1, Math.abs(edge.deltaShares) / maxAbs);
+        const color = new THREE.Color(edge.deltaShares >= 0 ? 0x34d399 : 0xfb7185).multiplyScalar(0.35 + 0.65 * magnitude);
+        colors.push(color.r, color.g, color.b, color.r, color.g, color.b);
+      }
+      const edgeGeometry = new THREE.BufferGeometry();
+      edgeGeometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+      edgeGeometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+      const edgeMaterial = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.38 });
+      materials.push(edgeMaterial);
+      scene.add(new THREE.LineSegments(edgeGeometry, edgeMaterial));
+
+      const ray = new THREE.Raycaster();
+      const ndc = new THREE.Vector2();
+      const onPointerMove = (event: PointerEvent) => {
+        const rect = renderer!.domElement.getBoundingClientRect();
+        ndc.set(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1);
+        ray.setFromCamera(ndc, camera);
+        const meshes = scene.children.filter((child): child is THREE.InstancedMesh => (child as any).isInstancedMesh);
+        const hit = ray.intersectObjects(meshes)[0];
+        if (hit && (hit as any).instanceId !== undefined) {
+          const mesh = hit.object as THREE.InstancedMesh;
+          const cik = (mesh as any).userData.ciks[(hit as any).instanceId];
+          const fund = byCikFund.get(cik), company = byCikCo.get(cik);
+          if (fund) setHover({ text: `${fund.name} [${fund.tier ?? "institutional"}]`, x: event.clientX - rect.left, y: event.clientY - rect.top });
+          else if (company) setHover({ text: `${company.ticker} — ${company.sector ?? "Unclassified"}`, x: event.clientX - rect.left, y: event.clientY - rect.top });
+        } else setHover(null);
+      };
+      const onClick = () => {
+        const meshes = scene.children.filter((child): child is THREE.InstancedMesh => (child as any).isInstancedMesh);
+        const hit = ray.intersectObjects(meshes)[0];
+        if (hit && (hit as any).instanceId !== undefined) {
+          const mesh = hit.object as THREE.InstancedMesh;
+          const cik = (mesh as any).userData.ciks[(hit as any).instanceId];
+          const point = pos.get(cik)!;
+          controls!.target.copy(point);
+          setFocusLabel(byCikFund.get(cik)?.name ?? byCikCo.get(cik)?.ticker ?? null);
+        }
+      };
+      renderer.domElement.addEventListener("pointermove", onPointerMove);
+      renderer.domElement.addEventListener("click", onClick);
+      const resize = () => {
+        camera.aspect = host.clientWidth / Math.max(1, host.clientHeight);
+        camera.updateProjectionMatrix();
+        renderer!.setSize(host.clientWidth, host.clientHeight);
+      };
+      window.addEventListener("resize", resize);
+      const tick = (time: number) => {
+        if (disposed) return;
+        frame = requestAnimationFrame(tick);
+        if (time - lastFrame < 33 || document.hidden) return;
+        lastFrame = time;
+        controls!.update();
+        renderer!.render(scene, camera);
+      };
+      frame = requestAnimationFrame(tick);
+      return cleanup;
+    } catch {
+      cleanup();
+      setWebglFailed(true);
+      setViewMode("table");
+      return undefined;
+    }
+  }, [data, viewMode, webglFailed, byCikFund, byCikCo, edges]);
+
+  const guard = data?.guard;
   return (
     <AppLayout title="Fund flows — 3D">
-      <div className="panel relative" style={{ height: "calc(100vh - 150px)", minHeight: 480 }}>
-        {q.data?.guard && (
-          <div className="absolute top-3 left-3 z-10 t-mono text-[11px] text-muted-foreground max-w-[95%]" title={q.data.guard.warnings.join("\n")}>
-            {q.data.guard.cur} vs {q.data.guard.prev ?? "n/a"} · stable funds {q.data.guard.stableFunds} · coverage {q.data.guard.curFunds}/{q.data.guard.expectedFunds} · excluded {q.data.guard.missingFunds + q.data.guard.suspectFunds}{q.data.guard.partial ? " · partial" : ""}
+      <div className="panel relative flows-panel">
+        <div className="flows-toolbar">
+          <div className="space-y-1">
+            {guard && <div className="t-mono text-[11px] text-muted-foreground max-w-[95%]" title={guard.warnings.join("\n")}>
+              {guard.cur} vs {guard.prev ?? "n/a"} · stable funds {guard.stableFunds} · coverage {guard.curFunds}/{guard.expectedFunds} · excluded {guard.missingFunds + guard.suspectFunds}{guard.partial ? " · partial" : ""}
+            </div>}
+            <div className="t-mono text-[11px] text-muted-foreground max-w-[95%]">
+              outer ring = funds by tier · inner ring = companies by sector · green inflow / red outflow · hover for names, click to focus
+            </div>
           </div>
-        )}
-        <div className="absolute top-10 left-3 z-10 t-mono text-[11px] text-muted-foreground max-w-[95%]">
-          outer ring = funds by tier · inner ring = companies by sector · green inflow / red outflow · hover for names, click to focus
+          <div className="flows-view-buttons" role="group" aria-label="Fund flow view">
+            <button type="button" className={viewMode === "scene" && !webglFailed ? "active" : ""} disabled={webglFailed} aria-pressed={viewMode === "scene" && !webglFailed} onClick={() => setViewMode("scene")}><Rotate3D size={13} /> 3D</button>
+            <button type="button" className={viewMode === "table" || webglFailed ? "active" : ""} aria-pressed={viewMode === "table" || webglFailed} onClick={() => setViewMode("table")}><Table2 size={13} /> Data table</button>
+          </div>
         </div>
-        <div ref={hostRef} className="w-full h-full" />
-        {hover && (
-          <div className="absolute z-20 t-mono text-[11px] px-2 py-1 rounded border border-border bg-[hsl(var(--card))] pointer-events-none"
-            style={{ left: hover.x + 12, top: hover.y + 12 }}>
-            {hover.text}
+
+        {q.isLoading && <div className="flows-state" role="status">loading flow graph…</div>}
+        {q.isError && <div className="flows-state flows-error" role="alert"><AlertTriangle size={18} /><p>Fund flow data could not be loaded. No graph is inferred from the error.</p></div>}
+        {!q.isLoading && !q.isError && edges.length === 0 && <div className="flows-state" role="status"><p>No comparable fund flows are available for this guard. Current-quarter levels are not converted into QoQ flows.</p></div>}
+
+        {!q.isLoading && !q.isError && edges.length > 0 && viewMode === "scene" && !webglFailed && <>
+          <div className="flows-scene-caption t-mono text-[10px] text-muted-foreground">showing {Math.min(MAX_SCENE_EDGES, edges.length)}/{edges.length} strongest share changes · {funds.length} funds · {companies.length} companies</div>
+          <div ref={hostRef} className="flows-canvas" />
+          {hover && <div className="absolute z-20 t-mono text-[11px] px-2 py-1 rounded border border-border bg-[hsl(var(--card))] pointer-events-none" style={{ left: hover.x + 12, top: hover.y + 12 }}>{hover.text}</div>}
+          {focusLabel && <div className="absolute bottom-3 left-3 z-10 t-mono text-[11px] text-live-cyan">focused: {focusLabel}</div>}
+        </>}
+
+        {!q.isLoading && !q.isError && edges.length > 0 && (viewMode === "table" || webglFailed) && (
+          <div className="flows-table-wrap">
+            {webglFailed && <div className="flows-webgl-note" role="status">3D is unavailable in this browser. The same evidence is shown below in accessible form.</div>}
+            <label className="flows-search"><Search size={13} /><span className="sr-only">Filter fund flows</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Filter fund, ticker or sector" /></label>
+            <div className="t-mono text-[10px] text-muted-foreground">{filteredEdges.length} shown · {edges.length} total flows</div>
+            <div className="flows-table-scroll" role="region" aria-label="Comparable fund flows table" tabIndex={0}>
+              <table className="flows-table"><thead><tr><th>Fund</th><th>Company</th><th className="numeric">Δ shares</th><th className="numeric">Δ USD</th><th className="numeric">Δ weight pp</th></tr></thead>
+                <tbody>{filteredEdges.map((edge) => {
+                  const fund = byCikFund.get(edge.fundCik), company = byCikCo.get(edge.cik);
+                  return <tr key={`${edge.fundCik}-${edge.cik}`}>
+                    <td title={fund?.name ?? String(edge.fundCik)}>{fund?.name ?? edge.fundCik}</td>
+                    <td><strong>{company?.ticker ?? edge.cik}</strong><span className="flows-sector">{company?.sector ?? "Unclassified"}</span></td>
+                    <td className={edge.deltaShares >= 0 ? "flow-positive numeric" : "flow-negative numeric"} title={String(edge.deltaShares)}>{signed(edge.deltaShares)}</td>
+                    <td className={edge.deltaUsd >= 0 ? "flow-positive numeric" : "flow-negative numeric"} title={String(edge.deltaUsd)}>{signed(edge.deltaUsd)}</td>
+                    <td className="numeric">{edge.deltaWeightPp === null ? "—" : signed(edge.deltaWeightPp, 3)}</td>
+                  </tr>;
+                })}</tbody>
+              </table>
+            </div>
           </div>
         )}
-        {focusLabel && <div className="absolute bottom-3 left-3 z-10 t-mono text-[11px] text-live-cyan">focused: {focusLabel}</div>}
-        {q.isLoading && <div className="absolute inset-0 grid place-items-center t-mono text-[12px] text-muted-foreground">loading flow graph…</div>}
       </div>
     </AppLayout>
   );

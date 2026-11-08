@@ -22,7 +22,7 @@ import path from "node:path";
 import { z } from "zod";
 import { desc, eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import { createRouter, adminQuery } from "../middleware";
+import { createRouter, adminQuery, authedQuery } from "../middleware";
 import { crossSectionFactorIc } from "../services/factor-ic";
 import { fundFlowsGraph } from "../services/institutional";
 import { getDb } from "../queries/connection";
@@ -82,7 +82,7 @@ export const adminRouter = createRouter({
   factorIc: adminQuery.query(async () => crossSectionFactorIc()),
 
   /** 5g-3D: fund×company flow graph for the 3D visualization. */
-  fundFlows: adminQuery.input(z.object({ limit: z.number().int().min(50).max(1000).default(400) })).query(({ input }) => fundFlowsGraph(input.limit)),
+  fundFlows: authedQuery.input(z.object({ limit: z.number().int().min(50).max(1000).default(400) })).query(({ input }) => fundFlowsGraph(input.limit)),
 
   /**
    * Manual list with metadata. `source` tells the UI whether the text came
