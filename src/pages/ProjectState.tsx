@@ -181,6 +181,9 @@ export default function ProjectState() {
               <strong>FRED + OFAC</strong><span>{report?.macro?.qaStatus ? `QA ${report.macro.qaStatus}` : "No dated report"}</span><span>Local macro archive</span><p>{report?.macro ? `FRED ${timeText(report.macro.fredGeneratedAt)} · OFAC ${timeText(report.macro.ofacGeneratedAt)}` : "Availability and vintage QA are required before derived research."}</p>
             </div>
             <div className="project-data-row" role="row">
+              <strong>Fund Flows + Revenue draft</strong><span>3D restored · protocol draft</span><span>Reviewer presentation</span><p>{PROJECT_STATE_REVIEW.research.revenuePilot}. Fund flows include a searchable evidence table and a no-WebGL fallback; the Revenue target remains unselected.</p>
+            </div>
+            <div className="project-data-row" role="row">
               <strong>Fundamentals Data QA</strong><span>Partial · active anchors clean</span><span>Research exclusions</span><p>{PROJECT_STATE_REVIEW.research.fundamentalsReadiness}. This is a data-quality gate, not IC, OLS or probability-model promotion.</p>
             </div>
             <div className="project-data-row" role="row">

@@ -31,6 +31,7 @@ export const PROJECT_STATE_REVIEW = {
     { id: "TONE", title: "EDGAR tone reviewed production sync for all 50 companies", status: "done" as const },
     { id: "BASELINE", title: "Clean checkout restored; document-presentation and signals.note aligned", status: "done" as const },
     { id: "FACTOR_QA", title: "Factor availability rematerialization and Fundamentals Data QA complete", status: "done" as const },
+    { id: "FLOWS", title: "Accessible Fund Flows 3D, reviewer access and WebGL fallback restored", status: "done" as const },
   ],
   research: {
     universe: "research-universe-50.json",
@@ -46,6 +47,7 @@ export const PROJECT_STATE_REVIEW = {
     scenarioLab: "Fifty companies · rates 26 current + 17 historical · credit 36 current + 6 historical · oil/USD direct evidence only · channel status remains evidence-partial",
     edgarTone: "Complete · 18,030 reviewed versioned tone rows / 50 companies · 6,570 inserted + 11,460 exact-ID rekeys · independent production post-check pass",
     fundamentalsReadiness: "Partial · 21,263 active factor points · 14 pilot candidates + 2 limited + 6 not evaluated · 1,280 integrity errors retained as per-period exclusions · active availability inversions=0 · netDebt/ROE/ROA independent mismatches=0",
+    revenuePilot: "Draft only · target not selected · 88 exact-fact exclusions + 2,774 TTM-window exclusions + 569 review warnings · no model or IC run",
     thirteenF: "Complete · fund_quarters 6,517 upserted / 14 batches · fund_holdings 1,617,277 upserted / 3,235 batches · production post-check pass",
     thirteenFEvaluation: "Not run after the 24-quarter sync; latest-quarter flow remains unevaluated",
   },
@@ -62,10 +64,9 @@ export const PROJECT_STATE_REVIEW = {
     accountSeedRequired: false,
   },
   nextQueue: [
-    "Triage the 1,280 fundamental integrity issues into explicit per-period exclusions, then freeze the Revenue pilot protocol",
+    "Select the Revenue pilot target and approve the protocol before implementation",
     "Add CSCO and the other missing companies to EX-99/cohort extraction; independent benchmark before reviewed coverage",
     "Review fresh direct SEC evidence for the remaining Scenario Lab gaps; never infer fixed rates, fuel/oil, foreign revenue or issuance terms",
-    "Fix the blank Fund Flows 3D view, then re-enable it for reviewers (temporarily admin-only)",
     "Audit Legacy Dashboard redundancy after the new retail Terminal experience",
   ],
 } as const;
