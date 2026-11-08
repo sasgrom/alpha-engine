@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import path from "node:path";
 import { CACHE_ROOT, CODE_ROOT, form4CacheRoot, form4QaRunsRoot, RUNS_ROOT } from "./cache-root";
+import { readJsonFile } from "./form4-core";
 
 describe("canonical Form 4 cache roots", () => {
   it("keeps Form 4 cache under one cache root", () => {
@@ -12,5 +13,9 @@ describe("canonical Form 4 cache roots", () => {
     expect(form4QaRunsRoot()).toBe(path.join(RUNS_ROOT, "form4-qa"));
     expect(path.isAbsolute(form4QaRunsRoot())).toBe(true);
     expect(CODE_ROOT).toBe(path.resolve(import.meta.dirname, "../.."));
+  });
+
+  it("starts with an empty manifest when no cache exists", () => {
+    expect(readJsonFile("worker/.runs/definitely-missing-form4-manifest.json", [])).toEqual([]);
   });
 });

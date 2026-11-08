@@ -12,9 +12,9 @@ Options:
 powershell -ExecutionPolicy Bypass -File scripts/form4-mvp.ps1 -Tickers INTC,NVDA -From 2024-01-01 -DryRun -StrictQa
 ```
 
-`-Force` refetches already cached filings without deleting the cache. `-StrictQa` stops on any QA mismatch. The default universe is `worker/research-universe-53.json`; `XOM_PRE` and other synthetic placeholders return `not_computable` and are never replaced with XOM.
+`-Force` refetches already cached filings without deleting the cache. `-StrictQa` stops on any QA mismatch. The default universe is `worker/research-universe-50.json`; `XOM_PRE` and other synthetic placeholders return `not_computable` and are never replaced with XOM.
 
-Canonical roots: code lives at `C:\dev\alpha-engine`; Form 4 cache defaults to `D:\alpha-engine\worker\cache\edgar-form4`; QA/benchmark summaries default to `D:\alpha-engine\worker\.runs\form4-qa`. Override only through `ALPHA_CACHE_ROOT` and `ALPHA_RUNS_ROOT`. `scripts/form4-cache-doctor.ps1` reports roots and stops on split-brain without merging, backing up or deleting anything. Delete the old C cache directory manually before a fresh run.
+Canonical roots: code lives at `C:\dev\alpha-engine`; Form 4 cache defaults to `D:\alpha-engine\worker\cache\edgar-form4`; QA/benchmark summaries default to `D:\alpha-engine\worker\.runs\form4-qa`. Override only through `ALPHA_CACHE_ROOT` and `ALPHA_RUNS_ROOT`. Doctor checks the parent `worker\cache` reparse point before the child path. A parent junction targeting `ALPHA_CACHE_ROOT` is one physical store, so a blank child LinkType is valid. Split-brain exists only when the parent is a normal directory and D contains files. Never recursively remove a path under `worker\cache`; if a reparse point must be removed, use only `cmd /c rmdir` on the link itself.
 
 Pipeline:
 

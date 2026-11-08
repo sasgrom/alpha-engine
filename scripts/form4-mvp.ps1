@@ -17,16 +17,31 @@ Write-Host "cacheRoot = $env:ALPHA_CACHE_ROOT"
 Write-Host "runsRoot = $env:ALPHA_RUNS_ROOT"
 Set-Location $codeRoot
 
-$cCache = Join-Path $codeRoot "worker\cache\edgar-form4"
-if (Test-Path -LiteralPath $cCache) {
-  $item = Get-Item -LiteralPath $cCache -Force
-  if ($item.LinkType -notin @("Junction", "SymbolicLink")) {
-    throw "C cache is a normal directory and may split Form 4 state. Run scripts/form4-cache-doctor.ps1 first."
-  }
+$cParent = Join-Path $codeRoot "worker\cache"
+$cCache = Join-Path $cParent "edgar-form4"
+$dCache = Join-Path $env:ALPHA_CACHE_ROOT "edgar-form4"
+function Test-LinkTarget([string]$Path, [string]$ExpectedTarget) {
+  if (-not (Test-Path -LiteralPath $Path)) { return $false }
+  $item = Get-Item -LiteralPath $Path -Force
+  if ($item.LinkType -notin @("Junction", "SymbolicLink")) { return $false }
   $target = @($item.Target)[0]
-  if (-not $target -or [IO.Path]::GetFullPath($target) -ine [IO.Path]::GetFullPath((Join-Path $env:ALPHA_CACHE_ROOT "edgar-form4"))) {
-    throw "C cache link target $target does not match canonical D cache. Run scripts/form4-cache-doctor.ps1 first."
+  return $target -and [IO.Path]::GetFullPath($target) -ieq [IO.Path]::GetFullPath($ExpectedTarget)
+}
+
+$parentItem = Get-Item -LiteralPath $cParent -Force
+if ($parentItem.LinkType -in @("Junction", "SymbolicLink")) {
+  if (-not (Test-LinkTarget $cParent $env:ALPHA_CACHE_ROOT)) {
+    throw "worker\cache link target does not match ALPHA_CACHE_ROOT; no files were changed"
   }
+  Write-Host "OK: single physical store via junction"
+} elseif (Test-LinkTarget $cCache $dCache) {
+  Write-Host "OK: single physical store via edgar-form4 junction"
+} else {
+  $dFiles = Get-ChildItem -LiteralPath $dCache -Recurse -File -Force -ErrorAction SilentlyContinue
+  if ($dFiles.Count -gt 0) {
+    throw "Split-brain detected: worker\cache is a normal directory and D cache contains files; no files were changed"
+  }
+  Write-Host "OK: empty cache start is allowed"
 }
 
 if (Get-Command git -ErrorAction SilentlyContinue) {
