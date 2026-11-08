@@ -2,16 +2,16 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { readCohortEntries } from "../worker/lib/cohort-checkpoint";
 import { assertExpectationNormalizationAudit, normalizeExpectationStatement, type ExpectationNormalizationAudit } from "../worker/lib/expectation-normalization";
-import { EXPECTATION_NORMALIZATION_VERSION, type ExpectationReviewItem } from "../worker/lib/expectation-normalization-rules";
+import { EXPECTATION_DEVELOPMENT_TICKERS, EXPECTATION_HOLDOUT_TICKERS, EXPECTATION_NORMALIZATION_VERSION, type ExpectationReviewItem } from "../worker/lib/expectation-normalization-rules";
 
-const DEVELOPMENT = new Set(["NVDA", "META", "AMZN", "JPM", "WMT"]);
-const HOLDOUT = new Set(["PFE", "UNH", "MSFT"]);
+const DEVELOPMENT = new Set(EXPECTATION_DEVELOPMENT_TICKERS);
+const HOLDOUT = new Set(EXPECTATION_HOLDOUT_TICKERS);
 const arg = (name: string) => {
   const index = process.argv.indexOf(name);
   return index >= 0 ? process.argv[index + 1] : null;
 };
 const universePath = path.resolve(arg("--universe") ?? "worker/research-universe-50.json");
-const out = path.resolve(arg("--out") ?? "research/expectation-normalization-postprocessing-v1.json");
+const out = path.resolve(arg("--out") ?? "research/expectation-normalization-postprocessing-v2.json");
 const companies = JSON.parse(readFileSync(universePath, "utf8")) as { cik: number; ticker: string }[];
 const entries = companies.flatMap((company) => readCohortEntries(path.resolve("worker/cache/edgar", String(company.cik))));
 const audit: ExpectationNormalizationAudit[] = [];

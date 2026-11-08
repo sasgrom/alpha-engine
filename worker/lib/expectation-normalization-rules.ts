@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto";
 import type { ExpectationStatement } from "./expectations";
 
-export const EXPECTATION_NORMALIZATION_VERSION = "expectation-normalization-v1";
+export const EXPECTATION_NORMALIZATION_VERSION = "expectation-normalization-v2";
+export const EXPECTATION_DEVELOPMENT_TICKERS = ["NVDA", "META", "AMZN", "JPM", "WMT"] as const;
+export const EXPECTATION_HOLDOUT_TICKERS = ["PFE", "UNH", "MSFT", "DAL", "RCL", "DASH", "NKE", "T"] as const;
 
 export interface ExpectationNormalizationContext {
   ticker: string;
@@ -12,7 +14,7 @@ export interface ExpectationNormalizationContext {
 
 export interface ExpectationReviewItem extends ExpectationNormalizationContext {
   statementKey: string;
-  category: "value_unit_scale" | "qualifier_evidence" | "combined_basis" | "revision_language" | "non_disclosure" | "metric_alias";
+  category: "value_unit_scale" | "qualifier_evidence" | "combined_basis" | "revision_language" | "non_disclosure" | "metric_alias" | "ambiguous";
   ruleId: string;
   detail: string;
   evidenceSha256: string;

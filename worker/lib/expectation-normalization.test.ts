@@ -42,7 +42,7 @@ describe("generic expectation normalization development sample", () => {
     expect(result.statements[0]).toMatchObject({ qualifier: "plus_minus", tolerance: 2, toleranceUnit: "percent" });
     const audit = result.audit.find((item) => item.ruleId === "GENERIC_PLUS_MINUS_FROM_EVIDENCE")!;
     expect(audit.numericChange).toBe(true);
-    expect(audit.normalizationVersion).toBe("expectation-normalization-v1");
+    expect(audit.normalizationVersion).toBe("expectation-normalization-v2");
     expect(audit.evidenceSha256).toBe(expectationEvidenceSha256(input));
     expect(audit.changes).toContainEqual({ field: "tolerance", before: null, after: 2 });
   });

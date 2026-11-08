@@ -14,7 +14,7 @@ const arg = (name: string) => {
   return index >= 0 ? process.argv[index + 1] : null;
 };
 const universePath = path.resolve(arg("--universe") ?? "worker/research-universe-50.json");
-const out = path.resolve(arg("--out") ?? "research/expectation-normalization-discovery-v1.json");
+const out = path.resolve(arg("--out") ?? "research/expectation-normalization-discovery-v2.json");
 const companies = JSON.parse(readFileSync(universePath, "utf8")) as { cik: number; ticker: string }[];
 const entries = companies.flatMap((company) => readCohortEntries(path.resolve("worker/cache/edgar", String(company.cik))));
 

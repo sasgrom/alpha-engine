@@ -7,6 +7,9 @@ import { readCohortEntries, type CohortResultEntry } from "../worker/lib/cohort-
 import { buildExpectationPrompt, type ExpectationStatement } from "../worker/lib/expectations";
 import type { BenchmarkFile, GoldStatement } from "../worker/lib/expectations-benchmark";
 import type { CohortPack } from "../worker/lib/cohort-pack";
+import { buildExpectationsReport } from "../worker/lib/expectations-report";
+import { assertExpectationNormalizationAudit, normalizeExpectationStatement, type CanonicalExpectationStatement, type ExpectationNormalizationAudit } from "../worker/lib/expectation-normalization";
+import { EXPECTATION_DEVELOPMENT_TICKERS, EXPECTATION_HOLDOUT_TICKERS, EXPECTATION_NORMALIZATION_VERSION, type ExpectationReviewItem } from "../worker/lib/expectation-normalization-rules";
 import { readFileSync as readSourceFile } from "node:fs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
@@ -21,7 +24,7 @@ const GOLD_SOURCE_ACCESSIONS = new Set([
 ]);
 const EXCLUDED = [
   "source filings", "HTML and plaintext", "cohort packs", "prompt text", "raw model output", "cache directories",
-  "runtime directories", "secret material", "environment configuration", "database URLs", "network addresses", "operations state", "GDELT", "political events",
+  "runtime directories", "secret material", "environment configuration", "database connection details", "network addresses", "scheduler metadata", "GDELT", "political events",
 ];
 
 export function resultKey(entry: Pick<CohortResultEntry, "cik" | "accessionNo" | "sourceId" | "containerId">): string {
@@ -119,6 +122,47 @@ export function buildCoverage(companies: { cik: number; ticker: string }[], entr
   };
 }
 
+export function normalizeCohortEntries(entries: CohortResultEntry[]) {
+  const normalizedEntries: (CohortResultEntry & { statements: CanonicalExpectationStatement[] })[] = [];
+  const audit: ExpectationNormalizationAudit[] = [];
+  const reviewQueue: ExpectationReviewItem[] = [];
+  for (const entry of entries) {
+    const statements = [];
+    for (const statement of entry.statements) {
+      const normalized = normalizeExpectationStatement(statement, { ticker: entry.ticker, cik: entry.cik, accessionNo: entry.accessionNo });
+      statements.push(...normalized.statements);
+      audit.push(...normalized.audit);
+      reviewQueue.push(...normalized.review);
+    }
+    normalizedEntries.push({ ...entry, statements });
+  }
+  assertExpectationNormalizationAudit(audit);
+  const outputStatements = normalizedEntries.reduce((sum, entry) => sum + entry.statements.length, 0);
+  const unmapped = reviewQueue.filter((item) => item.ruleId === "REVIEW_UNMAPPED_METRIC").length;
+  const counts = {
+    inputStatements: entries.reduce((sum, entry) => sum + entry.statements.length, 0),
+    outputStatements,
+    auditRecords: audit.length,
+    reviewItems: reviewQueue.length,
+    canonicalMapped: outputStatements - unmapped,
+    canonicalUnmapped: unmapped,
+    newlyCoveredByV3Aliases: Math.max(0, 4262 - unmapped),
+  };
+  const reviewCategoryCounts: Record<string, number> = { metric_alias: 0, value_unit_scale: 0, qualifier_evidence: 0, combined_basis: 0, revision_language: 0, non_disclosure: 0, ambiguous: 0 };
+  for (const item of reviewQueue) reviewCategoryCounts[item.category]++;
+  const ruleCounts: Record<string, number> = {};
+  for (const item of audit) ruleCounts[item.ruleId] = (ruleCounts[item.ruleId] ?? 0) + 1;
+  const unmappedMetrics = new Map<string, number>();
+  for (const item of reviewQueue) {
+    if (item.ruleId !== "REVIEW_UNMAPPED_METRIC") continue;
+    const metricRaw = JSON.parse(item.statementKey)[0] as string;
+    unmappedMetrics.set(metricRaw, (unmappedMetrics.get(metricRaw) ?? 0) + 1);
+  }
+  const topUnmappedMetricRaw = [...unmappedMetrics.entries()].map(([metricRaw, count]) => ({ metricRaw, count }))
+    .sort((a, b) => b.count - a.count || a.metricRaw.localeCompare(b.metricRaw)).slice(0, 100);
+  return { normalizedEntries, audit, reviewQueue, counts, reviewCategoryCounts, ruleCounts, topUnmappedMetricRaw };
+}
+
 export function statementKey(statement: ExpectationStatement): string {
   return JSON.stringify([
     statement.metric, statement.scopeRaw, statement.periodRaw, statement.basis, statement.qualifier,
@@ -206,7 +250,7 @@ async function main() {
   };
   const universeName = arg("--universe") ?? "research-universe-50.json";
   const universePath = path.join(ROOT, "worker", universeName);
-  const out = path.resolve(ROOT, arg("--out") ?? "research/reviewed-sync/2026-11-08/expectations-reviewed-v2.zip");
+  const out = path.resolve(ROOT, arg("--out") ?? "research/reviewed-sync/2026-11-08/expectations-reviewed-v3.zip");
   if (existsSync(out)) throw new Error(`Refusing to overwrite ${out}`);
   const benchmark = JSON.parse(readSourceFile(path.join(ROOT, "worker/.runs/expectations-benchmark-report.json"), "utf8"));
   assertBenchmarkPassed(benchmark);
@@ -215,14 +259,9 @@ async function main() {
     evaluationType: BENCHMARK_EVALUATION_TYPE,
     reviewMethod: "Post-remediation regression against independently reviewed official SEC gold statements; not an independent model benchmark.",
   });
-  execFileSync(process.execPath, [path.join(ROOT, "node_modules/tsx/dist/cli.mjs"), "worker/build-expectations-report.mts", "--universe", `worker/${universeName}`, "--cohorts", "--scope", "full-history", "--reviewed"], { cwd: ROOT, stdio: "inherit" });
-  const report = JSON.parse(readSourceFile(path.join(ROOT, "public/reports/expectations-report.json"), "utf8"));
   const companies = JSON.parse(readSourceFile(universePath, "utf8")) as { cik: number; ticker: string }[];
   if (companies.length === 0 || new Set(companies.map((company) => company.cik)).size !== companies.length) throw new Error("Universe must contain unique companies");
   const entries = mergeResultEntries(companies.flatMap((company) => readCohortEntries(path.join(ROOT, "worker/cache/edgar", String(company.cik)))));
-  const baseCoverage = buildCoverage(companies, entries);
-  const thinCompanies = baseCoverage.companies.filter((company) => company.documents <= 4);
-  const coverage = { ...baseCoverage, scope: PACKAGE_SCOPE, thinCompanyDefinition: "companies with at most four documents", thinCompanies };
   const models = new Set(entries.map((entry) => entry.model));
   const promptVersions = new Set(entries.map((entry) => entry.promptVersion));
   if (models.size !== 1 || !models.has("qwen3.5:9b")) throw new Error(`Unexpected models: ${[...models].join(",")}`);
@@ -239,14 +278,47 @@ async function main() {
     const expectedHash = sha256(`${entry.sourceId}\n${container.inputSha256}`);
     if (expectedHash !== entry.inputSha256) throw new Error(`inputSha256 mismatch for ${resultKey(entry)}`);
   }
+  const normalization = normalizeCohortEntries(entries);
+  const baseCoverage = buildCoverage(companies, normalization.normalizedEntries);
+  const thinCompanies = baseCoverage.companies.filter((company) => company.documents <= 4);
+  const coverage = { ...baseCoverage, scope: PACKAGE_SCOPE, normalizationVersion: EXPECTATION_NORMALIZATION_VERSION, thinCompanyDefinition: "companies with at most four documents", thinCompanies };
+  const partitionSummary = (tickers: readonly string[]) => {
+    const selected = new Set(tickers);
+    const selectedEntries = entries.filter((entry) => selected.has(entry.ticker));
+    const selectedNormalized = normalization.normalizedEntries.filter((entry) => selected.has(entry.ticker));
+    return {
+      tickers: [...selected],
+      companies: selected.size,
+      documents: selectedEntries.length,
+      inputStatements: selectedEntries.reduce((sum, entry) => sum + entry.statements.length, 0),
+      outputStatements: selectedNormalized.reduce((sum, entry) => sum + entry.statements.length, 0),
+      auditRecords: normalization.audit.filter((item) => selected.has(item.ticker)).length,
+      numericChanges: normalization.audit.filter((item) => selected.has(item.ticker) && item.numericChange).length,
+      reviewItems: normalization.reviewQueue.filter((item) => selected.has(item.ticker)).length,
+    };
+  };
+  const development = partitionSummary(EXPECTATION_DEVELOPMENT_TICKERS);
+  const holdout = partitionSummary(EXPECTATION_HOLDOUT_TICKERS);
+  const report = buildExpectationsReport(companies, normalization.normalizedEntries, new Date().toISOString(), PACKAGE_SCOPE, {
+    pass: sanitizedBenchmark.pass,
+    recall: sanitizedBenchmark.recall,
+    issueCount: sanitizedBenchmark.issues.length,
+  }, true);
   const sanitizedReport = sanitizeExpectationValue(report);
   sanitizedReport.coverage.noCandidate = entries.filter((entry) => entry.status === "empty").length;
-  sanitizedReport.scope = PACKAGE_SCOPE;
   sanitizedReport.partialHistory = {
     reason: "Full historical extraction is not claimed; AMZN, MSFT and GOOGL have thin document coverage.",
     thinCompanies,
   };
   sanitizedReport.benchmark = { ...sanitizedReport.benchmark, evaluationType: BENCHMARK_EVALUATION_TYPE };
+  sanitizedReport.normalization = {
+    normalizationVersion: EXPECTATION_NORMALIZATION_VERSION,
+    transformation: "model output + deterministic normalization",
+    counts: normalization.counts,
+    reviewCategoryCounts: normalization.reviewCategoryCounts,
+    development,
+    holdout,
+  };
   const sanitizedEntries = sanitizeExpectationValue(entries);
   const goldBenchmark = JSON.parse(readSourceFile(path.join(ROOT, "research/expectations-benchmark-v1.json"), "utf8")) as BenchmarkFile;
   const remediation = sanitizeExpectationValue(buildRemediationProvenance(goldBenchmark, sanitizedEntries));
@@ -260,8 +332,10 @@ async function main() {
   writeFileSync(path.join(stage, "benchmark-report.json"), `${JSON.stringify(sanitizedBenchmark, null, 2)}\n`);
   writeFileSync(path.join(stage, "coverage.json"), `${JSON.stringify(sanitizeExpectationValue(coverage), null, 2)}\n`);
   writeFileSync(path.join(stage, "remediation.json"), `${JSON.stringify(remediation, null, 2)}\n`);
+  writeFileSync(path.join(stage, "normalization-audit.json"), `${JSON.stringify(sanitizeExpectationValue({ schemaVersion: 1, normalizationVersion: EXPECTATION_NORMALIZATION_VERSION, counts: normalization.counts, audit: normalization.audit }), null, 2)}\n`);
+  writeFileSync(path.join(stage, "review-queue.json"), `${JSON.stringify(sanitizeExpectationValue({ schemaVersion: 1, normalizationVersion: EXPECTATION_NORMALIZATION_VERSION, categories: normalization.reviewCategoryCounts, topUnmappedMetricRaw: normalization.topUnmappedMetricRaw, reviewQueue: normalization.reviewQueue }), null, 2)}\n`);
   const auditSummary = sanitizeExpectationValue({
-    schemaVersion: 2,
+    schemaVersion: 3,
     scope: PACKAGE_SCOPE,
     lastExtractionRun: {
       sources: 26460,
@@ -297,6 +371,13 @@ async function main() {
       issues: sanitizedBenchmark.issues,
     },
     remediation: { documents: remediation.documents.length, statements: remediation.statements.length },
+    normalization: {
+      normalizationVersion: EXPECTATION_NORMALIZATION_VERSION,
+      counts: normalization.counts,
+      reviewCategoryCounts: normalization.reviewCategoryCounts,
+      development,
+      holdout,
+    },
     guard: {
       companiesExpected: coverage.companiesExpected,
       companiesWithResults: coverage.companiesWithResults,
@@ -313,6 +394,11 @@ async function main() {
     model: "qwen3.5:9b",
     promptVersion: "expectations-v4",
     promptSourceSha256: PROMPT_SOURCE_SHA256,
+    resultOrigin: "model output + deterministic normalization",
+    normalizationVersion: EXPECTATION_NORMALIZATION_VERSION,
+    rawModelOutputIncluded: false,
+    inputLineage: "inputSha256 binds the original source and container before deterministic normalization",
+    normalizedOutput: "expectations-report.json and expectations-report.ts",
     resultKeyDefinition: "(cik, accessionNo, sourceId, containerId)",
     companies: companies.map((company) => {
       const pack = packs.get(company.cik)!;
@@ -334,13 +420,14 @@ async function main() {
     }),
   };
   writeFileSync(path.join(stage, "lineage.json"), `${JSON.stringify(sanitizeExpectationValue(lineage), null, 2)}\n`);
-  const files = ["expectations-report.json", "expectations-report.ts", "benchmark-report.json", "coverage.json", "audit-summary.json", "lineage.json", "remediation.json"].map((file) => {
+  const files = ["expectations-report.json", "expectations-report.ts", "benchmark-report.json", "coverage.json", "audit-summary.json", "lineage.json", "remediation.json", "normalization-audit.json", "review-queue.json"].map((file) => {
     const bytes = readSourceFile(path.join(stage, file));
     return { path: file, bytes: bytes.length, sha256: sha256(bytes) };
   });
   const manifest = sanitizeExpectationValue({
-    schemaVersion: 2,
+    schemaVersion: 3,
     packageType: "reviewed-expectations",
+    packageVersion: 3,
     scope: PACKAGE_SCOPE,
     generatedAt: new Date().toISOString(),
     baselineCommit: execFileSync("git", ["rev-parse", "HEAD"], { cwd: ROOT, encoding: "utf8" }).trim(),
@@ -350,6 +437,12 @@ async function main() {
     model: "qwen3.5:9b",
     promptVersion: "expectations-v4",
     promptSourceSha256: PROMPT_SOURCE_SHA256,
+    resultOrigin: "model output + deterministic normalization",
+    normalizationVersion: EXPECTATION_NORMALIZATION_VERSION,
+    counts: normalization.counts,
+    development,
+    holdout,
+    reviewCategoryCounts: normalization.reviewCategoryCounts,
     benchmarkEvaluationType: BENCHMARK_EVALUATION_TYPE,
     exactKeyDefinition: "(cik, accessionNo, sourceId, containerId)",
     companies: coverage.companiesWithResults,
@@ -364,7 +457,11 @@ async function main() {
   mkdirSync(path.dirname(out), { recursive: true });
   powerShell(`Compress-Archive -Path ${psQuote(path.join(stage, "*"))} -DestinationPath ${psQuote(out)} -CompressionLevel Optimal`);
   powerShell(`Expand-Archive -Path ${psQuote(out)} -DestinationPath ${psQuote(verify)} -Force`);
-  const forbidden = [/(?:^|[^A-Za-z])[A-Za-z]:[\\/]/, /worker[\\/]{1,2}\.runs/i, /rawResponse|fallbackRawResponse/, /\.env/i, /credentials|connection strings/i];
+  const forbidden = [
+    /(?:^|[^A-Za-z])[A-Za-z]:[\\/]/, /worker[\\/]{1,2}\.runs/i, /rawResponse|fallbackRawResponse|rawLogs/i,
+    /\.env|credentials|connection strings|localhost/i, /"operationsState"\s*:/i, /worker[_-]?key|access[_-]?token|api[_-]?key|bearer\s+[a-z0-9]/i,
+    /mysql:\/\/|postgres:\/\/|database urls?|db urls?/i, /\b(?:\d{1,3}\.){3}\d{1,3}\b/,
+  ];
   for (const file of [...files, { path: "manifest.json", bytes: readSourceFile(path.join(stage, "manifest.json")).length, sha256: sha256(readSourceFile(path.join(stage, "manifest.json"))) }]) {
     const actual = readSourceFile(path.join(verify, file.path));
     if (actual.length !== file.bytes || sha256(actual) !== file.sha256) throw new Error(`ZIP verification failed for ${file.path}`);
@@ -377,6 +474,12 @@ async function main() {
     bytes: zipBytes.length,
     sha256: sha256(zipBytes),
     scope: PACKAGE_SCOPE,
+    packageVersion: 3,
+    normalizationVersion: EXPECTATION_NORMALIZATION_VERSION,
+    normalizationCounts: normalization.counts,
+    topUnmappedMetricRaw: normalization.topUnmappedMetricRaw,
+    development,
+    holdout,
     companiesWithResults: coverage.companiesWithResults,
     companiesExpected: coverage.companiesExpected,
     documents: coverage.documents,

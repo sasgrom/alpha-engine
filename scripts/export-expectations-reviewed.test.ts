@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assertBenchmarkPassed, BENCHMARK_EVALUATION_TYPE, buildCoverage, buildFallbackAudit, buildRemediationProvenance, canonicalSecUrl, mergeResultEntries, resultKey, sanitizeExpectationValue } from "./export-expectations-reviewed.mts";
+import { assertBenchmarkPassed, BENCHMARK_EVALUATION_TYPE, buildCoverage, buildFallbackAudit, buildRemediationProvenance, canonicalSecUrl, mergeResultEntries, normalizeCohortEntries, resultKey, sanitizeExpectationValue } from "./export-expectations-reviewed.mts";
 import type { CohortResultEntry } from "../worker/lib/cohort-checkpoint";
 import benchmark from "../research/expectations-benchmark-v1.json";
 
@@ -121,6 +121,27 @@ describe("reviewed expectations package", () => {
     expect(provenance.statements).toHaveLength(2);
     expect(provenance.statements[0]).toMatchObject({ ticker: "PFE", remediationKind: "gold_source_backfill", scriptVersion: 1 });
     expect(provenance.statements.every((statement) => /^[a-f0-9]{64}$/.test(statement.evidenceSha256))).toBe(true);
+  });
+
+  it("builds normalized output with audit and a separate scale review queue", () => {
+    const statement = {
+      kind: "guidance", metricRaw: "total expenses", metric: "other", scopeRaw: "consolidated", periodRaw: "2026", comparisonRaw: null,
+      qualifier: "range", valueLow: 1, valueHigh: 2, valuePoint: null, tolerance: null, toleranceUnit: null, valueText: null,
+      unit: "usd_billions", basis: "reported", currencyBasis: "reported", revision: "unclear", previousLow: null, previousHigh: null,
+      previousPoint: null, previousGuidanceDateRaw: null, assumptionRaw: null, sourceSection: "Outlook", evidence: "Total expenses are expected to be $1 billion to $2 billion.",
+    } as never;
+    const scale = {
+      ...statement, metricRaw: "Revenue", metric: "revenue", qualifier: "point", valueLow: null, valueHigh: null, valuePoint: 1160,
+      unit: "usd_millions", evidence: "Revenue is expected to be $1.16 billion.",
+    } as never;
+    const input = entry({ statements: [statement, scale] });
+    const result = normalizeCohortEntries([input]);
+    expect(input.statements[0].metric).toBe("other");
+    expect(result.normalizedEntries[0].statements.map((item) => item.canonicalMetric)).toEqual(["expense.total", "revenue"]);
+    expect(result.counts).toMatchObject({ inputStatements: 2, outputStatements: 2, canonicalUnmapped: 0 });
+    expect(result.reviewCategoryCounts.value_unit_scale).toBe(1);
+    expect(result.reviewCategoryCounts.ambiguous).toBe(0);
+    expect(result.audit.every((item) => item.evidenceSha256 && item.normalizationVersion)).toBe(true);
   });
 
   it("uses canonical SEC URLs and stable result keys", () => {
