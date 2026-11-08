@@ -113,7 +113,7 @@ function isSubheading(line: string): boolean {
 /** Whole source sections: no 4K/16K/90-line arbitrary truncation. */
 export function extractWholeSourceBlocks(source: CohortSourceDocument): string[] {
   if (source.plain.trim().length < 30) return [];
-  if (isEightKForm(source.form)) return [source.plain];
+  if (isEightKForm(source.form) || /^(?:SCHEDULE 13G|SC 13G)(?:\/A)?$/.test(source.form)) return [source.plain];
   const lines = source.plain.split("\n");
   const blocks: string[] = [];
   const used = new Set<number>();

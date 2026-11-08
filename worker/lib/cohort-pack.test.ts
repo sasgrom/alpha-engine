@@ -6,6 +6,7 @@ import {
   buildCohortPackWithHashes,
   cohortInputLimit,
   cohortSourceText,
+  extractWholeSourceBlocks,
   estimateCohortTokens,
   type CohortSourceDocument,
 } from "./cohort-pack";
@@ -112,5 +113,12 @@ describe("cohort pack", () => {
     const pack = buildCohortPack([a, b], { contextTokens: 32768, generatedAt: "now" });
     expect(pack.coverage.periods).toBe(2);
     expect(pack.containers.map((container) => container.cohortId)).toEqual(["unresolved:0000000-26-000001", "unresolved:0000000-26-000002"]);
+  });
+
+  it("keeps complete 13D/13G disclosures as source blocks", () => {
+    const disclosure = doc({ form: "SCHEDULE 13G/A", plain: "Ownership percentage is 5.2% with no management outlook." });
+    expect(extractWholeSourceBlocks(disclosure)).toEqual([disclosure.plain]);
+    const scDisclosure = doc({ form: "SC 13G/A", plain: "Ownership percentage is 5.2% with no management outlook." });
+    expect(extractWholeSourceBlocks(scDisclosure)).toEqual([scDisclosure.plain]);
   });
 });

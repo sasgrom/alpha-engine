@@ -212,6 +212,15 @@ function normalizeExpectationResponse(value: unknown): { value: unknown; normali
         change("qualifier", "qualitative");
         if (!hasText) change("valueText", rawQualifier);
       }
+    } else if (q === "explicitly_not_provided") {
+      change("qualifier", "not_provided");
+    } else if (q === "at a segment level" || q === "raised midpoint") {
+      if (hasRange) change("qualifier", "range");
+      else if (hasTolerance) change("qualifier", "plus_minus");
+      else if (hasPoint) change("qualifier", "point");
+      else if (hasLow && !hasHigh) change("qualifier", "at_least");
+      else if (hasHigh && !hasLow) change("qualifier", "at_most");
+      else if (hasText) change("qualifier", "qualitative");
     }
     if (statement.qualifier === "qualitative" && !hasLow && !hasHigh && !hasPoint && typeof statement.unit === "string" && statement.unit.startsWith("usd")) {
       change("unit", "text");
@@ -223,11 +232,16 @@ function normalizeExpectationResponse(value: unknown): { value: unknown; normali
 
 function sanitizeJsonStringWhitespace(json: string): string {
   let output = "", inString = false, escaped = false;
-  for (const char of json) {
+  for (let index = 0; index < json.length; index++) {
+    const char = json[index];
     if (escaped) { output += char; escaped = false; continue; }
     if (char === "\\") { output += char; escaped = true; continue; }
     if (char === '"') { output += char; inString = !inString; continue; }
     if (inString && char.charCodeAt(0) <= 31) { output += " "; continue; }
+    if (!inString && char === ",") {
+      const rest = json.slice(index + 1).replace(/^\s+/, "");
+      if (rest.startsWith("]") || rest.startsWith("}")) continue;
+    }
     output += char;
   }
   return output;

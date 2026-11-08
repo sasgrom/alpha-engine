@@ -27,9 +27,13 @@ import {
   fallbackEvidenceVerified,
   parseExpectationFallback,
 } from "./lib/expectation-fallback";
+import { accessionMatches, assertAccessionTasks, shouldResumeCohortEntry } from "./lib/cohort-extract-args";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const only = arg("--only")?.toUpperCase() ?? null;
+const accession = arg("--accession");
+const retryFallback = process.argv.includes("--retry-fallback");
+if (retryFallback && !accession) throw new Error("--retry-fallback requires --accession");
 const from = arg("--from");
 const fromTicker = arg("--from-ticker")?.toUpperCase() ?? null;
 const universeFile = arg("--universe") ?? "research-universe-53.json";
@@ -82,12 +86,13 @@ for (const company of universe) {
     writeCohortResultSnapshot(cacheDir(company.cik), result);
   }
   const tasks = pack.containers.flatMap((container) => container.sources
-    .filter((source) => (!from || source.filingDate >= from) && (!benchmarkAccessions || benchmarkAccessions.has(source.accessionNo)))
+    .filter((source) => accessionMatches(source, accession) && (!from || source.filingDate >= from) && (!benchmarkAccessions || benchmarkAccessions.has(source.accessionNo)))
     .map((source) => ({ container, source })))
     .sort((a, b) => a.container.cohortId.localeCompare(b.container.cohortId)
       || a.container.index - b.container.index
       || a.source.eventTs.localeCompare(b.source.eventTs)
       || a.source.sourceId.localeCompare(b.source.sourceId));
+  assertAccessionTasks(tasks, accession);
   let consecutiveFailures = 0;
   let companyDone = 0;
   const companyTimings: CohortSourceTiming[] = [];
@@ -103,7 +108,7 @@ for (const company of universe) {
     prog.item(companyDone, tasks.length, `${source.sourceId} · started`);
     const inputSha256 = sha256(`${source.sourceId}\n${container.inputSha256}`);
     const prior = result.entries.find((entry) => entry.sourceId === source.sourceId && entry.containerId === container.containerId && entry.inputSha256 === inputSha256 && entry.model === LLM_MODEL && entry.promptVersion === EXPECTATIONS_PROMPT_VERSION);
-    if (prior && prior.status !== "request_failed" && prior.status !== "unparsed") {
+    if (prior && shouldResumeCohortEntry(prior, retryFallback)) {
       totals.resumed++;
       companyDone++;
       prog.item(companyDone, tasks.length, `${source.sourceId} · resumed`);

@@ -8,6 +8,7 @@ import { buildCohortPackWithHashes, cohortInputLimit, type CohortSourceDocument,
 import { expectationSourcesFor } from "./lib/expectation-sources";
 import { dedupeExpectationUniverse } from "./lib/universe";
 import { selectLatestFilings } from "./lib/filing-selection";
+import { isCohortSupportedForm } from "./lib/cohort-forms";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
 import type { ManifestEntry } from "./edgar-fetch.mts";
@@ -27,7 +28,7 @@ const benchmarkAccessions = benchmarkOnly
 const cacheDir = (cik: number) => path.resolve(import.meta.dirname, "cache", "edgar", String(cik));
 const outputPath = (cik: number) => path.join(cacheDir(cik), "cohort-pack-v2.json");
 const sha256 = (value: string) => createHash("sha256").update(value).digest("hex");
-const supportedForm = (form: string) => /^(?:10-K|10-Q|8-K)(?:\/A)?$/.test(form);
+const supportedForm = (form: string) => isCohortSupportedForm(form);
 const universeAll = dedupeExpectationUniverse(loadEdgarUniverse(universeFile).filter((company) => !only || company.ticker === only));
 if (only && !universeAll.length) throw new Error(`Unknown ticker ${only}`);
 const start = fromTicker ? universeAll.findIndex((company) => company.ticker === fromTicker) : 0;
