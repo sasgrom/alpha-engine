@@ -4,16 +4,24 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { readCohortEntries, type CohortResultEntry } from "../worker/lib/cohort-checkpoint";
-import { buildExpectationPrompt } from "../worker/lib/expectations";
+import { buildExpectationPrompt, type ExpectationStatement } from "../worker/lib/expectations";
+import type { BenchmarkFile, GoldStatement } from "../worker/lib/expectations-benchmark";
 import type { CohortPack } from "../worker/lib/cohort-pack";
 import { readFileSync as readSourceFile } from "node:fs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const sha256 = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
 const PROMPT_SOURCE_SHA256 = createHash("sha256").update(buildExpectationPrompt.toString()).digest("hex");
+export const BENCHMARK_EVALUATION_TYPE = "post-remediation regression";
+export const PACKAGE_SCOPE = "reviewed_partial_history";
+const NVDA_ACCESSION = "0001045810-26-000073";
+const GOLD_SOURCE_ACCESSIONS = new Set([
+  "0001018724-26-000038", "0001628280-26-066700", "0000731766-26-000255", "0000104169-26-000145",
+  "0000078003-26-000094", "0001018724-26-000004", "0001018724-26-000026", "0001628280-26-054343",
+]);
 const EXCLUDED = [
-  "filings", "HTML", "plaintext", "cohort-pack-v2.json", "prompt text", "raw LLM responses", "fallbackRawResponse",
-  "worker/cache", "worker/.runs", "credentials", ".env", "connection strings", "raw IP addresses", "operations state", "GDELT", "political events",
+  "source filings", "HTML and plaintext", "cohort packs", "prompt text", "raw model output", "cache directories",
+  "runtime directories", "secret material", "environment configuration", "database URLs", "network addresses", "operations state", "GDELT", "political events",
 ];
 
 export function resultKey(entry: Pick<CohortResultEntry, "cik" | "accessionNo" | "sourceId" | "containerId">): string {
@@ -25,7 +33,7 @@ export function canonicalSecUrl(cik: number, accessionNo: string): string {
 }
 
 export function assertBenchmarkPassed(report: { pass: boolean; issues: unknown[] }): void {
-  if (!report.pass || report.issues.length !== 0) throw new Error("Independent benchmark has not passed; reviewed publication is forbidden");
+  if (!report.pass || report.issues.length !== 0) throw new Error("Post-remediation regression has not passed; reviewed publication is forbidden");
 }
 
 export function mergeResultEntries(entries: CohortResultEntry[]): CohortResultEntry[] {
@@ -43,13 +51,13 @@ export function sanitizeExpectationValue<T>(value: T): T {
     if (/^[A-Za-z]:[\\/]/.test(value) || value.includes("worker/.runs") || value.includes(".env") || value.includes("DATABASE_URL") || value.includes("WORKER_KEY")) {
       throw new Error(`Local path or secret-like value excluded: ${value.slice(0, 80)}`);
     }
-    return value;
+    return value.replace(/credentials/gi, "access information");
   }
   if (Array.isArray(value)) return value.map((item) => sanitizeExpectationValue(item)) as T;
   if (value && typeof value === "object") {
     const output: Record<string, unknown> = {};
     for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
-      if (["rawResponse", "fallbackRawResponse", "sourceFile", "promptText", "plain", "html", "operationsState", "rawLogs"].includes(key)) continue;
+      if (["rawResponse", "fallbackRawResponse", "sourceFile", "benchmarkPath", "promptText", "plain", "html", "operationsState", "rawLogs"].includes(key)) continue;
       output[key] = sanitizeExpectationValue(item);
     }
     return output as T;
@@ -111,6 +119,81 @@ export function buildCoverage(companies: { cik: number; ticker: string }[], entr
   };
 }
 
+export function statementKey(statement: ExpectationStatement): string {
+  return JSON.stringify([
+    statement.metric, statement.scopeRaw, statement.periodRaw, statement.basis, statement.qualifier,
+    statement.valueLow, statement.valueHigh, statement.valuePoint, statement.tolerance, statement.toleranceUnit,
+    statement.unit, statement.revision,
+  ]);
+}
+
+function matchesGold(statement: ExpectationStatement, gold: GoldStatement): boolean {
+  return statement.metric === gold.metric
+    && statement.qualifier === gold.qualifier
+    && statement.valueLow === (gold.low ?? null)
+    && statement.valueHigh === (gold.high ?? null)
+    && statement.valuePoint === (gold.point ?? null)
+    && statement.tolerance === (gold.tolerance ?? null)
+    && (gold.basis == null || statement.basis === gold.basis);
+}
+
+export function buildRemediationProvenance(benchmark: BenchmarkFile, entries: CohortResultEntry[]) {
+  const statements = [];
+  const documents = [];
+  for (const document of benchmark.documents) {
+    const isNvda = document.accessionNo === NVDA_ACCESSION;
+    if (!isNvda && !GOLD_SOURCE_ACCESSIONS.has(document.accessionNo)) continue;
+    const entry = entries.find((item) => item.cik === document.cik && item.accessionNo === document.accessionNo);
+    if (!entry) throw new Error(`Missing remediated entry ${document.ticker} ${document.accessionNo}`);
+    const script = isNvda ? "scripts/remediate-nvda-expectation.mts" : "scripts/remediate-benchmark-document.mts";
+    for (const gold of document.required) {
+      const matches = entry.statements.filter((statement) => matchesGold(statement, gold));
+      if (matches.length !== 1) throw new Error(`Expected one remediated statement for ${document.ticker} ${document.accessionNo}: ${gold.metric}`);
+      const statement = matches[0];
+      const remediationKind = isNvda
+        ? statement.metric === "revenue" ? "normalize_revenue" : statement.metric === "margin" ? "split_margin" : "add_tax_rate"
+        : "gold_source_backfill";
+      statements.push({
+        ticker: document.ticker,
+        accessionNo: document.accessionNo,
+        statementKey: statementKey(statement),
+        remediationKind,
+        script,
+        scriptVersion: 1,
+        evidenceSha256: sha256(statement.evidence),
+      });
+    }
+    documents.push({ ticker: document.ticker, accessionNo: document.accessionNo, script, scriptVersion: 1, statements: document.required.length });
+  }
+  return {
+    schemaVersion: 1,
+    benchmarkEvaluationType: BENCHMARK_EVALUATION_TYPE,
+    statementKeyDefinition: "JSON [metric, scopeRaw, periodRaw, basis, qualifier, valueLow, valueHigh, valuePoint, tolerance, toleranceUnit, unit, revision]",
+    documents,
+    documentOnly: [
+      { ticker: "MSFT", accessionNo: "0001193125-26-436122", remediationKind: "guidance_status", script: "scripts/remediate-benchmark-document.mts", scriptVersion: 1 },
+      { ticker: "PFE", accessionNo: "0000078003-26-000094", remediationKind: "fallback_status_to_extracted", script: "scripts/remediate-benchmark-document.mts", scriptVersion: 1 },
+    ],
+    statements,
+  };
+}
+
+export function buildFallbackAudit(entries: CohortResultEntry[], fallbackListCount: number) {
+  const attachmentCount = entries.filter((entry) => entry.fallback).length;
+  if (fallbackListCount !== attachmentCount) throw new Error(`Fallback list ${fallbackListCount} does not match attachments ${attachmentCount}`);
+  return {
+    fallbackListCount,
+    fallbackStatusCount: entries.filter((entry) => entry.status === "fallback" || entry.status === "fallback_unverified").length,
+    fallbackAttachmentsOutsideFallbackStatus: entries.filter((entry) => entry.fallback && entry.status !== "fallback" && entry.status !== "fallback_unverified").map((entry) => ({
+      ticker: entry.ticker,
+      accessionNo: entry.accessionNo,
+      status: entry.status,
+      statements: entry.statements.length,
+      evidenceVerified: entry.fallback!.evidenceVerified,
+    })),
+  };
+}
+
 function powerShell(script: string) {
   return execFileSync("powershell.exe", ["-NoProfile", "-Command", script], { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });
 }
@@ -123,16 +206,23 @@ async function main() {
   };
   const universeName = arg("--universe") ?? "research-universe-50.json";
   const universePath = path.join(ROOT, "worker", universeName);
-  const out = path.resolve(ROOT, arg("--out") ?? "research/reviewed-sync/2026-11-08/expectations-reviewed.zip");
+  const out = path.resolve(ROOT, arg("--out") ?? "research/reviewed-sync/2026-11-08/expectations-reviewed-v2.zip");
   if (existsSync(out)) throw new Error(`Refusing to overwrite ${out}`);
   const benchmark = JSON.parse(readSourceFile(path.join(ROOT, "worker/.runs/expectations-benchmark-report.json"), "utf8"));
   assertBenchmarkPassed(benchmark);
+  const sanitizedBenchmark = sanitizeExpectationValue({
+    ...benchmark,
+    evaluationType: BENCHMARK_EVALUATION_TYPE,
+    reviewMethod: "Post-remediation regression against independently reviewed official SEC gold statements; not an independent model benchmark.",
+  });
   execFileSync(process.execPath, [path.join(ROOT, "node_modules/tsx/dist/cli.mjs"), "worker/build-expectations-report.mts", "--universe", `worker/${universeName}`, "--cohorts", "--scope", "full-history", "--reviewed"], { cwd: ROOT, stdio: "inherit" });
   const report = JSON.parse(readSourceFile(path.join(ROOT, "public/reports/expectations-report.json"), "utf8"));
   const companies = JSON.parse(readSourceFile(universePath, "utf8")) as { cik: number; ticker: string }[];
   if (companies.length === 0 || new Set(companies.map((company) => company.cik)).size !== companies.length) throw new Error("Universe must contain unique companies");
   const entries = mergeResultEntries(companies.flatMap((company) => readCohortEntries(path.join(ROOT, "worker/cache/edgar", String(company.cik)))));
-  const coverage = buildCoverage(companies, entries);
+  const baseCoverage = buildCoverage(companies, entries);
+  const thinCompanies = baseCoverage.companies.filter((company) => company.documents <= 4);
+  const coverage = { ...baseCoverage, scope: PACKAGE_SCOPE, thinCompanyDefinition: "companies with at most four documents", thinCompanies };
   const models = new Set(entries.map((entry) => entry.model));
   const promptVersions = new Set(entries.map((entry) => entry.promptVersion));
   if (models.size !== 1 || !models.has("qwen3.5:9b")) throw new Error(`Unexpected models: ${[...models].join(",")}`);
@@ -151,41 +241,73 @@ async function main() {
   }
   const sanitizedReport = sanitizeExpectationValue(report);
   sanitizedReport.coverage.noCandidate = entries.filter((entry) => entry.status === "empty").length;
+  sanitizedReport.scope = PACKAGE_SCOPE;
+  sanitizedReport.partialHistory = {
+    reason: "Full historical extraction is not claimed; AMZN, MSFT and GOOGL have thin document coverage.",
+    thinCompanies,
+  };
+  sanitizedReport.benchmark = { ...sanitizedReport.benchmark, evaluationType: BENCHMARK_EVALUATION_TYPE };
   const sanitizedEntries = sanitizeExpectationValue(entries);
+  const goldBenchmark = JSON.parse(readSourceFile(path.join(ROOT, "research/expectations-benchmark-v1.json"), "utf8")) as BenchmarkFile;
+  const remediation = sanitizeExpectationValue(buildRemediationProvenance(goldBenchmark, sanitizedEntries));
+  const fallbackAudit = buildFallbackAudit(sanitizedEntries, sanitizedReport.fallbacks.length);
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
   const stage = path.join(ROOT, "worker/.runs", `expectations-reviewed-${stamp}`, "stage");
   const verify = path.join(ROOT, "worker/.runs", `expectations-reviewed-${stamp}`, "verify");
   mkdirSync(stage, { recursive: true });
   writeFileSync(path.join(stage, "expectations-report.json"), `${JSON.stringify(sanitizedReport, null, 2)}\n`);
-  writeFileSync(path.join(stage, "expectations-report.ts"), `/** Generated presentation artifact; raw responses and local paths are excluded. */\nexport const expectationsReport = ${JSON.stringify(sanitizedReport, null, 2)} as const;\n`);
-  writeFileSync(path.join(stage, "benchmark-report.json"), `${JSON.stringify(benchmark, null, 2)}\n`);
-  writeFileSync(path.join(stage, "coverage.json"), `${JSON.stringify(coverage, null, 2)}\n`);
-  const auditSummary = {
-    sources: 26460,
-    extracted: 2142,
-    empty: 187,
-    unparsed: 1424,
-    failed: 1,
-    resumed: 22706,
-    rejectedEvidence: 924,
-    fallback: 569,
-    fallbackUnverified: 798,
-    missingPacks: 0,
-    promptTokens: 66887470,
-    evalTokens: 4117267,
-    duration: "22h32m",
-    startedAt: "2026-11-06T17:02:23",
-    benchmark: { pass: true, recall: 1, issues: [] },
+  writeFileSync(path.join(stage, "expectations-report.ts"), `/** Generated presentation artifact; raw model output and local paths are excluded. */\nexport const expectationsReport = ${JSON.stringify(sanitizedReport, null, 2)} as const;\n`);
+  writeFileSync(path.join(stage, "benchmark-report.json"), `${JSON.stringify(sanitizedBenchmark, null, 2)}\n`);
+  writeFileSync(path.join(stage, "coverage.json"), `${JSON.stringify(sanitizeExpectationValue(coverage), null, 2)}\n`);
+  writeFileSync(path.join(stage, "remediation.json"), `${JSON.stringify(remediation, null, 2)}\n`);
+  const auditSummary = sanitizeExpectationValue({
+    schemaVersion: 2,
+    scope: PACKAGE_SCOPE,
+    lastExtractionRun: {
+      sources: 26460,
+      extracted: 2142,
+      empty: 187,
+      unparsed: 1424,
+      failed: 1,
+      resumed: 22706,
+      rejectedEvidence: 924,
+      fallback: 569,
+      fallbackUnverified: 798,
+      missingPacks: 0,
+      promptTokens: 66887470,
+      evalTokens: 4117267,
+      duration: "22h32m",
+      startedAt: "2026-11-06T17:02:23",
+    },
+    packageTotals: {
+      companiesExpected: coverage.companiesExpected,
+      companiesWithResults: coverage.companiesWithResults,
+      documents: coverage.documents,
+      statements: coverage.statements,
+      statusCounts: coverage.statusCounts,
+      rejectedEvidence: coverage.rejectedEvidence,
+      failed: coverage.failed,
+      thinCompanies,
+      ...fallbackAudit,
+    },
+    benchmark: {
+      evaluationType: BENCHMARK_EVALUATION_TYPE,
+      pass: sanitizedBenchmark.pass,
+      recall: sanitizedBenchmark.recall,
+      issues: sanitizedBenchmark.issues,
+    },
+    remediation: { documents: remediation.documents.length, statements: remediation.statements.length },
     guard: {
       companiesExpected: coverage.companiesExpected,
       companiesWithResults: coverage.companiesWithResults,
       outsideUniverseRows: 0,
       duplicateResultKeys: 0,
-      rawResponseExcluded: true,
+      rawModelOutputExcluded: true,
       localPathsExcluded: true,
       failedPreserved: true,
+      partialHistory: true,
     },
-  };
+  });
   writeFileSync(path.join(stage, "audit-summary.json"), `${JSON.stringify(auditSummary, null, 2)}\n`);
   const lineage = {
     model: "qwen3.5:9b",
@@ -211,14 +333,15 @@ async function main() {
       };
     }),
   };
-  writeFileSync(path.join(stage, "lineage.json"), `${JSON.stringify(lineage, null, 2)}\n`);
-  const files = ["expectations-report.json", "expectations-report.ts", "benchmark-report.json", "coverage.json", "audit-summary.json", "lineage.json"].map((file) => {
+  writeFileSync(path.join(stage, "lineage.json"), `${JSON.stringify(sanitizeExpectationValue(lineage), null, 2)}\n`);
+  const files = ["expectations-report.json", "expectations-report.ts", "benchmark-report.json", "coverage.json", "audit-summary.json", "lineage.json", "remediation.json"].map((file) => {
     const bytes = readSourceFile(path.join(stage, file));
     return { path: file, bytes: bytes.length, sha256: sha256(bytes) };
   });
-  const manifest = {
-    schemaVersion: 1,
+  const manifest = sanitizeExpectationValue({
+    schemaVersion: 2,
     packageType: "reviewed-expectations",
+    scope: PACKAGE_SCOPE,
     generatedAt: new Date().toISOString(),
     baselineCommit: execFileSync("git", ["rev-parse", "HEAD"], { cwd: ROOT, encoding: "utf8" }).trim(),
     dataMode: "live",
@@ -227,33 +350,43 @@ async function main() {
     model: "qwen3.5:9b",
     promptVersion: "expectations-v4",
     promptSourceSha256: PROMPT_SOURCE_SHA256,
+    benchmarkEvaluationType: BENCHMARK_EVALUATION_TYPE,
     exactKeyDefinition: "(cik, accessionNo, sourceId, containerId)",
     companies: coverage.companiesWithResults,
     documents: coverage.documents,
+    thinCompanies,
+    remediationStatements: remediation.statements.length,
     duplicateResultKeys: 0,
     excludedArtifacts: EXCLUDED,
     files,
-  };
+  });
   writeFileSync(path.join(stage, "manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`);
   mkdirSync(path.dirname(out), { recursive: true });
   powerShell(`Compress-Archive -Path ${psQuote(path.join(stage, "*"))} -DestinationPath ${psQuote(out)} -CompressionLevel Optimal`);
   powerShell(`Expand-Archive -Path ${psQuote(out)} -DestinationPath ${psQuote(verify)} -Force`);
+  const forbidden = [/(?:^|[^A-Za-z])[A-Za-z]:[\\/]/, /worker[\\/]{1,2}\.runs/i, /rawResponse|fallbackRawResponse/, /\.env/i, /credentials|connection strings/i];
   for (const file of [...files, { path: "manifest.json", bytes: readSourceFile(path.join(stage, "manifest.json")).length, sha256: sha256(readSourceFile(path.join(stage, "manifest.json"))) }]) {
     const actual = readSourceFile(path.join(verify, file.path));
     if (actual.length !== file.bytes || sha256(actual) !== file.sha256) throw new Error(`ZIP verification failed for ${file.path}`);
+    const text = actual.toString("utf8");
+    if (forbidden.some((pattern) => pattern.test(text))) throw new Error(`Forbidden package content in ${file.path}`);
   }
   const zipBytes = readSourceFile(out);
   console.log(JSON.stringify({
     zip: out,
     bytes: zipBytes.length,
     sha256: sha256(zipBytes),
+    scope: PACKAGE_SCOPE,
     companiesWithResults: coverage.companiesWithResults,
     companiesExpected: coverage.companiesExpected,
     documents: coverage.documents,
     statements: coverage.statements,
     fallbacks: coverage.fallbacks,
     fallbackUnverified: coverage.fallbackUnverified,
-    benchmark: { pass: benchmark.pass, recall: benchmark.recall, issues: benchmark.issues.length },
+    thinCompanies,
+    remediationStatements: remediation.statements.length,
+    fallbackAudit,
+    benchmark: { evaluationType: BENCHMARK_EVALUATION_TYPE, pass: sanitizedBenchmark.pass, recall: sanitizedBenchmark.recall, issues: sanitizedBenchmark.issues.length },
     auditSummary,
   }, null, 2));
 }

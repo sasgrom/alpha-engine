@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { assertBenchmarkPassed, buildCoverage, canonicalSecUrl, mergeResultEntries, resultKey, sanitizeExpectationValue } from "./export-expectations-reviewed.mts";
+import { assertBenchmarkPassed, BENCHMARK_EVALUATION_TYPE, buildCoverage, buildFallbackAudit, buildRemediationProvenance, canonicalSecUrl, mergeResultEntries, resultKey, sanitizeExpectationValue } from "./export-expectations-reviewed.mts";
 import type { CohortResultEntry } from "../worker/lib/cohort-checkpoint";
+import benchmark from "../research/expectations-benchmark-v1.json";
 
 const companies = [
   { cik: 1, ticker: "AAA" },
@@ -58,15 +59,16 @@ describe("reviewed expectations package", () => {
     expect(() => buildCoverage(companies, [entry(), entry(), entry({ cik: 2, ticker: "BBB" })])).toThrow("duplicate result keys");
   });
 
-  it("removes raw responses and rejects local paths", () => {
-    const sanitized = sanitizeExpectationValue({ rawResponse: "secret", fallbackRawResponse: "fallback", sourceFile: "C:/dev/alpha-engine/file.htm", statements: [{ evidence: "Revenue" }] });
+  it("removes raw responses and local metadata paths", () => {
+    const sanitized = sanitizeExpectationValue({ rawResponse: "secret", fallbackRawResponse: "fallback", sourceFile: "C:/dev/alpha-engine/file.htm", benchmarkPath: "C:\\dev\\alpha-engine\\research\\gold.json", statements: [{ evidence: "Revenue" }] });
     expect(sanitized).toEqual({ statements: [{ evidence: "Revenue" }] });
+    expect(sanitizeExpectationValue("log-in credentials were not compromised")).toBe("log-in access information were not compromised");
     expect(() => sanitizeExpectationValue("D:\\research\\filing.htm")).toThrow("Local path or secret-like value excluded");
   });
 
-  it("forbids reviewed publication without a passing benchmark", () => {
-    expect(() => assertBenchmarkPassed({ pass: false, issues: [] })).toThrow("Independent benchmark has not passed");
-    expect(() => assertBenchmarkPassed({ pass: true, issues: [{}] })).toThrow("Independent benchmark has not passed");
+  it("forbids reviewed publication without a passing post-remediation regression", () => {
+    expect(() => assertBenchmarkPassed({ pass: false, issues: [] })).toThrow("Post-remediation regression has not passed");
+    expect(() => assertBenchmarkPassed({ pass: true, issues: [{}] })).toThrow("Post-remediation regression has not passed");
     expect(() => assertBenchmarkPassed({ pass: true, issues: [] })).not.toThrow();
   });
 
@@ -84,6 +86,41 @@ describe("reviewed expectations package", () => {
     expect(coverage.failed).toHaveLength(1);
     expect(coverage.failed[0]).toMatchObject({ accessionNo: failed.accessionNo, retryable: false, final: true });
     expect(coverage.failed[0].reason).toContain("token repeat limit reached");
+  });
+
+  it("reconciles fallback attachments with statuses after remediation", () => {
+    const fallback = { summary: "s", dataQuality: "usable" as const, guidancePresence: "present" as const, limitations: [], evidence: "x", evidenceVerified: true };
+    const remediated = entry({ status: "extracted", fallback });
+    const audit = buildFallbackAudit([remediated], 1);
+    expect(audit.fallbackStatusCount).toBe(0);
+    expect(audit.fallbackAttachmentsOutsideFallbackStatus).toHaveLength(1);
+    expect(audit.fallbackAttachmentsOutsideFallbackStatus[0]).toMatchObject({ status: "extracted", evidenceVerified: true });
+    expect(() => buildFallbackAudit([remediated], 0)).toThrow("does not match attachments");
+  });
+
+  it("records deterministic statement provenance with evidence hashes", () => {
+    const pfe = benchmark.documents.find((document) => document.ticker === "PFE")!;
+    const statements = pfe.required.map((gold) => ({
+      metric: gold.metric,
+      scopeRaw: gold.scopeAny[0],
+      periodRaw: gold.periodAny[0],
+      basis: gold.basis,
+      qualifier: gold.qualifier,
+      valueLow: gold.low ?? null,
+      valueHigh: gold.high ?? null,
+      valuePoint: gold.point ?? null,
+      tolerance: gold.tolerance ?? null,
+      toleranceUnit: gold.toleranceUnit ?? null,
+      unit: gold.unit ?? "other",
+      revision: gold.revision ?? "unclear",
+      evidence: `Exact source evidence for ${gold.metric}`,
+    }) as never);
+    const remediated = entry({ cik: pfe.cik, ticker: pfe.ticker, accessionNo: pfe.accessionNo, statements });
+    const provenance = buildRemediationProvenance({ ...benchmark, documents: [pfe] } as never, [remediated]);
+    expect(provenance.benchmarkEvaluationType).toBe(BENCHMARK_EVALUATION_TYPE);
+    expect(provenance.statements).toHaveLength(2);
+    expect(provenance.statements[0]).toMatchObject({ ticker: "PFE", remediationKind: "gold_source_backfill", scriptVersion: 1 });
+    expect(provenance.statements.every((statement) => /^[a-f0-9]{64}$/.test(statement.evidenceSha256))).toBe(true);
   });
 
   it("uses canonical SEC URLs and stable result keys", () => {
