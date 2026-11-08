@@ -56,6 +56,7 @@ if (promptMode !== "cohort" && promptMode !== "target") throw new Error("--promp
 const dryRun = process.argv.includes("--dry-run");
 const skipWarmup = process.argv.includes("--skip-warmup");
 const allowContextOverflow = process.argv.includes("--allow-context-overflow");
+const retryUnparsed = process.argv.includes("--retry-unparsed");
 const includeRawResponse = process.argv.includes("--include-raw-response");
 const timeoutMs = Number(arg("--timeout-ms") ?? 600_000);
 const numPredict = Number(arg("--num-predict") ?? 4096);
@@ -115,6 +116,8 @@ interface AbRunRow {
   promptTokens: number;
   promptMs: number;
   generatedTokens: number;
+  outputTokenLimit: number;
+  outputTruncatedLikely: boolean;
   evalMs: number;
   evalPerSec: number;
   finishReason: string | null;
@@ -257,6 +260,13 @@ if (existsSync(outPath)) {
   const sameModels = JSON.stringify(report.models.map((item) => item.label).sort()) === JSON.stringify(models.map((item) => item.label).sort());
   if (!sameCases || !sameModels || report.promptMode !== promptMode || report.promptVersion !== EXPECTATIONS_PROMPT_VERSION) {
     throw new Error(`Existing --out has different cases/models/prompt settings; use a new file: ${outPath}`);
+  }
+  const outputBudgetChanged = report.numPredict !== numPredict;
+  if (retryUnparsed || outputBudgetChanged) {
+    const before = report.runs.length;
+    report.runs = report.runs.filter((row) => row.status !== "unparsed");
+    const removed = before - report.runs.length;
+    if (removed) console.log(`[expectations-ab] retrying ${removed} unparsed row(s)${outputBudgetChanged ? ` after num-predict ${report.numPredict} -> ${numPredict}` : ""}`);
   }
   report.generatedAt = new Date().toISOString();
   report.benchmarkPath = benchmarkPath;
@@ -490,6 +500,8 @@ for (const spec of models) {
           promptTokens: generated.promptEvalCount,
           promptMs: generated.promptEvalMs,
           generatedTokens: generated.evalCount,
+          outputTokenLimit: numPredict,
+          outputTruncatedLikely: parsed.response === null && generated.evalCount >= numPredict,
           evalMs: generated.evalMs,
           evalPerSec: generated.evalPerSec,
           finishReason: spec.engine === "strata" ? (generated as StrataGenerateResult).finishReason : null,
@@ -532,6 +544,8 @@ for (const spec of models) {
           promptTokens: 0,
           promptMs: 0,
           generatedTokens: 0,
+          outputTokenLimit: numPredict,
+          outputTruncatedLikely: false,
           evalMs: 0,
           evalPerSec: 0,
           finishReason: null,
