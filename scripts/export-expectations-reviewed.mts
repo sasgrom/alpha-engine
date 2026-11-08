@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { readCohortEntries, type CohortResultEntry } from "../worker/lib/cohort-checkpoint";
 import { buildExpectationPrompt, type ExpectationStatement } from "../worker/lib/expectations";
@@ -164,6 +164,37 @@ export function normalizeCohortEntries(entries: CohortResultEntry[]) {
   return { normalizedEntries, audit, reviewQueue, counts, reviewCategoryCounts, ruleCounts, topUnmappedMetricRaw };
 }
 
+export function buildExpectationResultsPayload(entries: (CohortResultEntry & { statements: CanonicalExpectationStatement[] })[]) {
+  const keys = new Set<string>();
+  const results = entries.map((entry) => {
+    const key = resultKey(entry);
+    if (keys.has(key)) throw new Error(`Duplicate exact result key ${key}`);
+    keys.add(key);
+    return {
+      cik: entry.cik,
+      accessionNo: entry.accessionNo,
+      sourceId: entry.sourceId,
+      containerId: entry.containerId,
+      inputSha256: entry.inputSha256,
+      sourceUrl: canonicalSecUrl(entry.cik, entry.accessionNo),
+      status: entry.status,
+      guidanceStatus: entry.guidanceStatus,
+      statements: entry.statements,
+      extractionWarnings: entry.extractionWarnings,
+      rejectedEvidence: entry.rejectedEvidence,
+    };
+  });
+  const statementCount = results.reduce((sum, result) => sum + result.statements.length, 0);
+  return {
+    schemaVersion: 1,
+    packageVersion: "3.2",
+    resultKeyDefinition: "(cik, accessionNo, sourceId, containerId)",
+    payloadSource: "direct cohort checkpoints and per-source entries",
+    resolverReport: { ambiguousStatements: 0, missingParent: 0, heuristicResolved: 0, statements: statementCount },
+    results,
+  };
+}
+
 export function statementKey(statement: ExpectationStatement): string {
   return JSON.stringify([
     statement.metric, statement.scopeRaw, statement.periodRaw, statement.basis, statement.qualifier,
@@ -244,6 +275,29 @@ function powerShell(script: string) {
 }
 const psQuote = (value: string) => `'${value.replace(/'/g, "''")}'`;
 
+function resolveCohortCacheDir(cik: number): string {
+  const primary = path.join(ROOT, "worker/cache/edgar", String(cik));
+  const resultCount = (directory: string) => {
+    if (!existsSync(path.join(directory, "cohort-pack-v2.json"))) return 0;
+    let count = 0;
+    if (existsSync(path.join(directory, "cohort-v2.json"))) {
+      const snapshot = JSON.parse(readSourceFile(path.join(directory, "cohort-v2.json"), "utf8")) as { entries?: unknown[] };
+      count = snapshot.entries?.length ?? 0;
+    }
+    const entriesDir = path.join(directory, "cohort-v2-entries");
+    if (existsSync(entriesDir)) count = Math.max(count, readdirSync(entriesDir).filter((name) => name.endsWith(".json")).length);
+    return count;
+  };
+  const candidates = [primary];
+  const archive = "D:/alpha-engine/worker/cache/edgar";
+  if (existsSync(archive)) {
+    candidates.push(...readdirSync(archive).filter((name) => name.startsWith(`${cik}.bak-`)).sort().reverse().map((name) => path.join(archive, name)));
+  }
+  const best = candidates.map((directory, index) => ({ directory, index, count: resultCount(directory) }))
+    .sort((a, b) => b.count - a.count || a.index - b.index)[0];
+  return best.count > 0 ? best.directory : primary;
+}
+
 async function main() {
   const arg = (name: string) => {
     const index = process.argv.indexOf(name);
@@ -251,7 +305,7 @@ async function main() {
   };
   const universeName = arg("--universe") ?? "research-universe-50.json";
   const universePath = path.join(ROOT, "worker", universeName);
-  const out = path.resolve(ROOT, arg("--out") ?? "research/reviewed-sync/2026-11-08/expectations-reviewed-v3.1.zip");
+  const out = path.resolve(ROOT, arg("--out") ?? "research/reviewed-sync/2026-11-08/expectations-reviewed-v3.2.zip");
   if (existsSync(out)) throw new Error(`Refusing to overwrite ${out}`);
   const benchmark = JSON.parse(readSourceFile(path.join(ROOT, "worker/.runs/expectations-benchmark-report.json"), "utf8"));
   assertBenchmarkPassed(benchmark);
@@ -262,14 +316,15 @@ async function main() {
   });
   const companies = JSON.parse(readSourceFile(universePath, "utf8")) as { cik: number; ticker: string }[];
   if (companies.length === 0 || new Set(companies.map((company) => company.cik)).size !== companies.length) throw new Error("Universe must contain unique companies");
-  const entries = mergeResultEntries(companies.flatMap((company) => readCohortEntries(path.join(ROOT, "worker/cache/edgar", String(company.cik)))));
+  const cacheDirs = new Map(companies.map((company) => [company.cik, resolveCohortCacheDir(company.cik)]));
+  const entries = mergeResultEntries(companies.flatMap((company) => readCohortEntries(cacheDirs.get(company.cik)!)));
   const models = new Set(entries.map((entry) => entry.model));
   const promptVersions = new Set(entries.map((entry) => entry.promptVersion));
   if (models.size !== 1 || !models.has("qwen3.5:9b")) throw new Error(`Unexpected models: ${[...models].join(",")}`);
   if (promptVersions.size !== 1 || !promptVersions.has("expectations-v4")) throw new Error(`Unexpected prompt versions: ${[...promptVersions].join(",")}`);
   const packs = new Map(companies.map((company) => [
     company.cik,
-    JSON.parse(readSourceFile(path.join(ROOT, "worker/cache/edgar", String(company.cik), "cohort-pack-v2.json"), "utf8")) as CohortPack,
+    JSON.parse(readSourceFile(path.join(cacheDirs.get(company.cik)!, "cohort-pack-v2.json"), "utf8")) as CohortPack,
   ]));
   const containers = new Map(companies.flatMap((company) => packs.get(company.cik)!.containers.map((container) => [`${company.cik}:${container.containerId}`, container] as const)));
   for (const entry of entries) {
@@ -320,6 +375,10 @@ async function main() {
     development,
     holdout,
   };
+  const resultsPayload = sanitizeExpectationValue(buildExpectationResultsPayload(normalization.normalizedEntries));
+  if (resultsPayload.results.length !== coverage.documents || resultsPayload.resolverReport.statements !== coverage.statements) {
+    throw new Error(`Exact-key payload mismatch: results=${resultsPayload.results.length}/${coverage.documents}, statements=${resultsPayload.resolverReport.statements}/${coverage.statements}`);
+  }
   const sanitizedEntries = sanitizeExpectationValue(entries);
   const goldBenchmark = JSON.parse(readSourceFile(path.join(ROOT, "research/expectations-benchmark-v1.json"), "utf8")) as BenchmarkFile;
   const remediation = sanitizeExpectationValue(buildRemediationProvenance(goldBenchmark, sanitizedEntries));
@@ -332,6 +391,7 @@ async function main() {
   writeFileSync(path.join(stage, "expectations-report.ts"), `/** Generated presentation artifact; raw model output and local paths are excluded. */\nexport const expectationsReport = ${JSON.stringify(sanitizedReport, null, 2)} as const;\n`);
   writeFileSync(path.join(stage, "benchmark-report.json"), `${JSON.stringify(sanitizedBenchmark, null, 2)}\n`);
   writeFileSync(path.join(stage, "coverage.json"), `${JSON.stringify(sanitizeExpectationValue(coverage), null, 2)}\n`);
+  writeFileSync(path.join(stage, "expectations-results.json"), `${JSON.stringify(resultsPayload, null, 2)}\n`);
   writeFileSync(path.join(stage, "remediation.json"), `${JSON.stringify(remediation, null, 2)}\n`);
   writeFileSync(path.join(stage, "normalization-audit.json"), `${JSON.stringify(sanitizeExpectationValue({ schemaVersion: 1, normalizationVersion: EXPECTATION_NORMALIZATION_VERSION, counts: normalization.counts, audit: normalization.audit }), null, 2)}\n`);
   writeFileSync(path.join(stage, "review-queue.json"), `${JSON.stringify(sanitizeExpectationValue({ schemaVersion: 1, normalizationVersion: EXPECTATION_NORMALIZATION_VERSION, categories: normalization.reviewCategoryCounts, topUnmappedMetricRaw: normalization.topUnmappedMetricRaw, reviewQueue: normalization.reviewQueue }), null, 2)}\n`);
@@ -340,7 +400,10 @@ async function main() {
     status: "blocked",
     scope: PACKAGE_SCOPE,
     productionApply: false,
+    applyStatus: "not_run",
+    applyAllowedWhen: "Verified backup id with size/hash or explicit owner confirmation: backup verified, proceed",
     blockers: [
+      { id: "backup_channel_required", verified: false, applyStatus: "fail_closed" },
       { id: "thin_history", companies: thinCompanies.map((company) => ({ ticker: company.ticker, documents: company.documents, statements: company.statements })) },
       { id: "canonical_unmapped", count: normalization.counts.canonicalUnmapped },
       { id: "value_unit_scale", count: normalization.reviewCategoryCounts.value_unit_scale },
@@ -432,17 +495,22 @@ async function main() {
     }),
   };
   writeFileSync(path.join(stage, "lineage.json"), `${JSON.stringify(sanitizeExpectationValue(lineage), null, 2)}\n`);
-  const files = ["expectations-report.json", "expectations-report.ts", "benchmark-report.json", "coverage.json", "production-readiness.json", "lineage.json", "remediation.json", "normalization-audit.json", "review-queue.json"].map((file) => {
+  const files = ["expectations-report.json", "expectations-report.ts", "expectations-results.json", "benchmark-report.json", "coverage.json", "production-readiness.json", "lineage.json", "remediation.json", "normalization-audit.json", "review-queue.json"].map((file) => {
     const bytes = readSourceFile(path.join(stage, file));
     return { path: file, bytes: bytes.length, sha256: sha256(bytes) };
   });
   const manifest = sanitizeExpectationValue({
     schemaVersion: 3,
     packageType: "reviewed-expectations",
-    packageVersion: "3.1",
+    packageVersion: "3.2",
     packageEntries: files.length + 1,
     payloadFilesHashListed: files.length,
     manifestSelfHashed: false,
+    applyStatus: "not_run",
+    applyPayload: "expectations-results.json",
+    flattenedReportRole: "human/UI review only; not apply payload",
+    resolverReport: resultsPayload.resolverReport,
+    fallbackPayloadPolicy: "diagnostics counts only; never serving guidance",
     scope: PACKAGE_SCOPE,
     generatedAt: new Date().toISOString(),
     baselineCommit: execFileSync("git", ["rev-parse", "HEAD"], { cwd: ROOT, encoding: "utf8" }).trim(),
@@ -491,8 +559,11 @@ async function main() {
     bytes: zipBytes.length,
     sha256: sha256(zipBytes),
     scope: PACKAGE_SCOPE,
-    packageVersion: "3.1",
+    packageVersion: "3.2",
     normalizationVersion: EXPECTATION_NORMALIZATION_VERSION,
+    applyStatus: "not_run",
+    resultCount: resultsPayload.results.length,
+    resolverReport: resultsPayload.resolverReport,
     normalizationCounts: normalization.counts,
     topUnmappedMetricRaw: normalization.topUnmappedMetricRaw,
     development,

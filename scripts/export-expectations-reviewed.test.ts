@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { assertBenchmarkPassed, BENCHMARK_EVALUATION_TYPE, buildCoverage, buildFallbackAudit, buildRemediationProvenance, canonicalSecUrl, mergeResultEntries, normalizeCohortEntries, resultKey, sanitizeExpectationValue } from "./export-expectations-reviewed.mts";
+import { assertBenchmarkPassed, BENCHMARK_EVALUATION_TYPE, buildCoverage, buildExpectationResultsPayload, buildFallbackAudit, buildRemediationProvenance, canonicalSecUrl, mergeResultEntries, normalizeCohortEntries, resultKey, sanitizeExpectationValue } from "./export-expectations-reviewed.mts";
 import type { CohortResultEntry } from "../worker/lib/cohort-checkpoint";
 import benchmark from "../research/expectations-benchmark-v1.json";
 
@@ -142,6 +142,17 @@ describe("reviewed expectations package", () => {
     expect(result.reviewCategoryCounts.value_unit_scale).toBe(1);
     expect(result.reviewCategoryCounts.ambiguous).toBe(0);
     expect(result.audit.every((item) => item.evidenceSha256 && item.normalizationVersion)).toBe(true);
+  });
+
+  it("builds exact-key result payloads directly without flattened resolvers or diagnostics", () => {
+    const directEntry = { ...entry(), statements: [{ canonicalMetric: "revenue" } as never] };
+    const payload = buildExpectationResultsPayload([directEntry]);
+    expect(payload.results).toHaveLength(1);
+    expect(payload.results[0]).toMatchObject({ cik: 1, sourceId: "source-1", containerId: "container-1", statements: [{ canonicalMetric: "revenue" }] });
+    expect(payload.resolverReport).toEqual({ ambiguousStatements: 0, missingParent: 0, heuristicResolved: 0, statements: 1 });
+    expect(payload.results[0]).not.toHaveProperty("fallback");
+    expect(payload.results[0]).not.toHaveProperty("rawResponse");
+    expect(() => buildExpectationResultsPayload([directEntry, directEntry])).toThrow("Duplicate exact result key");
   });
 
   it("uses canonical SEC URLs and stable result keys", () => {
