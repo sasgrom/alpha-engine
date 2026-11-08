@@ -17,6 +17,9 @@ export interface CanonicalExpectationStatement extends ExpectationStatement {
   canonicalMetric: string;
 }
 
+export const EXPECTATION_NUMERIC_CHANGE_FIELDS = ["qualifier", "valueLow", "valueHigh", "valuePoint", "tolerance", "toleranceUnit", "unit"] as const;
+export const EXPECTATION_NUMERIC_CHANGE_SEMANTICS = "numericChange=true when qualifier, valueLow, valueHigh, valuePoint, tolerance, toleranceUnit or unit changes";
+
 export interface ExpectationNormalizationChange {
   field: string;
   before: unknown;
@@ -30,6 +33,8 @@ export interface ExpectationNormalizationAudit extends ExpectationNormalizationC
   evidenceSha256: string;
   numericChange: boolean;
   changes: ExpectationNormalizationChange[];
+  beforeStatement?: ExpectationStatement;
+  afterStatement?: ExpectationStatement | ExpectationStatement[];
   afterStatementKeys: string[];
 }
 
@@ -44,6 +49,7 @@ export function normalizeExpectationStatement(
   const resolved = new Set<string>();
   const review = discoverExpectationStatement(statement, context);
   const apply = (ruleId: string, updates: Record<string, unknown>) => {
+    const beforeStatement = { ...working };
     const changes = Object.entries(updates).filter(([field, value]) => working[field as keyof ExpectationStatement] !== value).map(([field, after]) => ({
       field,
       before: working[field as keyof ExpectationStatement],
@@ -53,12 +59,14 @@ export function normalizeExpectationStatement(
     working = { ...working, ...updates };
     audit.push({
       ...context,
-      statementKey: originalKey,
+      statementKey: expectationStatementKey(beforeStatement),
       ruleId,
       normalizationVersion: EXPECTATION_NORMALIZATION_VERSION,
       evidenceSha256,
-      numericChange: changes.some((change) => typeof change.before === "number" || typeof change.after === "number"),
+      numericChange: changes.some((change) => EXPECTATION_NUMERIC_CHANGE_FIELDS.includes(change.field as typeof EXPECTATION_NUMERIC_CHANGE_FIELDS[number])),
       changes,
+      beforeStatement,
+      afterStatement: { ...working },
       afterStatementKeys: [expectationStatementKey(working)],
     });
   };
@@ -102,12 +110,14 @@ export function normalizeExpectationStatement(
       normalized = (["gaap", "non_gaap"] as const).map((basis) => ({ ...working, basis }));
       audit.push({
         ...context,
-        statementKey: originalKey,
+        statementKey: expectationStatementKey(working),
         ruleId: "GENERIC_SPLIT_COMBINED_BASIS",
         normalizationVersion: EXPECTATION_NORMALIZATION_VERSION,
         evidenceSha256,
         numericChange: false,
         changes: [{ field: "basis", before: working.basis, after: ["gaap", "non_gaap"] }],
+        beforeStatement: { ...working },
+        afterStatement: normalized.map((item) => ({ ...item })),
         afterStatementKeys: normalized.map(expectationStatementKey),
       });
       resolved.add("DISCOVER_COMBINED_BASIS");
@@ -159,8 +169,13 @@ export function assertExpectationNormalizationAudit(audit: ExpectationNormalizat
     if (item.normalizationVersion !== EXPECTATION_NORMALIZATION_VERSION || !/^[a-f0-9]{64}$/.test(item.evidenceSha256) || !item.statementKey || !item.changes.length || !item.afterStatementKeys.length) {
       throw new Error(`Incomplete normalization audit for ${item.ruleId}`);
     }
-    if (item.numericChange && !item.changes.some((change) => typeof change.before === "number" || typeof change.after === "number")) {
-      throw new Error(`Numeric normalization lacks before/after values for ${item.ruleId}`);
+    const hasNumericChange = item.changes.some((change) => EXPECTATION_NUMERIC_CHANGE_FIELDS.includes(change.field as typeof EXPECTATION_NUMERIC_CHANGE_FIELDS[number]));
+    if (item.numericChange !== hasNumericChange) throw new Error(`numericChange semantics mismatch for ${item.ruleId}`);
+    if (!item.ruleId.startsWith("ALIAS_")) {
+      if (!item.beforeStatement || !item.afterStatement) throw new Error(`Missing statement snapshots for ${item.ruleId}`);
+      if (expectationStatementKey(item.beforeStatement) !== item.statementKey) throw new Error(`Before-statement resolver mismatch for ${item.ruleId}`);
+      const afterStatements = Array.isArray(item.afterStatement) ? item.afterStatement : [item.afterStatement];
+      if (JSON.stringify(afterStatements.map(expectationStatementKey)) !== JSON.stringify(item.afterStatementKeys)) throw new Error(`After-statement resolver mismatch for ${item.ruleId}`);
     }
   }
 }

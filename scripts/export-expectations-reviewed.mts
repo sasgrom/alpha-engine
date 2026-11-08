@@ -8,7 +8,7 @@ import { buildExpectationPrompt, type ExpectationStatement } from "../worker/lib
 import type { BenchmarkFile, GoldStatement } from "../worker/lib/expectations-benchmark";
 import type { CohortPack } from "../worker/lib/cohort-pack";
 import { buildExpectationsReport } from "../worker/lib/expectations-report";
-import { assertExpectationNormalizationAudit, normalizeExpectationStatement, type CanonicalExpectationStatement, type ExpectationNormalizationAudit } from "../worker/lib/expectation-normalization";
+import { assertExpectationNormalizationAudit, EXPECTATION_NUMERIC_CHANGE_SEMANTICS, normalizeExpectationStatement, type CanonicalExpectationStatement, type ExpectationNormalizationAudit } from "../worker/lib/expectation-normalization";
 import { EXPECTATION_DEVELOPMENT_TICKERS, EXPECTATION_HOLDOUT_TICKERS, EXPECTATION_NORMALIZATION_VERSION, type ExpectationReviewItem } from "../worker/lib/expectation-normalization-rules";
 import { readFileSync as readSourceFile } from "node:fs";
 
@@ -143,6 +143,7 @@ export function normalizeCohortEntries(entries: CohortResultEntry[]) {
     inputStatements: entries.reduce((sum, entry) => sum + entry.statements.length, 0),
     outputStatements,
     auditRecords: audit.length,
+    numericChanges: audit.filter((item) => item.numericChange).length,
     reviewItems: reviewQueue.length,
     canonicalMapped: outputStatements - unmapped,
     canonicalUnmapped: unmapped,
@@ -250,7 +251,7 @@ async function main() {
   };
   const universeName = arg("--universe") ?? "research-universe-50.json";
   const universePath = path.join(ROOT, "worker", universeName);
-  const out = path.resolve(ROOT, arg("--out") ?? "research/reviewed-sync/2026-11-08/expectations-reviewed-v3.zip");
+  const out = path.resolve(ROOT, arg("--out") ?? "research/reviewed-sync/2026-11-08/expectations-reviewed-v3.1.zip");
   if (existsSync(out)) throw new Error(`Refusing to overwrite ${out}`);
   const benchmark = JSON.parse(readSourceFile(path.join(ROOT, "worker/.runs/expectations-benchmark-report.json"), "utf8"));
   assertBenchmarkPassed(benchmark);
@@ -334,9 +335,20 @@ async function main() {
   writeFileSync(path.join(stage, "remediation.json"), `${JSON.stringify(remediation, null, 2)}\n`);
   writeFileSync(path.join(stage, "normalization-audit.json"), `${JSON.stringify(sanitizeExpectationValue({ schemaVersion: 1, normalizationVersion: EXPECTATION_NORMALIZATION_VERSION, counts: normalization.counts, audit: normalization.audit }), null, 2)}\n`);
   writeFileSync(path.join(stage, "review-queue.json"), `${JSON.stringify(sanitizeExpectationValue({ schemaVersion: 1, normalizationVersion: EXPECTATION_NORMALIZATION_VERSION, categories: normalization.reviewCategoryCounts, topUnmappedMetricRaw: normalization.topUnmappedMetricRaw, reviewQueue: normalization.reviewQueue }), null, 2)}\n`);
-  const auditSummary = sanitizeExpectationValue({
+  const productionReadiness = sanitizeExpectationValue({
     schemaVersion: 3,
+    status: "blocked",
     scope: PACKAGE_SCOPE,
+    productionApply: false,
+    blockers: [
+      { id: "thin_history", companies: thinCompanies.map((company) => ({ ticker: company.ticker, documents: company.documents, statements: company.statements })) },
+      { id: "canonical_unmapped", count: normalization.counts.canonicalUnmapped },
+      { id: "value_unit_scale", count: normalization.reviewCategoryCounts.value_unit_scale },
+      { id: "qualifier_evidence", count: normalization.reviewCategoryCounts.qualifier_evidence },
+      { id: "combined_basis", count: normalization.reviewCategoryCounts.combined_basis },
+      { id: "benchmark_regression_only", evaluationType: BENCHMARK_EVALUATION_TYPE, independentModelBenchmark: false },
+      { id: "fallback_diagnostics", fallbackListCount: fallbackAudit.fallbackListCount, structuredGuidance: false },
+    ],
     lastExtractionRun: {
       sources: 26460,
       extracted: 2142,
@@ -389,7 +401,7 @@ async function main() {
       partialHistory: true,
     },
   });
-  writeFileSync(path.join(stage, "audit-summary.json"), `${JSON.stringify(auditSummary, null, 2)}\n`);
+  writeFileSync(path.join(stage, "production-readiness.json"), `${JSON.stringify(productionReadiness, null, 2)}\n`);
   const lineage = {
     model: "qwen3.5:9b",
     promptVersion: "expectations-v4",
@@ -420,14 +432,17 @@ async function main() {
     }),
   };
   writeFileSync(path.join(stage, "lineage.json"), `${JSON.stringify(sanitizeExpectationValue(lineage), null, 2)}\n`);
-  const files = ["expectations-report.json", "expectations-report.ts", "benchmark-report.json", "coverage.json", "audit-summary.json", "lineage.json", "remediation.json", "normalization-audit.json", "review-queue.json"].map((file) => {
+  const files = ["expectations-report.json", "expectations-report.ts", "benchmark-report.json", "coverage.json", "production-readiness.json", "lineage.json", "remediation.json", "normalization-audit.json", "review-queue.json"].map((file) => {
     const bytes = readSourceFile(path.join(stage, file));
     return { path: file, bytes: bytes.length, sha256: sha256(bytes) };
   });
   const manifest = sanitizeExpectationValue({
     schemaVersion: 3,
     packageType: "reviewed-expectations",
-    packageVersion: 3,
+    packageVersion: "3.1",
+    packageEntries: files.length + 1,
+    payloadFilesHashListed: files.length,
+    manifestSelfHashed: false,
     scope: PACKAGE_SCOPE,
     generatedAt: new Date().toISOString(),
     baselineCommit: execFileSync("git", ["rev-parse", "HEAD"], { cwd: ROOT, encoding: "utf8" }).trim(),
@@ -439,6 +454,8 @@ async function main() {
     promptSourceSha256: PROMPT_SOURCE_SHA256,
     resultOrigin: "model output + deterministic normalization",
     normalizationVersion: EXPECTATION_NORMALIZATION_VERSION,
+    numericChangeSemantics: EXPECTATION_NUMERIC_CHANGE_SEMANTICS,
+    nonAliasSnapshotPolicy: "Full beforeStatement and afterStatement snapshots; statementKey=before and afterStatementKeys=after",
     counts: normalization.counts,
     development,
     holdout,
@@ -474,7 +491,7 @@ async function main() {
     bytes: zipBytes.length,
     sha256: sha256(zipBytes),
     scope: PACKAGE_SCOPE,
-    packageVersion: 3,
+    packageVersion: "3.1",
     normalizationVersion: EXPECTATION_NORMALIZATION_VERSION,
     normalizationCounts: normalization.counts,
     topUnmappedMetricRaw: normalization.topUnmappedMetricRaw,
@@ -490,7 +507,7 @@ async function main() {
     remediationStatements: remediation.statements.length,
     fallbackAudit,
     benchmark: { evaluationType: BENCHMARK_EVALUATION_TYPE, pass: sanitizedBenchmark.pass, recall: sanitizedBenchmark.recall, issues: sanitizedBenchmark.issues.length },
-    auditSummary,
+    productionReadiness,
   }, null, 2));
 }
 

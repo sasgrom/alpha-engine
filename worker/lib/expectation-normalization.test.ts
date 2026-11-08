@@ -45,6 +45,8 @@ describe("generic expectation normalization development sample", () => {
     expect(audit.normalizationVersion).toBe("expectation-normalization-v2");
     expect(audit.evidenceSha256).toBe(expectationEvidenceSha256(input));
     expect(audit.changes).toContainEqual({ field: "tolerance", before: null, after: 2 });
+    expect(audit.beforeStatement).toMatchObject({ qualifier: "point", tolerance: null });
+    expect(audit.afterStatement).toMatchObject({ qualifier: "plus_minus", tolerance: 2 });
   });
 
   it("splits combined GAAP and non-GAAP margins without NVDA-specific code", () => {
@@ -62,7 +64,10 @@ describe("generic expectation normalization development sample", () => {
     expect(result.statements).toHaveLength(2);
     expect(result.statements.map((statement) => statement.basis)).toEqual(["gaap", "non_gaap"]);
     expect(result.statements.map((statement) => statement.canonicalMetric)).toEqual(["margin.gross.gaap", "margin.gross.non_gaap"]);
-    expect(result.audit.some((item) => item.ruleId === "GENERIC_SPLIT_COMBINED_BASIS")).toBe(true);
+    const audit = result.audit.find((item) => item.ruleId === "GENERIC_SPLIT_COMBINED_BASIS")!;
+    expect(audit.numericChange).toBe(false);
+    expect(audit.beforeStatement).toBeDefined();
+    expect(audit.afterStatement).toHaveLength(2);
   });
 
   it("keeps respectively-valued combined statements in the review queue", () => {
@@ -116,5 +121,9 @@ describe("generic expectation normalization development sample", () => {
   it("normalizes explicit non-disclosure only when no numeric target is present", () => {
     const result = normalizeExpectationStatement(base({ valuePoint: null, valueText: "not provided", unit: "text", evidence: "We do not provide guidance for this metric." }), context);
     expect(result.statements[0]).toMatchObject({ kind: "non_disclosure", qualifier: "not_provided", revision: "not_provided" });
+    const audit = result.audit.find((item) => item.ruleId === "GENERIC_NON_DISCLOSURE_FROM_EVIDENCE")!;
+    expect(audit.numericChange).toBe(true);
+    expect(audit.beforeStatement).toMatchObject({ qualifier: "point" });
+    expect(audit.afterStatement).toMatchObject({ qualifier: "not_provided" });
   });
 });
