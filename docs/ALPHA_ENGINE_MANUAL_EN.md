@@ -1778,3 +1778,39 @@ The error table preserves the owner's PDF semantics: `ei+ = P(wrong up | actual 
 `api/services/market-cap-ols.ts` implements the time-series task separately from factor-direction classification. The model is `ln(MarketCap_t) = α + β·ln(Revenue_{t-1}) + ε`, estimated with an expanding window and one-step-ahead predictions only. The first 20 quarters are the minimum training history. Each iteration uses only earlier observations and never sees the target period's future distribution. R² is out-of-sample and may be negative. RMSE is reported in log space and USD millions.
 
 Availability rules are explicit: revenue selects `latest <= anchor` and falls back to `first <= anchor` when needed; shares use the latest value available at or before the anchor, with diluted-shares fallback. Prices use one eligible source per date with observation date <= anchor and fetchedAt <= evaluation asOf. Historical backfill ingestion timestamps are not treated as market-availability dates. The error taxonomy is `ei+ = P(wrong up | actual down)` and `ei- = P(wrong down | actual up)`, based on actual and predicted log changes. Negative R² values are preserved. High R² on an individual company is not causal evidence or a production model.
+
+
+## 22. Prediction-market probabilities (Polymarket research namespace)
+
+Prediction markets provide what no other source does: event probabilities voted on by thousands of participants with real money at stake, updated continuously and free of charge. We consume this as **data, not betting**: trading, keys, orders and any contract operations are permanently out of scope. The source is research-only with the same reviewed-only transport as everything else.
+
+### 22.1 Access and cost
+
+- Public read-only API with no key: Polymarket US `https://gateway.polymarket.us` (markets, events, order books, BBO, settlement prices, price history); the international surface `gamma-api.polymarket.com` (event/market catalogue and metadata) + `clob.polymarket.com` (books, midpoints, `/prices-history`). There is no paid tier for market data; money only appears in the trading API, which we never touch.
+- Rate limits are IP-based and generous for our profile (thousands of requests per 10 seconds on the international surface; 20 rps on public US endpoints). Our pattern is dozens of contracts a few times per day — three to four orders of magnitude below the limits. Polite backoff and caching remain mandatory per the general source rules.
+- Historical backfill is limited: `/prices-history` serves price series (including long-resolved markets, down to 1-minute fidelity), but **no order book history exists anywhere** — book depth is forward-only. Snapshot accumulation therefore starts now: what was not captured yesterday can never be obtained later.
+
+### 22.2 Why this matters specifically for us
+
+- **Crowd-implied probability as a signal.** A contract price of 0..1 is a probability aggregated from thousands of subjective opinions with a financial incentive to be right. Published accuracy research puts this at or above expert forecasts and polls for macro events.
+- **Resolution as perfect training labels.** Every contract resolves to 0 or 1 under an objective rule. This is a free labeling machine: Brier score, log loss and calibration curves are computable without manual work and without lookahead — the resolved outcome is only known after the event.
+- **Macro coverage without politics.** Fed rate decisions, CPI/PCE surprises, recession probability, jobs reports, sector events (oil, chips, tariffs) are direct priors for Scenario Lab and the Macro Transmission Atlas. Political contracts live in a separate `political` sub-namespace, OFF by default (standing rule: political events are excluded from the computation plan).
+
+### 22.3 Module architecture
+
+- Separate `prediction_markets` namespace, isolated from company fundamentals and from `expectations`. No database-level joins except through an explicit feature layer.
+- **Curated watchlist, not a catalogue.** Dozens of owner-selected contracts (macro calendar + sector-relevant), not thousands of markets. The watchlist is versioned; changes are reviewed.
+- **Mandatory liquidity gate.** A thin market's "probability" is noise, not signal. Minimum 24h volume, maximum spread, minimum open interest; contracts below threshold are stored flagged `thin` and excluded from features.
+- **Point-in-time discipline as everywhere:** `fetchedAt` is the actual API poll time; the contract `eventTs` is a separate field. Snapshots are append-only; probability history is a first-class object, never overwritten.
+- **Three signal forms:** (1) level — current implied probability as an external prior for Scenario Lab; (2) delta — a ΔP shock (probability jump within a window) as an event-study trigger analogous to 8-K events; (3) calibration — after resolution, Brier/log-loss history accumulates per topic, giving an empirical weight for the crowd signal against our own models.
+- **Favorite-longshot bias handled explicitly:** prediction markets systematically overprice longshots and underprice favorites. Before use as a prior, probabilities are calibrated against accumulated resolved history; uncalibrated values are flagged.
+- The Retail Terminal never shows the provider name — lineage stays in admin/QA, as for all sources.
+
+### 22.4 Boundaries and honest limitations
+
+- No trading, no keys, no orders — any attempt to add execution is outside this module's scope.
+- Order book history cannot be recovered retroactively; the snapshot process cannot be "backfilled", only accumulated.
+- Thin markets, news-cycle manipulation and reflexivity (the market watching itself through media) are known distortions; the module stores raw values honestly and does not "fix" them.
+- Production promotion only via reviewed handoff; no automatic namespace sync to production.
+
+Detailed architecture, data formats, the watchlist contract and executor working instructions: `docs/DESIGN_POLYMARKET.md`.

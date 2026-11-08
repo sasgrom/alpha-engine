@@ -20,6 +20,7 @@ const DOCS = [
   { id: "llm-context", title: "LLM Context", file: "docs/LLM_CONTEXT.md", lang: "en" },
   { id: "design-value-signals", title: "Design: Value & Signals", file: "docs/DESIGN_VALUE_SIGNALS.md", lang: "en" },
   { id: "design-magnitude", title: "Design: Magnitude Engine", file: "docs/DESIGN_MAGNITUDE.md", lang: "en" },
+  { id: "design-polymarket", title: "Design: Polymarket Probabilities", file: "docs/DESIGN_POLYMARKET.md", lang: "en" },
 ];
 
 const entries = DOCS.map((d) => {
