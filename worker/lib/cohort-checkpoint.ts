@@ -32,6 +32,8 @@ export interface CohortResultEntry {
   fallbackRawResponse: string | null;
   fallbackUsage: CohortUsage | null;
   usage: CohortUsage | null;
+  outputTokens?: number;
+  outputTruncated?: boolean;
   updatedAt: string;
 }
 export interface CohortResultFile {

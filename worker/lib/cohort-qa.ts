@@ -61,8 +61,12 @@ export function auditCohortResults(pack: CohortPack, entries: CohortResultEntry[
       issues.push({ type: "missing_target", sourceId: entry.sourceId, containerId: entry.containerId, detail: "No exact target block exists in the current pack." });
       continue;
     }
-    if (entry.usage && entry.usage.evalCount >= pack.outputTokens) {
-      issues.push({ type: "output_truncated", sourceId: entry.sourceId, containerId: entry.containerId, detail: `Main generation reached ${entry.usage.evalCount}/${pack.outputTokens} tokens.` });
+    const outputCap = entry.outputTokens ?? pack.outputTokens;
+    if (entry.outputTruncated) {
+      issues.push({ type: "output_truncated", sourceId: entry.sourceId, containerId: entry.containerId, detail: "A chunked generation reached its per-chunk output cap." });
+    }
+    if (entry.usage && entry.usage.evalCount >= outputCap) {
+      issues.push({ type: "output_truncated", sourceId: entry.sourceId, containerId: entry.containerId, detail: `Main generation reached ${entry.usage.evalCount}/${outputCap} tokens.` });
     }
     if (entry.fallbackUsage && entry.fallbackUsage.evalCount >= 1024) {
       issues.push({ type: "output_truncated", sourceId: entry.sourceId, containerId: entry.containerId, detail: "Fallback generation reached its 1024-token cap." });

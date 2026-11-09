@@ -6,6 +6,7 @@ import {
   evidenceInSource,
   EXPECTATIONS_PROMPT_VERSION,
   parseExpectationResponse,
+  normalizeRejectedEvidenceGuidance,
   parseExpectationResponseDetailed,
   rejectUnsupportedStatements,
   selectExpectationText,
@@ -190,6 +191,13 @@ describe("expectations extraction contract", () => {
     ]))!, source);
     expect(checked.response.statements).toHaveLength(1);
     expect(checked.rejected).toBe(1);
+  });
+
+  it("converts found without surviving evidence to not_found with an audit warning", () => {
+    const response = normalizeRejectedEvidenceGuidance({ guidanceStatus: "found", statements: [], extractionWarnings: [] }, 2);
+    expect(response.guidanceStatus).toBe("not_found");
+    expect(response.extractionWarnings).toContain("statements_rejected_evidence");
+    expect(normalizeRejectedEvidenceGuidance({ guidanceStatus: "found", statements: [], extractionWarnings: [] }, 0).guidanceStatus).toBe("found");
   });
 
   it("routes 10-K/10-Q guidance sections but ignores accounting guidance", () => {

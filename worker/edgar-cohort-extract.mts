@@ -12,6 +12,7 @@ import {
   EXPECTATION_JSON_SCHEMA,
   EXPECTATIONS_PROMPT_VERSION,
   EXPECTATIONS_SCHEMA_VERSION,
+  normalizeRejectedEvidenceGuidance,
   parseExpectationResponseDetailed,
   rejectUnsupportedStatements,
 } from "./lib/expectations";
@@ -28,10 +29,23 @@ import {
   parseExpectationFallback,
 } from "./lib/expectation-fallback";
 import { accessionMatches, assertAccessionTasks, shouldResumeCohortEntry } from "./lib/cohort-extract-args";
+import { extractCohortSourceInChunks } from "./lib/cohort-chunked-extract";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const only = arg("--only")?.toUpperCase() ?? null;
 const accession = arg("--accession");
+const retryQaPath = arg("--retry-qa");
+const retryQaSources = new Set<string>();
+if (retryQaPath) {
+  const report = JSON.parse(readFileSync(retryQaPath, "utf8")) as { ticker: string; issues: { type: string; sourceId: string; containerId: string }[] };
+  for (const issue of report.issues) {
+    if (issue.type === "not_found_with_expectation_language") continue;
+    if (issue.type !== "output_truncated") throw new Error(`--retry-qa supports only output_truncated; found ${issue.type}`);
+    retryQaSources.add(`${issue.containerId}\n${issue.sourceId}`);
+  }
+  if (!retryQaSources.size) throw new Error("--retry-qa found no output_truncated sources");
+}
+const retryQaMatches = (containerId: string, sourceId: string) => retryQaSources.has(`${containerId}\n${sourceId}`);
 const retryFallback = process.argv.includes("--retry-fallback");
 if (retryFallback && !accession) throw new Error("--retry-fallback requires --accession");
 const from = arg("--from");
@@ -72,6 +86,7 @@ for (const company of universe) {
     prog.log(`${company.ticker}: cohort-pack-v2.json missing; skipped`);
     continue;
   }
+  if (retryQaPath && pack.contextTokens !== 131072) throw new Error(`--retry-qa requires 131072 context lineage; found ${pack.contextTokens}`);
   const freshResult: CohortResultFile = { schemaVersion: EXPECTATIONS_SCHEMA_VERSION, contextTokens: pack.contextTokens, packGeneratedAt: pack.generatedAt, unpacked: pack.unpacked, entries: [] };
   const result: CohortResultFile = rescore
     ? freshResult
@@ -86,13 +101,14 @@ for (const company of universe) {
     writeCohortResultSnapshot(cacheDir(company.cik), result);
   }
   const tasks = pack.containers.flatMap((container) => container.sources
-    .filter((source) => accessionMatches(source, accession) && (!from || source.filingDate >= from) && (!benchmarkAccessions || benchmarkAccessions.has(source.accessionNo)))
+    .filter((source) => accessionMatches(source, accession) && (!from || source.filingDate >= from) && (!benchmarkAccessions || benchmarkAccessions.has(source.accessionNo)) && (!retryQaPath || retryQaMatches(container.containerId, source.sourceId)))
     .map((source) => ({ container, source })))
     .sort((a, b) => a.container.cohortId.localeCompare(b.container.cohortId)
       || a.container.index - b.container.index
       || a.source.eventTs.localeCompare(b.source.eventTs)
       || a.source.sourceId.localeCompare(b.source.sourceId));
   assertAccessionTasks(tasks, accession);
+  if (retryQaPath && !tasks.length) throw new Error(`No output_truncated sources matched in ${company.ticker}`);
   let consecutiveFailures = 0;
   let companyDone = 0;
   const companyTimings: CohortSourceTiming[] = [];
@@ -108,7 +124,7 @@ for (const company of universe) {
     prog.item(companyDone, tasks.length, `${source.sourceId} · started`);
     const inputSha256 = sha256(`${source.sourceId}\n${container.inputSha256}`);
     const prior = result.entries.find((entry) => entry.sourceId === source.sourceId && entry.containerId === container.containerId && entry.inputSha256 === inputSha256 && entry.model === LLM_MODEL && entry.promptVersion === EXPECTATIONS_PROMPT_VERSION);
-    if (prior && shouldResumeCohortEntry(prior, retryFallback)) {
+    if (prior && (retryQaPath ? prior.outputTruncated === false && prior.status !== "request_failed" && prior.status !== "unparsed" : shouldResumeCohortEntry(prior, retryFallback))) {
       totals.resumed++;
       companyDone++;
       prog.item(companyDone, tasks.length, `${source.sourceId} · resumed`);
@@ -130,6 +146,7 @@ for (const company of universe) {
       inputSha256,
       model: LLM_MODEL,
       promptVersion: EXPECTATIONS_PROMPT_VERSION,
+      outputTokens: retryQaPath ? Math.max(pack.outputTokens * 2, 8192) : pack.outputTokens,
       status: "empty",
       guidanceStatus: null,
       statements: [],
@@ -150,17 +167,21 @@ for (const company of universe) {
       continue;
     }
     try {
-      const generated = await generate(buildCohortExpectationPrompt(container, source.sourceId, {
-        ticker: company.ticker,
-        form: source.form,
-        filingDate: source.filingDate,
-        accessionNo: source.accessionNo,
-      }), { jsonSchema: EXPECTATION_JSON_SCHEMA, numPredict: pack.outputTokens, timeoutMs: 180_000 });
-      base.usage = { promptTokens: generated.promptEvalCount, evalCount: generated.evalCount, promptMs: generated.promptEvalMs, evalMs: generated.evalMs, totalMs: generated.totalMs };
-      base.rawResponse = generated.text;
-      totals.promptTokens += generated.promptEvalCount;
-      totals.evalCount += generated.evalCount;
-      const parsed = parseExpectationResponseDetailed(generated.text);
+      const generated: any = retryQaPath
+        ? await extractCohortSourceInChunks(targetText, { ticker: company.ticker, form: source.form, filingDate: source.filingDate, accessionNo: source.accessionNo }, base.outputTokens)
+        : await generate(buildCohortExpectationPrompt(container, source.sourceId, {
+          ticker: company.ticker,
+          form: source.form,
+          filingDate: source.filingDate,
+          accessionNo: source.accessionNo,
+        }), { jsonSchema: EXPECTATION_JSON_SCHEMA, numPredict: base.outputTokens, timeoutMs: 180_000 });
+      base.outputTokens = generated.outputTokens ?? base.outputTokens;
+      base.usage = retryQaPath ? generated.usage : { promptTokens: generated.promptEvalCount, evalCount: generated.evalCount, promptMs: generated.promptEvalMs, evalMs: generated.evalMs, totalMs: generated.totalMs };
+      base.rawResponse = generated.rawResponse ?? generated.text;
+      base.outputTruncated = retryQaPath ? generated.outputTruncated : false;
+      totals.promptTokens += generated.promptEvalCount ?? generated.usage.promptTokens;
+      totals.evalCount += generated.evalCount ?? generated.usage.evalCount;
+      const parsed = retryQaPath ? { response: generated.response, issues: [], normalizations: [] } : parseExpectationResponseDetailed(generated.text);
       if (!parsed.response) {
         base.status = "unparsed";
         totals.unparsed++;
@@ -201,10 +222,11 @@ for (const company of universe) {
         }
       } else {
         const checked = rejectUnsupportedStatements(parsed.response, targetText);
-        base.status = checked.response.statements.length || checked.response.guidanceStatus !== "found" ? "extracted" : "empty";
-        base.guidanceStatus = checked.response.guidanceStatus;
-        base.statements = checked.response.statements;
-        base.extractionWarnings = [...parsed.normalizations, ...checked.response.extractionWarnings, ...(checked.rejected ? [`Rejected ${checked.rejected} statement(s) without target-source evidence`] : [])];
+        const normalized = normalizeRejectedEvidenceGuidance(checked.response, checked.rejected);
+        base.status = normalized.statements.length || normalized.guidanceStatus !== "found" ? "extracted" : "empty";
+        base.guidanceStatus = normalized.guidanceStatus;
+        base.statements = normalized.statements;
+        base.extractionWarnings = [...parsed.normalizations, ...normalized.extractionWarnings, ...(checked.rejected ? [`Rejected ${checked.rejected} statement(s) without target-source evidence`] : [])];
         base.rejectedEvidence = checked.rejected;
         totals.rejectedEvidence += checked.rejected;
         if (base.status === "extracted") totals.extracted++; else totals.empty++;
@@ -212,7 +234,14 @@ for (const company of universe) {
       }
     } catch (error) {
       base.status = "request_failed";
+      base.outputTruncated = Boolean((error as { outputTruncated?: boolean }).outputTruncated);
       base.extractionWarnings = [String(error).slice(0, 500)];
+      appendFileSync(failureLog, JSON.stringify({
+        ts: new Date().toISOString(), cik: company.cik, ticker: company.ticker,
+        cohortId: container.cohortId, containerId: container.containerId, sourceId: source.sourceId,
+        reason: String(error).slice(0, 500),
+        response: (error as { rawResponses?: string[] }).rawResponses ?? "",
+      }) + "\n");
       totals.failed++;
       consecutiveFailures = nextLlmFailureStreak("request_failed", consecutiveFailures);
     }

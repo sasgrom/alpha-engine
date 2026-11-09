@@ -112,4 +112,9 @@ describe("cohort result QA", () => {
     expect(report.status).toBe("fail");
     expect(report.issues.some((issue) => issue.type === "evidence_mismatch")).toBe(true);
   });
+
+  it("honors per-entry output caps for retry lineage", () => {
+    const report = auditCohortResults(pack, [entry("a", { outputTokens: 8192, usage: { promptTokens: 6000, evalCount: 4096, promptMs: 100, evalMs: 100, totalMs: 200 } })]);
+    expect(report.issues.some((issue) => issue.type === "output_truncated")).toBe(false);
+  });
 });

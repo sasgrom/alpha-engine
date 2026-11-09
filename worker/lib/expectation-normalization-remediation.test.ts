@@ -44,6 +44,23 @@ describe("expectation normalization remediation", () => {
     expect(nonDisclosure.response?.statements[0].qualifier).toBe("not_provided");
   });
 
+  it("normalizes delivery and plan qualifiers without accepting arbitrary text", () => {
+    const plan = parseExpectationResponseDetailed(JSON.stringify({ guidanceStatus: "found", statements: [{ ...statement, qualifier: "plans to serve", valueLow: 30, valueHigh: null, valuePoint: null }], extractionWarnings: [] }));
+    expect(plan.response?.statements[0].qualifier).toBe("at_least");
+    const delivery = parseExpectationResponseDetailed(JSON.stringify({ guidanceStatus: "found", statements: [{ ...statement, qualifier: "deliver inside", valueLow: null, valueHigh: null, valuePoint: 30 }], extractionWarnings: [] }));
+    expect(delivery.response?.statements[0].qualifier).toBe("point");
+    const over = parseExpectationResponseDetailed(JSON.stringify({ guidanceStatus: "found", statements: [{ ...statement, qualifier: "over", valueLow: 20, valueHigh: null, valuePoint: null }], extractionWarnings: [] }));
+    expect(over.response?.statements[0].qualifier).toBe("at_least");
+    const updated = parseExpectationResponseDetailed(JSON.stringify({ guidanceStatus: "found", statements: [{ ...statement, qualifier: "updated outlook" }], extractionWarnings: [] }));
+    expect(updated.response?.statements[0].qualifier).toBe("range");
+    const growth = parseExpectationResponseDetailed(JSON.stringify({ guidanceStatus: "found", statements: [{ ...statement, qualifier: "Growth in mid-teens", valueLow: null, valueHigh: null, valuePoint: null, valueText: "mid-teens" }], extractionWarnings: [] }));
+    expect(growth.response?.statements[0].qualifier).toBe("qualitative");
+    const unchanged = parseExpectationResponseDetailed(JSON.stringify({ guidanceStatus: "found", statements: [{ ...statement, qualifier: "No change" }], extractionWarnings: [] }));
+    expect(unchanged.response?.statements[0].qualifier).toBe("unchanged");
+    const rejected = parseExpectationResponseDetailed(JSON.stringify({ guidanceStatus: "found", statements: [{ ...statement, qualifier: "banana" }], extractionWarnings: [] }));
+    expect(rejected.response).toBeNull();
+  });
+
   it("accepts trailing commas without accepting malformed JSON", () => {
     const json = JSON.stringify({ guidanceStatus: "found", statements: [statement], extractionWarnings: [] });
     const trailing = json.replace(/}$/, ",}");

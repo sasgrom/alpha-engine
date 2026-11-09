@@ -212,6 +212,23 @@ function normalizeExpectationResponse(value: unknown): { value: unknown; normali
         change("qualifier", "qualitative");
         if (!hasText) change("valueText", rawQualifier);
       }
+    } else if (q === "no change" || q === "no change to outlook") {
+      change("qualifier", "unchanged");
+    } else if (/^(?:growth in |growth of |above |decline |should decline|content and services revenue expected to decline)/.test(q)) {
+      if (hasPoint || (hasLow && hasHigh && statement.valueLow === statement.valueHigh)) change("qualifier", "point");
+      else if (hasRange) change("qualifier", "range");
+      else if (hasTolerance) change("qualifier", "plus_minus");
+      else if (hasLow && !hasHigh) change("qualifier", "at_least");
+      else if (hasHigh && !hasLow) change("qualifier", "at_most");
+      else if (hasText) change("qualifier", "qualitative");
+    } else if (/^(?:plans? to|expects? to|deliver|aim to deliver|will deliver|increasing$|over$|updated outlook$|mechanical adjustments only to our outlook)/.test(q)) {
+      if (hasPoint || (hasLow && hasHigh && statement.valueLow === statement.valueHigh)) change("qualifier", "point");
+      else if (hasRange) change("qualifier", "range");
+      else if (hasTolerance) change("qualifier", "plus_minus");
+      else if (hasPoint) change("qualifier", "point");
+      else if (hasLow && !hasHigh) change("qualifier", "at_least");
+      else if (hasHigh && !hasLow) change("qualifier", "at_most");
+      else if (hasText) change("qualifier", "qualitative");
     } else if (q === "explicitly_not_provided") {
       change("qualifier", "not_provided");
     } else if (q === "at a segment level" || q === "raised midpoint") {
@@ -262,6 +279,15 @@ export function parseExpectationResponseDetailed(reply: string): { response: Exp
 
 export function parseExpectationResponse(reply: string): ExpectationResponse | null {
   return parseExpectationResponseDetailed(reply).response;
+}
+
+export function normalizeRejectedEvidenceGuidance(response: ExpectationResponse, rejected: number): ExpectationResponse {
+  if (response.guidanceStatus !== "found" || response.statements.length > 0 || rejected <= 0) return response;
+  return {
+    ...response,
+    guidanceStatus: "not_found",
+    extractionWarnings: [...response.extractionWarnings, "statements_rejected_evidence"],
+  };
 }
 
 export function rejectUnsupportedStatements(response: ExpectationResponse, source: string) {
