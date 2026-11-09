@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "reviewed": true,
+  "aliases": [
+    { "ruleId": "SALVAGE_CORE_FFO", "pattern": "\\bCore FFO\\b", "canonicalMetric": "ffo.core" },
+    { "ruleId": "SALVAGE_COMPARABLE_STORE_SALES", "pattern": "\\bcomp(?:arable)?(?: store)? sales\\b", "canonicalMetric": "revenue.comparable_sales" },
+    { "ruleId": "SALVAGE_UNIT_COST", "pattern": "\\bunit costs?\\b", "canonicalMetric": "operations.unit_cost" },
+    { "ruleId": "SALVAGE_PRE_TAX_MARGIN", "pattern": "\\bpre[- ]tax margins?\\b", "canonicalMetric": "margin.pre_tax" },
+    { "ruleId": "SALVAGE_TOTAL_REVENUE", "pattern": "^total revenue\\b", "canonicalMetric": "revenue" },
+    { "ruleId": "SALVAGE_NET_SALES", "pattern": "^net sales\\b", "canonicalMetric": "revenue.net_sales", "metric": "revenue", "scopeFromMetricRaw": true, "basis": "reported" },
+    { "ruleId": "SALVAGE_OPERATING_INCOME", "pattern": "^operating income\\b", "canonicalMetric": "operating_income", "metric": "operating_income", "scopeFromMetricRaw": true, "basis": "reported" },
+    { "ruleId": "SALVAGE_ADJUSTED_OPERATING_INCOME", "pattern": "\\badjusted operating income\\b", "canonicalMetric": "operating_income.non_gaap" },
+    { "ruleId": "SALVAGE_CASH_CAPEX", "pattern": "\\bcash capital expenditures\\b", "canonicalMetric": "capex", "metric": "capex", "scopeFromMetricRaw": true, "basis": "reported" },
+    { "ruleId": "SALVAGE_SEGMENT_REVENUE", "pattern": "\\bsegment revenue\\b", "canonicalMetric": "segment_revenue" }
+  ]
+}

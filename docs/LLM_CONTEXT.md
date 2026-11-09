@@ -292,3 +292,13 @@ The current local reviewed artifact is `research/reviewed-sync/2026-11-09/expect
 ## 12. Worker HTTP backup/apply transport — 2026-11-09
 
 The platform-managed production database now has a server-side worker transport in addition to direct mode: `POST /api/worker/backup-expectations` (SELECT-only, gzip, read-only auth) and `POST /api/worker/apply-expectations-reviewed` (gzip exact-key staging upsert, transaction and package-specific post-check). Local commands use `--via-api` with `PROD_INGEST_URL` and `WORKER_KEY`; SCRATCH restore and the 60-minute backup gate remain mandatory. The real v3.3 request is 35,072,547 raw bytes / 3,959,932 gzip bytes. DDL `db/ddl/031_expectations_reviewed.sql` is prepared but not applied. No live probe occurred because `PROD_INGEST_URL` was not provisioned and the server change was not deployed. See handoff §80 and OPERATIONS §65.
+
+
+## 13. Expectations v3.4 is not released — 2026-11-09
+
+The current reviewed package remains v3.3. Local v3.4 normalization rules and exporter reproduce all v3.3 results byte-for-byte before transformations, and their targeted tests pass, but the independent cohort benchmark fails with eight inherited AMZN/MSFT issues (20/27 recall). The same failures exist in v3.3; copying its historical pass would be dishonest. No reviewed v3.4 ZIP, production apply or transport occurred. See handoff §81 for exact issues and dry-run metrics.
+
+
+## 14. Expectations reviewed v3.4 released locally — 2026-11-09
+
+`research/reviewed-sync/2026-11-09/expectations-reviewed-v3.4.zip` is the current local reviewed normalization package (SHA256 `1580284b108cf58127b4541cac0eb0124ccbbd10caf5e6eba9a75b5c097465ea`). It preserves the v3.3 baseline byte-for-byte before transformations, passes the post-normalization gold regression at 27/27 with zero issues, and leaves 236 scale, 10 qualifier and 2 combined-basis blockers visible. Metric unmapped is zero-blocking with 3,563 non-blocking other; recent salvage is 10/228. AMZN metadata and 15 MSFT deferred-call statuses were remediated from source evidence without raw checkpoint changes. No production apply or transport occurred. See handoff §82.
