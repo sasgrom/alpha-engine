@@ -410,10 +410,10 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Blocked from home cron.", requirements: ["review"], notes: "The cloud control plane cannot spawn home workers, and the home scheduler does not create legacy cloud jobs.",
   }),
   job({
-    id: "mysql-backup-restore", name: "MySQL backup and restore gate", group: "maintenance", mode: "blocked", cron: null, defaultEnabled: false, dependsOn: [],
-    executable: null, args: [], command: "Not automated until backup and restore verification is complete", purpose: "Protect the local DB before the signals.note migration or any storage move.",
-    input: "A tested mysqldump backup on D: and a successful restore drill.", output: "Verified recovery evidence before schema changes.",
-    destination: "Not implemented as a runnable job yet.", requirements: ["mysql", "driveD", "review"], notes: "No forced DDL, no table drops and no storage migration before this gate passes.",
+    id: "mysql-backup-restore", name: "MySQL backup and restore gate", group: "maintenance", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
+    ...npx("scripts/prod-backup.mts", ["--full", "--source-env", "DATABASE_URL", "--restore-target", "SCRATCH_DATABASE_URL"]), purpose: "Protect the local DB before the signals.note migration or any storage move; the same SELECT-only tooling protects reviewed Expectations staging apply.",
+    input: "A source URL in DATABASE_URL for the local gate or PROD_DATABASE_URL for the reviewed production contract, plus an explicit SCRATCH_DATABASE_URL restore target.", output: "External-root table JSON dumps, per-table hashes, row counts and passing restore-drill evidence.",
+    destination: "Manual only; backups outside Git with the last ten retained and pruning only through --prune.", requirements: ["mysql", "driveD", "review"], notes: "Local gate: the DATABASE_URL command above closes signals.note only after its own successful scratch drill. Production Expectations uses scripts/prod-backup.mts without --source-env and requires --backup-id in the gated apply; no forced DDL, table drops, production restore or automatic pruning.",
   }),
   job({
     id: "schwab-selective-stream", name: "Selective AAPL/SPY streaming", group: "options", mode: "blocked", cron: null, defaultEnabled: false, dependsOn: [],

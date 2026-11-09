@@ -282,3 +282,8 @@ AuthLayout guard: `useAuth({redirectOnUnauthenticated:true})` inside AppLayout.
 ## 10. Current Expectations reviewed artifact — 2026-11-09
 
 The current local reviewed artifact is `research/reviewed-sync/2026-11-09/expectations-reviewed-v3.3.zip` (SHA256 `b5feac0eab5c0ae6ed2639c9f14cc859ed3f5a32fc84ffedee64065a1dc5a029`). It merges healed AMZN/MSFT/GOOGL extraction at `ollama_ctx_131072` with byte-identical normalized non-trio v3.2 results. It contains 50 companies, 26,787 exact-key results and 9,413 normalized statements; raw model output is excluded and productionApply=false. Thin-history blockers for the trio are cleared by document coverage, but production remains blocked by the fail-closed backup requirement, 3,601 unmapped metrics, 865 scale reviews, 109 qualifier/evidence reviews, 106 combined-basis reviews, regression-only benchmark semantics and non-serving fallback diagnostics. See `docs/KIMI_CODE_HANDOFF.md` section 78 for verification evidence. No production/staging apply or DB/API write is authorized by this artifact.
+
+
+## 11. Reviewed apply backup gate — 2026-11-09
+
+`scripts/prod-backup.mts` provides SELECT-only logical backups outside Git and explicit SCRATCH restore drills. `scripts/apply-expectations-reviewed.mts` requires a fresh (<60 minute) `--backup-id` with matching database identity, verified table hashes and passing restore evidence before any staging write. Production credentials were not provisioned in the last session, so no production backup or apply occurred. Local scoped drill `20261109T183738Z-d8d8e09b81aa` passed for two absent Expectations staging tables; it is not production evidence and does not complete the full signals.note gate. See `docs/OPERATIONS.md` §65 and handoff §79.

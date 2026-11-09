@@ -228,7 +228,7 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Schwab OAuth browser authorization | manual | manual | Interactive terminal/browser flow, not scheduler-runnable. |
 | Optional ORATS option lane | blocked | manual | Blocked; no scheduled collection. |
 | Legacy cloud ad-hoc job queue | blocked | manual | Blocked from home cron. |
-| MySQL backup and restore gate | blocked | manual | Not implemented as a runnable job yet. |
+| MySQL backup and restore gate | manual | manual | Manual only; backups outside Git with the last ten retained and pruning only through --prune. |
 | Selective AAPL/SPY streaming | blocked | manual | Future local streaming lane only. |
 | GDELT collector and backfill | frozen | manual | None. |
 
@@ -1325,18 +1325,18 @@ No home cron — legacy /jobs actions require a separate deliberate review
 ### 65. MySQL backup and restore gate
 
 - **ID:** `mysql-backup-restore`
-- **Mode:** blocked; **enabled by default:** no
+- **Mode:** manual; **enabled by default:** no
 - **Cron:** none
 - **Dependencies:** none
-- **Purpose:** Protect the local DB before the signals.note migration or any storage move.
-- **Input:** A tested mysqldump backup on D: and a successful restore drill.
-- **Output:** Verified recovery evidence before schema changes.
-- **Destination:** Not implemented as a runnable job yet.
+- **Purpose:** Protect the local DB before the signals.note migration or any storage move; the same SELECT-only tooling protects reviewed Expectations staging apply.
+- **Input:** A source URL in DATABASE_URL for the local gate or PROD_DATABASE_URL for the reviewed production contract, plus an explicit SCRATCH_DATABASE_URL restore target.
+- **Output:** External-root table JSON dumps, per-table hashes, row counts and passing restore-drill evidence.
+- **Destination:** Manual only; backups outside Git with the last ten retained and pruning only through --prune.
 - **Requirements:** mysql, driveD, review
-- **Operational note:** No forced DDL, no table drops and no storage migration before this gate passes.
+- **Operational note:** Local gate: the DATABASE_URL command above closes signals.note only after its own successful scratch drill. Production Expectations uses scripts/prod-backup.mts without --source-env and requires --backup-id in the gated apply; no forced DDL, table drops, production restore or automatic pruning.
 
 ```powershell
-Not automated until backup and restore verification is complete
+npx tsx scripts/prod-backup.mts --full --source-env DATABASE_URL --restore-target SCRATCH_DATABASE_URL
 ```
 
 ### 66. Selective AAPL/SPY streaming
