@@ -1,7 +1,7 @@
 export const EXPECTATIONS_APPLY_TABLES = ["expectations_reviewed_packages", "expectations_reviewed_results"] as const;
-export const EXPECTATIONS_REVIEWED_PACKAGE_VERSION = "3.3";
-export const EXPECTATIONS_REVIEWED_PACKAGE_SHA256 = "b5feac0eab5c0ae6ed2639c9f14cc859ed3f5a32fc84ffedee64065a1dc5a029";
-export const EXPECTATIONS_REVIEWED_MANIFEST_SHA256 = "3f61d4f46b6d9c3f18722a32d7ee7a3be6320451c59b4ce0b8c4104957c062f2";
+export const EXPECTATIONS_REVIEWED_PACKAGE_VERSION = "3.4";
+export const EXPECTATIONS_REVIEWED_PACKAGE_SHA256 = "1580284b108cf58127b4541cac0eb0124ccbbd10caf5e6eba9a75b5c097465ea";
+export const EXPECTATIONS_REVIEWED_MANIFEST_SHA256 = "39dc5ad95cc226b3d04cd0b8c06085d1bc4db0742d928e032fb56c8726f0e7d1";
 
 export interface ExpectationsApplyResultRow {
   cik: number;

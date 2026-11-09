@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import unzipper from "unzipper";
 import { EXPECTATIONS_APPLY_TABLES, sha256 } from "./prod-backup";
-import { EXPECTATIONS_REVIEWED_MANIFEST_SHA256, EXPECTATIONS_REVIEWED_PACKAGE_SHA256 } from "../../contracts/expectations-apply";
+import { EXPECTATIONS_REVIEWED_MANIFEST_SHA256, EXPECTATIONS_REVIEWED_PACKAGE_SHA256, EXPECTATIONS_REVIEWED_PACKAGE_VERSION } from "../../contracts/expectations-apply";
 
 export interface ExpectationsResultRow {
   cik: number;
@@ -31,9 +31,9 @@ export async function loadExpectationsReviewedPackage(packagePath: string) {
   if (sha256(manifestBytes) !== EXPECTATIONS_REVIEWED_MANIFEST_SHA256) throw new Error("Expectations reviewed manifest hash mismatch");
   const manifestJson = manifestBytes.toString("utf8");
   const manifest = JSON.parse(manifestJson);
-  if (manifest.packageVersion !== "3.3" || manifest.packageType !== "reviewed-expectations" || manifest.productionApply !== false ||
+  if (manifest.packageVersion !== EXPECTATIONS_REVIEWED_PACKAGE_VERSION || manifest.packageType !== "reviewed-expectations" || manifest.productionApply !== false ||
     manifest.applyPayload !== "expectations-results.json" || manifest.applyStatus !== "not_run") {
-    throw new Error("Expectations package is not the reviewed v3.3 local handoff");
+    throw new Error(`Expectations package is not the reviewed ${EXPECTATIONS_REVIEWED_PACKAGE_VERSION} local handoff`);
   }
   for (const file of manifest.files) {
     if (file.path.includes("..") || path.isAbsolute(file.path)) throw new Error("Expectations package contains an unsafe path");
@@ -45,7 +45,7 @@ export async function loadExpectationsReviewedPackage(packagePath: string) {
   if (entries.size !== manifest.files.length + 1) throw new Error("Expectations package file set does not match the manifest");
   const payloadJson = (await entries.get("expectations-results.json")!.buffer()).toString("utf8");
   const payload = JSON.parse(payloadJson);
-  if (payload.packageVersion !== "3.3" || payload.resultKeyDefinition !== "(cik, accessionNo, sourceId, containerId)" || !Array.isArray(payload.results)) {
+  if (payload.packageVersion !== EXPECTATIONS_REVIEWED_PACKAGE_VERSION || payload.resultKeyDefinition !== "(cik, accessionNo, sourceId, containerId)" || !Array.isArray(payload.results)) {
     throw new Error("Expectations exact-key payload is invalid");
   }
   const keys = new Set<string>();

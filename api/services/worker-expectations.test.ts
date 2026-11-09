@@ -41,7 +41,7 @@ function queryText(query: any): string {
 
 beforeEach(async () => {
   vi.clearAllMocks();
-  reviewed ??= await loadExpectationsReviewedPackage("research/reviewed-sync/2026-11-09/expectations-reviewed-v3.3.zip");
+  reviewed ??= await loadExpectationsReviewedPackage("research/reviewed-sync/2026-11-09/expectations-reviewed-v3.4.zip");
 });
 
 describe("worker Expectations backup/apply channel", () => {
@@ -117,9 +117,9 @@ describe("worker Expectations backup/apply channel", () => {
         const text = queryText(query);
         if (text.includes("information_schema")) return [EXPECTATIONS_APPLY_TABLES.map((table) => ({ TABLE_NAME: table }))];
         if (text.startsWith("SELECT COUNT(*)")) return [[{ n: reviewed.results.length }]];
-        if (text.includes("FROM `expectations_reviewed_results` WHERE packageVersion")) return [reviewed.results.map((row) => ({ ...row, packageVersion: "3.3" }))];
+        if (text.includes("FROM `expectations_reviewed_results` WHERE packageVersion")) return [reviewed.results.map((row) => ({ ...row, packageVersion: reviewed.manifest.packageVersion }))];
         if (text.includes("FROM `expectations_reviewed_packages` WHERE packageVersion")) return [[{
-          packageVersion: "3.3",
+          packageVersion: reviewed.manifest.packageVersion,
           scope: reviewed.manifest.scope,
           normalizationVersion: reviewed.manifest.normalizationVersion,
           productionApply: 0,
