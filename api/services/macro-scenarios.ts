@@ -91,7 +91,7 @@ export function latestMacroPoint(rows: NormalizedMacroPoint[], asOf: string): No
 function metricDetails(metric: ExposureMetric | ExposureEvidence, asOf: string): { concepts: string[]; periodStart: string | null; periodEnd: string | null; availableAt: string | null; stale: boolean } {
   const concepts = Array.isArray((metric as ExposureEvidence).concepts)
     ? (metric as ExposureEvidence).concepts!
-    : "concept" in metric && metric.concept ? [metric.concept] : "concepts" in metric ? metric.concepts : [];
+    : "concept" in metric && metric.concept ? [metric.concept] : "concepts" in metric && Array.isArray(metric.concepts) ? metric.concepts : [];
   const availableAt = "availableAt" in metric ? metric.availableAt : "sourceFiled" in metric ? metric.sourceFiled : null;
   const periodStart = "periodStart" in metric ? metric.periodStart : null;
   return { concepts, periodStart, periodEnd: metric.periodEnd, availableAt, stale: metric.stale === true || stale(metric.periodEnd, asOf) };
