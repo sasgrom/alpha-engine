@@ -76,6 +76,15 @@ app.post("/api/worker/ingest", async (c) => {
   return c.json({ error: "unsupported kind" }, 400);
 });
 
+app.post("/api/worker/backup-expectations", async (c) => {
+  const { handleWorkerExpectationsBackup } = await import("./services/worker-expectations-http");
+  return handleWorkerExpectationsBackup(c.req.raw);
+});
+app.post("/api/worker/apply-expectations-reviewed", async (c) => {
+  const { handleWorkerExpectationsApply } = await import("./services/worker-expectations-http");
+  return handleWorkerExpectationsApply(c.req.raw);
+});
+
 // 3i: orphan sweep at worker start — jobs left "running"/"queued" by a dead
 // process (redeploy, crash) are marked error honestly instead of hanging in
 // the queue forever with an un-cancelable cancel button. Single-instance

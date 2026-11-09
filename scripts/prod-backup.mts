@@ -4,14 +4,17 @@ import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "
 import path from "node:path";
 import mysql, { type Connection } from "mysql2/promise";
 import { loadExpectationsReviewedPackage } from "./lib/expectations-reviewed-package";
+import { fetchExpectationsBackupViaApi } from "./lib/worker-expectations-api";
 import {
   BACKUP_TOOL_VERSION,
   EXPECTATIONS_APPLY_TABLES,
+  assertBackupId,
   assertBackupRootOutsideRepository,
   assertReadOnlySql,
   databaseIdentityHash,
   defaultBackupRoot,
   pruneBackups,
+  serializeBackupTablePayload,
   sha256,
   tableContentSha256,
   verifyBackupManifest,
@@ -30,6 +33,11 @@ const backupRoot = defaultBackupRoot();
 const writeAtomic = (file: string, value: unknown) => {
   const temporary = `${file}.${process.pid}.tmp`;
   writeFileSync(temporary, `${JSON.stringify(value, null, 2)}\n`);
+  renameSync(temporary, file);
+};
+const writeTableAtomic = (file: string, payload: { table: string; sourceExists: boolean; rows: unknown[] }) => {
+  const temporary = `${file}.${process.pid}.tmp`;
+  writeFileSync(temporary, serializeBackupTablePayload(payload));
   renameSync(temporary, file);
 };
 
@@ -146,6 +154,17 @@ async function main() {
     backupDir = path.join(backupRoot, existingBackupId);
     manifest = verifyBackupManifest(backupDir);
     if (!restoreTarget) throw new Error("--restore-target is required when running a drill for an existing backup");
+  } else if (args.includes("--via-api")) {
+    if (args.includes("--full") || option("--source-env")) throw new Error("--via-api supports only the reviewed Expectations scope");
+    const response = await fetchExpectationsBackupViaApi();
+    manifest = response.manifest as ProdBackupManifest;
+    assertBackupId(manifest.backupId);
+    backupDir = path.join(backupRoot, manifest.backupId);
+    if (existsSync(backupDir)) throw new Error("Backup id collision; refusing to overwrite");
+    mkdirSync(path.join(backupDir, "tables"), { recursive: true });
+    for (const table of response.tables ?? []) writeTableAtomic(path.join(backupDir, `tables/${table.table}.json`), table);
+    writeAtomic(path.join(backupDir, "manifest.json"), manifest);
+    verifyBackupManifest(backupDir);
   } else {
     const sourceEnv = option("--source-env") ?? "PROD_DATABASE_URL";
     if (!/^[A-Z][A-Z0-9_]*$/.test(sourceEnv) || sourceEnv === restoreTarget) throw new Error("--source-env must name a source database URL environment variable distinct from the restore target");

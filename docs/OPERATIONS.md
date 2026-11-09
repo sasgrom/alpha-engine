@@ -1328,12 +1328,12 @@ No home cron — legacy /jobs actions require a separate deliberate review
 - **Mode:** manual; **enabled by default:** no
 - **Cron:** none
 - **Dependencies:** none
-- **Purpose:** Protect the local DB before the signals.note migration or any storage move; the same SELECT-only tooling protects reviewed Expectations staging apply.
-- **Input:** A source URL in DATABASE_URL for the local gate or PROD_DATABASE_URL for the reviewed production contract, plus an explicit SCRATCH_DATABASE_URL restore target.
+- **Purpose:** Protect the local DB before the signals.note migration or any storage move; the same SELECT-only tooling protects reviewed Expectations staging apply through direct or worker HTTP transport.
+- **Input:** Local gate: DATABASE_URL plus SCRATCH_DATABASE_URL. Current production: PROD_INGEST_URL, WORKER_KEY and SCRATCH_DATABASE_URL. Optional direct production mode: PROD_DATABASE_URL.
 - **Output:** External-root table JSON dumps, per-table hashes, row counts and passing restore-drill evidence.
 - **Destination:** Manual only; backups outside Git with the last ten retained and pruning only through --prune.
 - **Requirements:** mysql, driveD, review
-- **Operational note:** Local gate: the DATABASE_URL command above closes signals.note only after its own successful scratch drill. Production Expectations uses scripts/prod-backup.mts without --source-env and requires --backup-id in the gated apply; no forced DDL, table drops, production restore or automatic pruning.
+- **Operational note:** Two modes: direct uses the DATABASE_URL command above and closes signals.note only after its own full scratch drill. Via-api is the current production channel: npx tsx scripts/prod-backup.mts --via-api --restore-target SCRATCH_DATABASE_URL, then apply-expectations-reviewed.mts --via-api --backup-id <id>. The server uses worker-key auth, gzip, a 64 MB decompressed guard and no DDL. Direct PROD_DATABASE_URL remains optional. Missing reviewed tables are a separate blocker; db/ddl/031_expectations_reviewed.sql is prepared but never auto-applied.
 
 ```powershell
 npx tsx scripts/prod-backup.mts --full --source-env DATABASE_URL --restore-target SCRATCH_DATABASE_URL

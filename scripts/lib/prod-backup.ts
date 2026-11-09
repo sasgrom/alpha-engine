@@ -1,10 +1,11 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import path from "node:path";
+import { EXPECTATIONS_APPLY_TABLES } from "../../contracts/expectations-apply";
 
+export { EXPECTATIONS_APPLY_TABLES } from "../../contracts/expectations-apply";
 export const BACKUP_TOOL_VERSION = "prod-backup-v1";
 export const BACKUP_MAX_AGE_MS = 60 * 60 * 1000;
-export const EXPECTATIONS_APPLY_TABLES = ["expectations_reviewed_packages", "expectations_reviewed_results"] as const;
 
 export interface BackupTableManifest {
   table: string;
@@ -57,6 +58,7 @@ export interface ProdBackupManifest {
 }
 
 export const sha256 = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
+export const serializeBackupTablePayload = (payload: { table: string; sourceExists: boolean; rows: unknown[] }) => Buffer.from(`${JSON.stringify(payload, null, 2)}\n`);
 
 export function databaseIdentityHash(databaseUrl: string): string {
   let parsed: URL;
@@ -172,7 +174,8 @@ export function verifyRestoreDrill(backupDir: string, manifest: ProdBackupManife
 export function assertBackupGate(options: {
   backupId: string;
   backupRoot: string;
-  targetDatabaseUrl: string;
+  targetDatabaseUrl?: string;
+  expectedDbIdentityHash?: string;
   expectedTables?: readonly string[];
   now?: Date;
 }): { backupDir: string; manifest: ProdBackupManifest; drill: RestoreDrillEvidence } {
@@ -182,7 +185,8 @@ export function assertBackupGate(options: {
   const now = options.now ?? new Date();
   const age = now.getTime() - Date.parse(manifest.createdAt);
   if (age < 0 || age > BACKUP_MAX_AGE_MS) throw new Error("Backup is stale or dated in the future");
-  if (manifest.dbIdentityHash !== databaseIdentityHash(options.targetDatabaseUrl)) throw new Error("Backup database identity does not match the apply target");
+  const targetIdentity = options.expectedDbIdentityHash ?? (options.targetDatabaseUrl ? databaseIdentityHash(options.targetDatabaseUrl) : undefined);
+  if (!targetIdentity || manifest.dbIdentityHash !== targetIdentity) throw new Error("Backup database identity does not match the apply target");
   if (options.expectedTables) {
     const actual = manifest.tables.map((table) => table.table).sort();
     const expected = [...options.expectedTables].sort();

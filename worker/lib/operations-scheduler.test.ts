@@ -39,10 +39,13 @@ describe("operations registry", () => {
   });
 
   it("keeps production apply, GDELT and unfinished streaming out of executable automation", () => {
-    for (const id of ["signals-production-push", "facts-production-push", "gdelt-frozen", "schwab-selective-stream", "mysql-backup-restore"]) {
+    for (const id of ["signals-production-push", "facts-production-push", "gdelt-frozen", "schwab-selective-stream"]) {
       expect(OPERATION_JOB_MAP[id].executable).toBeNull();
       expect(OPERATION_JOB_MAP[id].defaultEnabled).toBe(false);
     }
+    expect(OPERATION_JOB_MAP["mysql-backup-restore"]).toMatchObject({ mode: "manual", defaultEnabled: false, cron: null });
+    expect(OPERATION_JOB_MAP["mysql-backup-restore"].command).toContain("--full --source-env DATABASE_URL");
+    expect(OPERATION_JOB_MAP["mysql-backup-restore"].command).not.toContain("--apply");
     expect(OPERATION_JOB_MAP["edgar-tone-nightly"].defaultEnabled).toBe(false);
     expect(OPERATION_JOB_MAP["expectations-extract"].defaultEnabled).toBe(false);
   });

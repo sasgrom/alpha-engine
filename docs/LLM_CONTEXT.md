@@ -287,3 +287,8 @@ The current local reviewed artifact is `research/reviewed-sync/2026-11-09/expect
 ## 11. Reviewed apply backup gate — 2026-11-09
 
 `scripts/prod-backup.mts` provides SELECT-only logical backups outside Git and explicit SCRATCH restore drills. `scripts/apply-expectations-reviewed.mts` requires a fresh (<60 minute) `--backup-id` with matching database identity, verified table hashes and passing restore evidence before any staging write. Production credentials were not provisioned in the last session, so no production backup or apply occurred. Local scoped drill `20261109T183738Z-d8d8e09b81aa` passed for two absent Expectations staging tables; it is not production evidence and does not complete the full signals.note gate. See `docs/OPERATIONS.md` §65 and handoff §79.
+
+
+## 12. Worker HTTP backup/apply transport — 2026-11-09
+
+The platform-managed production database now has a server-side worker transport in addition to direct mode: `POST /api/worker/backup-expectations` (SELECT-only, gzip, read-only auth) and `POST /api/worker/apply-expectations-reviewed` (gzip exact-key staging upsert, transaction and package-specific post-check). Local commands use `--via-api` with `PROD_INGEST_URL` and `WORKER_KEY`; SCRATCH restore and the 60-minute backup gate remain mandatory. The real v3.3 request is 35,072,547 raw bytes / 3,959,932 gzip bytes. DDL `db/ddl/031_expectations_reviewed.sql` is prepared but not applied. No live probe occurred because `PROD_INGEST_URL` was not provisioned and the server change was not deployed. See handoff §80 and OPERATIONS §65.

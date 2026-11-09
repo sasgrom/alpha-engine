@@ -2,7 +2,9 @@ import "dotenv/config";
 import path from "node:path";
 import mysql, { type Connection } from "mysql2/promise";
 import { loadExpectationsReviewedPackage, type ExpectationsResultRow } from "./lib/expectations-reviewed-package";
-import { assertBackupGate, defaultBackupRoot } from "./lib/prod-backup";
+import { assertExpectationsPostCheck } from "./lib/expectations-postcheck";
+import { assertBackupGate, defaultBackupRoot, sha256, verifyBackupManifest } from "./lib/prod-backup";
+import { applyExpectationsViaApi } from "./lib/worker-expectations-api";
 
 const args = process.argv.slice(2);
 const option = (name: string) => {
@@ -10,26 +12,30 @@ const option = (name: string) => {
   return index >= 0 ? args[index + 1] : undefined;
 };
 const apply = args.includes("--apply");
+const viaApi = args.includes("--via-api");
 const backupId = option("--backup-id");
 if (!backupId) {
   console.error("--backup-id is required; no database write is permitted without a verified backup");
   process.exit(1);
 }
-const sourceUrl = process.env.PROD_DATABASE_URL;
-if (!sourceUrl) {
-  console.error("PROD_DATABASE_URL is required; provision it without printing or committing the connection string");
+const sourceUrl = viaApi ? undefined : process.env.PROD_DATABASE_URL;
+if (!viaApi && !sourceUrl) {
+  console.error("PROD_DATABASE_URL is required for direct mode, or use --via-api with PROD_INGEST_URL and WORKER_KEY");
   process.exit(1);
 }
 const reviewed = await loadExpectationsReviewedPackage(path.resolve(option("--package") ?? "research/reviewed-sync/2026-11-09/expectations-reviewed-v3.3.zip"));
+const backupRoot = defaultBackupRoot();
 const gateOptions = {
   backupId,
-  backupRoot: defaultBackupRoot(),
+  backupRoot,
   targetDatabaseUrl: sourceUrl,
+  expectedDbIdentityHash: viaApi ? verifyBackupManifest(path.join(backupRoot, backupId)).dbIdentityHash : undefined,
   expectedTables: reviewed.tables,
 };
 const gate = assertBackupGate(gateOptions);
 
 async function connect(): Promise<Connection> {
+  if (!sourceUrl) throw new Error("Direct apply requires PROD_DATABASE_URL");
   try {
     return await mysql.createConnection({ uri: sourceUrl, multipleStatements: false });
   } catch {
@@ -57,6 +63,7 @@ function resultBatch(rows: ExpectationsResultRow[]) {
 if (!apply) {
   console.log(JSON.stringify({
     mode: "dry-run",
+    transport: viaApi ? "via-api" : "direct",
     gate: "pass",
     backupId,
     manifestCreatedAt: gate.manifest.createdAt,
@@ -67,6 +74,17 @@ if (!apply) {
     tables: reviewed.tables,
     productionApply: false,
   }, null, 2));
+} else if (viaApi) {
+  assertBackupGate({ ...gateOptions, now: new Date() });
+  const response = await applyExpectationsViaApi({
+    manifestJson: reviewed.manifestJson,
+    manifestSha256: sha256(reviewed.manifestJson),
+    payloadJson: reviewed.payloadJson,
+    expectedDbIdentityHash: gate.manifest.dbIdentityHash,
+    readiness: reviewed.readiness,
+  });
+  assertExpectationsPostCheck(response, reviewed);
+  console.log(JSON.stringify({ mode: "staging-apply", transport: "via-api", gate: "pass", postCheck: "pass", backupId, packageVersion: reviewed.manifest.packageVersion, resultRows: response.results, statements: response.statements, productionApply: false }, null, 2));
 } else {
   assertBackupGate({ ...gateOptions, now: new Date() });
   const connection = await connect();
@@ -90,5 +108,5 @@ if (!apply) {
   } finally {
     await connection.end();
   }
-  console.log(JSON.stringify({ mode: "staging-apply", gate: "pass", backupId, packageVersion: reviewed.manifest.packageVersion, resultRows, statements: reviewed.statements, productionApply: false }, null, 2));
+  console.log(JSON.stringify({ mode: "staging-apply", transport: "direct", gate: "pass", backupId, packageVersion: reviewed.manifest.packageVersion, resultRows, statements: reviewed.statements, productionApply: false }, null, 2));
 }

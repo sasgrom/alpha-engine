@@ -32,7 +32,7 @@ export async function mintWorkerKey(label: string): Promise<string> {
 }
 
 /** Verify a Bearer key → the key's label, or null (unknown/revoked). */
-export async function verifyWorkerKey(authHeader: string | null): Promise<string | null> {
+export async function verifyWorkerKey(authHeader: string | null, options: { touch?: boolean } = {}): Promise<string | null> {
   if (!authHeader?.startsWith("Bearer ")) return null;
   const key = authHeader.slice(7).trim();
   if (!key) return null;
@@ -43,7 +43,7 @@ export async function verifyWorkerKey(authHeader: string | null): Promise<string
     .where(and(eq(workerKeys.keyHash, keyHashOf(key)), isNull(workerKeys.revokedAt)))
     .limit(1);
   if (!row) return null;
-  await db.update(workerKeys).set({ lastUsedAt: new Date() }).where(eq(workerKeys.id, row.id));
+  if (options.touch !== false) await db.update(workerKeys).set({ lastUsedAt: new Date() }).where(eq(workerKeys.id, row.id));
   return row.label;
 }
 
