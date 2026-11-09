@@ -224,7 +224,7 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Frozen research protocol validation | manual | manual | Console/log only. |
 | 13F top-300 universe rebuild | manual | manual | Local tracked universe candidate for review; not a daily job. |
 | Research coverage expansion | blocked | manual | Blocked pending universe design. |
-| signals.note migration gate | blocked | after mysql-backup-restore | Blocked by mysql-backup-restore. |
+| signals.note migration gate | done | — | Applied (DDL 028, prod varchar(2000) verified 2026-11-09: 39,233 rows preserved, max note 512 chars; sentence-safe truncation live in contracts/signals.ts). |
 | Schwab OAuth browser authorization | manual | manual | Interactive terminal/browser flow, not scheduler-runnable. |
 | Optional ORATS option lane | blocked | manual | Blocked; no scheduled collection. |
 | Legacy cloud ad-hoc job queue | blocked | manual | Blocked from home cron. |
