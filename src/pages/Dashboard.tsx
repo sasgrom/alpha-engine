@@ -1,4 +1,5 @@
 import AppLayout from "@/components/AppLayout";
+import OpsStatusBanner from "@/components/OpsStatusBanner";
 import { trpc } from "@/providers/trpc";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -56,6 +57,7 @@ export default function Dashboard() {
 
   return (
     <AppLayout title="Mission Control">
+      {isAdmin && <OpsStatusBanner />}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
         <Stat label="Companies" value={fmtNum(s?.companies)} sub="tracked in the shared DB" />
         <Stat label="Universe" value={fmtNum(s?.universe)} sub="my active watchlist" />
