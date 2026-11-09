@@ -92,6 +92,22 @@ describe("generic expectation normalization development sample", () => {
     expect(result.statements[0]).toMatchObject({ revision: "raised", canonicalMetric: "revenue.net_sales" });
   });
 
+  it("queues every unmapped statement, including narrative advertising guidance", () => {
+    const input = base({
+      metricRaw: "We expect year-over-year advertising revenue to grow in the high teens in fourth quarter 2026.",
+      metric: "other",
+      scopeRaw: "Fourth Quarter 2026",
+      periodRaw: "Q4 2026",
+      qualifier: "qualitative",
+      valuePoint: null,
+      unit: "percent",
+      evidence: "We expect year-over-year advertising revenue to grow in the high teens in fourth quarter 2026.",
+    });
+    const result = normalizeExpectationStatement(input, { ticker: "AMZN", cik: 1018724, accessionNo: "0001018724-26-000038" });
+    expect(result.statements[0].canonicalMetric).toBe("other.unmapped");
+    expect(result.review.filter((item) => item.ruleId === "REVIEW_UNMAPPED_METRIC")).toHaveLength(1);
+  });
+
   it("does not rewrite scale anomalies or numeric values without review", () => {
     const input = base({ unit: "usd_millions", valuePoint: 1160, evidence: "Revenue is expected to be $1.16 billion." });
     const result = normalizeExpectationStatement(input, context);

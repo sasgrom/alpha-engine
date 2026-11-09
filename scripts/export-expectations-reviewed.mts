@@ -275,7 +275,7 @@ function powerShell(script: string) {
 }
 const psQuote = (value: string) => `'${value.replace(/'/g, "''")}'`;
 
-function resolveCohortCacheDir(cik: number): string {
+export function resolveCohortCacheDir(cik: number): string {
   const primary = path.join(ROOT, "worker/cache/edgar", String(cik));
   const resultCount = (directory: string) => {
     if (!existsSync(path.join(directory, "cohort-pack-v2.json"))) return 0;
