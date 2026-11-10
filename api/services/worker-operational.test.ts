@@ -28,8 +28,9 @@ class FakeDb {
       for (const row of Array.isArray(input) ? input : [input]) {
         const key = table === prices ? `${row.cik}|${row.date}|${row.source}` : table === macroPoints ? `${row.seriesId}|${row.date}|${row.realtimeStart}` : row.name;
         const index = rows.findIndex((current) => (table === prices ? `${current.cik}|${current.date}|${current.source}` : table === macroPoints ? `${current.seriesId}|${current.date}|${current.realtimeStart}` : current.name) === key);
-        if (index >= 0) rows[index] = row;
-        else rows.push(row);
+        const stored = table === reports ? { ...row, generatedAt: new Date(Math.floor(new Date(row.generatedAt).getTime() / 1000) * 1000) } : row;
+        if (index >= 0) rows[index] = stored;
+        else rows.push(stored);
       }
     } }) };
   }
@@ -46,7 +47,7 @@ const price = (overrides: Record<string, unknown> = {}) => ({
   adjClose: null,
   volume: 1000,
   source: "schwab" as const,
-  fetchedAt: "2026-11-07T01:00:00.000Z",
+  fetchedAt: "2026-11-07T01:00:00.123Z",
   ...overrides,
 });
 const macro = (overrides: Record<string, unknown> = {}) => ({
@@ -68,7 +69,7 @@ beforeEach(() => {
 afterEach(() => rmSync(temp, { recursive: true, force: true }));
 
 describe("operational worker ingest", () => {
-  it("post-check survives mysql2-shaped rows (DATE/TIMESTAMP returned as Date)", async () => {
+  it("post-check survives mysql2-shaped Date and BIGINT volume values", async () => {
     const dayKey = (v: any) => (v instanceof Date ? v.toISOString().slice(0, 10) : String(v).slice(0, 10));
     const store: any[] = [];
     const db: any = {
@@ -79,7 +80,7 @@ describe("operational worker ingest", () => {
       insert: () => ({ values: (input: any[]) => ({ onDuplicateKeyUpdate: async () => {
         for (const row of input) {
           const i = store.findIndex((c) => c.cik === row.cik && dayKey(c.date) === dayKey(row.date) && c.source === row.source);
-          const stored = { ...row, date: new Date(`${dayKey(row.date)}T00:00:00Z`), fetchedAt: new Date(row.fetchedAt) };
+          const stored = { ...row, date: new Date(`${dayKey(row.date)}T00:00:00Z`), fetchedAt: new Date(Math.floor(new Date(row.fetchedAt).getTime() / 1000) * 1000), volume: String(row.volume) };
           if (i >= 0) store[i] = stored; else store.push(stored);
         }
       } }) }),
@@ -161,9 +162,9 @@ describe("operational worker ingest", () => {
     expect(db.data.macro).toHaveLength(1);
   });
 
-  it("stores only newer report content and verifies body hashes", async () => {
-    const body = JSON.stringify({ generatedAt: "2026-11-09T10:00:00.000Z", value: 1 });
-    const input = { name: "schwab-context.json", body, sha256: createHash("sha256").update(body).digest("hex"), generatedAt: "2026-11-09T10:00:00.000Z" };
+  it("stores newer report content and verifies hashes with second-precision database timestamps", async () => {
+    const body = JSON.stringify({ generatedAt: "2026-11-09T10:00:00.123Z", value: 1 });
+    const input = { name: "schwab-context.json", body, sha256: createHash("sha256").update(body).digest("hex"), generatedAt: "2026-11-09T10:00:00.123Z" };
     expect((await ingestReportFile(input, { db })).accepted).toBe(1);
     expect((await ingestReportFile({ ...input, generatedAt: "2026-11-08T10:00:00.000Z" }, { db })).dupes).toBe(1);
     expect(db.data.reports).toHaveLength(1);

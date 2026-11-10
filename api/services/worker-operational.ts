@@ -12,16 +12,18 @@ const day = (message: string) => z.string().regex(/^\d{4}-\d{2}-\d{2}$/, message
 const timestamp = z.string().refine((value) => Number.isFinite(Date.parse(value)), "ISO timestamp required");
 const hash = z.string().regex(/^[a-f0-9]{64}$/);
 
-/** mysql2 returns DATE columns as UTC-midnight Date objects while the wire sends
- * YYYY-MM-DD strings. Canonicalize both sides before comparison — the previous
- * post-check compared wire strings to raw DB values and failed on real rows
- * (mocks with string dates hid this). Verified against prod driver output. */
+/** mysql2 can return DATE/TIMESTAMP as Date objects and BIGINT as strings while
+ * the wire sends strings and numbers. Canonicalize both sides before comparison —
+ * raw driver values otherwise fail post-checks on real rows (simplified mocks hid this). */
 const canonicalDay = (value: unknown): string | null => {
   if (value === null || value === undefined) return null;
   if (value instanceof Date) return value.toISOString().slice(0, 10);
   return String(value).slice(0, 10);
 };
-const canonicalTs = (value: unknown): string => (value instanceof Date ? value : new Date(String(value))).toISOString();
+const canonicalTs = (value: unknown): string => {
+  const date = value instanceof Date ? value : new Date(String(value));
+  return new Date(Math.floor(date.getTime() / 1000) * 1000).toISOString();
+};
 
 export const workerPriceDailyRowZ = z.object({
   cik: z.number().int().nonnegative(),
@@ -76,7 +78,7 @@ function priceKey(row: Pick<WorkerPriceDailyRow, "cik" | "date" | "source">) {
 }
 
 function priceContent(row: any) {
-  return [row.ticker, row.open, row.high, row.low, row.close, row.adjClose ?? null, row.volume, row.source, canonicalTs(row.fetchedAt)];
+  return [row.ticker, row.open, row.high, row.low, row.close, row.adjClose ?? null, row.volume === null || row.volume === undefined ? null : Number(row.volume), row.source, canonicalTs(row.fetchedAt)];
 }
 
 export async function ingestPricesDaily(rows: WorkerPriceDailyRow[], options: { db?: any; now?: Date } = {}) {
@@ -215,7 +217,7 @@ export async function ingestReportFile(input: { name: string; body: string; sha2
     set: { body: sql`VALUES(\`body\`)`, sha256: sql`VALUES(\`sha256\`)`, generatedAt: sql`VALUES(\`generatedAt\`)`, updatedAt: sql`VALUES(\`updatedAt\`)` },
   });
   const [persisted] = await db.select().from(reports).where(eq(reports.name, input.name)).limit(1);
-  const verified = persisted && persisted.body === input.body && persisted.sha256 === input.sha256 && new Date(persisted.generatedAt).toISOString() === generatedAt.toISOString() ? 1 : 0;
+  const verified = persisted && persisted.body === input.body && persisted.sha256 === input.sha256 && canonicalTs(persisted.generatedAt) === canonicalTs(generatedAt) ? 1 : 0;
   if (!verified) throw new Error("reportFile post-check mismatch");
   return { accepted: 1, dupes: 0, postCheck: { expected: 1, verified, failed: 0 } };
 }

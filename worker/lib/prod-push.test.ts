@@ -54,6 +54,8 @@ describe("operational production push", () => {
     const candles = [
       { datetime: Date.parse("2026-11-05T00:00:00Z"), open: 99, high: 105, low: 98, close: 101, volume: 900 },
       { datetime: Date.parse("2026-11-06T00:00:00Z"), open: 100, high: 110, low: 90, close: 105, volume: 1000 },
+      { datetime: Date.parse("2026-11-09T00:00:00Z"), open: 105, high: 112, low: 104, close: 110, volume: 1100 },
+      { datetime: Date.parse("2026-11-09T01:00:00Z"), open: 105, high: 112, low: 104, close: 110, volume: 1050 },
     ];
     writeFileSync(path.join(root, "pricehistory", "AAPL.json"), JSON.stringify({ candles }));
     const result = buildDailyPricesFromRaw({ root, universeFile, now: new Date("2026-11-09T12:00:00Z") });
@@ -66,6 +68,17 @@ describe("operational production push", () => {
     const backfill = buildReportFileBackfillPayload("daily-prices-schwab.json", { root, universeFile, now: new Date("2026-11-09T12:00:00Z") });
     expect(backfill).toMatchObject({ kind: "reportFile", name: "daily-prices-schwab.json", body: result.report.body, sha256: result.report.sha256 });
     expect(buildDailyPricesFromRaw({ root, universeFile, from: "2026-11-07", now: new Date("2026-11-09T12:00:00Z") }).rows).toHaveLength(0);
+    const afterClose = buildDailyPricesFromRaw({ root, universeFile, now: new Date("2026-11-10T01:00:00Z") });
+    expect(afterClose.rows).toHaveLength(2);
+    expect(afterClose.rows[1]).toMatchObject({ date: "2026-11-09", close: 110, volume: 1050 });
+    expect(JSON.parse(afterClose.report.body).companies[0].conflictEvidence).toEqual({
+      date: "2026-11-09",
+      candidates: [
+        { volume: 1100, fetchedAt: "2026-11-09T00:00:00.000Z" },
+        { volume: 1050, fetchedAt: "2026-11-09T01:00:00.000Z" },
+      ],
+      selected: { volume: 1050, fetchedAt: "2026-11-09T01:00:00.000Z" },
+    });
   });
 
   it("builds macro vintage rows with availability and source hashes", () => {

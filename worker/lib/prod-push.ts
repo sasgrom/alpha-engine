@@ -6,7 +6,7 @@ import { reportFilePolicy } from "../../contracts/report-files";
 import { sql } from "drizzle-orm";
 import { getDb } from "../../api/queries/connection";
 import { fetchJson } from "./http";
-import { latestCompleteOfficialDailyBars } from "./schwab-daily";
+import { latestCompleteOfficialDailyBars, latestCompletedSchwabDailyDate } from "./schwab-daily";
 import { MACRO_SERIES } from "./macro-sources";
 import { auditNormalizedMacroSeries } from "./macro-manifest-qa";
 import type { NormalizedMacroPoint } from "./fred";
@@ -58,6 +58,7 @@ export async function postOperationalIngest(payload: any, options: { onTarget?: 
     return await fetchJson(target.url, {
       method: "POST",
       retries: 1,
+      timeoutMs: 120_000,
       headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
       body: JSON.stringify(payload),
     });
@@ -69,7 +70,7 @@ export async function postOperationalIngest(payload: any, options: { onTarget?: 
 
 async function postRows(kind: OperationalPushKind, rows: any[]): Promise<any[]> {
   const results = [];
-  const batchSize = kind === "digests" ? 10 : 500;
+  const batchSize = kind === "pricesDaily" || kind === "digests" ? 10 : 500;
   for (let offset = 0; offset < rows.length; offset += batchSize) results.push(await postOperationalIngest({ kind, rows: rows.slice(offset, offset + batchSize) }));
   return results;
 }
@@ -110,7 +111,7 @@ export function buildDailyPricesFromRaw(options: { root?: string; universeFile?:
   const universe = JSON.parse(readFileSync(universeFile, "utf8")) as { cik: number; ticker: string }[];
   const manifest = JSON.parse(readFileSync(path.join(root, "manifest.json"), "utf8")) as { tickers: any[] };
   const now = options.now ?? new Date();
-  const pacificDate = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+  const pacificDate = latestCompletedSchwabDailyDate(now);
   const generatedAt = now.toISOString();
   const rows: any[] = [];
   const companies = [];
@@ -138,6 +139,7 @@ export function buildDailyPricesFromRaw(options: { root?: string; universeFile?:
       low: latest.low,
       close: latest.close,
       volume: latest.volume,
+      conflictEvidence: latest.conflictEvidence ?? null,
       previousDate: previous?.date ?? null,
       previousClose: previous?.close ?? null,
       change: previous && latest.close !== null && previous.close !== null ? latest.close - previous.close : null,
@@ -150,7 +152,7 @@ export function buildDailyPricesFromRaw(options: { root?: string; universeFile?:
     });
   }
   if (!options.from && companies.length !== universe.length) throw new Error(`Daily price coverage is incomplete: ${companies.length}/${universe.length}`);
-  const reportBody = JSON.stringify({ schemaVersion: 2, generatedAt, universeSize: universe.length, historyPolicy: "Latest two complete official daily candles with OHLCV; no backdating and no options-intraday spot substitution", sourcePolicy: "Schwab official closes only in the automatic lane", companies }, null, 2) + "\n";
+  const reportBody = JSON.stringify({ schemaVersion: 2, generatedAt, universeSize: universe.length, historyPolicy: "Latest two completed-session official daily candles with OHLCV; current Pacific session excluded before 16:00; no backdating and no options-intraday spot substitution", sourcePolicy: "Schwab official closes only in the automatic lane", companies }, null, 2) + "\n";
   return { rows, report: { name: "daily-prices-schwab.json", body: reportBody, sha256: createHash("sha256").update(reportBody).digest("hex"), generatedAt } };
 }
 
