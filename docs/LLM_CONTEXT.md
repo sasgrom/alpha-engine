@@ -3,6 +3,59 @@
 > Machine-oriented project context for LLM agents working on this codebase.
 > Read this file fully before modifying code. Dense, normative, no prose padding.
 
+
+## SANDBOX AGENT WORK REPORT 2026-11-09/10 — FOR INDEPENDENT AUDIT BY A FRESH AGENT
+
+Self-contained record of what the sandbox agent (Kimi web session, not Kimi Code) did on 2026-11-09/10. Every claim lists its verification path. Site published state at report time: platform version V150.
+
+### A. Production database writes made from the sandbox (highest audit priority)
+
+The sandbox holds a working DATABASE_URL to the production DB (owner-approved since iteration 4e). Identity proof: sha256(host/schema) of that URL = `ae905a120151d8bd2cdc4c1f9217e5cb76ff5340669f5716cb1a93f419e2abce`, byte-identical to the dbIdentityHash the PRODUCTION server itself computed during the owner-run via-api backup on 2026-11-09. The prod DB engine is TiDB (MySQL-compatible), host on Alibaba Cloud privatelink.
+
+All writes, chronological:
+
+1. DDL 031 — CREATE TABLE expectations_reviewed_packages / expectations_reviewed_results (both empty at creation; column counts 9/12 verified post-create).
+2. Expectations v3.4 staging apply — reviewed ZIP `research/reviewed-sync/2026-11-09/expectations-reviewed-v3.4.zip` (sha256 `1580284b…5c097465ea`, independently recomputed, matches git blob byte-for-byte); pre-apply real backup `20261109T234007Z-e7c40360b3a1` with restore-drill pass; transactional exact-key upsert; independent post-check: 26,787 results / 9,464 statements, all packageVersion=3.4, trio intact (AMZN 622/503, MSFT 559/241, GOOGL 240/14).
+3. DDL 030 — ALTER cusip_map.ticker to TEXT (table was empty; verified via information_schema).
+4. CUSIP transport — 41,090 rows inserted into prod cusip_map from reviewed export `research/reviewed-sync/2026-11-10/cusip-map/backup-cusip-map.json` (sha256 verified against manifest and git blob); null-stats identical to source; plus one-row patch cusip 31816QAD3 ticker="MNDT 1.625 06/01/35 B" (Kimi re-resolved via OpenFIGI). Coverage audit: 383/384 holding CUSIPs resolve to a company; single exclusion 22587M106 (Cresco Labs, OTC, outside universe); row-weighted coverage 1,617,268/1,617,277 = 99.9994%. Evidence: `research/reviewed-sync/2026-11-10/cusip-map/prod-apply-audit.md`.
+5. macro_points — DELETE of 18 stale pre-remediation rows (keys from reviewed `macro-correction-review.json`; surgical backup `macro-delete-backup.json` sha256 `ce417c4b…` committed); then sourceHash backfill UPDATE of 360,962 rows from reviewed package `macro-sourcehash-backfill.json` (sha256 `8d2cc2f0…` verified; temp-table join, WHERE sourceHash IS NULL guard, idempotent). Post-state: 408,860 rows total, 47,898 still null (no archive hash exists locally either — matches local exactly). Content drill vs package: realtimeEnd/value identical on all 360,962 rows.
+6. DDL 032 — CREATE TABLE reports; DDL 033 — ALTER macro_points ADD sourceHash (column added before the backfill; 408,878 rows preserved at ALTER time).
+
+Audit queries (run read-only against prod): row counts per expectations_reviewed_*; `SELECT COUNT(*), SUM(sourceHash IS NULL) FROM macro_points` → 408,860 / 47,898; `SELECT COUNT(*) FROM cusip_map` → 41,090; `SELECT name FROM reports` → daily-prices-schwab.json + schwab-context.json.
+
+### B. Code written by the sandbox agent (all committed to origin/main)
+
+- `253fa97` — ops status banner (src/components/OpsStatusBanner.tsx + tests): quiet admin banner on Dashboard from daily-operations.json; never renders fixture as live; 4/4 tests.
+- `729ff6b` — HTTP 500 root-cause fix in the ingest lane: mysql2 returns DATE/TIMESTAMP as Date objects while the wire sends YYYY-MM-DD; post-check compared raw forms and always mismatched (mocks hid it). canonicalDay/canonicalTs normalize both sides; two regression tests with driver-shaped rows; verified against real prod driver output.
+- `96fcb67` — analytics graph statuses follow evidence: cusip + data-QA flipped to done on verified evidence; prices/macro/optionsRaw/guidance keep partial with the precise missing piece in the node text. NOTE: the published graph still shows old statuses until the snapshot is REGENERATED locally (scripts/build-analytics-snapshot.mts reads the local DB) and the new version is published.
+- `17e0154`, `7baa0a2`, `ab41063`, `5833e48` — scripts/reconcile-inventory.mts (canonical per-table counts + content hashes; four comparison fixes: type-aware dates, sorted row keys, bigint-as-string, server-stamp exclusion).
+- `c10ae31` — macro-scenarios.ts:97 type fix (Array.isArray narrowing); FundFlows page frozen (page/route/nav/tests removed; server query kept; git history preserves).
+- `c3729df` — expectations package pins moved to v3.4; loader made version-agnostic (was hardcoded "3.3").
+- Docs: manual chapter 22 (Polymarket research namespace, RU+EN), chapter 23 (transport lanes, RU+EN), DESIGN_POLYMARKET.md (multi-venue, Kalshi venue 2), PROJECT_STATE.md refresh + priority plan §8a, reconciliation-final.md, LLM_CONTEXT NOW bullets. `docs/OPERATIONS.md` signals.note gate closed (it was already applied long before; the registry was stale).
+- `408e483`, `ce5f8e5` — CUSIP apply evidence + reconciliation final record.
+
+### C. Verification work (no production writes)
+
+- v3.3 and v3.4 reviewed packages verified independently: manifest hashes, exact-key uniqueness (0 dupes), statement arithmetic, non-trio byte-identity v3.2→v3.3, lineage context labels (trio ollama_ctx_131072), blocker arithmetic 4,681→248.
+- Local↔prod reconciliation: canonical inventories both sides; final record in `research/reviewed-sync/2026-11-10/reconciliation-final.md`. Converged: digests (hash match), macro_points (counts + content drill), cusip_map/documents (by construction), documented intentional asymmetries (facts corpus, staging, reports).
+- Form 4: diagnosed the 139-error class from parser code as multi-owner forms (worker/lib/form4-xml.ts line 59); Kimi implemented the fix (d8f594e): 139→0, 174,665 transactions, no duplicates.
+- Insider-buy cluster dry-run benchmark (Kimi, reviewed by me): NEGATIVE edge — hit rates 39%/41%/48% and median excess −0.6/−0.5/−1.2pp at +1d/+5d/+20d vs SPY. Standalone signal rejected; data asset kept.
+
+### D. Mistakes made by the sandbox agent (own them)
+
+1. First backup-channel instructions assumed the owner had a direct prod DB string; the platform does not expose one. Cost: owner time and a local MySQL password pasted into chat twice (marked for rotation). Lesson recorded in project memory: check own access first; placeholder-only commands.
+2. Earlier session: cache split-brain misdiagnosis — LinkType was checked on a child path; the junction was on the parent. Owner corrected; doctor script fixed to check the parent first.
+3. Process gap: site-vs-DB distinction was not communicated clearly — the owner reasonably expected the published site to reflect the work; DB changes and docs only surface after publish (and generated artifacts like the analytics snapshot additionally need a local regeneration first).
+
+### E. Open items at report time
+
+- Publish chain: versions newer than V150 exist only as platform version snapshots; the graph status update additionally needs a local snapshot regeneration first.
+- signals backfill stalled mid-run (prod 42,048 / local 84,329 at last check) — rerun is idempotent; prices backfill (Δ50) pending at report time.
+- Expectations serving promotion: 248 human-review items + independent accuracy benchmark (not regression) remain the gate.
+- Form 4 weighted-signal iteration (size/role/10b5-1) — owner decision.
+- Polymarket collector — design ready, awaits explicit owner go.
+- Two test failures on the home machine (Expectations "Not run", Methodology sections) are environment-dependent (read local artifacts); both pass in the sandbox. Not code bugs at report time.
+
 ## NOW — current state (update at every handoff; 2026-11-09, packed for a fresh chat)
 
 - **V3.4 STAGED ON PROD + TRANSPORT LANES LIVE (2026-11-10):** expectations v3.4 (26,787 results / 9,464 statements; normalization blockers 4,681 → 248 review items, metric_alias no longer serving-blocking) applied to prod staging tables with the full reviewed chain — real backup (26,787 pre-apply rows), restore drill pass, dry-run, transactional exact-key apply, independent direct post-check (all rows packageVersion=3.4; v3.3 retained in packages history). Package pins now live in contracts/expectations-apply.ts at v3.4; the package loader reads the pinned version from the constant (no hardcoded version). The outbox lane is live on prod: first reportFile (daily-prices-schwab.json) verified in the prod reports table; prod-push targets PROD_INGEST_URL only, never the INGEST_URL local/prod toggle, and reports success only from server post-check evidence. New: scripts/reconcile-inventory.mts prints canonical per-table counts/content hashes on either side for local↔prod zero-diff reconciliation. DDL 030/031/032/033 are applied on prod. Backup ceremony policy: physical backup gate is mandatory for non-reproducible state; reproducible staging packages roll back from git. Ops banner on Dashboard surfaces daily-operations CRITICAL to the admin quietly.
