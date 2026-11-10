@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-11-10T05:41:00.696Z",
+  "table": "macro_points",
+  "reason": "pre-delete surgical backup of 18 stale pre-remediation rows (keys from reviewed macro-correction-review.json)",
+  "rows": [
+    {
+      "id": 463343,
+      "seriesId": "BAMLH0A0HYM2",
+      "date": "2026-11-03T00:00:00.000Z",
+      "value": 3.4,
+      "realtimeStart": "2026-11-03T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:44.000Z"
+    },
+    {
+      "id": 463344,
+      "seriesId": "BAMLH0A0HYM2",
+      "date": "2026-11-04T00:00:00.000Z",
+      "value": 3.32,
+      "realtimeStart": "2026-11-04T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:44.000Z"
+    },
+    {
+      "id": 463345,
+      "seriesId": "BAMLH0A0HYM2",
+      "date": "2026-11-05T00:00:00.000Z",
+      "value": 3.48,
+      "realtimeStart": "2026-11-05T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:44.000Z"
+    },
+    {
+      "id": 47832,
+      "seriesId": "CPIAUCSL",
+      "date": "2026-09-01T00:00:00.000Z",
+      "value": 336.298,
+      "realtimeStart": "2026-10-19T00:00:00.000Z",
+      "realtimeEnd": "2026-10-19T00:00:00.000Z",
+      "sourceHash": null,
+      "fetchedAt": "2026-10-20T02:44:11.000Z"
+    },
+    {
+      "id": 463333,
+      "seriesId": "DGS10",
+      "date": "2026-11-03T00:00:00.000Z",
+      "value": 4.95,
+      "realtimeStart": "2026-11-04T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:41.000Z"
+    },
+    {
+      "id": 463334,
+      "seriesId": "DGS10",
+      "date": "2026-11-04T00:00:00.000Z",
+      "value": 4.9,
+      "realtimeStart": "2026-11-05T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:41.000Z"
+    },
+    {
+      "id": 463335,
+      "seriesId": "DGS10",
+      "date": "2026-11-05T00:00:00.000Z",
+      "value": 4.84,
+      "realtimeStart": "2026-11-06T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:41.000Z"
+    },
+    {
+      "id": 463336,
+      "seriesId": "DGS2",
+      "date": "2026-11-03T00:00:00.000Z",
+      "value": 4.61,
+      "realtimeStart": "2026-11-04T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:42.000Z"
+    },
+    {
+      "id": 463337,
+      "seriesId": "DGS2",
+      "date": "2026-11-04T00:00:00.000Z",
+      "value": 4.58,
+      "realtimeStart": "2026-11-05T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:42.000Z"
+    },
+    {
+      "id": 463338,
+      "seriesId": "DGS2",
+      "date": "2026-11-05T00:00:00.000Z",
+      "value": 4.46,
+      "realtimeStart": "2026-11-06T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:42.000Z"
+    },
+    {
+      "id": 47763,
+      "seriesId": "FEDFUNDS",
+      "date": "2026-09-01T00:00:00.000Z",
+      "value": 3.75,
+      "realtimeStart": "2026-10-19T00:00:00.000Z",
+      "realtimeEnd": "2026-10-19T00:00:00.000Z",
+      "sourceHash": null,
+      "fetchedAt": "2026-10-20T02:44:10.000Z"
+    },
+    {
+      "id": 463339,
+      "seriesId": "T10Y2Y",
+      "date": "2026-11-04T00:00:00.000Z",
+      "value": 0.32,
+      "realtimeStart": "2026-11-04T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:43.000Z"
+    },
+    {
+      "id": 463340,
+      "seriesId": "T10Y2Y",
+      "date": "2026-11-05T00:00:00.000Z",
+      "value": 0.38,
+      "realtimeStart": "2026-11-05T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:43.000Z"
+    },
+    {
+      "id": 463341,
+      "seriesId": "T10Y2Y",
+      "date": "2026-11-06T00:00:00.000Z",
+      "value": 0.35,
+      "realtimeStart": "2026-11-06T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:43.000Z"
+    },
+    {
+      "id": 463342,
+      "seriesId": "UNRATE",
+      "date": "2026-10-01T00:00:00.000Z",
+      "value": 4.1,
+      "realtimeStart": "2026-11-06T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:44.000Z"
+    },
+    {
+      "id": 463346,
+      "seriesId": "VIXCLS",
+      "date": "2026-11-03T00:00:00.000Z",
+      "value": 20.83,
+      "realtimeStart": "2026-11-03T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:45.000Z"
+    },
+    {
+      "id": 463347,
+      "seriesId": "VIXCLS",
+      "date": "2026-11-04T00:00:00.000Z",
+      "value": 16.61,
+      "realtimeStart": "2026-11-04T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:45.000Z"
+    },
+    {
+      "id": 463348,
+      "seriesId": "VIXCLS",
+      "date": "2026-11-05T00:00:00.000Z",
+      "value": 28.18,
+      "realtimeStart": "2026-11-05T00:00:00.000Z",
+      "realtimeEnd": null,
+      "sourceHash": null,
+      "fetchedAt": "2026-11-07T01:23:45.000Z"
+    }
+  ]
+}

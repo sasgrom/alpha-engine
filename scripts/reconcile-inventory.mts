@@ -63,7 +63,11 @@ for (const spec of TABLES) {
   // Sorted keys: SELECT * column order follows ordinal position, which can differ
   // between sides with different DDL histories. bigint -> String for cross-driver
   // stability (one side may return numbers, the other strings).
-  const canonRow = (row: Record<string, unknown>) => Object.fromEntries(Object.entries(row)
+  // Server-side stamps (createdAt/updatedAt/ingestedAt) and transport stamps
+  // (fetchedAt) legitimately differ between sides for identical content — the
+  // question here is "same facts", not "same transport metadata".
+  const STAMP_COLS = new Set(["createdAt", "updatedAt", "ingestedAt", "fetchedAt"]);
+  const canonRow = (row: Record<string, unknown>) => Object.fromEntries(Object.entries(row).filter(([k]) => !STAMP_COLS.has(k))
     .map(([k, v]) => [k, canonValue(k, v)] as const)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([k, v]) => [k, typeOf.get(k) === "bigint" && v !== null && v !== undefined ? String(v) : v]));
