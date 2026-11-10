@@ -295,7 +295,7 @@ npx tsx worker/edgar-fetch.mts --universe edgar-universe.json
 - **Operational note:** Independent from the legacy tone exhibit selection; never reduces documents to the largest exhibit.
 
 ```powershell
-npx tsx worker/edgar-exhibits.mts --universe research-universe-51.json
+npx tsx worker/edgar-exhibits.mts --universe research-universe-50.json
 ```
 
 ### 4. Companyfacts local snapshot
@@ -305,14 +305,14 @@ npx tsx worker/edgar-exhibits.mts --universe research-universe-51.json
 - **Cron:** 0 3 * * *
 - **Dependencies:** none
 - **Purpose:** Refresh SEC XBRL companyfacts into local MySQL with first-filed availability intact.
-- **Input:** SEC companyfacts JSON and research-universe-51.json.
+- **Input:** SEC companyfacts JSON and research-universe-50.json.
 - **Output:** One complete, validated facts snapshot per CIK; raw JSON remains cached on D:.
 - **Destination:** Local MySQL through the local factsSnapshot ingest route; no production write.
 - **Requirements:** network, server, mysql, driveD
 - **Operational note:** Requires exactly one reachable local web server on port 3000 and INGEST_URL pointing to it.
 
 ```powershell
-npx tsx worker/facts-fetch.mts --universe research-universe-51.json
+npx tsx worker/facts-fetch.mts --universe research-universe-50.json
 ```
 
 ### 5. S&P 500 incremental companyfacts
@@ -326,7 +326,7 @@ npx tsx worker/facts-fetch.mts --universe research-universe-51.json
 - **Output:** Resumable per-CIK raw snapshots and manifest transitions with a staggered seven-day full reconciliation baseline.
 - **Destination:** Local MySQL and the D:-only raw cache; no production write and no research-universe expansion.
 - **Requirements:** network, server, mysql, driveD
-- **Operational note:** Independent from research-51: failures never block its dependency chain, and this job has no research-series/factors downstream.
+- **Operational note:** Independent from research-50: failures never block its dependency chain, and this job has no research-series/factors downstream.
 
 ```powershell
 npx tsx worker/facts-fetch.mts --universe edgar-universe.json
@@ -346,7 +346,7 @@ npx tsx worker/facts-fetch.mts --universe edgar-universe.json
 - **Operational note:** Dependency-triggered after a successful facts refresh; no SEC request and no arbitrary delay guess.
 
 ```powershell
-npx tsx scripts/build-research-series.mts --universe research-universe-51.json
+npx tsx scripts/build-research-series.mts --universe research-universe-50.json
 ```
 
 ### 7. Research factor materialization
@@ -363,7 +363,7 @@ npx tsx scripts/build-research-series.mts --universe research-universe-51.json
 - **Operational note:** Does not claim new predictive evidence; evaluation remains a separate research job.
 
 ```powershell
-npx tsx scripts/materialize-research-factors.mts --universe research-universe-51.json
+npx tsx scripts/materialize-research-factors.mts --universe research-universe-50.json
 ```
 
 ### 8. Schwab REST daily snapshot
@@ -373,14 +373,14 @@ npx tsx scripts/materialize-research-factors.mts --universe research-universe-51
 - **Cron:** 0 4 * * *
 - **Dependencies:** none
 - **Purpose:** Capture chains, quotes, daily price history and instruments with hashes and availability timestamps.
-- **Input:** Schwab Market Data Production; local token file; research-universe-51.json.
+- **Input:** Schwab Market Data Production; local token file; research-universe-50.json.
 - **Output:** D:-only raw snapshots and a resumable manifest; User Preference status is recorded separately for streaming setup.
 - **Destination:** Raw chains remain local; successful scheduled runs automatically push QA-passed daily OHLCV and daily-prices-schwab.json through /api/worker/ingest.
 - **Requirements:** network, driveD
 - **Operational note:** Same-day complete tickers resume without redownloading. Automatic operational push is allowed only after exit-ok with one retry; a push failure marks the job error. No raw option chains, accounts or orders leave home. User Preference 401 does not invalidate REST data.
 
 ```powershell
-npx tsx worker/schwab-fetch.mts --universe research-universe-51.json
+npx tsx worker/schwab-fetch.mts --universe research-universe-50.json
 ```
 
 ### 9. Schwab normalized UI snapshot
@@ -458,7 +458,7 @@ npx tsx scripts/build-analytics-snapshot.mts
 - **Cron:** 0 6 * * *
 - **Dependencies:** none
 - **Purpose:** Publish the current local extraction and factual fallback notes to the owner-only UI without raw LLM responses.
-- **Input:** Current cohort extraction results, benchmark result when present, and research-universe-51.json.
+- **Input:** Current cohort extraction results, benchmark result when present, and research-universe-50.json.
 - **Output:** Credential-free expectations JSON and TypeScript with evidence, coverage and data-quality notes.
 - **Destination:** Local static UI artifacts; partial results remain explicitly unreviewed.
 - **Requirements:** review
@@ -533,7 +533,7 @@ npx tsx worker/macro-manifest-qa.mts
 - **Operational note:** Runs after current research factors so scenario inputs cannot silently use an older fundamental snapshot.
 
 ```powershell
-npx tsx scripts/build-company-exposure.mts --universe research-universe-51.json
+npx tsx scripts/build-company-exposure.mts --universe research-universe-50.json
 ```
 
 ### 18. Pilot SEC exposure evidence refresh
@@ -754,7 +754,7 @@ npx tsx worker/edgar-tone.mts --universe edgar-universe.json --concurrency 2
 - **Operational note:** Paused with the active LLM lane so the operator does not accidentally start a second full-history run.
 
 ```powershell
-npx tsx worker/edgar-cohorts.mts --universe research-universe-51.json
+npx tsx worker/edgar-cohorts.mts --universe research-universe-50.json
 ```
 
 ### 31. Cohort LLM extraction
@@ -771,7 +771,7 @@ npx tsx worker/edgar-cohorts.mts --universe research-universe-51.json
 - **Operational note:** Paused by default. Never runs concurrently with tone because the scheduler has one execution lane.
 
 ```powershell
-npx tsx worker/edgar-cohort-extract.mts --universe research-universe-51.json
+npx tsx worker/edgar-cohort-extract.mts --universe research-universe-50.json
 ```
 
 ### 32. Independent extraction benchmark
@@ -805,7 +805,7 @@ npx tsx worker/expectations-benchmark.mts --cohorts
 - **Operational note:** Paused to avoid maintaining duplicate current-provider lanes without a research need.
 
 ```powershell
-npx tsx worker/options-fetch.mts --source cboe --universe research-universe-51.json
+npx tsx worker/options-fetch.mts --source cboe --universe research-universe-50.json
 ```
 
 ### 34. Offline DTE option features
@@ -883,7 +883,7 @@ npx tsx scripts/research-reconciliation.mts
 - **Cron:** none
 - **Dependencies:** none
 - **Purpose:** Fail closed on duplicates, unit conflicts, missing periods, availability inversions, continuity gaps and factor-before-fact without modifying the database.
-- **Input:** Local facts, series_points, factor_points, company registry and research-universe-51.json.
+- **Input:** Local facts, series_points, factor_points, company registry and research-universe-50.json.
 - **Output:** public/reports/fundamental-integrity.json and .md with CIK, concept, period and accession evidence plus explicit omitted-issue counts.
 - **Destination:** Read-only QA report; no repairs, deletions or silent interpolation.
 - **Requirements:** mysql, review
@@ -1128,7 +1128,7 @@ npx tsx scripts/push-local-signals.mts --source edgar --dry
 - **Operational note:** A dry-run is never marked as a successful production synchronization.
 
 ```powershell
-npx tsx scripts/push-local-facts.mts --universe research-universe-51.json --dry
+npx tsx scripts/push-local-facts.mts --universe research-universe-50.json --dry
 ```
 
 ### 53. Reviewed signals production push
@@ -1162,7 +1162,7 @@ npx tsx scripts/push-local-signals.mts --source edgar
 - **Operational note:** Deliberately not UI-runnable and never scheduled; missing local coverage fails the apply run.
 
 ```powershell
-npx tsx scripts/push-local-facts.mts --universe research-universe-51.json
+npx tsx scripts/push-local-facts.mts --universe research-universe-50.json
 ```
 
 ### 55. EDGAR tone readiness audit

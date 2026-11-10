@@ -61,17 +61,17 @@ Collection contract:
 - New job: independent `sp500-facts-daily`, **23:30 home local time**.
 - Destination: local raw cache and local MySQL only.
 - Per-CIK atomic manifests support resume and next-day retry of missing/failed companies.
-- The job does **not** parent `research-series` or `research-factors`; its failures do not block the research-51 chain.
+- The job does **not** parent `research-series` or `research-factors`; its failures do not block the research-50 chain.
 - The current S&P 500 snapshot is a **collection universe**, not historical point-in-time index membership.
 
-The existing research-51 companyfacts job remains independent at 03:00 home local time and feeds `research-series → research-factors`.
+The existing research-50 companyfacts job remains independent at 03:00 home local time and feeds `research-series → research-factors`.
 
 ## 4. What updates where
 
 | Workflow | Schedule / trigger | Destination | What it does not mean |
 |---|---|---|---|
 | S&P 500 companyfacts | 23:30 home local + reviewed initial backfill | Raw cache + local MySQL | Full-S&P research or production promotion |
-| Research-51 companyfacts | 03:00 home local | Local MySQL → canonical series → factors | A claim of predictive alpha |
+| Research-50 companyfacts | 03:00 home local | Local MySQL → canonical series → factors | A claim of predictive alpha |
 | Schwab REST/options | 04:00 home local for the full daily snapshot; independent hourly context; pre-slot is pending, not failure | Local raw snapshots, normalized reports and Feature Lab | Accounts, orders, production sync or a successful capture before it happens |
 | FRED | Weekly refresh plus artifact freshness checks | Local macro archive with realtime vintages | Automatic scenario/probability changes |
 | OFAC Recent Actions | Daily incremental collection | Local event archive | A complete historical OFAC archive or causal forecast |
@@ -138,7 +138,7 @@ The owner’s working hypothesis is a **pooled statistical law across companies*
 
 ### Default model family: pooled statistical regularities
 
-We may train and evaluate on a limited research universe that has complete evidence (currently research-51 for factors and research-universe-50 for Atlas) **without first collecting complete history for every other company**. This is valid only when the model is pooled: shared coefficients and allowed sector effects are learned on discovery data and frozen for out-of-sample evaluation. Company-specific intercepts or separately fitted company models are not part of this default.
+We may train and evaluate on a limited research universe that has complete evidence (research-universe-50 across factors and Atlas) **without first collecting complete history for every other company**. This is valid only when the model is pooled: shared coefficients and allowed sector effects are learned on discovery data and frozen for out-of-sample evaluation. Company-specific intercepts or separately fitted company models are not part of this default.
 
 The hypothesis is not considered proven merely because 51 companies are available. Statistical power depends on independent companies, events, sectors and market regimes, not on a large row count created by repeatedly measuring the same observations.
 

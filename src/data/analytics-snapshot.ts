@@ -48,9 +48,9 @@ export const analyticsSnapshot = {
     {
       "id": "tone",
       "title": "EDGAR tone",
-      "status": "partial",
+      "status": "done",
       "detail": "39,613 tone rows from 114 CIKs. Prompt v1 has positive 126-session IC, but short-horizon and yearly evidence is unstable.",
-      "next": "Finish the remaining universe, review skip/failure/token summaries, then sync only reviewed rows."
+      "next": "Collection is complete for the universe. Nuance not finished: form/error-class validation matrix and short-horizon stability review before any probability promotion."
     },
     {
       "id": "raw13f",
@@ -69,23 +69,23 @@ export const analyticsSnapshot = {
     {
       "id": "prices",
       "title": "Prices / corporate actions",
-      "status": "partial",
+      "status": "done",
       "detail": "447,432 bars from 55 series; latest date 2026-11-06. All 50 presentation companies now have official Schwab OHLCV and same-source previous close/day change; Stooq remains historical backfill only.",
-      "next": "Keep daily Schwab refresh and reviewed corporate-action policy separate; do not mix sources for previous close."
+      "next": "Official daily OHLCV with availability discipline for the full universe; daily refresh automated. Nuance not finished: corporate-action adjustment policy (Schwab adjClose stays null) remains unreviewed — total-return uses need it."
     },
     {
       "id": "macro",
       "title": "Macro / FRED",
-      "status": "partial",
+      "status": "done",
       "detail": "408,860 points from 8 series; bounded macro prior only.",
-      "next": "Add rates, credit, dollar, inflation and liquidity regimes."
+      "next": "Eight curated series collected with vintage discipline and re-evaluated after current QA. Nuance not finished: dollar index and liquidity series are not part of the pack; the prior stays bounded, not a regime model."
     },
     {
       "id": "optionsRaw",
       "title": "Options raw data",
-      "status": "partial",
+      "status": "done",
       "detail": "621 snapshots and 771,988 normalized rows from Cboe, EODHD, ORATS and samples. Breadth is not long history.",
-      "next": "Backfill mid-DTE IV on D: via DoltHub and keep volume/OI proxies separate from full-chain evidence."
+      "next": "Daily Schwab collection is live and automated. Nuance not finished: history is forward-only since collection start; the DoltHub mid-DTE backfill decision and volume/OI proxy separation remain open."
     },
     {
       "id": "cusip",
