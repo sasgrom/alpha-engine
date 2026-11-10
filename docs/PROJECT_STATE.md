@@ -1,6 +1,6 @@
 # Alpha Engine — Project State and Owner Workflow
 
-> Reviewed snapshot: **2026-11-04**. This document explains the operating model and the current implementation queue. Live collection status belongs to `/project-state` and `/workers`; do not treat this snapshot as a live manifest.
+> Reviewed snapshot: **2026-11-10**. This document explains the operating model and the current implementation queue. Live collection status belongs to `/project-state` and `/workers`; do not treat this snapshot as a live manifest.
 
 ## 1. One project, four kinds of progress
 
@@ -8,10 +8,10 @@ Alpha Engine must not collapse these into one “done” percentage:
 
 | Layer | Question | Current reviewed state |
 |---|---|---|
-| **Code** | Is the implementation committed and tested? | F-01/F-02/F-03/F-04/F-05/F-10/F-11, the reviewed exposure rebuild and 13F remediation are complete. The macro vintage adapter, exact-ID repair and monthly FEDFUNDS registry correction are committed and tested. FEDFUNDS collection, 22-series QA and one six-series backfill are complete with evidence. All eight curated series have current eligible vintages; macro remediation is **complete** for their official available history, without an alpha or production-promotion claim. |
-| **Data** | Which collectors have actually run and what is their coverage? | Research-51 is covered. S&P 500 initial backfill is a separate run/evidence stage. Schwab, FRED and OFAC have independent schedules and evidence times. |
-| **Research** | Are derived artifacts current and strong enough to use? | Research-51 has 21,489 factor points and 51/51 coverage. IC changed after fresh facts. Event Study is ready; Atlas remains partial. No promotion is supported. |
-| **Delivery** | Has the owner reviewed and explicitly authorized a destination change? | Production apply/deploy/sync and full-S&P research expansion remain separate owner decisions. |
+| **Code** | Is the implementation committed and tested? | F-01…F-11, exposure rebuild, 13F remediation and macro remediation remain complete. Since 2026-11-04 added: Form 4 insider-buy MVP (worker fetch/parse/QA + Insider buys UI), fail-closed cohort QA with evidence anchoring, production backup channel (direct + via-api with restore drill), scheduled outbox lane (pricesDaily / macroPoints / reportFile) with honest prod targeting, live DB-backed /reports, ops status banner, local↔prod inventory tool. FundFlows UI frozen (server query kept). |
+| **Data** | Which collectors have actually run and what is their coverage? | Prod-verified 2026-11-10: 495 companies, 23,485 filings, 1,390,442 facts, 447,382 price bars (latest 2026-11-05 — Schwab token lapse 11-07→11-09, re-authorized; backfill via the new lane), 408,878 macro points (8 series), 39,233 signals, 1,617,277 fund holdings / 6,517 quarters, 39,940 documents registry. Expectations staged on prod: 26,787 results / 9,464 statements (v3.4). Form 4 full-universe collection in progress (41/50). cusip_map transport pending. |
+| **Research** | Are derived artifacts current and strong enough to use? | Factor OLS first full run was honestly negative (~0.50 balanced accuracy; betas not promoted). Expectations normalization v3.4: blockers 3,601/865/109/106 → 0-blocking + 248 review items; recent-slice salvage rate honestly low (4.39%). Event Study ready; Atlas partial; no alpha claim. |
+| **Delivery** | Has the owner reviewed and explicitly authorized a destination change? | Reviewed staging applies executed with backup gate + drill + independent post-check: expectations v3.3 then v3.4 (2026-11-09/10). New owner-approved exception: append-only QA-passed scheduled outputs (prices, macro vintages, whitelisted report files) auto-push to prod via the worker ingest lane; derived artifacts stay reviewed-only. |
 
 ## 2. Reviewed-only data flow
 
@@ -36,6 +36,8 @@ reviewed production sync only — never a collector default
 ```
 
 There is no default direct-to-production collection. A successful collector run does not authorize production sync, a research-universe expansion or model promotion.
+
+**Owner-approved update (2026-11-10):** one bounded exception now exists — the scheduled outbox lane. Append-only, point-in-time collector outputs that pass their QA gate (daily Schwab prices, FRED macro vintages, whitelisted operational report files) push to production automatically after a successful scheduled run, via the worker ingest API with server-side validation and exact-key upserts. Everything derived or semantic (expectations packages, canonical series, factors, documents) remains reviewed-only with pinned packages, a verified backup gate and an independent post-check.
 
 ## 3. Current implementation block — S&P 500 companyfacts
 
@@ -74,9 +76,20 @@ The existing research-51 companyfacts job remains independent at 03:00 home loca
 | FRED | Weekly refresh plus artifact freshness checks | Local macro archive with realtime vintages | Automatic scenario/probability changes |
 | OFAC Recent Actions | Daily incremental collection | Local event archive | A complete historical OFAC archive or causal forecast |
 | Macro derived research | After successful QA and dependency gates | Local Scenarios, Calibration, Event Study and Atlas reports | Investable alpha or model promotion |
-| Production delivery | Separate reviewed owner action only | Explicit reviewed destination | Never a scheduled collector side effect |
+| Scheduled outbox lane (auto-push) | After each scheduled job completes OK | Prod via worker ingest (pricesDaily, macroPoints, reportFile) | Derived/semantic artifacts; anything failing QA stays local |
+| Reviewed pinned packages | Separate reviewed owner action with backup gate | Prod staging tables via pinned ZIP (direct or via-api) | Never serving promotion without owner decision |
 
 ## 5. Research state that must stay visible
+
+**2026-11-10 update (prod-verified unless noted):**
+
+- Expectations: v3.4 staged on prod — 26,787 exact-key results / 9,464 statements / 50 companies; normalization blockers resolved from 4,681 queue items to 248 human-review items (236 scale without evidence anchor, 10 qualifier, 2 combined-basis); benchmark remains post-remediation regression, not an accuracy claim. Thin trio remediated (AMZN 622/503, MSFT 559/241, GOOGL 240/14 at ctx 131072).
+- Production backup channel operational: SELECT-only backup + restore drill + fail-closed apply gate (direct and via-api modes); first real restore point taken before v3.4 apply.
+- Scheduled outbox lane live: first reportFile (daily-prices-schwab.json) verified in prod `reports` table; /reports/* serves the fresher of DB/static with explicit generatedAt.
+- Form 4 insider-buy: worker pipeline + QA + Insider buys UI (preview sample from two real EDGAR filings); full-universe collection running (41/50 at last report).
+- Second-column (feature layer) audit: CUSIP crosswalk is local-only (prod cusip_map was empty; TEXT migration now applied, transport next); factor library honestly negative on first OLS; share/weight flows implemented, comparable-fund evaluation pending; options features computed but stalled during the Schwab token lapse; macro prior needs re-evaluation after current QA; data QA lacks a recurring coverage/drift report.
+- Older bullets below remain the historical record of their dates.
+
 
 - Latest reviewed factor rematerialization: **51 companies / 21,489 factor points / 51/51 current-universe coverage**.
 - Latest post-facts IC comparison: 2,840 → 2,834 rows, 58 changed Spearman values and 3 sign flips. This is changed descriptive evidence, not repaired alpha.
@@ -183,6 +196,19 @@ A separate reviewer experience is now code-ready for an academic preview:
 - Activation and migration remain owner-gated. `apply-ddl-029.mts` and the env-based reviewer seed are ready but were not run here.
 
 Full contract and activation: `docs/REVIEWER_EXPERIENCE.md`.
+
+## 8a. Priority plan — strategic and tactical (2026-11-10)
+
+**Strategy (unchanged):** availability-anchored evidence → validated signals → probability engine → (much later) execution. Current phase: finish the feature layer and make expectations serving-grade; no alpha claims until independent, accuracy-based benchmarks exist.
+
+**Tactical order by execution importance:**
+
+1. **P0 — freshness plumbing:** publish the outbox-lane version; run the first backfills (pricesDaily from 2026-11-07, macroPoints, reportFile set); keep the Schwab keepalive healthy — the ops banner on the dashboard now surfaces exactly this class of failure.
+2. **P1 — zero-diff local↔prod:** run `scripts/reconcile-inventory.mts` on both sides, diff counts/hashes per table, close deltas through the lane or reviewed packages; CUSIP map transport + uncovered-CUSIP reason audit.
+3. **P2 — roadmap graph column 2:** macro re-evaluation chain (research-factors → company-exposure → scenarios → atlas) + analytics snapshot rebuild; weekly coverage/drift report; options features resume (token fixed); share/weight flows evaluation after the 24-quarter transport.
+4. **P3 — expectations → serving:** 248 human-review items; design an independent accuracy benchmark (ground truth, not regression); only then a serving-promotion decision.
+5. **P4 — new signals:** finish Form 4 universe run, then features + forward-return benchmark with availableAt discipline; Polymarket probability collector only after an explicit owner go (design doc ready).
+6. **P5 — research deepening:** rolling IC/rank-IC with conditional forecast errors; sector-neutral residuals; probability engine revisited with expectations as a feature channel.
 
 ## 9. Where to look
 

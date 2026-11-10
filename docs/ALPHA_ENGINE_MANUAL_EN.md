@@ -1815,3 +1815,15 @@ Prediction markets provide what no other source does: event probabilities voted 
 - Production promotion only via reviewed handoff; no automatic namespace sync to production.
 
 Detailed architecture, data formats, the watchlist contract and executor working instructions: `docs/DESIGN_POLYMARKET.md`.
+
+
+## 23. Production transport lanes (reviewed + outbox)
+
+The production database is platform-managed; the owner's machine has no direct mysql access, the sandbox has. All production writes go through three explicit lanes, each with its own data class and gates:
+
+- **Reviewed pinned package** (semantic artifacts: expectations, documents metadata): a ZIP with a hash manifest pinned in `contracts/expectations-apply.ts`; only the pinned package can be applied. Gates: fresh (≤60 min) verified backup + restore drill + dry-run + transactional exact-key upsert + independent post-check. Rollback is re-applying the previous package from git.
+- **Backup channel** (`scripts/prod-backup.mts`): SELECT-only dump of the scope tables + per-table hashes + a mandatory restore drill into scratch (source≠target by identity hash); direct mode (when direct access exists) and via-api mode (worker HTTP). Policy: the physical backup gate is mandatory for non-reproducible state; reproducible staging packages roll back from git without a separate dump.
+- **Scheduled outbox lane** (auto-push, owner-approved 2026-11-10): append-only point-in-time scheduled outputs after exit-ok — pricesDaily, macroPoints (vintages with realtimeStart monotonicity), whitelisted reportFile. Server-side validation (OHLC sanity, no future dates, source whitelist), exact-key upsert, post-check counts from the server response. One retry, then an honest job error. prod-push targets PROD_INGEST_URL only (https + path validation), never the INGEST_URL local/prod toggle; success is claimed only from server evidence. Raw option chains stay local.
+- **Live /reports**: the `reports` table (DDL 032); the route serves the fresher of DB/static with the actual generatedAt — stale is never presented as current.
+
+Operational visibility: the Dashboard ops banner (admin) reads daily-operations.json and surfaces CRITICAL quietly; a fixture report never raises the banner. Local↔prod drift is measured by `scripts/reconcile-inventory.mts` (per-table counts + content hashes on both sides, then diff).

@@ -1821,3 +1821,15 @@ Prediction markets дают то, чего нет ни в одном друго�
 - Production promotion только через reviewed handoff; никакой автоматической синхронизации namespace на прод.
 
 Детальная архитектура, формат данных, watchlist-контракт и рабочие инструкции для исполнителя: `docs/DESIGN_POLYMARKET.md`.
+
+
+## 23. Транспортные линии в прод (reviewed + outbox)
+
+Прод-БД управляется платформой; прямого mysql-доступа с машины владельца нет, из песочницы — есть. Все записи в прод идут тремя явными линиями, у каждой свой класс данных и свои ворота:
+
+- **Reviewed pinned package** (семантические артефакты: expectations, documents metadata): ZIP с hash manifest пинится в `contracts/expectations-apply.ts`; apply возможен только для запиненного пакета. Ворота: свежий (≤60 мин) verified backup + restore drill + dry-run + транзакционный exact-key upsert + независимый post-check. Откат — re-apply предыдущего пакета из git.
+- **Backup channel** (`scripts/prod-backup.mts`): SELECT-only дамп scope-таблиц + per-table хэши + обязательный restore drill в scratch (source≠target по identity hash); режимы direct (когда есть прямой доступ) и via-api (через worker HTTP). Политика: физический backup-gate обязателен для невоспроизводимого состояния; репродуцируемые staging-пакеты откатываются из git без отдельного дампа.
+- **Scheduled outbox lane** (автопуш, owner-approved 2026-11-10): append-only point-in-time выходы scheduled-джобов после exit-ok — pricesDaily, macroPoints (винтажи с монотонностью realtimeStart), whitelisted reportFile. Server-side валидация (OHLC sanity, no future dates, source whitelist), exact-key upsert, post-check counts из ответа сервера. Один retry, потом честный job error. prod-push целится ТОЛЬКО в PROD_INGEST_URL (валидация https + путь), никогда не в INGEST_URL-тумблер; успех заявляется только по evidence ответа сервера. Сырые опционные чейны локальны.
+- **Live /reports**: таблица `reports` (DDL 032); роут отдаёт более свежий из DB/static источника с фактическим generatedAt — stale никогда не выдаётся за current.
+
+Операционная видимость: ops-баннер на Dashboard (admin) читает daily-operations.json и показывает CRITICAL без пушей; fixture-отчёт баннером не считается. Local↔prod расхождения измеряются `scripts/reconcile-inventory.mts` (per-table counts + content hashes с обеих сторон, затем diff).
