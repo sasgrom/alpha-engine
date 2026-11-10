@@ -73,6 +73,21 @@ app.post("/api/worker/ingest", async (c) => {
     const r = await ingestFactsSnapshot(parsed.data.cik, parsed.data.rows);
     return c.json({ ok: true, worker: label, ...r });
   }
+  if (parsed.data.kind === "pricesDaily") {
+    const { ingestPricesDaily } = await import("./services/worker-operational");
+    const r = await ingestPricesDaily(parsed.data.rows);
+    return c.json({ ok: true, worker: label, ...r });
+  }
+  if (parsed.data.kind === "macroPoints") {
+    const { ingestMacroPoints } = await import("./services/worker-operational");
+    const r = await ingestMacroPoints(parsed.data.rows);
+    return c.json({ ok: true, worker: label, ...r });
+  }
+  if (parsed.data.kind === "reportFile") {
+    const { ingestReportFile } = await import("./services/worker-operational");
+    const r = await ingestReportFile(parsed.data);
+    return c.json({ ok: true, worker: label, ...r });
+  }
   return c.json({ error: "unsupported kind" }, 400);
 });
 
@@ -83,6 +98,10 @@ app.post("/api/worker/backup-expectations", async (c) => {
 app.post("/api/worker/apply-expectations-reviewed", async (c) => {
   const { handleWorkerExpectationsApply } = await import("./services/worker-expectations-http");
   return handleWorkerExpectationsApply(c.req.raw);
+});
+app.get("/reports/:name", async (c) => {
+  const { reportFileResponse } = await import("./services/report-files");
+  return reportFileResponse(c.req.param("name"));
 });
 
 // 3i: orphan sweep at worker start — jobs left "running"/"queued" by a dead

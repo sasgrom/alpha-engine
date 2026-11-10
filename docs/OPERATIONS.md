@@ -104,16 +104,28 @@ Check coverage, evidence, QA and dry-run payloads before anything leaves home.
 Open /workers → Delivery dry-runs
 ```
 
-### Cloud control plane
+### Worker operational outbox
 
-Receive reviewed data and present the cloud UI.
+Push only QA-passed operational outputs after successful scheduled jobs.
 
-- **When:** Never scheduled and never triggered by a collector. Cloud cannot spawn home jobs.
-- **Input:** Reviewed facts, signals or other explicitly approved artifacts.
-- **Output:** Production records with server receipt timestamps and dedupe protection.
+- **When:** Automatically after exit-ok for Schwab prices/context, FRED vintages and daily operations. One retry with backoff; failure marks the job error. Manual triggers do not auto-push; use this explicit backfill command instead.
+- **Input:** INGEST_URL, WORKER_KEY and local Schwab/FRED/operations artifacts.
+- **Output:** pricesDaily, macroPoints and whitelisted reportFile payloads; raw option chains never leave home.
 
 ```powershell
-Manual terminal apply after review only
+npx tsx worker/prod-push.mts --kind pricesDaily --from 2026-11-07
+```
+
+### Cloud control plane
+
+Receive operational outbox data and separately reviewed derived artifacts.
+
+- **When:** Automatic push is limited to the declared operational outputs. Expectations, canonical series, factors and other derived artifacts remain reviewed/pinned and are not auto-pushed.
+- **Input:** Operational QA-passed outputs or separately reviewed packages.
+- **Output:** Production records with exact-key dedupe, conflict refusal and fresher DB/static report selection.
+
+```powershell
+Manual reviewed apply for derived artifacts; automatic /api/worker/ingest only for the declared operational lane
 ```
 
 ## 2. Install hidden startup processes
@@ -171,13 +183,13 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | S&P 500 incremental companyfacts | scheduled | 30 23 * * * | Local MySQL and the D:-only raw cache; no production write and no research-universe expansion. |
 | Canonical research series | scheduled | after facts-fetch-daily | Local MySQL. |
 | Research factor materialization | scheduled | after research-series | Local MySQL. |
-| Schwab REST daily snapshot | scheduled | 0 4 * * * | Local Schwab archive only; no orders, accounts or production sync. |
-| Schwab normalized UI snapshot | scheduled | after schwab-fetch-daily | Reviewed local static snapshot only. |
+| Schwab REST daily snapshot | scheduled | 0 4 * * * | Raw chains remain local; successful scheduled runs automatically push QA-passed daily OHLCV and daily-prices-schwab.json through /api/worker/ingest. |
+| Schwab normalized UI snapshot | scheduled | after schwab-fetch-daily | Normalized snapshot automatically pushed as schwab-market-data.json after exit-ok; raw chains stay local. |
 | Schwab Feature Lab materialization | scheduled | after schwab-snapshot | Local Feature Lab UI only; no production factor promotion. |
-| Schwab market context pack | scheduled | 10 * * * * | Local Market Context UI only; no accounts, orders or full-universe streaming. |
+| Schwab market context pack | scheduled | 10 * * * * | schwab-context.json automatically pushed through reportFile after successful scheduled runs; no accounts, orders or full-universe streaming. |
 | Analytics and weekly evidence snapshot | scheduled | after research-factors | Local static UI artifacts; no production write. |
 | Expectations static report | scheduled | 0 6 * * * | Local static UI artifacts; partial results remain explicitly unreviewed. |
-| FRED and ALFRED weekly vintage refresh | scheduled | 30 5 * * 0 | Local macro archive only; no production write. |
+| FRED and ALFRED weekly vintage refresh | scheduled | 30 5 * * 0 | Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local. |
 | OFAC daily event refresh | scheduled | 40 5 * * * | Local macro archive only; no production write. |
 | Macro manifest and availability QA | scheduled | 55 5 * * * | Local fail-closed QA gate only. |
 | Company macro exposure evidence | scheduled | after research-factors | Local static evidence only; no production write. |
@@ -188,7 +200,7 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Macro Transmission Atlas | scheduled | after macro-event-study + research-factors | Local research artifact only; no production write or probability promotion. |
 | Production UI rebuild | scheduled | after analytics-snapshot + schwab-feature-lab + expectations-report | Local production server files only; no cloud deployment. |
 | Local morning brief | scheduled | 15 7 * * * | Local probation when INGEST_URL is set; no automatic reviewed production promotion is added by the scheduler. |
-| Daily operations health report | scheduled | 20 7 * * * | Local Operations UI only; no production sync. |
+| Daily operations health report | scheduled | 20 7 * * * | daily-operations.json and .md automatically pushed through reportFile after exit-ok and served from the fresher of DB/static. |
 | Alpha Bridge captain executor | paused | */2 * * * * | Local command protocol only; no production transport. |
 | 13F holdings and full-book refresh | scheduled | 0 5 * * 1,4 | Local MySQL; production transfer is a separate reviewed manual job. |
 | EDGAR local tone scoring | paused | after edgar-fetch-daily | Local MySQL/outbox only; production copy remains reviewed and manual. |
@@ -224,7 +236,7 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Frozen research protocol validation | manual | manual | Console/log only. |
 | 13F top-300 universe rebuild | manual | manual | Local tracked universe candidate for review; not a daily job. |
 | Research coverage expansion | blocked | manual | Blocked pending universe design. |
-| signals.note migration gate | done | — | Applied (DDL 028, prod varchar(2000) verified 2026-11-09: 39,233 rows preserved, max note 512 chars; sentence-safe truncation live in contracts/signals.ts). |
+| signals.note migration gate | blocked | after mysql-backup-restore | Blocked by mysql-backup-restore. |
 | Schwab OAuth browser authorization | manual | manual | Interactive terminal/browser flow, not scheduler-runnable. |
 | Optional ORATS option lane | blocked | manual | Blocked; no scheduled collection. |
 | Legacy cloud ad-hoc job queue | blocked | manual | Blocked from home cron. |
@@ -362,9 +374,9 @@ npx tsx scripts/materialize-research-factors.mts --universe research-universe-51
 - **Purpose:** Capture chains, quotes, daily price history and instruments with hashes and availability timestamps.
 - **Input:** Schwab Market Data Production; local token file; research-universe-51.json.
 - **Output:** D:-only raw snapshots and a resumable manifest; User Preference status is recorded separately for streaming setup.
-- **Destination:** Local Schwab archive only; no orders, accounts or production sync.
+- **Destination:** Raw chains remain local; successful scheduled runs automatically push QA-passed daily OHLCV and daily-prices-schwab.json through /api/worker/ingest.
 - **Requirements:** network, driveD
-- **Operational note:** Same-day complete tickers resume without redownloading. For a fresh intraday snapshot, run the same command with --force: it appends timestamped raw snapshots instead of overwriting history. User Preference 401 does not invalidate REST data.
+- **Operational note:** Same-day complete tickers resume without redownloading. Automatic operational push is allowed only after exit-ok with one retry; a push failure marks the job error. No raw option chains, accounts or orders leave home. User Preference 401 does not invalidate REST data.
 
 ```powershell
 npx tsx worker/schwab-fetch.mts --universe research-universe-51.json
@@ -379,9 +391,9 @@ npx tsx worker/schwab-fetch.mts --universe research-universe-51.json
 - **Purpose:** Normalize the latest valid chain per ticker and expose credential-free static data to /market-data.
 - **Input:** Latest Schwab manifest entries and raw chains.
 - **Output:** public/reports/schwab-market-data.json with OSI IDs, DTE and QA, fetched on demand by /market-data.
-- **Destination:** Reviewed local static snapshot only.
+- **Destination:** Normalized snapshot automatically pushed as schwab-market-data.json after exit-ok; raw chains stay local.
 - **Requirements:** review
-- **Operational note:** Hash mismatches, truncated chains and provider failures remain visible. The builder also updates an existing dist/public/reports, so new Schwab data does not require an application rebuild.
+- **Operational note:** Hash mismatches, truncated chains and provider failures remain visible. Only the normalized report enters the automatic operational lane; no factor promotion.
 
 ```powershell
 npx tsx worker/build-schwab-market-data.mts
@@ -413,9 +425,9 @@ npx tsx worker/schwab-features.mts
 - **Purpose:** Refresh market hours, S&P/Nasdaq/Dow movers, instrument profiles and AAPL/SPY five-minute bars separately from option chains.
 - **Input:** Schwab Market Data Production, existing instrument files and the local token.
 - **Output:** schwab-context.json with sessions, movers, primitive fundamental fields, intraday VWAP/opening range and per-endpoint provenance.
-- **Destination:** Local Market Context UI only; no accounts, orders or full-universe streaming.
+- **Destination:** schwab-context.json automatically pushed through reportFile after successful scheduled runs; no accounts, orders or full-universe streaming.
 - **Requirements:** network, driveD
-- **Operational note:** Hourly context is independent of daily option features. Missing endpoints remain visible; no GPU is used.
+- **Operational note:** Hourly context is independent of daily option features. Missing endpoints remain visible; push failure marks the job error after one retry. No GPU is used.
 
 ```powershell
 npx tsx worker/schwab-context.mts
@@ -464,9 +476,9 @@ npx tsx worker/build-expectations-report.mts --cohorts --scope full-history
 - **Purpose:** Refresh all registered FRED series with raw yearly chunks, vintage availability and resumable manifests.
 - **Input:** FRED/ALFRED API, existing D:-only macro archive and the configured server-side API key.
 - **Output:** Raw hashes, normalized first-to-current vintage rows and manifest-fred.json from 2000 onward.
-- **Destination:** Local macro archive only; no production write.
+- **Destination:** Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local.
 - **Requirements:** network, driveD
-- **Operational note:** Weekly full-vintage refresh avoids treating a slowly changing archive as a required daily parent. Request spacing remains capped at 100 requests per minute.
+- **Operational note:** Weekly full-vintage refresh preserves sourceHash and realtimeStart/End. Conflicting vintages are rejected with reasons rather than overwritten. Request spacing remains capped at 100 requests per minute.
 
 ```powershell
 npx tsx worker/macro-fred-fetch.mts --group all
@@ -651,9 +663,9 @@ npx tsx scripts/daily-digest.mts --hours 36
 - **Purpose:** Record scheduler health, same-day Schwab evidence, job failures and pending automation in one owner-only static report.
 - **Input:** Persistent scheduler state, current registry configuration and credential-free Schwab report summaries.
 - **Output:** daily-operations.json and .md in public/reports and an existing dist/public/reports bundle.
-- **Destination:** Local Operations UI only; no production sync.
+- **Destination:** daily-operations.json and .md automatically pushed through reportFile after exit-ok and served from the fresher of DB/static.
 - **Requirements:** offline computation only
-- **Operational note:** Runs independently after the morning jobs so failed parents cannot suppress the health report. A critical report is evidence, not a scheduler process failure.
+- **Operational note:** Runs independently after the morning jobs so failed parents cannot suppress the health report. A critical report is evidence, not a scheduler process failure; its push failure still marks the job error.
 
 ```powershell
 npx tsx scripts/build-daily-operations-report.mts

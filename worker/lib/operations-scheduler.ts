@@ -3,6 +3,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync
 import path from "node:path";
 import { Cron } from "croner";
 import { OPERATION_JOBS, OPERATION_JOB_MAP, type OperationJob } from "../../contracts/operations";
+import { pushOperationalJobOutput, shouldPushOperationalJob } from "./prod-push";
 
 export const OPERATIONS_ROOT = path.resolve(import.meta.dirname, "..", "..");
 export const OPERATIONS_RUNS_DIR = path.join(OPERATIONS_ROOT, "worker", ".runs");
@@ -281,12 +282,22 @@ export class OperationsScheduler {
       run.error = error.message;
       appendFileSync(run.logFile, `PROCESS ERROR: ${error.message}\n`);
     });
-    child.on("close", (code) => {
+    child.on("close", async (code) => {
       this.child = null;
-      run.endedAt = nowIso();
       run.exitCode = code;
       run.status = code === 0 ? "done" : run.error?.includes("Kill requested") ? "killed" : "error";
       if (run.status === "error" && !run.error) run.error = `Process exited with code ${code ?? "unknown"}`;
+      if (shouldPushOperationalJob(job.id, run.status, run.trigger)) {
+        try {
+          const pushed = await pushOperationalJobOutput(job.id);
+          appendFileSync(run.logFile, `[operations] operational push completed: ${JSON.stringify(pushed)}\n`);
+        } catch (error) {
+          run.status = "error";
+          run.error = `Operational push failed: ${error instanceof Error ? error.message.slice(0, 240) : String(error).slice(0, 240)}`;
+          appendFileSync(run.logFile, `${run.error}\n`);
+        }
+      }
+      run.endedAt = nowIso();
       this.state.current = null;
       saveOperationsState(this.state);
       if (run.status === "done") {

@@ -3,6 +3,7 @@ import {
   mysqlEnum,
   serial,
   varchar,
+  char,
   text,
   mediumtext,
   timestamp,
@@ -826,6 +827,7 @@ export const macroPoints = mysqlTable(
     value: double("value"),
     realtimeStart: date("realtimeStart", { mode: "string" }),
     realtimeEnd: date("realtimeEnd", { mode: "string" }),
+    sourceHash: char("sourceHash", { length: 64 }),
     fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
   },
   (t) => [uniqueIndex("uq_macro_points").on(t.seriesId, t.date, t.realtimeStart), index("idx_macro_series_date").on(t.seriesId, t.date)]
@@ -890,3 +892,13 @@ export const reviewerTourPreferences = mysqlTable(
   (t) => [uniqueIndex("uq_reviewer_tour_user_track").on(t.userId, t.track)],
 );
 export type ReviewerTourPreference = typeof reviewerTourPreferences.$inferSelect;
+
+
+export const reports = mysqlTable("reports", {
+  name: varchar("name", { length: 128 }).primaryKey(),
+  body: mediumtext("body").notNull(),
+  sha256: char("sha256", { length: 64 }).notNull(),
+  generatedAt: timestamp("generatedAt").notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull().$onUpdate(() => new Date()),
+});
+export type ReportRow = typeof reports.$inferSelect;

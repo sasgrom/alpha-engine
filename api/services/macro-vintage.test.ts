@@ -9,7 +9,7 @@ import { macroPriorAt } from "./probability-engine";
 const dialect = new MySqlDialect();
 
 function point(id: number, seriesId: string, date: string, value: number | null, realtimeStart: string | null, realtimeEnd: string | null = null): MacroPoint {
-  return { id, seriesId, date, value, realtimeStart, realtimeEnd, fetchedAt: new Date("2025-01-01T00:00:00Z") };
+  return { id, seriesId, date, value, realtimeStart, realtimeEnd, sourceHash: null, fetchedAt: new Date("2025-01-01T00:00:00Z") };
 }
 
 function sqlToken(part: unknown, row: MacroPoint): unknown {
