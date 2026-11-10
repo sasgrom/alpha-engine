@@ -115,6 +115,14 @@ export function buildReportFilePayload(name: string, options: { root?: string; b
   return { kind: "reportFile", name, body, sha256: createHash("sha256").update(body).digest("hex"), generatedAt };
 }
 
+export function buildReportFileBackfillPayload(name: string, options: { root?: string; universeFile?: string; from?: string; now?: Date; body?: string } = {}) {
+  if (name === "daily-prices-schwab.json") {
+    const daily = buildDailyPricesFromRaw({ root: options.root, universeFile: options.universeFile, from: options.from, now: options.now });
+    return { kind: "reportFile", ...daily.report };
+  }
+  return buildReportFilePayload(name, { root: options.root, body: options.body });
+}
+
 export function buildMacroPointsPayload(options: { root?: string; from?: string } = {}) {
   const root = options.root ?? path.resolve(process.platform === "win32" ? "D:/research/alpha-engine/macro" : "worker/cache/macro");
   const rows = [];
@@ -163,5 +171,5 @@ export async function runOperationalBackfill(options: { kind: OperationalPushKin
   if (!options.name) throw new Error("--name is required for reportFile backfill");
   const policy = reportFilePolicy(options.name);
   if (!policy.automatic && !options.reviewed) throw new Error("This report belongs to the reviewed/pinned channel; pass --reviewed explicitly");
-  return postOperationalIngest(buildReportFilePayload(options.name));
+  return postOperationalIngest(buildReportFileBackfillPayload(options.name, { from: options.from }));
 }

@@ -899,3 +899,11 @@ Deliberately not automatic:
 - `worker/lib/prod-push.ts` builds Schwab daily OHLCV from local official candles, normalized FRED vintage rows and whitelisted report payloads. Scheduler pushes only `done` non-manual outputs, with exactly one retry; push failure marks the job error and blocks dependencies. Raw option chains never leave home. `worker/prod-push.mts` adds explicit backfill for all three kinds. No auto-push occurs for failed or manual jobs.
 - Verification: targeted operational/scheduler/worker suites **4 files / 28 tests passed**; `npm run test:scripts` **4 files / 30 tests passed**; `npm run check`, production build and `git diff --check` passed. Full suite **952/954** with the two previously documented unrelated generated UI snapshot failures in `src/components/AnalyticsNetwork.test.tsx` and `src/pages/Expectations.test.tsx`.
 - Owner next steps: publish the server change, apply DDL 032/033 manually, provision production `INGEST_URL` and `WORKER_KEY`, then run the first explicit backfill: `npx tsx worker/prod-push.mts --kind pricesDaily --from 2026-11-07`. Analogous commands support `--kind macroPoints` and `--kind reportFile --name <whitelisted-name>`. Exact delivery commit is authoritative in `git log`.
+
+
+
+## 84. Daily-prices reportFile backfill source fix — 2026-11-10
+
+- Fixed `npx tsx worker/prod-push.mts --kind reportFile --name daily-prices-schwab.json`: it no longer reads a nonexistent `public/reports/daily-prices-schwab.json`. The new `buildReportFileBackfillPayload` builds this generated report from the same official Schwab daily candles used by `pricesDaily`; static report names keep the existing file loader.
+- Real local payload verification, without any network push: **50/50 collected**, 61,941 bytes, SHA256 `0fbab4e99872523fc128d0d50f0104e2961602d01b3a3c6243d8d8c947964abe`. Regression covers the exact report name, generated body and hash.
+- Verification: `worker/lib/prod-push.test.ts` **5/5 passed**, `npm run check`, production build and `git diff --check` passed. No production write occurred. Exact fix commit is authoritative in `git log`.

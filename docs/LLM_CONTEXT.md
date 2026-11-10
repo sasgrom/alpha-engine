@@ -304,3 +304,8 @@ The current reviewed package remains v3.3. Local v3.4 normalization rules and ex
 ## 14. Expectations reviewed v3.4 released locally — 2026-11-09
 
 `research/reviewed-sync/2026-11-09/expectations-reviewed-v3.4.zip` is the current local reviewed normalization package (SHA256 `1580284b108cf58127b4541cac0eb0124ccbbd10caf5e6eba9a75b5c097465ea`). It preserves the v3.3 baseline byte-for-byte before transformations, passes the post-normalization gold regression at 27/27 with zero issues, and leaves 236 scale, 10 qualifier and 2 combined-basis blockers visible. Metric unmapped is zero-blocking with 3,563 non-blocking other; recent salvage is 10/228. AMZN metadata and 15 MSFT deferred-call statuses were remediated from source evidence without raw checkpoint changes. No production apply or transport occurred. See handoff §82.
+
+
+## 15. Daily-prices backfill source fix — 2026-11-10
+
+`reportFile --name daily-prices-schwab.json` now builds its payload directly from official Schwab daily bars instead of requiring a nonexistent static file. The real local payload has 50/50 collected companies and matching body SHA256. Targeted tests, TypeScript and production build pass; no production write occurred. See handoff §84.

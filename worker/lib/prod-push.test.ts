@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { buildDailyPricesFromRaw, buildMacroPointsPayload, buildReportFilePayload, postOperationalIngest, shouldPushOperationalJob } from "./prod-push";
+import { buildDailyPricesFromRaw, buildMacroPointsPayload, buildReportFileBackfillPayload, buildReportFilePayload, postOperationalIngest, shouldPushOperationalJob } from "./prod-push";
 import { MACRO_SERIES } from "./macro-sources";
 import type { NormalizedMacroPoint } from "./fred";
 
@@ -45,6 +45,8 @@ describe("operational production push", () => {
     expect(report.companies[0]).toMatchObject({ previousClose: 101, close: 105, change: 4 });
     expect(result.report.sha256).toBe(createHash("sha256").update(result.report.body).digest("hex"));
     expect(result.report.body).not.toContain("optionExpDateMap");
+    const backfill = buildReportFileBackfillPayload("daily-prices-schwab.json", { root, universeFile, now: new Date("2026-11-09T12:00:00Z") });
+    expect(backfill).toMatchObject({ kind: "reportFile", name: "daily-prices-schwab.json", body: result.report.body, sha256: result.report.sha256 });
     expect(buildDailyPricesFromRaw({ root, universeFile, from: "2026-11-07", now: new Date("2026-11-09T12:00:00Z") }).rows).toHaveLength(0);
   });
 
