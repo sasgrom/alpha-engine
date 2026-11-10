@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { gunzipSync, gzipSync } from "node:zlib";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -170,6 +171,35 @@ describe("operational worker ingest", () => {
     expect(db.data.reports).toHaveLength(1);
     await expect(ingestReportFile({ ...input, sha256: "0".repeat(64) }, { db })).rejects.toThrow("SHA256 mismatch");
     await expect(ingestReportFile({ ...input, name: "not-allowed.json" }, { db })).rejects.toThrow("not whitelisted");
+  });
+
+  it("accepts the full Form 4 gzip transport and serves the identical JSON with gzip headers", async () => {
+    const body = JSON.stringify({
+      status: "full_run",
+      generatedAt: "2026-11-10T12:00:00.123Z",
+      universe: 50,
+      totals: { accessions: 1, transactions: 1, clusters: 1 },
+      kpi: { openMarketBuyCount: 1, openMarketBuyUsd: 100, excludedCount: 0, excludedUsd: 0, uniqueInsidersBuying: 1, multiOwnerTransactions: 0 },
+      perTicker: [],
+      benchmarkRuns: [{ generatedAt: "2026-11-10T06:49:42.087Z" }, { generatedAt: "2026-11-10T12:00:00.123Z" }],
+      transactions: [{ accessionNo: "0000000001-26-000001" }],
+      clusters: [{ clusterId: "cluster-1" }],
+    });
+    const compressed = `gzip-base64:${gzipSync(body, { level: 9 }).toString("base64")}`;
+    const input = {
+      kind: "reportFile" as const,
+      name: "insider-form4.json",
+      body: compressed,
+      sha256: createHash("sha256").update(compressed).digest("hex"),
+      generatedAt: "2026-11-10T12:00:00.123Z",
+      contentEncoding: "gzip-base64" as const,
+    };
+    expect(workerIngestBodyZ.parse(input)).toMatchObject({ name: "insider-form4.json", contentEncoding: "gzip-base64" });
+    expect((await ingestReportFile(input, { db })).accepted).toBe(1);
+    expect((await ingestReportFile(input, { db })).dupes).toBe(1);
+    const response = await reportFileResponse("insider-form4.json", { db, staticRoot: temp });
+    expect(response.headers.get("content-encoding")).toBe("gzip");
+    expect(gunzipSync(Buffer.from(await response.arrayBuffer())).toString("utf8")).toBe(body);
   });
 
   it("serves DB reports only when fresher than static and exposes actual generatedAt", async () => {

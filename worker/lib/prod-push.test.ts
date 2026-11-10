@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { gunzipSync } from "node:zlib";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { assertOperationalServerEvidence, buildDailyPricesFromRaw, buildMacroPointsPayload, buildReportFileBackfillPayload, buildReportFilePayload, postOperationalIngest, prodIngestTarget, runOperationalBackfill, shouldPushOperationalJob } from "./prod-push";
 import { MACRO_SERIES } from "./macro-sources";
@@ -42,6 +43,8 @@ describe("operational production push", () => {
     expect(shouldPushOperationalJob("schwab-fetch-daily", "done", "cron")).toBe(true);
     expect(shouldPushOperationalJob("macro-fred-weekly", "done", "dependency")).toBe(true);
     expect(shouldPushOperationalJob("weekly-coverage-report", "done", "dependency")).toBe(true);
+    expect(shouldPushOperationalJob("form4-export", "done", "dependency")).toBe(true);
+    expect(shouldPushOperationalJob("form4-export", "done", "manual")).toBe(false);
     expect(shouldPushOperationalJob("schwab-fetch-daily", "error", "cron")).toBe(false);
     expect(shouldPushOperationalJob("schwab-fetch-daily", "done", "manual")).toBe(false);
     expect(shouldPushOperationalJob("expectations-report", "done", "cron")).toBe(false);
@@ -159,6 +162,22 @@ describe("operational production push", () => {
     expect(assertOperationalServerEvidence(retryDigests)).toMatchObject({ accepted: 0, dupes: 11, postCheck: { expected: 11, verified: 11 } });
     expect(fetchMock.mock.calls.filter(([, options]: any) => JSON.parse(options.body).kind === "signals").every(([, options]: any) => JSON.parse(options.body).rows.length <= 500)).toBe(true);
     expect(fetchMock.mock.calls.filter(([, options]: any) => JSON.parse(options.body).kind === "digests").every(([, options]: any) => JSON.parse(options.body).rows.length <= 10)).toBe(true);
+  });
+
+  it("compresses a full universe-50 Form 4 report without dropping transactions", () => {
+    const body = JSON.stringify({
+      status: "full_run",
+      generatedAt: "2026-11-10T12:00:00.000Z",
+      universe: 50,
+      totals: { accessions: 1, transactions: 1, clusters: 1 },
+      transactions: [{ accessionNo: "0000000001-26-000001" }],
+      clusters: [{ clusterId: "cluster-1" }],
+    });
+    const payload = buildReportFilePayload("insider-form4.json", { body });
+    expect(payload).toMatchObject({ kind: "reportFile", name: "insider-form4.json", contentEncoding: "gzip-base64" });
+    expect(payload.sha256).toBe(createHash("sha256").update(payload.body).digest("hex"));
+    expect(JSON.parse(gunzipSync(Buffer.from(payload.body.slice("gzip-base64:".length), "base64")).toString("utf8"))).toEqual(JSON.parse(body));
+    expect(() => buildReportFilePayload("insider-form4.json", { body: JSON.stringify({ status: "preview_sample", generatedAt: "2026-11-10T12:00:00.000Z", universe: 50 }) })).toThrow("full universe-50");
   });
 
   it("hashes report bodies and preserves their generatedAt", () => {

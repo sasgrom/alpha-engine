@@ -9,13 +9,48 @@
  */
 import type { Form4Transaction } from "@/lib/insider-form4";
 
+export interface Form4ServingCluster {
+  clusterId: string;
+  ticker: string;
+  windowStart: string;
+  windowEnd: string;
+  availableAt: string;
+  status: "computed" | "partial" | "not_computable";
+  uniqueInsiders: number;
+  multiOwner: boolean;
+  hasCeo: boolean;
+  hasCfo: boolean;
+  hasDirector: boolean;
+  hasTenPercentOwner: boolean;
+  aggregatePurchaseUsd: number | null;
+  maxSinglePurchaseUsd: number | null;
+}
+
 export interface Form4ActivityFeed {
   schemaVersion: 1;
   status: "preview_sample" | "full_run";
   generatedAt: string;
-  universe: string;
-  note: string;
+  universe: number | string;
+  note?: string;
+  totals?: { accessions: number; transactions: number; clusters: number };
   transactions: Form4Transaction[];
+  clusters?: Form4ServingCluster[];
+  kpi?: {
+    openMarketBuyCount: number;
+    openMarketBuyUsd: number;
+    excludedCount: number;
+    excludedUsd: number;
+    uniqueInsidersBuying: number;
+    multiOwnerTransactions: number;
+  };
+  perTicker?: (Form4ActivityFeed["kpi"] & { ticker: string; clusters: number })[];
+  benchmarkRuns?: {
+    generatedAt: string;
+    dryRun: true;
+    notProductionAlpha: true;
+    priceCoverage: { status: "degraded" | "current"; latestDate: string; note?: string };
+    horizons: Record<string, { hitRate: number; medianExcess: number; coverage: number }>;
+  }[];
 }
 
 const INTC_CIK = 50863;

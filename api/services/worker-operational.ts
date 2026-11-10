@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { gunzipSync } from "node:zlib";
 import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { macroPoints, prices, reports } from "@db/schema";
@@ -65,6 +66,7 @@ export const workerOperationalIngestOptions = [
     body: z.string().min(1).max(40 * 1024 * 1024),
     sha256: hash,
     generatedAt: timestamp,
+    contentEncoding: z.literal("gzip-base64").optional(),
   }),
 ];
 
@@ -201,15 +203,25 @@ export async function ingestMacroPoints(rows: WorkerMacroPointRow[], options: { 
   return { accepted, dupes, rejected, postCheck: { expected: expected.length, verified, failed: expected.length - verified } };
 }
 
-export async function ingestReportFile(input: { name: string; body: string; sha256: string; generatedAt: string }, options: { db?: any; now?: Date } = {}) {
+export async function ingestReportFile(input: { name: string; body: string; sha256: string; generatedAt: string; contentEncoding?: "gzip-base64" }, options: { db?: any; now?: Date } = {}) {
   reportFilePolicy(input.name);
+  if (input.contentEncoding) {
+    if (input.name !== "insider-form4.json" || !input.body.startsWith("gzip-base64:")) throw new Error("Unsupported report content encoding");
+    const plain = gunzipSync(Buffer.from(input.body.slice("gzip-base64:".length), "base64"), { maxOutputLength: 256 * 1024 * 1024 }).toString("utf8");
+    const parsed = JSON.parse(plain);
+    if (parsed.status !== "full_run" || parsed.universe !== 50 || !parsed.kpi || !Array.isArray(parsed.perTicker)
+      || parsed.transactions?.length !== Math.min(500, parsed.totals?.transactions) || parsed.clusters?.length !== parsed.totals?.clusters
+      || !Array.isArray(parsed.benchmarkRuns) || parsed.benchmarkRuns.length !== 2) {
+      throw new Error("Compressed Form 4 report is not a complete full-run artifact");
+    }
+  }
   const actualHash = createHash("sha256").update(input.body).digest("hex");
   if (actualHash !== input.sha256) throw new Error("reportFile body SHA256 mismatch");
   const generatedAt = new Date(input.generatedAt);
   if (!Number.isFinite(generatedAt.getTime())) throw new Error("reportFile generatedAt is invalid");
   const db = options.db ?? getDb();
   const [existing] = await db.select().from(reports).where(eq(reports.name, input.name)).limit(1);
-  if (existing && new Date(existing.generatedAt).getTime() >= generatedAt.getTime()) {
+  if (existing && canonicalTs(existing.generatedAt) >= canonicalTs(generatedAt)) {
     return { accepted: 0, dupes: 1, postCheck: { expected: 1, verified: existing.sha256 === input.sha256 ? 1 : 0, failed: existing.sha256 === input.sha256 ? 0 : 1 } };
   }
   const now = options.now ?? new Date();

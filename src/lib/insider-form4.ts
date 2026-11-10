@@ -8,6 +8,17 @@
  * noise with an explicit reason — never silently dropped, never counted.
  */
 
+export interface Form4Owner {
+  ownerCik: string | number | null;
+  rptOwnerName: string;
+  isDirector: boolean;
+  isOfficer: boolean;
+  isTenPercentOwner: boolean;
+  isOther: boolean;
+  officerTitle: string | null;
+  otherText: string | null;
+}
+
 export interface Form4Transaction {
   accessionNo: string;
   issuerCik: number;
@@ -35,6 +46,11 @@ export interface Form4Transaction {
   /** availableAt — SEC filing/acceptance date (never before transactionDate). */
   filingDate: string;
   sourceUrl: string;
+  owners?: Form4Owner[];
+  multiOwner?: boolean;
+  exclusionReason?: string | null;
+  clusterId?: string | null;
+  availableAt?: string;
 }
 
 export type Form4Class =
@@ -72,7 +88,20 @@ export const EXCLUDE_REASON_LABEL: Record<ExcludeReason, string> = {
   missing_amounts: "Shares or price missing — not computable",
 };
 
+const EXPORT_REASON: Record<string, ExcludeReason> = {
+  sale: "sale",
+  option_exercise: "option_exercise",
+  rsu_tax_withholding: "tax_withholding",
+  award: "grant_or_award",
+  gift: "gift",
+  equity_swap: "equity_swap",
+  unknown_equity_swap: "equity_swap",
+  other_excluded: "other_code",
+};
+
 export function classifyTransaction(t: Form4Transaction): Form4Class {
+  const exportedReason = t.exclusionReason ? EXPORT_REASON[t.exclusionReason] : undefined;
+  if (exportedReason) return { included: false, reason: exportedReason };
   if (t.equitySwapInvolved) return { included: false, reason: "equity_swap" };
   if (t.transactionCode === "P") {
     if (t.acquiredDisposedCode !== "A") return { included: false, reason: "not_acquisition" };
@@ -108,6 +137,7 @@ export function insiderRoles(t: Form4Transaction): InsiderRole[] {
 }
 
 export interface InsiderCluster {
+  clusterId?: string;
   ticker: string;
   windowStart: string;
   windowEnd: string;
@@ -117,6 +147,7 @@ export interface InsiderCluster {
   hasDirector: boolean;
   hasTenPercent: boolean;
   allPreplanned: boolean;
+  multiOwner?: boolean;
   aggregatePurchaseUsd: number;
   maxSinglePurchaseUsd: number;
   /** computed = every buy has value; partial = some buy missing amounts */

@@ -2,6 +2,7 @@ import "dotenv/config";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { gzipSync } from "node:zlib";
 import { reportFilePolicy } from "../../contracts/report-files";
 import { sql } from "drizzle-orm";
 import { getDb } from "../../api/queries/connection";
@@ -22,6 +23,7 @@ const JOB_OUTPUTS: Record<string, { kind: OperationalPushKind; name?: string }[]
   "macro-fred-weekly": [{ kind: "macroPoints" }],
   "daily-operations-report": [{ kind: "reportFile", name: "daily-operations.json" }, { kind: "reportFile", name: "daily-operations.md" }],
   "weekly-coverage-report": [{ kind: "reportFile", name: "weekly-coverage.json" }, { kind: "reportFile", name: "weekly-coverage.md" }],
+  "form4-export": [{ kind: "reportFile", name: "insider-form4.json" }],
 };
 
 export function shouldPushOperationalJob(jobId: string, status: OperationalJobStatus, trigger: string): boolean {
@@ -163,6 +165,11 @@ export function buildReportFilePayload(name: string, options: { root?: string; b
   const parsed = name.endsWith(".json") ? JSON.parse(body) : null;
   const generatedAt = parsed?.generatedAt ?? body.match(/\bGenerated:\s*([^\s·]+)/i)?.[1];
   if (!generatedAt || !Number.isFinite(Date.parse(generatedAt))) throw new Error(`Report generatedAt is missing for ${name}`);
+  if (name === "insider-form4.json") {
+    if (parsed.status !== "full_run" || parsed.universe !== 50) throw new Error("insider-form4.json must be a full universe-50 run");
+    const compressed = `gzip-base64:${gzipSync(body, { level: 9 }).toString("base64")}`;
+    return { kind: "reportFile", name, body: compressed, contentEncoding: "gzip-base64", sha256: createHash("sha256").update(compressed).digest("hex"), generatedAt };
+  }
   return { kind: "reportFile", name, body, sha256: createHash("sha256").update(body).digest("hex"), generatedAt };
 }
 

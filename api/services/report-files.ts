@@ -51,9 +51,12 @@ export async function reportFileResponse(name: string, options: { db?: any; stat
   }
   const selected = databaseCandidate && (!staticCandidate || databaseCandidate.generatedAt.getTime() > staticCandidate.generatedAt.getTime()) ? databaseCandidate : staticCandidate;
   if (!selected) return Response.json({ error: "Report not found or generatedAt unavailable" }, { status: databaseCandidate ? 500 : 404 });
-  return new Response(selected.body, {
+  const compressed = selected.body.startsWith("gzip-base64:");
+  const body = compressed ? Buffer.from(selected.body.slice("gzip-base64:".length), "base64") : selected.body;
+  return new Response(body, {
     headers: {
       "content-type": `${policy.contentType}; charset=utf-8`,
+      ...(compressed ? { "content-encoding": "gzip" } : {}),
       "x-report-generated-at": selected.generatedAt.toISOString(),
       "x-report-source": selected.source,
       "cache-control": "private, no-store",
