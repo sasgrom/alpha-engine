@@ -1,4 +1,4 @@
-import { addBusinessDays, sha256Text, type Form4Transaction, type PriceBar } from "./form4-core";
+import { addBusinessDays, sha256Text, type Form4Owner, type Form4Transaction, type PriceBar } from "./form4-core";
 
 export interface Form4FeatureValue {
   status: "computed" | "not_computable";
@@ -16,6 +16,12 @@ export interface InsiderBuyCluster {
   availableAt: string;
   status: "computed" | "partial" | "not_computable";
   uniqueInsiders: number;
+  uniqueInsidersExcludingMultiOwner: number;
+  multiOwner: boolean;
+  multiOwnerTransactionCount: number;
+  multiOwnerPurchaseUsd: number | null;
+  purchaseCountExcludingMultiOwner: number;
+  aggregatePurchaseUsdExcludingMultiOwner: number | null;
   hasCeo: boolean;
   hasCfo: boolean;
   hasDirector: boolean;
@@ -35,7 +41,10 @@ export interface InsiderBuyCluster {
 export function supersedeForm4Transactions(transactions: Form4Transaction[]): Form4Transaction[] {
   const groups = new Map<string, Form4Transaction[]>();
   for (const transaction of transactions) {
-    const key = [transaction.issuerCik, transaction.ownerCik ?? transaction.rptOwnerName, transaction.periodOfReport].join("|");
+    const ownerKey = transaction.multiOwner && transaction.owners?.length
+      ? transaction.owners.map((owner) => owner.ownerCik ?? owner.rptOwnerName).sort().join(",")
+      : transaction.ownerCik ?? transaction.rptOwnerName;
+    const key = [transaction.issuerCik, ownerKey, transaction.periodOfReport].join("|");
     const rows = groups.get(key) ?? [];
     rows.push(transaction);
     groups.set(key, rows);
@@ -68,6 +77,24 @@ export function form4ExclusionReason(transaction: Form4Transaction): string | nu
   if (transaction.transactionCode === "S") return "sale";
   if (/restricted stock|tax withholding/i.test(`${transaction.transactionFormType} ${transaction.footnotes.join(" ")}`)) return "rsu_tax_withholding";
   return "other_excluded";
+}
+
+function ownersOf(transaction: Form4Transaction): Form4Owner[] {
+  return transaction.owners?.length ? transaction.owners : [{
+    ownerCik: transaction.ownerCik,
+    rptOwnerName: transaction.rptOwnerName,
+    isDirector: transaction.isDirector,
+    isOfficer: transaction.isOfficer,
+    isTenPercentOwner: transaction.isTenPercentOwner,
+    isOther: false,
+    officerTitle: transaction.officerTitle,
+    otherText: null,
+  }];
+}
+
+function sameOwner(left: Form4Transaction, right: Form4Transaction): boolean {
+  const rightOwners = new Set(ownersOf(right).map((owner) => owner.ownerCik ?? owner.rptOwnerName));
+  return ownersOf(left).some((owner) => rightOwners.has(owner.ownerCik ?? owner.rptOwnerName));
 }
 
 function ownershipIncrease(transaction: Form4Transaction): number | null {
@@ -113,7 +140,13 @@ export function buildInsiderBuyClusters(
     }
     const windowEnd = clusterRows.at(-1)!.eventTs;
     const values = clusterRows.map((row) => row.valueUsd).filter((value): value is number => value !== null);
-    const owners = new Set(clusterRows.map((row) => row.ownerCik ?? row.rptOwnerName));
+    const ownerRows = clusterRows.flatMap(ownersOf);
+    const ownerRowsExcludingMulti = clusterRows.filter((row) => !row.multiOwner).flatMap(ownersOf);
+    const owners = new Set(ownerRows.map((owner) => owner.ownerCik ?? owner.rptOwnerName));
+    const ownersExcludingMulti = new Set(ownerRowsExcludingMulti.map((owner) => owner.ownerCik ?? owner.rptOwnerName));
+    const multiOwnerRows = clusterRows.filter((row) => row.multiOwner);
+    const multiOwnerValues = multiOwnerRows.map((row) => row.valueUsd).filter((value): value is number => value !== null);
+    const valuesExcludingMulti = clusterRows.filter((row) => !row.multiOwner).map((row) => row.valueUsd).filter((value): value is number => value !== null);
     const availableAt = clusterRows.map((row) => row.availableAt).sort().at(-1)!;
     const aggregatePurchaseUsd = values.length ? values.reduce((sum, value) => sum + value, 0) : null;
     const base = {
@@ -125,10 +158,16 @@ export function buildInsiderBuyClusters(
       availableAt,
       status: values.length === clusterRows.length ? "computed" as const : "partial" as const,
       uniqueInsiders: owners.size,
-      hasCeo: clusterRows.some((row) => /chief executive officer|\bCEO\b/i.test(row.officerTitle ?? "")),
-      hasCfo: clusterRows.some((row) => /chief financial officer|\bCFO\b/i.test(row.officerTitle ?? "")),
-      hasDirector: clusterRows.some((row) => row.isDirector),
-      hasTenPercentOwner: clusterRows.some((row) => row.isTenPercentOwner),
+      uniqueInsidersExcludingMultiOwner: ownersExcludingMulti.size,
+      multiOwner: multiOwnerRows.length > 0,
+      multiOwnerTransactionCount: multiOwnerRows.length,
+      multiOwnerPurchaseUsd: multiOwnerValues.length ? multiOwnerValues.reduce((sum, value) => sum + value, 0) : null,
+      purchaseCountExcludingMultiOwner: clusterRows.length - multiOwnerRows.length,
+      aggregatePurchaseUsdExcludingMultiOwner: valuesExcludingMulti.length ? valuesExcludingMulti.reduce((sum, value) => sum + value, 0) : null,
+      hasCeo: ownerRows.some((owner) => /chief executive officer|\bCEO\b/i.test(owner.officerTitle ?? "")),
+      hasCfo: ownerRows.some((owner) => /chief financial officer|\bCFO\b/i.test(owner.officerTitle ?? "")),
+      hasDirector: ownerRows.some((owner) => owner.isDirector),
+      hasTenPercentOwner: ownerRows.some((owner) => owner.isTenPercentOwner),
       aggregatePurchaseUsd,
       maxSinglePurchaseUsd: values.length ? Math.max(...values) : null,
       ownershipIncreasePct: (() => {
@@ -136,7 +175,7 @@ export function buildInsiderBuyClusters(
         return increases.length ? Math.max(...increases) : null;
       })(),
       flipAfterSell90d: clusterRows.some((purchase) => rows.some((candidate) => candidate.transactionCode === "S"
-        && (candidate.ownerCik ?? candidate.rptOwnerName) === (purchase.ownerCik ?? purchase.rptOwnerName)
+        && sameOwner(candidate, purchase)
         && candidate.eventTs < windowStart
         && candidate.eventTs >= new Date(new Date(`${windowStart}T00:00:00Z`).getTime() - 90 * 86400_000).toISOString().slice(0, 10))),
       purchaseCount: clusterRows.length,

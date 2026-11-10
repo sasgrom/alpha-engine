@@ -1,4 +1,4 @@
-import { boolFromXml, finiteNumber, type Form4Transaction } from "./form4-core";
+import { boolFromXml, finiteNumber, type Form4Owner, type Form4Transaction } from "./form4-core";
 
 export interface Form4ParseContext {
   accessionNo: string;
@@ -48,18 +48,19 @@ export function parseForm4Xml(xml: string, context: Form4ParseContext): Form4Tra
   const globalPeriod = value(xml, "periodOfReport") ?? context.periodOfReport;
   const isAmendment = context.form.endsWith("/A") || boolFromXml(value(xml, "isAmendment")) === true;
   const amendmentOf = value(xml, "amendmentReferenceNumber");
-  const owners = blocks(xml, "reportingOwner").map((owner) => ({
+  const owners: Form4Owner[] = blocks(xml, "reportingOwner").map((owner) => ({
     ownerCik: finiteNumber(value(owner, "rptOwnerCik")),
     rptOwnerName: required(value(owner, "rptOwnerName"), "rptOwnerName"),
     isDirector: boolFlag(owner, "isDirector"),
     isOfficer: boolFlag(owner, "isOfficer"),
     isTenPercentOwner: boolFlag(owner, "isTenPercentOwner"),
+    isOther: boolFlag(owner, "isOther"),
     officerTitle: value(owner, "officerTitle"),
+    otherText: value(owner, "otherText"),
   }));
   const transactionBlocks = ["nonDerivativeTransaction", "derivativeTransaction"].flatMap((tag) => blocks(xml, tag));
-  if (owners.length !== 1 && transactionBlocks.length) throw new Error("Form 4 schema mismatch: multiple reporting owners require explicit transaction-owner mapping");
-  const owner = owners[0];
-  if (!owner) return [];
+  const primaryOwner = owners[0];
+  if (!primaryOwner) return [];
   const rows: Form4Transaction[] = [];
   for (const transaction of transactionBlocks) {
     const eventTs = required(value(transaction, "transactionDate"), "transactionDate");
@@ -75,6 +76,8 @@ export function parseForm4Xml(xml: string, context: Form4ParseContext): Form4Tra
     const sharesOwnedAfter = finiteNumber(value(transaction, "sharesOwnedFollowingTransaction"));
     const percentOwnedAfter = finiteNumber(value(transaction, "percentOwnedFollowingTransaction"));
     const references = [...transaction.matchAll(/<footnoteId[^>]*\bid=["']([^"']+)["'][^>]*\/?\s*>/gi)].map((match) => match[1]);
+    const ownerReference = value(transaction, "ownerReference") ?? value(transaction, "rptOwnerReference") ?? value(transaction, "ownerRef") ?? value(transaction, "reportingOwnerReference");
+    const owner = ownerReference ? owners.find((candidate) => String(candidate.ownerCik ?? "") === ownerReference || candidate.rptOwnerName === ownerReference) ?? primaryOwner : primaryOwner;
     rows.push({
       issuerCik,
       ticker: value(xml, "issuerTradingSymbol") ?? context.ticker,
@@ -93,6 +96,9 @@ export function parseForm4Xml(xml: string, context: Form4ParseContext): Form4Tra
       sharesOwnedAfter,
       percentOwnedAfter,
       ...owner,
+      owners: owners.map((candidate) => ({ ...candidate })),
+      multiOwner: owners.length > 1,
+      ownerReference,
       footnotes: references.map((id) => footnotes.get(id)).filter((note): note is string => Boolean(note)),
       sourceUrl: context.sourceUrl,
       inputSha256: context.inputSha256,

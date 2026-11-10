@@ -22,6 +22,17 @@ export interface Form4ManifestEntry {
   error?: string;
 }
 
+export interface Form4Owner {
+  ownerCik: number | null;
+  rptOwnerName: string;
+  isDirector: boolean;
+  isOfficer: boolean;
+  isTenPercentOwner: boolean;
+  isOther: boolean;
+  officerTitle: string | null;
+  otherText: string | null;
+}
+
 export interface Form4Transaction {
   issuerCik: number;
   ticker: string;
@@ -40,6 +51,9 @@ export interface Form4Transaction {
   sharesOwnedAfter: number | null;
   percentOwnedAfter: number | null;
   ownerCik: number | null;
+  owners?: Form4Owner[];
+  multiOwner?: boolean;
+  ownerReference?: string | null;
   rptOwnerName: string;
   isDirector: boolean;
   isOfficer: boolean;

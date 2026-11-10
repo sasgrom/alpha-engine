@@ -336,3 +336,8 @@ Canonical local inventory was regenerated. The macro correction reviewer now com
 ## 20. Final reconciliation and weekly coverage — 2026-11-10
 
 Final `5833e48` inventory is committed with per-table counts and content hashes. Form 4 covers all 50 with 174,090 parsed transactions, 542 computed clusters and three zero-cluster names; 139 multi-owner errors remain explicit. SourceHash backfill contains 360,962 valid rows with zero conflicts (SHA256 `8d2cc2f09269334cd3dde105f45c27e5d7a4e18b3c9f361a1687390792e8fb1c`). Weekly coverage job, Workers tab and reportFile lane are implemented and report ready status with 10 hash-drift tables and +36 rows. Scripts suites and build pass; full suite has two unrelated Expectations/Methodology failures documented in handoff §91. No production apply occurred.
+
+
+## 21. Multi-owner Form 4 complete — 2026-11-10
+
+Form 4 now preserves every reporting owner with roles and multiOwner flags, avoids duplicate transactions and computes cluster identity with/without joint forms. All 139 prior multi-owner errors are resolved: 56,148 accessions, 174,665 transactions (+575), 139 joint forms and 89 distinct owners. Strict QA and dry-run benchmark pass with 544 computed clusters and zero partial; no production writes. Multi-owner regressions, scripts suites, TypeScript and build pass. See handoff §92.
