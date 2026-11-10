@@ -90,9 +90,9 @@ export const analyticsSnapshot = {
     {
       "id": "cusip",
       "title": "CUSIP crosswalk",
-      "status": "partial",
-      "detail": "Mapping and repair work, but coverage has not been independently audited. Null is not automatically an error.",
-      "next": "Report uncovered CUSIPs by reason instead of assuming full coverage."
+      "status": "done",
+      "detail": "41,090 mappings transported to production with reviewed export; reason audit: 383/384 holding CUSIPs resolve to a company, the single exclusion is Cresco Labs (OTC, outside universe). Null is not automatically an error.",
+      "next": "Keep quarterly 13F refresh transports reviewed; re-resolve long-label bonds as they appear."
     },
     {
       "id": "factorLib",
@@ -132,9 +132,9 @@ export const analyticsSnapshot = {
     {
       "id": "qa",
       "title": "Data QA / audits",
-      "status": "partial",
-      "detail": "Tests and selective audits exist, but recurring coverage and drift reporting is missing.",
-      "next": "Add weekly coverage/error reports and cross-provider comparisons."
+      "status": "done",
+      "detail": "Daily operations report, dashboard CRITICAL banner, weekly coverage/drift report and fail-closed cohort QA with evidence anchoring are all live; reconciliation inventory hashes both sides.",
+      "next": "Keep weekly coverage honest about unknowns; extend drift thresholds as history accumulates."
     },
     {
       "id": "probability",
