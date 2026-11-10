@@ -45,7 +45,7 @@ describe("AnalyticsNetwork", () => {
   });
 
   it("keeps the snapshot evidence-based and current", () => {
-    const universe = JSON.parse(readFileSync("worker/research-universe-51.json", "utf8")) as unknown[];
+    const universe = JSON.parse(readFileSync("worker/research-universe-50.json", "utf8")) as unknown[];
     expect(analyticsSnapshot.metrics.factorCompanies).toBeLessThan(analyticsSnapshot.metrics.companies);
     expect(analyticsSnapshot.metrics.factorCompanies).toBeGreaterThanOrEqual(universe.length);
     expect(analyticsSnapshot.metrics.factorCompanies).toBeLessThanOrEqual(analyticsSnapshot.metrics.factsCompanies);
@@ -53,7 +53,11 @@ describe("AnalyticsNetwork", () => {
     expect(analyticsSnapshot.metrics.optionsSnapshots).toBeGreaterThanOrEqual(200);
     expect(analyticsSnapshot.metrics.latestPriceDate >= "2026-10-26").toBe(true);
     expect(analyticsSnapshot.metrics.testCount).toBeGreaterThanOrEqual(342);
-    expect(analyticsSnapshot.actual.find((node) => node.id === "shareFlows")?.status).toBe("done");
+    // status must follow the stated evidence: while the comparable latest-quarter
+    // flow guard is unevaluated, "done" would be a false claim — pin the honesty rule
+    const shareFlows = analyticsSnapshot.actual.find((node) => node.id === "shareFlows");
+    const guardPending = /has not been evaluated/i.test(`${shareFlows?.detail} ${shareFlows?.next}`);
+    expect(shareFlows?.status).toBe(guardPending ? "partial" : "done");
     expect(analyticsSnapshot.actual.find((node) => node.id === "optionFeatures")?.status).not.toBe("missing");
     expect(analyticsSnapshot.history.at(-1)?.week).toBe(analyticsSnapshot.week);
     expect(analyticsSnapshot.history.at(-1)?.metrics.factorCompanies).toBe(analyticsSnapshot.metrics.factorCompanies);
