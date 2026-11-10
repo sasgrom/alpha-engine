@@ -4,7 +4,7 @@ import { getDb } from "../api/queries/connection";
 import { sql } from "drizzle-orm";
 import { loadEdgarUniverse } from "../worker/lib/edgar";
 
-const universeFile = process.argv.includes("--universe") ? process.argv[process.argv.indexOf("--universe") + 1] : "research-universe-51.json";
+const universeFile = process.argv.includes("--universe") ? process.argv[process.argv.indexOf("--universe") + 1] : "research-universe-50.json";
 const universe = loadEdgarUniverse(universeFile);
 const byCik = new Map(universe.map((company) => [company.cik, company.ticker]));
 const db = getDb();

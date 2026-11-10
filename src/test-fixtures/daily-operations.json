@@ -53,7 +53,7 @@
    "status": "error",
    "observedAt": "2026-11-02T04:05:00.000Z",
    "detail": "0/2 tickers captured today.",
-   "action": "npx tsx worker/schwab-fetch.mts --universe research-universe-51.json",
+   "action": "npx tsx worker/schwab-fetch.mts --universe research-universe-50.json",
    "jobId": "schwab-fetch-daily"
   },
   {
@@ -99,6 +99,6 @@
  ],
  "actions": [
   "schtasks /Run /TN AlphaEngine-Operations-Scheduler",
-  "npx tsx worker/schwab-fetch.mts --universe research-universe-51.json"
+  "npx tsx worker/schwab-fetch.mts --universe research-universe-50.json"
  ]
 }

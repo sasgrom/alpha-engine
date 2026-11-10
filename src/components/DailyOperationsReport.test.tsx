@@ -28,7 +28,7 @@ describe("Daily operations report", () => {
     await act(async () => { root = createRoot(host!); root.render(<DailyOperationsReportView onOpenJob={onOpenJob} />); });
     expect(host!.textContent).toContain("Daily pipeline is not healthy");
     expect(host!.textContent).toContain("Schwab captured today0/2");
-    expect(host!.textContent).toContain("schwab-fetch.mts --universe research-universe-51.json");
+    expect(host!.textContent).toContain("schwab-fetch.mts --universe research-universe-50.json");
     expect(host!.querySelector('a[href="/reports/daily-operations.md"]')).not.toBeNull();
     const inspect = [...host!.querySelectorAll("button")].find((button) => button.textContent === "Inspect job")!;
     await act(async () => { inspect.click(); });

@@ -8,7 +8,7 @@ import type { FactsManifestHealth } from "./facts-incremental";
 
 export const DAILY_OPERATIONS_REPORT_JOB_ID = "daily-operations-report";
 const SCHEDULER_COMMAND = "schtasks /Run /TN AlphaEngine-Operations-Scheduler";
-const SCHWAB_FETCH_COMMAND = "npx tsx worker/schwab-fetch.mts --universe research-universe-51.json";
+const SCHWAB_FETCH_COMMAND = "npx tsx worker/schwab-fetch.mts --universe research-universe-50.json";
 const SCHWAB_FEATURE_COMMAND = "npx tsx worker/build-schwab-market-data.mts && npx tsx worker/schwab-features.mts";
 const SCHWAB_CONTEXT_COMMAND = "npx tsx worker/schwab-context.mts";
 const HOURLY_JOBS = new Set(["stocktwits-hourly", "schwab-context-hourly"]);

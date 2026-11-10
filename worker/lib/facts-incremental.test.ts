@@ -186,7 +186,7 @@ describe("incremental companyfacts collection", () => {
     expect((await runFactsCollection([company()], notDue)).unchanged).toBe(1);
   });
 
-  it("keeps an S&P failure outside the research-51 dependency chain", () => {
+  it("keeps an S&P failure outside the research-50 dependency chain", () => {
     expect(OPERATION_JOB_MAP["sp500-facts-daily"].dependsOn).toEqual([]);
     expect(operationChain("research-factors").map((job) => job.id)).toEqual(["facts-fetch-daily", "research-series", "research-factors"]);
   });

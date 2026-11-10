@@ -11,7 +11,7 @@ import { startProgress } from "../worker/lib/progress";
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const gapsPath = path.resolve(arg("--gaps") ?? "public/reports/edgar-coverage-gaps.json");
 const contextPath = path.resolve(arg("--context") ?? "public/reports/schwab-context.json");
-const universeFile = arg("--universe") ?? "research-universe-51.json";
+const universeFile = arg("--universe") ?? "research-universe-50.json";
 for (const file of [gapsPath, contextPath]) if (!existsSync(file)) throw new Error(`Missing required report ${file}. Run edgar-gap-analysis and schwab-context first.`);
 const gaps = JSON.parse(readFileSync(gapsPath, "utf8")) as EdgarGapAnalysis;
 const context = JSON.parse(readFileSync(contextPath, "utf8")) as SchwabContextReport;

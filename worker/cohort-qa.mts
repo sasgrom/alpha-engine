@@ -10,7 +10,7 @@ import { writeJsonAtomic } from "./lib/json-file";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const only = arg("--only")?.toUpperCase() ?? null;
-const universeFile = arg("--universe") ?? "research-universe-51.json";
+const universeFile = arg("--universe") ?? "research-universe-50.json";
 const strict = process.argv.includes("--strict");
 const universe = dedupeExpectationUniverse(loadEdgarUniverse(universeFile).filter((company) => !only || company.ticker === only));
 if (only && !universe.length) throw new Error(`Unknown ticker ${only}`);

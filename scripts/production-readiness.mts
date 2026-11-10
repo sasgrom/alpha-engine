@@ -7,7 +7,7 @@ interface Check { id: string; file: string; required: boolean; present: boolean;
 const macroRoot = path.resolve(process.env.MACRO_ROOT ?? (process.platform === "win32" ? "D:\\research\\alpha-engine\\macro" : "worker/cache/macro"));
 const checks: Check[] = [
   { id: "pilot-evidence", file: "public/reports/pilot-exposure-evidence.json", required: true, present: false, action: "npx tsx scripts/build-pilot-exposure-evidence.mts" },
-  { id: "company-exposure", file: "public/reports/company-exposures.json", required: true, present: false, action: "npx tsx scripts/build-company-exposure.mts --universe research-universe-51.json" },
+  { id: "company-exposure", file: "public/reports/company-exposures.json", required: true, present: false, action: "npx tsx scripts/build-company-exposure.mts --universe research-universe-50.json" },
   { id: "scenario-report", file: "public/reports/macro-scenarios.json", required: true, present: false, action: "npx tsx scripts/build-macro-scenarios.mts --macro-root D:\\research\\alpha-engine\\macro" },
   { id: "fred-manifest", file: path.join(macroRoot, "manifest-fred.json"), required: true, present: false, action: "npx tsx worker/macro-fred-fetch.mts --group all" },
   { id: "ofac-manifest", file: path.join(macroRoot, "manifest-events.json"), required: true, present: false, action: "npx tsx worker/macro-events-fetch.mts --pages 1" },

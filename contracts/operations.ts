@@ -39,38 +39,38 @@ export const OPERATION_JOBS: OperationJob[] = [
   }),
   job({
     id: "edgar-exhibits-daily", name: "Complete EX-99 expectations cache", group: "expectations", mode: "scheduled", cron: "20 2 * * *", defaultEnabled: true, dependsOn: [],
-    ...npx("worker/edgar-exhibits.mts", ["--universe", "research-universe-51.json"]), purpose: "Preserve every substantive earnings exhibit, including the main release and supplements.",
-    input: "SEC exhibit-bearing filings for the current 51-name expectations universe.", output: "Hash-linked EX-99 cache with completeness metadata.",
+    ...npx("worker/edgar-exhibits.mts", ["--universe", "research-universe-50.json"]), purpose: "Preserve every substantive earnings exhibit, including the main release and supplements.",
+    input: "SEC exhibit-bearing filings for the current 50-name expectations universe.", output: "Hash-linked EX-99 cache with completeness metadata.",
     destination: "Local expectations cache only.", requirements: ["network", "driveD"], notes: "Independent from the legacy tone exhibit selection; never reduces documents to the largest exhibit.",
   }),
   job({
     id: "facts-fetch-daily", name: "Companyfacts local snapshot", group: "fundamentals", mode: "scheduled", cron: "0 3 * * *", defaultEnabled: true, dependsOn: [],
-    ...npx("worker/facts-fetch.mts", ["--universe", "research-universe-51.json"]), purpose: "Refresh SEC XBRL companyfacts into local MySQL with first-filed availability intact.",
-    input: "SEC companyfacts JSON and research-universe-51.json.", output: "One complete, validated facts snapshot per CIK; raw JSON remains cached on D:.",
+    ...npx("worker/facts-fetch.mts", ["--universe", "research-universe-50.json"]), purpose: "Refresh SEC XBRL companyfacts into local MySQL with first-filed availability intact.",
+    input: "SEC companyfacts JSON and research-universe-50.json.", output: "One complete, validated facts snapshot per CIK; raw JSON remains cached on D:.",
     destination: "Local MySQL through the local factsSnapshot ingest route; no production write.", requirements: ["network", "server", "mysql", "driveD"], notes: "Requires exactly one reachable local web server on port 3000 and INGEST_URL pointing to it.",
   }),
   job({
     id: "sp500-facts-daily", name: "S&P 500 incremental companyfacts", group: "sec", mode: "scheduled", cron: "30 23 * * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/facts-fetch.mts", ["--universe", "edgar-universe.json"]), purpose: "Collect relevant new SEC companyfacts for the deduplicated S&P 500 snapshot without redundant full downloads.",
     input: "Deduplicated edgar-universe.json, recent financial/XBRL forms and amendments, shared per-CIK raw cache and atomic manifests.", output: "Resumable per-CIK raw snapshots and manifest transitions with a staggered seven-day full reconciliation baseline.",
-    destination: "Local MySQL and the D:-only raw cache; no production write and no research-universe expansion.", requirements: ["network", "server", "mysql", "driveD"], notes: "Independent from research-51: failures never block its dependency chain, and this job has no research-series/factors downstream.",
+    destination: "Local MySQL and the D:-only raw cache; no production write and no research-universe expansion.", requirements: ["network", "server", "mysql", "driveD"], notes: "Independent from research-50: failures never block its dependency chain, and this job has no research-series/factors downstream.",
   }),
   job({
     id: "research-series", name: "Canonical research series", group: "fundamentals", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["facts-fetch-daily"],
-    ...npx("scripts/build-research-series.mts", ["--universe", "research-universe-51.json"]), purpose: "Convert current local facts into canonical vintage-aware series points.",
+    ...npx("scripts/build-research-series.mts", ["--universe", "research-universe-50.json"]), purpose: "Convert current local facts into canonical vintage-aware series points.",
     input: "Local facts snapshots written by facts-fetch-daily.", output: "Atomically replaced series_points per CIK.",
     destination: "Local MySQL.", requirements: ["mysql"], notes: "Dependency-triggered after a successful facts refresh; no SEC request and no arbitrary delay guess.",
   }),
   job({
     id: "research-factors", name: "Research factor materialization", group: "fundamentals", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-series"],
-    ...npx("scripts/materialize-research-factors.mts", ["--universe", "research-universe-51.json"]), purpose: "Materialize point-in-time factor points from the new canonical series and available prices.",
+    ...npx("scripts/materialize-research-factors.mts", ["--universe", "research-universe-50.json"]), purpose: "Materialize point-in-time factor points from the new canonical series and available prices.",
     input: "Local series_points and existing research price history.", output: "Idempotent factor_points per company.",
     destination: "Local MySQL.", requirements: ["mysql"], notes: "Does not claim new predictive evidence; evaluation remains a separate research job.",
   }),
   job({
     id: "schwab-fetch-daily", name: "Schwab REST daily snapshot", group: "options", mode: "scheduled", cron: "0 4 * * *", defaultEnabled: true, dependsOn: [],
-    ...npx("worker/schwab-fetch.mts", ["--universe", "research-universe-51.json"]), purpose: "Capture chains, quotes, daily price history and instruments with hashes and availability timestamps.",
-    input: "Schwab Market Data Production; local token file; research-universe-51.json.", output: "D:-only raw snapshots and a resumable manifest; User Preference status is recorded separately for streaming setup.",
+    ...npx("worker/schwab-fetch.mts", ["--universe", "research-universe-50.json"]), purpose: "Capture chains, quotes, daily price history and instruments with hashes and availability timestamps.",
+    input: "Schwab Market Data Production; local token file; research-universe-50.json.", output: "D:-only raw snapshots and a resumable manifest; User Preference status is recorded separately for streaming setup.",
     destination: "Raw chains remain local; successful scheduled runs automatically push QA-passed daily OHLCV and daily-prices-schwab.json through /api/worker/ingest.", requirements: ["network", "driveD"], notes: "Same-day complete tickers resume without redownloading. Automatic operational push is allowed only after exit-ok with one retry; a push failure marks the job error. No raw option chains, accounts or orders leave home. User Preference 401 does not invalidate REST data.",
   }),
   job({
@@ -100,7 +100,7 @@ export const OPERATION_JOBS: OperationJob[] = [
   job({
     id: "expectations-report", name: "Expectations static report", group: "expectations", mode: "scheduled", cron: "0 6 * * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/build-expectations-report.mts", ["--cohorts", "--scope", "full-history"]), purpose: "Publish the current local extraction and factual fallback notes to the owner-only UI without raw LLM responses.",
-    input: "Current cohort extraction results, benchmark result when present, and research-universe-51.json.", output: "Credential-free expectations JSON and TypeScript with evidence, coverage and data-quality notes.",
+    input: "Current cohort extraction results, benchmark result when present, and research-universe-50.json.", output: "Credential-free expectations JSON and TypeScript with evidence, coverage and data-quality notes.",
     destination: "Local static UI artifacts; partial results remain explicitly unreviewed.", requirements: ["review"], notes: "Safe even while extraction is paused: it reports the actual partial state instead of fabricating completion.",
   }),
   job({
@@ -123,8 +123,8 @@ export const OPERATION_JOBS: OperationJob[] = [
   }),
   job({
     id: "company-exposure-evidence", name: "Company macro exposure evidence", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-factors"],
-    ...npx("scripts/build-company-exposure.mts", ["--universe", "research-universe-51.json"]), purpose: "Materialize debt, interest, fuel, oil and geography exposure only from aligned canonical SEC evidence.",
-    input: "Local canonical series and the 51-name research universe.", output: "company-exposures.json and .md with availability, period alignment, missing and stale flags.",
+    ...npx("scripts/build-company-exposure.mts", ["--universe", "research-universe-50.json"]), purpose: "Materialize debt, interest, fuel, oil and geography exposure only from aligned canonical SEC evidence.",
+    input: "Local canonical series and the 50-name research universe.", output: "company-exposures.json and .md with availability, period alignment, missing and stale flags.",
     destination: "Local static evidence only; no production write.", requirements: ["mysql", "review"], notes: "Runs after current research factors so scenario inputs cannot silently use an older fundamental snapshot.",
   }),
   job({
@@ -201,13 +201,13 @@ export const OPERATION_JOBS: OperationJob[] = [
   }),
   job({
     id: "expectations-cohorts", name: "Quarterly cohort pack builder", group: "expectations", mode: "paused", cron: null, defaultEnabled: false, dependsOn: ["edgar-exhibits-daily"],
-    ...npx("worker/edgar-cohorts.mts", ["--universe", "research-universe-51.json"]), purpose: "Build deterministic, period-aligned bounded containers from complete guidance and actual blocks.",
+    ...npx("worker/edgar-cohorts.mts", ["--universe", "research-universe-50.json"]), purpose: "Build deterministic, period-aligned bounded containers from complete guidance and actual blocks.",
     input: "Complete EX-99 cache and filing period metadata.", output: "cohort-pack-v2.json with source hashes and explicit unpacked failures.",
     destination: "Local cache only.", requirements: ["driveD"], notes: "Paused with the active LLM lane so the operator does not accidentally start a second full-history run.",
   }),
   job({
     id: "expectations-extract", name: "Cohort LLM extraction", group: "expectations", mode: "paused", cron: null, defaultEnabled: false, dependsOn: ["expectations-cohorts"],
-    ...npx("worker/edgar-cohort-extract.mts", ["--universe", "research-universe-51.json"]), purpose: "Extract guidance, comparable actuals and factual fallback notes with atomic source-level resume.",
+    ...npx("worker/edgar-cohort-extract.mts", ["--universe", "research-universe-50.json"]), purpose: "Extract guidance, comparable actuals and factual fallback notes with atomic source-level resume.",
     input: "Bounded cohort packs and local Ollama; prompt/schema remain fixed by the research protocol.", output: "cohort-v2.json, structured statements, fallback notes and explicit failures.",
     destination: "Local research files only.", requirements: ["gpu", "driveD"], notes: "Paused by default. Never runs concurrently with tone because the scheduler has one execution lane.",
   }),
@@ -219,7 +219,7 @@ export const OPERATION_JOBS: OperationJob[] = [
   }),
   job({
     id: "options-cboe-fetch", name: "Legacy Cboe option snapshot", group: "options", mode: "paused", cron: "30 4 * * *", defaultEnabled: false, dependsOn: [],
-    ...npx("worker/options-fetch.mts", ["--source", "cboe", "--universe", "research-universe-51.json"]), purpose: "Maintain the independent delayed-Cboe provider lane for cross-provider checks when explicitly enabled.",
+    ...npx("worker/options-fetch.mts", ["--source", "cboe", "--universe", "research-universe-50.json"]), purpose: "Maintain the independent delayed-Cboe provider lane for cross-provider checks when explicitly enabled.",
     input: "Cboe delayed public chains for the current research universe.", output: "Immutable raw and normalized provider-specific snapshots.",
     destination: "Local option cache; never silently merged with Schwab or DoltHub.", requirements: ["network", "driveD"], notes: "Paused to avoid maintaining duplicate current-provider lanes without a research need.",
   }),
@@ -250,7 +250,7 @@ export const OPERATION_JOBS: OperationJob[] = [
   job({
     id: "fundamental-integrity-audit", name: "Fundamental integrity and continuity audit", group: "fundamentals", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
     ...npx("scripts/fundamental-integrity-audit.mts"), purpose: "Fail closed on duplicates, unit conflicts, missing periods, availability inversions, continuity gaps and factor-before-fact without modifying the database.",
-    input: "Local facts, series_points, factor_points, company registry and research-universe-51.json.", output: "public/reports/fundamental-integrity.json and .md with CIK, concept, period and accession evidence plus explicit omitted-issue counts.",
+    input: "Local facts, series_points, factor_points, company registry and research-universe-50.json.", output: "public/reports/fundamental-integrity.json and .md with CIK, concept, period and accession evidence plus explicit omitted-issue counts.",
     destination: "Read-only QA report; no repairs, deletions or silent interpolation.", requirements: ["mysql", "review"], notes: "Run with --strict to block the next research stage on any error. Warnings retain unit changes, irregular durations, revision outliers and concept coverage gaps for review.",
   }),
   job({
@@ -262,7 +262,7 @@ export const OPERATION_JOBS: OperationJob[] = [
   job({
     id: "schwab-fundamental-gap-map", name: "Schwab fundamental gap mapping", group: "fundamentals", mode: "manual", cron: null, defaultEnabled: false, dependsOn: ["edgar-gap-analysis", "schwab-context-hourly"],
     ...npx("scripts/schwab-fundamental-gap-map.mts"), purpose: "Map EDGAR concept gaps to direct, derived and unsupported Schwab fundamental candidates without fabricating XBRL replacements.",
-    input: "edgar-coverage-gaps.json, schwab-context.json and the 51-name ticker registry.", output: "schwab-fundamental-gap-map.json and .md with per-concept fields, formulas and vintage-equivalence warnings.",
+    input: "edgar-coverage-gaps.json, schwab-context.json and the 50-name ticker registry.", output: "schwab-fundamental-gap-map.json and .md with per-concept fields, formulas and vintage-equivalence warnings.",
     destination: "Read-only candidate map for a later reviewed repair plan.", requirements: ["review"], notes: "Direct fields are current metadata, not vintage replacements. Derived formulas are approximate; unsupported concepts stay missing.",
   }),
   job({
@@ -333,8 +333,8 @@ export const OPERATION_JOBS: OperationJob[] = [
   }),
   job({
     id: "facts-dry-review", name: "Facts production dry-run", group: "delivery", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
-    ...npx("scripts/push-local-facts.mts", ["--universe", "research-universe-51.json", "--dry"]), purpose: "Preview complete per-CIK facts snapshots before any production transfer.",
-    input: "Local facts and the 51-name universe.", output: "Per-company row counts and missing coverage; no production write.",
+    ...npx("scripts/push-local-facts.mts", ["--universe", "research-universe-50.json", "--dry"]), purpose: "Preview complete per-CIK facts snapshots before any production transfer.",
+    input: "Local facts and the 50-name universe.", output: "Per-company row counts and missing coverage; no production write.",
     destination: "Review console only.", requirements: ["mysql", "review"], notes: "A dry-run is never marked as a successful production synchronization.",
   }),
   job({
@@ -345,7 +345,7 @@ export const OPERATION_JOBS: OperationJob[] = [
   }),
   job({
     id: "facts-production-push", name: "Reviewed facts production push", group: "delivery", mode: "blocked", cron: null, defaultEnabled: false, dependsOn: ["facts-dry-review"],
-    executable: null, args: [], command: "npx tsx scripts/push-local-facts.mts --universe research-universe-51.json", purpose: "Replace reviewed per-CIK production snapshots transactionally.",
+    executable: null, args: [], command: "npx tsx scripts/push-local-facts.mts --universe research-universe-50.json", purpose: "Replace reviewed per-CIK production snapshots transactionally.",
     input: "A reviewed dry-run and complete local snapshots.", output: "Production facts replaced per company in 500-row chunks.",
     destination: "Production only after explicit terminal review.", requirements: ["network", "mysql", "review"], notes: "Deliberately not UI-runnable and never scheduled; missing local coverage fails the apply run.",
   }),

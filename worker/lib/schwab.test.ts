@@ -1,7 +1,14 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { isSchwabTokenFresh, schwabAuthorizeUrl, schwabBasicAuth, schwabGet, schwabTraderGet, SCHWAB_CALLBACK_URL } from "./schwab";
+import { isSchwabTokenFresh, schwabAuthorizeUrl, schwabBasicAuth, schwabDailyPriceHistoryPath, schwabGet, schwabTraderGet, SCHWAB_CALLBACK_URL } from "./schwab";
 
 afterEach(() => vi.unstubAllGlobals());
+
+describe("Schwab daily price history request", () => {
+  it("pins the request to an explicit current endDate so the latest session is eligible", () => {
+    expect(schwabDailyPriceHistoryPath("AAPL", 1793936539494)).toBe("pricehistory?symbol=AAPL&periodType=month&period=1&frequencyType=daily&frequency=1&endDate=1793936539494");
+    expect(() => schwabDailyPriceHistoryPath("AAPL", 0)).toThrow("valid endDate");
+  });
+});
 
 describe("Schwab OAuth helpers", () => {
   it("builds an authorize URL with an exact encoded callback", () => {

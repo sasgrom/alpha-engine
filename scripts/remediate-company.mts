@@ -27,8 +27,8 @@ async function run(script: string, args: string[]): Promise<void> {
 }
 if (apply) {
   await run("worker/edgar-fetch.mts", ["--only", ticker]);
-  await run("worker/edgar-exhibits.mts", ["--universe", "research-universe-51.json", "--only", ticker]);
-  await run("worker/facts-fetch.mts", ["--universe", "research-universe-51.json", "--only", ticker]);
+  await run("worker/edgar-exhibits.mts", ["--universe", "research-universe-50.json", "--only", ticker]);
+  await run("worker/facts-fetch.mts", ["--universe", "research-universe-50.json", "--only", ticker]);
 }
 await run("scripts/fundamental-integrity-audit.mts", ["--only", ticker]);
 await run("scripts/edgar-gap-analysis.mts", ["--input", "public/reports/fundamental-integrity.json"]);

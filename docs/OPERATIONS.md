@@ -288,7 +288,7 @@ npx tsx worker/edgar-fetch.mts --universe edgar-universe.json
 - **Cron:** 20 2 * * *
 - **Dependencies:** none
 - **Purpose:** Preserve every substantive earnings exhibit, including the main release and supplements.
-- **Input:** SEC exhibit-bearing filings for the current 51-name expectations universe.
+- **Input:** SEC exhibit-bearing filings for the current 50-name expectations universe.
 - **Output:** Hash-linked EX-99 cache with completeness metadata.
 - **Destination:** Local expectations cache only.
 - **Requirements:** network, driveD
@@ -526,7 +526,7 @@ npx tsx worker/macro-manifest-qa.mts
 - **Cron:** none
 - **Dependencies:** `research-factors`
 - **Purpose:** Materialize debt, interest, fuel, oil and geography exposure only from aligned canonical SEC evidence.
-- **Input:** Local canonical series and the 51-name research universe.
+- **Input:** Local canonical series and the 50-name research universe.
 - **Output:** company-exposures.json and .md with availability, period alignment, missing and stale flags.
 - **Destination:** Local static evidence only; no production write.
 - **Requirements:** mysql, review
@@ -917,7 +917,7 @@ npx tsx scripts/edgar-gap-analysis.mts
 - **Cron:** none
 - **Dependencies:** `edgar-gap-analysis`, `schwab-context-hourly`
 - **Purpose:** Map EDGAR concept gaps to direct, derived and unsupported Schwab fundamental candidates without fabricating XBRL replacements.
-- **Input:** edgar-coverage-gaps.json, schwab-context.json and the 51-name ticker registry.
+- **Input:** edgar-coverage-gaps.json, schwab-context.json and the 50-name ticker registry.
 - **Output:** schwab-fundamental-gap-map.json and .md with per-concept fields, formulas and vintage-equivalence warnings.
 - **Destination:** Read-only candidate map for a later reviewed repair plan.
 - **Requirements:** review
@@ -1121,7 +1121,7 @@ npx tsx scripts/push-local-signals.mts --source edgar --dry
 - **Cron:** none
 - **Dependencies:** none
 - **Purpose:** Preview complete per-CIK facts snapshots before any production transfer.
-- **Input:** Local facts and the 51-name universe.
+- **Input:** Local facts and the 50-name universe.
 - **Output:** Per-company row counts and missing coverage; no production write.
 - **Destination:** Review console only.
 - **Requirements:** mysql, review

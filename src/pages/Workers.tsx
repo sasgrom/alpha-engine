@@ -244,7 +244,7 @@ export default function Workers() {
                 <article className="t-panel ops-doc-section">
                   <span className="t-label">03 · Live cohort extraction</span><h2>Current source, rate, ETA and resume.</h2>
                   <ol className="ops-steps">
-                    <li><strong>Run from C:\dev\alpha-engine and keep a live log.</strong><code>{`npx tsx worker/edgar-cohort-extract.mts --universe research-universe-51.json 2>&1 | Tee-Object -FilePath worker\\.runs\\cohort-extract.log`}</code><CopyButton text={'npx tsx worker/edgar-cohort-extract.mts --universe research-universe-51.json 2>&1 | Tee-Object -FilePath worker\\.runs\\cohort-extract.log'} /></li>
+                    <li><strong>Run from C:\dev\alpha-engine and keep a live log.</strong><code>{`npx tsx worker/edgar-cohort-extract.mts --universe research-universe-50.json 2>&1 | Tee-Object -FilePath worker\\.runs\\cohort-extract.log`}</code><CopyButton text={'npx tsx worker/edgar-cohort-extract.mts --universe research-universe-50.json 2>&1 | Tee-Object -FilePath worker\\.runs\\cohort-extract.log'} /></li>
                     <li><strong>Watch progress in a second PowerShell.</strong><code>{`Get-Content worker\\.runs\\cohort-extract.log -Tail 40 -Wait`}</code><CopyButton text={'Get-Content worker\\.runs\\cohort-extract.log -Tail 40 -Wait'} /><p>Follow only failures with <code>Get-Content worker\.runs\cohort-extraction-failures.jsonl -Tail 20 -Wait</code>.</p></li>
                     <li><strong>Expected output.</strong><pre className="ops-expected">{`0/195 (0001018724-26-000004:primary:... · started) | 0.0/min | elapsed 0s
 1/195 (0001018724-26-000026:primary:... · extracted) | 2.4/min | ETA 1h05m | elapsed 25s

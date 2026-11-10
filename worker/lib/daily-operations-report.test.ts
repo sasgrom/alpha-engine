@@ -104,7 +104,7 @@ describe("daily operations report", () => {
     expect(report.checks.find((item) => item.id === "schwab-feature-lineage")?.status).toBe("error");
   });
 
-  it("reports manifest-backed S&P companyfacts coverage independently of research-51", () => {
+  it("reports manifest-backed S&P companyfacts coverage independently of research-50", () => {
     const value = input();
     value.facts = { sp500: { universeHash: "universe-hash", uniqueCiks: 499, refreshed: 480, unchanged: 10, failed: 2, missing: 7, lastCheckedAt: NOW } };
     const report = buildDailyOperationsReport(value);

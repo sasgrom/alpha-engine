@@ -2,7 +2,7 @@
 import "dotenv/config";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statfsSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { isSchwabTokenFresh, loadSchwabToken, refreshSchwabToken, saveSchwabToken, schwabGet, schwabTokenDirectory, schwabTraderGet } from "./lib/schwab";
+import { isSchwabTokenFresh, loadSchwabToken, refreshSchwabToken, saveSchwabToken, schwabDailyPriceHistoryPath, schwabGet, schwabTokenDirectory, schwabTraderGet } from "./lib/schwab";
 import { sha256Text } from "./lib/schwab-normalize";
 import { isSchwabBodyOverflow, mergeSchwabChunks, monthlySchwabChunks } from "./lib/schwab-chain-chunks";
 import { schwabChainFile, schwabChunkDirectory, schwabChunkDirectoryFromFile, schwabQuoteFile } from "./lib/schwab-snapshot";
@@ -16,7 +16,7 @@ const arg = (name: string) => { const i = process.argv.indexOf(name); return i >
 const only = arg("--only")?.toUpperCase() ?? null;
 const fromTicker = arg("--from-ticker")?.toUpperCase() ?? null;
 const force = process.argv.includes("--force");
-const universeFile = arg("--universe") ?? "research-universe-51.json";
+const universeFile = arg("--universe") ?? "research-universe-50.json";
 const root = path.resolve(arg("--root") ?? schwabTokenDirectory());
 const manifestPath = path.join(root, "manifest.json");
 const prog = startProgress("schwab-fetch", `root ${root} · universe ${universeFile}${force ? " · force new snapshot" : ""}`);
@@ -114,7 +114,7 @@ for (const company of universe) {
     entry.chainChunks = chain.chunks;
     const quote = await request(`quotes?symbols=${encodeURIComponent(company.ticker)}`, token.access_token);
     writeTextAtomic(path.join(root, schwabQuoteFile(today, company.ticker, capturedAt, force)), quote);
-    const history = await request(`pricehistory?symbol=${encodeURIComponent(company.ticker)}&periodType=month&frequencyType=daily&frequency=1`, token.access_token);
+    const history = await request(schwabDailyPriceHistoryPath(company.ticker, Date.now()), token.access_token);
     writeTextAtomic(path.join(root, `pricehistory/${company.ticker}.json`), history);
     const instrument = await request(`instruments?symbol=${encodeURIComponent(company.ticker)}&projection=fundamental`, token.access_token);
     writeTextAtomic(path.join(root, `instruments/${company.ticker}.json`), instrument);

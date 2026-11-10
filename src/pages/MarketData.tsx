@@ -106,7 +106,7 @@ export default function MarketData() {
               <RadioTower size={22} />
               <h2>{loadStatus === "loading" ? "Loading reviewed snapshot" : loadStatus === "error" ? "Snapshot could not be loaded" : snapshot.options.length ? "REST snapshot ready" : "No Schwab snapshots yet"}</h2>
               <p>{loadStatus === "loading" ? "The JSON report is fetched only when this page opens; it is not embedded in the application bundle." : loadStatus === "error" ? "Check that public/reports/schwab-market-data.json exists and was produced by the snapshot builder. No live state is inferred." : snapshot.options.length ? "Open Options to filter by ticker, expiration, side, DTE or ATM. Provenance contains raw hashes and QA status." : "Run the REST collector, then rebuild this static snapshot. No live state is inferred."}</p>
-              {loadStatus === "ready" && !snapshot.options.length && <code>npx tsx worker/schwab-fetch.mts --universe research-universe-51.json<br />npx tsx worker/build-schwab-market-data.mts</code>}
+              {loadStatus === "ready" && !snapshot.options.length && <code>npx tsx worker/schwab-fetch.mts --universe research-universe-50.json<br />npx tsx worker/build-schwab-market-data.mts</code>}
             </section>
           </>
         )}

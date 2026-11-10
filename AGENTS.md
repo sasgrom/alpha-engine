@@ -52,7 +52,7 @@ Progress messages should be short status updates, not questions. Ask the owner o
 5. If Schwab is stale and no overlapping scheduler job is active, run or resume the existing chain sequentially:
 
    ```powershell
-   npx tsx worker/schwab-fetch.mts --universe research-universe-51.json
+   npx tsx worker/schwab-fetch.mts --universe research-universe-50.json
    npx tsx worker/build-schwab-market-data.mts
    npx tsx worker/schwab-features.mts
    npx tsx worker/schwab-context.mts

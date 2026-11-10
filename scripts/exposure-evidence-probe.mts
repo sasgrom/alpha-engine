@@ -7,7 +7,7 @@ import { startProgress } from "../worker/lib/progress";
 const PILOTS = ["DAL", "RCL", "CVX", "COP", "PFE"] as const;
 const PATTERN = /OilAndGas|CrudeOil|NaturalGas|Fuel|EnergyRelated|ForeignCurrency|GeographicAreasRevenue|ForeignOperations|InternationalRevenue|Domicile|LongTermDebt|DebtInstrument|InterestExpense|InterestRate|Maturities|FixedRate|VariableRate|FloatingRate/i;
 interface Candidate { concept: string; taxonomy: string; units: string[]; recentRecords: number; latest: { end: string; filed?: string; form?: string; val?: number; start?: string } | null }
-const universe = loadEdgarUniverse("research-universe-51.json");
+const universe = loadEdgarUniverse("research-universe-50.json");
 const prog = startProgress("exposure-evidence-probe", "fresh SEC companyfacts · no mapping changes");
 const output: Record<string, Candidate[]> = {};
 for (const [index, ticker] of PILOTS.entries()) {

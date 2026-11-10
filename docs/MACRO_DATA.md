@@ -183,7 +183,7 @@ Use `--allow-partial` when only some groups were intentionally downloaded. `--fr
 ## 8. Company exposure evidence
 
 ```powershell
-npx tsx scripts/build-company-exposure.mts --universe research-universe-51.json
+npx tsx scripts/build-company-exposure.mts --universe research-universe-50.json
 ```
 
 For one company or a historical as-of check:
@@ -291,7 +291,7 @@ Manual chain:
 npx tsx worker/macro-fred-fetch.mts --group all
 npx tsx worker/macro-events-fetch.mts --pages 1
 npx tsx worker/macro-manifest-qa.mts
-npx tsx scripts/build-company-exposure.mts --universe research-universe-51.json
+npx tsx scripts/build-company-exposure.mts --universe research-universe-50.json
 npx tsx scripts/build-pilot-exposure-evidence.mts
 npx tsx scripts/build-macro-scenarios.mts --macro-root D:\research\alpha-engine\macro
 npx tsx scripts/build-shock-calibration.mts --macro-root D:\research\alpha-engine\macro
@@ -360,7 +360,7 @@ Outputs are `public/reports/macro-transmission-atlas.json` and `.md`. Daily Oper
 
 The independent `sp500-facts-daily` job collects SEC companyfacts for the current documented S&P snapshot, not for a historical point-in-time index membership. The collection snapshot is `edgar-universe.json` plus `GICS_SNAPSHOT_AS_OF=2026-10-11`, sourced from the documented Wikipedia `List of S&P 500 companies` constituents table. It has 502 rows and 499 unique CIKs; FOX/FOXA, GOOG/GOOGL and NWS/NWSA are deduplicated by CIK, never downloaded twice for share classes. The sorted-unique-CIK universe SHA256 is `9db32591ad570e51e4e9902417a5152414c2d27a5d73e2b9f7365b4d75809c9b`. No live scrape is performed during collection; snapshot changes require a separate documented source/asOf diff.
 
-- The scheduler command is `npx tsx worker/facts-fetch.mts --universe edgar-universe.json`, cron `30 23 * * *` home local time. The job has no research-series/research-factors dependencies and its failures do not block the independent research-51 chain.
+- The scheduler command is `npx tsx worker/facts-fetch.mts --universe edgar-universe.json`, cron `30 23 * * *` home local time. The job has no research-series/research-factors dependencies and its failures do not block the independent research-50 chain.
 - Recent submissions are checked for 10-K, 10-Q, 20-F, 40-F, 10-KT and 10-QT forms plus their amendments. Form 4, 13D/G and other irrelevant forms never trigger a companyfacts refresh.
 - Refresh occurs for a new relevant accession, missing/corrupt raw, missing/failed previous ingest, previous failure or due full reconciliation. Unchanged valid raw with successful previous ingest and the same filing signature is skipped.
 - The full reconciliation baseline is seven days with a deterministic 0–6-day CIK stagger, so the whole index is not downloaded every week in one run.

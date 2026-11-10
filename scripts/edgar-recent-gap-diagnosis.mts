@@ -12,7 +12,7 @@ import { startProgress } from "../worker/lib/progress";
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const ticker = arg("--ticker")?.toUpperCase();
 if (!ticker || !/^[A-Z0-9._-]{1,12}$/.test(ticker)) throw new Error("Use --ticker SYMBOL");
-const company = loadEdgarUniverse("research-universe-51.json").find((item) => item.ticker === ticker);
+const company = loadEdgarUniverse("research-universe-50.json").find((item) => item.ticker === ticker);
 if (!company) throw new Error(`Unknown ticker ${ticker}`);
 const gapPath = path.resolve(arg("--gaps") ?? "public/reports/edgar-coverage-gaps.json");
 if (!existsSync(gapPath)) throw new Error(`Missing ${gapPath}. Run edgar-gap-analysis first.`);

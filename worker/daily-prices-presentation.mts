@@ -5,13 +5,14 @@ import path from "node:path";
 import { getDb } from "../api/queries/connection";
 import { upsertBars } from "../api/services/prices";
 import { dailyPrice } from "../api/services/daily-price";
-import { latestCompleteOfficialDailyBars } from "./lib/schwab-daily";
+import { latestCompleteOfficialDailyBars, latestCompletedSchwabDailyDate } from "./lib/schwab-daily";
 
 const universe = JSON.parse(readFileSync("worker/research-universe-50.json", "utf8")) as { cik: number; ticker: string }[];
 const root = path.resolve("D:/research/alpha-engine/schwab");
 const manifest = JSON.parse(readFileSync(path.join(root, "manifest.json"), "utf8")) as { tickers: any[] };
-const generatedAt = new Date().toISOString();
-const pacificDate = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+const now = new Date();
+const generatedAt = now.toISOString();
+const pacificDate = latestCompletedSchwabDailyDate(now);
 const results: any[] = [];
 for (const company of universe) {
   const result: any = { ...company, status: "pending", source: "schwab", adjustedCloseStatus: "missing_official_adjustment_policy" };
@@ -77,7 +78,7 @@ const output = {
   schemaVersion: 2,
   generatedAt,
   universeSize: universe.length,
-  historyPolicy: "Latest two complete official daily candles with OHLCV; no backdating and no options-intraday spot substitution",
+  historyPolicy: "Latest two completed-session official daily candles with OHLCV; current Pacific session excluded before 16:00; no backdating and no options-intraday spot substitution",
   sourcePolicy: "Schwab preferred when eligible; Stooq historical fallback only; same-source previous close; adjClose remains null until a reviewed corporate-action policy exists",
   companies: results,
 };

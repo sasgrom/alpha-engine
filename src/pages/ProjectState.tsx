@@ -140,7 +140,7 @@ export default function ProjectState() {
           <PhaseRail collection={collectionPhase} finalEvidence={finalEvidenceReady ? "done" : "current"} />
           <div className="project-current-facts">
             <div><span>Scope</span><strong>499 unique CIKs</strong><small>Current collection snapshot, not historical index membership</small></div>
-            <div><span>Schedule</span><strong>23:30 home local</strong><small>Independent of the research-51 dependency chain</small></div>
+            <div><span>Schedule</span><strong>23:30 home local</strong><small>Independent of the research-50 dependency chain</small></div>
             <div><span>Manifest evidence</span><strong>{sp500Health ? `${sp500Health.refreshed + sp500Health.unchanged + sp500Health.failed} entries` : "Unavailable"}</strong><small>{sp500Health ? `${sp500Health.refreshed} refreshed · ${sp500Health.unchanged} unchanged · ${sp500Health.failed} failed · ${sp500Health.missing} missing${mappingVerified ? " · six ticker/CIK mappings corrected for the next daily run" : ""}` : "Build Daily Operations after the run"}</small></div>
             <div><span>Scheduler now</span><strong>{jobName(activeJob)}</strong><small>{queuedJobs === null ? "Queue unavailable" : `${queuedJobs} queued · no duplicate run inferred`}</small></div>
           </div>

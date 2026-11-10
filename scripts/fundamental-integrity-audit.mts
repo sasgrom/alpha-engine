@@ -12,7 +12,7 @@ import { startProgress } from "../worker/lib/progress";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
-const universeFile = arg("--universe") ?? "research-universe-51.json";
+const universeFile = arg("--universe") ?? "research-universe-50.json";
 const only = arg("--only")?.toUpperCase() ?? null;
 const strict = process.argv.includes("--strict");
 const maxIssues = Number(arg("--max-issues") ?? 10_000);

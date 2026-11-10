@@ -4,11 +4,11 @@
  */
 export const analyticsSnapshot = {
   "week": "2026-W46",
-  "generatedAt": "2026-11-10T02:31:05.551Z",
+  "generatedAt": "2026-11-10T09:27:19.303Z",
   "metrics": {
     "companies": 496,
     "sectors": 11,
-    "factsRows": 12856818,
+    "factsRows": 12872958,
     "factsCompanies": 502,
     "factorPoints": 21803,
     "factorCompanies": 52,
@@ -33,7 +33,7 @@ export const analyticsSnapshot = {
     "macroSeries": 8,
     "macroLastDate": "2026-11-03",
     "jobsError": 0,
-    "testCount": 960,
+    "testCount": 978,
     "optionsSnapshots": 621,
     "normalizedOptionRows": 771988
   },
@@ -63,7 +63,7 @@ export const analyticsSnapshot = {
       "id": "fundamentals",
       "title": "Fundamentals / XBRL",
       "status": "done",
-      "detail": "12,856,818 facts and 21,803 factor points from 502/52 CIKs. All 50 presentation companies have canonical series and factor points; CSCO is materialized and registration/proxy/offering facts no longer create fiscal columns.",
+      "detail": "12,872,958 facts and 21,803 factor points from 502/52 CIKs. All 50 presentation companies have canonical series and factor points; CSCO is materialized and registration/proxy/offering facts no longer create fiscal columns.",
       "next": "Pipeline materialization is complete for the presentation universe. Keep daily collection and evaluate research, expectations and Atlas separately."
     },
     {
@@ -126,7 +126,7 @@ export const analyticsSnapshot = {
       "id": "guidance",
       "title": "Structured guidance",
       "status": "partial",
-      "detail": "Expectations currently covers 27/53 companies with 5,025 statements and 12,017 documents. Another 22 companies are zero in the report and CSCO is absent; independent benchmark has not run, so full reviewed coverage is not claimed.",
+      "detail": "Expectations v3.4 is staged on production: 50/50 companies, 26,787 results, 9,464 statements, blockers resolved to 248 human-review items. Serving promotion still awaits those reviews plus an independent accuracy benchmark — regression-only evidence is not a promotion basis.",
       "next": "Finish missing EX-99/cohort inputs and CSCO without repeating completed sources, then run the independent benchmark and review accuracy."
     },
     {
@@ -452,11 +452,11 @@ export const analyticsSnapshot = {
     },
     {
       "week": "2026-W46",
-      "generatedAt": "2026-11-10T02:31:05.551Z",
+      "generatedAt": "2026-11-10T09:27:19.303Z",
       "metrics": {
         "companies": 496,
         "sectors": 11,
-        "factsRows": 12856818,
+        "factsRows": 12872958,
         "factsCompanies": 502,
         "factorPoints": 21803,
         "factorCompanies": 52,
@@ -481,7 +481,7 @@ export const analyticsSnapshot = {
         "macroSeries": 8,
         "macroLastDate": "2026-11-03",
         "jobsError": 0,
-        "testCount": 960,
+        "testCount": 978,
         "optionsSnapshots": 621,
         "normalizedOptionRows": 771988
       }

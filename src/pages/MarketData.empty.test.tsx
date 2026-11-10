@@ -31,7 +31,7 @@ describe("Schwab Market Data empty state", () => {
 
   it("shows the real empty snapshot and exact collection commands", () => {
     expect(host!.textContent).toContain("No Schwab snapshots yet");
-    expect(host!.textContent).toContain("npx tsx worker/schwab-fetch.mts --universe research-universe-51.json");
+    expect(host!.textContent).toContain("npx tsx worker/schwab-fetch.mts --universe research-universe-50.json");
     expect(host!.textContent).toContain("npx tsx worker/build-schwab-market-data.mts");
     expect(host!.textContent).toContain("0 / 51");
   });

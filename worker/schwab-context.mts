@@ -67,7 +67,7 @@ for (const task of tasks) {
   if (transportFailures >= 2) break;
 }
 const instruments: Record<string, string> = {};
-for (const company of loadEdgarUniverse("research-universe-51.json")) {
+for (const company of loadEdgarUniverse("research-universe-50.json")) {
   const file = path.join(root, "instruments", `${company.ticker}.json`);
   if (!existsSync(file)) {
     files.push({ kind: `instrument/${company.ticker}`, capturedAt, sourceHash: "", status: "failed", error: "Instrument file missing" });

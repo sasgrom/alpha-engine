@@ -28,7 +28,10 @@ export async function fetchJson<T = unknown>(
         const text = await res.text().catch(() => "");
         throw Object.assign(new Error(`HTTP ${res.status} (fatal): ${text.slice(0, 300)}`), { fatal: true });
       }
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`HTTP ${res.status}: ${text.slice(0, 300)}`);
+      }
       return (await res.json()) as T;
     } catch (e: any) {
       lastErr = e;
