@@ -68,6 +68,52 @@ beforeEach(() => {
 afterEach(() => rmSync(temp, { recursive: true, force: true }));
 
 describe("operational worker ingest", () => {
+  it("post-check survives mysql2-shaped rows (DATE/TIMESTAMP returned as Date)", async () => {
+    const dayKey = (v: any) => (v instanceof Date ? v.toISOString().slice(0, 10) : String(v).slice(0, 10));
+    const store: any[] = [];
+    const db: any = {
+      select: () => ({ from: () => ({ where: () => ({
+        limit: async (n: number) => store.slice(0, n),
+        then: (resolve: (v: any[]) => unknown) => Promise.resolve(store.map((r) => ({ ...r }))).then(resolve),
+      }) }) }),
+      insert: () => ({ values: (input: any[]) => ({ onDuplicateKeyUpdate: async () => {
+        for (const row of input) {
+          const i = store.findIndex((c) => c.cik === row.cik && dayKey(c.date) === dayKey(row.date) && c.source === row.source);
+          const stored = { ...row, date: new Date(`${dayKey(row.date)}T00:00:00Z`), fetchedAt: new Date(row.fetchedAt) };
+          if (i >= 0) store[i] = stored; else store.push(stored);
+        }
+      } }) }),
+    };
+    await ingestPricesDaily([price()], { db });
+    const second = await ingestPricesDaily([price()], { db });
+    expect(second.dupes).toBe(1);
+    expect(second.postCheck.verified).toBe(1);
+    expect(store).toHaveLength(1);
+  });
+
+  it("macro vintage post-check survives driver-shaped date rows", async () => {
+    const dayKey = (v: any) => (v instanceof Date ? v.toISOString().slice(0, 10) : String(v).slice(0, 10));
+    const store: any[] = [];
+    const db: any = {
+      select: () => ({ from: () => ({ where: () => ({
+        limit: async (n: number) => store.slice(0, n),
+        then: (resolve: (v: any[]) => unknown) => Promise.resolve(store.map((r) => ({ ...r }))).then(resolve),
+      }) }) }),
+      insert: () => ({ values: (input: any[]) => ({ onDuplicateKeyUpdate: async () => {
+        for (const row of input) {
+          const i = store.findIndex((c) => c.seriesId === row.seriesId && dayKey(c.date) === dayKey(row.date) && dayKey(c.realtimeStart) === dayKey(row.realtimeStart));
+          const stored = { ...row, date: new Date(`${dayKey(row.date)}T00:00:00Z`), realtimeStart: new Date(`${dayKey(row.realtimeStart)}T00:00:00Z`), realtimeEnd: null };
+          if (i >= 0) store[i] = stored; else store.push(stored);
+        }
+      } }) }),
+    };
+    await ingestMacroPoints([macro()], { db });
+    const second = await ingestMacroPoints([macro()], { db });
+    expect(second.dupes).toBe(1);
+    expect(second.postCheck.verified).toBe(1);
+    expect(store).toHaveLength(1);
+  });
+
   it("validates OHLC, future dates and source whitelist", async () => {
     expect(() => workerPriceDailyRowZ.parse(price({ low: 120 }))).toThrow("OHLC sanity");
     expect(() => workerPriceDailyRowZ.parse(price({ source: "yahoo" }))).toThrow();
