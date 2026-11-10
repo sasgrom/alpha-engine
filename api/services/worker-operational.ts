@@ -12,6 +12,17 @@ const day = (message: string) => z.string().regex(/^\d{4}-\d{2}-\d{2}$/, message
 const timestamp = z.string().refine((value) => Number.isFinite(Date.parse(value)), "ISO timestamp required");
 const hash = z.string().regex(/^[a-f0-9]{64}$/);
 
+/** mysql2 returns DATE columns as UTC-midnight Date objects while the wire sends
+ * YYYY-MM-DD strings. Canonicalize both sides before comparison — the previous
+ * post-check compared wire strings to raw DB values and failed on real rows
+ * (mocks with string dates hid this). Verified against prod driver output. */
+const canonicalDay = (value: unknown): string | null => {
+  if (value === null || value === undefined) return null;
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  return String(value).slice(0, 10);
+};
+const canonicalTs = (value: unknown): string => (value instanceof Date ? value : new Date(String(value))).toISOString();
+
 export const workerPriceDailyRowZ = z.object({
   cik: z.number().int().nonnegative(),
   ticker: z.string().min(1).max(20),
@@ -61,11 +72,11 @@ function assertPriceDateNotFuture(row: WorkerPriceDailyRow, now: Date) {
 }
 
 function priceKey(row: Pick<WorkerPriceDailyRow, "cik" | "date" | "source">) {
-  return `${row.cik}|${row.date}|${row.source}`;
+  return `${row.cik}|${canonicalDay(row.date)}|${row.source}`;
 }
 
 function priceContent(row: any) {
-  return [row.ticker, row.open, row.high, row.low, row.close, row.adjClose ?? null, row.volume, row.source, new Date(row.fetchedAt).toISOString()];
+  return [row.ticker, row.open, row.high, row.low, row.close, row.adjClose ?? null, row.volume, row.source, canonicalTs(row.fetchedAt)];
 }
 
 export async function ingestPricesDaily(rows: WorkerPriceDailyRow[], options: { db?: any; now?: Date } = {}) {
@@ -116,7 +127,7 @@ export async function ingestPricesDaily(rows: WorkerPriceDailyRow[], options: { 
 }
 
 function macroKey(row: Pick<WorkerMacroPointRow, "seriesId" | "observationPeriod" | "realtimeStart">) {
-  return `${row.seriesId}|${row.observationPeriod}|${row.realtimeStart}`;
+  return `${row.seriesId}|${canonicalDay(row.observationPeriod)}|${canonicalDay(row.realtimeStart)}`;
 }
 
 export async function ingestMacroPoints(rows: WorkerMacroPointRow[], options: { db?: any; now?: Date } = {}) {
@@ -141,12 +152,12 @@ export async function ingestMacroPoints(rows: WorkerMacroPointRow[], options: { 
     const candidates = batch.filter((row) => {
       const same = existing.filter((item: any) => macroKey({ seriesId, observationPeriod: item.date, realtimeStart: item.realtimeStart }) === macroKey(row));
       for (const current of same) {
-        if (current.value !== row.value || current.realtimeEnd !== row.realtimeEnd || (current.sourceHash && current.sourceHash !== row.sourceHash)) {
+        if (current.value !== row.value || canonicalDay(current.realtimeEnd) !== canonicalDay(row.realtimeEnd) || (current.sourceHash && current.sourceHash !== row.sourceHash)) {
           rejected.push({ key: macroKey(row), reason: "existing vintage content differs; overwrite refused" });
           return false;
         }
       }
-      const olderOverlap = existing.some((current: any) => current.date === row.observationPeriod && current.realtimeStart > row.realtimeStart && (row.realtimeEnd === null || row.realtimeEnd > current.realtimeStart));
+      const olderOverlap = existing.some((current: any) => canonicalDay(current.date) === canonicalDay(row.observationPeriod) && canonicalDay(current.realtimeStart)! > canonicalDay(row.realtimeStart)! && (row.realtimeEnd === null || canonicalDay(row.realtimeEnd)! > canonicalDay(current.realtimeStart)!));
       if (olderOverlap) {
         rejected.push({ key: macroKey(row), reason: "older open vintage overlaps a newer realtimeStart" });
         return false;
@@ -155,7 +166,7 @@ export async function ingestMacroPoints(rows: WorkerMacroPointRow[], options: { 
     });
     const allowedCandidates: WorkerMacroPointRow[] = [];
     for (const row of [...candidates].sort((a, b) => b.realtimeStart.localeCompare(a.realtimeStart))) {
-      const overlap = allowedCandidates.some((current) => current.observationPeriod === row.observationPeriod && current.realtimeStart > row.realtimeStart && (row.realtimeEnd === null || row.realtimeEnd > current.realtimeStart));
+      const overlap = allowedCandidates.some((current) => canonicalDay(current.observationPeriod) === canonicalDay(row.observationPeriod) && canonicalDay(current.realtimeStart)! > canonicalDay(row.realtimeStart)! && (row.realtimeEnd === null || canonicalDay(row.realtimeEnd)! > canonicalDay(current.realtimeStart)!));
       if (overlap) rejected.push({ key: macroKey(row), reason: "older open vintage overlaps a newer batch realtimeStart" });
       else allowedCandidates.push(row);
     }
@@ -181,7 +192,7 @@ export async function ingestMacroPoints(rows: WorkerMacroPointRow[], options: { 
   for (const seriesId of new Set(expected.map((row) => row.seriesId))) {
     const persisted = await db.select().from(macroPoints).where(eq(macroPoints.seriesId, seriesId));
     for (const row of expected.filter((item) => item.seriesId === seriesId)) {
-      if (persisted.some((current: any) => current.date === row.observationPeriod && current.realtimeStart === row.realtimeStart && current.value === row.value && current.realtimeEnd === row.realtimeEnd && current.sourceHash === row.sourceHash)) verified++;
+      if (persisted.some((current: any) => canonicalDay(current.date) === canonicalDay(row.observationPeriod) && canonicalDay(current.realtimeStart) === canonicalDay(row.realtimeStart) && current.value === row.value && canonicalDay(current.realtimeEnd) === canonicalDay(row.realtimeEnd) && current.sourceHash === row.sourceHash)) verified++;
     }
   }
   if (verified !== expected.length) throw new Error(`macroPoints post-check mismatch: ${verified}/${expected.length}`);
