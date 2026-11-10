@@ -321,3 +321,8 @@ The current reviewed package remains v3.3. Local v3.4 normalization rules and ex
 ## 17. Macro chain and W46 analytics snapshot — 2026-11-10
 
 The universe-50 factor/exposure/scenario/Atlas/analytics chain completed locally: 21,440 new factor points, four scenarios, Atlas partial with 904 records/24 studies, and W46 snapshot with 502 fact companies, 52 factor companies and 621 option snapshots. `AnalyticsNetwork` is 3/4 because `shareFlows=partial` is supported by the current comparable-flow guard, while the test expects done; no status was tuned. TypeScript and production build pass. See handoff §87 for before/after metrics.
+
+
+## 18. Signals/digests backfill ready; publish still required — 2026-11-10
+
+`prod-push.mts` now supports local signals/digests backfill with bounded batches, exact-key server post-checks and PROD-only targeting. Repeated mock runs return accepted=0/dupes=N. Canonical inventory was regenerated with all row counts unchanged; date normalization explains the expected local hash changes. Macro correction planner is read-only with zero local duplicate exact keys. No production backfill ran; owner publish confirmation is still required. See handoff §89.

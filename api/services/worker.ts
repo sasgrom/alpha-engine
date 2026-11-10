@@ -219,17 +219,47 @@ export type WorkerIngestBody = z.infer<typeof workerIngestBodyZ>;
  * Upsert digests by (kind, forDate): a redigest of the same date REFRESHES the
  * body (derived content, honest to recompute); inputs keep their own lineage.
  */
-export async function ingestDigests(rows: WorkerDigestRow[]): Promise<{ upserted: number }> {
+export async function ingestDigests(rows: WorkerDigestRow[]): Promise<{ accepted: number; dupes: number; upserted: number; postCheck: { expected: number; verified: number; failed: number } }> {
   const db = getDb();
   const now = new Date().toISOString().slice(0, 19).replace("T", " ");
+  let accepted = 0;
+  let dupes = 0;
   let upserted = 0;
   for (const r of rows) {
+    const scope = r.scope ?? "";
+    const [existing] = await db.select().from(digests).where(and(eq(digests.kind, r.kind), eq(digests.scope, scope), eq(digests.forDate, r.forDate))).limit(1);
+    if (existing && existing.body === r.body && (existing.model ?? null) === (r.model ?? null) && (existing.meta ?? null) === (r.meta ?? null)) {
+      dupes++;
+      continue;
+    }
     const res: any = await db.execute(sql`INSERT INTO digests (kind, scope, forDate, body, model, meta, createdAt)
-      VALUES (${r.kind}, ${r.scope ?? ""}, ${r.forDate}, ${r.body}, ${r.model ?? null}, ${r.meta ?? null}, ${now})
+      VALUES (${r.kind}, ${scope}, ${r.forDate}, ${r.body}, ${r.model ?? null}, ${r.meta ?? null}, ${now})
       ON DUPLICATE KEY UPDATE body = VALUES(body), model = VALUES(model), meta = VALUES(meta), createdAt = VALUES(createdAt)`);
+    accepted += Number(res[0]?.affectedRows ?? 0) > 0 ? 1 : 0;
     upserted += Number(res[0]?.affectedRows ?? 0) > 0 ? 1 : 0;
   }
-  return { upserted };
+  let verified = 0;
+  for (const r of rows) {
+    const [persisted] = await db.select().from(digests).where(and(eq(digests.kind, r.kind), eq(digests.scope, r.scope ?? ""), eq(digests.forDate, r.forDate))).limit(1);
+    if (persisted && persisted.body === r.body && (persisted.model ?? null) === (r.model ?? null) && (persisted.meta ?? null) === (r.meta ?? null)) verified++;
+  }
+  if (verified !== rows.length) throw new Error(`digests post-check mismatch: ${verified}/${rows.length}`);
+  return { accepted, dupes, upserted, postCheck: { expected: rows.length, verified, failed: rows.length - verified } };
+}
+
+async function postCheckSignals(db: any, rows: WorkerSignalRow[]) {
+  const unique = new Map<string, WorkerSignalRow>();
+  for (const row of rows) unique.set(`${row.cik}|${row.source}|${row.signalType}|${row.eventTs.replace("T", " ")}|${row.payloadKey ?? ""}`, row);
+  let verified = 0;
+  const candidates = [...unique.values()];
+  for (let index = 0; index < candidates.length; index += 500) {
+    const batch = candidates.slice(index, index + 500);
+    const tuples = batch.map((row) => sql`(${row.cik}, ${row.source}, ${row.signalType}, ${row.eventTs.replace("T", " ")}, ${row.payloadKey ?? null})`);
+    const persisted: any = await db.execute(sql`SELECT cik, source, signalType, eventTs, payloadKey FROM signals WHERE (cik, source, signalType, eventTs, payloadKey) IN (${sql.join(tuples, sql`, `)})`);
+    const found = new Set((persisted[0] as any[]).map((row) => `${row.cik}|${row.source}|${row.signalType}|${row.eventTs}|${row.payloadKey ?? ""}`));
+    for (const row of batch) if (found.has(`${row.cik}|${row.source}|${row.signalType}|${row.eventTs.replace("T", " ")}|${row.payloadKey ?? ""}`)) verified++;
+  }
+  return { expected: unique.size, verified, failed: unique.size - verified };
 }
 
 /**
@@ -237,7 +267,7 @@ export async function ingestDigests(rows: WorkerDigestRow[]): Promise<{ upserted
  * inserted) vs skippedDupes (already known via the UQ key). ingestedAt is
  * server-stamped once per batch — receipt time, never client time.
  */
-export async function ingestSignals(rows: WorkerSignalRow[]): Promise<{ accepted: number; skippedDupes: number }> {
+export async function ingestSignals(rows: WorkerSignalRow[]): Promise<{ accepted: number; skippedDupes: number; dupes: number; postCheck: { expected: number; verified: number; failed: number } }> {
   const db = getDb();
   const ingestedAt = new Date().toISOString().slice(0, 19).replace("T", " ");
   let accepted = 0;
@@ -254,5 +284,7 @@ export async function ingestSignals(rows: WorkerSignalRow[]): Promise<{ accepted
       )}`);
     accepted += Number(res[0]?.affectedRows ?? 0);
   }
-  return { accepted, skippedDupes: rows.length - accepted };
+  const postCheck = await postCheckSignals(db, rows);
+  if (postCheck.failed) throw new Error(`signals post-check mismatch: ${postCheck.verified}/${postCheck.expected}`);
+  return { accepted, skippedDupes: rows.length - accepted, dupes: rows.length - accepted, postCheck };
 }

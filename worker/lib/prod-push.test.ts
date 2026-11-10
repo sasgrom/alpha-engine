@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { assertOperationalServerEvidence, buildDailyPricesFromRaw, buildMacroPointsPayload, buildReportFileBackfillPayload, buildReportFilePayload, postOperationalIngest, prodIngestTarget, shouldPushOperationalJob } from "./prod-push";
+import { assertOperationalServerEvidence, buildDailyPricesFromRaw, buildMacroPointsPayload, buildReportFileBackfillPayload, buildReportFilePayload, postOperationalIngest, prodIngestTarget, runOperationalBackfill, shouldPushOperationalJob } from "./prod-push";
 import { MACRO_SERIES } from "./macro-sources";
 import type { NormalizedMacroPoint } from "./fred";
 
@@ -114,6 +114,37 @@ describe("operational production push", () => {
     const summary = assertOperationalServerEvidence([{ accepted: 2, dupes: 1, postCheck: { expected: 3, verified: 3, failed: 0 } }]);
     expect(summary).toEqual({ accepted: 2, dupes: 1, rejected: 0, postCheck: { expected: 3, verified: 3, failed: 0 } });
     expect(() => assertOperationalServerEvidence({ accepted: 0, dupes: 0, postCheck: { expected: 1, verified: 0, failed: 1 } })).toThrow("Server post-check failed");
+  });
+
+  it("backfills signals and digests idempotently with bounded batches", async () => {
+    process.env.PROD_INGEST_URL = "https://example.test/api/worker/ingest";
+    process.env.WORKER_KEY = "unit-test-key";
+    let duplicate = false;
+    const fetchMock = vi.fn(async (_url: string, options: any) => {
+      const payload = JSON.parse(options.body);
+      return new Response(JSON.stringify({
+        accepted: duplicate ? 0 : payload.rows.length,
+        dupes: duplicate ? payload.rows.length : 0,
+        skippedDupes: duplicate ? payload.rows.length : 0,
+        upserted: duplicate ? 0 : payload.rows.length,
+        postCheck: { expected: payload.rows.length, verified: payload.rows.length, failed: 0 },
+      }), { status: 200, headers: { "content-type": "application/json" } });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    const signals = Array.from({ length: 501 }, (_, index) => ({ cik: index + 1, source: "edgar", signalType: "tone", eventTs: "2026-11-01 00:00:00", payloadKey: `s${index}`, src: "live" }));
+    const firstSignals = await runOperationalBackfill({ kind: "signals", rows: signals });
+    expect(assertOperationalServerEvidence(firstSignals)).toMatchObject({ accepted: 501, dupes: 0, postCheck: { expected: 501, verified: 501 } });
+    duplicate = true;
+    const retrySignals = await runOperationalBackfill({ kind: "signals", rows: signals });
+    expect(assertOperationalServerEvidence(retrySignals)).toMatchObject({ accepted: 0, dupes: 501, postCheck: { expected: 501, verified: 501 } });
+    const digests = Array.from({ length: 11 }, (_, index) => ({ kind: "morning", scope: "", forDate: `2026-11-${String(index + 1).padStart(2, "0")}`, body: "brief", model: null, meta: null }));
+    duplicate = false;
+    await runOperationalBackfill({ kind: "digests", rows: digests });
+    duplicate = true;
+    const retryDigests = await runOperationalBackfill({ kind: "digests", rows: digests });
+    expect(assertOperationalServerEvidence(retryDigests)).toMatchObject({ accepted: 0, dupes: 11, postCheck: { expected: 11, verified: 11 } });
+    expect(fetchMock.mock.calls.filter(([, options]: any) => JSON.parse(options.body).kind === "signals").every(([, options]: any) => JSON.parse(options.body).rows.length <= 500)).toBe(true);
+    expect(fetchMock.mock.calls.filter(([, options]: any) => JSON.parse(options.body).kind === "digests").every(([, options]: any) => JSON.parse(options.body).rows.length <= 10)).toBe(true);
   });
 
   it("hashes report bodies and preserves their generatedAt", () => {

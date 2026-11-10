@@ -3,13 +3,15 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { reportFilePolicy } from "../../contracts/report-files";
+import { sql } from "drizzle-orm";
+import { getDb } from "../../api/queries/connection";
 import { fetchJson } from "./http";
 import { latestCompleteOfficialDailyBars } from "./schwab-daily";
 import { MACRO_SERIES } from "./macro-sources";
 import { auditNormalizedMacroSeries } from "./macro-manifest-qa";
 import type { NormalizedMacroPoint } from "./fred";
 
-export type OperationalPushKind = "pricesDaily" | "macroPoints" | "reportFile";
+export type OperationalPushKind = "pricesDaily" | "macroPoints" | "reportFile" | "signals" | "digests";
 export type OperationalJobStatus = "done" | "error" | "killed" | "running";
 
 const JOB_OUTPUTS: Record<string, { kind: OperationalPushKind; name?: string }[]> = {
@@ -64,9 +66,10 @@ export async function postOperationalIngest(payload: any, options: { onTarget?: 
   }
 }
 
-async function postRows(kind: "pricesDaily" | "macroPoints", rows: any[]): Promise<any[]> {
+async function postRows(kind: OperationalPushKind, rows: any[]): Promise<any[]> {
   const results = [];
-  for (let offset = 0; offset < rows.length; offset += 500) results.push(await postOperationalIngest({ kind, rows: rows.slice(offset, offset + 500) }));
+  const batchSize = kind === "digests" ? 10 : 500;
+  for (let offset = 0; offset < rows.length; offset += batchSize) results.push(await postOperationalIngest({ kind, rows: rows.slice(offset, offset + batchSize) }));
   return results;
 }
 
@@ -75,13 +78,13 @@ export function assertOperationalServerEvidence(result: any) {
   const visit = (value: any) => {
     if (Array.isArray(value)) return value.forEach(visit);
     if (!value || typeof value !== "object") return;
-    if ("accepted" in value || "dupes" in value || "postCheck" in value) responses.push(value);
+    if ("accepted" in value || "dupes" in value || "skippedDupes" in value || "upserted" in value || "postCheck" in value) responses.push(value);
     else Object.values(value).forEach(visit);
   };
   visit(result);
   const summary = {
-    accepted: responses.reduce((sum, row) => sum + Number(row.accepted ?? 0), 0),
-    dupes: responses.reduce((sum, row) => sum + Number(row.dupes ?? 0), 0),
+    accepted: responses.reduce((sum, row) => sum + Number(row.accepted ?? row.upserted ?? 0), 0),
+    dupes: responses.reduce((sum, row) => sum + Number(row.dupes ?? row.skippedDupes ?? 0), 0),
     rejected: responses.reduce((sum, row) => sum + (Array.isArray(row.rejected) ? row.rejected.length : 0), 0),
     postCheck: {
       expected: responses.reduce((sum, row) => sum + Number(row.postCheck?.expected ?? 0), 0),
@@ -208,12 +211,32 @@ export async function pushOperationalJobOutput(jobId: string, options: { from?: 
   return results;
 }
 
-export async function runOperationalBackfill(options: { kind: OperationalPushKind; from?: string; name?: string; reviewed?: boolean }) {
+async function loadSignalDigestRows(kind: "signals" | "digests", from?: string) {
+  const db = getDb();
+  try {
+    if (kind === "signals") {
+      const cutoff = from ?? "0000-01-01";
+      const [rows]: any = await db.execute(sql`SELECT cik, source, signalType, eventTs, score, magnitude, payloadKey, src, note FROM signals WHERE eventTs >= ${cutoff} ORDER BY eventTs, id`);
+      return rows;
+    }
+    const cutoff = from ?? "0000-01-01";
+    const [rows]: any = await db.execute(sql`SELECT kind, scope, forDate, body, model, meta FROM digests WHERE forDate >= ${cutoff} ORDER BY forDate, id`);
+    return rows.map((row: any) => ({ ...row, forDate: row.forDate instanceof Date ? row.forDate.toISOString().slice(0, 10) : String(row.forDate).slice(0, 10) }));
+  } finally {
+    await db.$client.end();
+  }
+}
+
+export async function runOperationalBackfill(options: { kind: OperationalPushKind; from?: string; name?: string; reviewed?: boolean; rows?: any[] }) {
   if (options.kind === "pricesDaily") {
     const daily = buildDailyPricesFromRaw({ from: options.from });
     return postRows("pricesDaily", daily.rows);
   }
   if (options.kind === "macroPoints") return postRows("macroPoints", buildMacroPointsPayload({ from: options.from }));
+  if (options.kind === "signals" || options.kind === "digests") {
+    const rows = options.rows ?? await loadSignalDigestRows(options.kind, options.from);
+    return postRows(options.kind, rows);
+  }
   if (!options.name) throw new Error("--name is required for reportFile backfill");
   const policy = reportFilePolicy(options.name);
   if (!policy.automatic && !options.reviewed) throw new Error("This report belongs to the reviewed/pinned channel; pass --reviewed explicitly");
