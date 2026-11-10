@@ -41,6 +41,7 @@ describe("operational production push", () => {
   it("pushes only successful scheduled outputs, never failed or manual jobs", () => {
     expect(shouldPushOperationalJob("schwab-fetch-daily", "done", "cron")).toBe(true);
     expect(shouldPushOperationalJob("macro-fred-weekly", "done", "dependency")).toBe(true);
+    expect(shouldPushOperationalJob("weekly-coverage-report", "done", "dependency")).toBe(true);
     expect(shouldPushOperationalJob("schwab-fetch-daily", "error", "cron")).toBe(false);
     expect(shouldPushOperationalJob("schwab-fetch-daily", "done", "manual")).toBe(false);
     expect(shouldPushOperationalJob("expectations-report", "done", "cron")).toBe(false);

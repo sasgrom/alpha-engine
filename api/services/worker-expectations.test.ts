@@ -1,5 +1,5 @@
 import { gunzipSync } from "node:zlib";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   verifyWorkerKey: vi.fn(),
@@ -39,9 +39,12 @@ function queryText(query: any): string {
   }).join("");
 }
 
-beforeEach(async () => {
+beforeAll(async () => {
+  reviewed = await loadExpectationsReviewedPackage("research/reviewed-sync/2026-11-09/expectations-reviewed-v3.4.zip");
+}, 60_000);
+
+beforeEach(() => {
   vi.clearAllMocks();
-  reviewed ??= await loadExpectationsReviewedPackage("research/reviewed-sync/2026-11-09/expectations-reviewed-v3.4.zip");
 });
 
 describe("worker Expectations backup/apply channel", () => {

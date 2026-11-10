@@ -5,13 +5,14 @@ import {
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import DailyOperationsReportView from "@/components/DailyOperationsReport";
+import WeeklyCoverageReportView from "@/components/WeeklyCoverageReport";
 import { trpc } from "@/providers/trpc";
 import {
   OPERATION_GROUPS, OPERATION_JOBS, OPERATION_JOB_MAP, OPERATION_MODULES,
   type OperationGroup, type OperationJob, type OperationModule,
 } from "@contracts/operations";
 
-type Tab = "daily" | "stack" | "jobs" | "runbook" | "activity";
+type Tab = "daily" | "weekly" | "stack" | "jobs" | "runbook" | "activity";
 type Selection = { kind: "job" | "module"; id: string };
 type Config = Record<string, { enabled: boolean; cron: string | null }>;
 const DEFAULT_CONFIG: Config = Object.fromEntries(OPERATION_JOBS.map((job) => [job.id, { enabled: job.defaultEnabled, cron: job.cron }]));
@@ -181,10 +182,11 @@ export default function Workers() {
 
           <main className="operations-main">
             <div className="operations-tabs" role="tablist" aria-label="Operations views">
-              {([{ id: "daily", name: "Daily report", icon: ShieldCheck }, { id: "stack", name: "Run stack", icon: Layers3 }, { id: "jobs", name: "Jobs & schedules", icon: CalendarClock }, { id: "runbook", name: "Runbook", icon: FileText }, { id: "activity", name: "Activity", icon: Activity }] as const).map((item) => <button type="button" role="tab" aria-selected={tab === item.id} key={item.id} className={tab === item.id ? "active" : ""} onClick={() => setTab(item.id)}><item.icon size={14} />{item.name}</button>)}
+              {([{ id: "daily", name: "Daily report", icon: ShieldCheck }, { id: "weekly", name: "Weekly coverage", icon: CalendarClock }, { id: "stack", name: "Run stack", icon: Layers3 }, { id: "jobs", name: "Jobs & schedules", icon: CalendarClock }, { id: "runbook", name: "Runbook", icon: FileText }, { id: "activity", name: "Activity", icon: Activity }] as const).map((item) => <button type="button" role="tab" aria-selected={tab === item.id} key={item.id} className={tab === item.id ? "active" : ""} onClick={() => setTab(item.id)}><item.icon size={14} />{item.name}</button>)}
             </div>
 
             {tab === "daily" && <DailyOperationsReportView onOpenJob={(jobId) => selectJob(jobId, "jobs")} />}
+            {tab === "weekly" && <WeeklyCoverageReportView />}
 
             {tab === "stack" && (
               <section className="ops-stack">

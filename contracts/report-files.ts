@@ -6,6 +6,8 @@ export interface ReportFilePolicy {
 export const REPORT_FILE_POLICY: Record<string, ReportFilePolicy> = {
   "daily-operations.json": { contentType: "application/json", automatic: true },
   "daily-operations.md": { contentType: "text/markdown", automatic: true },
+  "weekly-coverage.json": { contentType: "application/json", automatic: true },
+  "weekly-coverage.md": { contentType: "text/markdown", automatic: true },
   "schwab-context.json": { contentType: "application/json", automatic: true },
   "schwab-market-data.json": { contentType: "application/json", automatic: true },
   "daily-prices-schwab.json": { contentType: "application/json", automatic: true },

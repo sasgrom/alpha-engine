@@ -41,6 +41,13 @@ describe("Form 4 ownership XML parser", () => {
     expect(() => parseForm4Xml("<html/>", context)).toThrow("ownershipDocument");
   });
 
+  it("keeps transaction dates scalar when value contains a footnote reference", () => {
+    const xml = form4FixtureXml(["P"]).replace("<transactionDate><value>2026-10-01</value></transactionDate>", "<transactionDate><value>2026-10-01</value><footnoteId id=\"F1\"/></transactionDate>");
+    const rows = parseForm4Xml(xml, context);
+    expect(rows[0].eventTs).toBe("2026-10-01");
+    expect(Number.isFinite(Date.parse(rows[0].eventTs))).toBe(true);
+  });
+
   it("uses the official SEC acceptance header instead of a midnight fallback", () => {
     expect(parseSecAcceptanceDateTime("<SEC-HEADER><ACCEPTANCE-DATETIME>20240130165654</SEC-HEADER>")).toBe("2024-01-30 16:56:54");
     expect(() => parseSecAcceptanceDateTime("<SEC-HEADER/>")).toThrow("acceptance datetime");

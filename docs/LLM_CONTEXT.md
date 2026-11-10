@@ -331,3 +331,8 @@ The universe-50 factor/exposure/scenario/Atlas/analytics chain completed locally
 ## 19. Final inventory and macro correction review — 2026-11-10
 
 Canonical local inventory was regenerated. The macro correction reviewer now computes prod-minus-local before classifying: 408,878 prod keys minus 408,860 local keys yields exactly 18 candidates, all local-missing delete candidates with zero local duplicate exact keys. Fourteen have archive matches; four do not. The read-only review is committed as `macro-correction-review.json`; no deletion or production apply occurred. Tests and build pass. See handoff §90.
+
+
+## 20. Final reconciliation and weekly coverage — 2026-11-10
+
+Final `5833e48` inventory is committed with per-table counts and content hashes. Form 4 covers all 50 with 174,090 parsed transactions, 542 computed clusters and three zero-cluster names; 139 multi-owner errors remain explicit. SourceHash backfill contains 360,962 valid rows with zero conflicts (SHA256 `8d2cc2f09269334cd3dde105f45c27e5d7a4e18b3c9f361a1687390792e8fb1c`). Weekly coverage job, Workers tab and reportFile lane are implemented and report ready status with 10 hash-drift tables and +36 rows. Scripts suites and build pass; full suite has two unrelated Expectations/Methodology failures documented in handoff §91. No production apply occurred.

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-11-10T06:14:17.297Z",
+  "backupFile": "macro-sourcehash-backfill.json",
+  "byteSize": 99580564,
+  "sha256": "8d2cc2f09269334cd3dde105f45c27e5d7a4e18b3c9f361a1687390792e8fb1c",
+  "counts": {
+    "prodKeysTotal": 408878,
+    "backfillRows": 360962,
+    "conflicts": 0,
+    "missingLocalRows": 18,
+    "missingArchiveHash": 47898,
+    "duplicateLocalExactKeys": 0
+  },
+  "credentialMaterialIncluded": false,
+  "productionApply": false
+}

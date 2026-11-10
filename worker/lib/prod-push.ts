@@ -21,6 +21,7 @@ const JOB_OUTPUTS: Record<string, { kind: OperationalPushKind; name?: string }[]
   "schwab-context-hourly": [{ kind: "reportFile", name: "schwab-context.json" }],
   "macro-fred-weekly": [{ kind: "macroPoints" }],
   "daily-operations-report": [{ kind: "reportFile", name: "daily-operations.json" }, { kind: "reportFile", name: "daily-operations.md" }],
+  "weekly-coverage-report": [{ kind: "reportFile", name: "weekly-coverage.json" }, { kind: "reportFile", name: "weekly-coverage.md" }],
 };
 
 export function shouldPushOperationalJob(jobId: string, status: OperationalJobStatus, trigger: string): boolean {

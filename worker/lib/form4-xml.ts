@@ -26,7 +26,8 @@ function value(xml: string, tag: string): string | null {
   if (!match) return null;
   const decoded = decodeXml(match[1]);
   const nested = decoded.match(/^<value(?:\s[^>]*)?>([\s\S]*?)<\/value>$/i);
-  return nested ? decodeXml(nested[1]) : decoded;
+  const text = nested ? decodeXml(nested[1]) : decoded;
+  return text.replace(/<[^>]+>/g, "").trim();
 }
 
 function required(value: string | null, field: string): string {
