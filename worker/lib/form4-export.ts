@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { form4CacheRoot, form4QaRunsRoot } from "./cache-root";
 import { loadReviewedPriceBars, type Form4Owner, type Form4Transaction } from "./form4-core";
-import { form4ExclusionReason, type InsiderBuyCluster } from "./form4-features";
+import { form4AffiliatedOwnerKeys, form4ExclusionReason, type InsiderBuyCluster } from "./form4-features";
 import { latestCompletedSchwabDailyDate } from "./schwab-daily";
 import { writeJsonAtomic } from "./json-file";
 
@@ -14,6 +14,7 @@ export interface Form4ExportOptions {
   out?: string;
   fullOut?: string;
   previousBenchmarkFile?: string;
+  previousRecentBenchmarkFile?: string;
   now?: Date;
   expectedUniverse?: number;
 }
@@ -52,7 +53,7 @@ function isIncludedPurchase(transaction: any): boolean {
 function aggregateTransactions(transactions: any[]) {
   const included = transactions.filter(isIncludedPurchase);
   const excluded = transactions.filter((row) => !isIncludedPurchase(row));
-  const owners = new Set(included.flatMap((row) => row.owners.map((owner: any) => String(owner.ownerCik ?? ""))));
+  const owners = new Set(included.flatMap(form4AffiliatedOwnerKeys));
   return {
     openMarketBuyCount: included.length,
     openMarketBuyUsd: included.reduce((sum, row) => sum + (row.valueUsd ?? 0), 0),
@@ -85,8 +86,10 @@ export function buildForm4ServingArtifact(options: Form4ExportOptions = {}) {
   const benchmark = readJson<any>(path.join(qaRoot, "benchmark-summary.json"));
   const previousBenchmarkFile = options.previousBenchmarkFile ?? path.join(qaRoot, "benchmark-summary-2026-11-10T06-49-42Z.json");
   const previousBenchmark = readJson<any>(previousBenchmarkFile);
+  const previousRecentBenchmarkFile = options.previousRecentBenchmarkFile ?? path.join(qaRoot, "benchmark-summary-2026-11-10T21-36-16Z.json");
+  const previousRecentBenchmark = readJson<any>(previousRecentBenchmarkFile);
   if (qa.status !== "passed" || qa.strictQa !== true) throw new Error("Form 4 export requires passed strict QA");
-  if (benchmark.dryRun !== true || benchmark.notProductionAlpha !== true || previousBenchmark.dryRun !== true || previousBenchmark.notProductionAlpha !== true) {
+  if (benchmark.dryRun !== true || benchmark.notProductionAlpha !== true || previousBenchmark.dryRun !== true || previousBenchmark.notProductionAlpha !== true || previousRecentBenchmark.dryRun !== true || previousRecentBenchmark.notProductionAlpha !== true) {
     throw new Error("Form 4 export requires honest dry-run benchmarks");
   }
   if (!Array.isArray(parse.companies) || !Array.isArray(features.companies) || parse.errors?.length) throw new Error("Form 4 parse summary is incomplete");
@@ -121,6 +124,8 @@ export function buildForm4ServingArtifact(options: Form4ExportOptions = {}) {
         ...(transaction.ticker !== company.ticker ? { sourceTicker: transaction.ticker } : {}),
         eventTs: transaction.eventTs,
         availableAt: transaction.availableAt,
+        isAmendment: transaction.isAmendment,
+        amendmentOf: transaction.amendmentOf,
         transactionCode: transaction.transactionCode,
         transactionFormType: transaction.transactionFormType,
         equitySwapInvolved: transaction.equitySwapInvolved,
@@ -160,8 +165,7 @@ export function buildForm4ServingArtifact(options: Form4ExportOptions = {}) {
     || new Set(clusters.map((cluster) => cluster.clusterId)).size !== totals.clusters) {
     throw new Error("Form 4 serving totals do not match the full-run summaries");
   }
-  assertBenchmarkCoverage(benchmark, totals);
-  assertBenchmarkCoverage(previousBenchmark, totals);
+  if (benchmark.methodology === "canonical_dailyPrice_v1") assertBenchmarkCoverage(benchmark, totals);
   if (previousBenchmark.priceCoverage?.status !== "degraded" || previousBenchmark.priceCoverage?.latestDate !== "2026-11-06") {
     throw new Error("The earlier Form 4 benchmark must preserve its degraded 2026-11-06 price coverage");
   }
@@ -186,15 +190,27 @@ export function buildForm4ServingArtifact(options: Form4ExportOptions = {}) {
         generatedAt: previousBenchmark.generatedAt,
         dryRun: true,
         notProductionAlpha: true,
+        methodologyStatus: "invalid-methodology",
         priceCoverage: previousBenchmark.priceCoverage,
         horizons: previousBenchmark.horizons,
+      },
+      {
+        generatedAt: previousRecentBenchmark.generatedAt,
+        dryRun: true,
+        notProductionAlpha: true,
+        methodologyStatus: "invalid-methodology",
+        priceCoverage: previousRecentBenchmark.priceCoverage ?? { status: "current", latestDate: "2026-11-09" },
+        horizons: previousRecentBenchmark.horizons,
       },
       {
         generatedAt: benchmark.generatedAt,
         dryRun: true,
         notProductionAlpha: true,
+        methodologyStatus: benchmark.methodology === "canonical_dailyPrice_v1" ? "canonical" : "invalid-methodology",
         priceCoverage: { status: "current", latestDate: latestPriceDate },
+        maxEntryGapDays: benchmark.priceEvidence?.maxEntryGapDays,
         horizons: benchmark.horizons,
+        coverageByYear: benchmark.coverageByYear,
       },
     ],
   };

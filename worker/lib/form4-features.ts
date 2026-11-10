@@ -39,31 +39,13 @@ export interface InsiderBuyCluster {
 }
 
 export function supersedeForm4Transactions(transactions: Form4Transaction[]): Form4Transaction[] {
-  const groups = new Map<string, Form4Transaction[]>();
-  for (const transaction of transactions) {
-    const ownerKey = transaction.multiOwner && transaction.owners?.length
-      ? transaction.owners.map((owner) => owner.ownerCik ?? owner.rptOwnerName).sort().join(",")
-      : transaction.ownerCik ?? transaction.rptOwnerName;
-    const key = [transaction.issuerCik, ownerKey, transaction.periodOfReport].join("|");
-    const rows = groups.get(key) ?? [];
-    rows.push(transaction);
-    groups.set(key, rows);
-  }
-  const superseded = [...groups.values()].flatMap((rows) => {
-    const latestAccession = [...new Set(rows.map((row) => row.accessionNo))].sort((a, b) => {
-      const left = rows.find((row) => row.accessionNo === a)!;
-      const right = rows.find((row) => row.accessionNo === b)!;
-      return left.availableAt.localeCompare(right.availableAt) || Number(left.isAmendment) - Number(right.isAmendment);
-    }).at(-1);
-    return rows.filter((row) => row.accessionNo === latestAccession);
-  });
   const seen = new Set<string>();
-  return superseded.filter((row) => {
-    const key = [row.accessionNo, row.ownerCik, row.eventTs, row.transactionCode, row.shares, row.pricePerShare, row.directOrIndirect, row.natureOfOwnership].join("|");
+  return transactions.filter((row) => {
+    const key = JSON.stringify(row);
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
-  });
+  }).sort((a, b) => a.availableAt.localeCompare(b.availableAt) || a.accessionNo.localeCompare(b.accessionNo) || a.eventTs.localeCompare(b.eventTs));
 }
 
 export function form4ExclusionReason(transaction: Form4Transaction): string | null {
@@ -90,6 +72,14 @@ function ownersOf(transaction: Form4Transaction): Form4Owner[] {
     officerTitle: transaction.officerTitle,
     otherText: null,
   }];
+}
+
+export function form4AffiliatedOwnerKeys(transaction: Form4Transaction): string[] {
+  const owners = ownersOf(transaction);
+  if (transaction.multiOwner && owners.length > 1) {
+    return [`joint:${owners.map((owner) => String(owner.ownerCik ?? owner.rptOwnerName)).sort().join("|")}`];
+  }
+  return owners.map((owner) => String(owner.ownerCik ?? owner.rptOwnerName));
 }
 
 function sameOwner(left: Form4Transaction, right: Form4Transaction): boolean {
@@ -142,7 +132,7 @@ export function buildInsiderBuyClusters(
     const values = clusterRows.map((row) => row.valueUsd).filter((value): value is number => value !== null);
     const ownerRows = clusterRows.flatMap(ownersOf);
     const ownerRowsExcludingMulti = clusterRows.filter((row) => !row.multiOwner).flatMap(ownersOf);
-    const owners = new Set(ownerRows.map((owner) => owner.ownerCik ?? owner.rptOwnerName));
+    const owners = new Set(clusterRows.flatMap(form4AffiliatedOwnerKeys));
     const ownersExcludingMulti = new Set(ownerRowsExcludingMulti.map((owner) => owner.ownerCik ?? owner.rptOwnerName));
     const multiOwnerRows = clusterRows.filter((row) => row.multiOwner);
     const multiOwnerValues = multiOwnerRows.map((row) => row.valueUsd).filter((value): value is number => value !== null);

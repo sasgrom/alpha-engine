@@ -11,11 +11,21 @@ import { workerIngestBodyZ } from "./worker";
 
 class FakeDb {
   data = { prices: [] as any[], macro: [] as any[], reports: [] as any[] };
+  corruptReads = false;
   private rows(table: any) {
-    if (table === prices) return this.data.prices;
-    if (table === macroPoints) return this.data.macro;
-    if (table === reports) return this.data.reports;
-    throw new Error("Unexpected table");
+    const rows = table === prices ? this.data.prices : table === macroPoints ? this.data.macro : table === reports ? this.data.reports : null;
+    if (!rows) throw new Error("Unexpected table");
+    if (this.corruptReads) return rows.map((row) => ({ ...row, volume: typeof row.volume === "number" ? row.volume + 1 : row.volume, body: typeof row.body === "string" ? `${row.body}corrupt` : row.body }));
+    return rows;
+  }
+  async transaction(callback: (db: this) => Promise<unknown>) {
+    const snapshot = structuredClone(this.data);
+    try {
+      return await callback(this);
+    } catch (error) {
+      this.data = snapshot;
+      throw error;
+    }
   }
   select() {
     return { from: (table: any) => ({ where: () => {
@@ -74,6 +84,7 @@ describe("operational worker ingest", () => {
     const dayKey = (v: any) => (v instanceof Date ? v.toISOString().slice(0, 10) : String(v).slice(0, 10));
     const store: any[] = [];
     const db: any = {
+      transaction: async (callback: (tx: any) => Promise<unknown>) => callback(db),
       select: () => ({ from: () => ({ where: () => ({
         limit: async (n: number) => store.slice(0, n),
         then: (resolve: (v: any[]) => unknown) => Promise.resolve(store.map((r) => ({ ...r }))).then(resolve),
@@ -97,6 +108,7 @@ describe("operational worker ingest", () => {
     const dayKey = (v: any) => (v instanceof Date ? v.toISOString().slice(0, 10) : String(v).slice(0, 10));
     const store: any[] = [];
     const db: any = {
+      transaction: async (callback: (tx: any) => Promise<unknown>) => callback(db),
       select: () => ({ from: () => ({ where: () => ({
         limit: async (n: number) => store.slice(0, n),
         then: (resolve: (v: any[]) => unknown) => Promise.resolve(store.map((r) => ({ ...r }))).then(resolve),
@@ -132,6 +144,12 @@ describe("operational worker ingest", () => {
     const changed = await ingestPricesDaily([price({ close: 106 })], { db });
     expect(changed.accepted).toBe(1);
     expect(db.data.prices[0].close).toBe(106);
+  });
+
+  it("rolls back the upsert when the post-check fails", async () => {
+    db.corruptReads = true;
+    await expect(ingestPricesDaily([price()], { db })).rejects.toThrow("post-check mismatch");
+    expect(db.data.prices).toHaveLength(0);
   });
 
   it("rejects conflicting exact price keys before writing", async () => {
@@ -181,7 +199,7 @@ describe("operational worker ingest", () => {
       totals: { accessions: 1, transactions: 1, clusters: 1 },
       kpi: { openMarketBuyCount: 1, openMarketBuyUsd: 100, excludedCount: 0, excludedUsd: 0, uniqueInsidersBuying: 1, multiOwnerTransactions: 0 },
       perTicker: [],
-      benchmarkRuns: [{ generatedAt: "2026-11-10T06:49:42.087Z" }, { generatedAt: "2026-11-10T12:00:00.123Z" }],
+      benchmarkRuns: [{ generatedAt: "2026-11-10T06:49:42.087Z" }, { generatedAt: "2026-11-10T21:36:16.094Z" }, { generatedAt: "2026-11-10T12:00:00.123Z" }],
       transactions: [{ accessionNo: "0000000001-26-000001" }],
       clusters: [{ clusterId: "cluster-1" }],
     });

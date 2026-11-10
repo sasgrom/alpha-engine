@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chunkFigiIds, FIGI_MAX_429_RETRIES, FIGI_MAX_JOBS_PER_REQUEST, formatFigiError, normalizeFigiTicker, shouldRetryFigi429 } from "./figi";
+import { chunkFigiIds, FIGI_MAX_429_RETRIES, FIGI_MAX_JOBS_PER_REQUEST, formatFigiError, normalizeCusip, normalizeFigiTicker, resolveCompanyCik, shouldRetryFigi429 } from "./figi";
 
 describe("OpenFIGI request guardrails", () => {
   it("chunks mapping jobs at exactly the provider maximum", () => {
@@ -64,5 +64,23 @@ describe("OpenFIGI request guardrails", () => {
     const bondDescriptor = "MNDT 1.625 06/01/35 B";
     expect(bondDescriptor).toHaveLength(21);
     expect(normalizeFigiTicker(bondDescriptor)).toBe(bondDescriptor);
+  });
+
+  it("uppercases CUSIP keys and rejects malformed values", () => {
+    expect(normalizeCusip("22587m106")).toBe("22587M106");
+    expect(() => normalizeCusip("bad")).toThrow("nine alphanumeric");
+  });
+
+  it("resolves exact tickers only with compatible exchanges and fails closed on mismatches", () => {
+    const companies = [
+      { cik: 1, ticker: "T", exchange: "NYSE" },
+      { cik: 2, ticker: "T", exchange: "TSX" },
+      { cik: 3, ticker: "EFX", exchange: "NYSE" },
+    ];
+    expect(resolveCompanyCik({ ticker: "T", exchCode: "TSX" }, companies)).toEqual({ cik: 2, reason: null });
+    expect(resolveCompanyCik({ ticker: "T", exchCode: "NYSE" }, companies)).toEqual({ cik: 1, reason: null });
+    expect(resolveCompanyCik({ ticker: "T", exchCode: "LSE" }, companies)).toEqual({ cik: null, reason: "exchange_mismatch" });
+    expect(resolveCompanyCik({ ticker: "EFX", exchCode: "TSX" }, companies)).toEqual({ cik: null, reason: "exchange_mismatch" });
+    expect(resolveCompanyCik({ ticker: "missing", exchCode: "NYSE" }, companies)).toEqual({ cik: null, reason: "no_ticker_match" });
   });
 });

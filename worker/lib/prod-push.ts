@@ -47,6 +47,20 @@ export function prodIngestTarget(): { url: string; host: string } {
   return { url: url.toString(), host: url.host };
 }
 
+export function wholeSecondIso(value: string | Date): string {
+  const date = value instanceof Date ? value : new Date(value);
+  if (!Number.isFinite(date.getTime())) throw new Error("Invalid timestamp");
+  return new Date(Math.round(date.getTime() / 1000) * 1000).toISOString();
+}
+
+function stampWholeSeconds(payload: any): any {
+  const stamped = { ...payload };
+  if (stamped.generatedAt) stamped.generatedAt = wholeSecondIso(stamped.generatedAt);
+  if (stamped.report?.generatedAt) stamped.report = { ...stamped.report, generatedAt: wholeSecondIso(stamped.report.generatedAt) };
+  if (Array.isArray(stamped.rows)) stamped.rows = stamped.rows.map((row: any) => row.fetchedAt ? { ...row, fetchedAt: wholeSecondIso(row.fetchedAt) } : row);
+  return stamped;
+}
+
 export async function postOperationalIngest(payload: any, options: { onTarget?: (host: string) => void } = {}): Promise<any> {
   const target = prodIngestTarget();
   if (options.onTarget) options.onTarget(target.host);
@@ -62,7 +76,7 @@ export async function postOperationalIngest(payload: any, options: { onTarget?: 
       retries: 1,
       timeoutMs: 120_000,
       headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(stampWholeSeconds(payload)),
     });
   } catch (error) {
     if (error instanceof Error && /HTTP 400[\s\S]*unsupported kind/i.test(error.message)) throw new Error("prod server has no ingest lane yet — publish the new version first");

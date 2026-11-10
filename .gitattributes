@@ -1,0 +1,2 @@
+research/reviewed-sync/** -text
+worker/test-fixtures/form4/*.xml text eol=lf

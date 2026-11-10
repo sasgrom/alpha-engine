@@ -51,6 +51,8 @@ export interface Form4Transaction {
   exclusionReason?: string | null;
   clusterId?: string | null;
   availableAt?: string;
+  isAmendment?: boolean;
+  amendmentOf?: string | null;
 }
 
 export type Form4Class =

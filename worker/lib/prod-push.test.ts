@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { gunzipSync } from "node:zlib";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { assertOperationalServerEvidence, buildDailyPricesFromRaw, buildMacroPointsPayload, buildReportFileBackfillPayload, buildReportFilePayload, postOperationalIngest, prodIngestTarget, runOperationalBackfill, shouldPushOperationalJob } from "./prod-push";
+import { assertOperationalServerEvidence, buildDailyPricesFromRaw, buildMacroPointsPayload, buildReportFileBackfillPayload, buildReportFilePayload, postOperationalIngest, prodIngestTarget, runOperationalBackfill, wholeSecondIso, shouldPushOperationalJob } from "./prod-push";
 import { MACRO_SERIES } from "./macro-sources";
 import type { NormalizedMacroPoint } from "./fred";
 
@@ -115,6 +115,19 @@ describe("operational production push", () => {
     expect(response).toEqual({ ok: true });
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(onTarget).toHaveBeenCalledWith("example.test");
+  });
+
+  it("rounds .500+ timestamps to the next second before sending payloads", async () => {
+    expect(wholeSecondIso("2026-11-10T12:00:00.499Z")).toBe("2026-11-10T12:00:00.000Z");
+    expect(wholeSecondIso("2026-11-10T12:00:00.500Z")).toBe("2026-11-10T12:00:01.000Z");
+    process.env.PROD_INGEST_URL = "https://example.test/api/worker/ingest";
+    process.env.WORKER_KEY = "unit-test-key";
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify({ ok: true }), { status: 200, headers: { "content-type": "application/json" } }));
+    vi.stubGlobal("fetch", fetchMock);
+    await postOperationalIngest({ kind: "pricesDaily", generatedAt: "2026-11-10T12:00:00.500Z", rows: [{ fetchedAt: "2026-11-10T12:00:00.501Z" }] });
+    const wire = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(wire.generatedAt).toBe("2026-11-10T12:00:01.000Z");
+    expect(wire.rows[0].fetchedAt).toBe("2026-11-10T12:00:01.000Z");
   });
 
   it("rejects an old server lane without emitting a success line", async () => {

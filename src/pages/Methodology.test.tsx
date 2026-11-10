@@ -2,7 +2,7 @@
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { MemoryRouter } from "react-router";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Methodology from "./Methodology";
 import { TRPCProvider } from "@/providers/trpc";
 
@@ -31,7 +31,9 @@ describe("Methodology handbook", () => {
       root = createRoot(host!);
       root.render(<TRPCProvider><MemoryRouter><Methodology /></MemoryRouter></TRPCProvider>);
     });
-    await act(async () => { await new Promise((resolve) => setTimeout(resolve, 20)); });
+    await act(async () => {
+      await vi.waitFor(() => { expect(host!.querySelectorAll(".methodology-section")).toHaveLength(8); }, { timeout: 2000, interval: 10 });
+    });
   });
   afterEach(() => {
     if (root) act(() => root!.unmount());

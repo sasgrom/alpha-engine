@@ -1,11 +1,12 @@
 import { readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseForm4Xml } from "./form4-xml";
 import { buildInsiderBuyClusters } from "./form4-features";
 import { form4FixtureXml } from "./form4-test-fixtures";
 
 function realRows(cik: number, ticker: string, accessionNo: string) {
-  return parseForm4Xml(readFileSync(`D:/alpha-engine/worker/cache/edgar-form4/${cik}/${accessionNo}.xml`, "utf8"), {
+  return parseForm4Xml(readFileSync(path.resolve("worker/test-fixtures/form4", `${cik}-${accessionNo}.xml`), "utf8"), {
     accessionNo,
     form: "4",
     availableAt: "2018-01-01 00:00:00",
@@ -54,6 +55,13 @@ describe("Form 4 multi-owner parsing", () => {
     const xml = form4FixtureXml(["P"]).replace("</reportingOwner>", `</reportingOwner>${secondOwner}`);
     const rows = parseForm4Xml(xml, context);
     const { clusters } = buildInsiderBuyClusters(rows, { INTC: [] });
-    expect(clusters[0]).toMatchObject({ multiOwner: true, multiOwnerTransactionCount: 1, uniqueInsiders: 2, uniqueInsidersExcludingMultiOwner: 0, purchaseCountExcludingMultiOwner: 0, multiOwnerPurchaseUsd: 2500, aggregatePurchaseUsdExcludingMultiOwner: null, hasTenPercentOwner: true });
+    expect(clusters[0]).toMatchObject({ multiOwner: true, multiOwnerTransactionCount: 1, uniqueInsiders: 1, uniqueInsidersExcludingMultiOwner: 0, purchaseCountExcludingMultiOwner: 0, multiOwnerPurchaseUsd: 2500, aggregatePurchaseUsdExcludingMultiOwner: null, hasTenPercentOwner: true });
+  });
+
+  it("counts ten Sequoia co-filers as one affiliated group", () => {
+    const rows = realRows(1792789, "DASH", "0001062993-22-007354");
+    expect(rows[0].owners).toHaveLength(10);
+    const { clusters } = buildInsiderBuyClusters(rows, { DASH: [] });
+    expect(clusters[0].uniqueInsiders).toBe(1);
   });
 });

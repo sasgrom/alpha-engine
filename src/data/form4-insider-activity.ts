@@ -49,7 +49,10 @@ export interface Form4ActivityFeed {
     dryRun: true;
     notProductionAlpha: true;
     priceCoverage: { status: "degraded" | "current"; latestDate: string; note?: string };
+    methodologyStatus?: "invalid-methodology" | "canonical";
+    maxEntryGapDays?: number;
     horizons: Record<string, { hitRate: number; medianExcess: number; coverage: number }>;
+    coverageByYear?: { year: string; total: number; horizons: Record<string, { computed: number; coverage: number }> }[];
   }[];
 }
 

@@ -31,6 +31,8 @@ export function normalizeForm4Transaction(row: any): Form4Transaction {
     exclusionReason: row.exclusionReason ?? null,
     clusterId: row.clusterId ?? null,
     availableAt: String(row.availableAt),
+    isAmendment: row.isAmendment === true,
+    amendmentOf: row.amendmentOf ?? null,
   };
 }
 

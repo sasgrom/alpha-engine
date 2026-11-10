@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<ownershipDocument>
+
+    <schemaVersion>X0306</schemaVersion>
+
+    <documentType>4</documentType>
+
+    <periodOfReport>2017-11-28</periodOfReport>
+
+    <notSubjectToSection16>1</notSubjectToSection16>
+
+    <issuer>
+        <issuerCik>0000789019</issuerCik>
+        <issuerName>MICROSOFT CORP</issuerName>
+        <issuerTradingSymbol>MSFT</issuerTradingSymbol>
+    </issuer>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001325920</rptOwnerCik>
+            <rptOwnerName>Morfit G Mason</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>ONE LETTERMAN DRIVE</rptOwnerStreet1>
+            <rptOwnerStreet2>BUILDING D, 4TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94129</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>1</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>0</isTenPercentOwner>
+            <isOther>1</isOther>
+            <otherText>See Remarks</otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001418814</rptOwnerCik>
+            <rptOwnerName>ValueAct Holdings, L.P.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>ONE LETTERMAN DRIVE</rptOwnerStreet1>
+            <rptOwnerStreet2>BUILDING D, 4TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94129</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>1</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>0</isTenPercentOwner>
+            <isOther>1</isOther>
+            <otherText>See Remarks</otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001464912</rptOwnerCik>
+            <rptOwnerName>ValueAct Capital Master Fund, L.P.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>ONE LETTERMAN DRIVE</rptOwnerStreet1>
+            <rptOwnerStreet2>BUILDING D, 4TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94129</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>1</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>0</isTenPercentOwner>
+            <isOther>1</isOther>
+            <otherText>See Remarks</otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001579734</rptOwnerCik>
+            <rptOwnerName>ValueAct Co-Invest Master Fund, L.P.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>ONE LETTERMAN DRIVE</rptOwnerStreet1>
+            <rptOwnerStreet2>BUILDING D, 4TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94129</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>1</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>0</isTenPercentOwner>
+            <isOther>1</isOther>
+            <otherText>See Remarks</otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001418812</rptOwnerCik>
+            <rptOwnerName>VA Partners I, LLC</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>ONE LETTERMAN DRIVE</rptOwnerStreet1>
+            <rptOwnerStreet2>BUILDING D, 4TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94129</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>1</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>0</isTenPercentOwner>
+            <isOther>1</isOther>
+            <otherText>See Remarks</otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001351069</rptOwnerCik>
+            <rptOwnerName>ValueAct Capital Management, L.P.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>ONE LETTERMAN DRIVE</rptOwnerStreet1>
+            <rptOwnerStreet2>BUILDING D, 4TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94129</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>1</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>0</isTenPercentOwner>
+            <isOther>1</isOther>
+            <otherText>See Remarks</otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001351073</rptOwnerCik>
+            <rptOwnerName>ValueAct Capital Management, LLC</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>ONE LETTERMAN DRIVE</rptOwnerStreet1>
+            <rptOwnerStreet2>BUILDING D, 4TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94129</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>1</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>0</isTenPercentOwner>
+            <isOther>1</isOther>
+            <otherText>See Remarks</otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001418813</rptOwnerCik>
+            <rptOwnerName>ValueAct Holdings GP, LLC</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>ONE LETTERMAN DRIVE</rptOwnerStreet1>
+            <rptOwnerStreet2>BUILDING D, 4TH FLOOR</rptOwnerStreet2>
+            <rptOwnerCity>SAN FRANCISCO</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94129</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>1</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>0</isTenPercentOwner>
+            <isOther>1</isOther>
+            <otherText>See Remarks</otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <nonDerivativeTable>
+        <nonDerivativeTransaction>
+            <securityTitle>
+                <value>Common Stock</value>
+            </securityTitle>
+            <transactionDate>
+                <value>2017-11-28</value>
+            </transactionDate>
+            <transactionCoding>
+                <transactionFormType>4</transactionFormType>
+                <transactionCode>A</transactionCode>
+                <equitySwapInvolved>0</equitySwapInvolved>
+            </transactionCoding>
+            <transactionTimeliness>
+                <value></value>
+            </transactionTimeliness>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>589</value>
+                    <footnoteId id="F1"/>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <value>0</value>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>A</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>589</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>D</value>
+                    <footnoteId id="F2"/>
+                    <footnoteId id="F3"/>
+                </directOrIndirectOwnership>
+            </ownershipNature>
+        </nonDerivativeTransaction>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>8131525</value>
+                    <footnoteId id="F4"/>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>See Footnotes</value>
+                    <footnoteId id="F3"/>
+                    <footnoteId id="F5"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>881949</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>See Footnotes</value>
+                    <footnoteId id="F3"/>
+                    <footnoteId id="F6"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+    </nonDerivativeTable>
+
+    <footnotes>
+        <footnote id="F1">Represents stock award which is fully vested on the date of grant.</footnote>
+        <footnote id="F2">The ValueAct entities referred to in this footnote 2 are collectively referred to herein as &quot;ValueAct Capital.&quot; Under an agreement with ValueAct Capital, G. Mason Morfit is deemed to hold the shares for the benefit of the limited partners of ValueAct Capital Master Fund, L.P. and indirectly for (i) VA Partners I, LLC as  General Partner of ValueAct Capital Master Fund, L.P., (ii) ValueAct Capital Management, L.P. as the manager of ValueAct Capital Master Fund, L.P., (iii) ValueAct Capital Management, LLC as General Partner of ValueAct Capital Management, L.P., (iv) ValueAct Holdings, L.P. as the sole owner of the limited partnership interests of ValueAct Capital Management, L.P. and the membership interests of  ValueAct Capital Management, LLC and as the majority owner of the membership interests of VA Partners I, LLC and (v) ValueAct Holdings GP, LLC as General Partner of ValueAct Holdings, L.P.</footnote>
+        <footnote id="F3">Each reporting person listed herein disclaims beneficial ownership of the reported securities except to the extent of its pecuniary interest therein, and this report shall not be deemed an admission that such person is the beneficial owner of the securities for purposes of Section 16 of the Securities Exchange Act of 1934, as amended, or for any other purpose.</footnote>
+        <footnote id="F4">Reflects the transfer to ValueAct Capital Master Fund, L.P. of 675 shares, which were previously awarded to Mr. Morfit on August 30, 2017 pursuant to the Issuer's Director compensation policy. Under an agreement with ValueAct Capital, Mr. Morfit held these shares for the benefit of the limited partners of ValueAct Capital Master Fund, L.P. and as such the vested shares have been transferred.</footnote>
+        <footnote id="F5">The securities reported herein are directly beneficially owned by ValueAct Capital Master Fund, L.P. and may be deemed to be indirectly beneficially owned by (i) VA Partners I, LLC as General Partner of ValueAct Capital Master Fund, L.P. , (ii) ValueAct Capital Management, L.P. as the manager of ValueAct Capital Master Fund, L.P. , (iii) ValueAct Capital Management, LLC as General Partner of ValueAct Capital Management, L.P., (iv) ValueAct Holdings, L.P. as the sole owner of the limited partnership interests of ValueAct Capital Management, L.P. and the membership interests of ValueAct Capital Management, LLC and as the majority owner of the membership interests of VA Partners I, LLC and (v) ValueAct Holdings GP, LLC as General Partner of ValueAct Holdings, L.P.  G. Mason Morfit is a member of the management board of ValueAct Holdings GP, LLC.</footnote>
+        <footnote id="F6">The securities reported herein are directly beneficially owned by ValueAct Co-Invest Master Fund, L.P. and may be deemed to be indirectly beneficially owned by (i) VA Partners I, LLC as General Partner of ValueAct Co-Invest Master Fund, L.P. , (ii) ValueAct Capital Management, L.P. as the manager of ValueAct Co-Invest Master Fund, L.P. , (iii) ValueAct Capital Management, LLC as General Partner of ValueAct Capital Management, L.P., (iv) ValueAct Holdings, L.P. as the sole owner of the limited partnership interests of ValueAct Capital Management, L.P. and the membership interests of ValueAct Capital Management, LLC and as the majority owner of the membership interests of VA Partners I, LLC and (v) ValueAct Holdings GP, LLC as General Partner of ValueAct Holdings, L.P.   G. Mason Morfit is a member of the management board of ValueAct Holdings GP, LLC.</footnote>
+    </footnotes>
+
+    <remarks>- The reporting persons herein may be deemed to be members of a &quot;group&quot; for purposes of the Securities Exchange Act of 1934, as amended. Each reporting person disclaims beneficial ownership of any securities deemed to be owned by the group that are not directly owned by such reporting person. This report shall not be deemed an admission that such reporting person is a member of a group or the beneficial owner of any securities not directly owned by such reporting person.
+
+- G. Mason Morfit, a member of the management board of ValueAct Holdings GP, LLC, served on the board of directors of the Issuer. As a result, the other reporting persons herein may be deemed directors by deputization.</remarks>
+
+    <ownerSignature>
+        <signatureName>/s/ G. Mason Morfit</signatureName>
+        <signatureDate>2017-11-30</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>VALUEACT HOLDINGS, L.P., By:  VALUEACT HOLDINGS GP, LLC, its General Partner, By: /s/ Bradley E. Singer, Chief Operating Officer</signatureName>
+        <signatureDate>2017-11-30</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>VALUEACT CAPITAL MASTER FUND, L.P., By:  VA PARTNERS I, LLC, its General Partner, By: /s/ Bradley E. Singer, Chief Operating Officer</signatureName>
+        <signatureDate>2017-11-30</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>VALUEACT CO-INVEST MASTER FUND, L.P., By:  VA PARTNERS I, LLC, its General Partner, By: /s/ Bradley E. Singer, Chief Operating Officer</signatureName>
+        <signatureDate>2017-11-30</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>VA PARTNERS I, LLC, By: /s/ Bradley E. Singer, Chief Operating Officer</signatureName>
+        <signatureDate>2017-11-30</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>VALUEACT CAPITAL  MANAGEMENT, L.P., By:  VALUEACT CAPITAL MANAGEMENT, LLC, its General Partner, By: /s/ Bradley E. Singer, Chief Operating Officer</signatureName>
+        <signatureDate>2017-11-30</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>VALUEACT CAPITAL MANAGEMENT, LLC, By: /s/ Bradley E. Singer, Chief Operating Officer</signatureName>
+        <signatureDate>2017-11-30</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>VALUEACT HOLDINGS GP, LLC, By: /s/ Bradley E. Singer, Chief Operating Officer</signatureName>
+        <signatureDate>2017-11-30</signatureDate>
+    </ownerSignature>
+</ownershipDocument>

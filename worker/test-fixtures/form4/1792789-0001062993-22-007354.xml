@@ -1,0 +1,824 @@
+<?xml version="1.0"?>
+<ownershipDocument>
+
+    <schemaVersion>X0306</schemaVersion>
+
+    <documentType>4</documentType>
+
+    <periodOfReport>2022-03-08</periodOfReport>
+
+    <issuer>
+        <issuerCik>0001792789</issuerCik>
+        <issuerName>DoorDash, Inc.</issuerName>
+        <issuerTradingSymbol>DASH</issuerTradingSymbol>
+    </issuer>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001607841</rptOwnerCik>
+            <rptOwnerName>SC US (TTGP), LTD.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>2800 SAND HILL ROAD, SUITE 101</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>MENLO PARK</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94025</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001611397</rptOwnerCik>
+            <rptOwnerName>SC U.S. VENTURE XIV MANAGEMENT, L.P.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>2800 SAND HILL ROAD, SUITE 101</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>MENLO PARK</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94025</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001556027</rptOwnerCik>
+            <rptOwnerName>SEQUOIA CAPITAL U.S. VENTURE FUND XIV, L.P.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>2800 SAND HILL ROAD, SUITE 101</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>MENLO PARK</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94025</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001556219</rptOwnerCik>
+            <rptOwnerName>SEQUOIA CAPITAL U.S. VENTURE PARTNERS FUND XIV, L.P.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>2800 SAND HILL ROAD, SUITE 101</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>MENLO PARK</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94025</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001561342</rptOwnerCik>
+            <rptOwnerName>SEQUOIA CAPITAL U.S. VENTURE PARTNERS FUND XIV (Q), L.P.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>2800 SAND HILL ROAD, SUITE 101</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>MENLO PARK</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94025</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001611394</rptOwnerCik>
+            <rptOwnerName>SEQUOIA CAPITAL USV XIV HOLDCO, LTD.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>2800 SAND HILL ROAD, SUITE 101</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>MENLO PARK</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94025</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001863586</rptOwnerCik>
+            <rptOwnerName>Sequoia Grove Manager, LLC</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>2800 SAND HILL ROAD, SUITE 101</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>MENLO PARK</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94025</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001863636</rptOwnerCik>
+            <rptOwnerName>Sequoia Grove II, LLC</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>2800 SAND HILL ROAD, SUITE 101</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>MENLO PARK</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94025</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001913045</rptOwnerCik>
+            <rptOwnerName>Sequoia Capital Fund Management, L.P.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>2800 SAND HILL ROAD, SUITE 101</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>MENLO PARK</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94025</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001906948</rptOwnerCik>
+            <rptOwnerName>Sequoia Capital Fund, L.P.</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>2800 SAND HILL ROAD, SUITE 101</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>MENLO PARK</rptOwnerCity>
+            <rptOwnerState>CA</rptOwnerState>
+            <rptOwnerZipCode>94025</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <nonDerivativeTable>
+        <nonDerivativeTransaction>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <transactionDate>
+                <value>2022-03-08</value>
+            </transactionDate>
+            <transactionCoding>
+                <transactionFormType>4</transactionFormType>
+                <transactionCode>P</transactionCode>
+                <equitySwapInvolved>0</equitySwapInvolved>
+            </transactionCoding>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>13382</value>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <value>81.5799</value>
+                    <footnoteId id="F1"/>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>A</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>258032</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Global Growth Fund III - U.S./India Annex Fund, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeTransaction>
+        <nonDerivativeTransaction>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <transactionDate>
+                <value>2022-03-08</value>
+            </transactionDate>
+            <transactionCoding>
+                <transactionFormType>4</transactionFormType>
+                <transactionCode>P</transactionCode>
+                <equitySwapInvolved>0</equitySwapInvolved>
+            </transactionCoding>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>9127</value>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <value>82.8415</value>
+                    <footnoteId id="F2"/>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>A</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>267159</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Global Growth Fund III - U.S./India Annex Fund, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeTransaction>
+        <nonDerivativeTransaction>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <transactionDate>
+                <value>2022-03-08</value>
+            </transactionDate>
+            <transactionCoding>
+                <transactionFormType>4</transactionFormType>
+                <transactionCode>P</transactionCode>
+                <equitySwapInvolved>0</equitySwapInvolved>
+            </transactionCoding>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>19006</value>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <value>83.6549</value>
+                    <footnoteId id="F3"/>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>A</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>286165</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Global Growth Fund III - U.S./India Annex Fund, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeTransaction>
+        <nonDerivativeTransaction>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <transactionDate>
+                <value>2022-03-08</value>
+            </transactionDate>
+            <transactionCoding>
+                <transactionFormType>4</transactionFormType>
+                <transactionCode>P</transactionCode>
+                <equitySwapInvolved>0</equitySwapInvolved>
+            </transactionCoding>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>348761</value>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <value>84.8679</value>
+                    <footnoteId id="F4"/>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>A</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>634926</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Global Growth Fund III - U.S./India Annex Fund, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeTransaction>
+        <nonDerivativeTransaction>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <transactionDate>
+                <value>2022-03-09</value>
+            </transactionDate>
+            <transactionCoding>
+                <transactionFormType>4</transactionFormType>
+                <transactionCode>P</transactionCode>
+                <equitySwapInvolved>0</equitySwapInvolved>
+            </transactionCoding>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>126786</value>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <value>92.1595</value>
+                    <footnoteId id="F5"/>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>A</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>761712</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Global Growth Fund III - U.S./India Annex Fund, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeTransaction>
+        <nonDerivativeTransaction>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <transactionDate>
+                <value>2022-03-09</value>
+            </transactionDate>
+            <transactionCoding>
+                <transactionFormType>4</transactionFormType>
+                <transactionCode>P</transactionCode>
+                <equitySwapInvolved>0</equitySwapInvolved>
+            </transactionCoding>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>56438</value>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <value>92.8720</value>
+                    <footnoteId id="F6"/>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>A</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>818150</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Global Growth Fund III - U.S./India Annex Fund, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeTransaction>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>5013439</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital U.S. Growth Fund VI, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>358663</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital U.S. Growth VI Principals Fund, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>4178708</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital U.S. Growth Fund VII, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>377907</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital U.S. Growth VII Principals Fund, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>592842</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Global Growth Fund, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>21500</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Global Growth Principals Fund, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>8961452</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Global Growth Fund II, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>137131</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Global Growth II Principals Fund, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>12399303</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital USV XIV Holdco, Ltd.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>5350</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Global Growth Fund III - U.S./India Annex Principals Fund, L.P.</value>
+                    <footnoteId id="F7"/>
+                    <footnoteId id="F8"/>
+                    <footnoteId id="F9"/>
+                    <footnoteId id="F10"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>2604048</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Grove II, LLC</value>
+                    <footnoteId id="F11"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>2531667</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Fund, LP</value>
+                    <footnoteId id="F12"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+        <nonDerivativeHolding>
+            <securityTitle>
+                <value>Class A Common Stock</value>
+            </securityTitle>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>459341</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>Sequoia Capital Fund Parallel, LLC</value>
+                    <footnoteId id="F12"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeHolding>
+    </nonDerivativeTable>
+
+    <footnotes>
+        <footnote id="F1">The price reported in column 4 is a weighted average price. These shares were purchased in multiple transactions at prices ranging from $81.1700 to $82.1699. The Reporting Person undertakes to provide the Issuer, any security holder of the Issuer, or the staff at the Securities and Exchange Commission, upon request, the full information regarding the number of shares purchased at each separate price within the ranges set forth above.</footnote>
+        <footnote id="F2">The price reported in column 4 is a weighted average price. These shares were purchased in multiple transactions at prices ranging from $82.1700 to $83.1699. The Reporting Person undertakes to provide the Issuer, any security holder of the Issuer, or the staff at the Securities and Exchange Commission, upon request, the full information regarding the number of shares purchased at each separate price within the ranges set forth above.</footnote>
+        <footnote id="F3">The price reported in column 4 is a weighted average price. These shares were purchased in multiple transactions at prices ranging from $83.1700 to $84.1699. The Reporting Person undertakes to provide the Issuer, any security holder of the Issuer, or the staff at the Securities and Exchange Commission, upon request, the full information regarding the number of shares purchased at each separate price within the ranges set forth above.</footnote>
+        <footnote id="F4">The price reported in column 4 is a weighted average price. These shares were purchased in multiple transactions at prices ranging from $84.1700 to $85.0000. The Reporting Person undertakes to provide the Issuer, any security holder of the Issuer, or the staff at the Securities and Exchange Commission, upon request, the full information regarding the number of shares purchased at each separate price within the ranges set forth above.</footnote>
+        <footnote id="F5">The price reported in column 4 is a weighted average price. These shares were purchased in multiple transactions at prices ranging from $91.4800 to $92.4799. The Reporting Person undertakes to provide the Issuer, any security holder of the Issuer, or the staff at the Securities and Exchange Commission, upon request, the full information regarding the number of shares purchased at each separate price within the ranges set forth above.</footnote>
+        <footnote id="F6">The price reported in column 4 is a weighted average price. These shares were purchased in multiple transactions at prices ranging from $92.4800 to $93.0100. The Reporting Person undertakes to provide the Issuer, any security holder of the Issuer, or the staff at the Securities and Exchange Commission, upon request, the full information regarding the number of shares purchased at each separate price within the ranges set forth above.</footnote>
+        <footnote id="F7">SC US (TTGP), Ltd. is (i) the general partner of SC U.S. Venture XIV Management, L.P., which is the general partner of Sequoia Capital U.S. Venture Fund XIV, L.P., Sequoia Capital U.S. Venture Partners Fund XIV, L.P., and Sequoia Capital U.S. Venture Partners Fund XIV (Q), L.P., or collectively, the SC USV XIV Funds, which together own 100% of the outstanding ordinary shares of Sequoia Capital USV XIV Holdco, Ltd. (SC USV XIV Holdco); (ii) the general partner of SC Global Growth II Management, L.P., which is the general partner of each of Sequoia Capital Global Growth Fund II, L.P. (SC GGFII) and Sequoia Capital Global Growth II Principals Fund, L.P. (SC GGFII PF), or collectively, the SC GGFII Funds; (iii) the general partner of SC U.S. Growth VI Management, L.P., which is the general partner of each of Sequoia Capital U.S. Growth Fund VI, L.P. (SC US GFVI) and Sequoia Capital U.S. Growth VI Principals Fund, L.P. (SC US GFVI PF), or collectively, the SC US GFVI Funds;</footnote>
+        <footnote id="F8">(Continued from Footnote 7) (iv) the general partner of SC U.S. Growth VII Management, L.P., which is the general partner of each of Sequoia Capital U.S. Growth Fund VII, L.P. (SC US GFVII) and Sequoia Capital U.S. Growth VII Principals Fund, L.P. (SC US GFVII PF), or collectively, the SC US GFVII Funds; (v) the general partner of SCGGF Management, L.P., which is the general partner of each of Sequoia Capital Global Growth Fund, L.P. (SC GGF) and Sequoia Capital Global Growth Principals Fund, L.P. (SC GGF PF), or collectively, the SC GGF Funds; and (vi) the general partner of SCGGF III - U.S./India Management, L.P., which is the general partner of each of Sequoia Capital Global Growth Fund III - U.S./India Annex Fund, L.P. (SC GGFIII) and Sequoia Capital Global Growth Fund III - U.S./India Annex Principals Fund, L.P. (SC GGFIII PF), or collectively, the SC GGFIII Funds.</footnote>
+        <footnote id="F9">(Continued from Footnote 8) As a result, SC US (TTGP), Ltd. may be deemed to share voting and dispositive power with respect to the shares held by SC USV XIV Holdco, the SC GGFII Funds, the SC US GFVI Funds, the SC US GFVII Funds, the SC GGF Funds and the SC GGFIII Funds. In addition, the directors and stockholders of SC US (TTGP), Ltd. who exercise voting and investment discretion with respect to the SC GGFII Funds and the SC GGFIII Funds are Douglas M. Leone and Roelof F. Botha, and the directors and stockholders of SC US (TTGP), Ltd. who exercise voting and investment discretion with respect to the SC GGF Funds are Douglas M. Leone and James J. Goetz. As a result, and by virtue of the relationship described in this footnote, each such person may be deemed to share voting and dispositive power with respect to the shares of Class A common stock held by the SC GGFII Funds, the SC GGFIII Funds or the SC GGF Funds, as applicable.</footnote>
+        <footnote id="F10">(Continued from Footnote 9) Each of SC US (TTGP), Ltd., SC U.S. Venture XIV Management, L.P., SC U.S. Growth VI Management, L.P., SC U.S. Growth VII Management, L.P., SCGGF Management, L.P., SC Global Growth II Management, L.P., SCGGF III - U.S./India Management, L.P., Mr. Leone, Mr. Botha and Mr. Goetz disclaims beneficial ownership of the shares held by SC USV XIV Holdco, the GFVI Funds, the GFVII Funds, the GGF Funds, the GGF II Funds, and the GGF III Funds except to the extent of its or his pecuniary interest therein, and the inclusion of these securities in this report shall not be deemed an admission of beneficial ownership of the reported securities for purposes of Section 16 or for any other purposes.</footnote>
+        <footnote id="F11">Sequoia Grove Manager, LLC is the manager of Sequoia Grove II, LLC.  As a result, Sequoia Grove Manager, LLC may be deemed to share beneficial ownership with respect to the shares held by Sequoia Grove II, LLC.  Each of Sequoia Grove Manager, LLC and Sequoia Grove II, LLC disclaims beneficial ownership of the shares held by Sequoia Grove II, LLC except to the extent of its pecuniary interest therein, and the inclusion of these securities in this report shall not be deemed an admission of beneficial ownership of the reported securities for purposes of Section 16 or for any other purpose.</footnote>
+        <footnote id="F12">SC US (TTGP), Ltd. is (i) the general partner of Sequoia Capital Fund Management, L.P., which is the general partner of each of Sequoia Capital Fund, LP (&quot;SCF&quot;) and Sequoia Capital Fund Parallel, LLC (&quot;SCFP&quot;). As a result, SC US (TTGP), Ltd. may be deemed to share voting and dispositive power with respect to the shares held by SCF and SCFP. Each of the reporting persons disclaims beneficial ownership of the shares held by SCF and SCFP, as applicable, except to the extent of his or its pecuniary interest therein, and the inclusion of these securities in this report shall not be deemed an admission of beneficial ownership of the reported securities for purposes of Section 16 or for any other purposes.</footnote>
+    </footnotes>
+
+    <remarks>Form 3 of 3; By: /s/ Jung Yeon Son, by power of attorney for Douglas Leone, a Director of SC US (TTGP), Ltd., the General Partner of SC U.S. Venture XIV Management, L.P., the General Partner of Sequoia Capital U.S. Venture Fund XIV, L.P., Sequoia Capital U.S. Venture Partners Fund XIV, L.P., and Sequoia Capital U.S. Venture Partners Fund XIV (Q), L.P., which together own 100% of the outstanding ordinary shares of Sequoia Capital USV XIV Holdco, Ltd.</remarks>
+
+    <ownerSignature>
+        <signatureName>By: /s/ Jung Yeon Son, by power of attorney for Douglas Leone, a Director of SC US (TTGP), Ltd.</signatureName>
+        <signatureDate>2022-03-10</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>By: /s/ Jung Yeon Son, by power of attorney for Douglas Leone, a Director of SC US (TTGP), Ltd., the General Partner of SC U.S. Venture XIV Management, L.P.</signatureName>
+        <signatureDate>2022-03-10</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>By: /s/ Jung Yeon Son, by power of attorney for Douglas Leone, a Director of SC US (TTGP), Ltd., the General Partner of SC U.S. Venture XIV Management, L.P., the General Partner of Sequoia Capital U.S. Venture Fund XIV, L.P.</signatureName>
+        <signatureDate>2022-03-10</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>By: /s/ Jung Yeon Son, by power of attorney for Douglas Leone, a Director of SC US (TTGP), Ltd., the General Partner of SC U.S. Venture XIV Management, L.P., the General Partner of Sequoia Capital U.S. Venture Partners Fund XIV, L.P.</signatureName>
+        <signatureDate>2022-03-10</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>By: /s/ Jung Yeon Son, by power of attorney for Douglas Leone, a Director of SC US (TTGP), Ltd., the General Partner of SC U.S. Venture XIV Management, L.P., the General Partner of Sequoia Capital U.S. Venture Partners Fund XIV (Q), L.P.</signatureName>
+        <signatureDate>2022-03-10</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>See Remarks</signatureName>
+        <signatureDate>2022-03-10</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>By: /s/ Jung Yeon Son, by power of attorney for Douglas Leone, a Managing Member of Sequoia Grove Manager, LLC</signatureName>
+        <signatureDate>2022-03-10</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>By: /s/ Jung Yeon Son, by power of attorney for Douglas Leone, a Managing Member of Sequoia Grove Manager, LLC, the manager of Sequoia Grove II, LLC</signatureName>
+        <signatureDate>2022-03-10</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>By: /s/ Jung Yeon Son, by power of attorney for Douglas Leone, a Director of SC US (TTGP), Ltd., the General Partner of Sequoia Capital Fund Management, L.P.</signatureName>
+        <signatureDate>2022-03-10</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>By: /s/ Jung Yeon Son, by power of attorney for Douglas Leone, a Director of SC US (TTGP), Ltd., the General Partner of Sequoia Capital Fund Management, L.P., which is the General Partner of Sequoia Capital Fund, LP and Sequoia Capital Fund Parallel, LLC</signatureName>
+        <signatureDate>2022-03-10</signatureDate>
+    </ownerSignature>
+</ownershipDocument>

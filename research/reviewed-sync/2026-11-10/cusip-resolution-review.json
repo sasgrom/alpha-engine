@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-10T23:05:36.000Z",
+  "status": "owner_review_required",
+  "productionApply": false,
+  "lowercaseCusips": 238,
+  "findings": [
+    {
+      "cusip": "87971M103",
+      "nameOfIssuer": "Telus Corp",
+      "evidence": "worker/cache/13f/1007280/000100728026000009.xml:32628",
+      "currentMap": { "cik": 732717, "ticker": "T", "company": "AT&T INC.", "exchange": "NYSE" },
+      "exchCode": "CN",
+      "disposition": "confirmed_misMap",
+      "recommendedAction": "Set cik=null pending owner review; do not map Telus to AT&T."
+    },
+    {
+      "cusip": "29269R105",
+      "nameOfIssuer": "Enerflex Ltd",
+      "evidence": "worker/cache/13f/1007280/000100728026000009.xml:6132",
+      "currentMap": { "cik": 33185, "ticker": "EFX", "company": "EQUIFAX INC", "exchange": "NYSE" },
+      "exchCode": "CN",
+      "disposition": "confirmed_misMap",
+      "recommendedAction": "Set cik=null pending owner review; do not map Enerflex to Equifax."
+    },
+    {
+      "cusip": "87236Y108",
+      "nameOfIssuer": "TD AMERITRADE HLDG CORP",
+      "evidence": "worker/cache/13f/1009207/000110465920125810.xml:74681",
+      "currentMap": { "cik": 1053507, "ticker": "AMT", "company": "AMERICAN TOWER CORP /MA/", "exchange": "NYSE" },
+      "exchCode": "GS",
+      "disposition": "confirmed_misMap",
+      "recommendedAction": "Set cik=null pending owner review; do not map TD Ameritrade to American Tower."
+    },
+    {
+      "cusip": "05508R106",
+      "nameOfIssuer": "B&G Foods Inc",
+      "evidence": "worker/cache/13f/1007280/000100728026000009.xml:16948",
+      "currentMap": { "cik": 313616, "ticker": "DHR", "company": "DANAHER CORP /DE/", "exchange": "NYSE" },
+      "exchCode": "GR",
+      "disposition": "confirmed_misMap",
+      "recommendedAction": "Set cik=null pending owner review; do not map B&G Foods to Danaher."
+    },
+    {
+      "cusip": "22587m106",
+      "nameOfIssuer": "Cresco Labs Inc",
+      "evidence": "worker/cache/13f/1040197/000104019723000004.xml:3661",
+      "currentMap": { "cik": 21665, "ticker": "CL", "company": "COLGATE PALMOLIVE CO", "exchange": "NYSE" },
+      "exchCode": "CN",
+      "disposition": "confirmed_misMap_and_lowercase_key",
+      "recommendedAction": "Normalize key to 22587M106, set cik=null pending owner review; do not map Cresco to Colgate."
+    },
+    {
+      "cusip": "74834L100",
+      "nameOfIssuer": "Quest Diagnostics Inc",
+      "evidence": "worker/cache/13f/1007280/000100728026000009.xml:12692",
+      "currentMap": { "cik": 1022079, "ticker": "DGX", "company": "QUEST DIAGNOSTICS INC", "exchange": "NYSE" },
+      "exchCode": "US",
+      "disposition": "verified_correct_not_a_misMap",
+      "recommendedAction": "Keep DGX; include as a negative control in regression tests."
+    }
+  ],
+  "guard": {
+    "uppercase": true,
+    "exchangeAware": true,
+    "onMismatchOrAmbiguity": "cik=null and owner review, never ticker-only promotion"
+  }
+}

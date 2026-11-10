@@ -30,7 +30,7 @@ import {
   type Filing13F, type QuarterFilingPart,
 } from "../worker/lib/thirteenf";
 import { startProgress } from "../worker/lib/progress";
-import { chunkFigiIds, formatFigiError, normalizeFigiTicker, shouldRetryFigi429 } from "../worker/lib/figi";
+import { chunkFigiIds, formatFigiError, normalizeCusip, normalizeFigiTicker, resolveCompanyCik, shouldRetryFigi429 } from "../worker/lib/figi";
 
 // ---------------------------------------------------------------------------
 const FORMS_13F = new Set(["13F-HR", "13F-HR/A"]);
@@ -122,18 +122,18 @@ const FIGI_KEY = process.env.OPENFIGI_API_KEY ?? null;
 const FIGI_CHUNK = 10;
 const retriedNegativeCache = new Set<string>();
 
-async function mapCusips(cusips: string[]): Promise<{ map: Map<string, { cik: number | null; ticker: string | null }>; failed: boolean }> {
+async function mapCusips(inputCusips: string[]): Promise<{ map: Map<string, { cik: number | null; ticker: string | null }>; failed: boolean }> {
+  const cusips = inputCusips.map(normalizeCusip);
   let failed = false;
   // 1) repair cached rows whose ticker never resolved (JS-side join — the
   //    UPDATE..JOIN hit a collation mismatch; chunked by cik, one UPDATE each)
   try {
-    const [pending]: any = await db.execute(sql`SELECT cusip, ticker FROM cusip_map WHERE cik IS NULL AND ticker IS NOT NULL`);
+    const [pending]: any = await db.execute(sql`SELECT cusip, ticker, exchCode FROM cusip_map WHERE cik IS NULL AND ticker IS NOT NULL`);
     if (pending.length > 0) {
-      const [comp]: any = await db.execute(sql`SELECT cik, ticker FROM companies`);
-      const byTicker = new Map<string, number>(comp.map((c: any): [string, number] => [String(c.ticker), Number(c.cik)]));
+      const [comp]: any = await db.execute(sql`SELECT cik, ticker, exchange FROM companies`);
       const byCik = new Map<number, string[]>();
       for (const row of pending) {
-        const cik = byTicker.get(String(row.ticker));
+        const cik = resolveCompanyCik({ ticker: row.ticker, exchCode: row.exchCode }, comp).cik;
         if (cik) (byCik.get(cik) ?? byCik.set(cik, []).get(cik)!).push(String(row.cusip));
       }
       for (const [cik, list] of byCik) {
@@ -199,10 +199,9 @@ async function mapCusips(cusips: string[]): Promise<{ map: Map<string, { cik: nu
       // resolve the fresh tickers against companies in one go
       const tickers = values.map((v) => v.ticker).filter(Boolean);
       if (tickers.length > 0) {
-        const [comp]: any = await db.execute(sql`SELECT cik, ticker FROM companies WHERE ticker IN (${sql.join(tickers.map((t) => sql`${t}`), sql`, `)})`);
-        const byTicker = new Map<string, number>(comp.map((c: any): [string, number] => [String(c.ticker), Number(c.cik)]));
+        const [comp]: any = await db.execute(sql`SELECT cik, ticker, exchange FROM companies WHERE ticker IN (${sql.join(tickers.map((t) => sql`${t}`), sql`, `)})`);
         for (const v of values) {
-          const cik = v.ticker ? byTicker.get(v.ticker) ?? null : null;
+          const cik = resolveCompanyCik({ ticker: v.ticker, exchCode: v.exchCode }, comp).cik;
           if (cik) await db.execute(sql`UPDATE cusip_map SET cik = ${cik} WHERE cusip = ${v.cusip}`);
           out.set(v.cusip, { cik, ticker: v.ticker });
         }

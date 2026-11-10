@@ -67,6 +67,7 @@ const fullFeed = {
     generatedAt: "2026-11-10T06:49:42.087Z",
     dryRun: true,
     notProductionAlpha: true,
+    methodologyStatus: "invalid-methodology",
     priceCoverage: { status: "degraded", latestDate: "2026-11-06", note: "Price history ended 2026-11-06" },
     horizons: {
       forward1d: { hitRate: 0.3907407407, medianExcess: -0.005, coverage: 0.9926470588 },
@@ -77,12 +78,30 @@ const fullFeed = {
     generatedAt: "2026-11-10T12:00:00.000Z",
     dryRun: true,
     notProductionAlpha: true,
+    methodologyStatus: "invalid-methodology",
     priceCoverage: { status: "current", latestDate: "2026-11-09" },
     horizons: {
       forward1d: { hitRate: 0.5341959335, medianExcess: 0.001, coverage: 0.9944852941 },
       forward5d: { hitRate: 0.5185873606, medianExcess: 0.007, coverage: 0.9889705882 },
       forward20d: { hitRate: 0.5095785441, medianExcess: 0.01, coverage: 0.9595588235 },
     },
+  }, {
+    generatedAt: "2026-11-10T13:00:00.000Z",
+    dryRun: true,
+    notProductionAlpha: true,
+    methodologyStatus: "canonical",
+    priceCoverage: { status: "current", latestDate: "2026-11-09" },
+    maxEntryGapDays: 45,
+    horizons: {
+      forward1d: { hitRate: 0.5, medianExcess: 0, coverage: 1 },
+      forward5d: { hitRate: 0.5, medianExcess: 0, coverage: 1 },
+      forward20d: { hitRate: 0.5, medianExcess: 0, coverage: 1 },
+    },
+    coverageByYear: [{ year: "2026", total: 1, horizons: {
+      forward1d: { computed: 1, coverage: 1 },
+      forward5d: { computed: 1, coverage: 1 },
+      forward20d: { computed: 1, coverage: 1 },
+    } }],
   }],
 };
 
@@ -125,6 +144,8 @@ describe("Insider Activity full-run loading and preview fallback", () => {
     expect(host!.textContent).toContain("price coverage through 2026-11-09");
     expect(host!.textContent).toContain("39.1% hit · 99.3% coverage");
     expect(host!.textContent).toContain("53.4% hit · 99.4% coverage");
+    expect(host!.textContent).toContain("invalid-methodology");
+    expect(host!.textContent).toContain("years: 2026 100%/+1d 100%/+5d 100%/+20d");
     expect(host!.textContent).toContain("window-sensitive dry-run, no CI, not a standalone signal");
     expect(host!.textContent).not.toContain("Preview sample — two real EDGAR filings");
   });

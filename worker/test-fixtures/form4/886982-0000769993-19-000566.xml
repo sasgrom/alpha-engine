@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<ownershipDocument>
+
+    <schemaVersion>X0306</schemaVersion>
+
+    <documentType>4</documentType>
+
+    <periodOfReport>2019-11-21-05:00</periodOfReport>
+
+    <notSubjectToSection16>false</notSubjectToSection16>
+
+    <issuer>
+        <issuerCik>0000886982</issuerCik>
+        <issuerName>GOLDMAN SACHS GROUP INC</issuerName>
+        <issuerTradingSymbol>PROS</issuerTradingSymbol>
+    </issuer>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0000886982</rptOwnerCik>
+            <rptOwnerName>GOLDMAN SACHS GROUP INC</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>200 WEST STREET</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>NEW YORK</rptOwnerCity>
+            <rptOwnerState>NY</rptOwnerState>
+            <rptOwnerZipCode>10282</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>false</isDirector>
+            <isOfficer>false</isOfficer>
+            <isTenPercentOwner>true</isTenPercentOwner>
+            <isOther>false</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0000769993</rptOwnerCik>
+            <rptOwnerName>GOLDMAN SACHS &amp; CO. LLC</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>200 WEST STREET</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>NEW YORK</rptOwnerCity>
+            <rptOwnerState>NY</rptOwnerState>
+            <rptOwnerZipCode>10282</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>false</isDirector>
+            <isOfficer>false</isOfficer>
+            <isTenPercentOwner>true</isTenPercentOwner>
+            <isOther>false</isOther>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <nonDerivativeTable></nonDerivativeTable>
+
+    <derivativeTable>
+        <derivativeTransaction>
+            <securityTitle>
+                <value>Restricted Stock Units</value>
+            </securityTitle>
+            <conversionOrExercisePrice>
+                <footnoteId id="F2"/>
+            </conversionOrExercisePrice>
+            <transactionDate>
+                <value>2019-11-21-05:00</value>
+            </transactionDate>
+            <transactionCoding>
+                <transactionFormType>4</transactionFormType>
+                <transactionCode>J</transactionCode>
+                <equitySwapInvolved>false</equitySwapInvolved>
+            </transactionCoding>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>3720</value>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <footnoteId id="F3"/>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>A</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <exerciseDate>
+                <footnoteId id="F3"/>
+            </exerciseDate>
+            <expirationDate>
+                <footnoteId id="F3"/>
+            </expirationDate>
+            <underlyingSecurity>
+                <underlyingSecurityTitle>
+                    <value>Common Stock</value>
+                </underlyingSecurityTitle>
+                <underlyingSecurityShares>
+                    <value>3720</value>
+                </underlyingSecurityShares>
+            </underlyingSecurity>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>3720</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>See footnotes</value>
+                    <footnoteId id="F1"/>
+                    <footnoteId id="F3"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </derivativeTransaction>
+    </derivativeTable>
+
+    <footnotes>
+        <footnote id="F1">This statement is being filed by The Goldman Sachs Group, Inc. (&quot;GS Group&quot;) and Goldman Sachs &amp; Co. LLC (&quot;Goldman Sachs&quot; and together with GS Group, the &quot;Reporting Persons&quot;). Goldman Sachs is a subsidiary of GS Group. The Reporting Persons disclaim beneficial ownership of the securities reported herein except to the extent of their pecuniary interest therein.In addition to the RSUs described herein, the Reporting Persons may be deemed to beneficially own indirectly, in the aggregate, 17,005,016 shares of Common Stock, par value $0.01 per share (the &quot;Common Stock&quot;) of ProSight Global, Inc. (the &quot;Company&quot;) by reason of the direct beneficial ownership of Common Stock by certain investment entities (the &quot;GS Funds&quot;) because GS Group, or affiliates of GS Group and Goldman Sachs, are the general partner, managing general partner, managing partner, managing member or member of each of the GS Funds. Goldman Sachs is the investment manager of certain of the GS Funds.</footnote>
+        <footnote id="F2">Each restricted stock unit (&quot;RSU&quot;) represents a contingent right to receive one share of ProSight Global, Inc.'s (&quot;PGI&quot;) common stock.</footnote>
+        <footnote id="F3">Represents 1,860 non-employee director RSUs granted pursuant to PGI's non-employee director compensation policy as compensation to each of Sumit Rajpal and Anthony Arnold for their service as members of the board of directors for the period from the completion of PGI's initial public offering to December 31, 2019. Such RSUs were fully vested on grant and will be settled on the first to occur of the grantee's separation of service and a &quot;change of control&quot; as defined in PGI's 2019 Equity Incentive Plan. Messrs. Rajpal and Arnold have an understanding with the Reporting Persons to hold the shares on the Reporting Persons' behalf.</footnote>
+    </footnotes>
+
+    <remarks></remarks>
+
+    <ownerSignature>
+        <signatureName>/s/ Jamison Yardley, Attorney-in-fact</signatureName>
+        <signatureDate>2019-11-25-05:00</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>/s/ Jamison Yardley, Attorney-in-fact</signatureName>
+        <signatureDate>2019-11-25-05:00</signatureDate>
+    </ownerSignature>
+</ownershipDocument>

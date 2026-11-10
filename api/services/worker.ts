@@ -221,6 +221,7 @@ export type WorkerIngestBody = z.infer<typeof workerIngestBodyZ>;
  */
 export async function ingestDigests(rows: WorkerDigestRow[]): Promise<{ accepted: number; dupes: number; upserted: number; postCheck: { expected: number; verified: number; failed: number } }> {
   const db = getDb();
+  return db.transaction(async (db) => {
   const now = new Date().toISOString().slice(0, 19).replace("T", " ");
   let accepted = 0;
   let dupes = 0;
@@ -245,6 +246,7 @@ export async function ingestDigests(rows: WorkerDigestRow[]): Promise<{ accepted
   }
   if (verified !== rows.length) throw new Error(`digests post-check mismatch: ${verified}/${rows.length}`);
   return { accepted, dupes, upserted, postCheck: { expected: rows.length, verified, failed: rows.length - verified } };
+  });
 }
 
 async function postCheckSignals(db: any, rows: WorkerSignalRow[]) {
@@ -269,6 +271,7 @@ async function postCheckSignals(db: any, rows: WorkerSignalRow[]) {
  */
 export async function ingestSignals(rows: WorkerSignalRow[]): Promise<{ accepted: number; skippedDupes: number; dupes: number; postCheck: { expected: number; verified: number; failed: number } }> {
   const db = getDb();
+  return db.transaction(async (db) => {
   const ingestedAt = new Date().toISOString().slice(0, 19).replace("T", " ");
   let accepted = 0;
   const CHUNK = 500;
@@ -287,4 +290,5 @@ export async function ingestSignals(rows: WorkerSignalRow[]): Promise<{ accepted
   const postCheck = await postCheckSignals(db, rows);
   if (postCheck.failed) throw new Error(`signals post-check mismatch: ${postCheck.verified}/${postCheck.expected}`);
   return { accepted, skippedDupes: rows.length - accepted, dupes: rows.length - accepted, postCheck };
+  });
 }

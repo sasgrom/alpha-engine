@@ -39,6 +39,11 @@ function RoleBadges({ t }: { t: Form4Transaction }) {
           multi-owner · {t.owners?.length ?? 0}
         </span>
       )}
+      {t.isAmendment && (
+        <span className="t-mono text-[9px] uppercase px-1.5 py-0.5 rounded border border-[hsl(var(--warn)/0.5)] text-[hsl(var(--warn))]">
+          amendment{t.amendmentOf ? ` · ${t.amendmentOf}` : ""}
+        </span>
+      )}
       {t.preplanned && (
         <span className="t-mono text-[9px] uppercase px-1.5 py-0.5 rounded border border-[hsl(var(--warn)/0.5)] text-[hsl(var(--warn))]">
           10b5-1 plan
@@ -223,11 +228,16 @@ export default function InsiderActivity() {
           {feed.benchmarkRuns?.map((run) => (
             <div key={run.generatedAt} className="mb-3 t-mono text-[10px] leading-relaxed text-muted-foreground">
               <div>
-                Dry-run {run.generatedAt.slice(0, 10)} · {run.priceCoverage.status === "degraded" ? "degraded · " : ""}price coverage through {run.priceCoverage.latestDate}
+                Dry-run {run.generatedAt.slice(0, 10)} · {run.methodologyStatus === "invalid-methodology" ? "invalid-methodology · " : ""}{run.priceCoverage.status === "degraded" ? "degraded · " : ""}price coverage through {run.priceCoverage.latestDate}
               </div>
               <div>
                 {Object.entries(run.horizons).map(([key, value]) => `${horizonLabel(key)} ${(value.hitRate * 100).toFixed(1)}% hit · ${(value.coverage * 100).toFixed(1)}% coverage`).join(" · ")}
               </div>
+              {run.coverageByYear && (
+                <div>
+                  years: {run.coverageByYear.map((row) => `${row.year} ${(row.horizons.forward1d.coverage * 100).toFixed(0)}%/+1d ${(row.horizons.forward5d.coverage * 100).toFixed(0)}%/+5d ${(row.horizons.forward20d.coverage * 100).toFixed(0)}%/+20d`).join(" · ")}
+                </div>
+              )}
             </div>
           ))}
           {Boolean(feed.benchmarkRuns?.length) && (

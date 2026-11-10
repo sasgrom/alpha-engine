@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<ownershipDocument>
+
+    <schemaVersion>X0306</schemaVersion>
+
+    <documentType>4</documentType>
+
+    <periodOfReport>2018-06-07</periodOfReport>
+
+    <notSubjectToSection16>true</notSubjectToSection16>
+
+    <issuer>
+        <issuerCik>0001397187</issuerCik>
+        <issuerName>lululemon athletica inc.</issuerName>
+        <issuerTradingSymbol>LULU</issuerTradingSymbol>
+    </issuer>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001034196</rptOwnerCik>
+            <rptOwnerName>ADVENT INTERNATIONAL CORP/MA</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>800 BOYLSTON STREET, SUITE 3300</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>BOSTON</rptOwnerCity>
+            <rptOwnerState>MA</rptOwnerState>
+            <rptOwnerZipCode>02199-8069</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isTenPercentOwner>true</isTenPercentOwner>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001553020</rptOwnerCik>
+            <rptOwnerName>Advent International GPE VII-G Limited Partnership</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>C/O ADVENT INTERNATIONAL CORPORATION</rptOwnerStreet1>
+            <rptOwnerStreet2>800 BOYLSTON STREET, SUITE 3300</rptOwnerStreet2>
+            <rptOwnerCity>BOSTON</rptOwnerCity>
+            <rptOwnerState>MA</rptOwnerState>
+            <rptOwnerZipCode>02199-8069</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isTenPercentOwner>true</isTenPercentOwner>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001551275</rptOwnerCik>
+            <rptOwnerName>Advent International GPE VII-A Limited Partnership</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>C/O ADVENT INTERNATIONAL CORPORATION</rptOwnerStreet1>
+            <rptOwnerStreet2>800 BOYLSTON STREET, SUITE 3300</rptOwnerStreet2>
+            <rptOwnerCity>BOSTON</rptOwnerCity>
+            <rptOwnerState>MA</rptOwnerState>
+            <rptOwnerZipCode>02199-8069</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isTenPercentOwner>true</isTenPercentOwner>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001551364</rptOwnerCik>
+            <rptOwnerName>Advent International GPE VII-E Limited Partnership</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>C/O ADVENT INTERNATIONAL CORPORATION</rptOwnerStreet1>
+            <rptOwnerStreet2>800 BOYLSTON STREET, SUITE 3300</rptOwnerStreet2>
+            <rptOwnerCity>BOSTON</rptOwnerCity>
+            <rptOwnerState>MA</rptOwnerState>
+            <rptOwnerZipCode>02199-8069</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isTenPercentOwner>true</isTenPercentOwner>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001553021</rptOwnerCik>
+            <rptOwnerName>Advent International GPE VII-H Limited Partnership</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>C/O ADVENT INTERNATIONAL CORPORATION</rptOwnerStreet1>
+            <rptOwnerStreet2>800 BOYLSTON STREET, SUITE 3300</rptOwnerStreet2>
+            <rptOwnerCity>BOSTON</rptOwnerCity>
+            <rptOwnerState>MA</rptOwnerState>
+            <rptOwnerZipCode>02199-8069</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isTenPercentOwner>true</isTenPercentOwner>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <nonDerivativeTable>
+        <nonDerivativeTransaction>
+            <securityTitle>
+                <value>Common Stock</value>
+            </securityTitle>
+            <transactionDate>
+                <value>2018-06-07</value>
+            </transactionDate>
+            <transactionCoding>
+                <transactionFormType>4</transactionFormType>
+                <transactionCode>S</transactionCode>
+                <equitySwapInvolved>0</equitySwapInvolved>
+                <footnoteId id="F1"/>
+            </transactionCoding>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>10000000</value>
+                    <footnoteId id="F1"/>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <value>121</value>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>D</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>10105279</value>
+                    <footnoteId id="F1"/>
+                    <footnoteId id="F2"/>
+                    <footnoteId id="F3"/>
+                    <footnoteId id="F4"/>
+                    <footnoteId id="F5"/>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                    <footnoteId id="F1"/>
+                    <footnoteId id="F2"/>
+                    <footnoteId id="F3"/>
+                    <footnoteId id="F4"/>
+                    <footnoteId id="F5"/>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>See Notes</value>
+                    <footnoteId id="F1"/>
+                    <footnoteId id="F2"/>
+                    <footnoteId id="F3"/>
+                    <footnoteId id="F4"/>
+                    <footnoteId id="F5"/>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeTransaction>
+    </nonDerivativeTable>
+
+    <footnotes>
+        <footnote id="F1">Represents shares of Common Stock held directly and sold by: (a) Advent Puma Acquisition Limited (&quot;APAL&quot;) (9,703,920 shares); and each of the following entities (a &quot;Specified Advent Fund&quot;) - Advent Partners GPE VII-A Limited Partnership (10,651 shares); Advent Partners GPE VII-A Cayman Limited Partnership (25,640 shares); Advent Partners GPE VII-B Cayman Limited Partnership (105,751 shares); Advent Partners GPE VII 2014 Limited Partnership (6,120 shares); Advent Partners GPE VII 2014 Cayman Limited Partnership (17,400 shares); Advent Partners GPE VII-A 2014 Limited Partnership (16,851 shares); Advent Partners GPE VII-A 2014 Cayman Limited Partnership (12,270 shares); Advent Partners GPE VII Limited Partnership (4,451 shares); and Advent Partners GPE VII Cayman Limited Partnership (96,946 shares).</footnote>
+        <footnote id="F2">Following the reported transaction, the shares of Common Stock were directly owned by:  APAL (9,806,083 shares); Advent Partners GPE VII-A Limited Partnership (10,761 shares); Advent Partners GPE VII-A Cayman Limited Partnership (25,910 shares); Advent Partners GPE VII-B Cayman Limited Partnership (106,862 shares); Advent Partners GPE VII 2014 Limited Partnership (6,184 shares); Advent Partners GPE VII 2014 Cayman Limited Partnership (17,583 shares); Advent Partners GPE VII-A 2014 Limited Partnership (17,026 shares); Advent Partners GPE VII-A 2014 Cayman Limited Partnership (12,399 shares); Advent Partners GPE VII Limited Partnership (4,496 shares); and Advent Partners GPE VII Cayman Limited Partnership (97,975 shares).  The owners of APAL are the Advent Funds (as defined below) other than than the Specified Advent Funds.</footnote>
+        <footnote id="F3">APAL, together with Advent International Corporation (&quot;AIC&quot;) and the Advent Funds are referred to herein as the &quot;Reporting Persons.&quot;  The shares directly owned by APAL or by any Specified Advent Fund may be deemed indirectly owned by other Reporting Persons; however, each Reporting Person disclaims beneficial ownership of these securities except to the extent of its respective pecuniary interest therein, if any, and the inclusion of these shares in this report shall not be deemed an admission of beneficial ownership of all of the reported shares for purposes of Section 16 or for any other purpose.</footnote>
+        <footnote id="F4">AIC is the Manager of Advent International GPE VII, LLC (&quot;AIGPE VII LLC&quot;) which in turn is the General Partner of the following entities (together with AIGPE VII LLC, the &quot;Advent VII Funds&quot;):  Advent Partners GPE VII Limited Partnership; Advent Partners GPE VII Cayman Limited Partnership; Advent Partners GPE VII-A Limited Partnership; Advent Partners GPE VII-A Cayman Limited Partnership; Advent Partners GPE VII-B Cayman Limited Partnership; Advent Partners GPE VII 2014 Limited Partnership; Advent Partners GPE VII 2014 Cayman Limited Partnership; Advent Partners GPE VII-A 2014 Limited Partnership; Advent Partners GPE VII-A 2014 Cayman Limited Partnership; GPE VII GP (Delaware) Limited Partnership (&quot;GPEVII GP (Del)&quot;); and GPE VII GP Limited Partnership (&quot;GPEVII GP&quot;).</footnote>
+        <footnote id="F5">GPEVII GP (Del) is the General Partner of the following entities (together, the &quot;Advent Del Funds&quot;): Advent International GPE VII Limited Partnership; Advent International GPE VII-B Limited Partnership; Advent International GPE VII-C Limited Partnership; Advent International GPE VII-D Limited Partnership; Advent International GPE VII-F Limited Partnership; and Advent International GPE VII-G Limited Partnership.  GPEVII GP is the General Partner of the following entities (the &quot;GPE VII GP Funds&quot; and together with the Advent VII Funds and the Advent Del Funds, the &quot;Advent Funds&quot;): Advent International GPE VII-A Limited Partnership; Advent International GPE VII-E Limited Partnership; and Advent International GPE VII-H Limited Partnership.</footnote>
+    </footnotes>
+
+    <remarks>Exhibit 99.1 - Signatures and Joint Filer Information, incorporated herein by reference.  This Form 4 is the third of three Form 4s being filed relating to the same event. The Form 4 has been split into three filings because there are more than 20 Reporting Persons in total, and the SEC's EDGAR filing system limits a single Form 4 to a maximum of 10. Each Form 4 will be filed by Designated Filer, Advent International Corporation.</remarks>
+
+    <ownerSignature>
+        <signatureName>See Exhibit 99.1</signatureName>
+        <signatureDate>2018-06-11</signatureDate>
+    </ownerSignature>
+</ownershipDocument>

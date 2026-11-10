@@ -7,6 +7,25 @@ const mocks = vi.hoisted(() => ({
 }));
 vi.mock("../queries/connection", () => ({
   getDb: () => ({
+    transaction: async (callback: (tx: any) => Promise<unknown>) => callback({
+      execute: async (query: any) => {
+        const text = query.queryChunks.map((chunk: any) => chunk?.constructor?.name === "StringChunk" ? chunk.value.join("") : "").join("");
+        if (text.startsWith("INSERT INTO digests") || text.startsWith("INSERT IGNORE INTO digests")) {
+          mocks.digestRows = [{ kind: "morning", scope: "", forDate: "2026-11-06", body: "brief", model: null, meta: null }];
+          return [{ affectedRows: mocks.affectedRows }];
+        }
+        if (text.startsWith("INSERT")) return [{ affectedRows: mocks.affectedRows }];
+        if (text.startsWith("SELECT")) return [mocks.signalRows];
+        throw new Error("Unexpected SQL");
+      },
+      select: () => ({
+        from: () => ({
+          where: () => ({
+            limit: async () => mocks.digestRows.slice(0, 1),
+          }),
+        }),
+      }),
+    }),
     execute: async (query: any) => {
       const text = query.queryChunks.map((chunk: any) => chunk?.constructor?.name === "StringChunk" ? chunk.value.join("") : "").join("");
       if (text.startsWith("INSERT INTO digests") || text.startsWith("INSERT IGNORE INTO digests")) {

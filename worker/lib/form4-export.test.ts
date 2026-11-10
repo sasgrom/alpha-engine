@@ -107,7 +107,10 @@ beforeEach(() => {
     generatedAt: "2026-11-10T12:00:00.000Z",
     dryRun: true,
     notProductionAlpha: true,
+    methodology: "canonical_dailyPrice_v1",
+    priceEvidence: { source: "local_mysql_dailyPrice", asOf: "2026-11-10T12:00:00.000Z", maxEntryGapDays: 45 },
     priceCoverage: { status: "current", latestDate: "2026-11-09" },
+    coverageByYear: [{ year: "2026", total: 1, horizons: { forward1d: { computed: 1, coverage: 1 }, forward5d: { computed: 1, coverage: 1 }, forward20d: { computed: 1, coverage: 1 } } }],
     horizons: {
       forward1d: { counts: { total: 1, computed: 1 }, hitRate: 0.39, medianExcess: -0.005 },
       forward5d: { counts: { total: 1, computed: 1 }, hitRate: 0.41, medianExcess: -0.006 },
@@ -119,6 +122,12 @@ beforeEach(() => {
     ...benchmark,
     generatedAt: "2026-11-10T06:49:42.087Z",
     priceCoverage: { status: "degraded", latestDate: "2026-11-06", note: "Price history ended 2026-11-06" },
+  }));
+  writeFileSync(path.join(qaRoot, "benchmark-summary-2026-11-10T21-36-16Z.json"), JSON.stringify({
+    ...benchmark,
+    generatedAt: "2026-11-10T21:36:16.094Z",
+    methodology: "raw_pricehistory_short_window",
+    priceCoverage: { status: "current", latestDate: "2026-11-09" },
   }));
 });
 
@@ -135,6 +144,10 @@ describe("Form 4 full-run serving export", () => {
     expect(excluded).toMatchObject({ exclusionReason: "option_exercise", clusterId: null, multiOwner: true });
     expect(excluded.owners).toHaveLength(2);
     expect(purchase).toMatchObject({ ticker: "AAA", sourceTicker: "LEGACY", exclusionReason: null, clusterId: cluster.clusterId });
+    expect(artifact.benchmarkRuns).toHaveLength(3);
+    expect(artifact.benchmarkRuns.slice(0, 2).every((run) => run.methodologyStatus === "invalid-methodology")).toBe(true);
+    expect(artifact.benchmarkRuns[2]).toMatchObject({ methodologyStatus: "canonical", maxEntryGapDays: 45 });
+    expect(artifact.benchmarkRuns[2].coverageByYear[0]).toMatchObject({ year: "2026", total: 1 });
     expect(artifact.benchmarkRuns[0].horizons.forward20d.hitRate).toBeLessThan(0.5);
     expect(artifact.benchmarkRuns[0].priceCoverage).toMatchObject({ status: "degraded", latestDate: "2026-11-06" });
     expect(artifact.benchmarkRuns[1].priceCoverage).toMatchObject({ status: "current", latestDate: "2026-11-09" });
@@ -148,7 +161,7 @@ describe("Form 4 full-run serving export", () => {
     expect(result.sha256).toBe(createHash("sha256").update(body).digest("hex"));
     expect(result.multiOwnerTransactions).toBe(2);
     expect(slim.transactions).toHaveLength(2);
-    expect(slim.kpi).toMatchObject({ openMarketBuyCount: 1, openMarketBuyUsd: 2500, excludedCount: 1, uniqueInsidersBuying: 2, multiOwnerTransactions: 2 });
+    expect(slim.kpi).toMatchObject({ openMarketBuyCount: 1, openMarketBuyUsd: 2500, excludedCount: 1, uniqueInsidersBuying: 1, multiOwnerTransactions: 2 });
     expect(slim.perTicker.find((row) => row.ticker === "AAA")).toMatchObject({ openMarketBuyCount: 1, clusters: 1 });
     expect(result.fullSha256).toBe(createHash("sha256").update(readFileSync(result.fullOut, "utf8")).digest("hex"));
     writeFileSync(out, "previous-reviewed-artifact");

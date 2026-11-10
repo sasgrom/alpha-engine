@@ -26,14 +26,16 @@ describe("Form 4 ownership XML parser", () => {
     expect(rows.slice(1).map(form4ExclusionReason)).toEqual(["award", "option_exercise", "rsu_tax_withholding", "gift", "sale"]);
   });
 
-  it("supersedes amendments and duplicate transactions without double counting", () => {
+  it("keeps first-available original and amendment separately while deduping identical rows", () => {
     const original = parseForm4Xml(form4FixtureXml(["P"]), context);
     const amended = parseForm4Xml(form4FixtureXml(["P"], true), { ...context, form: "4/A", accessionNo: "0000000000-26-000002", availableAt: "2026-10-11 16:30:00" });
     const rows = supersedeForm4Transactions([...original, ...original, ...amended]);
-    expect(rows).toHaveLength(1);
-    expect(rows[0].accessionNo).toBe("0000000000-26-000002");
-    expect(rows[0].isAmendment).toBe(true);
-    expect(rows[0].amendmentOf).toBe("0000000000-26-000001");
+    expect(rows).toHaveLength(2);
+    expect(rows[0].accessionNo).toBe("0000000000-26-000001");
+    expect(rows[0].isAmendment).toBe(false);
+    expect(rows[1].accessionNo).toBe("0000000000-26-000002");
+    expect(rows[1].isAmendment).toBe(true);
+    expect(rows[1].amendmentOf).toBe("0000000000-26-000001");
   });
 
   it("skips a different issuer but rejects invalid ownership XML", () => {

@@ -7,6 +7,41 @@ export function normalizeFigiTicker(value: unknown): string | null {
   return value.trim() || null;
 }
 
+export function normalizeCusip(value: unknown): string {
+  if (typeof value !== "string" || !/^[A-Za-z0-9]{9}$/.test(value)) throw new Error("CUSIP must contain exactly nine alphanumeric characters");
+  return value.toUpperCase();
+}
+
+const EXCHANGE_ALIASES: Record<string, string[]> = {
+  NYSE: ["NYSE", "XNYS", "NEW YORK STOCK EXCHANGE"],
+  NASDAQ: ["NASDAQ", "XNAS", "NASDAQ STOCK MARKET"],
+  TSX: ["TSX", "XTSE", "TORONTO STOCK EXCHANGE"],
+  TSXV: ["TSXV", "XTSX", "TSX VENTURE EXCHANGE"],
+  LSE: ["LSE", "XLON", "LONDON STOCK EXCHANGE"],
+};
+
+function exchangeMatches(left: string, right: string): boolean {
+  const normalize = (value: string) => value.trim().toUpperCase().replace(/[^A-Z0-9]+/g, " ");
+  const a = normalize(left), b = normalize(right);
+  return a === b || Object.values(EXCHANGE_ALIASES).some((aliases) => aliases.includes(a) && aliases.includes(b));
+}
+
+export function resolveCompanyCik(
+  candidate: { ticker: unknown; exchCode?: unknown },
+  companies: { cik: number; ticker: string; exchange?: string | null }[],
+): { cik: number | null; reason: string | null } {
+  if (typeof candidate.ticker !== "string" || !candidate.ticker.trim()) return { cik: null, reason: "missing_ticker" };
+  const ticker = candidate.ticker.trim().toUpperCase();
+  const matches = companies.filter((company) => company.ticker.trim().toUpperCase() === ticker);
+  if (!matches.length) return { cik: null, reason: "no_ticker_match" };
+  const exchCode = typeof candidate.exchCode === "string" && candidate.exchCode.trim() ? candidate.exchCode.trim() : null;
+  const exchangeMatchesCandidate = (company: { exchange?: string | null }) => !exchCode || !company.exchange || exchangeMatches(exchCode, company.exchange);
+  const compatible = matches.filter(exchangeMatchesCandidate);
+  if (!compatible.length) return { cik: null, reason: "exchange_mismatch" };
+  if (compatible.length > 1) return { cik: null, reason: "ambiguous_ticker" };
+  return { cik: compatible[0].cik, reason: null };
+}
+
 /** Split mapping jobs without crossing OpenFIGI's documented request limit. */
 export function chunkFigiIds<T>(ids: T[], size = FIGI_MAX_JOBS_PER_REQUEST): Array<{ start: number; items: T[] }> {
   if (!Number.isInteger(size) || size < 1 || size > FIGI_MAX_JOBS_PER_REQUEST) {

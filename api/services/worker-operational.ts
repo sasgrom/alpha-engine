@@ -85,6 +85,7 @@ function priceContent(row: any) {
 
 export async function ingestPricesDaily(rows: WorkerPriceDailyRow[], options: { db?: any; now?: Date } = {}) {
   const db = options.db ?? getDb();
+  return db.transaction(async (db: any) => {
   const now = options.now ?? new Date();
   for (const row of rows) assertPriceDateNotFuture(row, now);
   const unique = new Map<string, WorkerPriceDailyRow>();
@@ -128,6 +129,7 @@ export async function ingestPricesDaily(rows: WorkerPriceDailyRow[], options: { 
   }
   if (verified !== unique.size) throw new Error(`pricesDaily post-check mismatch: ${verified}/${unique.size}`);
   return { accepted, dupes, postCheck: { expected: unique.size, verified, failed: unique.size - verified } };
+  });
 }
 
 function macroKey(row: Pick<WorkerMacroPointRow, "seriesId" | "observationPeriod" | "realtimeStart">) {
@@ -136,6 +138,7 @@ function macroKey(row: Pick<WorkerMacroPointRow, "seriesId" | "observationPeriod
 
 export async function ingestMacroPoints(rows: WorkerMacroPointRow[], options: { db?: any; now?: Date } = {}) {
   const db = options.db ?? getDb();
+  return db.transaction(async (db: any) => {
   const now = options.now ?? new Date();
   const unique = new Map<string, WorkerMacroPointRow>();
   const rejected: { key: string; reason: string }[] = [];
@@ -201,6 +204,7 @@ export async function ingestMacroPoints(rows: WorkerMacroPointRow[], options: { 
   }
   if (verified !== expected.length) throw new Error(`macroPoints post-check mismatch: ${verified}/${expected.length}`);
   return { accepted, dupes, rejected, postCheck: { expected: expected.length, verified, failed: expected.length - verified } };
+  });
 }
 
 export async function ingestReportFile(input: { name: string; body: string; sha256: string; generatedAt: string; contentEncoding?: "gzip-base64" }, options: { db?: any; now?: Date } = {}) {
@@ -211,7 +215,7 @@ export async function ingestReportFile(input: { name: string; body: string; sha2
     const parsed = JSON.parse(plain);
     if (parsed.status !== "full_run" || parsed.universe !== 50 || !parsed.kpi || !Array.isArray(parsed.perTicker)
       || parsed.transactions?.length !== Math.min(500, parsed.totals?.transactions) || parsed.clusters?.length !== parsed.totals?.clusters
-      || !Array.isArray(parsed.benchmarkRuns) || parsed.benchmarkRuns.length !== 2) {
+      || !Array.isArray(parsed.benchmarkRuns) || parsed.benchmarkRuns.length !== 3) {
       throw new Error("Compressed Form 4 report is not a complete full-run artifact");
     }
   }
@@ -220,6 +224,7 @@ export async function ingestReportFile(input: { name: string; body: string; sha2
   const generatedAt = new Date(input.generatedAt);
   if (!Number.isFinite(generatedAt.getTime())) throw new Error("reportFile generatedAt is invalid");
   const db = options.db ?? getDb();
+  return db.transaction(async (db: any) => {
   const [existing] = await db.select().from(reports).where(eq(reports.name, input.name)).limit(1);
   if (existing && canonicalTs(existing.generatedAt) >= canonicalTs(generatedAt)) {
     return { accepted: 0, dupes: 1, postCheck: { expected: 1, verified: existing.sha256 === input.sha256 ? 1 : 0, failed: existing.sha256 === input.sha256 ? 0 : 1 } };
@@ -232,6 +237,7 @@ export async function ingestReportFile(input: { name: string; body: string; sha2
   const verified = persisted && persisted.body === input.body && persisted.sha256 === input.sha256 && canonicalTs(persisted.generatedAt) === canonicalTs(generatedAt) ? 1 : 0;
   if (!verified) throw new Error("reportFile post-check mismatch");
   return { accepted: 1, dupes: 0, postCheck: { expected: 1, verified, failed: 0 } };
+  });
 }
 
 export async function existingReport(name: string, db: any = getDb()) {
