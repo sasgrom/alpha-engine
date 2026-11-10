@@ -1086,3 +1086,11 @@ Deliberately not automatic:
 - Global results: **+1d hitRate=0.4748603352, medianExcess=−0.0009260126 (537/545 computed); +5d hitRate=0.5561797753, medianExcess=0.0037760400 (534/545); +20d hitRate=0.5125240848, medianExcess=0.0029148603 (519/545)**. Coverage: 98.53% / 97.98% / 95.23%.
 - Per-year +1d/+5d/+20d coverage: 2013 1/1 all; 2014 12/12 all; 2015 48/48 all; 2016 44/44 all; 2017 24/27 all; 2018 50/50 all; 2019 47/48 all; 2020 49/49 all; 2021 35/36 all; 2022 46/47 all; 2023 60/60 all; 2024 41/41 all; 2025 36/36 all; 2026 **44/46 (95.65%) / 41/46 (89.13%) / 26/46 (56.52%)**. Earlier years have identical horizon coverage within each year.
 - This is evidence delivery only: no production writes, deployment, code changes or additional tests were needed. The pre-existing unrelated untracked PDF and generated slim serving JSON remain outside the commit.
+
+
+
+## 102. Prediction-engine design track opened; prep tasks K01 and K02 — 2026-11-10
+
+- The owner and Claude are designing the prediction engine step by step. The living design is `docs/engine/DESIGN.md`; step 1 (problem definition) is decided: the engine only analyses, predicts each stock's own direction plus value-band probabilities, uses company windows from one earnings release to the day before the next, and models market, sector and company states. Existing engine code in `api/services/` is not the baseline for this design.
+- Prep work for Kimi Code is specified in `docs/engine/tasks/`. Two tasks are ready: `K01-event-calendar.md` (publication times, earnings-release flags and a per-quarter timeline for the 50 companies) and `K02-stooq-price-load.md` (S&P 500, SPY and sector ETF prices from `D:\stooq data 102726\d_us_txt.zip`). Each spec lists deliverables and acceptance checks; append the delivery report to the spec file.
+- These are documentation-only changes: no source, database, collector or production action was taken. Read-only SELECTs on local MySQL were used for the measurements quoted in the design.
