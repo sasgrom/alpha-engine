@@ -42,6 +42,25 @@ for (const spec of TABLES) {
   const [exists]: any = await conn.query("SELECT COUNT(*) n FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?", [spec.table]);
   if (!exists[0].n) { (out.tables as any)[spec.table] = { present: false }; continue; }
   const [cnt]: any = await conn.query(`SELECT COUNT(*) n FROM \`${spec.table}\``);
+  const [colTypes]: any = await conn.query("SELECT COLUMN_NAME, DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?", [spec.table]);
+  const typeOf = new Map<string, string>(colTypes.map((r: any) => [r.COLUMN_NAME, r.DATA_TYPE]));
+  // Cross-driver comparable rows: DATE -> YYYY-MM-DD; DATETIME/TIMESTAMP -> UTC ISO.
+  // mysql2 may return Date objects or "YYYY-MM-DD HH:MM:SS" strings depending on config.
+  const canonValue = (col: string, value: unknown): unknown => {
+    const t = typeOf.get(col);
+    if (value === null || value === undefined) return value;
+    if (t === "date") {
+      if (value instanceof Date) return value.toISOString().slice(0, 10);
+      return String(value).slice(0, 10);
+    }
+    if (t === "datetime" || t === "timestamp") {
+      if (value instanceof Date) return value.toISOString();
+      const parsed = new Date(String(value).replace(" ", "T") + (String(value).includes("Z") || String(value).includes("+") ? "" : "Z"));
+      return Number.isFinite(parsed.getTime()) ? parsed.toISOString() : String(value);
+    }
+    return value;
+  };
+  const canonRow = (row: Record<string, unknown>) => Object.fromEntries(Object.entries(row).map(([k, v]) => [k, canonValue(k, v)]));
   const [pkCols]: any = await conn.query(
     "SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND CONSTRAINT_NAME = 'PRIMARY' ORDER BY ORDINAL_POSITION",
     [spec.table],
@@ -62,7 +81,7 @@ for (const spec of TABLES) {
       [rows] = await conn.query(`SELECT * FROM \`${spec.table}\` ORDER BY ${orderBy} LIMIT 20000 OFFSET ${offset}`) as any;
     }
     if (!rows.length) break;
-    for (const row of rows) hash.update(JSON.stringify(row) + "\n");
+    for (const row of rows) hash.update(JSON.stringify(canonRow(row)) + "\n");
     hashed += rows.length;
     lastKey = pks.map((c) => rows[rows.length - 1][c]);
     if (rows.length < 20000) break;
