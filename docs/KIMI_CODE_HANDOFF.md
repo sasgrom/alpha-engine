@@ -907,3 +907,12 @@ Deliberately not automatic:
 - Fixed `npx tsx worker/prod-push.mts --kind reportFile --name daily-prices-schwab.json`: it no longer reads a nonexistent `public/reports/daily-prices-schwab.json`. The new `buildReportFileBackfillPayload` builds this generated report from the same official Schwab daily candles used by `pricesDaily`; static report names keep the existing file loader.
 - Real local payload verification, without any network push: **50/50 collected**, 61,941 bytes, SHA256 `0fbab4e99872523fc128d0d50f0104e2961602d01b3a3c6243d8d8c947964abe`. Regression covers the exact report name, generated body and hash.
 - Verification: `worker/lib/prod-push.test.ts` **5/5 passed**, `npm run check`, production build and `git diff --check` passed. No production write occurred. Exact fix commit is authoritative in `git log`.
+
+
+
+## 85. Honest PROD-only targeting for prod-push — 2026-11-10
+
+- `worker/lib/prod-push.ts` now reads only `PROD_INGEST_URL`; the local `INGEST_URL` fallback is removed. Missing/invalid values fail with `PROD_INGEST_URL is required (https .../api/worker/ingest); INGEST_URL is not used by prod-push`. HTTPS, exact `/api/worker/ingest` path and no credentials/query/hash are enforced.
+- Target logging is host-only (`target host: <host>`). `worker/prod-push.mts` emits `PROD_PUSH_OK` only after all responses succeed and `assertOperationalServerEvidence` verifies zero rejected/failed rows and expected=verified. Output contains accepted/dupes/postCheck counts from the server, not local expectations. HTTP 400 `unsupported kind` maps to `prod server has no ingest lane yet — publish the new version first`.
+- Verification: targeted suites **3 files / 26 tests passed**, including INGEST_URL-only refusal, exact target path, host log, non-ok response without success, and post-check mismatch. `npm run test:scripts` **4 files / 30 tests passed**; `npm run check`, production build and `git diff --check` passed.
+- Safe CLI proof with `PROD_INGEST_URL=` returned `PROD_PUSH_FAILED PROD_INGEST_URL is required ...` before any network call. During earlier validation, the configured production target returned HTTP 500 twice; no success or post-check evidence was returned, so no production write is claimed or confirmed. Exact fix commit is authoritative in `git log`.

@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { buildDailyPricesFromRaw, buildMacroPointsPayload, buildReportFileBackfillPayload, buildReportFilePayload, postOperationalIngest, shouldPushOperationalJob } from "./prod-push";
+import { assertOperationalServerEvidence, buildDailyPricesFromRaw, buildMacroPointsPayload, buildReportFileBackfillPayload, buildReportFilePayload, postOperationalIngest, prodIngestTarget, shouldPushOperationalJob } from "./prod-push";
 import { MACRO_SERIES } from "./macro-sources";
 import type { NormalizedMacroPoint } from "./fred";
 
@@ -16,11 +16,28 @@ beforeEach(() => {
 afterEach(() => {
   rmSync(root, { recursive: true, force: true });
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
   delete process.env.INGEST_URL;
+  delete process.env.PROD_INGEST_URL;
   delete process.env.WORKER_KEY;
 });
 
 describe("operational production push", () => {
+  it("refuses INGEST_URL when PROD_INGEST_URL is missing", () => {
+    process.env.INGEST_URL = "http://127.0.0.1:3000/api/worker/ingest";
+    delete process.env.PROD_INGEST_URL;
+    expect(() => prodIngestTarget()).toThrow("PROD_INGEST_URL is required (https .../api/worker/ingest); INGEST_URL is not used by prod-push");
+  });
+
+  it("requires HTTPS and the exact production ingest path", () => {
+    process.env.PROD_INGEST_URL = "http://example.test/api/worker/ingest";
+    expect(() => prodIngestTarget()).toThrow("PROD_INGEST_URL is required");
+    process.env.PROD_INGEST_URL = "https://example.test/api/worker/other";
+    expect(() => prodIngestTarget()).toThrow("PROD_INGEST_URL is required");
+    process.env.PROD_INGEST_URL = "https://example.test/api/worker/ingest";
+    expect(prodIngestTarget()).toEqual({ url: "https://example.test/api/worker/ingest", host: "example.test" });
+  });
+
   it("pushes only successful scheduled outputs, never failed or manual jobs", () => {
     expect(shouldPushOperationalJob("schwab-fetch-daily", "done", "cron")).toBe(true);
     expect(shouldPushOperationalJob("macro-fred-weekly", "done", "dependency")).toBe(true);
@@ -69,16 +86,34 @@ describe("operational production push", () => {
   });
 
   it("uses exactly one retry before returning a successful ingest response", async () => {
-    process.env.INGEST_URL = "https://example.test/api/worker/ingest";
+    process.env.PROD_INGEST_URL = "https://example.test/api/worker/ingest";
     process.env.WORKER_KEY = "unit-test-key";
     const fetchMock = vi.fn()
       .mockResolvedValueOnce(new Response("temporary failure", { status: 500 }))
       .mockResolvedValueOnce(new Response(JSON.stringify({ ok: true }), { status: 200, headers: { "content-type": "application/json" } }));
     vi.stubGlobal("fetch", fetchMock);
     const body = JSON.stringify({ generatedAt: "2026-11-09T10:00:00.000Z" });
-    const response = await postOperationalIngest({ kind: "reportFile", name: "schwab-context.json", body, sha256: createHash("sha256").update(body).digest("hex"), generatedAt: "2026-11-09T10:00:00.000Z" });
+    const onTarget = vi.fn();
+    const response = await postOperationalIngest({ kind: "reportFile", name: "schwab-context.json", body, sha256: createHash("sha256").update(body).digest("hex"), generatedAt: "2026-11-09T10:00:00.000Z" }, { onTarget });
     expect(response).toEqual({ ok: true });
     expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(onTarget).toHaveBeenCalledWith("example.test");
+  });
+
+  it("rejects an old server lane without emitting a success line", async () => {
+    process.env.PROD_INGEST_URL = "https://example.test/api/worker/ingest";
+    process.env.WORKER_KEY = "unit-test-key";
+    const response = new Response(JSON.stringify({ error: "unsupported kind" }), { status: 400, headers: { "content-type": "application/json" } });
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(response));
+    const log = vi.spyOn(console, "log").mockImplementation(() => {});
+    await expect(postOperationalIngest({ kind: "unsupported" })).rejects.toThrow("prod server has no ingest lane yet — publish the new version first");
+    expect(log.mock.calls.some(([line]) => String(line).startsWith("PROD_PUSH_OK"))).toBe(false);
+  });
+
+  it("summarizes only server evidence and rejects failed post-checks", () => {
+    const summary = assertOperationalServerEvidence([{ accepted: 2, dupes: 1, postCheck: { expected: 3, verified: 3, failed: 0 } }]);
+    expect(summary).toEqual({ accepted: 2, dupes: 1, rejected: 0, postCheck: { expected: 3, verified: 3, failed: 0 } });
+    expect(() => assertOperationalServerEvidence({ accepted: 0, dupes: 0, postCheck: { expected: 1, verified: 0, failed: 1 } })).toThrow("Server post-check failed");
   });
 
   it("hashes report bodies and preserves their generatedAt", () => {

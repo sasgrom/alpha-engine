@@ -4,7 +4,6 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { reportFilePolicy } from "../../contracts/report-files";
 import { fetchJson } from "./http";
-import { PROD_INGEST_URL } from "./ingest";
 import { latestCompleteOfficialDailyBars } from "./schwab-daily";
 import { MACRO_SERIES } from "./macro-sources";
 import { auditNormalizedMacroSeries } from "./macro-manifest-qa";
@@ -26,28 +25,74 @@ export function shouldPushOperationalJob(jobId: string, status: OperationalJobSt
   return status === "done" && trigger !== "manual" && Boolean(JOB_OUTPUTS[jobId]?.length);
 }
 
-function ingestUrl(): string {
-  const value = process.env.INGEST_URL ?? PROD_INGEST_URL;
-  const url = new URL(value);
-  if (url.protocol !== "https:" && !["127.0.0.1", "localhost"].includes(url.hostname)) throw new Error("INGEST_URL must use HTTPS outside the local worker");
-  return value;
+let loggedTargetHost: string | undefined;
+
+export function prodIngestTarget(): { url: string; host: string } {
+  const value = process.env.PROD_INGEST_URL;
+  if (!value) throw new Error("PROD_INGEST_URL is required (https .../api/worker/ingest); INGEST_URL is not used by prod-push");
+  let url: URL;
+  try {
+    url = new URL(value);
+  } catch {
+    throw new Error("PROD_INGEST_URL is required (https .../api/worker/ingest); INGEST_URL is not used by prod-push");
+  }
+  if (url.protocol !== "https:" || url.pathname !== "/api/worker/ingest" || url.search || url.hash || url.username || url.password) {
+    throw new Error("PROD_INGEST_URL is required (https .../api/worker/ingest); INGEST_URL is not used by prod-push");
+  }
+  return { url: url.toString(), host: url.host };
 }
 
-export async function postOperationalIngest(payload: any): Promise<any> {
+export async function postOperationalIngest(payload: any, options: { onTarget?: (host: string) => void } = {}): Promise<any> {
+  const target = prodIngestTarget();
+  if (options.onTarget) options.onTarget(target.host);
+  else if (loggedTargetHost !== target.host) {
+    loggedTargetHost = target.host;
+    console.log(`target host: ${target.host}`);
+  }
   const key = process.env.WORKER_KEY;
   if (!key) throw new Error("WORKER_KEY is required for operational production push");
-  return fetchJson(ingestUrl(), {
-    method: "POST",
-    retries: 1,
-    headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  try {
+    return await fetchJson(target.url, {
+      method: "POST",
+      retries: 1,
+      headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    if (error instanceof Error && /HTTP 400[\s\S]*unsupported kind/i.test(error.message)) throw new Error("prod server has no ingest lane yet — publish the new version first");
+    throw error;
+  }
 }
 
 async function postRows(kind: "pricesDaily" | "macroPoints", rows: any[]): Promise<any[]> {
   const results = [];
   for (let offset = 0; offset < rows.length; offset += 500) results.push(await postOperationalIngest({ kind, rows: rows.slice(offset, offset + 500) }));
   return results;
+}
+
+export function assertOperationalServerEvidence(result: any) {
+  const responses: any[] = [];
+  const visit = (value: any) => {
+    if (Array.isArray(value)) return value.forEach(visit);
+    if (!value || typeof value !== "object") return;
+    if ("accepted" in value || "dupes" in value || "postCheck" in value) responses.push(value);
+    else Object.values(value).forEach(visit);
+  };
+  visit(result);
+  const summary = {
+    accepted: responses.reduce((sum, row) => sum + Number(row.accepted ?? 0), 0),
+    dupes: responses.reduce((sum, row) => sum + Number(row.dupes ?? 0), 0),
+    rejected: responses.reduce((sum, row) => sum + (Array.isArray(row.rejected) ? row.rejected.length : 0), 0),
+    postCheck: {
+      expected: responses.reduce((sum, row) => sum + Number(row.postCheck?.expected ?? 0), 0),
+      verified: responses.reduce((sum, row) => sum + Number(row.postCheck?.verified ?? 0), 0),
+      failed: responses.reduce((sum, row) => sum + Number(row.postCheck?.failed ?? 0), 0),
+    },
+  };
+  if (summary.rejected || summary.postCheck.failed || summary.postCheck.expected !== summary.postCheck.verified) {
+    throw new Error(`Server post-check failed: ${JSON.stringify(summary)}`);
+  }
+  return summary;
 }
 
 interface DailyPriceBuild {
@@ -159,6 +204,7 @@ export async function pushOperationalJobOutput(jobId: string, options: { from?: 
       }
     }
   }
+  assertOperationalServerEvidence(results);
   return results;
 }
 
