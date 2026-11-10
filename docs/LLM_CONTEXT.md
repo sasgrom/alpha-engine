@@ -316,3 +316,8 @@ The current reviewed package remains v3.3. Local v3.4 normalization rules and ex
 ## 16. PROD-only prod-push targeting — 2026-11-10
 
 `prod-push` no longer reads `INGEST_URL`; only a validated HTTPS `PROD_INGEST_URL` ending in `/api/worker/ingest` is accepted. Target logs expose host only, and `PROD_PUSH_OK` requires server-side accepted/dupes/post-check evidence with zero failures. Empty-env CLI verification fails before network access. Targeted suites, TypeScript and build pass. Earlier configured-prod validation returned HTTP 500 without success evidence; no write is claimed. See handoff §85.
+
+
+## 17. Macro chain and W46 analytics snapshot — 2026-11-10
+
+The universe-50 factor/exposure/scenario/Atlas/analytics chain completed locally: 21,440 new factor points, four scenarios, Atlas partial with 904 records/24 studies, and W46 snapshot with 502 fact companies, 52 factor companies and 621 option snapshots. `AnalyticsNetwork` is 3/4 because `shareFlows=partial` is supported by the current comparable-flow guard, while the test expects done; no status was tuned. TypeScript and production build pass. See handoff §87 for before/after metrics.

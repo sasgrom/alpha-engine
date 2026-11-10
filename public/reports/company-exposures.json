@@ -1,18 +1,18 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-02T20:17:08.616Z",
- "asOf": "2026-11-02T20:15:37.432Z",
- "universeSha256": "f253b8c5622e380bdc0a4e3781157c8d043be756994651b9fb9510eedb27bbbe",
+ "generatedAt": "2026-11-10T02:27:28.906Z",
+ "asOf": "2026-11-10T02:27:28.016Z",
+ "universeSha256": "aa3bd9e6bba551cd51d66bba80a9d38c7e654bb1a7baa63f87d2676f69c26a53",
  "policy": {
   "noSectorInference": true,
   "noDirectionScore": true,
   "missingFields": "floating rate share, debt maturity schedule, hedges and foreign revenue share are null unless directly supported"
  },
  "coverage": {
-  "companies": 51,
+  "companies": 50,
   "debt": 47,
-  "interestCoverage": 35,
-  "fuelCost": 2,
+  "interestCoverage": 6,
+  "fuelCost": 1,
   "oilRevenue": 1,
   "oilCost": 2,
   "foreignRevenueShare": 0
@@ -24,58 +24,55 @@
    "name": "Apple Inc.",
    "sector": "Information Technology",
    "debt": {
-    "value": 82300000000,
+    "value": 78114000000,
     "unit": "USD",
     "concepts": [
      "LongTermDebt"
     ],
-    "periodEnd": "2026-06-27",
-    "sourceFiled": "2026-07-31",
+    "periodEnd": "2026-09-26",
+    "sourceFiled": "2026-11-03",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 128,
+    "evidenceAgeDays": 45,
     "stale": false
    },
    "debtToOperatingIncome": {
-    "value": 0.5314511910835018,
+    "value": 0.494195352486034,
     "unit": "ratio",
     "concepts": [
      "LongTermDebt",
      "OperatingIncomeLoss"
     ],
-    "periodEnd": "2026-06-27",
-    "sourceFiled": "2026-07-31",
+    "periodEnd": "2026-09-26",
+    "sourceFiled": "2026-11-03",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 128,
+    "evidenceAgeDays": 45,
     "stale": false
    },
    "interestCoverage": {
-    "value": 39.37426900584796,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-06-27",
-    "sourceFiled": "2026-07-31",
-    "quality": "partial",
-    "note": "Non-consecutive quarterly points",
-    "evidenceAgeDays": 128,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-26 vs 2023-09-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.48048602673147023,
+    "value": 0.4647694395370868,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebt"
     ],
-    "periodEnd": "2026-06-27",
-    "sourceFiled": "2026-07-31",
+    "periodEnd": "2026-09-26",
+    "sourceFiled": "2026-11-03",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 128,
+    "evidenceAgeDays": 45,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -111,6 +108,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -118,7 +137,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -156,7 +175,7 @@
     "sourceFiled": "2026-02-12",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 306,
+    "evidenceAgeDays": 314,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -225,6 +244,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -232,7 +273,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -270,49 +311,43 @@
     "sourceFiled": "2016-10-26",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 3691,
+    "evidenceAgeDays": 3699,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 0.25154130702836003,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebtAndCapitalLeaseObligations",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2016-09-24",
-    "sourceFiled": "2016-10-26",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 3691,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2016-09-24 vs 2026-09-26",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 44.136054421768705,
+    "value": 46.80232558139535,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpense"
     ],
-    "periodEnd": "2026-06-27",
-    "sourceFiled": "2026-08-05",
+    "periodEnd": "2026-09-26",
+    "sourceFiled": "2026-11-04",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 128,
+    "evidenceAgeDays": 45,
     "stale": false
    },
    "cashToDebt": {
-    "value": 3.116421568627451,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebtAndCapitalLeaseObligations"
-    ],
-    "periodEnd": "2026-06-27",
-    "sourceFiled": "2026-08-05",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 128,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-26 vs 2016-09-24",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -348,6 +383,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -355,7 +412,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -393,7 +450,7 @@
     "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -407,21 +464,18 @@
     "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "interestCoverage": {
-    "value": 3.4657822699515686,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-27",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2024-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -435,7 +489,7 @@
     "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -471,6 +525,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -478,7 +554,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -516,7 +592,7 @@
     "sourceFiled": "2026-10-30",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -530,21 +606,18 @@
     "sourceFiled": "2026-10-30",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "interestCoverage": {
-    "value": 34.75391275391275,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-30",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2024-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -558,7 +631,7 @@
     "sourceFiled": "2026-10-30",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -594,6 +667,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -601,7 +696,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -640,36 +735,29 @@
     "sourceFiled": "2014-08-08",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 4508,
+    "evidenceAgeDays": 4516,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 0,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebtCurrent",
-     "LongTermDebtNoncurrent",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2014-06-30",
-    "sourceFiled": "2014-08-08",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 4508,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2014-06-30 vs 2026-09-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 6878.819969742814,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-05",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 125,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2019-09-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -679,7 +767,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "Cash / debt is unavailable: non-positive or missing denominator",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-30 vs 2014-06-30",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -716,6 +804,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -723,7 +833,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -761,7 +871,7 @@
     "sourceFiled": "2026-09-10",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 92,
+    "evidenceAgeDays": 100,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -775,7 +885,7 @@
     "sourceFiled": "2026-09-10",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 92,
+    "evidenceAgeDays": 100,
     "stale": false
    },
    "interestCoverage": {
@@ -789,7 +899,7 @@
     "sourceFiled": "2026-09-10",
     "quality": "partial",
     "note": "Non-consecutive quarterly points",
-    "evidenceAgeDays": 92,
+    "evidenceAgeDays": 100,
     "stale": false
    },
    "cashToDebt": {
@@ -803,7 +913,7 @@
     "sourceFiled": "2026-09-10",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 92,
+    "evidenceAgeDays": 100,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -839,6 +949,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -846,7 +978,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -884,7 +1016,7 @@
     "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -898,7 +1030,7 @@
     "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "interestCoverage": {
@@ -923,7 +1055,7 @@
     "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -959,6 +1091,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -966,7 +1120,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -1004,21 +1158,18 @@
     "sourceFiled": "2026-02-13",
     "quality": "partial",
     "note": "Only one current/noncurrent debt component is available",
-    "evidenceAgeDays": 306,
+    "evidenceAgeDays": 314,
     "stale": false
    },
    "debtToOperatingIncome": {
-    "value": 2.3446379468377634,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebtNoncurrent",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2025-12-31",
-    "sourceFiled": "2026-02-13",
-    "quality": "partial",
-    "note": "Only one current/noncurrent debt component is available",
-    "evidenceAgeDays": 306,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2025-12-31 vs 2026-09-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "interestCoverage": {
@@ -1033,17 +1184,14 @@
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.21869298931456868,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebtNoncurrent"
-    ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-05",
-    "quality": "partial",
-    "note": "Only one current/noncurrent debt component is available",
-    "evidenceAgeDays": 125,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-30 vs 2025-12-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -1079,6 +1227,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -1086,7 +1256,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -1115,16 +1285,16 @@
    "name": "CAPITAL ONE FINANCIAL CORP",
    "sector": "Financials",
    "debt": {
-    "value": 44677000000,
+    "value": 47662000000,
     "unit": "USD",
     "concepts": [
      "LongTermDebtAndCapitalLeaseObligations"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-07-28",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-11-03",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -1193,6 +1363,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -1200,7 +1392,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -1229,16 +1421,16 @@
    "name": "CONOCOPHILLIPS",
    "sector": "Energy",
    "debt": {
-    "value": 22828000000,
+    "value": 22384000000,
     "unit": "USD",
     "concepts": [
      "LongTermDebtAndCapitalLeaseObligations"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-06",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-11-05",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -1264,17 +1456,17 @@
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.2879796740844577,
+    "value": 0.3468995711222302,
     "unit": "ratio",
     "concepts": [
      "CashAndCashEquivalentsAtCarryingValue",
      "LongTermDebtAndCapitalLeaseObligations"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-06",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-11-05",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -1309,8 +1501,30 @@
     "sourceFiled": "2018-08-01",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 3047,
+    "evidenceAgeDays": 3055,
     "stale": true
+   },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "foreignRevenueShare": {
     "value": null,
@@ -1319,7 +1533,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -1357,22 +1571,19 @@
     "sourceFiled": "2022-06-02",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 1639,
+    "evidenceAgeDays": 1647,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 0.5663671373555841,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebt",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2022-05-08",
-    "sourceFiled": "2022-06-02",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 1639,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2022-05-08 vs 2026-08-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
     "value": 80.58620689655173,
@@ -1385,21 +1596,18 @@
     "sourceFiled": "2026-10-07",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 64,
+    "evidenceAgeDays": 72,
     "stale": false
    },
    "cashToDebt": {
-    "value": 3.0533393774554245,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2026-08-30",
-    "sourceFiled": "2026-10-07",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 64,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-08-30 vs 2022-05-08",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -1435,6 +1643,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -1442,7 +1672,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -1456,6 +1686,150 @@
     "note": "No NotionalAmountOfForeignCurrencyDerivatives",
     "evidenceAgeDays": null,
     "stale": false
+   },
+   "missing": [
+    "floating rate share",
+    "debt maturity schedule",
+    "interest-rate hedge ratio",
+    "fuel hedge ratio",
+    "foreign revenue share"
+   ]
+  },
+  {
+   "cik": 858877,
+   "ticker": "CSCO",
+   "name": "CISCO SYSTEMS, INC.",
+   "sector": "Information Technology",
+   "debt": {
+    "value": 22872000000,
+    "unit": "USD",
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-07-25",
+    "sourceFiled": "2026-09-02",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 108,
+    "stale": false
+   },
+   "debtToOperatingIncome": {
+    "value": 1.4882873503383653,
+    "unit": "ratio",
+    "concepts": [
+     "LongTermDebt",
+     "OperatingIncomeLoss"
+    ],
+    "periodEnd": "2026-07-25",
+    "sourceFiled": "2026-09-02",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 108,
+    "stale": false
+   },
+   "interestCoverage": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-07-25 vs 2024-04-27",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "cashToDebt": {
+    "value": 0.31558237145855195,
+    "unit": "ratio",
+    "concepts": [
+     "CashAndCashEquivalentsAtCarryingValue",
+     "LongTermDebt"
+    ],
+    "periodEnd": "2026-07-25",
+    "sourceFiled": "2026-09-02",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 108,
+    "stale": false
+   },
+   "fuelCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenue": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No OilAndGasRevenue",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCost": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No CostOfPurchasedOilAndGas",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignRevenueShare": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "foreignDerivativeNotional": {
+    "value": 5591000000,
+    "unit": "USD",
+    "concepts": [
+     "NotionalAmountOfForeignCurrencyDerivatives"
+    ],
+    "periodEnd": "2011-04-30",
+    "sourceFiled": "2011-05-25",
+    "quality": "available",
+    "note": null,
+    "evidenceAgeDays": 5673,
+    "stale": true
    },
    "missing": [
     "floating rate share",
@@ -1480,7 +1854,7 @@
     "sourceFiled": "2026-02-24",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 306,
+    "evidenceAgeDays": 314,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -1506,18 +1880,15 @@
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.10075161509263215,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebtAndCapitalLeaseObligations"
-    ],
-    "periodEnd": "2024-06-30",
-    "sourceFiled": "2024-08-07",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 855,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2024-06-30 vs 2025-12-31",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "fuelCostToOperatingIncome": {
     "value": null,
@@ -1540,7 +1911,7 @@
     "sourceFiled": "2018-05-03",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 3138,
+    "evidenceAgeDays": 3146,
     "stale": true
    },
    "oilCost": {
@@ -1553,8 +1924,30 @@
     "sourceFiled": "2018-05-03",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 3138,
+    "evidenceAgeDays": 3146,
     "stale": true
+   },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "foreignRevenueShare": {
     "value": null,
@@ -1563,7 +1956,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -1601,7 +1994,7 @@
     "sourceFiled": "2026-10-09",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -1615,21 +2008,18 @@
     "sourceFiled": "2026-10-09",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "interestCoverage": {
-    "value": 13.084158415841584,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-09",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2018-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -1643,7 +2033,7 @@
     "sourceFiled": "2026-10-09",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -1657,7 +2047,7 @@
     "sourceFiled": "2026-10-09",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "oilRevenue": {
@@ -1682,6 +2072,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -1689,7 +2101,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -1740,128 +2152,13 @@
     "stale": false
    },
    "interestCoverage": {
-    "value": 298.6666666666667,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-30",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
-    "stale": false
-   },
-   "cashToDebt": {
     "value": null,
     "unit": null,
     "concepts": [],
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "Cash / debt is unavailable",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "fuelCostToOperatingIncome": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "Fuel cost / operating income is unavailable",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "oilRevenue": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "No OilAndGasRevenue",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "oilCost": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "No CostOfPurchasedOilAndGas",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "foreignRevenueShare": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "foreignDerivativeNotional": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "missing": [
-    "floating rate share",
-    "debt maturity schedule",
-    "interest-rate hedge ratio",
-    "fuel hedge ratio",
-    "foreign revenue share"
-   ]
-  },
-  {
-   "cik": 1922641,
-   "ticker": "ENLT",
-   "name": "Enlight Renewable Energy Ltd.",
-   "sector": null,
-   "debt": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "No DebtInstrumentCarryingAmount",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "debtToOperatingIncome": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "Debt / operating income is unavailable",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "interestCoverage": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "Operating income / interest expense is unavailable",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2023-03-31",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -1909,6 +2206,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -1916,7 +2235,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -1954,49 +2273,40 @@
     "sourceFiled": "2020-11-06",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 2224,
+    "evidenceAgeDays": 2232,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 1.4420049111656796,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebtAndCapitalLeaseObligations",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2020-09-30",
-    "sourceFiled": "2020-11-06",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 2224,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2020-09-30 vs 2026-06-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 22.118210862619808,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-06",
-    "quality": "partial",
-    "note": "Non-consecutive quarterly points",
-    "evidenceAgeDays": 125,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-06-30 vs 2012-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.40869478112791746,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebtAndCapitalLeaseObligations"
-    ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-06",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 125,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-06-30 vs 2020-09-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -2032,6 +2342,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -2039,7 +2371,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -2077,49 +2409,40 @@
     "sourceFiled": "2020-10-28",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 2224,
+    "evidenceAgeDays": 2232,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 0.11666097797816073,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebtAndCapitalLeaseObligations",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2020-09-30",
-    "sourceFiled": "2020-10-28",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 2224,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2020-09-30 vs 2026-09-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 88.19316749894992,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-29",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2024-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 7.148832420074754,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebtAndCapitalLeaseObligations"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-29",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-30 vs 2020-09-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -2155,6 +2478,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -2162,7 +2507,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -2200,49 +2545,40 @@
     "sourceFiled": "2025-04-25",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 581,
+    "evidenceAgeDays": 589,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 0.06934818061359699,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebtAndCapitalLeaseObligations",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2025-03-31",
-    "sourceFiled": "2025-04-25",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 581,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2025-03-31 vs 2026-09-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 487.5031055900621,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-29",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2024-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 5.174903545838692,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebtAndCapitalLeaseObligations"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-29",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-30 vs 2025-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -2278,6 +2614,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -2285,7 +2643,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -2323,7 +2681,7 @@
     "sourceFiled": "2019-11-01",
     "quality": "partial",
     "note": "Only one current/noncurrent debt component is available",
-    "evidenceAgeDays": 2590,
+    "evidenceAgeDays": 2598,
     "stale": true
    },
    "debtToOperatingIncome": {
@@ -2349,17 +2707,14 @@
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.8187458191786572,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebtNoncurrent"
-    ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-03",
-    "quality": "partial",
-    "note": "Only one current/noncurrent debt component is available",
-    "evidenceAgeDays": 125,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-30 vs 2019-09-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -2395,6 +2750,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -2402,7 +2779,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -2440,7 +2817,7 @@
     "sourceFiled": "2026-08-25",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 92,
+    "evidenceAgeDays": 100,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -2454,21 +2831,18 @@
     "sourceFiled": "2026-08-25",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 92,
+    "evidenceAgeDays": 100,
     "stale": false
    },
    "interestCoverage": {
-    "value": 10.758444216990789,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-08-02",
-    "sourceFiled": "2026-08-25",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 92,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-08-02 vs 2024-04-28",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -2482,7 +2856,7 @@
     "sourceFiled": "2026-08-25",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 92,
+    "evidenceAgeDays": 100,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -2518,6 +2892,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -2525,7 +2921,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -2539,7 +2935,7 @@
     "sourceFiled": "2013-03-28",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 5020,
+    "evidenceAgeDays": 5028,
     "stale": true
    },
    "missing": [
@@ -2565,7 +2961,7 @@
     "sourceFiled": "2026-10-22",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -2601,7 +2997,7 @@
     "sourceFiled": "2026-10-22",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -2637,6 +3033,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -2644,7 +3062,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -2682,49 +3100,40 @@
     "sourceFiled": "2026-01-23",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 310,
+    "evidenceAgeDays": 318,
     "stale": false
    },
    "debtToOperatingIncome": {
-    "value": 26.438706015891032,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebt",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2025-12-27",
-    "sourceFiled": "2026-01-23",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 310,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2025-12-27 vs 2026-09-26",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "interestCoverage": {
-    "value": 1.8685047720042418,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-26",
-    "sourceFiled": "2026-10-30",
-    "quality": "partial",
-    "note": "Non-consecutive quarterly points",
-    "evidenceAgeDays": 37,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-26 vs 2024-03-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.46894923258559623,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2026-09-26",
-    "sourceFiled": "2026-10-30",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 37,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-26 vs 2025-12-27",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -2760,6 +3169,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -2767,7 +3198,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -2805,49 +3236,40 @@
     "sourceFiled": "2026-02-11",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 309,
+    "evidenceAgeDays": 317,
     "stale": false
    },
    "debtToOperatingIncome": {
-    "value": 1.9037074470528783,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebt",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2025-12-28",
-    "sourceFiled": "2026-02-11",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 309,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2025-12-28 vs 2015-03-29",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "interestCoverage": {
-    "value": 25.790284360189574,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2015-03-29",
-    "sourceFiled": "2015-05-01",
-    "quality": "partial",
-    "note": "Non-consecutive quarterly points",
-    "evidenceAgeDays": 4236,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2015-03-29 vs 2024-03-31",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "cashToDebt": {
-    "value": 0.40807954051836476,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2026-09-27",
-    "sourceFiled": "2026-10-21",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 36,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-27 vs 2025-12-28",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -2883,6 +3305,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -2890,7 +3334,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -2928,7 +3372,7 @@
     "sourceFiled": "2014-08-04",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 4508,
+    "evidenceAgeDays": 4516,
     "stale": true
    },
    "debtToOperatingIncome": {
@@ -2954,18 +3398,15 @@
     "stale": false
    },
    "cashToDebt": {
-    "value": 1.0328382648770602,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2018-12-31",
-    "sourceFiled": "2019-02-26",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 2863,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2018-12-31 vs 2014-06-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "fuelCostToOperatingIncome": {
     "value": null,
@@ -3000,6 +3441,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -3007,7 +3470,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -3045,49 +3508,40 @@
     "sourceFiled": "2015-02-23",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 4324,
+    "evidenceAgeDays": 4332,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 7.5735792246894995,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebtAndCapitalLeaseObligations",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2014-12-31",
-    "sourceFiled": "2015-02-23",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 4324,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2014-12-31 vs 2026-09-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 3.1443786982248523,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-23",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2013-12-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.022809720220643044,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebtAndCapitalLeaseObligations"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-23",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-30 vs 2014-12-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -3123,6 +3577,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -3130,7 +3606,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -3168,7 +3644,7 @@
     "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -3182,7 +3658,7 @@
     "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "interestCoverage": {
@@ -3196,7 +3672,7 @@
     "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "cashToDebt": {
@@ -3210,7 +3686,7 @@
     "sourceFiled": "2026-10-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -3246,6 +3722,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -3253,7 +3751,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -3291,7 +3789,7 @@
     "sourceFiled": "2025-02-19",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 671,
+    "evidenceAgeDays": 679,
     "stale": true
    },
    "debtToOperatingIncome": {
@@ -3317,17 +3815,14 @@
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.16573929565040374,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-29",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-30 vs 2024-12-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -3363,6 +3858,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -3370,7 +3887,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -3408,49 +3925,40 @@
     "sourceFiled": "2026-01-29",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 306,
+    "evidenceAgeDays": 314,
     "stale": false
    },
    "debtToOperatingIncome": {
-    "value": 2.329325890940318,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebt",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2025-12-31",
-    "sourceFiled": "2026-01-29",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 306,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2025-12-31 vs 2026-09-27",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "interestCoverage": {
-    "value": 9.614035087719298,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-27",
-    "sourceFiled": "2026-10-22",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 36,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-27 vs 2024-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.2746543778801843,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2026-09-27",
-    "sourceFiled": "2026-10-22",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 36,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-27 vs 2025-12-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -3486,6 +3994,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -3493,7 +4023,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -3507,7 +4037,7 @@
     "sourceFiled": "2013-04-25",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 4964,
+    "evidenceAgeDays": 4972,
     "stale": true
    },
    "missing": [
@@ -3600,6 +4130,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -3607,7 +4159,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -3645,49 +4197,40 @@
     "sourceFiled": "2011-05-03",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 5695,
+    "evidenceAgeDays": 5703,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 0.0009874917709019092,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebt",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2011-03-31",
-    "sourceFiled": "2011-05-03",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 5695,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2011-03-31 vs 2026-09-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 34.86229508196721,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-29",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2024-09-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 483.1904761904762,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-29",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-30 vs 2011-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -3723,6 +4266,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -3730,7 +4295,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -3769,7 +4334,7 @@
     "sourceFiled": "2026-10-22",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -3784,21 +4349,18 @@
     "sourceFiled": "2026-10-22",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "interestCoverage": {
-    "value": 1417.5,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-22",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2013-12-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -3813,7 +4375,7 @@
     "sourceFiled": "2026-10-22",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -3849,6 +4411,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -3856,7 +4440,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -3894,7 +4478,7 @@
     "sourceFiled": "2026-07-31",
     "quality": "partial",
     "note": "Only one current/noncurrent debt component is available",
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 133,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -3930,7 +4514,7 @@
     "sourceFiled": "2026-07-31",
     "quality": "partial",
     "note": "Only one current/noncurrent debt component is available",
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 133,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -3966,6 +4550,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -3973,7 +4579,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -4011,7 +4617,7 @@
     "sourceFiled": "2026-10-28",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -4025,21 +4631,18 @@
     "sourceFiled": "2026-10-28",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "interestCoverage": {
-    "value": 55.60170357751278,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-28",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2024-06-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -4053,7 +4656,7 @@
     "sourceFiled": "2026-10-28",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -4089,6 +4692,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -4096,7 +4721,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -4134,7 +4759,7 @@
     "sourceFiled": "2026-10-09",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 60,
+    "evidenceAgeDays": 68,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -4148,21 +4773,18 @@
     "sourceFiled": "2026-10-09",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 60,
+    "evidenceAgeDays": 68,
     "stale": false
    },
    "interestCoverage": {
-    "value": 178.99099099099098,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-03",
-    "sourceFiled": "2026-10-09",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 60,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-03 vs 2024-05-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -4176,7 +4798,7 @@
     "sourceFiled": "2026-10-09",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 60,
+    "evidenceAgeDays": 68,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -4212,6 +4834,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -4219,7 +4863,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -4258,7 +4902,7 @@
     "sourceFiled": "2026-04-23",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 216,
+    "evidenceAgeDays": 224,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -4273,7 +4917,7 @@
     "sourceFiled": "2026-04-23",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 216,
+    "evidenceAgeDays": 224,
     "stale": false
    },
    "interestCoverage": {
@@ -4299,7 +4943,7 @@
     "sourceFiled": "2026-04-23",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 216,
+    "evidenceAgeDays": 224,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -4335,6 +4979,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -4342,7 +5008,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -4380,49 +5046,40 @@
     "sourceFiled": "2021-10-21",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 1859,
+    "evidenceAgeDays": 1867,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 1.319364312069423,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebt",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2021-09-30",
-    "sourceFiled": "2021-10-21",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 1859,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2021-09-30 vs 2026-09-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 22.192981455552356,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-21",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2024-09-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.3990251821532164,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-21",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-30 vs 2021-09-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -4458,6 +5115,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -4465,7 +5144,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -4503,7 +5182,7 @@
     "sourceFiled": "2026-07-15",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 155,
+    "evidenceAgeDays": 163,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -4529,17 +5208,14 @@
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.8691765298413497,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2026-08-31",
-    "sourceFiled": "2026-10-02",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 63,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-08-31 vs 2026-05-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -4575,6 +5251,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -4582,7 +5280,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -4620,7 +5318,7 @@
     "sourceFiled": "2026-08-26",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 99,
+    "evidenceAgeDays": 107,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -4634,21 +5332,18 @@
     "sourceFiled": "2026-08-26",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 99,
+    "evidenceAgeDays": 107,
     "stale": false
    },
    "interestCoverage": {
-    "value": 774.8196078431373,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-07-26",
-    "sourceFiled": "2026-08-26",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 99,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-07-26 vs 2024-04-28",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -4662,7 +5357,7 @@
     "sourceFiled": "2026-08-26",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 99,
+    "evidenceAgeDays": 107,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -4698,6 +5393,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -4705,7 +5422,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -4743,7 +5460,7 @@
     "sourceFiled": "2021-02-25",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 2132,
+    "evidenceAgeDays": 2140,
     "stale": true
    },
    "debtToOperatingIncome": {
@@ -4769,17 +5486,14 @@
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.244,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2026-06-28",
-    "sourceFiled": "2026-08-04",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 127,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-27 vs 2020-12-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -4815,6 +5529,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -4822,7 +5558,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable: incompatible periods 2011-04-03 vs 2026-09-27",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -4836,7 +5572,7 @@
     "sourceFiled": "2011-05-12",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 5692,
+    "evidenceAgeDays": 5700,
     "stale": true
    },
    "missing": [
@@ -4862,50 +5598,41 @@
     "sourceFiled": "2015-10-26",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 4143,
+    "evidenceAgeDays": 4151,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 1.1663220535579202,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebt",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2015-06-30",
-    "sourceFiled": "2015-10-26",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 4143,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2015-06-30 vs 2026-09-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 20.96088794926004,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-22",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2024-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.4023003415920785,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2019-09-30",
-    "sourceFiled": "2019-10-22",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 2590,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2019-09-30 vs 2015-06-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "fuelCostToOperatingIncome": {
     "value": null,
@@ -4940,6 +5667,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -4947,7 +5696,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -4985,7 +5734,7 @@
     "sourceFiled": "2026-04-30",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 216,
+    "evidenceAgeDays": 224,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -4999,21 +5748,18 @@
     "sourceFiled": "2026-04-30",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 216,
+    "evidenceAgeDays": 224,
     "stale": false
    },
    "interestCoverage": {
-    "value": 6.195440436407825,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-03-31",
-    "sourceFiled": "2026-04-30",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 216,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-03-31 vs 2024-06-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -5027,7 +5773,7 @@
     "sourceFiled": "2026-04-30",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 216,
+    "evidenceAgeDays": 224,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -5063,6 +5809,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -5070,7 +5838,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -5108,35 +5876,29 @@
     "sourceFiled": "2022-02-24",
     "quality": "partial",
     "note": "Only one current/noncurrent debt component is available",
-    "evidenceAgeDays": 1767,
+    "evidenceAgeDays": 1775,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 0,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebtNoncurrent",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2021-12-31",
-    "sourceFiled": "2022-02-24",
-    "quality": "partial",
-    "note": "Only one current/noncurrent debt component is available",
-    "evidenceAgeDays": 1767,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2021-12-31 vs 2026-09-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 759.2657060518732,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-04",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 125,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2023-12-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -5146,7 +5908,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "Cash / debt is unavailable: non-positive or missing denominator",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-30 vs 2021-12-31",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -5183,6 +5945,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -5190,7 +5974,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -5228,7 +6012,7 @@
     "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -5242,21 +6026,18 @@
     "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "interestCoverage": {
-    "value": 3.595358830175377,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-27",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2024-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -5270,22 +6051,19 @@
     "sourceFiled": "2026-10-27",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
-    "value": 0.07307453062772615,
-    "unit": "ratio",
-    "concepts": [
-     "FuelCosts",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2021-12-31",
-    "sourceFiled": "2022-03-01",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 1767,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Fuel cost / operating income is unavailable: incompatible periods 2021-12-31 vs 2026-09-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "oilRevenue": {
     "value": null,
@@ -5309,6 +6087,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -5316,7 +6116,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -5330,128 +6130,8 @@
     "sourceFiled": "2013-07-26",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 4873,
+    "evidenceAgeDays": 4881,
     "stale": true
-   },
-   "missing": [
-    "floating rate share",
-    "debt maturity schedule",
-    "interest-rate hedge ratio",
-    "fuel hedge ratio",
-    "foreign revenue share"
-   ]
-  },
-  {
-   "cik": 1874178,
-   "ticker": "RIVN",
-   "name": "Rivian Automotive, Inc. / DE",
-   "sector": null,
-   "debt": {
-    "value": 5526000000,
-    "unit": "USD",
-    "concepts": [
-     "LongTermDebt"
-    ],
-    "periodEnd": "2024-06-30",
-    "sourceFiled": "2024-08-06",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 855,
-    "stale": true
-   },
-   "debtToOperatingIncome": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "Debt / operating income is unavailable: non-positive or missing denominator",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "interestCoverage": {
-    "value": -13.350194552529183,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-29",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
-    "stale": false
-   },
-   "cashToDebt": {
-    "value": 0.6349981903727832,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-29",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
-    "stale": false
-   },
-   "fuelCostToOperatingIncome": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "Fuel cost / operating income is unavailable",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "oilRevenue": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "No OilAndGasRevenue",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "oilCost": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "No CostOfPurchasedOilAndGas",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "foreignRevenueShare": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
-    "evidenceAgeDays": null,
-    "stale": false
-   },
-   "foreignDerivativeNotional": {
-    "value": null,
-    "unit": null,
-    "concepts": [],
-    "periodEnd": null,
-    "sourceFiled": null,
-    "quality": "missing",
-    "note": "No NotionalAmountOfForeignCurrencyDerivatives",
-    "evidenceAgeDays": null,
-    "stale": false
    },
    "missing": [
     "floating rate share",
@@ -5476,49 +6156,40 @@
     "sourceFiled": "2013-05-10",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 4964,
+    "evidenceAgeDays": 4972,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 0.002610733279287461,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebtAndCapitalLeaseObligations",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2013-03-31",
-    "sourceFiled": "2013-05-10",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 4964,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2013-03-31 vs 2026-06-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 140.2848751835536,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-31",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 125,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-06-30 vs 2024-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 1039.8830360846123,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebtAndCapitalLeaseObligations"
-    ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-31",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 125,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-06-30 vs 2013-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -5554,6 +6225,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -5561,7 +6254,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -5599,7 +6292,7 @@
     "sourceFiled": "2026-10-21",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "debtToOperatingIncome": {
@@ -5613,21 +6306,18 @@
     "sourceFiled": "2026-10-21",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "interestCoverage": {
-    "value": 3.4618998678608133,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-21",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2024-06-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
@@ -5641,7 +6331,7 @@
     "sourceFiled": "2026-10-21",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 33,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -5677,6 +6367,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -5684,7 +6396,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -5722,49 +6434,40 @@
     "sourceFiled": "2019-02-19",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 2863,
+    "evidenceAgeDays": 2871,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 2.7131194460473167,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebtAndCapitalLeaseObligations",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2018-12-31",
-    "sourceFiled": "2019-02-19",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 2863,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2018-12-31 vs 2026-09-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 13.279693486590038,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-22",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2024-06-30",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 1.8985136869937616,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebtAndCapitalLeaseObligations"
-    ],
-    "periodEnd": "2026-09-30",
-    "sourceFiled": "2026-10-22",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 33,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-30 vs 2018-12-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -5800,6 +6503,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -5807,7 +6532,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -5821,7 +6546,7 @@
     "sourceFiled": "2012-11-07",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 5146,
+    "evidenceAgeDays": 5154,
     "stale": true
    },
    "missing": [
@@ -5860,17 +6585,17 @@
     "stale": false
    },
    "interestCoverage": {
-    "value": 5.566512583461736,
+    "value": 6.207576543850545,
     "unit": "ratio",
     "concepts": [
      "OperatingIncomeLoss",
      "InterestExpense"
     ],
-    "periodEnd": "2026-06-30",
-    "sourceFiled": "2026-08-10",
+    "periodEnd": "2026-09-30",
+    "sourceFiled": "2026-11-03",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 125,
+    "evidenceAgeDays": 41,
     "stale": false
    },
    "cashToDebt": {
@@ -5917,6 +6642,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -5924,7 +6671,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -5962,49 +6709,40 @@
     "sourceFiled": "2022-01-28",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 1767,
+    "evidenceAgeDays": 1775,
     "stale": true
    },
    "debtToOperatingIncome": {
-    "value": 0.7955582598113782,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebt",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2021-12-31",
-    "sourceFiled": "2022-01-28",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 1767,
-    "stale": true
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2021-12-31 vs 2026-09-30",
+    "evidenceAgeDays": null,
+    "stale": false
    },
    "interestCoverage": {
-    "value": 153.77777777777777,
-    "unit": "ratio",
-    "concepts": [
-     "OperatingIncomeLoss",
-     "InterestExpense"
-    ],
-    "periodEnd": "2026-03-31",
-    "sourceFiled": "2026-04-29",
-    "quality": "partial",
-    "note": "Non-consecutive quarterly points",
-    "evidenceAgeDays": 216,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Operating income / interest expense is unavailable: incompatible periods 2026-09-30 vs 2016-03-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.5929254302103251,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2026-03-31",
-    "sourceFiled": "2026-04-29",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 216,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-09-30 vs 2021-12-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -6040,6 +6778,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -6047,7 +6807,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
@@ -6061,7 +6821,7 @@
     "sourceFiled": "2011-11-18",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 5512,
+    "evidenceAgeDays": 5520,
     "stale": true
    },
    "missing": [
@@ -6087,21 +6847,18 @@
     "sourceFiled": "2026-03-13",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 275,
+    "evidenceAgeDays": 283,
     "stale": false
    },
    "debtToOperatingIncome": {
-    "value": 1.1823420074349442,
-    "unit": "ratio",
-    "concepts": [
-     "LongTermDebt",
-     "OperatingIncomeLoss"
-    ],
-    "periodEnd": "2026-01-31",
-    "sourceFiled": "2026-03-13",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 275,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Debt / operating income is unavailable: incompatible periods 2026-01-31 vs 2026-07-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "interestCoverage": {
@@ -6115,21 +6872,18 @@
     "sourceFiled": "2026-08-28",
     "quality": "available",
     "note": null,
-    "evidenceAgeDays": 94,
+    "evidenceAgeDays": 102,
     "stale": false
    },
    "cashToDebt": {
-    "value": 0.3020751454173872,
-    "unit": "ratio",
-    "concepts": [
-     "CashAndCashEquivalentsAtCarryingValue",
-     "LongTermDebt"
-    ],
-    "periodEnd": "2026-07-31",
-    "sourceFiled": "2026-08-28",
-    "quality": "available",
-    "note": null,
-    "evidenceAgeDays": 94,
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Cash / debt is unavailable: incompatible periods 2026-07-31 vs 2026-01-31",
+    "evidenceAgeDays": null,
     "stale": false
    },
    "fuelCostToOperatingIncome": {
@@ -6165,6 +6919,28 @@
     "evidenceAgeDays": null,
     "stale": false
    },
+   "oilRevenueToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil revenue / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
+   "oilCostToOperatingIncome": {
+    "value": null,
+    "unit": null,
+    "concepts": [],
+    "periodEnd": null,
+    "sourceFiled": null,
+    "quality": "missing",
+    "note": "Oil cost / operating income is unavailable",
+    "evidenceAgeDays": null,
+    "stale": false
+   },
    "foreignRevenueShare": {
     "value": null,
     "unit": null,
@@ -6172,7 +6948,7 @@
     "periodEnd": null,
     "sourceFiled": null,
     "quality": "missing",
-    "note": "No directly comparable domicile and total revenue",
+    "note": "No directly comparable domicile and total revenue: Domicile / total revenue is unavailable",
     "evidenceAgeDays": null,
     "stale": false
    },
