@@ -1077,3 +1077,12 @@ Deliberately not automatic:
 - **CUSIP:** uppercase nine-character keys plus exact ticker/exchange compatibility guards; mismatch/ambiguity returns `cik=null` instead of a ticker-only company. `research/reviewed-sync/2026-11-10/cusip-resolution-review.json` records TELUS, Enerflex, TD Ameritrade, B&G Foods and Cresco mis-maps with `nameOfIssuer` evidence and 238 lowercase keys. Quest/DGX is retained as a verified negative control.
 - **Tests and packaging:** Expectations uses a deterministic module fixture with `benchmark=null` instead of the daily generated file; Methodology uses `vi.waitFor` and passed five consecutive isolated runs. `.gitattributes` marks `research/reviewed-sync/**` as `-text` to prevent CRLF hash drift and Form 4 XML fixtures as LF.
 - **Verification:** targeted suites **14 files / 74 tests passed**; full suite **181 files / 998 tests passed**; `npm run check`, production build and `git diff --check` all passed. No production writes, deployment or credentials were used.
+
+
+
+## 101. Canonical Form 4 benchmark evidence committed to research — 2026-11-10
+
+- Committed the actual full benchmark and all 545 result records as `research/form4-benchmark-canonical-v1.json`: **475,586 bytes**, SHA256 **`b3dd4505cd5fca42f74caf4fb3f379fc02cbdeda797c5a958e3c283f6a2a4741`**. Methodology `canonical_dailyPrice_v1`, source local MySQL `dailyPrice`, max entry gap 45 days, generatedAt `2026-11-10T22:43:04.186Z`.
+- Global results: **+1d hitRate=0.4748603352, medianExcess=−0.0009260126 (537/545 computed); +5d hitRate=0.5561797753, medianExcess=0.0037760400 (534/545); +20d hitRate=0.5125240848, medianExcess=0.0029148603 (519/545)**. Coverage: 98.53% / 97.98% / 95.23%.
+- Per-year +1d/+5d/+20d coverage: 2013 1/1 all; 2014 12/12 all; 2015 48/48 all; 2016 44/44 all; 2017 24/27 all; 2018 50/50 all; 2019 47/48 all; 2020 49/49 all; 2021 35/36 all; 2022 46/47 all; 2023 60/60 all; 2024 41/41 all; 2025 36/36 all; 2026 **44/46 (95.65%) / 41/46 (89.13%) / 26/46 (56.52%)**. Earlier years have identical horizon coverage within each year.
+- This is evidence delivery only: no production writes, deployment, code changes or additional tests were needed. The pre-existing unrelated untracked PDF and generated slim serving JSON remain outside the commit.
