@@ -60,7 +60,13 @@ for (const spec of TABLES) {
     }
     return value;
   };
-  const canonRow = (row: Record<string, unknown>) => Object.fromEntries(Object.entries(row).map(([k, v]) => [k, canonValue(k, v)]));
+  // Sorted keys: SELECT * column order follows ordinal position, which can differ
+  // between sides with different DDL histories. bigint -> String for cross-driver
+  // stability (one side may return numbers, the other strings).
+  const canonRow = (row: Record<string, unknown>) => Object.fromEntries(Object.entries(row)
+    .map(([k, v]) => [k, canonValue(k, v)] as const)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([k, v]) => [k, typeOf.get(k) === "bigint" && v !== null && v !== undefined ? String(v) : v]));
   const [pkCols]: any = await conn.query(
     "SELECT COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND CONSTRAINT_NAME = 'PRIMARY' ORDER BY ORDINAL_POSITION",
     [spec.table],
