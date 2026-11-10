@@ -951,3 +951,12 @@ Deliberately not automatic:
 - Added `signals` and `digests` to `prod-push.mts`: local DB reads, `--from` filtering, batches ≤500 for signals and ≤10 for digests, PROD-only targeting and server-evidence summaries. Server `ingestSignals` now performs grouped exact-key post-checks; `ingestDigests` skips identical content and returns accepted/dupes/upserted/postCheck while preserving compatibility fields.
 - `scripts/review-macro-correction.mts` now waits for the 18 prod keys. It is read-only and will classify local-missing delete candidates, exact local matches and archive mismatches. Current local duplicate exact macro keys: **0** (`worker/.runs/macro-correction-review.json`, productionApply=false).
 - Verification: targeted backfill suites **3 files / 18 tests passed**, including 501 signals / 11 digests first-run accepted vs retry accepted=0/dupes=N and actual server post-checks. `npm run test:scripts` **5 files / 32 tests passed**; `npm run check`, production build and `git diff --check` passed. **No production backfill was run in this block**: owner publish confirmation is still required before executing `--kind signals` or `--kind digests`. Exact source commit is authoritative in `git log`.
+
+
+
+## 90. Final local inventory and 18-key macro correction review — 2026-11-10
+
+- Final canonical inventory: `research/reviewed-sync/2026-11-10/inventory-local.json`, generatedAt **2026-11-10T04:57:28.597Z**. Local counts now include signals **84,293**; all other table counts match the previous inventory. No production writes occurred.
+- `scripts/review-macro-correction.mts` now reads full prod gzip CSV keysets and computes **prod minus local exact keys before classification**. This avoids accidentally treating all 408,878 prod rows as candidates. The grouped exact-key query uses parameterized mysql2 tuples and no unbounded SQL values.
+- Result: **408,878 prod keys − 408,860 local keys = 18 candidates**, all `delete_candidate_local_missing` with `localRows=0`. Fourteen also have one archive match; four have no archive match. `localDuplicateExactKeys=0`. Review artifact: `research/reviewed-sync/2026-11-10/macro-correction-review.json`, generatedAt `2026-11-10T05:30:20.752Z`, productionApply=false. No deletion or production apply was performed.
+- Verification: `npm run test:scripts` **5 files / 33 tests passed**, `npm run check`, production build and `git diff --check` passed. Exact review commit is authoritative in `git log`.

@@ -1,89 +1,89 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-10T03:32:18.090Z",
+  "generatedAt": "2026-11-10T04:57:28.597Z",
   "side": "local",
   "tables": {
     "companies": {
       "present": true,
       "rows": 496,
-      "contentSha256": "fb78144d0b87346bf1aa6424b3ffd189717f1f9dc710e4523fecc447ec8276ae",
+      "contentSha256": "10740df2b31f044824728ee414ae5198159261e5576db9c3371b53890067e5d1",
       "hashedRows": 496,
       "maxDate": null
     },
     "filings": {
       "present": true,
       "rows": 23479,
-      "contentSha256": "9eb8202a674dda152e3cf8be8c8fa136acbebe5e492b9c481d56cd677ca5c53b",
+      "contentSha256": "d819e9fc7e356e0c55f41505b57b39af7eae6d07e37f6d8bb8022436a6360724",
       "hashedRows": 23479,
       "maxDate": "Thu Nov 05 2026 00:00:00 GMT-0800 (Pacific Standard Time)"
     },
     "facts": {
       "present": true,
       "rows": 12856818,
-      "contentSha256": "2f2f862d1fc174c2a35ff5bcd36e913595599bcbbefc1e457ee2750da280a4ba",
+      "contentSha256": "28ee7e36a87dca6b72490b5f791d5991f6b9ab015ed390a20b81b2e8734c2cb9",
       "hashedRows": 12856818,
       "maxDate": "Thu Nov 05 2026 00:00:00 GMT-0800 (Pacific Standard Time)"
     },
     "prices": {
       "present": true,
       "rows": 447432,
-      "contentSha256": "6152c78daaf64ef1bf8e29ffc2a8211221cac7998e425cce305a33c8aacfb7a5",
+      "contentSha256": "95e24bd81c0465e31140840e4517b950103b918115bb56670b454e6971595157",
       "hashedRows": 447432,
       "maxDate": "Fri Nov 06 2026 00:00:00 GMT-0800 (Pacific Standard Time)"
     },
     "macro_points": {
       "present": true,
       "rows": 408860,
-      "contentSha256": "8e0fdda66f5300cdf4a0dfa9fff8793322508f1dc1207d7c05d7ddc6e97660f8",
+      "contentSha256": "9cb4fa87ffa155a62cbc672681af774f21755ea6d775607d82fec3c3081133fb",
       "hashedRows": 408860,
       "maxDate": "Tue Nov 03 2026 00:00:00 GMT-0800 (Pacific Standard Time)"
     },
     "signals": {
       "present": true,
-      "rows": 84193,
-      "contentSha256": "f8bf69a46a31b7e0df114d7e74db52e1aa30e7aee7bf0af43e1bc8e3c307c5fa",
-      "hashedRows": 84193,
-      "maxDate": "Tue Nov 10 2026 02:31:34 GMT-0800 (Pacific Standard Time)"
+      "rows": 84293,
+      "contentSha256": "8def1762f1df8375ad2e282eb1661012840cb83238a9be5ba01bc9d535c17d8a",
+      "hashedRows": 84293,
+      "maxDate": "Tue Nov 10 2026 04:29:17 GMT-0800 (Pacific Standard Time)"
     },
     "digests": {
       "present": true,
       "rows": 3,
-      "contentSha256": "3de1a51ac2492dabea27e5bae3077ad3ed269a6292c99ac7b412059537d835fe",
+      "contentSha256": "eb6a42fb45c3d868a9e96bdc482d348fbac574fe163293bd73b68547d3231d31",
       "hashedRows": 3,
       "maxDate": "Fri Nov 06 2026 15:15:31 GMT-0800 (Pacific Standard Time)"
     },
     "fund_holdings": {
       "present": true,
       "rows": 1617656,
-      "contentSha256": "ff5ed0a768d7b5e8e9d82e85d28e8468573edbbac68b1f52811d7ebb0bb9b373",
+      "contentSha256": "79d9e6621ee8a4d752ad1d763cbf69b5d25a106c3b5e48b51ffebd122a86c4a9",
       "hashedRows": 1617656,
       "maxDate": "Mon Nov 09 2026 05:00:58 GMT-0800 (Pacific Standard Time)"
     },
     "fund_quarters": {
       "present": true,
       "rows": 6518,
-      "contentSha256": "8235c0d4cef2193efc1015dafb460ea6e086ac98a1f48b94d1daf694d5dee717",
+      "contentSha256": "38afa66a2385014442c8d73d002ac545a78bd01438931d4db784678364106406",
       "hashedRows": 6518,
       "maxDate": "Fri Nov 06 2026 00:00:00 GMT-0800 (Pacific Standard Time)"
     },
     "cusip_map": {
       "present": true,
       "rows": 41090,
-      "contentSha256": "ad6940fa9f2bd28b44e1cd0003f08e76e6a41ea2385e804daad38dee174e6195",
+      "contentSha256": "6e9998fca307e9944beea8296ff7e4f4282a7320a6331471f1a856c76858aa71",
       "hashedRows": 41090,
       "maxDate": null
     },
     "documents": {
       "present": true,
       "rows": 39940,
-      "contentSha256": "8f17cd09c38b82dfa5a893b34bee32b0dbf2e72bb6656c94dd586ab7d96e6560",
+      "contentSha256": "6791de9889760fa66de7522bcdf547fd10de40f17b2325daf5e7b27e33bbf4e5",
       "hashedRows": 39940,
       "maxDate": "Fri Nov 06 2026 00:46:31 GMT-0800 (Pacific Standard Time)"
     },
     "events": {
       "present": true,
       "rows": 1586,
-      "contentSha256": "c580dd5da9f01f67816c19153fd8d655f1de633412a9f191b72da92da81d6438",
+      "contentSha256": "0e0b4020702b0d67c243fad91dfc8044a722762704047132c09f5b415e9ab3d2",
       "hashedRows": 1586,
       "maxDate": "Thu Nov 05 2026 00:00:00 GMT-0800 (Pacific Standard Time)"
     },
@@ -99,7 +99,7 @@
     "external_cache": {
       "present": true,
       "rows": 18,
-      "contentSha256": "83a8526710221270692172c244c12c95395b8f4baa929c079b761eb0d987525b",
+      "contentSha256": "53faa0728ca419e91451f1647fd030caad979c54c84bf8fcbff30eaa5e800d76",
       "hashedRows": 18,
       "maxDate": null
     }

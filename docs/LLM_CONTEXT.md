@@ -326,3 +326,8 @@ The universe-50 factor/exposure/scenario/Atlas/analytics chain completed locally
 ## 18. Signals/digests backfill ready; publish still required — 2026-11-10
 
 `prod-push.mts` now supports local signals/digests backfill with bounded batches, exact-key server post-checks and PROD-only targeting. Repeated mock runs return accepted=0/dupes=N. Canonical inventory was regenerated with all row counts unchanged; date normalization explains the expected local hash changes. Macro correction planner is read-only with zero local duplicate exact keys. No production backfill ran; owner publish confirmation is still required. See handoff §89.
+
+
+## 19. Final inventory and macro correction review — 2026-11-10
+
+Canonical local inventory was regenerated. The macro correction reviewer now computes prod-minus-local before classifying: 408,878 prod keys minus 408,860 local keys yields exactly 18 candidates, all local-missing delete candidates with zero local duplicate exact keys. Fourteen have archive matches; four do not. The read-only review is committed as `macro-correction-review.json`; no deletion or production apply occurred. Tests and build pass. See handoff §90.

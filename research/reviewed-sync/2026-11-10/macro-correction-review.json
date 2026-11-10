@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-10T05:30:20.752Z",
+  "status": "reviewed_read_only",
+  "prodKeysTotal": 408878,
+  "localKeysTotal": 408860,
+  "localDuplicateExactKeys": 0,
+  "candidates": 18,
+  "byDisposition": {
+    "delete_candidate_local_missing": 18
+  },
+  "corrections": [
+    {
+      "seriesId": "BAMLH0A0HYM2",
+      "observationPeriod": "2026-11-03",
+      "realtimeStart": "2026-11-03",
+      "prodRealtimeEnd": null,
+      "prodValue": 3.4,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "BAMLH0A0HYM2",
+      "observationPeriod": "2026-11-04",
+      "realtimeStart": "2026-11-04",
+      "prodRealtimeEnd": null,
+      "prodValue": 3.32,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "BAMLH0A0HYM2",
+      "observationPeriod": "2026-11-05",
+      "realtimeStart": "2026-11-05",
+      "prodRealtimeEnd": null,
+      "prodValue": 3.48,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "CPIAUCSL",
+      "observationPeriod": "2026-09-01",
+      "realtimeStart": "2026-10-19",
+      "prodRealtimeEnd": "2026-10-19",
+      "prodValue": 336.298,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 0,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "DGS10",
+      "observationPeriod": "2026-11-03",
+      "realtimeStart": "2026-11-04",
+      "prodRealtimeEnd": null,
+      "prodValue": 4.95,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "DGS10",
+      "observationPeriod": "2026-11-04",
+      "realtimeStart": "2026-11-05",
+      "prodRealtimeEnd": null,
+      "prodValue": 4.9,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "DGS10",
+      "observationPeriod": "2026-11-05",
+      "realtimeStart": "2026-11-06",
+      "prodRealtimeEnd": null,
+      "prodValue": 4.84,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "DGS2",
+      "observationPeriod": "2026-11-03",
+      "realtimeStart": "2026-11-04",
+      "prodRealtimeEnd": null,
+      "prodValue": 4.61,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "DGS2",
+      "observationPeriod": "2026-11-04",
+      "realtimeStart": "2026-11-05",
+      "prodRealtimeEnd": null,
+      "prodValue": 4.58,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "DGS2",
+      "observationPeriod": "2026-11-05",
+      "realtimeStart": "2026-11-06",
+      "prodRealtimeEnd": null,
+      "prodValue": 4.46,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "FEDFUNDS",
+      "observationPeriod": "2026-09-01",
+      "realtimeStart": "2026-10-19",
+      "prodRealtimeEnd": "2026-10-19",
+      "prodValue": 3.75,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 0,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "T10Y2Y",
+      "observationPeriod": "2026-11-04",
+      "realtimeStart": "2026-11-04",
+      "prodRealtimeEnd": null,
+      "prodValue": 0.32,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "T10Y2Y",
+      "observationPeriod": "2026-11-05",
+      "realtimeStart": "2026-11-05",
+      "prodRealtimeEnd": null,
+      "prodValue": 0.38,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "T10Y2Y",
+      "observationPeriod": "2026-11-06",
+      "realtimeStart": "2026-11-06",
+      "prodRealtimeEnd": null,
+      "prodValue": 0.35,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "UNRATE",
+      "observationPeriod": "2026-10-01",
+      "realtimeStart": "2026-11-06",
+      "prodRealtimeEnd": null,
+      "prodValue": 4.1,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "VIXCLS",
+      "observationPeriod": "2026-11-03",
+      "realtimeStart": "2026-11-03",
+      "prodRealtimeEnd": null,
+      "prodValue": 20.83,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "VIXCLS",
+      "observationPeriod": "2026-11-04",
+      "realtimeStart": "2026-11-04",
+      "prodRealtimeEnd": null,
+      "prodValue": 16.61,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    },
+    {
+      "seriesId": "VIXCLS",
+      "observationPeriod": "2026-11-05",
+      "realtimeStart": "2026-11-05",
+      "prodRealtimeEnd": null,
+      "prodValue": 28.18,
+      "prodSourceHash": null,
+      "localRows": 0,
+      "archiveRows": 1,
+      "disposition": "delete_candidate_local_missing"
+    }
+  ],
+  "productionApply": false
+}
