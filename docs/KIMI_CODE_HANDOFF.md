@@ -916,3 +916,12 @@ Deliberately not automatic:
 - Target logging is host-only (`target host: <host>`). `worker/prod-push.mts` emits `PROD_PUSH_OK` only after all responses succeed and `assertOperationalServerEvidence` verifies zero rejected/failed rows and expected=verified. Output contains accepted/dupes/postCheck counts from the server, not local expectations. HTTP 400 `unsupported kind` maps to `prod server has no ingest lane yet — publish the new version first`.
 - Verification: targeted suites **3 files / 26 tests passed**, including INGEST_URL-only refusal, exact target path, host log, non-ok response without success, and post-check mismatch. `npm run test:scripts` **4 files / 30 tests passed**; `npm run check`, production build and `git diff --check` passed.
 - Safe CLI proof with `PROD_INGEST_URL=` returned `PROD_PUSH_FAILED PROD_INGEST_URL is required ...` before any network call. During earlier validation, the configured production target returned HTTP 500 twice; no success or post-check evidence was returned, so no production write is claimed or confirmed. Exact fix commit is authoritative in `git log`.
+
+
+
+## 86. CUSIP map reviewed export for production transport — 2026-11-10
+
+- Created local-only backup with `npx tsx scripts/backup-cusip-map.mts`; no production writes, DDL changes or new ingest kinds were performed.
+- Reviewed artifacts: `research/reviewed-sync/2026-11-10/cusip-map/backup-cusip-map.json` and `backup-manifest.json`.
+- Script output: createdAt **2026-11-10T02:03:02.967Z**, rowsTotal **41,090**, byteSize **7,092,932**, backup SHA256 **`dc1df9326e633a92c8789f165d18ec805bac5173b35c6b04780ac4532f75eb0c`**.
+- Verification passed: manifest SHA256 matches the file and the reviewed copy, local `COUNT(*)=41,090`, JSON row count=41,090, byte size matches, `credentialMaterialIncluded=false`, and no unexpected fields outside `cusip/cik/ticker/exchCode/secType/mappedAt`. Local ticker column is TEXT as expected; production DDL 030 was not touched. Exact export commit is authoritative in `git log`; next action belongs to the sandbox production apply and uncovered-CUSIP reason audit.

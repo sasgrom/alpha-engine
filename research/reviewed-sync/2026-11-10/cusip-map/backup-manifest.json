@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "table": "cusip_map",
+  "createdAt": "2026-11-10T02:03:02.967Z",
+  "rowsTotal": 41090,
+  "backupFile": "backup-cusip-map.json",
+  "byteSize": 7092932,
+  "sha256": "dc1df9326e633a92c8789f165d18ec805bac5173b35c6b04780ac4532f75eb0c",
+  "tableFingerprint": "a3dd52791a83f736503418c1240acd8e285b9fad89569c3877ce3b4711b4bcb0",
+  "tickerColumn": {
+    "DATA_TYPE": "text",
+    "CHARACTER_MAXIMUM_LENGTH": 65535
+  },
+  "credentialMaterialIncluded": false
+}
