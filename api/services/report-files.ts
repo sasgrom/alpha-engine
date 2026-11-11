@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { reportFilePolicy } from "@contracts/report-files";
+import { REPORT_FILE_POLICY, reportFilePolicy } from "@contracts/report-files";
 import { env } from "../lib/env";
 import { existingReport } from "./worker-operational";
 
@@ -27,6 +27,8 @@ function generatedAtFromBody(body: string, name: string): Date | null {
 }
 
 export async function reportFileResponse(name: string, options: { db?: any; staticRoot?: string } = {}): Promise<Response> {
+  // A name outside the whitelist is not served: an honest 404, not a server error.
+  if (!REPORT_FILE_POLICY[name]) return Response.json({ error: "Report not found" }, { status: 404 });
   const policy = reportFilePolicy(name);
   const root = options.staticRoot ?? path.resolve(process.cwd(), env.isProduction ? "dist/public/reports" : "public/reports");
   const staticFile = path.join(root, name);

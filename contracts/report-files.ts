@@ -16,6 +16,12 @@ export const REPORT_FILE_POLICY: Record<string, ReportFilePolicy> = {
   "company-exposures.json": { contentType: "application/json", automatic: false },
   "macro-scenarios.json": { contentType: "application/json", automatic: false },
   "expectations-report.json": { contentType: "application/json", automatic: false },
+  // Read by pages (Scenario Lab, Feature Lab, Analytics); served locally, not part of the automatic push.
+  "pilot-exposure-evidence.json": { contentType: "application/json", automatic: false },
+  "shock-calibration.json": { contentType: "application/json", automatic: false },
+  "schwab-features.json": { contentType: "application/json", automatic: false },
+  "weekly-metrics.json": { contentType: "application/json", automatic: false },
+  "project-strength-review.md": { contentType: "text/markdown", automatic: false },
 };
 
 export function reportFilePolicy(name: string): ReportFilePolicy {
