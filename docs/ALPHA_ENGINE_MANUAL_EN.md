@@ -39,13 +39,44 @@ the structural trajectory and derivatives/volatility set the execution boundarie
 | 1.6 | Series Builder — canonical time series | ✅ done (iteration 2) |
 | 1.7 | Prices — daily OHLCV + SPY benchmark | ✅ done (3f/3g/3l; 5 tickers + SPY, 100% coverage) |
 | 2 | Semantic Triage — LLM scoring of MD&A/footnotes (−1…+1) | 🚧 PARTIAL: 2.1 section slicing ✅, 2.2 cloud scoring prototype ✅ (calibration + Lab); full local LLM ⬜ (awaits home worker) |
-| 3 | Purification — Huber M-estimation + FFT denoise | ⬜ not started; design under review (see the 3h memo: FFT has little to denoise on quarterly series — causal filters for prices instead) |
+| 3 | Purification — data validation and robust estimation (redesigned 2026-11-11, replaces Huber M-estimation + FFT denoise) | 🚧 design agreed 2026-11-11; steps A–D in §2.1 |
 | 4 | Regime & Probability — MS-AR/HMM + Bayesian posterior | ⬜ not started; next candidate input — FRED macro |
 | 5 | Conformal Prediction — intervals and sizing | ⬜ not started; proposed entry point — factor IC monitor (Stage 5-alpha) |
 | 6 | Execution — covered calls, skew overrides, orders | ⬜ not started; blocker — the options data source decision |
 
 Cross-stage additions: earnings events from 8-K Item 2.02 and the Screener
 page (iteration 4a) are infrastructure on top of stages 1–2, not stage 4.
+
+### 2.1 Stage 3 — data purity (design agreed 2026-11-11)
+
+Purification starts with correctness, not smoothing. The errors found on 2026-11-11 (split units mixed in
+market value and in option features, a derived fourth quarter of an average share count, raw and adjusted
+prices mixed, duplicate and out-of-order filings, missing days) pushed results in one direction; noise mostly
+averages out.
+
+Principles:
+
+- Only causal operations: anything applied at a date uses only data available on that date. Two-sided
+  smoothing (FFT over a whole series, centred averages) is excluded because it leaks later values.
+- No FFT on quarterly series: 40–80 values with a trend and a four-quarter season, and the year-ago comparison
+  already removes the season.
+- The first-session reaction to a publication is the signal and is never smoothed. Smoothing fits slow
+  descriptors only (usual volatility, distance from the one-year average), with filters that look back.
+- Robustness belongs in the fitting, not in edited data; readings already enter as ranks among earlier readings.
+- Each step is judged once, fixed in advance, by the paired walk-forward test on the same decisions over the
+  full company list; nothing is tuned on the years kept apart.
+
+Steps:
+
+- **A. Data-health checks with quarantine**, per source: splits and dividends (Stooq against Schwab, the
+  option-implied price against the stock price), stale or jumping prices, unit and sign errors and non-additive
+  quarters in filed figures, duplicate and out-of-order filings, model output that cannot be verified in its
+  source. A daily data-health report; inputs set aside never reach the engine.
+- **B. Clean outcomes**: windows after a publication that contain another major event (the next release, a
+  merger, an index change) are marked, and leaving them out is tested.
+- **C. Robust fitting variants**: Huber regression for each factor's direction, robust scaling of surprises,
+  trimming of extreme values using only past data.
+- **D. Survivorship**: add the companies that left the index or were delisted, with their prices and filings.
 
 **Target hybrid architecture (Variant C):** cloud = control plane (UI, registries, task queue);
 local machine (Mac, later Mac Studio) = worker for heavy lifting (full SEC mirror, LLM processing).
