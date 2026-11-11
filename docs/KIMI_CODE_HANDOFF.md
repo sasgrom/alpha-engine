@@ -1193,3 +1193,27 @@ Deliberately not automatic:
 - One read-only query on the local price table wrote `closes-2018.json` under the research data folder on D:. No collector, scheduler, server or production action was started or changed.
 - Working tree at commit time: the same three generated files modified by scheduled jobs (`public/reports/company-exposures.json`, `.md`, `src/data/analytics-snapshot.ts`), left untouched and not part of this commit.
 - Next safe action: unchanged. The owner's word on the K06 full list (426 companies) is the step every open question waits for; Kimi starts nothing until then.
+
+## 118. Claude: S&P 500 prices and option history, Schwab daily bars, S&P 500 option capture, housekeeping fixes — 2026-11-11 (local afternoon)
+
+Owner requests of 11 November: update prices for the full S&P 500 (history and daily), fix the price holes, collect
+options for everybody, load the option history, precalculate for page load (K07, Kimi), then the housekeeping items
+of the findings. Times are Pacific.
+
+Verified:
+
+- **Stooq dump 2026-11-10** (`D:\stooq data 111126\data\daily\us`): `npx tsx scripts/load-stooq-prices.mts --dir "D:/stooq data 111126/data/daily/us" --refresh`, 11:10–11:41. 514/514 series; 412 replaced by the dump's dividend-adjusted history (the October dump lacked part of the dividend adjustments), 90 corrected (last bar's volume), 12 held for review (BF-B, BNY, DTE, FLEX, HBAN, HPE, HSIC, J, JCI, KEY, PG, UNP; 10 received the new dates, PG and BNY end 2026-10-26). 3,054,748 stored bars changed as intended, 0 unexpectedly, 0 missing; 5,626 added; readback 502/502. Evidence `research/engine/price-load-stooq-2026-11-10.summary.json` (`365a243`).
+- **Schwab daily history**: `npx tsx worker/schwab-history-backfill.mts` (one year, 514/514, `D:\research\alpha-engine\schwab-sp500\pricehistory-backfill\2026-11-11-1y`), loaded with `worker/schwab-daily-bars.mts --history-dir ...`: 128,803 bars, 0 conflicts. Then found: `getBars` lets Schwab win on its dates, so a year of raw Schwab closes overlaid the dividend-adjusted Stooq history (false step of 1–3% for dividend payers). At 12:20 the 128,785 overlapping rows were relabelled `schwab-hist` (one-off UPDATE of rows written that day; nothing deleted); `schwab` keeps 218 rows (the 200 earlier rows of the 50 for 4–9 November, 18 PG/BNY rows after their Stooq end). The writer now stores dates up to a series' last Stooq bar as `schwab-hist` (`2452dbc`). Macro atlas rebuilt at 12:28 on the corrected view. Schwab history is split-adjusted and not dividend-adjusted (NVDA 2024-05-31 close 109.63; KO Stooq/Schwab ratio steps by each dividend).
+- **Scheduler** restarted at 11:23 while idle (no job process): 70 jobs. New `schwab-fetch-sp500` (04:30; `--price-series --exclude research-universe-50.json --skip-preferences --root D:/research/alpha-engine/schwab-sp500`; local only) and `schwab-daily-bars` after it. The research-50 lane, its UI snapshot and its production push are unchanged. The collector now spaces requests by 550 ms, retries HTTP 429 and renews the token during long runs (`worker/lib/schwab-paced.ts`); class shares are requested as BRK/B.
+- **DoltHub history**: `npx tsx worker/dolthub-export-dates.mts`, started 11:59: 510 tickers, 2019–2026, one query per snapshot date (about a second for all tickers, against about a minute per ticker and year); the 40 existing files are rebuilt as a check and were identical in every year completed at the time of writing. NVR, SKYD, VYLR and XLU are not listed by DoltHub. Still running at the time of writing.
+- **First S&P 500 option capture** queued for 13:05 (after the close and after the export).
+- **Operations report**: the heartbeat check counted a heartbeat written a few seconds after the report's clock as offline ("stale: 0 min ago") and made the report critical; fixed with a test (`b1055f0`). Macro scenarios, macro atlas, local Schwab snapshot and features rebuilt. Remaining error: the `schwab-snapshot` push fails with HTTP 413 (the report is 77 MB; production limit and the 16 MiB column; the server accepts gzip only for `insider-form4.json`); owner decision.
+- **Option features**: spot read from the quotes by put-call parity (split-proof), schema 3, `--all-exported`; calibration scales both moves by the same entry close; the research readers read source stooq only (`8b2ab53`). Features not yet rebuilt.
+- **13F flows**: weight change from dollar values, each fund's book counted once (`0944e09`).
+- **Specs**: K07 (`5cf0554`, approved by the owner in Kimi's window), K08 market value (`992f9c5`, waits for the owner).
+
+Gates at 12:38 on the committed state: `npm run check`, `npm test -- --run` (191 files / 1,068 tests), `npm run build`, `git diff --check` pass. A one-off type check of the changed `worker/` and `scripts/` files shows no new errors (13 older ones in `worker/dolthub-features.mts`, `worker/dolthub-vol-target.mts`, `worker/lib/dolthub-research.ts`; these folders are outside `npm run check`).
+
+Left uncommitted by Claude: Kimi's handoff sections 112–117, K06 and event-calendar files, scheduler-generated reports.
+
+Next safe actions: after the export, `npx tsx worker/dolthub-export-validate.mts` (without `--full`, which expects the old 40×8 scope) and `npx tsx worker/dolthub-features.mts --all-exported`; check the first `schwab-sp500` manifest; the first scheduled S&P capture and daily bars run tomorrow at 04:30. Owner decisions: the snapshot push (413), PG and BNY, K08, the Manual §1 draft (research repository, findings §11).
