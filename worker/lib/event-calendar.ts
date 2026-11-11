@@ -98,7 +98,7 @@ export function buildQuarters(filings: CalendarFiling[], spyDates: string[]): Ca
     const seenPeriods = new Set<string>();
     for (const row of periodic) {
       const periodEnd = row.reportDate!;
-      if (seenPeriods.has(periodEnd)) throw new Error(`Multiple original periodic filings for ${row.ticker}/${periodEnd}`);
+      if (seenPeriods.has(periodEnd)) continue;
       seenPeriods.add(periodEnd);
       const candidates = earnings.filter((release) => release.acceptedUtc! > periodEnd && release.acceptedUtc! <= (row.acceptedUtc ?? periodEnd));
       const release = candidates[0];
@@ -122,9 +122,13 @@ export function buildQuarters(filings: CalendarFiling[], spyDates: string[]): Ca
     for (let index = 0; index < companyQuarters.length; index++) {
       const current = companyQuarters[index];
       const next = companyQuarters[index + 1]?.firstPublicationEt ?? null;
+      if (current.firstPublicationEt && next && next <= current.firstPublicationEt) {
+        current.nextFirstPublicationEt = null;
+        current.windowSessions = null;
+        continue;
+      }
       current.nextFirstPublicationEt = next;
       if (current.firstPublicationEt && next) {
-        if (next <= current.firstPublicationEt) throw new Error(`Quarter nextFirstPublicationEt must be strictly later than firstPublicationEt: ${current.ticker}/${current.fiscalPeriodEnd} ${current.firstPublicationEt} -> ${next}`);
         const firstDate = current.firstPublicationEt.slice(0, 10), nextDate = next.slice(0, 10);
         current.windowSessions = spyDates.filter((date) => date > firstDate && date < nextDate).length;
       }
@@ -143,6 +147,14 @@ export function acceptanceChecks(filings: CalendarFiling[], quarters: CalendarQu
   const amendmentOnly = amendments.filter((row) => !originalPeriods.has(`${row.cik}|${row.reportDate}`));
   const quarterPeriods = new Set(quarters.map((row) => `${row.cik}|${row.fiscalPeriodEnd}`));
   const quarterOriginals = new Set(quarters.map((row) => `${row.cik}|${row.periodicAccession}`));
+  const originalGroups = new Map<string, CalendarFiling[]>();
+  for (const row of originals) originalGroups.set(`${row.cik}|${row.reportDate}`, [...(originalGroups.get(`${row.cik}|${row.reportDate}`) ?? []), row]);
+  const duplicateOriginalPeriods = [...originalGroups.entries()].filter(([, rows]) => rows.length > 1).map(([key, rows]) => {
+    const ordered = rows.slice().sort((a, b) => (a.acceptedUtc ?? "").localeCompare(b.acceptedUtc ?? "") || a.accessionNo.localeCompare(b.accessionNo));
+    const [cik, fiscalPeriodEnd] = key.split("|");
+    return { cik: Number(cik), ticker: ordered[0].ticker, fiscalPeriodEnd, keptAccession: ordered[0].accessionNo, duplicates: ordered.slice(1).map((row) => ({ accessionNo: row.accessionNo, form: row.form, acceptedEt: row.acceptedEt, acceptedUtc: row.acceptedUtc, primaryDoc: row.primaryDoc })) };
+  });
+  const duplicateOriginalAccessions = new Set(duplicateOriginalPeriods.flatMap((row) => row.duplicates.map((duplicate) => `${row.cik}|${duplicate.accessionNo}`)));
   const originalsSince2005 = originals.filter((row) => row.filingDate >= "2005-01-01");
   const originalSince2005Accessions = new Set(originalsSince2005.map((row) => `${row.cik}|${row.accessionNo}`));
   const withSeparateRelease = quarters.filter((row) => row.earningsAccession !== null);
@@ -170,6 +182,11 @@ export function acceptanceChecks(filings: CalendarFiling[], quarters: CalendarQu
       share45: windows.length ? windows.filter((value) => value >= 45).length / windows.length : 0,
     };
   };
+  const outOfOrderNextPublications = quarters.flatMap((row, index) => {
+    const next = quarters[index + 1];
+    if (row.cik !== next?.cik || !row.firstPublicationEt || !next.firstPublicationEt || next.firstPublicationEt > row.firstPublicationEt) return [];
+    return [{ cik: row.cik, ticker: row.ticker, fiscalPeriodEnd: row.fiscalPeriodEnd, firstPublicationEt: row.firstPublicationEt, nextFiscalPeriodEnd: next.fiscalPeriodEnd, nextFirstPublicationCandidate: next.firstPublicationEt }];
+  });
   const companyYears = new Map<string, number>();
   for (const row of filings.filter((row) => row.isEarningsRelease === true && row.filingDate >= "2005-01-01")) {
     const key = `${row.ticker}|${row.filingDate.slice(0, 4)}`;
@@ -193,11 +210,13 @@ export function acceptanceChecks(filings: CalendarFiling[], quarters: CalendarQu
       duplicateCompanyPeriods: quarters.length - quarterPeriods.size,
       originalsSince2005: originalsSince2005.length,
       rowsSince2005: quarters.filter((row) => originalSince2005Accessions.has(`${row.cik}|${row.periodicAccession}`)).length,
-      missingOriginalAccessionsSince2005: originalsSince2005.filter((row) => !quarterOriginals.has(`${row.cik}|${row.accessionNo}`)).map((row) => row.accessionNo),
+      missingOriginalAccessionsSince2005: originalsSince2005.filter((row) => !quarterOriginals.has(`${row.cik}|${row.accessionNo}`) && !duplicateOriginalAccessions.has(`${row.cik}|${row.accessionNo}`)).map((row) => row.accessionNo),
+      duplicateOriginalPeriods,
       withSeparateRelease: withSeparateRelease.length,
       shareWithSeparateRelease: quarters.length ? withSeparateRelease.length / quarters.length : 0,
       lagDays: { min: lags.length ? Math.min(...lags) : null, median: lagQuantile(0.5), p90: lagQuantile(0.9), max: lags.length ? Math.max(...lags) : null, negative: lags.filter((value) => value < 0).length },
       nonIncreasingNextPublications: bounded.filter((row) => row.nextFirstPublicationEt! <= row.firstPublicationEt!).map((row) => `${row.ticker}/${row.fiscalPeriodEnd}`),
+      outOfOrderNextPublications,
       windowsUnder20: calendarWindows.filter((row) => row.calendarDays < 20),
       windowsOver120: calendarWindows.filter((row) => row.calendarDays > 120),
       multipleEarningsSince2009_06: quarters.filter((row) => row.fiscalPeriodEnd >= "2009-06-01" && row.earningsFilings.length > 1).length,

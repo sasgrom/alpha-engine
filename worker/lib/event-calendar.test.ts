@@ -85,12 +85,30 @@ describe("quarter timeline", () => {
     expect(checks.periodicAmendments).toEqual({ filings: 3, linkedToQuarters: 2, amendmentOnlyFilings: 1, amendmentOnlyPeriods: ["AAA/2025-12-31"] });
   });
 
-  it("rejects a next quarter whose first publication is not strictly later", () => {
+  it("keeps the earliest original per fiscal period and records duplicate evidence", () => {
     const rows = [
-      filing({ accessionNo: "q1", reportDate: "2026-03-31", acceptedEt: "2026-05-07T10:00:00", acceptedUtc: "2026-05-07T14:00:00.000Z" }),
-      filing({ accessionNo: "q2", reportDate: "2026-06-30", acceptedEt: "2026-05-07T10:00:00", acceptedUtc: "2026-05-07T14:00:00.000Z" }),
+      filing({ accessionNo: "q1-original", reportDate: "2010-03-31", acceptedEt: "2010-04-30T15:44:08", acceptedUtc: "2010-04-30T19:44:08.000Z", primaryDoc: "form10q.htm" }),
+      filing({ accessionNo: "late", reportDate: "2010-06-30", acceptedEt: "2010-07-22T11:50:22", acceptedUtc: "2010-07-22T15:50:22.000Z", primaryDoc: "form10q.htm" }),
+      filing({ accessionNo: "early", reportDate: "2010-06-30", acceptedEt: "2010-07-21T17:58:03", acceptedUtc: "2010-07-21T21:58:03.000Z", primaryDoc: "form10q.htm" }),
     ];
-    expect(() => buildQuarters(rows, [])).toThrow(/strictly later/);
+    const quarters = buildQuarters(rows, []);
+    expect(quarters.map((row) => row.fiscalPeriodEnd)).toEqual(["2010-03-31", "2010-06-30"]);
+    expect(quarters[1].periodicAccession).toBe("early");
+    const checks = acceptanceChecks(rows, quarters);
+    expect(checks.quarters).toMatchObject({ originalPeriodicRows: 3, uniqueCompanyPeriods: 2, duplicateCompanyPeriods: 0, originalsSince2005: 3, rowsSince2005: 2, missingOriginalAccessionsSince2005: [] });
+    expect(checks.quarters.duplicateOriginalPeriods).toEqual([{ cik: 1, ticker: "AAA", fiscalPeriodEnd: "2010-06-30", keptAccession: "early", duplicates: [{ accessionNo: "late", form: "10-Q", acceptedEt: "2010-07-22T11:50:22", acceptedUtc: "2010-07-22T15:50:22.000Z", primaryDoc: "form10q.htm" }] }]);
+  });
+
+  it("marks an out-of-order next publication without inventing a window", () => {
+    const rows = [
+      filing({ accessionNo: "q1", reportDate: "2006-09-30", acceptedEt: "2007-04-09T14:23:47", acceptedUtc: "2007-04-09T18:23:47.000Z" }),
+      filing({ accessionNo: "q2", reportDate: "2006-12-31", acceptedEt: "2007-03-30T15:50:53", acceptedUtc: "2007-03-30T19:50:53.000Z" }),
+    ];
+    const quarters = buildQuarters(rows, []);
+    expect(quarters[0]).toMatchObject({ nextFirstPublicationEt: null, windowSessions: null });
+    const checks = acceptanceChecks(rows, quarters);
+    expect(checks.quarters.nonIncreasingNextPublications).toEqual([]);
+    expect(checks.quarters.outOfOrderNextPublications).toEqual([{ cik: 1, ticker: "AAA", fiscalPeriodEnd: "2006-09-30", firstPublicationEt: "2007-04-09T14:23:47", nextFiscalPeriodEnd: "2006-12-31", nextFirstPublicationCandidate: "2007-03-30T15:50:53" }]);
   });
 
   it("uses at-least session thresholds and first-to-next calendar days", () => {

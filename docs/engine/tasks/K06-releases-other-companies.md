@@ -92,6 +92,19 @@ summary `research/engine/event-calendar-rest.summary.json` (counts per company, 
 - Stop and report instead of improvising if the SEC throttles for more than 15 minutes, if a
   company's submissions pages are inconsistent with K01's assumptions, or if disk space falls
   under the limit above.
+- Owner-approved out-of-order rule (2026-11-11, after the verified TMUS case): when the next quarter's
+  first publication is not later than the current quarter's first publication, set only that link's
+  `nextFirstPublicationEt` and `windowSessions` to null. Preserve both timestamps in
+  `outOfOrderNextPublications`; do not invent a bounded window or hide the anomaly. Every other K01 rule
+  and the research-50 artifacts remain unchanged.
+- Owner-approved duplicate-original rule (2026-11-11, after the verified TXN case): when distinct original
+  10-Q/10-K filings share one fiscal period, use the earliest `acceptedUtc` original in the quarter. Keep
+  every original filing in `filings-rest.jsonl` and record `duplicateOriginalPeriods` with `keptAccession`
+  and every duplicate's accession, form, timestamps and primary document. Deliberately deduped later filings
+  are not counted as missing; research-50 artifacts remain unchanged.
+- A company with zero in-scope submissions is marked `notApplicable` with the explicit reason instead of a
+  fabricated metadata-ratio failure. Metadata checks still fail when in-scope filings exist but acceptance
+  times or item lists are missing (for example, foreign private issuers with only 6-K forms).
 
 ## Delivery report — 20-company pilot complete; full run stopped for owner decision
 

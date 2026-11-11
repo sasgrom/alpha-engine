@@ -91,8 +91,8 @@ export function companyPilotChecks(filings: CalendarFiling[], quarters: Calendar
   const missingOutcome = earnings.filter((row) => !byAccession.has(row.accessionNo)).map((row) => row.accessionNo);
   const unexplained = outcomes.filter((outcome) => outcome.files.length === 0 && !outcome.reason).map((outcome) => outcome.accessionNo);
   const issues: string[] = [];
-  if (checks.acceptedSince2004.share < 0.995) issues.push(`acceptedEt share ${checks.acceptedSince2004.share} < 0.995`);
-  if (checks.itemLists8k.share < 0.99) issues.push(`8-K item-list share ${checks.itemLists8k.share} < 0.99`);
+  if (filings.length > 0 && checks.acceptedSince2004.share < 0.995) issues.push(`acceptedEt share ${checks.acceptedSince2004.share} < 0.995`);
+  if (filings.length > 0 && checks.itemLists8k.share < 0.99) issues.push(`8-K item-list share ${checks.itemLists8k.share} < 0.99`);
   if (checks.quarters.duplicateCompanyPeriods) issues.push(`${checks.quarters.duplicateCompanyPeriods} duplicate company-periods`);
   if (checks.quarters.missingOriginalAccessionsSince2005.length) issues.push(`${checks.quarters.missingOriginalAccessionsSince2005.length} original filings missing from quarters`);
   if (checks.quarters.lagDays.negative) issues.push(`${checks.quarters.lagDays.negative} negative release lags`);
@@ -104,6 +104,7 @@ export function companyPilotChecks(filings: CalendarFiling[], quarters: Calendar
     pass: issues.length === 0,
     issues,
     checks,
+    notApplicable: filings.length === 0 ? "No in-scope 10-Q, 10-K, 8-K or amendment submissions since 2005; publication and item-list ratios are not applicable" : null,
     exhibits: {
       releases: earnings.length,
       outcomes: outcomes.length,

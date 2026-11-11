@@ -46,6 +46,17 @@ describe("REST submissions calendar", () => {
     expect(companyPilotChecks(filings, quarters, [missing]).pass).toBe(true);
   });
 
+  it("marks an empty in-scope company not applicable without weakening metadata checks", () => {
+    const empty = companyPilotChecks([], [], []);
+    expect(empty.pass).toBe(true);
+    expect(empty.notApplicable).toMatch(/No in-scope/);
+    const filings = calendarRowsFromSubmissions(company, [page]);
+    const quarters = buildQuarters(filings, []);
+    const missingAcceptance = companyPilotChecks(filings.map((row) => ({ ...row, acceptedEt: null, acceptedUtc: null })), quarters, []);
+    expect(missingAcceptance.pass).toBe(false);
+    expect(missingAcceptance.notApplicable).toBeNull();
+  });
+
   it("uses the traded Stooq ticker and rejects ambiguous CIK mappings", () => {
     const tickers = stooqTickerMap([{ cik: 1, priceTicker: "C" }, { cik: 2, priceTicker: "BRK-B" }, { cik: 3, priceTicker: null }]);
     expect(tickers.get(1)).toBe("C");
