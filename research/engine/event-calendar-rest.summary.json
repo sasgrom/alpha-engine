@@ -1,9 +1,9 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-11T11:14:20.707Z",
+ "generatedAt": "2026-11-11T11:34:25.034Z",
  "status": "pilot_complete",
- "codeCommit": "2b8cbda881612e75475153a410878b693629cb6c",
- "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+ "codeCommit": "7b466c9d7471b8a383d59d789823fec6f6ef205a",
+ "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
  "eligibleCompanies": 446,
  "pilotCompanies": 20,
  "completedCompanies": 20,
@@ -13,10 +13,10 @@
   "releases": 2116,
   "bytesDownloaded": 4721857804,
   "bytesOnDisk": 4721857804,
-  "elapsedSeconds": 1169.1280000000002,
+  "elapsedSeconds": 1232.6179999999997,
   "cacheHits": 20,
   "processedThisRun": 0,
-  "wallSecondsThisRun": 18.741
+  "wallSecondsThisRun": 17.933
  },
  "overall": {
   "pass": true,
@@ -35,175 +35,175 @@
    },
    "companyYearOutliers": [
     {
-     "companyYear": "C-PR|2009",
+     "companyYear": "C|2009",
      "count": 8
     },
     {
-     "companyYear": "C-PR|2010",
+     "companyYear": "C|2010",
      "count": 6
     },
     {
-     "companyYear": "C-PR|2012",
+     "companyYear": "C|2012",
      "count": 6
     },
     {
-     "companyYear": "C-PR|2013",
+     "companyYear": "C|2013",
      "count": 7
     },
     {
-     "companyYear": "C-PR|2014",
+     "companyYear": "C|2014",
      "count": 9
     },
     {
-     "companyYear": "MET-PF|2018",
+     "companyYear": "MET|2018",
      "count": 8
     },
     {
-     "companyYear": "MET-PF|2005",
+     "companyYear": "MET|2005",
      "count": 6
     },
     {
-     "companyYear": "MET-PF|2006",
+     "companyYear": "MET|2006",
      "count": 7
     },
     {
-     "companyYear": "MET-PF|2007",
+     "companyYear": "MET|2007",
      "count": 6
     },
     {
-     "companyYear": "MET-PF|2008",
+     "companyYear": "MET|2008",
      "count": 8
     },
     {
-     "companyYear": "MET-PF|2010",
+     "companyYear": "MET|2010",
      "count": 7
     },
     {
-     "companyYear": "MET-PF|2011",
+     "companyYear": "MET|2011",
      "count": 6
     },
     {
-     "companyYear": "MET-PF|2019",
+     "companyYear": "MET|2019",
      "count": 8
     },
     {
-     "companyYear": "MET-PF|2020",
+     "companyYear": "MET|2020",
      "count": 8
     },
     {
-     "companyYear": "MET-PF|2021",
+     "companyYear": "MET|2021",
      "count": 8
     },
     {
-     "companyYear": "MET-PF|2022",
+     "companyYear": "MET|2022",
      "count": 8
     },
     {
-     "companyYear": "MET-PF|2012",
+     "companyYear": "MET|2012",
      "count": 10
     },
     {
-     "companyYear": "MET-PF|2013",
+     "companyYear": "MET|2013",
      "count": 6
     },
     {
-     "companyYear": "MET-PF|2014",
+     "companyYear": "MET|2014",
      "count": 8
     },
     {
-     "companyYear": "MET-PF|2015",
+     "companyYear": "MET|2015",
      "count": 7
     },
     {
-     "companyYear": "MET-PF|2016",
+     "companyYear": "MET|2016",
      "count": 8
     },
     {
-     "companyYear": "MET-PF|2017",
+     "companyYear": "MET|2017",
      "count": 7
     },
     {
-     "companyYear": "BNY-PK|2008",
+     "companyYear": "BNY|2008",
      "count": 8
     },
     {
-     "companyYear": "BNY-PK|2009",
+     "companyYear": "BNY|2009",
      "count": 9
     },
     {
-     "companyYear": "BNY-PK|2010",
+     "companyYear": "BNY|2010",
      "count": 8
     },
     {
-     "companyYear": "BNY-PK|2011",
+     "companyYear": "BNY|2011",
      "count": 10
     },
     {
-     "companyYear": "BNY-PK|2012",
+     "companyYear": "BNY|2012",
      "count": 11
     },
     {
-     "companyYear": "BNY-PK|2013",
+     "companyYear": "BNY|2013",
      "count": 8
     },
     {
-     "companyYear": "BNY-PK|2015",
+     "companyYear": "BNY|2015",
      "count": 6
     },
     {
-     "companyYear": "WFC-PZ|2018",
+     "companyYear": "WFC|2018",
      "count": 7
     },
     {
-     "companyYear": "WFC-PZ|2009",
+     "companyYear": "WFC|2009",
      "count": 7
     },
     {
-     "companyYear": "MER-PK|2013",
+     "companyYear": "BAC|2013",
      "count": 6
     },
     {
-     "companyYear": "PRS|2025",
+     "companyYear": "PRU|2025",
      "count": 7
     },
     {
-     "companyYear": "PRS|2026",
+     "companyYear": "PRU|2026",
      "count": 9
     },
     {
-     "companyYear": "PRS|2007",
+     "companyYear": "PRU|2007",
      "count": 6
     },
     {
-     "companyYear": "PRS|2008",
+     "companyYear": "PRU|2008",
      "count": 6
     },
     {
-     "companyYear": "PRS|2011",
+     "companyYear": "PRU|2011",
      "count": 6
     },
     {
-     "companyYear": "PRS|2012",
+     "companyYear": "PRU|2012",
      "count": 8
     },
     {
-     "companyYear": "PRS|2014",
+     "companyYear": "PRU|2014",
      "count": 7
     },
     {
-     "companyYear": "PRS|2015",
+     "companyYear": "PRU|2015",
      "count": 6
     },
     {
-     "companyYear": "HBANZ|2025",
+     "companyYear": "HBAN|2025",
      "count": 6
     },
     {
-     "companyYear": "HBANZ|2008",
+     "companyYear": "HBAN|2008",
      "count": 6
     },
     {
-     "companyYear": "KEY-PL|2008",
+     "companyYear": "KEY|2008",
      "count": 6
     },
     {
@@ -215,11 +215,11 @@
      "count": 6
     },
     {
-     "companyYear": "STT-PG|2009",
+     "companyYear": "STT|2009",
      "count": 6
     },
     {
-     "companyYear": "STT-PG|2010",
+     "companyYear": "STT|2010",
      "count": 6
     },
     {
@@ -344,7 +344,7 @@
     "windowsOver120": [
      {
       "cik": 895421,
-      "ticker": "MS-PQ",
+      "ticker": "MS",
       "fiscalPeriodEnd": "2008-11-30",
       "firstPublicationEt": "2008-12-17T08:00:48",
       "nextFirstPublicationEt": "2009-04-22T08:02:25",
@@ -408,7 +408,7 @@
   }
  },
  "companies": {
-  "C-PR": {
+  "C": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -425,23 +425,23 @@
     },
     "companyYearOutliers": [
      {
-      "companyYear": "C-PR|2009",
+      "companyYear": "C|2009",
       "count": 8
      },
      {
-      "companyYear": "C-PR|2010",
+      "companyYear": "C|2010",
       "count": 6
      },
      {
-      "companyYear": "C-PR|2012",
+      "companyYear": "C|2012",
       "count": 6
      },
      {
-      "companyYear": "C-PR|2013",
+      "companyYear": "C|2013",
       "count": 7
      },
      {
-      "companyYear": "C-PR|2014",
+      "companyYear": "C|2014",
       "count": 9
      }
     ],
@@ -503,7 +503,7 @@
     "unexplained": []
    }
   },
-  "MET-PF": {
+  "MET": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -520,71 +520,71 @@
     },
     "companyYearOutliers": [
      {
-      "companyYear": "MET-PF|2018",
+      "companyYear": "MET|2018",
       "count": 8
      },
      {
-      "companyYear": "MET-PF|2005",
+      "companyYear": "MET|2005",
       "count": 6
      },
      {
-      "companyYear": "MET-PF|2006",
+      "companyYear": "MET|2006",
       "count": 7
      },
      {
-      "companyYear": "MET-PF|2007",
+      "companyYear": "MET|2007",
       "count": 6
      },
      {
-      "companyYear": "MET-PF|2008",
+      "companyYear": "MET|2008",
       "count": 8
      },
      {
-      "companyYear": "MET-PF|2010",
+      "companyYear": "MET|2010",
       "count": 7
      },
      {
-      "companyYear": "MET-PF|2011",
+      "companyYear": "MET|2011",
       "count": 6
      },
      {
-      "companyYear": "MET-PF|2019",
+      "companyYear": "MET|2019",
       "count": 8
      },
      {
-      "companyYear": "MET-PF|2020",
+      "companyYear": "MET|2020",
       "count": 8
      },
      {
-      "companyYear": "MET-PF|2021",
+      "companyYear": "MET|2021",
       "count": 8
      },
      {
-      "companyYear": "MET-PF|2022",
+      "companyYear": "MET|2022",
       "count": 8
      },
      {
-      "companyYear": "MET-PF|2012",
+      "companyYear": "MET|2012",
       "count": 10
      },
      {
-      "companyYear": "MET-PF|2013",
+      "companyYear": "MET|2013",
       "count": 6
      },
      {
-      "companyYear": "MET-PF|2014",
+      "companyYear": "MET|2014",
       "count": 8
      },
      {
-      "companyYear": "MET-PF|2015",
+      "companyYear": "MET|2015",
       "count": 7
      },
      {
-      "companyYear": "MET-PF|2016",
+      "companyYear": "MET|2016",
       "count": 8
      },
      {
-      "companyYear": "MET-PF|2017",
+      "companyYear": "MET|2017",
       "count": 7
      }
     ],
@@ -646,7 +646,7 @@
     "unexplained": []
    }
   },
-  "BNY-PK": {
+  "BNY": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -663,31 +663,31 @@
     },
     "companyYearOutliers": [
      {
-      "companyYear": "BNY-PK|2008",
+      "companyYear": "BNY|2008",
       "count": 8
      },
      {
-      "companyYear": "BNY-PK|2009",
+      "companyYear": "BNY|2009",
       "count": 9
      },
      {
-      "companyYear": "BNY-PK|2010",
+      "companyYear": "BNY|2010",
       "count": 8
      },
      {
-      "companyYear": "BNY-PK|2011",
+      "companyYear": "BNY|2011",
       "count": 10
      },
      {
-      "companyYear": "BNY-PK|2012",
+      "companyYear": "BNY|2012",
       "count": 11
      },
      {
-      "companyYear": "BNY-PK|2013",
+      "companyYear": "BNY|2013",
       "count": 8
      },
      {
-      "companyYear": "BNY-PK|2015",
+      "companyYear": "BNY|2015",
       "count": 6
      }
     ],
@@ -749,7 +749,7 @@
     "unexplained": []
    }
   },
-  "WFC-PZ": {
+  "WFC": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -766,11 +766,11 @@
     },
     "companyYearOutliers": [
      {
-      "companyYear": "WFC-PZ|2018",
+      "companyYear": "WFC|2018",
       "count": 7
      },
      {
-      "companyYear": "WFC-PZ|2009",
+      "companyYear": "WFC|2009",
       "count": 7
      }
     ],
@@ -832,7 +832,7 @@
     "unexplained": []
    }
   },
-  "FITB-PM": {
+  "FITB": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -906,7 +906,7 @@
     "unexplained": []
    }
   },
-  "MS-PQ": {
+  "MS": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -950,7 +950,7 @@
      "windowsOver120": [
       {
        "cik": 895421,
-       "ticker": "MS-PQ",
+       "ticker": "MS",
        "fiscalPeriodEnd": "2008-11-30",
        "firstPublicationEt": "2008-12-17T08:00:48",
        "nextFirstPublicationEt": "2009-04-22T08:02:25",
@@ -989,7 +989,7 @@
     "unexplained": []
    }
   },
-  "MER-PK": {
+  "BAC": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -1006,7 +1006,7 @@
     },
     "companyYearOutliers": [
      {
-      "companyYear": "MER-PK|2013",
+      "companyYear": "BAC|2013",
       "count": 6
      }
     ],
@@ -1068,7 +1068,7 @@
     "unexplained": []
    }
   },
-  "PRS": {
+  "PRU": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -1085,35 +1085,35 @@
     },
     "companyYearOutliers": [
      {
-      "companyYear": "PRS|2025",
+      "companyYear": "PRU|2025",
       "count": 7
      },
      {
-      "companyYear": "PRS|2026",
+      "companyYear": "PRU|2026",
       "count": 9
      },
      {
-      "companyYear": "PRS|2007",
+      "companyYear": "PRU|2007",
       "count": 6
      },
      {
-      "companyYear": "PRS|2008",
+      "companyYear": "PRU|2008",
       "count": 6
      },
      {
-      "companyYear": "PRS|2011",
+      "companyYear": "PRU|2011",
       "count": 6
      },
      {
-      "companyYear": "PRS|2012",
+      "companyYear": "PRU|2012",
       "count": 8
      },
      {
-      "companyYear": "PRS|2014",
+      "companyYear": "PRU|2014",
       "count": 7
      },
      {
-      "companyYear": "PRS|2015",
+      "companyYear": "PRU|2015",
       "count": 6
      }
     ],
@@ -1175,7 +1175,7 @@
     "unexplained": []
    }
   },
-  "USB-PS": {
+  "USB": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -1249,7 +1249,7 @@
     "unexplained": []
    }
   },
-  "RF-PF": {
+  "RF": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -1323,7 +1323,7 @@
     "unexplained": []
    }
   },
-  "HBANZ": {
+  "HBAN": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -1340,11 +1340,11 @@
     },
     "companyYearOutliers": [
      {
-      "companyYear": "HBANZ|2025",
+      "companyYear": "HBAN|2025",
       "count": 6
      },
      {
-      "companyYear": "HBANZ|2008",
+      "companyYear": "HBAN|2008",
       "count": 6
      }
     ],
@@ -1406,7 +1406,7 @@
     "unexplained": []
    }
   },
-  "KEY-PL": {
+  "KEY": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -1423,7 +1423,7 @@
     },
     "companyYearOutliers": [
      {
-      "companyYear": "KEY-PL|2008",
+      "companyYear": "KEY|2008",
       "count": 6
      }
     ],
@@ -1602,7 +1602,7 @@
     "unexplained": []
    }
   },
-  "STT-PG": {
+  "STT": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -1619,11 +1619,11 @@
     },
     "companyYearOutliers": [
      {
-      "companyYear": "STT-PG|2009",
+      "companyYear": "STT|2009",
       "count": 6
      },
      {
-      "companyYear": "STT-PG|2010",
+      "companyYear": "STT|2010",
       "count": 6
      }
     ],
@@ -1685,7 +1685,7 @@
     "unexplained": []
    }
   },
-  "MTB-PL": {
+  "MTB": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -1833,7 +1833,7 @@
     "unexplained": []
    }
   },
-  "TFC-PR": {
+  "TFC": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -2141,7 +2141,7 @@
     "unexplained": []
    }
   },
-  "NTRSO": {
+  "NTRS": {
    "pass": true,
    "issues": [],
    "checks": {
@@ -2402,105 +2402,105 @@
  "exhibitExceptions": [
   {
    "cik": 1099219,
-   "ticker": "MET-PF",
+   "ticker": "MET",
    "accessionNo": "0001193125-14-180174",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 1099219,
-   "ticker": "MET-PF",
+   "ticker": "MET",
    "accessionNo": "0001193125-17-234225",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 1099219,
-   "ticker": "MET-PF",
+   "ticker": "MET",
    "accessionNo": "0001193125-18-043518",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 1390777,
-   "ticker": "BNY-PK",
+   "ticker": "BNY",
    "accessionNo": "0001193125-16-430028",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 72971,
-   "ticker": "WFC-PZ",
+   "ticker": "WFC",
    "accessionNo": "0000072971-16-000967",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 72971,
-   "ticker": "WFC-PZ",
+   "ticker": "WFC",
    "accessionNo": "0000072971-18-000307",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 72971,
-   "ticker": "WFC-PZ",
+   "ticker": "WFC",
    "accessionNo": "0001193125-09-027231",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 35527,
-   "ticker": "FITB-PM",
+   "ticker": "FITB",
    "accessionNo": "0001193125-13-320588",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 35527,
-   "ticker": "FITB-PM",
+   "ticker": "FITB",
    "accessionNo": "0001193125-15-183207",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 895421,
-   "ticker": "MS-PQ",
+   "ticker": "MS",
    "accessionNo": "0000905148-05-002330",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 895421,
-   "ticker": "MS-PQ",
+   "ticker": "MS",
    "accessionNo": "0000950103-15-001485",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 1137774,
-   "ticker": "PRS",
+   "ticker": "PRU",
    "accessionNo": "0001193125-10-028108",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 49196,
-   "ticker": "HBANZ",
+   "ticker": "HBAN",
    "accessionNo": "0001299933-06-006587",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 49196,
-   "ticker": "HBANZ",
+   "ticker": "HBAN",
    "accessionNo": "0001299933-07-004082",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
   },
   {
    "cik": 91576,
-   "ticker": "KEY-PL",
+   "ticker": "KEY",
    "accessionNo": "0000950152-08-003064",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
@@ -2535,7 +2535,7 @@
   },
   {
    "cik": 93751,
-   "ticker": "STT-PG",
+   "ticker": "STT",
    "accessionNo": "0001104659-09-002906",
    "status": "no_exhibit",
    "reason": "No substantive earnings exhibit in the filing index"
@@ -2590,7 +2590,7 @@
   "rows": [
    {
     "cik": 40545,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000040545-26-000005",
     "acceptedEt": "2026-01-22T06:38:59",
     "expectedEt": "2026-01-22T06:38:59",
@@ -2599,7 +2599,7 @@
    },
    {
     "cik": 1156039,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001193125-20-017551",
     "acceptedEt": "2020-01-29T06:12:45",
     "expectedEt": "2020-01-29T06:12:45",
@@ -2608,7 +2608,7 @@
    },
    {
     "cik": 895421,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000895421-24-000484",
     "acceptedEt": "2024-10-16T07:28:47",
     "expectedEt": "2024-10-16T07:28:47",
@@ -2617,7 +2617,7 @@
    },
    {
     "cik": 1281761,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001281761-20-000081",
     "acceptedEt": "2020-10-19T17:59:36",
     "expectedEt": "2020-10-19T17:59:36",
@@ -2626,7 +2626,7 @@
    },
    {
     "cik": 92230,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000092230-09-000011",
     "acceptedEt": "2009-01-22T10:25:49",
     "expectedEt": "2009-01-22T10:25:49",
@@ -2635,7 +2635,7 @@
    },
    {
     "cik": 72971,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000072971-20-000230",
     "acceptedEt": "2020-04-14T07:46:22",
     "expectedEt": "2020-04-14T07:46:22",
@@ -2644,7 +2644,7 @@
    },
    {
     "cik": 49196,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000049196-26-000084",
     "acceptedEt": "2026-10-22T06:19:09",
     "expectedEt": "2026-10-22T06:19:09",
@@ -2653,7 +2653,7 @@
    },
    {
     "cik": 1137774,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001193125-12-046709",
     "acceptedEt": "2012-02-08T16:38:30",
     "expectedEt": "2012-02-08T16:38:30",
@@ -2662,7 +2662,7 @@
    },
    {
     "cik": 70858,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000070858-20-000003",
     "acceptedEt": "2020-01-15T06:46:08",
     "expectedEt": "2020-01-15T06:46:08",
@@ -2671,7 +2671,7 @@
    },
    {
     "cik": 36270,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001564590-21-019283",
     "acceptedEt": "2021-04-19T11:05:09",
     "expectedEt": "2021-04-19T11:05:09",
@@ -2680,7 +2680,7 @@
    },
    {
     "cik": 91576,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000091576-26-000006",
     "acceptedEt": "2026-01-20T06:30:36",
     "expectedEt": "2026-01-20T06:30:36",
@@ -2689,7 +2689,7 @@
    },
    {
     "cik": 895421,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001157523-16-004228",
     "acceptedEt": "2016-01-19T06:58:10",
     "expectedEt": "2016-01-19T06:58:10",
@@ -2698,7 +2698,7 @@
    },
    {
     "cik": 713676,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001193125-15-343181",
     "acceptedEt": "2015-10-14T06:38:06",
     "expectedEt": "2015-10-14T06:38:06",
@@ -2707,7 +2707,7 @@
    },
    {
     "cik": 36270,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000950152-09-003919",
     "acceptedEt": "2009-04-21T08:32:07",
     "expectedEt": "2009-04-21T08:32:07",
@@ -2716,7 +2716,7 @@
    },
    {
     "cik": 35527,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000035527-25-000002",
     "acceptedEt": "2025-01-21T06:36:57",
     "expectedEt": "2025-01-21T06:36:57",
@@ -2725,7 +2725,7 @@
    },
    {
     "cik": 874761,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000874761-23-000004",
     "acceptedEt": "2023-02-27T06:02:03",
     "expectedEt": "2023-02-27T06:02:03",
@@ -2734,7 +2734,7 @@
    },
    {
     "cik": 831001,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001104659-20-114299",
     "acceptedEt": "2020-10-13T10:26:06",
     "expectedEt": "2020-10-13T10:26:06",
@@ -2743,7 +2743,7 @@
    },
    {
     "cik": 831001,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001104659-12-025434",
     "acceptedEt": "2012-04-16T09:24:38",
     "expectedEt": "2012-04-16T09:24:38",
@@ -2752,7 +2752,7 @@
    },
    {
     "cik": 713676,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001193125-10-163347",
     "acceptedEt": "2010-07-22T07:40:51",
     "expectedEt": "2010-07-22T07:40:51",
@@ -2761,7 +2761,7 @@
    },
    {
     "cik": 73124,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001193125-15-139221",
     "acceptedEt": "2015-04-21T08:56:04",
     "expectedEt": "2015-04-21T08:56:04",
@@ -2770,7 +2770,7 @@
    },
    {
     "cik": 72971,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000950134-08-000645",
     "acceptedEt": "2008-01-16T08:02:11",
     "expectedEt": "2008-01-16T08:02:11",
@@ -2779,7 +2779,7 @@
    },
    {
     "cik": 1099219,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001099219-23-000207",
     "acceptedEt": "2023-08-02T16:30:56",
     "expectedEt": "2023-08-02T16:30:56",
@@ -2788,7 +2788,7 @@
    },
    {
     "cik": 70858,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000070858-23-000131",
     "acceptedEt": "2023-04-18T06:47:41",
     "expectedEt": "2023-04-18T06:47:41",
@@ -2797,7 +2797,7 @@
    },
    {
     "cik": 35527,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001193125-07-008017",
     "acceptedEt": "2007-01-18T07:01:27",
     "expectedEt": "2007-01-18T07:01:27",
@@ -2806,7 +2806,7 @@
    },
    {
     "cik": 1137774,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001137774-26-000210",
     "acceptedEt": "2026-10-15T16:22:03",
     "expectedEt": "2026-10-15T16:22:03",
@@ -2815,7 +2815,7 @@
    },
    {
     "cik": 40545,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000040545-08-000052",
     "acceptedEt": "2008-10-10T07:49:29",
     "expectedEt": "2008-10-10T07:49:29",
@@ -2824,7 +2824,7 @@
    },
    {
     "cik": 91576,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001193125-15-132158",
     "acceptedEt": "2015-04-16T06:36:03",
     "expectedEt": "2015-04-16T06:36:03",
@@ -2833,7 +2833,7 @@
    },
    {
     "cik": 1390777,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001193125-08-153577",
     "acceptedEt": "2008-07-18T16:07:22",
     "expectedEt": "2008-07-18T16:07:22",
@@ -2842,7 +2842,7 @@
    },
    {
     "cik": 91576,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0001193125-13-021452",
     "acceptedEt": "2013-01-24T07:20:58",
     "expectedEt": "2013-01-24T07:20:58",
@@ -2851,7 +2851,7 @@
    },
    {
     "cik": 70858,
-    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "codeHash": "05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e",
     "accessionNo": "0000070858-21-000098",
     "acceptedEt": "2021-10-14T06:46:02",
     "expectedEt": "2021-10-14T06:46:02",
@@ -2877,32 +2877,365 @@
  },
  "projection": {
   "projectedRemainingBytes": 100575571225,
-  "projectedRemainingSeconds": 24902.426400000004,
-  "projectedFreeBytes": 624944354023,
+  "projectedRemainingSeconds": 26254.763399999993,
+  "projectedFreeBytes": 624944181991,
   "minimumFreeBytes": 107374182400,
   "storagePass": true
  },
  "universeEvidence": {
   "factCompanies": 496,
   "eligibleCompanies": 446,
+  "tickerSource": "prices.stooq.ticker",
+  "tickerCorrections": [
+   {
+    "cik": 831001,
+    "from": "C-PR",
+    "to": "C"
+   },
+   {
+    "cik": 1099219,
+    "from": "MET-PF",
+    "to": "MET"
+   },
+   {
+    "cik": 1390777,
+    "from": "BNY-PK",
+    "to": "BNY"
+   },
+   {
+    "cik": 72971,
+    "from": "WFC-PZ",
+    "to": "WFC"
+   },
+   {
+    "cik": 35527,
+    "from": "FITB-PM",
+    "to": "FITB"
+   },
+   {
+    "cik": 895421,
+    "from": "MS-PQ",
+    "to": "MS"
+   },
+   {
+    "cik": 70858,
+    "from": "MER-PK",
+    "to": "BAC"
+   },
+   {
+    "cik": 1137774,
+    "from": "PRS",
+    "to": "PRU"
+   },
+   {
+    "cik": 36104,
+    "from": "USB-PS",
+    "to": "USB"
+   },
+   {
+    "cik": 1281761,
+    "from": "RF-PF",
+    "to": "RF"
+   },
+   {
+    "cik": 49196,
+    "from": "HBANZ",
+    "to": "HBAN"
+   },
+   {
+    "cik": 91576,
+    "from": "KEY-PL",
+    "to": "KEY"
+   },
+   {
+    "cik": 93751,
+    "from": "STT-PG",
+    "to": "STT"
+   },
+   {
+    "cik": 36270,
+    "from": "MTB-PL",
+    "to": "MTB"
+   },
+   {
+    "cik": 92230,
+    "from": "TFC-PR",
+    "to": "TFC"
+   },
+   {
+    "cik": 73124,
+    "from": "NTRSO",
+    "to": "NTRS"
+   },
+   {
+    "cik": 874766,
+    "from": "HIG-PG",
+    "to": "HIG"
+   },
+   {
+    "cik": 899051,
+    "from": "ALL-PJ",
+    "to": "ALL"
+   },
+   {
+    "cik": 1164727,
+    "from": "NEMCL",
+    "to": "NEM"
+   },
+   {
+    "cik": 14272,
+    "from": "CELG-RI",
+    "to": "BMY"
+   },
+   {
+    "cik": 316709,
+    "from": "SCHW-PJ",
+    "to": "SCHW"
+   },
+   {
+    "cik": 1326160,
+    "from": "DUKU",
+    "to": "DUK"
+   },
+   {
+    "cik": 947484,
+    "from": "ACGLO",
+    "to": "ACGL"
+   },
+   {
+    "cik": 1032208,
+    "from": "SREA",
+    "to": "SRE"
+   },
+   {
+    "cik": 922224,
+    "from": "PPLC",
+    "to": "PPL"
+   },
+   {
+    "cik": 936340,
+    "from": "DTK",
+    "to": "DTE"
+   },
+   {
+    "cik": 1267238,
+    "from": "AIZN",
+    "to": "AIZ"
+   },
+   {
+    "cik": 759944,
+    "from": "CFG-PI",
+    "to": "CFG"
+   },
+   {
+    "cik": 320335,
+    "from": "GL-PD",
+    "to": "GL"
+   },
+   {
+    "cik": 51434,
+    "from": "INPAP",
+    "to": "IP"
+   },
+   {
+    "cik": 915913,
+    "from": "ALB-PA",
+    "to": "ALB"
+   },
+   {
+    "cik": 879101,
+    "from": "KIM-PN",
+    "to": "KIM"
+   },
+   {
+    "cik": 11544,
+    "from": "WRB-PH",
+    "to": "WRB"
+   },
+   {
+    "cik": 1283699,
+    "from": "TMUSZ",
+    "to": "TMUS"
+   },
+   {
+    "cik": 72903,
+    "from": "XELLL",
+    "to": "XEL"
+   },
+   {
+    "cik": 827054,
+    "from": "MCHPP",
+    "to": "MCHP"
+   },
+   {
+    "cik": 1415404,
+    "from": "SATS",
+    "to": "ECHO"
+   },
+   {
+    "cik": 849399,
+    "from": "GENVR",
+    "to": "GEN"
+   },
+   {
+    "cik": 92122,
+    "from": "SOMN",
+    "to": "SO"
+   },
+   {
+    "cik": 1341439,
+    "from": "ORCL-PD",
+    "to": "ORCL"
+   },
+   {
+    "cik": 811156,
+    "from": "CMS-PC",
+    "to": "CMS"
+   },
+   {
+    "cik": 797468,
+    "from": "OXY-WT",
+    "to": "OXY"
+   },
+   {
+    "cik": 1166691,
+    "from": "CCZ",
+    "to": "CMCSA"
+   },
+   {
+    "cik": 37996,
+    "from": "F-PD",
+    "to": "F"
+   },
+   {
+    "cik": 1297996,
+    "from": "DLR-PL",
+    "to": "DLR"
+   },
+   {
+    "cik": 943819,
+    "from": "RSMDF",
+    "to": "RMD"
+   },
+   {
+    "cik": 1645590,
+    "from": "HPE-PC",
+    "to": "HPE"
+   },
+   {
+    "cik": 63754,
+    "from": "MKC-V",
+    "to": "MKC"
+   },
+   {
+    "cik": 1063761,
+    "from": "SPG-PJ",
+    "to": "SPG"
+   },
+   {
+    "cik": 1004980,
+    "from": "PCG-PX",
+    "to": "PCG"
+   },
+   {
+    "cik": 1091667,
+    "from": "CHTRP",
+    "to": "CHTR"
+   },
+   {
+    "cik": 1393311,
+    "from": "PSA-PT",
+    "to": "PSA"
+   },
+   {
+    "cik": 34903,
+    "from": "FRT-PC",
+    "to": "FRT"
+   },
+   {
+    "cik": 1564708,
+    "from": "NWSLL",
+    "to": "NWSA"
+   },
+   {
+    "cik": 14693,
+    "from": "BF-A",
+    "to": "BF-B"
+   },
+   {
+    "cik": 1404912,
+    "from": "KKRT",
+    "to": "KKR"
+   },
+   {
+    "cik": 920760,
+    "from": "LEN-B",
+    "to": "LEN"
+   },
+   {
+    "cik": 1601712,
+    "from": "SYF-PB",
+    "to": "SYF"
+   },
+   {
+    "cik": 1067983,
+    "from": "BRK-A",
+    "to": "BRK-B"
+   },
+   {
+    "cik": 1512673,
+    "from": "BSQKZ",
+    "to": "XYZ"
+   },
+   {
+    "cik": 910606,
+    "from": "REGCP",
+    "to": "REG"
+   },
+   {
+    "cik": 1748790,
+    "from": "AMCCF",
+    "to": "AMCR"
+   },
+   {
+    "cik": 1754301,
+    "from": "FOX",
+    "to": "FOXA"
+   },
+   {
+    "cik": 1858681,
+    "from": "APOS",
+    "to": "APO"
+   },
+   {
+    "cik": 1176948,
+    "from": "ARES-PB",
+    "to": "ARES"
+   },
+   {
+    "cik": 2041610,
+    "from": "SKYD-WT",
+    "to": "SKYD"
+   }
+  ],
   "factsWithoutStooq": [],
   "pricesWithoutFacts": []
  },
  "artifacts": {
   "universe": {
    "path": "D:\\research\\alpha-engine\\engine\\events\\universe-rest.json",
-   "bytes": 33744,
-   "sha256": "8c5aec546a72924aaed0cb3f094035a726584bd955878e2c123aff9437e5cbf5"
+   "bytes": 33606,
+   "sha256": "f6d828f039078e5ea2c45af30a8092fc271522af523b8b97ef52c06eaece6fff"
   },
   "filings": {
    "path": "D:\\research\\alpha-engine\\engine\\events\\filings-rest.jsonl",
-   "bytes": 5757634,
-   "sha256": "7cb028bbaac76ff60afc67e78f6d3b949152b84770eb25472ccae65fcd690f02"
+   "bytes": 5732248,
+   "sha256": "3b1174cbdf16336dd5bfedbfec26a1e2fb837466e07e9b80c1d9e33489ff4a1c"
   },
   "quarters": {
    "path": "D:\\research\\alpha-engine\\engine\\events\\quarters-rest.jsonl",
-   "bytes": 910774,
-   "sha256": "2bf4e386eff334c6d81e11c5efad65893fea37e1a9d0e836d9351615167fe9c3"
+   "bytes": 907196,
+   "sha256": "c6febb5aeef9904384159bf10d83766e0c3dec01e232d6d39862510841c705e6"
   }
  },
  "productionWrite": false,

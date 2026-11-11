@@ -95,6 +95,10 @@ summary `research/engine/event-calendar-rest.summary.json` (counts per company, 
 
 ## Delivery report — 20-company pilot complete; full run stopped for owner decision
 
+**Traded-symbol correction (2026-11-11):** current artifacts use `prices.ticker` for `source="stooq"`.
+The correction section at the end supersedes registry/preferred-share labels and artifact hashes in the
+original report below; the underlying pilot acceptance counts are unchanged.
+
 Implemented in `scripts/build-release-calendar-rest.mts`, with shared calendar rules in
 `worker/lib/event-calendar.ts` and REST helpers in `worker/lib/event-calendar-rest.ts`.
 `scripts/build-event-calendar.mts` now accepts `--universe`, `--suffix`, `--from` and `--check`; defaults
@@ -268,3 +272,73 @@ contains every company's full K01 metrics, all exhibit exceptions, index-check r
 counts and projection. The progress file is rewritten after each company so completed work is usable after
 an interruption or D: remount. `productionWrite=false` and `databaseWrite=false` are recorded in both the
 summary and manifest.
+
+## Traded-symbol correction — 2026-11-11
+
+Claude's pilot review found that the registry's preferred-share/secondary symbols could not join reliably to
+the common-share price series. The database check confirmed **66 CIKs** whose registry and Stooq tickers differ.
+Commit **`7b466c9d7471b8a383d59d789823fec6f6ef205a`** changes `universe-rest.json`, `filings-rest.jsonl` and
+`quarters-rest.jsonl` to use `prices.ticker` for `source="stooq"`; CIK remains the identity key. A guard rejects
+multiple Stooq symbols for one CIK. `universeEvidence.tickerSource="prices.stooq.ticker"` and all 66
+registry-to-traded-symbol corrections are retained in the committed summary. Checkpoint input now binds the
+traded ticker as well as SEC submissions, SPY dates and the code hash.
+
+Every one of the **11,534 filings** and **1,750 quarters** was checked against the corrected universe mapping.
+All 20 company checks and the original acceptance results still pass, including **30/30** index-time matches,
+**2,090** releases with exhibits and **26** explicit exceptions. Downloaded/on-disk bytes remain
+**4,721,857,804**; valid exhibits were not redownloaded. Research-50 hashes remain unchanged.
+
+### Corrected per-company labels and counts
+
+| Company | Filings | Quarters | Earlier release | Releases | Bytes downloaded | Seconds | Checks |
+|---|---:|---:|---:|---:|---:|---:|---|
+| C | 896 | 88 | 86/88 (97.73%) | 108 | 887,632,632 | 131.169 | pass |
+| MET | 682 | 88 | 88/88 (100.00%) | 148 | 440,767,689 | 91.469 | pass |
+| BNY | 455 | 78 | 78/78 (100.00%) | 114 | 242,167,352 | 65.787 | pass |
+| WFC | 1,492 | 88 | 88/88 (100.00%) | 95 | 255,490,803 | 66.607 | pass |
+| FITB | 769 | 88 | 88/88 (100.00%) | 90 | 211,086,881 | 54.666 | pass |
+| MS | 424 | 88 | 85/88 (96.59%) | 89 | 261,736,042 | 72.315 | pass |
+| BAC | 520 | 88 | 88/88 (100.00%) | 93 | 446,159,819 | 77.203 | pass |
+| PRU | 542 | 88 | 88/88 (100.00%) | 116 | 354,629,857 | 69.588 | pass |
+| USB | 510 | 88 | 88/88 (100.00%) | 89 | 79,831,453 | 40.911 | pass |
+| RF | 572 | 88 | 88/88 (100.00%) | 91 | 246,512,884 | 59.243 | pass |
+| HBAN | 587 | 88 | 86/88 (97.73%) | 92 | 191,849,815 | 62.273 | pass |
+| KEY | 405 | 88 | 87/88 (98.86%) | 90 | 68,708,099 | 50.043 | pass |
+| AES | 411 | 88 | 18/88 (20.45%) | 89 | 46,293,145 | 29.227 | pass |
+| STT | 478 | 88 | 88/88 (100.00%) | 97 | 225,667,291 | 63.366 | pass |
+| MTB | 398 | 88 | 88/88 (100.00%) | 90 | 145,986,087 | 34.881 | pass |
+| GE | 437 | 88 | 80/88 (90.91%) | 92 | 70,945,662 | 32.794 | pass |
+| TFC | 538 | 88 | 88/88 (100.00%) | 90 | 211,644,977 | 60.743 | pass |
+| ELV | 422 | 88 | 87/88 (98.86%) | 96 | 32,977,351 | 32.524 | pass |
+| PNC | 614 | 88 | 88/88 (100.00%) | 257 | 234,185,934 | 105.268 | pass |
+| NTRS | 382 | 88 | 88/88 (100.00%) | 90 | 67,584,031 | 32.541 | pass |
+
+The 68 company-year outliers have the same counts with these traded labels (C, MET, BNY, WFC, BAC, PRU,
+HBAN, KEY, AES, STT, ELV and PNC); the complete current list is in `overall.checks.companyYearOutliers` in
+the summary. The original outlier and form/year counts are unchanged.
+
+### Corrected artifact and verification evidence
+
+Builder code hash: `05d6a83426b81d2be7f1907375f9f5a538ba15332d2ad72383a8634acb43814e`.
+Final cached run: `2026-11-11T11:34:25.034Z`. Cumulative company processing after the correction:
+**1,232.618 seconds**; final cached comparison: **17.933 seconds**. Remaining-426 projection:
+**100,575,571,225 bytes**, **26,254.7634 seconds**, projected free **624,944,181,991 bytes** versus the
+100 GiB minimum. `storagePass=true`.
+
+| Artifact | Bytes | SHA-256 |
+|---|---:|---|
+| `D:\research\alpha-engine\engine\events\universe-rest.json` | 33,606 | `f6d828f039078e5ea2c45af30a8092fc271522af523b8b97ef52c06eaece6fff` |
+| `D:\research\alpha-engine\engine\events\filings-rest.jsonl` | 5,732,248 | `3b1174cbdf16336dd5bfedbfec26a1e2fb837466e07e9b80c1d9e33489ff4a1c` |
+| `D:\research\alpha-engine\engine\events\quarters-rest.jsonl` | 907,196 | `c6febb5aeef9904384159bf10d83766e0c3dec01e232d6d39862510841c705e6` |
+| `D:\research\alpha-engine\engine\events\progress-rest.json` | 9,686 | `f7eba3d779222c5dda999508620629ecd7dc5545222e1963b9695461e9e5ebc0` |
+| `research/engine/event-calendar-rest.summary.json` | 67,213 | `e5ec5d24a7f570f8c47644a9452f82fbae0c7e7a8fb2e266ef2faa237199934c` |
+| `D:\research\alpha-engine\engine\events\manifest-rest.json` | 1,826 | `31e2a19ce8d2f5d0f0211ba95c4d446e7ed9fd5a3dd0e32686b5a7c839f403a4` |
+
+A saved hash baseline and a later cached run are byte-identical for universe/filings/quarters, with **20 cache
+hits / 0 reprocessed**. Verification: **15 targeted tests**, **189 files / 1,043 full-suite tests**, **39**
+scripts tests, forced TypeScript, production build and `git diff --check` pass. Scheduler-generated changes
+to `public/reports/company-exposures.json`, `.md` and `src/data/analytics-snapshot.ts` were left untouched
+and excluded from both correction commits.
+
+The remaining **426 companies were not started**. This correction does not change the requirement for an
+explicit owner decision before the long extraction.
