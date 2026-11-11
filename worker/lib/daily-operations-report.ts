@@ -223,8 +223,10 @@ export function buildDailyOperationsReport(input: DailyOperationsInput): DailyOp
   const date = input.date ?? input.now.slice(0, 10);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error("Daily report date must be YYYY-MM-DD");
   const heartbeatAt = input.state.heartbeatAt ?? null;
+  // The scheduler writes its heartbeat every 15 s, so one written after the report fixed `now` is up to a few
+  // seconds in the future; that is a live scheduler, not a stale one. More than a minute ahead stays suspicious.
   const heartbeatAge = (nowMs - timestamp(heartbeatAt)) / 60_000;
-  const schedulerStatus = !heartbeatAt ? "missing" : heartbeatAge >= 0 && heartbeatAge <= 1.5 ? "online" : "offline";
+  const schedulerStatus = !heartbeatAt ? "missing" : heartbeatAge >= -1 && heartbeatAge <= 1.5 ? "online" : "offline";
   const nextRunAt = Object.values(input.state.nextRuns).filter((value): value is string => !!value && Number.isFinite(timestamp(value))).sort()[0] ?? null;
   const enabledJobs = OPERATION_JOBS.filter((job) => input.config[job.id]?.enabled).length;
   const schedulerCheck = baseCheck(

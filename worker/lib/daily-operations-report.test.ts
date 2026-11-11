@@ -96,6 +96,16 @@ describe("daily operations report", () => {
     expect(report.actions.some((action) => action.includes("schwab-fetch.mts"))).toBe(true);
   });
 
+  it("treats a heartbeat written a few seconds after the report's clock as a live scheduler, not a stale one", () => {
+    const value = input();
+    value.state.heartbeatAt = new Date(Date.parse(value.now) + 8000).toISOString();
+    const report = buildDailyOperationsReport(value);
+    expect(report.scheduler.status).toBe("online");
+    expect(report.checks.find((item) => item.id === "scheduler-heartbeat")?.status).toBe("ok");
+    value.state.heartbeatAt = new Date(Date.parse(value.now) + 5 * 60_000).toISOString();
+    expect(buildDailyOperationsReport(value).scheduler.status).toBe("offline");
+  });
+
   it("rejects fresh-looking features derived from a different snapshot", () => {
     const value = input();
     value.features!.sourceSnapshotSha256 = "older-hash";
