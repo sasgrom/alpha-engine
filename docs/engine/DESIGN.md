@@ -288,15 +288,17 @@ planted factor, resampling by quarter and by company.
 **First look at companies the engine had not seen (2026-11-11).** Applied unchanged to the 20
 companies of the K06 pilot, 17 of them banks and insurers, the release effect does not repeat: −8.2
 [−14.7, −1.9] per 1000 at 10 sessions, and the decisions leaned on went the engine's way in 46% of
-cases. In both sets financial companies show no continuation after a release (among the 50: 49.5 /
-48.5 / 49.5% beat their sector after the weakest / middle / strongest reaction; the 50 without them:
-42.7 / 47.5 / 56.1%). The result above is therefore a result for non-financial companies, and the
-full K06 list is the test of how far it holds. Separate tables per sector are too thin on this many
-companies. In the account illustration, leaving out Financials and Energy raises the gain per
-position beyond the index of the 50 from +0.5 to +1.8 points to +1.1 to +2.7 points across six
-settings (two confidence definitions, margins 53, 55 and 57%), and positions opened in 2023–2025
-are ahead in five of the six settings instead of two. The two sectors were chosen on the same data,
-so part of that is hindsight until the full list confirms it.
+cases. The 17 banks and insurers show no continuation after a release in any of three periods
+(2005–2012, 2013–2022, 2023 to mid-2026). The six financial and three energy companies among the 50
+behaved like the rest until 2022 and reversed only in 2023 to mid-2026; over all scored years the
+six financial companies show none (49.5 / 48.5 / 49.5% beat their sector after the weakest / middle
+/ strongest reaction; the 50 without them: 42.7 / 47.5 / 56.1%). Working rule until the full K06
+list is in: the release rule is not applied to banks and insurers; Energy is undecided. Separate
+tables per sector are too thin on this many companies. In the account illustration, leaving out
+Financials and Energy raises the gain per position beyond the index of the 50 from +0.5 to +1.8
+points to +1.1 to +2.7 points across six settings (two confidence definitions, margins 53, 55 and
+57%). Because the companies left out reversed only in the later years, the better figures for
+positions opened in 2023–2025 are hindsight and count as no evidence; the full list is the check.
 
 **Inputs that arrived on 2026-11-11.** Task K03: the statements printed in 3,609 releases, graded
 against the later filing; the release's revenue equals the filed figure in 1,484 of 1,491 comparable
