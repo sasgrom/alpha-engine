@@ -11,9 +11,9 @@ baseline for this design; existing tables and caches are used only as data sourc
 | Step | Topic | Status |
 |---|---|---|
 | 1 | Problem definition: what is predicted, when, for whom | **decided 2026-11-10** |
-| 2 | Information timeline: what is known at each moment (incl. press-release extraction) | next |
-| 3 | Signals: how each data family becomes a factor forecast | open |
-| 4 | Model: error rates, priors, dependence, combining market / sector / company | open |
+| 2 | Information timeline: what is known at each moment (incl. press-release extraction) | in progress (K01 and K02 delivered, K03 running) |
+| 3 | Signals: how each data family becomes a factor forecast | method decided (section 1.9); factor list open |
+| 4 | Model: error rates, priors, dependence, combining market / sector / company | open; lessons from the earlier model in section 6 |
 | 5 | Evaluation: walk-forward protocol, scoring, baselines | open |
 | 6 | Interface to the downstream "gearbox" modules | open |
 | 7 | Build plan | open |
@@ -57,7 +57,9 @@ Per company and fiscal quarter:
   and its press-release exhibit.
 - **Periodic filing:** the 10-Q or 10-K for the same quarter.
 - **Window:** opens at the earnings release and closes at the last market close before the *next*
-  quarter's earnings release. The reaction to the next results never enters a target.
+  quarter's first results-related publication. That is normally the next earnings release; when a
+  company publishes part of its results earlier (for example Tesla's delivery numbers), the window
+  closes before that earlier publication. The reaction to the next results never enters a target.
 - **Decision points inside a window:** (a) the earnings release, using what the press release
   contains; (b) the periodic filing, when it arrives later, to add missing or updated fundamentals.
   Other in-window events may be added in later steps.
@@ -126,6 +128,30 @@ EDGAR tone, options, 13F and expectations/guidance are experimental. They are te
 already collected for the 50 companies, with the same windows and scoring as everything else.
 No new processing or collection for a family until it passes that test.
 
+### 1.9 How a factor becomes a forecast (owner's method)
+
+- One regression per factor, on changes or logs, never on levels (two trending levels correlate
+  without meaning anything). The factor is lagged: change in market value after the publication
+  against the change in the factor that was published.
+- The regression is refitted on an expanding window, using only finished windows. Its forecast is
+  then compared with what happened, and e+ and e− are counted from those past forecasts only.
+- A factor's output is a confidence between −1 and +1, not a yes/no vote: its sign says rise or
+  fall, its size says how much its own record supports that.
+- Comparison bases to test: the same quarter a year ago, the company's own trend, sector peers.
+- The stock's price reaction to the release is allowed, as one separate family.
+- All factors are tested. Factors that are derivatives of one another are joined and count once
+  (the note's 1/k rule), with k measured from how the factors actually move together.
+
+### 1.10 Reading press releases
+
+- Statement tables are read by ordinary code. Rows are named by matching the prior-period columns
+  of the release against figures the company had already filed (task K03). Rows that code cannot
+  name go to the local model with a fixed list of allowed answers (task K04).
+- Releases published as page images are read with the local model's vision. A number read from an
+  image is accepted only if it also appears in the document's hidden text (task K05).
+- Until the press-release numbers exist, engine research continues on the fundamentals of the
+  10-Q/10-K. The research prototype lives outside this repository (`C:\dev\alpha-engine-lab`).
+
 ## 2. Facts measured on local data (2026-11-10)
 
 Research-50, local MySQL and caches, read-only.
@@ -145,6 +171,16 @@ Research-50, local MySQL and caches, read-only.
 - Publication times of filings are not stored anywhere (dates only).
 - Prices: 55 tickers loaded. The archive `D:\stooq data 102726\d_us_txt.zip` holds 13,289 US
   stocks and ETFs through 2026-10-26, currently listed tickers only; SPY starts 2005-02-25.
+
+Added after tasks K01 and K02 (2026-11-10):
+
+- Event calendar for the 50 (K01): 22,240 filings with publication times; 4,447 company-quarters.
+  Windows opened at the first publication, fiscal periods from 2009-06: 3,169 windows, median 62
+  sessions, shortest 26; 100% hold a 20-session horizon and 98.6% a 45-session horizon.
+- Prices (K02, per its delivery report): 514 series loaded from the Stooq archive, 3.63 million
+  daily bars: all 502 S&P 500 tickers of the snapshot, SPY and the eleven sector ETFs.
+- Earnings releases of the 50 since 2009: 3,615. Statements are real HTML tables in 86% of them;
+  2.5% are page images (5% in recent years).
 
 Known limit: both the 50-company list and the price archive contain only companies that exist
 today, so historical results describe survivors. Step 5 must state this next to every result.
@@ -176,6 +212,13 @@ today, so historical results describe survivors. Step 5 must state this next to 
 | 2026-11-10 | 2009+ first, then back to 2000 with the extraction tool | owner |
 | 2026-11-10 | Start with the 50; tone / options / 13F / expectations are experimental and gated | owner |
 | 2026-11-10 | Prep work goes to Kimi Code as spec files under `docs/engine/tasks/` | owner |
+| 2026-11-10 | A window also closes before an early partial results publication (e.g. deliveries) | owner |
+| 2026-11-10 | Task K03 approved: press-release statements by code, graded against the later filing | owner |
+| 2026-11-10 | Image-only releases are read with the local model's vision; numbers must also appear in the hidden text | owner + measurement |
+| 2026-11-10 | Engine research continues on existing fundamentals while extraction runs; prototype built by Claude outside this repository | owner |
+| 2026-11-10 | Factor method: lagged regression on changes, expanding window, e+/e− from past forecasts, output as confidence −1..+1; price reaction as a separate family | owner |
+| 2026-11-10 | Test all factors; join those that are derivatives of one another | owner |
+| 2026-11-10 | No wider company set for now; first reproduce the earlier model, then explain it with schemas, graphs and examples | owner |
 
 ## 5. Open items for the next steps
 
@@ -186,3 +229,38 @@ today, so historical results describe survivors. Step 5 must state this next to 
 - Step 4: final band edges, combining the three states, pooling strength, recency weighting of old
   history.
 - Step 5: walk-forward protocol, scoring rules, baselines, survivorship statement.
+- After the review in section 6: how factors share evidence across companies when one company has
+  about 40 finished quarters per factor; how k is measured; which prior replaces 50%.
+
+## 6. Findings from the earlier model (2026-11-10)
+
+The owner's earlier model (Python scripts and two database dumps, 2021–2024) was rebuilt from the
+dumps and tested. Code and the illustrated page are in the research repository
+(`C:\dev\alpha-engine-lab\src\old-model`, `reports\old-model.html`). These are findings, not
+decisions.
+
+- **Reproduced.** Every stored number of the REIT run (103 companies) is reproduced from its raw
+  rows through all seven steps, and every stored error rate and probability of the S&P 500 run
+  (493 companies).
+- **The fundamentals were not the companies' own.** In both databases every company carries one
+  identical fundamentals history for 1999–2020 (the figures of a single small REIT); companies'
+  own figures start in 2021. The earlier results therefore say nothing about whether fundamentals
+  predict.
+- **The error rates saw the answers.** e+ and e− were counted once over each company's whole
+  history and used for every quarter of that history. Scored that way, accepted company-quarters
+  rose 79% of the time against 58% for the rest, and forecasts scrambled in time score the same
+  (81% against 58%). With error rates from finished quarters only: 62% against 62%.
+- **Portfolio.** Stored result 21.7% a year (S&P 500 universe, 2006–2021); holding every company
+  of that universe under the same weighting rule 12.6%; the same acceptance rule with past-only
+  error rates 12.1%.
+- **One vote, many times.** A factor voted "up" when its regression's forecast growth was at least
+  the stock's last quarterly move, so 76% of votes were simply the opposite of that move. Twenty
+  factors of a company were worth about two independent ones, while the rule k = factors ÷ 10
+  counted them as ten.
+- **A company's lean did not last.** Whether up-votes preceded rises more or less often than
+  down-votes in the first half of a company's history had no relation to the second half
+  (correlation 0.05, same sign for 50% of companies).
+
+Consequences already covered by sections 1.3, 1.6 and 1.9: error rates from finished windows only,
+each factor forecasting from its own change, measured k, real publication dates. Still to decide:
+see section 5.
