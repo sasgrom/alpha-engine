@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { batchSql, csvStats, DOLT_CSV_HEADER, inspectCsv, isAllowedOutputRoot, mergeBatches, sha256Text } from "./dolthub-export";
+import { batchSql, csvStats, dateSql, DOLT_CSV_HEADER, inspectCsv, isAllowedOutputRoot, mergeBatches, sha256Text, splitBySymbol } from "./dolthub-export";
 
 describe("DoltHub export helpers", () => {
   it("builds bounded per-ticker/year queries and rejects invalid identifiers", () => {
@@ -50,5 +50,23 @@ describe("DoltHub export helpers", () => {
 
   it("hashes content deterministically", () => {
     expect(sha256Text("abc")).toBe("ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
+  });
+  it("builds one-date queries for many symbols in per-ticker row order and rejects invalid identifiers", () => {
+    const sql = dateSql("2025-06-02", ["AAPL", "BRK.B"]);
+    expect(sql).toContain("WHERE date = '2025-06-02' AND act_symbol IN ('AAPL', 'BRK.B')");
+    expect(sql).toContain("ORDER BY act_symbol, expiration, strike, call_put");
+    expect(() => dateSql("2025-06-02", ["AAPL'); DROP TABLE option_chain; --"])).toThrow();
+    expect(() => dateSql("2025-6-2", ["AAPL"])).toThrow();
+    expect(() => dateSql("2025-06-02", [])).toThrow();
+  });
+
+  it("splits one date's output into lines per symbol and refuses an unexpected header", () => {
+    const csv = `${DOLT_CSV_HEADER}\r\n2025-06-02,AAPL,2025-06-20,200.00,Call,1,2,0.3,0.5,0.01,-0.1,0.2,0.1\n2025-06-02,AAPL,2025-06-20,200.00,Put,1,2,0.3,-0.5,0.01,-0.1,0.2,-0.1\n2025-06-02,BRK.B,2025-06-20,500.00,Call,3,4,0.2,0.5,0.01,-0.1,0.2,0.1\n`;
+    const split = splitBySymbol(csv);
+    expect([...split.keys()]).toEqual(["AAPL", "BRK.B"]);
+    expect(split.get("AAPL")).toHaveLength(2);
+    expect(split.get("AAPL")![1]).toBe("2025-06-02,AAPL,2025-06-20,200.00,Put,1,2,0.3,-0.5,0.01,-0.1,0.2,-0.1");
+    expect(splitBySymbol("")).toEqual(new Map());
+    expect(() => splitBySymbol("a,b,c\n1,2,3\n")).toThrow(/header/);
   });
 });

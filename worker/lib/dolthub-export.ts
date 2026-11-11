@@ -18,6 +18,32 @@ export function batchSql(ticker: string, year: number): string {
   return `SELECT ${DOLT_COLUMNS.join(", ")} FROM option_chain WHERE act_symbol='${ticker}' AND date BETWEEN '${year}-01-01' AND '${year}-12-31' ORDER BY date, expiration, strike, call_put`;
 }
 
+/**
+ * One snapshot date for many symbols. The table's primary key starts with the date, so this is a short read,
+ * while one symbol over a year makes Dolt read the whole year. Rows come per symbol in expiration, strike,
+ * call/put order, which is the order of a per-ticker export within one date.
+ */
+export function dateSql(date: string, symbols: string[]): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error(`Invalid date ${date}`);
+  if (!symbols.length) throw new Error("At least one symbol is required");
+  for (const symbol of symbols) assertTicker(symbol);
+  return `SELECT ${DOLT_COLUMNS.join(", ")} FROM option_chain WHERE date = '${date}' AND act_symbol IN (${symbols.map((symbol) => `'${symbol}'`).join(", ")}) ORDER BY act_symbol, expiration, strike, call_put`;
+}
+
+/** Dolt CSV output of one query split into its data lines per symbol (second column), in output order. */
+export function splitBySymbol(text: string): Map<string, string[]> {
+  const lines = text.replace(/^﻿/, "").split(/\r?\n/).filter((line) => line.length);
+  const bySymbol = new Map<string, string[]>();
+  if (!lines.length) return bySymbol;
+  if (lines[0] !== DOLT_CSV_HEADER) throw new Error(`Unexpected Dolt CSV header: ${lines[0].slice(0, 160)}`);
+  for (const line of lines.slice(1)) {
+    const symbol = line.split(",", 2)[1];
+    if (!symbol) throw new Error(`Malformed Dolt CSV line: ${line.slice(0, 160)}`);
+    (bySymbol.get(symbol) ?? bySymbol.set(symbol, []).get(symbol)!).push(line);
+  }
+  return bySymbol;
+}
+
 export interface CsvStats { rows: number; firstDate: string | null; lastDate: string | null }
 export function csvStats(text: string): CsvStats {
   const normalized = text.replace(/^\uFEFF/, "");
