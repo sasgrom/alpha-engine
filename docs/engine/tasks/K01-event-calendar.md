@@ -51,7 +51,8 @@ Research artifacts, written outside Git under `D:\research\alpha-engine\engine\e
 2. `quarters-50.jsonl` — one row per company and fiscal quarter:
    `cik, ticker, fiscalPeriodEnd, periodicForm, periodicAccession, periodicAcceptedEt,
    earningsAccession, earningsAcceptedEt, firstPublicationEt, pairingBasis,
-   otherEarningsAccessions[], nextFirstPublicationEt, windowSessions`.
+   amendmentAccessions[], earningsFilings[{accessionNo, acceptedEt}],
+   nextFirstPublicationEt, windowSessions`.
    - Pairing rule: the earnings release of a quarter is the **earliest** earnings 8-K accepted
      after `fiscalPeriodEnd` and not later than the periodic filing. If there is none, the periodic
      filing is the first publication (`pairingBasis: "periodic_only"`).
@@ -80,12 +81,12 @@ Report each as a number in the delivery report.
    items, earnings releases by basis.
 4. **Earnings releases per company-year (2005+):** table; list every company-year with fewer than
    3 or more than 5 and say why.
-5. **Quarter timeline:** every 10-Q/10-K since 2005 has exactly one row. Report the share with a
-   separate earlier release, the distribution of days from release to periodic filing (expected
-   median about 2 days, 90th percentile about 20), zero negative lags, and every window shorter
-   than 20 or longer than 120 calendar days.
+5. **Quarter timeline:** every original 10-Q/10-K since 2005 has exactly one row. Report the share
+   with a separate earlier release, the distribution of days from release to periodic filing
+   (expected median about 2 days, 90th percentile about 20), zero negative lags, and every
+   first-publication-to-next-first-publication window shorter than 20 or longer than 120 calendar days.
 6. **Window lengths:** median and 5th/95th percentile of `windowSessions`, and the share of windows
-   that hold 20, 30 and 45 sessions.
+   that hold at least 20, 30 and 45 sessions.
 7. `npm run check` and the targeted tests pass. The builder is resumable and repeatable: a second
    run produces byte-identical files apart from the generation time.
 
@@ -106,12 +107,16 @@ and hashes, and anything that did not meet a threshold. Add the usual note to
 Executed with `scripts/build-event-calendar.mts` and `worker/lib/event-calendar.ts` on 2026-11-10/11.
 No production write, schema change, model call, or new external service was used. SEC submissions and
 older pages were fetched through the existing serialized SEC client and cached under the artifact root.
+The independent review corrections were regenerated at `2026-11-11T04:15:05.451Z`; builder source
+commit `db31da9` is recorded in the manifest. These corrections supersede the original quarter
+counts, window calculations and hashes below; filing coverage and publication metadata are unchanged.
 
 ### Acceptance checks
 
-1. **Completeness — pass.** The builder contains exactly 22,240 unique in-scope rows and 4,644
-   quarter rows; there are no duplicates. Form counts on both sides are identical: 10-K 1,092,
-   10-K/A 112, 10-Q 3,355, 10-Q/A 85, 8-K 17,230, 8-K/A 366. Proxy/DEF filings were excluded.
+1. **Completeness — pass.** The builder contains exactly 22,240 unique in-scope filing rows and 4,447
+   original-period quarter rows; there are no duplicate company-periods. Form counts on both sides are
+   identical: 10-K 1,092, 10-K/A 112, 10-Q 3,355, 10-Q/A 85, 8-K 17,230, 8-K/A 366. Proxy/DEF filings
+   were excluded.
    Year totals (local = JSONL): 2000 90, 2001 288, 2002 356, 2003 516, 2004 636, 2005 938,
    2006 1,043, 2007 1,109, 2008 1,107, 2009 938, 2010 902, 2011 1,069, 2012 1,067, 2013 1,031,
    2014 1,023, 2015 1,029, 2016 1,041, 2017 1,041, 2018 1,006, 2019 1,034, 2020 1,180,
@@ -145,34 +150,94 @@ older pages were fetched through the existing serialized SEC client and cached u
    T|2005=6; T|2007=6; GOOGL|2015=1; CVX|2013=8; CVX|2014=7; CVX|2009=8; CVX|2010=8;
    CVX|2011=8; CVX|2007=8; CVX|2008=8; CVX|2012=8; MA|2006=2; AIG|2005=7; AIG|2016=6;
    AIG|2017=8; COP|2005=9; COP|2007=9; COP|2006=9; COP|2008=9; COP|2009=8; COP|2010=6.
-5. **Quarter timeline — pass with documented long lags.** All 4,644 periodic rows appear once.
-   4,105 (88.39%) have a separate earlier earnings release. Lag days: min 0, median 9, p90 32,
-   max 931, negative 0. There are 2,946 lags under 20 days (enumerated in the committed summary)
-   and 49 over 120 days: AMD/2015-06-27; AIG/2004-03-31, 2004-06-30, 2004-12-31, 2005-03-31,
-   2005-06-30, 2005-12-31, 2009-12-31; CAT/2003-12-31 (two), 2005-12-31; JPM/2003-12-31,
-   2004-12-31, 2005-12-31 (two); LLY/2007-12-31, 2008-03-31; WMT/2004-01-31; AAPL/2006-07-01;
-   MU/2003-12-04, 2005-12-01, 2012-05-31, 2013-02-28, 2016-03-03; UNH/2006-03-31, 2006-06-30,
-   2006-09-30; FCX/2014-12-31; COF/2004-12-31, 2005-03-31, 2005-06-30, 2005-09-30;
-   PLD/2003-12-31, 2004-03-31, 2006-12-31, 2007-03-31; NVDA/2006-01-29, 2006-04-30;
-   AMT/2003-12-31, 2004-03-31, 2004-06-30, 2004-09-30, 2005-12-31 (two), 2006-03-31;
-   MA/2010-12-31; FSLR/2015-03-31; SMCI/2007-06-30, 2016-09-30, 2016-12-31, 2017-03-31,
-   2017-06-30, 2018-09-30, 2018-12-31, 2019-03-31, 2019-06-30, 2024-06-30; LULU/2013-05-05.
-6. **Window lengths.** Median 62 sessions, p05 0, p95 69. Exact-session shares: 20 sessions 0%,
-   30 sessions 0.0218%, 45 sessions 0.2612%. Last/unbounded windows are excluded from this distribution.
-7. **Checks and repeatability — pass.** `npx vitest run worker/lib/event-calendar.test.ts` = 3/3;
-   `npm run check` passed. A second and third build produced byte-identical JSONL files with the same
-   hashes; only generation time and header/network metadata changed.
+5. **Quarter timeline — pass after review correction.** Original 10-Q/10-K filings only: 4,447 rows
+   for 4,447 company-periods, with 0 duplicates. All 3,901 originals since 2005 have exactly one row;
+   no original accession is missing. The next window endpoint is the following quarter in fiscal-period
+   order; every bounded `nextFirstPublicationEt` is strictly later than its own `firstPublicationEt`
+   (0 violations). Earliest-release pairing is unchanged. A separate earlier release is present for
+   3,951 (88.8464%); lag days are min 0, median 8, p90 29, max 665 and negative 0.
+   `earningsFilings[]` includes the chosen earliest release and every other candidate, sorted by
+   acceptance time: 4,390 retained links and 268 multi-release original quarters since 2009-06.
+   The review's 304 count included amendment duplicate rows; the original-only counts include TSLA 49,
+   NKE 36, SMCI 26, IBM 29, CVX 25 and INTC 18. `amendmentAccessions[]` links 187 amendments without
+   creating quarter duplicates. Ten amendment filings across nine periods have no original and remain
+   visible in `filings-50.jsonl`, disclosed here rather than fabricated into original-based quarters:
+   AMZN/1999-12-31, BA/2003-06-30, CAT/2001-12-31, CAT/2004-12-31, CAT/2005-12-31,
+   COST/2004-10-08, FCX/2001-12-31, JPM/2001-12-31 and KMI/2011-08-24.
+
+   Window outliers below use **first publication to next first publication calendar days**, not
+   release-to-periodic-filing lags. There are **0 windows under 20 days** and **111 over 120 days**.
+   Every long window is listed as ticker, fiscal period and days; exact endpoint timestamps for each
+   are in the committed summary's `quarters.windowsOver120` array.
+
+   - AMD: 2002-09-29=121
+   - AIG: 2000-09-30=139; 2001-09-30=138; 2002-09-30=138; 2017-09-30=121
+   - BA: 2001-09-30=134; 2003-09-30=127
+   - CAT: 2000-09-30=121; 2001-09-30=187; 2002-09-30=138; 2004-09-30=126; 2005-09-30=124
+   - JPM: 2000-09-30=182; 2001-09-30=182; 2002-09-30=125
+   - DAL: 2000-09-30=178; 2001-09-30=181; 2002-09-30=134
+   - INTC: 2001-09-29=126; 2002-09-28=125
+   - IBM: 2000-12-31=154; 2001-09-30=182; 2002-09-30=126
+   - LLY: 2000-03-31=368; 2001-09-30=181; 2002-09-30=128
+   - PFE: 2000-04-02=363; 2001-09-30=135; 2002-09-29=134
+   - PG: 2001-03-31=126; 2002-03-31=133; 2003-03-31=135
+   - CVX: 2001-09-30=183; 2002-09-30=129
+   - WMT: 2000-01-31=358; 2001-10-31=137; 2002-10-31=130; 2008-10-31=139
+   - JNJ: 2001-09-30=127; 2002-09-29=126
+   - NKE: 2002-02-28=121
+   - AAPL: 2000-07-01=136; 2001-06-30=182; 2002-06-29=132
+   - HD: 2000-10-30=152; 2001-10-28=142; 2002-11-03=134
+   - MU: 2008-06-26=123
+   - UNH: 2000-09-30=144; 2001-09-30=139; 2002-09-30=125
+   - T: 2007-09-30=127
+   - NEE: 2001-09-30=140; 2002-09-30=133
+   - MSFT: 2001-03-31=126; 2002-03-31=129
+   - FCX: 2001-09-30=187; 2002-09-30=140
+   - GS: 2000-08-25=178; 2001-08-31=176; 2002-08-30=139
+   - COST: 2000-05-07=189; 2001-05-13=193; 2002-05-12=161; 2004-05-09=170; 2005-05-08=133;
+     2006-05-07=134; 2007-05-13=132; 2008-05-11=132; 2009-05-10=141; 2010-05-09=132;
+     2012-05-06=139; 2013-05-12=132; 2014-05-11=132; 2015-05-10=126; 2016-05-08=126;
+     2017-05-07=133; 2018-05-13=126; 2019-05-12=126; 2023-05-07=124
+   - COF: 2001-09-30=128
+   - LMT: 2001-09-30=121
+   - AMZN: 2000-09-30=179; 2001-09-30=176
+   - PLD: 2000-09-30=141; 2001-09-30=139; 2002-09-30=125
+   - NVDA: 2001-10-28=172; 2002-10-27=135; 2007-11-21=121
+   - AMT: 2001-09-30=138; 2002-09-30=130; 2004-09-30=153; 2016-09-30=123; 2023-09-30=124
+   - NFLX: 2002-09-30=137
+   - MA: 2005-09-30=134
+   - COP: 2002-09-30=132
+   - FSLR: 2011-09-30=125; 2020-09-30=121; 2022-09-30=124
+   - TSLA: 2013-03-31=128
+   - SMCI: 2017-06-30=483; 2020-03-31=131
+   - LULU: 2007-10-31=125
+   - KMI: 2011-09-30=126
+   - ANET: 2019-12-31=124
+   - MRNA: 2019-12-31=122
+   - LIN: 2017-09-30=144; 2017-12-31=231; 2018-09-30=129
+6. **Window lengths — pass after review correction.** Shares are now **at least** 20, 30 and 45
+   sessions, not exactly those lengths. For fiscal periods from 2009-06, 3,169 bounded windows have
+   median 62, p05 54 and p95 70; shares at least 20/30/45 sessions are **100% / 99.9684% / 98.5800%**.
+   Across all 4,397 bounded windows, median is 62, p05 is 0 and p95 is 69, with shares
+   **87.6052% / 87.4005% / 85.5811%**. The full-history p05 is affected by dates before the SPY
+   calendar starts on 2005-02-25. Last/unbounded windows are excluded from these distributions.
+   Both distributions are recorded explicitly in the summary rather than substituting one scope for
+   the other.
+7. **Checks and repeatability — pass.** `npx vitest run worker/lib/event-calendar.test.ts` = 6/6;
+   `npm run check` passed. The full suite passed 183 files / 1,009 tests, and the production build
+   passed. Repeated builds produced byte-identical JSONL files with the same hashes; only generation
+   time and header/network metadata changed. The final manifest records builder commit `db31da9`.
 
 ### Artifacts and hashes
 
 - `D:\research\alpha-engine\engine\events\filings-50.jsonl` — 8,823,008 bytes; SHA-256
   `29bf87c5ba943b691215825ad611e3945ef6b2de33c2ac8f19b0808faf26716d`.
-- `D:\research\alpha-engine\engine\events\quarters-50.jsonl` — 1,960,492 bytes; SHA-256
-  `8dd75df1d4396c688953aa0e2eadb6f6adad4079a6148a10dda7ae2d7f2a6c44`.
+- `D:\research\alpha-engine\engine\events\quarters-50.jsonl` — 2,264,505 bytes; SHA-256
+  `35e11fc013b935c0457771759248a401895c7e8aa64fcdea42cbfcba8ff2a21f`.
 - `D:\research\alpha-engine\engine\events\manifest.json` — SHA-256
-  `894bee2e9ad7ce23c49cbbc5c253dc029f51f32650f8fe4d1bf3e7d0c1fa2bc0`.
+  `f871dc205562dbcf18780793c7b91d9e7541ada675b6dc907039617fce1a794e`.
 - `research/engine/event-calendar-50.summary.json` — committed summary only, no row-level data;
-  SHA-256 `7a4c6f98778358b50ab4145800c6f4466b24ea312117d0bec8c9d4c77146b302`.
+  40,211 bytes; SHA-256 `edd216243bdf46695341c8c89bdb85a73f256f91c689af8b145fc011e70dd33b`.
 - SEC submissions cache and 30 header-check records live below `D:\research\alpha-engine\engine\events\`.
   No `filings.items` production backfill was performed.
 
