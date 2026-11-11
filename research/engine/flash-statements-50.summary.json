@@ -1,0 +1,3554 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-11T10:01:06.788Z",
+ "codeCommit": "84fbe958af8eb1cfa2b9ded1667d62b89ec0266d",
+ "codeHash": "dd49b64d157d25529af745fca4f78c8b5e858e4171886e5dcca817f79ddee64d",
+ "run": {
+  "expectedReleases": 3609,
+  "cacheHits": 3609,
+  "processedThisRun": 0,
+  "exhibits": 7542,
+  "duplicateExhibits": 14,
+  "missingExhibitReleases": 218,
+  "processedReleases": 3609,
+  "errors": 0
+ },
+ "coverage": {
+  "overall": {
+   "releases": 3609,
+   "income": 2962,
+   "balance": 2728,
+   "cashflow": 1981,
+   "periodTotal": 2924,
+   "periodMatched": 2899,
+   "periodUnpaired": 38,
+   "incomeShare": 0.8207259628706013,
+   "balanceShare": 0.7558880576336935,
+   "cashflowShare": 0.5489055139927957,
+   "periodShare": 0.9914500683994528
+  },
+  "byYear": {
+   "2009": {
+    "releases": 189,
+    "income": 147,
+    "balance": 130,
+    "cashflow": 73,
+    "periodTotal": 134,
+    "periodMatched": 133,
+    "periodUnpaired": 13,
+    "incomeShare": 0.7777777777777778,
+    "balanceShare": 0.6878306878306878,
+    "cashflowShare": 0.3862433862433862,
+    "periodShare": 0.9925373134328358
+   },
+   "2010": {
+    "releases": 185,
+    "income": 152,
+    "balance": 134,
+    "cashflow": 80,
+    "periodTotal": 147,
+    "periodMatched": 141,
+    "periodUnpaired": 5,
+    "incomeShare": 0.8216216216216217,
+    "balanceShare": 0.7243243243243244,
+    "cashflowShare": 0.43243243243243246,
+    "periodShare": 0.9591836734693877
+   },
+   "2011": {
+    "releases": 190,
+    "income": 157,
+    "balance": 141,
+    "cashflow": 87,
+    "periodTotal": 152,
+    "periodMatched": 150,
+    "periodUnpaired": 5,
+    "incomeShare": 0.8263157894736842,
+    "balanceShare": 0.7421052631578947,
+    "cashflowShare": 0.45789473684210524,
+    "periodShare": 0.9868421052631579
+   },
+   "2012": {
+    "releases": 201,
+    "income": 153,
+    "balance": 139,
+    "cashflow": 90,
+    "periodTotal": 151,
+    "periodMatched": 148,
+    "periodUnpaired": 2,
+    "incomeShare": 0.7611940298507462,
+    "balanceShare": 0.6915422885572139,
+    "cashflowShare": 0.44776119402985076,
+    "periodShare": 0.9801324503311258
+   },
+   "2013": {
+    "releases": 190,
+    "income": 153,
+    "balance": 139,
+    "cashflow": 96,
+    "periodTotal": 153,
+    "periodMatched": 148,
+    "periodUnpaired": 0,
+    "incomeShare": 0.8052631578947368,
+    "balanceShare": 0.7315789473684211,
+    "cashflowShare": 0.5052631578947369,
+    "periodShare": 0.9673202614379085
+   },
+   "2014": {
+    "releases": 188,
+    "income": 151,
+    "balance": 136,
+    "cashflow": 91,
+    "periodTotal": 148,
+    "periodMatched": 148,
+    "periodUnpaired": 3,
+    "incomeShare": 0.8031914893617021,
+    "balanceShare": 0.723404255319149,
+    "cashflowShare": 0.48404255319148937,
+    "periodShare": 1
+   },
+   "2015": {
+    "releases": 194,
+    "income": 158,
+    "balance": 141,
+    "cashflow": 94,
+    "periodTotal": 155,
+    "periodMatched": 154,
+    "periodUnpaired": 3,
+    "incomeShare": 0.8144329896907216,
+    "balanceShare": 0.7268041237113402,
+    "cashflowShare": 0.4845360824742268,
+    "periodShare": 0.9935483870967742
+   },
+   "2016": {
+    "releases": 199,
+    "income": 162,
+    "balance": 146,
+    "cashflow": 102,
+    "periodTotal": 161,
+    "periodMatched": 160,
+    "periodUnpaired": 1,
+    "incomeShare": 0.8140703517587939,
+    "balanceShare": 0.7336683417085427,
+    "cashflowShare": 0.5125628140703518,
+    "periodShare": 0.9937888198757764
+   },
+   "2017": {
+    "releases": 195,
+    "income": 162,
+    "balance": 147,
+    "cashflow": 104,
+    "periodTotal": 162,
+    "periodMatched": 161,
+    "periodUnpaired": 0,
+    "incomeShare": 0.8307692307692308,
+    "balanceShare": 0.7538461538461538,
+    "cashflowShare": 0.5333333333333333,
+    "periodShare": 0.9938271604938271
+   },
+   "2018": {
+    "releases": 197,
+    "income": 159,
+    "balance": 149,
+    "cashflow": 99,
+    "periodTotal": 158,
+    "periodMatched": 158,
+    "periodUnpaired": 1,
+    "incomeShare": 0.8071065989847716,
+    "balanceShare": 0.7563451776649747,
+    "cashflowShare": 0.5025380710659898,
+    "periodShare": 1
+   },
+   "2019": {
+    "releases": 208,
+    "income": 168,
+    "balance": 152,
+    "cashflow": 114,
+    "periodTotal": 167,
+    "periodMatched": 166,
+    "periodUnpaired": 1,
+    "incomeShare": 0.8076923076923077,
+    "balanceShare": 0.7307692307692307,
+    "cashflowShare": 0.5480769230769231,
+    "periodShare": 0.9940119760479041
+   },
+   "2020": {
+    "releases": 209,
+    "income": 173,
+    "balance": 160,
+    "cashflow": 125,
+    "periodTotal": 173,
+    "periodMatched": 173,
+    "periodUnpaired": 0,
+    "incomeShare": 0.8277511961722488,
+    "balanceShare": 0.7655502392344498,
+    "cashflowShare": 0.5980861244019139,
+    "periodShare": 1
+   },
+   "2021": {
+    "releases": 212,
+    "income": 184,
+    "balance": 171,
+    "cashflow": 135,
+    "periodTotal": 183,
+    "periodMatched": 183,
+    "periodUnpaired": 1,
+    "incomeShare": 0.8679245283018868,
+    "balanceShare": 0.8066037735849056,
+    "cashflowShare": 0.6367924528301887,
+    "periodShare": 1
+   },
+   "2022": {
+    "releases": 215,
+    "income": 184,
+    "balance": 173,
+    "cashflow": 134,
+    "periodTotal": 184,
+    "periodMatched": 182,
+    "periodUnpaired": 0,
+    "incomeShare": 0.8558139534883721,
+    "balanceShare": 0.8046511627906977,
+    "cashflowShare": 0.6232558139534884,
+    "periodShare": 0.9891304347826086
+   },
+   "2023": {
+    "releases": 213,
+    "income": 185,
+    "balance": 177,
+    "cashflow": 142,
+    "periodTotal": 184,
+    "periodMatched": 182,
+    "periodUnpaired": 1,
+    "incomeShare": 0.8685446009389671,
+    "balanceShare": 0.8309859154929577,
+    "cashflowShare": 0.6666666666666666,
+    "periodShare": 0.9891304347826086
+   },
+   "2024": {
+    "releases": 211,
+    "income": 178,
+    "balance": 169,
+    "cashflow": 145,
+    "periodTotal": 178,
+    "periodMatched": 178,
+    "periodUnpaired": 0,
+    "incomeShare": 0.8436018957345972,
+    "balanceShare": 0.8009478672985783,
+    "cashflowShare": 0.6872037914691943,
+    "periodShare": 1
+   },
+   "2025": {
+    "releases": 210,
+    "income": 174,
+    "balance": 167,
+    "cashflow": 139,
+    "periodTotal": 174,
+    "periodMatched": 174,
+    "periodUnpaired": 0,
+    "incomeShare": 0.8285714285714286,
+    "balanceShare": 0.7952380952380952,
+    "cashflowShare": 0.6619047619047619,
+    "periodShare": 1
+   },
+   "2026": {
+    "releases": 203,
+    "income": 162,
+    "balance": 157,
+    "cashflow": 131,
+    "periodTotal": 160,
+    "periodMatched": 160,
+    "periodUnpaired": 2,
+    "incomeShare": 0.7980295566502463,
+    "balanceShare": 0.7733990147783252,
+    "cashflowShare": 0.645320197044335,
+    "periodShare": 1
+   }
+  },
+  "byCompany": {
+   "AAPL": {
+    "releases": 73,
+    "income": 72,
+    "balance": 72,
+    "cashflow": 72,
+    "periodTotal": 71,
+    "periodMatched": 71,
+    "periodUnpaired": 1,
+    "incomeShare": 0.9863013698630136,
+    "balanceShare": 0.9863013698630136,
+    "cashflowShare": 0.9863013698630136,
+    "periodShare": 1
+   },
+   "AIG": {
+    "releases": 82,
+    "income": 50,
+    "balance": 24,
+    "cashflow": 0,
+    "periodTotal": 34,
+    "periodMatched": 31,
+    "periodUnpaired": 16,
+    "incomeShare": 0.6097560975609756,
+    "balanceShare": 0.2926829268292683,
+    "cashflowShare": 0,
+    "periodShare": 0.9117647058823529
+   },
+   "AMD": {
+    "releases": 76,
+    "income": 72,
+    "balance": 72,
+    "cashflow": 66,
+    "periodTotal": 71,
+    "periodMatched": 71,
+    "periodUnpaired": 1,
+    "incomeShare": 0.9473684210526315,
+    "balanceShare": 0.9473684210526315,
+    "cashflowShare": 0.868421052631579,
+    "periodShare": 1
+   },
+   "AMT": {
+    "releases": 73,
+    "income": 73,
+    "balance": 73,
+    "cashflow": 72,
+    "periodTotal": 73,
+    "periodMatched": 73,
+    "periodUnpaired": 0,
+    "incomeShare": 1,
+    "balanceShare": 1,
+    "cashflowShare": 0.9863013698630136,
+    "periodShare": 1
+   },
+   "AMZN": {
+    "releases": 72,
+    "income": 72,
+    "balance": 72,
+    "cashflow": 72,
+    "periodTotal": 72,
+    "periodMatched": 72,
+    "periodUnpaired": 0,
+    "incomeShare": 1,
+    "balanceShare": 1,
+    "cashflowShare": 1,
+    "periodShare": 1
+   },
+   "ANET": {
+    "releases": 52,
+    "income": 50,
+    "balance": 50,
+    "cashflow": 46,
+    "periodTotal": 50,
+    "periodMatched": 50,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9615384615384616,
+    "balanceShare": 0.9615384615384616,
+    "cashflowShare": 0.8846153846153846,
+    "periodShare": 1
+   },
+   "AVGO": {
+    "releases": 34,
+    "income": 34,
+    "balance": 34,
+    "cashflow": 34,
+    "periodTotal": 34,
+    "periodMatched": 34,
+    "periodUnpaired": 0,
+    "incomeShare": 1,
+    "balanceShare": 1,
+    "cashflowShare": 1,
+    "periodShare": 1
+   },
+   "BA": {
+    "releases": 79,
+    "income": 58,
+    "balance": 59,
+    "cashflow": 59,
+    "periodTotal": 58,
+    "periodMatched": 58,
+    "periodUnpaired": 0,
+    "incomeShare": 0.7341772151898734,
+    "balanceShare": 0.7468354430379747,
+    "cashflowShare": 0.7468354430379747,
+    "periodShare": 1
+   },
+   "CAT": {
+    "releases": 75,
+    "income": 72,
+    "balance": 72,
+    "cashflow": 72,
+    "periodTotal": 72,
+    "periodMatched": 72,
+    "periodUnpaired": 0,
+    "incomeShare": 0.96,
+    "balanceShare": 0.96,
+    "cashflowShare": 0.96,
+    "periodShare": 1
+   },
+   "COF": {
+    "releases": 73,
+    "income": 72,
+    "balance": 72,
+    "cashflow": 0,
+    "periodTotal": 72,
+    "periodMatched": 72,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9863013698630136,
+    "balanceShare": 0.9863013698630136,
+    "cashflowShare": 0,
+    "periodShare": 1
+   },
+   "COP": {
+    "releases": 80,
+    "income": 72,
+    "balance": 34,
+    "cashflow": 72,
+    "periodTotal": 72,
+    "periodMatched": 72,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9,
+    "balanceShare": 0.425,
+    "cashflowShare": 0.9,
+    "periodShare": 1
+   },
+   "COST": {
+    "releases": 72,
+    "income": 70,
+    "balance": 68,
+    "cashflow": 13,
+    "periodTotal": 70,
+    "periodMatched": 67,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9722222222222222,
+    "balanceShare": 0.9444444444444444,
+    "cashflowShare": 0.18055555555555555,
+    "periodShare": 0.9571428571428572
+   },
+   "CSCO": {
+    "releases": 71,
+    "income": 71,
+    "balance": 71,
+    "cashflow": 71,
+    "periodTotal": 71,
+    "periodMatched": 71,
+    "periodUnpaired": 0,
+    "incomeShare": 1,
+    "balanceShare": 1,
+    "cashflowShare": 1,
+    "periodShare": 1
+   },
+   "CVX": {
+    "releases": 99,
+    "income": 73,
+    "balance": 73,
+    "cashflow": 32,
+    "periodTotal": 73,
+    "periodMatched": 73,
+    "periodUnpaired": 0,
+    "incomeShare": 0.7373737373737373,
+    "balanceShare": 0.7373737373737373,
+    "cashflowShare": 0.32323232323232326,
+    "periodShare": 1
+   },
+   "DAL": {
+    "releases": 74,
+    "income": 74,
+    "balance": 73,
+    "cashflow": 64,
+    "periodTotal": 74,
+    "periodMatched": 74,
+    "periodUnpaired": 0,
+    "incomeShare": 1,
+    "balanceShare": 0.9864864864864865,
+    "cashflowShare": 0.8648648648648649,
+    "periodShare": 1
+   },
+   "DASH": {
+    "releases": 24,
+    "income": 24,
+    "balance": 24,
+    "cashflow": 24,
+    "periodTotal": 24,
+    "periodMatched": 24,
+    "periodUnpaired": 0,
+    "incomeShare": 1,
+    "balanceShare": 1,
+    "cashflowShare": 1,
+    "periodShare": 1
+   },
+   "FCX": {
+    "releases": 78,
+    "income": 73,
+    "balance": 73,
+    "cashflow": 73,
+    "periodTotal": 72,
+    "periodMatched": 72,
+    "periodUnpaired": 1,
+    "incomeShare": 0.9358974358974359,
+    "balanceShare": 0.9358974358974359,
+    "cashflowShare": 0.9358974358974359,
+    "periodShare": 1
+   },
+   "FSLR": {
+    "releases": 75,
+    "income": 73,
+    "balance": 73,
+    "cashflow": 16,
+    "periodTotal": 70,
+    "periodMatched": 70,
+    "periodUnpaired": 3,
+    "incomeShare": 0.9733333333333334,
+    "balanceShare": 0.9733333333333334,
+    "cashflowShare": 0.21333333333333335,
+    "periodShare": 1
+   },
+   "GOOGL": {
+    "releases": 46,
+    "income": 45,
+    "balance": 45,
+    "cashflow": 45,
+    "periodTotal": 45,
+    "periodMatched": 45,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9782608695652174,
+    "balanceShare": 0.9782608695652174,
+    "cashflowShare": 0.9782608695652174,
+    "periodShare": 1
+   },
+   "GS": {
+    "releases": 74,
+    "income": 71,
+    "balance": 71,
+    "cashflow": 0,
+    "periodTotal": 71,
+    "periodMatched": 71,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9594594594594594,
+    "balanceShare": 0.9594594594594594,
+    "cashflowShare": 0,
+    "periodShare": 1
+   },
+   "HD": {
+    "releases": 71,
+    "income": 69,
+    "balance": 69,
+    "cashflow": 4,
+    "periodTotal": 69,
+    "periodMatched": 69,
+    "periodUnpaired": 0,
+    "incomeShare": 0.971830985915493,
+    "balanceShare": 0.971830985915493,
+    "cashflowShare": 0.056338028169014086,
+    "periodShare": 1
+   },
+   "IBM": {
+    "releases": 106,
+    "income": 22,
+    "balance": 42,
+    "cashflow": 42,
+    "periodTotal": 21,
+    "periodMatched": 18,
+    "periodUnpaired": 1,
+    "incomeShare": 0.20754716981132076,
+    "balanceShare": 0.39622641509433965,
+    "cashflowShare": 0.39622641509433965,
+    "periodShare": 0.8571428571428571
+   },
+   "INTC": {
+    "releases": 93,
+    "income": 76,
+    "balance": 83,
+    "cashflow": 42,
+    "periodTotal": 75,
+    "periodMatched": 72,
+    "periodUnpaired": 1,
+    "incomeShare": 0.8172043010752689,
+    "balanceShare": 0.8924731182795699,
+    "cashflowShare": 0.45161290322580644,
+    "periodShare": 0.96
+   },
+   "JNJ": {
+    "releases": 75,
+    "income": 75,
+    "balance": 0,
+    "cashflow": 0,
+    "periodTotal": 74,
+    "periodMatched": 73,
+    "periodUnpaired": 1,
+    "incomeShare": 1,
+    "balanceShare": 0,
+    "cashflowShare": 0,
+    "periodShare": 0.9864864864864865
+   },
+   "JPM": {
+    "releases": 73,
+    "income": 72,
+    "balance": 72,
+    "cashflow": 1,
+    "periodTotal": 72,
+    "periodMatched": 72,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9863013698630136,
+    "balanceShare": 0.9863013698630136,
+    "cashflowShare": 0.0136986301369863,
+    "periodShare": 1
+   },
+   "KMI": {
+    "releases": 63,
+    "income": 60,
+    "balance": 61,
+    "cashflow": 11,
+    "periodTotal": 59,
+    "periodMatched": 59,
+    "periodUnpaired": 1,
+    "incomeShare": 0.9523809523809523,
+    "balanceShare": 0.9682539682539683,
+    "cashflowShare": 0.1746031746031746,
+    "periodShare": 1
+   },
+   "LIN": {
+    "releases": 32,
+    "income": 22,
+    "balance": 22,
+    "cashflow": 22,
+    "periodTotal": 21,
+    "periodMatched": 21,
+    "periodUnpaired": 1,
+    "incomeShare": 0.6875,
+    "balanceShare": 0.6875,
+    "cashflowShare": 0.6875,
+    "periodShare": 1
+   },
+   "LLY": {
+    "releases": 83,
+    "income": 65,
+    "balance": 0,
+    "cashflow": 0,
+    "periodTotal": 65,
+    "periodMatched": 64,
+    "periodUnpaired": 0,
+    "incomeShare": 0.7831325301204819,
+    "balanceShare": 0,
+    "cashflowShare": 0,
+    "periodShare": 0.9846153846153847
+   },
+   "LMT": {
+    "releases": 73,
+    "income": 72,
+    "balance": 72,
+    "cashflow": 72,
+    "periodTotal": 72,
+    "periodMatched": 72,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9863013698630136,
+    "balanceShare": 0.9863013698630136,
+    "cashflowShare": 0.9863013698630136,
+    "periodShare": 1
+   },
+   "LULU": {
+    "releases": 71,
+    "income": 71,
+    "balance": 71,
+    "cashflow": 69,
+    "periodTotal": 71,
+    "periodMatched": 71,
+    "periodUnpaired": 0,
+    "incomeShare": 1,
+    "balanceShare": 1,
+    "cashflowShare": 0.971830985915493,
+    "periodShare": 1
+   },
+   "MA": {
+    "releases": 73,
+    "income": 72,
+    "balance": 72,
+    "cashflow": 72,
+    "periodTotal": 72,
+    "periodMatched": 72,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9863013698630136,
+    "balanceShare": 0.9863013698630136,
+    "cashflowShare": 0.9863013698630136,
+    "periodShare": 1
+   },
+   "META": {
+    "releases": 58,
+    "income": 58,
+    "balance": 58,
+    "cashflow": 58,
+    "periodTotal": 58,
+    "periodMatched": 58,
+    "periodUnpaired": 0,
+    "incomeShare": 1,
+    "balanceShare": 1,
+    "cashflowShare": 1,
+    "periodShare": 1
+   },
+   "MRNA": {
+    "releases": 40,
+    "income": 29,
+    "balance": 16,
+    "cashflow": 29,
+    "periodTotal": 29,
+    "periodMatched": 29,
+    "periodUnpaired": 0,
+    "incomeShare": 0.725,
+    "balanceShare": 0.4,
+    "cashflowShare": 0.725,
+    "periodShare": 1
+   },
+   "MSFT": {
+    "releases": 72,
+    "income": 72,
+    "balance": 72,
+    "cashflow": 9,
+    "periodTotal": 70,
+    "periodMatched": 69,
+    "periodUnpaired": 2,
+    "incomeShare": 1,
+    "balanceShare": 1,
+    "cashflowShare": 0.125,
+    "periodShare": 0.9857142857142858
+   },
+   "MU": {
+    "releases": 73,
+    "income": 46,
+    "balance": 49,
+    "cashflow": 48,
+    "periodTotal": 46,
+    "periodMatched": 46,
+    "periodUnpaired": 0,
+    "incomeShare": 0.6301369863013698,
+    "balanceShare": 0.6712328767123288,
+    "cashflowShare": 0.6575342465753424,
+    "periodShare": 1
+   },
+   "NEE": {
+    "releases": 73,
+    "income": 1,
+    "balance": 1,
+    "cashflow": 1,
+    "periodTotal": 1,
+    "periodMatched": 1,
+    "periodUnpaired": 0,
+    "incomeShare": 0.0136986301369863,
+    "balanceShare": 0.0136986301369863,
+    "cashflowShare": 0.0136986301369863,
+    "periodShare": 1
+   },
+   "NFLX": {
+    "releases": 75,
+    "income": 73,
+    "balance": 72,
+    "cashflow": 72,
+    "periodTotal": 73,
+    "periodMatched": 72,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9733333333333334,
+    "balanceShare": 0.96,
+    "cashflowShare": 0.96,
+    "periodShare": 0.9863013698630136
+   },
+   "NKE": {
+    "releases": 109,
+    "income": 72,
+    "balance": 71,
+    "cashflow": 0,
+    "periodTotal": 72,
+    "periodMatched": 71,
+    "periodUnpaired": 0,
+    "incomeShare": 0.6605504587155964,
+    "balanceShare": 0.6513761467889908,
+    "cashflowShare": 0,
+    "periodShare": 0.9861111111111112
+   },
+   "NVDA": {
+    "releases": 74,
+    "income": 70,
+    "balance": 69,
+    "cashflow": 27,
+    "periodTotal": 70,
+    "periodMatched": 69,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9459459459459459,
+    "balanceShare": 0.9324324324324325,
+    "cashflowShare": 0.36486486486486486,
+    "periodShare": 0.9857142857142858
+   },
+   "PFE": {
+    "releases": 76,
+    "income": 71,
+    "balance": 6,
+    "cashflow": 0,
+    "periodTotal": 71,
+    "periodMatched": 71,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9342105263157895,
+    "balanceShare": 0.07894736842105263,
+    "cashflowShare": 0,
+    "periodShare": 1
+   },
+   "PG": {
+    "releases": 72,
+    "income": 48,
+    "balance": 48,
+    "cashflow": 48,
+    "periodTotal": 48,
+    "periodMatched": 48,
+    "periodUnpaired": 0,
+    "incomeShare": 0.6666666666666666,
+    "balanceShare": 0.6666666666666666,
+    "cashflowShare": 0.6666666666666666,
+    "periodShare": 1
+   },
+   "PLD": {
+    "releases": 86,
+    "income": 29,
+    "balance": 38,
+    "cashflow": 0,
+    "periodTotal": 28,
+    "periodMatched": 24,
+    "periodUnpaired": 1,
+    "incomeShare": 0.3372093023255814,
+    "balanceShare": 0.4418604651162791,
+    "cashflowShare": 0,
+    "periodShare": 0.8571428571428571
+   },
+   "PLTR": {
+    "releases": 26,
+    "income": 25,
+    "balance": 25,
+    "cashflow": 25,
+    "periodTotal": 25,
+    "periodMatched": 25,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9615384615384616,
+    "balanceShare": 0.9615384615384616,
+    "cashflowShare": 0.9615384615384616,
+    "periodShare": 1
+   },
+   "RCL": {
+    "releases": 75,
+    "income": 53,
+    "balance": 67,
+    "cashflow": 67,
+    "periodTotal": 53,
+    "periodMatched": 53,
+    "periodUnpaired": 0,
+    "incomeShare": 0.7066666666666667,
+    "balanceShare": 0.8933333333333333,
+    "cashflowShare": 0.8933333333333333,
+    "periodShare": 1
+   },
+   "SMCI": {
+    "releases": 96,
+    "income": 61,
+    "balance": 61,
+    "cashflow": 56,
+    "periodTotal": 60,
+    "periodMatched": 60,
+    "periodUnpaired": 1,
+    "incomeShare": 0.6354166666666666,
+    "balanceShare": 0.6354166666666666,
+    "cashflowShare": 0.5833333333333334,
+    "periodShare": 1
+   },
+   "T": {
+    "releases": 76,
+    "income": 74,
+    "balance": 73,
+    "cashflow": 70,
+    "periodTotal": 68,
+    "periodMatched": 68,
+    "periodUnpaired": 6,
+    "incomeShare": 0.9736842105263158,
+    "balanceShare": 0.9605263157894737,
+    "cashflowShare": 0.9210526315789473,
+    "periodShare": 1
+   },
+   "TSLA": {
+    "releases": 117,
+    "income": 36,
+    "balance": 36,
+    "cashflow": 36,
+    "periodTotal": 36,
+    "periodMatched": 36,
+    "periodUnpaired": 0,
+    "incomeShare": 0.3076923076923077,
+    "balanceShare": 0.3076923076923077,
+    "cashflowShare": 0.3076923076923077,
+    "periodShare": 1
+   },
+   "UNH": {
+    "releases": 73,
+    "income": 68,
+    "balance": 68,
+    "cashflow": 68,
+    "periodTotal": 68,
+    "periodMatched": 68,
+    "periodUnpaired": 0,
+    "incomeShare": 0.9315068493150684,
+    "balanceShare": 0.9315068493150684,
+    "cashflowShare": 0.9315068493150684,
+    "periodShare": 1
+   },
+   "V": {
+    "releases": 72,
+    "income": 58,
+    "balance": 58,
+    "cashflow": 58,
+    "periodTotal": 58,
+    "periodMatched": 58,
+    "periodUnpaired": 0,
+    "incomeShare": 0.8055555555555556,
+    "balanceShare": 0.8055555555555556,
+    "cashflowShare": 0.8055555555555556,
+    "periodShare": 1
+   },
+   "WMT": {
+    "releases": 71,
+    "income": 71,
+    "balance": 71,
+    "cashflow": 71,
+    "periodTotal": 70,
+    "periodMatched": 67,
+    "periodUnpaired": 1,
+    "incomeShare": 1,
+    "balanceShare": 1,
+    "cashflowShare": 1,
+    "periodShare": 0.9571428571428572
+   }
+  },
+  "companiesWithoutStatements": [],
+  "companiesWithoutIncome": [],
+  "companiesWithoutBalance": [
+   "JNJ",
+   "LLY"
+  ],
+  "companiesWithoutCashflow": [
+   "AIG",
+   "COF",
+   "GS",
+   "JNJ",
+   "LLY",
+   "NKE",
+   "PFE",
+   "PLD"
+  ]
+ },
+ "naming": {
+  "overall": {
+   "dataRows": 200557,
+   "namedRows": 101771,
+   "values": 283557,
+   "residual": 135355,
+   "share": 0.5074417746575787
+  },
+  "byStatementByYear": {
+   "2009": {
+    "balance": {
+     "dataRows": 3366,
+     "namedRows": 434,
+     "share": 0.1289364230540701
+    },
+    "cashflow": {
+     "dataRows": 2215,
+     "namedRows": 32,
+     "share": 0.014446952595936794
+    },
+    "income": {
+     "dataRows": 3563,
+     "namedRows": 78,
+     "share": 0.02189166432781364
+    }
+   },
+   "2010": {
+    "balance": {
+     "dataRows": 3338,
+     "namedRows": 1697,
+     "share": 0.5083882564409826
+    },
+    "cashflow": {
+     "dataRows": 2216,
+     "namedRows": 386,
+     "share": 0.17418772563176896
+    },
+    "income": {
+     "dataRows": 3551,
+     "namedRows": 637,
+     "share": 0.17938608842579554
+    }
+   },
+   "2011": {
+    "balance": {
+     "dataRows": 3498,
+     "namedRows": 1951,
+     "share": 0.5577472841623785
+    },
+    "cashflow": {
+     "dataRows": 2344,
+     "namedRows": 859,
+     "share": 0.36646757679180886
+    },
+    "income": {
+     "dataRows": 3590,
+     "namedRows": 1266,
+     "share": 0.35264623955431756
+    }
+   },
+   "2012": {
+    "balance": {
+     "dataRows": 3457,
+     "namedRows": 2234,
+     "share": 0.6462250506219265
+    },
+    "cashflow": {
+     "dataRows": 2633,
+     "namedRows": 1136,
+     "share": 0.4314470186099506
+    },
+    "income": {
+     "dataRows": 3571,
+     "namedRows": 1510,
+     "share": 0.4228507420890507
+    }
+   },
+   "2013": {
+    "balance": {
+     "dataRows": 3497,
+     "namedRows": 2427,
+     "share": 0.6940234486702889
+    },
+    "cashflow": {
+     "dataRows": 2887,
+     "namedRows": 1255,
+     "share": 0.4347073086248701
+    },
+    "income": {
+     "dataRows": 3506,
+     "namedRows": 1626,
+     "share": 0.4637763833428408
+    }
+   },
+   "2014": {
+    "balance": {
+     "dataRows": 3602,
+     "namedRows": 2392,
+     "share": 0.6640755136035535
+    },
+    "cashflow": {
+     "dataRows": 2792,
+     "namedRows": 1322,
+     "share": 0.47349570200573066
+    },
+    "income": {
+     "dataRows": 3434,
+     "namedRows": 1706,
+     "share": 0.49679673849737915
+    }
+   },
+   "2015": {
+    "balance": {
+     "dataRows": 3822,
+     "namedRows": 2622,
+     "share": 0.6860282574568289
+    },
+    "cashflow": {
+     "dataRows": 3042,
+     "namedRows": 1542,
+     "share": 0.5069033530571992
+    },
+    "income": {
+     "dataRows": 3731,
+     "namedRows": 1868,
+     "share": 0.5006700616456714
+    }
+   },
+   "2016": {
+    "balance": {
+     "dataRows": 4030,
+     "namedRows": 2672,
+     "share": 0.6630272952853598
+    },
+    "cashflow": {
+     "dataRows": 3239,
+     "namedRows": 1712,
+     "share": 0.5285581969743748
+    },
+    "income": {
+     "dataRows": 3828,
+     "namedRows": 1841,
+     "share": 0.4809299895506792
+    }
+   },
+   "2017": {
+    "balance": {
+     "dataRows": 3952,
+     "namedRows": 2838,
+     "share": 0.7181174089068826
+    },
+    "cashflow": {
+     "dataRows": 3305,
+     "namedRows": 1547,
+     "share": 0.4680786686838124
+    },
+    "income": {
+     "dataRows": 3706,
+     "namedRows": 1699,
+     "share": 0.45844576362655154
+    }
+   },
+   "2018": {
+    "balance": {
+     "dataRows": 4013,
+     "namedRows": 2753,
+     "share": 0.6860204335908298
+    },
+    "cashflow": {
+     "dataRows": 2961,
+     "namedRows": 1186,
+     "share": 0.4005403579871665
+    },
+    "income": {
+     "dataRows": 3652,
+     "namedRows": 1712,
+     "share": 0.4687842278203724
+    }
+   },
+   "2019": {
+    "balance": {
+     "dataRows": 4289,
+     "namedRows": 2804,
+     "share": 0.6537654464910235
+    },
+    "cashflow": {
+     "dataRows": 3241,
+     "namedRows": 1460,
+     "share": 0.45047824745448933
+    },
+    "income": {
+     "dataRows": 3790,
+     "namedRows": 1803,
+     "share": 0.4757255936675462
+    }
+   },
+   "2020": {
+    "balance": {
+     "dataRows": 4541,
+     "namedRows": 3097,
+     "share": 0.6820083682008368
+    },
+    "cashflow": {
+     "dataRows": 3639,
+     "namedRows": 1749,
+     "share": 0.4806265457543281
+    },
+    "income": {
+     "dataRows": 3914,
+     "namedRows": 1764,
+     "share": 0.4506898313745529
+    }
+   },
+   "2021": {
+    "balance": {
+     "dataRows": 4887,
+     "namedRows": 3225,
+     "share": 0.6599140577041129
+    },
+    "cashflow": {
+     "dataRows": 4051,
+     "namedRows": 1823,
+     "share": 0.450012342631449
+    },
+    "income": {
+     "dataRows": 4106,
+     "namedRows": 1833,
+     "share": 0.4464198733560643
+    }
+   },
+   "2022": {
+    "balance": {
+     "dataRows": 4909,
+     "namedRows": 3366,
+     "share": 0.6856793644326746
+    },
+    "cashflow": {
+     "dataRows": 4089,
+     "namedRows": 1804,
+     "share": 0.44118366348740523
+    },
+    "income": {
+     "dataRows": 4029,
+     "namedRows": 1910,
+     "share": 0.47406304293869445
+    }
+   },
+   "2023": {
+    "balance": {
+     "dataRows": 4970,
+     "namedRows": 3450,
+     "share": 0.6941649899396378
+    },
+    "cashflow": {
+     "dataRows": 4309,
+     "namedRows": 1940,
+     "share": 0.4502204687862613
+    },
+    "income": {
+     "dataRows": 4017,
+     "namedRows": 1975,
+     "share": 0.4916604431167538
+    }
+   },
+   "2024": {
+    "balance": {
+     "dataRows": 4682,
+     "namedRows": 3307,
+     "share": 0.7063220845792396
+    },
+    "cashflow": {
+     "dataRows": 4277,
+     "namedRows": 1753,
+     "share": 0.4098667290156652
+    },
+    "income": {
+     "dataRows": 3959,
+     "namedRows": 1839,
+     "share": 0.46451124021217477
+    }
+   },
+   "2025": {
+    "balance": {
+     "dataRows": 4605,
+     "namedRows": 3418,
+     "share": 0.7422366992399566
+    },
+    "cashflow": {
+     "dataRows": 4110,
+     "namedRows": 1915,
+     "share": 0.4659367396593674
+    },
+    "income": {
+     "dataRows": 3889,
+     "namedRows": 1846,
+     "share": 0.47467215222422215
+    }
+   },
+   "2026": {
+    "balance": {
+     "dataRows": 4340,
+     "namedRows": 3201,
+     "share": 0.7375576036866359
+    },
+    "cashflow": {
+     "dataRows": 3941,
+     "namedRows": 1812,
+     "share": 0.4597817812737884
+    },
+    "income": {
+     "dataRows": 3632,
+     "namedRows": 1737,
+     "share": 0.4782488986784141
+    }
+   }
+  },
+  "byStatementByCompany": {
+   "AAPL": {
+    "balance": {
+     "dataRows": 1939,
+     "namedRows": 1786,
+     "share": 0.9210933470861269
+    },
+    "cashflow": {
+     "dataRows": 2302,
+     "namedRows": 1365,
+     "share": 0.5929626411815813
+    },
+    "income": {
+     "dataRows": 1737,
+     "namedRows": 795,
+     "share": 0.45768566493955093
+    }
+   },
+   "AIG": {
+    "balance": {
+     "dataRows": 11,
+     "namedRows": 0,
+     "share": 0
+    },
+    "cashflow": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "income": {
+     "dataRows": 291,
+     "namedRows": 5,
+     "share": 0.01718213058419244
+    }
+   },
+   "AMD": {
+    "balance": {
+     "dataRows": 2063,
+     "namedRows": 0,
+     "share": 0
+    },
+    "cashflow": {
+     "dataRows": 1439,
+     "namedRows": 0,
+     "share": 0
+    },
+    "income": {
+     "dataRows": 1525,
+     "namedRows": 115,
+     "share": 0.07540983606557378
+    }
+   },
+   "AMT": {
+    "balance": {
+     "dataRows": 2555,
+     "namedRows": 2042,
+     "share": 0.7992172211350294
+    },
+    "cashflow": {
+     "dataRows": 2445,
+     "namedRows": 1735,
+     "share": 0.7096114519427403
+    },
+    "income": {
+     "dataRows": 2007,
+     "namedRows": 1397,
+     "share": 0.6960637767812655
+    }
+   },
+   "AMZN": {
+    "balance": {
+     "dataRows": 1734,
+     "namedRows": 1438,
+     "share": 0.8292964244521338
+    },
+    "cashflow": {
+     "dataRows": 2505,
+     "namedRows": 1710,
+     "share": 0.6826347305389222
+    },
+    "income": {
+     "dataRows": 1779,
+     "namedRows": 1150,
+     "share": 0.6464305789769533
+    }
+   },
+   "ANET": {
+    "balance": {
+     "dataRows": 1438,
+     "namedRows": 1274,
+     "share": 0.885952712100139
+    },
+    "cashflow": {
+     "dataRows": 1454,
+     "namedRows": 1019,
+     "share": 0.7008253094910591
+    },
+    "income": {
+     "dataRows": 1096,
+     "namedRows": 812,
+     "share": 0.7408759124087592
+    }
+   },
+   "AVGO": {
+    "balance": {
+     "dataRows": 857,
+     "namedRows": 724,
+     "share": 0.8448074679113186
+    },
+    "cashflow": {
+     "dataRows": 1215,
+     "namedRows": 263,
+     "share": 0.21646090534979423
+    },
+    "income": {
+     "dataRows": 1052,
+     "namedRows": 252,
+     "share": 0.23954372623574144
+    }
+   },
+   "BA": {
+    "balance": {
+     "dataRows": 2108,
+     "namedRows": 1727,
+     "share": 0.8192599620493358
+    },
+    "cashflow": {
+     "dataRows": 2407,
+     "namedRows": 1167,
+     "share": 0.48483589530535937
+    },
+    "income": {
+     "dataRows": 1369,
+     "namedRows": 780,
+     "share": 0.5697589481373265
+    }
+   },
+   "CAT": {
+    "balance": {
+     "dataRows": 2694,
+     "namedRows": 1,
+     "share": 0.0003711952487008166
+    },
+    "cashflow": {
+     "dataRows": 2669,
+     "namedRows": 0,
+     "share": 0
+    },
+    "income": {
+     "dataRows": 1789,
+     "namedRows": 1121,
+     "share": 0.626607043040805
+    }
+   },
+   "COF": {
+    "balance": {
+     "dataRows": 1683,
+     "namedRows": 1080,
+     "share": 0.6417112299465241
+    },
+    "cashflow": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "income": {
+     "dataRows": 2511,
+     "namedRows": 1005,
+     "share": 0.4002389486260454
+    }
+   },
+   "COP": {
+    "balance": {
+     "dataRows": 1038,
+     "namedRows": 0,
+     "share": 0
+    },
+    "cashflow": {
+     "dataRows": 2629,
+     "namedRows": 0,
+     "share": 0
+    },
+    "income": {
+     "dataRows": 2395,
+     "namedRows": 4,
+     "share": 0.0016701461377870565
+    }
+   },
+   "COST": {
+    "balance": {
+     "dataRows": 1846,
+     "namedRows": 1631,
+     "share": 0.8835319609967497
+    },
+    "cashflow": {
+     "dataRows": 321,
+     "namedRows": 61,
+     "share": 0.19003115264797507
+    },
+    "income": {
+     "dataRows": 1264,
+     "namedRows": 160,
+     "share": 0.12658227848101267
+    }
+   },
+   "CSCO": {
+    "balance": {
+     "dataRows": 1756,
+     "namedRows": 12,
+     "share": 0.00683371298405467
+    },
+    "cashflow": {
+     "dataRows": 2825,
+     "namedRows": 1435,
+     "share": 0.5079646017699115
+    },
+    "income": {
+     "dataRows": 1813,
+     "namedRows": 1142,
+     "share": 0.6298952013237727
+    }
+   },
+   "CVX": {
+    "balance": {
+     "dataRows": 516,
+     "namedRows": 0,
+     "share": 0
+    },
+    "cashflow": {
+     "dataRows": 867,
+     "namedRows": 0,
+     "share": 0
+    },
+    "income": {
+     "dataRows": 1520,
+     "namedRows": 36,
+     "share": 0.02368421052631579
+    }
+   },
+   "DAL": {
+    "balance": {
+     "dataRows": 1676,
+     "namedRows": 1361,
+     "share": 0.8120525059665871
+    },
+    "cashflow": {
+     "dataRows": 1217,
+     "namedRows": 192,
+     "share": 0.15776499589153656
+    },
+    "income": {
+     "dataRows": 2361,
+     "namedRows": 210,
+     "share": 0.08894536213468869
+    }
+   },
+   "DASH": {
+    "balance": {
+     "dataRows": 675,
+     "namedRows": 478,
+     "share": 0.7081481481481482
+    },
+    "cashflow": {
+     "dataRows": 980,
+     "namedRows": 293,
+     "share": 0.29897959183673467
+    },
+    "income": {
+     "dataRows": 431,
+     "namedRows": 266,
+     "share": 0.617169373549884
+    }
+   },
+   "FCX": {
+    "balance": {
+     "dataRows": 2492,
+     "namedRows": 1830,
+     "share": 0.7343499197431782
+    },
+    "cashflow": {
+     "dataRows": 2956,
+     "namedRows": 116,
+     "share": 0.03924221921515562
+    },
+    "income": {
+     "dataRows": 1583,
+     "namedRows": 136,
+     "share": 0.08591282375236892
+    }
+   },
+   "FSLR": {
+    "balance": {
+     "dataRows": 2706,
+     "namedRows": 2080,
+     "share": 0.7686622320768662
+    },
+    "cashflow": {
+     "dataRows": 537,
+     "namedRows": 399,
+     "share": 0.7430167597765364
+    },
+    "income": {
+     "dataRows": 1479,
+     "namedRows": 1155,
+     "share": 0.7809330628803245
+    }
+   },
+   "GOOGL": {
+    "balance": {
+     "dataRows": 1540,
+     "namedRows": 1294,
+     "share": 0.8402597402597403
+    },
+    "cashflow": {
+     "dataRows": 1416,
+     "namedRows": 625,
+     "share": 0.4413841807909605
+    },
+    "income": {
+     "dataRows": 665,
+     "namedRows": 361,
+     "share": 0.5428571428571428
+    }
+   },
+   "GS": {
+    "balance": {
+     "dataRows": 1001,
+     "namedRows": 324,
+     "share": 0.32367632367632365
+    },
+    "cashflow": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "income": {
+     "dataRows": 2234,
+     "namedRows": 1336,
+     "share": 0.5980304386750224
+    }
+   },
+   "HD": {
+    "balance": {
+     "dataRows": 1449,
+     "namedRows": 1227,
+     "share": 0.8467908902691511
+    },
+    "cashflow": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "income": {
+     "dataRows": 1473,
+     "namedRows": 462,
+     "share": 0.3136456211812627
+    }
+   },
+   "IBM": {
+    "balance": {
+     "dataRows": 1635,
+     "namedRows": 1457,
+     "share": 0.891131498470948
+    },
+    "cashflow": {
+     "dataRows": 775,
+     "namedRows": 336,
+     "share": 0.4335483870967742
+    },
+    "income": {
+     "dataRows": 549,
+     "namedRows": 114,
+     "share": 0.20765027322404372
+    }
+   },
+   "INTC": {
+    "balance": {
+     "dataRows": 2336,
+     "namedRows": 2009,
+     "share": 0.8600171232876712
+    },
+    "cashflow": {
+     "dataRows": 1278,
+     "namedRows": 672,
+     "share": 0.5258215962441315
+    },
+    "income": {
+     "dataRows": 1397,
+     "namedRows": 806,
+     "share": 0.5769506084466715
+    }
+   },
+   "JNJ": {
+    "balance": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "cashflow": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "income": {
+     "dataRows": 1370,
+     "namedRows": 18,
+     "share": 0.013138686131386862
+    }
+   },
+   "JPM": {
+    "balance": {
+     "dataRows": 2355,
+     "namedRows": 1689,
+     "share": 0.7171974522292993
+    },
+    "cashflow": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "income": {
+     "dataRows": 2297,
+     "namedRows": 1319,
+     "share": 0.5742272529386155
+    }
+   },
+   "KMI": {
+    "balance": {
+     "dataRows": 1833,
+     "namedRows": 734,
+     "share": 0.4004364429896345
+    },
+    "cashflow": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "income": {
+     "dataRows": 1642,
+     "namedRows": 461,
+     "share": 0.2807551766138855
+    }
+   },
+   "LIN": {
+    "balance": {
+     "dataRows": 672,
+     "namedRows": 0,
+     "share": 0
+    },
+    "cashflow": {
+     "dataRows": 636,
+     "namedRows": 0,
+     "share": 0
+    },
+    "income": {
+     "dataRows": 618,
+     "namedRows": 20,
+     "share": 0.032362459546925564
+    }
+   },
+   "LLY": {
+    "balance": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "cashflow": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "income": {
+     "dataRows": 1294,
+     "namedRows": 42,
+     "share": 0.03245749613601236
+    }
+   },
+   "LMT": {
+    "balance": {
+     "dataRows": 2057,
+     "namedRows": 1432,
+     "share": 0.6961594555177443
+    },
+    "cashflow": {
+     "dataRows": 2015,
+     "namedRows": 633,
+     "share": 0.3141439205955335
+    },
+    "income": {
+     "dataRows": 1323,
+     "namedRows": 654,
+     "share": 0.4943310657596372
+    }
+   },
+   "LULU": {
+    "balance": {
+     "dataRows": 1437,
+     "namedRows": 1064,
+     "share": 0.7404314544189283
+    },
+    "cashflow": {
+     "dataRows": 658,
+     "namedRows": 265,
+     "share": 0.4027355623100304
+    },
+    "income": {
+     "dataRows": 1263,
+     "namedRows": 455,
+     "share": 0.3602533650039588
+    }
+   },
+   "MA": {
+    "balance": {
+     "dataRows": 2714,
+     "namedRows": 1280,
+     "share": 0.4716285924834193
+    },
+    "cashflow": {
+     "dataRows": 2846,
+     "namedRows": 1174,
+     "share": 0.4125087842586086
+    },
+    "income": {
+     "dataRows": 1345,
+     "namedRows": 244,
+     "share": 0.18141263940520447
+    }
+   },
+   "META": {
+    "balance": {
+     "dataRows": 1344,
+     "namedRows": 714,
+     "share": 0.53125
+    },
+    "cashflow": {
+     "dataRows": 2050,
+     "namedRows": 1009,
+     "share": 0.4921951219512195
+    },
+    "income": {
+     "dataRows": 1329,
+     "namedRows": 802,
+     "share": 0.6034612490594432
+    }
+   },
+   "MRNA": {
+    "balance": {
+     "dataRows": 441,
+     "namedRows": 382,
+     "share": 0.8662131519274376
+    },
+    "cashflow": {
+     "dataRows": 561,
+     "namedRows": 232,
+     "share": 0.41354723707664887
+    },
+    "income": {
+     "dataRows": 455,
+     "namedRows": 287,
+     "share": 0.6307692307692307
+    }
+   },
+   "MSFT": {
+    "balance": {
+     "dataRows": 2343,
+     "namedRows": 1985,
+     "share": 0.8472044387537345
+    },
+    "cashflow": {
+     "dataRows": 279,
+     "namedRows": 221,
+     "share": 0.7921146953405018
+    },
+    "income": {
+     "dataRows": 2117,
+     "namedRows": 1509,
+     "share": 0.7128011336797355
+    }
+   },
+   "MU": {
+    "balance": {
+     "dataRows": 1103,
+     "namedRows": 988,
+     "share": 0.8957388939256573
+    },
+    "cashflow": {
+     "dataRows": 928,
+     "namedRows": 470,
+     "share": 0.5064655172413793
+    },
+    "income": {
+     "dataRows": 697,
+     "namedRows": 480,
+     "share": 0.6886657101865137
+    }
+   },
+   "NEE": {
+    "balance": {
+     "dataRows": 25,
+     "namedRows": 0,
+     "share": 0
+    },
+    "cashflow": {
+     "dataRows": 24,
+     "namedRows": 0,
+     "share": 0
+    },
+    "income": {
+     "dataRows": 36,
+     "namedRows": 0,
+     "share": 0
+    }
+   },
+   "NFLX": {
+    "balance": {
+     "dataRows": 1757,
+     "namedRows": 1339,
+     "share": 0.7620944792259533
+    },
+    "cashflow": {
+     "dataRows": 2585,
+     "namedRows": 1733,
+     "share": 0.6704061895551258
+    },
+    "income": {
+     "dataRows": 1277,
+     "namedRows": 1052,
+     "share": 0.8238057948316366
+    }
+   },
+   "NKE": {
+    "balance": {
+     "dataRows": 1743,
+     "namedRows": 1038,
+     "share": 0.5955249569707401
+    },
+    "cashflow": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "income": {
+     "dataRows": 1303,
+     "namedRows": 644,
+     "share": 0.49424405218726014
+    }
+   },
+   "NVDA": {
+    "balance": {
+     "dataRows": 1367,
+     "namedRows": 1130,
+     "share": 0.8266276517922458
+    },
+    "cashflow": {
+     "dataRows": 790,
+     "namedRows": 515,
+     "share": 0.6518987341772152
+    },
+    "income": {
+     "dataRows": 1201,
+     "namedRows": 881,
+     "share": 0.7335553705245629
+    }
+   },
+   "PFE": {
+    "balance": {
+     "dataRows": 44,
+     "namedRows": 0,
+     "share": 0
+    },
+    "cashflow": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "income": {
+     "dataRows": 1614,
+     "namedRows": 8,
+     "share": 0.004956629491945477
+    }
+   },
+   "PG": {
+    "balance": {
+     "dataRows": 1033,
+     "namedRows": 980,
+     "share": 0.9486931268151017
+    },
+    "cashflow": {
+     "dataRows": 1439,
+     "namedRows": 995,
+     "share": 0.6914523974982627
+    },
+    "income": {
+     "dataRows": 1241,
+     "namedRows": 376,
+     "share": 0.3029814665592264
+    }
+   },
+   "PLD": {
+    "balance": {
+     "dataRows": 534,
+     "namedRows": 0,
+     "share": 0
+    },
+    "cashflow": {
+     "dataRows": 0,
+     "namedRows": 0,
+     "share": null
+    },
+    "income": {
+     "dataRows": 667,
+     "namedRows": 0,
+     "share": 0
+    }
+   },
+   "PLTR": {
+    "balance": {
+     "dataRows": 703,
+     "namedRows": 612,
+     "share": 0.8705547652916074
+    },
+    "cashflow": {
+     "dataRows": 732,
+     "namedRows": 397,
+     "share": 0.5423497267759563
+    },
+    "income": {
+     "dataRows": 476,
+     "namedRows": 373,
+     "share": 0.7836134453781513
+    }
+   },
+   "RCL": {
+    "balance": {
+     "dataRows": 1854,
+     "namedRows": 1085,
+     "share": 0.5852211434735707
+    },
+    "cashflow": {
+     "dataRows": 2286,
+     "namedRows": 1579,
+     "share": 0.6907261592300963
+    },
+    "income": {
+     "dataRows": 1508,
+     "namedRows": 744,
+     "share": 0.493368700265252
+    }
+   },
+   "SMCI": {
+    "balance": {
+     "dataRows": 1713,
+     "namedRows": 1283,
+     "share": 0.7489784004670169
+    },
+    "cashflow": {
+     "dataRows": 908,
+     "namedRows": 674,
+     "share": 0.7422907488986784
+    },
+    "income": {
+     "dataRows": 1217,
+     "namedRows": 762,
+     "share": 0.6261298274445357
+    }
+   },
+   "T": {
+    "balance": {
+     "dataRows": 2485,
+     "namedRows": 2140,
+     "share": 0.8611670020120724
+    },
+    "cashflow": {
+     "dataRows": 2547,
+     "namedRows": 964,
+     "share": 0.3784844915586965
+    },
+    "income": {
+     "dataRows": 1679,
+     "namedRows": 587,
+     "share": 0.3496128648004765
+    }
+   },
+   "TSLA": {
+    "balance": {
+     "dataRows": 1149,
+     "namedRows": 577,
+     "share": 0.5021758050478677
+    },
+    "cashflow": {
+     "dataRows": 466,
+     "namedRows": 237,
+     "share": 0.5085836909871244
+    },
+    "income": {
+     "dataRows": 949,
+     "namedRows": 605,
+     "share": 0.6375131717597471
+    }
+   },
+   "UNH": {
+    "balance": {
+     "dataRows": 1095,
+     "namedRows": 731,
+     "share": 0.6675799086757991
+    },
+    "cashflow": {
+     "dataRows": 1407,
+     "namedRows": 758,
+     "share": 0.5387348969438521
+    },
+    "income": {
+     "dataRows": 1301,
+     "namedRows": 1052,
+     "share": 0.808608762490392
+    }
+   },
+   "V": {
+    "balance": {
+     "dataRows": 1972,
+     "namedRows": 901,
+     "share": 0.45689655172413796
+    },
+    "cashflow": {
+     "dataRows": 1929,
+     "namedRows": 684,
+     "share": 0.3545878693623639
+    },
+    "income": {
+     "dataRows": 1318,
+     "namedRows": 537,
+     "share": 0.40743550834597875
+    }
+   },
+   "WMT": {
+    "balance": {
+     "dataRows": 2277,
+     "namedRows": 2029,
+     "share": 0.891084760649978
+    },
+    "cashflow": {
+     "dataRows": 1968,
+     "namedRows": 1305,
+     "share": 0.663109756097561
+    },
+    "income": {
+     "dataRows": 1611,
+     "namedRows": 1118,
+     "share": 0.6939788950962136
+    }
+   }
+  }
+ },
+ "periods": {
+  "overall": {
+   "releases": 3609,
+   "income": 2962,
+   "balance": 2728,
+   "cashflow": 1981,
+   "periodTotal": 2924,
+   "periodMatched": 2899,
+   "periodUnpaired": 38,
+   "incomeShare": 0.8207259628706013,
+   "balanceShare": 0.7558880576336935,
+   "cashflowShare": 0.5489055139927957,
+   "periodShare": 0.9914500683994528
+  },
+  "mismatches": [
+   {
+    "ticker": "NVDA",
+    "releaseAccession": "0001045810-09-000005",
+    "expectedPeriodEnd": "2009-01-25",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "INTC",
+    "releaseAccession": "0000050863-10-000006",
+    "expectedPeriodEnd": "2009-12-26",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "INTC",
+    "releaseAccession": "0000050863-10-000033",
+    "expectedPeriodEnd": "2010-03-27",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "INTC",
+    "releaseAccession": "0000050863-10-000065",
+    "expectedPeriodEnd": "2010-06-26",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "NFLX",
+    "releaseAccession": "0001065280-19-000001",
+    "expectedPeriodEnd": "2018-12-31",
+    "actualPeriodEnd": "2018-09-30",
+    "deltaDays": -92
+   },
+   {
+    "ticker": "NKE",
+    "releaseAccession": "0000320187-13-000156",
+    "expectedPeriodEnd": "2013-08-31",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "PLD",
+    "releaseAccession": "0001193125-12-198456",
+    "expectedPeriodEnd": "2012-03-31",
+    "actualPeriodEnd": "2012-05-01",
+    "deltaDays": 31
+   },
+   {
+    "ticker": "PLD",
+    "releaseAccession": "0001193125-12-430875",
+    "expectedPeriodEnd": "2012-09-30",
+    "actualPeriodEnd": "2011-06-01",
+    "deltaDays": -487
+   },
+   {
+    "ticker": "PLD",
+    "releaseAccession": "0001193125-13-040119",
+    "expectedPeriodEnd": "2012-12-31",
+    "actualPeriodEnd": "2011-06-01",
+    "deltaDays": -579
+   },
+   {
+    "ticker": "PLD",
+    "releaseAccession": "0001193125-13-299744",
+    "expectedPeriodEnd": "2013-06-30",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "MSFT",
+    "releaseAccession": "0001193125-10-239800",
+    "expectedPeriodEnd": "2010-09-30",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "LLY",
+    "releaseAccession": "0000059478-13-000053",
+    "expectedPeriodEnd": "2013-09-30",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "IBM",
+    "releaseAccession": "0001558370-22-015079",
+    "expectedPeriodEnd": "2022-09-30",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "IBM",
+    "releaseAccession": "0001558370-23-000529",
+    "expectedPeriodEnd": "2022-12-31",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "IBM",
+    "releaseAccession": "0001558370-23-006218",
+    "expectedPeriodEnd": "2023-03-31",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "JNJ",
+    "releaseAccession": "0000200406-11-000052",
+    "expectedPeriodEnd": "2011-04-03",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "WMT",
+    "releaseAccession": "0001193125-10-190753",
+    "expectedPeriodEnd": "2010-07-31",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "WMT",
+    "releaseAccession": "0001193125-10-261366",
+    "expectedPeriodEnd": "2010-10-31",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "WMT",
+    "releaseAccession": "0001193125-11-041255",
+    "expectedPeriodEnd": "2011-01-31",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "COST",
+    "releaseAccession": "0001193125-15-398215",
+    "expectedPeriodEnd": "2015-11-22",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "COST",
+    "releaseAccession": "0001193125-16-787613",
+    "expectedPeriodEnd": "2016-11-20",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "COST",
+    "releaseAccession": "0001193125-17-369704",
+    "expectedPeriodEnd": "2017-11-26",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "AIG",
+    "releaseAccession": "0001104659-22-024314",
+    "expectedPeriodEnd": "2021-12-31",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "AIG",
+    "releaseAccession": "0001193125-12-446488",
+    "expectedPeriodEnd": "2012-09-30",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   },
+   {
+    "ticker": "AIG",
+    "releaseAccession": "0001193125-13-315318",
+    "expectedPeriodEnd": "2013-06-30",
+    "actualPeriodEnd": null,
+    "deltaDays": null
+   }
+  ]
+ },
+ "grades": {
+  "overall": {
+   "gradable": 108252,
+   "matches": 106574,
+   "mismatches": 1678,
+   "notGradable": 18214,
+   "total": 126466,
+   "matchShare": 0.9844991316557662
+  },
+  "byYear": {
+   "2009": {
+    "gradable": 548,
+    "matches": 543,
+    "mismatches": 5,
+    "notGradable": 89,
+    "total": 637,
+    "matchShare": 0.9908759124087592
+   },
+   "2010": {
+    "gradable": 2959,
+    "matches": 2906,
+    "mismatches": 53,
+    "notGradable": 364,
+    "total": 3323,
+    "matchShare": 0.9820885434268334
+   },
+   "2011": {
+    "gradable": 4537,
+    "matches": 4455,
+    "mismatches": 82,
+    "notGradable": 654,
+    "total": 5191,
+    "matchShare": 0.9819263830725149
+   },
+   "2012": {
+    "gradable": 5217,
+    "matches": 5096,
+    "mismatches": 121,
+    "notGradable": 1048,
+    "total": 6265,
+    "matchShare": 0.9768065938278704
+   },
+   "2013": {
+    "gradable": 5940,
+    "matches": 5864,
+    "mismatches": 76,
+    "notGradable": 947,
+    "total": 6887,
+    "matchShare": 0.9872053872053872
+   },
+   "2014": {
+    "gradable": 5747,
+    "matches": 5657,
+    "mismatches": 90,
+    "notGradable": 1077,
+    "total": 6824,
+    "matchShare": 0.9843396554724204
+   },
+   "2015": {
+    "gradable": 6628,
+    "matches": 6532,
+    "mismatches": 96,
+    "notGradable": 991,
+    "total": 7619,
+    "matchShare": 0.9855159927579964
+   },
+   "2016": {
+    "gradable": 6607,
+    "matches": 6519,
+    "mismatches": 88,
+    "notGradable": 1192,
+    "total": 7799,
+    "matchShare": 0.9866807930982292
+   },
+   "2017": {
+    "gradable": 6415,
+    "matches": 6254,
+    "mismatches": 161,
+    "notGradable": 1236,
+    "total": 7651,
+    "matchShare": 0.9749025720966484
+   },
+   "2018": {
+    "gradable": 5903,
+    "matches": 5767,
+    "mismatches": 136,
+    "notGradable": 1183,
+    "total": 7086,
+    "matchShare": 0.9769608673555819
+   },
+   "2019": {
+    "gradable": 6317,
+    "matches": 6183,
+    "mismatches": 134,
+    "notGradable": 1328,
+    "total": 7645,
+    "matchShare": 0.9787873990818426
+   },
+   "2020": {
+    "gradable": 6795,
+    "matches": 6671,
+    "mismatches": 124,
+    "notGradable": 1229,
+    "total": 8024,
+    "matchShare": 0.9817512877115526
+   },
+   "2021": {
+    "gradable": 7191,
+    "matches": 7124,
+    "mismatches": 67,
+    "notGradable": 1276,
+    "total": 8467,
+    "matchShare": 0.9906827979418718
+   },
+   "2022": {
+    "gradable": 7530,
+    "matches": 7458,
+    "mismatches": 72,
+    "notGradable": 1147,
+    "total": 8677,
+    "matchShare": 0.9904382470119522
+   },
+   "2023": {
+    "gradable": 7662,
+    "matches": 7565,
+    "mismatches": 97,
+    "notGradable": 1278,
+    "total": 8940,
+    "matchShare": 0.9873401200730879
+   },
+   "2024": {
+    "gradable": 7368,
+    "matches": 7266,
+    "mismatches": 102,
+    "notGradable": 1042,
+    "total": 8410,
+    "matchShare": 0.9861563517915309
+   },
+   "2025": {
+    "gradable": 7758,
+    "matches": 7668,
+    "mismatches": 90,
+    "notGradable": 993,
+    "total": 8751,
+    "matchShare": 0.988399071925754
+   },
+   "2026": {
+    "gradable": 7130,
+    "matches": 7046,
+    "mismatches": 84,
+    "notGradable": 1140,
+    "total": 8270,
+    "matchShare": 0.988218793828892
+   }
+  },
+  "byCompany": {
+   "AAPL": {
+    "gradable": 3781,
+    "matches": 3779,
+    "mismatches": 2,
+    "notGradable": 790,
+    "total": 4571,
+    "matchShare": 0.9994710394075641
+   },
+   "AIG": {
+    "gradable": 5,
+    "matches": 4,
+    "mismatches": 1,
+    "notGradable": 2,
+    "total": 7,
+    "matchShare": 0.8
+   },
+   "AMD": {
+    "gradable": 169,
+    "matches": 159,
+    "mismatches": 10,
+    "notGradable": 48,
+    "total": 217,
+    "matchShare": 0.9408284023668639
+   },
+   "AMT": {
+    "gradable": 5383,
+    "matches": 5348,
+    "mismatches": 35,
+    "notGradable": 890,
+    "total": 6273,
+    "matchShare": 0.9934980494148244
+   },
+   "AMZN": {
+    "gradable": 6810,
+    "matches": 6782,
+    "mismatches": 28,
+    "notGradable": 1036,
+    "total": 7846,
+    "matchShare": 0.9958883994126285
+   },
+   "ANET": {
+    "gradable": 3326,
+    "matches": 3292,
+    "mismatches": 34,
+    "notGradable": 404,
+    "total": 3730,
+    "matchShare": 0.9897775105231509
+   },
+   "AVGO": {
+    "gradable": 1057,
+    "matches": 1054,
+    "mismatches": 3,
+    "notGradable": 472,
+    "total": 1529,
+    "matchShare": 0.9971617786187322
+   },
+   "BA": {
+    "gradable": 3891,
+    "matches": 3870,
+    "mismatches": 21,
+    "notGradable": 380,
+    "total": 4271,
+    "matchShare": 0.9946029298380878
+   },
+   "CAT": {
+    "gradable": 1647,
+    "matches": 1621,
+    "mismatches": 26,
+    "notGradable": 359,
+    "total": 2006,
+    "matchShare": 0.98421372191864
+   },
+   "COF": {
+    "gradable": 2194,
+    "matches": 1894,
+    "mismatches": 300,
+    "notGradable": 506,
+    "total": 2700,
+    "matchShare": 0.8632634457611669
+   },
+   "COP": {
+    "gradable": 10,
+    "matches": 6,
+    "mismatches": 4,
+    "notGradable": 2,
+    "total": 12,
+    "matchShare": 0.6
+   },
+   "COST": {
+    "gradable": 1670,
+    "matches": 1660,
+    "mismatches": 10,
+    "notGradable": 259,
+    "total": 1929,
+    "matchShare": 0.9940119760479041
+   },
+   "CSCO": {
+    "gradable": 2769,
+    "matches": 2737,
+    "mismatches": 32,
+    "notGradable": 811,
+    "total": 3580,
+    "matchShare": 0.9884434814012278
+   },
+   "CVX": {
+    "gradable": 56,
+    "matches": 56,
+    "mismatches": 0,
+    "notGradable": 8,
+    "total": 64,
+    "matchShare": 1
+   },
+   "DAL": {
+    "gradable": 1781,
+    "matches": 1649,
+    "mismatches": 132,
+    "notGradable": 156,
+    "total": 1937,
+    "matchShare": 0.9258843346434588
+   },
+   "DASH": {
+    "gradable": 1124,
+    "matches": 1109,
+    "mismatches": 15,
+    "notGradable": 127,
+    "total": 1251,
+    "matchShare": 0.9866548042704626
+   },
+   "FCX": {
+    "gradable": 1969,
+    "matches": 1870,
+    "mismatches": 99,
+    "notGradable": 227,
+    "total": 2196,
+    "matchShare": 0.9497206703910615
+   },
+   "FSLR": {
+    "gradable": 3997,
+    "matches": 3976,
+    "mismatches": 21,
+    "notGradable": 514,
+    "total": 4511,
+    "matchShare": 0.9947460595446584
+   },
+   "GOOGL": {
+    "gradable": 2284,
+    "matches": 2277,
+    "mismatches": 7,
+    "notGradable": 604,
+    "total": 2888,
+    "matchShare": 0.9969352014010507
+   },
+   "GS": {
+    "gradable": 1581,
+    "matches": 1471,
+    "mismatches": 110,
+    "notGradable": 79,
+    "total": 1660,
+    "matchShare": 0.9304237824161923
+   },
+   "HD": {
+    "gradable": 1826,
+    "matches": 1811,
+    "mismatches": 15,
+    "notGradable": 241,
+    "total": 2067,
+    "matchShare": 0.9917853231106243
+   },
+   "IBM": {
+    "gradable": 942,
+    "matches": 935,
+    "mismatches": 7,
+    "notGradable": 206,
+    "total": 1148,
+    "matchShare": 0.9925690021231423
+   },
+   "INTC": {
+    "gradable": 3398,
+    "matches": 3344,
+    "mismatches": 54,
+    "notGradable": 587,
+    "total": 3985,
+    "matchShare": 0.9841082989994114
+   },
+   "JNJ": {
+    "gradable": 13,
+    "matches": 13,
+    "mismatches": 0,
+    "notGradable": 5,
+    "total": 18,
+    "matchShare": 1
+   },
+   "JPM": {
+    "gradable": 3518,
+    "matches": 3482,
+    "mismatches": 36,
+    "notGradable": 486,
+    "total": 4004,
+    "matchShare": 0.9897669130187606
+   },
+   "KMI": {
+    "gradable": 1240,
+    "matches": 1126,
+    "mismatches": 114,
+    "notGradable": 279,
+    "total": 1519,
+    "matchShare": 0.9080645161290323
+   },
+   "LIN": {
+    "gradable": 18,
+    "matches": 18,
+    "mismatches": 0,
+    "notGradable": 2,
+    "total": 20,
+    "matchShare": 1
+   },
+   "LLY": {
+    "gradable": 62,
+    "matches": 59,
+    "mismatches": 3,
+    "notGradable": 12,
+    "total": 74,
+    "matchShare": 0.9516129032258065
+   },
+   "LMT": {
+    "gradable": 2621,
+    "matches": 2607,
+    "mismatches": 14,
+    "notGradable": 671,
+    "total": 3292,
+    "matchShare": 0.9946585272796642
+   },
+   "LULU": {
+    "gradable": 1702,
+    "matches": 1680,
+    "mismatches": 22,
+    "notGradable": 370,
+    "total": 2072,
+    "matchShare": 0.9870740305522914
+   },
+   "MA": {
+    "gradable": 2701,
+    "matches": 2687,
+    "mismatches": 14,
+    "notGradable": 187,
+    "total": 2888,
+    "matchShare": 0.994816734542762
+   },
+   "META": {
+    "gradable": 2895,
+    "matches": 2882,
+    "mismatches": 13,
+    "notGradable": 1045,
+    "total": 3940,
+    "matchShare": 0.9955094991364422
+   },
+   "MRNA": {
+    "gradable": 969,
+    "matches": 961,
+    "mismatches": 8,
+    "notGradable": 152,
+    "total": 1121,
+    "matchShare": 0.9917440660474717
+   },
+   "MSFT": {
+    "gradable": 4355,
+    "matches": 4342,
+    "mismatches": 13,
+    "notGradable": 659,
+    "total": 5014,
+    "matchShare": 0.9970149253731343
+   },
+   "MU": {
+    "gradable": 1944,
+    "matches": 1931,
+    "mismatches": 13,
+    "notGradable": 352,
+    "total": 2296,
+    "matchShare": 0.9933127572016461
+   },
+   "NEE": {
+    "gradable": 0,
+    "matches": 0,
+    "mismatches": 0,
+    "notGradable": 0,
+    "total": 0,
+    "matchShare": null
+   },
+   "NFLX": {
+    "gradable": 5252,
+    "matches": 5223,
+    "mismatches": 29,
+    "notGradable": 1045,
+    "total": 6297,
+    "matchShare": 0.9944782939832445
+   },
+   "NKE": {
+    "gradable": 1986,
+    "matches": 1971,
+    "mismatches": 15,
+    "notGradable": 194,
+    "total": 2180,
+    "matchShare": 0.9924471299093656
+   },
+   "NVDA": {
+    "gradable": 2890,
+    "matches": 2873,
+    "mismatches": 17,
+    "notGradable": 711,
+    "total": 3601,
+    "matchShare": 0.9941176470588236
+   },
+   "PFE": {
+    "gradable": 8,
+    "matches": 8,
+    "mismatches": 0,
+    "notGradable": 8,
+    "total": 16,
+    "matchShare": 1
+   },
+   "PG": {
+    "gradable": 2232,
+    "matches": 2219,
+    "mismatches": 13,
+    "notGradable": 187,
+    "total": 2419,
+    "matchShare": 0.9941756272401434
+   },
+   "PLD": {
+    "gradable": 0,
+    "matches": 0,
+    "mismatches": 0,
+    "notGradable": 0,
+    "total": 0,
+    "matchShare": null
+   },
+   "PLTR": {
+    "gradable": 1537,
+    "matches": 1525,
+    "mismatches": 12,
+    "notGradable": 135,
+    "total": 1672,
+    "matchShare": 0.9921925829538061
+   },
+   "RCL": {
+    "gradable": 3042,
+    "matches": 3022,
+    "mismatches": 20,
+    "notGradable": 299,
+    "total": 3341,
+    "matchShare": 0.9934253780407627
+   },
+   "SMCI": {
+    "gradable": 2958,
+    "matches": 2824,
+    "mismatches": 134,
+    "notGradable": 371,
+    "total": 3329,
+    "matchShare": 0.9546991210277215
+   },
+   "T": {
+    "gradable": 3450,
+    "matches": 3392,
+    "mismatches": 58,
+    "notGradable": 630,
+    "total": 4080,
+    "matchShare": 0.9831884057971014
+   },
+   "TSLA": {
+    "gradable": 1525,
+    "matches": 1467,
+    "mismatches": 58,
+    "notGradable": 544,
+    "total": 2069,
+    "matchShare": 0.9619672131147541
+   },
+   "UNH": {
+    "gradable": 2950,
+    "matches": 2893,
+    "mismatches": 57,
+    "notGradable": 396,
+    "total": 3346,
+    "matchShare": 0.9806779661016949
+   },
+   "V": {
+    "gradable": 1888,
+    "matches": 1874,
+    "mismatches": 14,
+    "notGradable": 253,
+    "total": 2141,
+    "matchShare": 0.9925847457627118
+   },
+   "WMT": {
+    "gradable": 4826,
+    "matches": 4791,
+    "mismatches": 35,
+    "notGradable": 513,
+    "total": 5339,
+    "matchShare": 0.9927476170741815
+   }
+  },
+  "mismatchPatterns": [
+   {
+    "pattern": "balance|value_mismatch|Assets,LiabilitiesAndStockholdersEquity",
+    "count": 107,
+    "example": {
+     "valueId": "1045810|0001045810-11-000039|balance|1045810\\000104581011000039.ex-earningsrelease.htm|15|20|0",
+     "ticker": "NVDA",
+     "releaseAccession": "0001045810-11-000039",
+     "rowLabel": "Total assets",
+     "releaseValue": 4913614000,
+     "comparisons": [
+      {
+       "concept": "Assets",
+       "factValue": 4864424000,
+       "factAccession": "0001045810-11-000046",
+       "factFiled": "2011-08-25",
+       "match": false
+      },
+      {
+       "concept": "LiabilitiesAndStockholdersEquity",
+       "factValue": 4864424000,
+       "factAccession": "0001045810-11-000046",
+       "factFiled": "2011-08-25",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|NetIncomeLoss",
+    "count": 67,
+    "example": {
+     "valueId": "50863|0000050863-14-000029|income|50863\\000005086314000029.ex-earningsreleaseq12014.htm|32|19|0",
+     "ticker": "INTC",
+     "releaseAccession": "0000050863-14-000029",
+     "rowLabel": "NET INCOME",
+     "releaseValue": 1947000000,
+     "comparisons": [
+      {
+       "concept": "NetIncomeLoss",
+       "factValue": 1930000000,
+       "factAccession": "0000050863-14-000032",
+       "factFiled": "2014-04-25",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|StockholdersEquity",
+    "count": 40,
+    "example": {
+     "valueId": "1045810|0001045810-13-000029|balance|1045810\\000104581013000029.ex-q114pressrelease.htm|16|31|0",
+     "ticker": "NVDA",
+     "releaseAccession": "0001045810-13-000029",
+     "rowLabel": "Stockholders' equity",
+     "releaseValue": 4824184000,
+     "comparisons": [
+      {
+       "concept": "StockholdersEquity",
+       "factValue": 4824936000,
+       "factAccession": "0001045810-13-000054",
+       "factFiled": "2013-05-22",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|Liabilities",
+    "count": 34,
+    "example": {
+     "valueId": "1065280|0001193125-12-023436|balance|1065280\\000119312512023436.ex-d290258dex991.htm|18|32|0",
+     "ticker": "NFLX",
+     "releaseAccession": "0001193125-12-023436",
+     "rowLabel": "Total liabilities",
+     "releaseValue": 2417386000,
+     "comparisons": [
+      {
+       "concept": "Liabilities",
+       "factValue": 2426386000,
+       "factAccession": "0001193125-12-053009",
+       "factFiled": "2012-02-10",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|OtherLiabilitiesNoncurrent",
+    "count": 34,
+    "example": {
+     "valueId": "1045810|0001045810-11-000039|balance|1045810\\000104581011000039.ex-earningsrelease.htm|15|28|0",
+     "ticker": "NVDA",
+     "releaseAccession": "0001045810-11-000039",
+     "rowLabel": "Other long-term liabilities",
+     "releaseValue": 241353000,
+     "comparisons": [
+      {
+       "concept": "OtherLiabilitiesNoncurrent",
+       "factValue": 192163000,
+       "factAccession": "0001045810-11-000046",
+       "factFiled": "2011-08-25",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|LiabilitiesCurrent",
+    "count": 33,
+    "example": {
+     "valueId": "50863|0000050863-14-000029|balance|50863\\000005086314000029.ex-earningsreleaseq12014.htm|33|32|0",
+     "ticker": "INTC",
+     "releaseAccession": "0000050863-14-000029",
+     "rowLabel": "TOTAL CURRENT LIABILITIES",
+     "releaseValue": 13508000000,
+     "comparisons": [
+      {
+       "concept": "LiabilitiesCurrent",
+       "factValue": 13552000000,
+       "factAccession": "0000050863-14-000032",
+       "factFiled": "2014-04-25",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|IncomeTaxExpenseBenefit",
+    "count": 32,
+    "example": {
+     "valueId": "1065280|0001193125-12-023436|income|1065280\\000119312512023436.ex-d290258dex991.htm|16|25|3",
+     "ticker": "NFLX",
+     "releaseAccession": "0001193125-12-023436",
+     "rowLabel": "Provision for income taxes",
+     "releaseValue": 136883000,
+     "comparisons": [
+      {
+       "concept": "IncomeTaxExpenseBenefit",
+       "factValue": 133396000,
+       "factAccession": "0001193125-12-053009",
+       "factFiled": "2012-02-10",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|EarningsPerShareDiluted",
+    "count": 30,
+    "example": {
+     "valueId": "2488|0000002488-25-000163|income|2488\\000000248825000163.ex-q32025991.htm|6|28|0",
+     "ticker": "AMD",
+     "releaseAccession": "0000002488-25-000163",
+     "rowLabel": "Earnings from continuing operations - diluted",
+     "releaseValue": 0.71,
+     "comparisons": [
+      {
+       "concept": "EarningsPerShareDiluted",
+       "factValue": 0.75,
+       "factAccession": "0000002488-25-000166",
+       "factFiled": "2025-11-05",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|AssetsCurrent",
+    "count": 23,
+    "example": {
+     "valueId": "50863|0000050863-14-000065|balance|50863\\000005086314000065.ex-earningsreleaseq32014.htm|30|15|0",
+     "ticker": "INTC",
+     "releaseAccession": "0000050863-14-000065",
+     "rowLabel": "TOTAL CURRENT ASSETS",
+     "releaseValue": 27963000000,
+     "comparisons": [
+      {
+       "concept": "AssetsCurrent",
+       "factValue": 27509000000,
+       "factAccession": "0000050863-14-000069",
+       "factFiled": "2014-10-29",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|OtherAssetsNoncurrent",
+    "count": 23,
+    "example": {
+     "valueId": "50863|0000050863-14-000065|balance|50863\\000005086314000065.ex-earningsreleaseq32014.htm|30|22|0",
+     "ticker": "INTC",
+     "releaseAccession": "0000050863-14-000065",
+     "rowLabel": "Other long-term assets",
+     "releaseValue": 6394000000,
+     "comparisons": [
+      {
+       "concept": "OtherAssetsNoncurrent",
+       "factValue": 6370000000,
+       "factAccession": "0000050863-14-000069",
+       "factFiled": "2014-10-29",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|EarningsPerShareBasic",
+    "count": 23,
+    "example": {
+     "valueId": "2488|0000002488-25-000163|income|2488\\000000248825000163.ex-q32025991.htm|6|24|0",
+     "ticker": "AMD",
+     "releaseAccession": "0000002488-25-000163",
+     "rowLabel": "Earnings from continuing operations - basic",
+     "releaseValue": 0.72,
+     "comparisons": [
+      {
+       "concept": "EarningsPerShareBasic",
+       "factValue": 0.76,
+       "factAccession": "0000002488-25-000166",
+       "factFiled": "2025-11-05",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|WeightedAverageNumberOfDilutedSharesOutstanding",
+    "count": 23,
+    "example": {
+     "valueId": "320187|0000320187-12-000164|income|320187\\000032018712000164.ex-exhibit991.htm|14|37|0",
+     "ticker": "NKE",
+     "releaseAccession": "0000320187-12-000164",
+     "rowLabel": "Diluted",
+     "releaseValue": 456600000,
+     "comparisons": [
+      {
+       "concept": "WeightedAverageNumberOfDilutedSharesOutstanding",
+       "factValue": 913100000,
+       "factAccession": "0001193125-13-008172",
+       "factFiled": "2013-01-09",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+    "count": 22,
+    "example": {
+     "valueId": "50863|0000050863-14-000029|income|50863\\000005086314000029.ex-earningsreleaseq12014.htm|32|17|0",
+     "ticker": "INTC",
+     "releaseAccession": "0000050863-14-000029",
+     "rowLabel": "INCOME BEFORE TAXES",
+     "releaseValue": 2693000000,
+     "comparisons": [
+      {
+       "concept": "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
+       "factValue": 2670000000,
+       "factAccession": "0000050863-14-000032",
+       "factFiled": "2014-04-25",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|WeightedAverageNumberOfSharesOutstandingBasic",
+    "count": 20,
+    "example": {
+     "valueId": "1018724|0001193125-13-409933|income|1018724\\000119312513409933.ex-d614066dex991.htm|22|37|2",
+     "ticker": "AMZN",
+     "releaseAccession": "0001193125-13-409933",
+     "rowLabel": "Diluted",
+     "releaseValue": 464000000,
+     "comparisons": [
+      {
+       "concept": "WeightedAverageNumberOfSharesOutstandingBasic",
+       "factValue": 456000000,
+       "factAccession": "0001445305-13-002495",
+       "factFiled": "2013-10-25",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "cashflow|value_mismatch|NetIncomeLoss",
+    "count": 19,
+    "example": {
+     "valueId": "1065280|0001193125-12-023436|cashflow|1065280\\000119312512023436.ex-d290258dex991.htm|20|5|3",
+     "ticker": "NFLX",
+     "releaseAccession": "0001193125-12-023436",
+     "rowLabel": "Net income",
+     "releaseValue": 231639000,
+     "comparisons": [
+      {
+       "concept": "NetIncomeLoss",
+       "factValue": 226126000,
+       "factAccession": "0001193125-12-053009",
+       "factFiled": "2012-02-10",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|OperatingIncomeLoss",
+    "count": 19,
+    "example": {
+     "valueId": "50863|0000050863-14-000029|income|50863\\000005086314000029.ex-earningsreleaseq12014.htm|32|14|0",
+     "ticker": "INTC",
+     "releaseAccession": "0000050863-14-000029",
+     "rowLabel": "OPERATING INCOME",
+     "releaseValue": 2533000000,
+     "comparisons": [
+      {
+       "concept": "OperatingIncomeLoss",
+       "factValue": 2510000000,
+       "factAccession": "0000050863-14-000032",
+       "factFiled": "2014-04-25",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+    "count": 18,
+    "example": {
+     "valueId": "731766|0000731766-17-000004|balance|731766\\000073176617000004.ex-q42016exhibit991.htm|40|19|0",
+     "ticker": "UNH",
+     "releaseAccession": "0000731766-17-000004",
+     "rowLabel": "Equity",
+     "releaseValue": 38397000000,
+     "comparisons": [
+      {
+       "concept": "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+       "factValue": 38177000000,
+       "factAccession": "0000731766-17-000009",
+       "factFiled": "2017-02-08",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|RetainedEarningsAccumulatedDeficit",
+    "count": 17,
+    "example": {
+     "valueId": "50863|0000050863-14-000029|balance|50863\\000005086314000029.ex-earningsreleaseq12014.htm|33|41|0",
+     "ticker": "INTC",
+     "releaseAccession": "0000050863-14-000029",
+     "rowLabel": "Retained earnings",
+     "releaseValue": 34733000000,
+     "comparisons": [
+      {
+       "concept": "RetainedEarningsAccumulatedDeficit",
+       "factValue": 34716000000,
+       "factAccession": "0000050863-14-000032",
+       "factFiled": "2014-04-25",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|NetIncomeLossAvailableToCommonStockholdersBasic",
+    "count": 15,
+    "example": {
+     "valueId": "886982|0000886982-26-000294|income|886982\\000088698226000294.ex-a2q26gsearningsresults.htm|53|35|1",
+     "ticker": "GS",
+     "releaseAccession": "0000886982-26-000294",
+     "rowLabel": "Net earnings to common",
+     "releaseValue": 5403000000,
+     "comparisons": [
+      {
+       "concept": "NetIncomeLossAvailableToCommonStockholdersBasic",
+       "factValue": 6399000000,
+       "factAccession": "0000886982-26-000297",
+       "factFiled": "2026-08-03",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|DeferredTaxLiabilitiesNoncurrent",
+    "count": 14,
+    "example": {
+     "valueId": "50863|0000050863-14-000065|balance|50863\\000005086314000065.ex-earningsreleaseq32014.htm|30|35|0",
+     "ticker": "INTC",
+     "releaseAccession": "0000050863-14-000065",
+     "rowLabel": "Long-term deferred tax liabilities",
+     "releaseValue": 4029000000,
+     "comparisons": [
+      {
+       "concept": "DeferredTaxLiabilitiesNoncurrent",
+       "factValue": 3551000000,
+       "factAccession": "0000050863-14-000069",
+       "factFiled": "2014-10-29",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|NoninterestExpense",
+    "count": 14,
+    "example": {
+     "valueId": "886982|0000886982-26-000294|income|886982\\000088698226000294.ex-a2q26gsearningsresults.htm|53|29|1",
+     "ticker": "GS",
+     "releaseAccession": "0000886982-26-000294",
+     "rowLabel": "Total operating expenses",
+     "releaseValue": 10426000000,
+     "comparisons": [
+      {
+       "concept": "NoninterestExpense",
+       "factValue": 11673000000,
+       "factAccession": "0000886982-26-000297",
+       "factFiled": "2026-08-03",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|PropertyPlantAndEquipmentNet",
+    "count": 13,
+    "example": {
+     "valueId": "1045810|0001045810-11-000006|balance|1045810\\000104581011000006.ex-earningrelease.htm|19|10|0",
+     "ticker": "NVDA",
+     "releaseAccession": "0001045810-11-000006",
+     "rowLabel": "Property and equipment, net",
+     "releaseValue": 614431000,
+     "comparisons": [
+      {
+       "concept": "PropertyPlantAndEquipmentNet",
+       "factValue": 568857000,
+       "factAccession": "0001045810-11-000015",
+       "factFiled": "2011-03-16",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|InterestIncomeExpenseNet",
+    "count": 13,
+    "example": {
+     "valueId": "886982|0000886982-26-000294|income|886982\\000088698226000294.ex-a2q26gsearningsresults.htm|53|14|1",
+     "ticker": "GS",
+     "releaseAccession": "0000886982-26-000294",
+     "rowLabel": "Net interest income",
+     "releaseValue": 3555000000,
+     "comparisons": [
+      {
+       "concept": "InterestIncomeExpenseNet",
+       "factValue": 3954000000,
+       "factAccession": "0000886982-26-000297",
+       "factFiled": "2026-08-03",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|IncomeLossFromContinuingOperationsPerDilutedShare",
+    "count": 12,
+    "example": {
+     "valueId": "927628|0000927628-16-000126|income|927628\\000092762816000126.ex-q42015earningsrelease-ex992.htm|2|29|1",
+     "ticker": "COF",
+     "releaseAccession": "0000927628-16-000126",
+     "rowLabel": "Net income from continuing operations",
+     "releaseValue": 1.99,
+     "comparisons": [
+      {
+       "concept": "IncomeLossFromContinuingOperationsPerDilutedShare",
+       "factValue": 7,
+       "factAccession": "0000927628-16-000140",
+       "factFiled": "2016-02-25",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|OtherNoninterestExpense",
+    "count": 12,
+    "example": {
+     "valueId": "886982|0000886982-26-000294|income|886982\\000088698226000294.ex-a2q26gsearningsresults.htm|53|28|1",
+     "ticker": "GS",
+     "releaseAccession": "0000886982-26-000294",
+     "rowLabel": "Other expenses",
+     "releaseValue": 602000000,
+     "comparisons": [
+      {
+       "concept": "OtherNoninterestExpense",
+       "factValue": 559000000,
+       "factAccession": "0000886982-26-000297",
+       "factFiled": "2026-08-03",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|AccumulatedOtherComprehensiveIncomeLossNetOfTax",
+    "count": 11,
+    "example": {
+     "valueId": "831259|0000831259-10-000004|balance|831259\\000083125910000004.ex-ex99-1.htm|55|48|0",
+     "ticker": "FCX",
+     "releaseAccession": "0000831259-10-000004",
+     "rowLabel": "Accumulated other comprehensive loss",
+     "releaseValue": -258000000,
+     "comparisons": [
+      {
+       "concept": "AccumulatedOtherComprehensiveIncomeLossNetOfTax",
+       "factValue": -273000000,
+       "factAccession": "0000831259-10-000010",
+       "factFiled": "2010-02-26",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|NoninterestIncome",
+    "count": 11,
+    "example": {
+     "valueId": "886982|0000886982-26-000294|income|886982\\000088698226000294.ex-a2q26gsearningsresults.htm|53|10|1",
+     "ticker": "GS",
+     "releaseAccession": "0000886982-26-000294",
+     "rowLabel": "Total non-interest revenues",
+     "releaseValue": 13672000000,
+     "comparisons": [
+      {
+       "concept": "NoninterestIncome",
+       "factValue": 16384000000,
+       "factAccession": "0000886982-26-000297",
+       "factFiled": "2026-08-03",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "income|value_mismatch|OccupancyNet",
+    "count": 11,
+    "example": {
+     "valueId": "886982|0000886982-26-000294|income|886982\\000088698226000294.ex-a2q26gsearningsresults.htm|53|26|1",
+     "ticker": "GS",
+     "releaseAccession": "0000886982-26-000294",
+     "rowLabel": "Occupancy",
+     "releaseValue": 254000000,
+     "comparisons": [
+      {
+       "concept": "OccupancyNet",
+       "factValue": 244000000,
+       "factAccession": "0000886982-26-000297",
+       "factFiled": "2026-08-03",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|LiabilitiesNoncurrent",
+    "count": 10,
+    "example": {
+     "valueId": "27904|0000027904-26-000008|balance|27904\\000002790426000008.ex-deltaairlinesannouncesdece.htm|9|50|0",
+     "ticker": "DAL",
+     "releaseAccession": "0000027904-26-000008",
+     "rowLabel": "Total noncurrent liabilities",
+     "releaseValue": 32765000000,
+     "comparisons": [
+      {
+       "concept": "LiabilitiesNoncurrent",
+       "factValue": 32840000000,
+       "factAccession": "0000027904-26-000013",
+       "factFiled": "2026-02-11",
+       "match": false
+      }
+     ]
+    }
+   },
+   {
+    "pattern": "balance|value_mismatch|OtherAssetsCurrent",
+    "count": 10,
+    "example": {
+     "valueId": "50863|0000050863-14-000065|balance|50863\\000005086314000065.ex-earningsreleaseq32014.htm|30|14|0",
+     "ticker": "INTC",
+     "releaseAccession": "0000050863-14-000065",
+     "rowLabel": "Other current assets",
+     "releaseValue": 2439000000,
+     "comparisons": [
+      {
+       "concept": "OtherAssetsCurrent",
+       "factValue": 2479000000,
+       "factAccession": "0000050863-14-000069",
+       "factFiled": "2014-10-29",
+       "match": false
+      }
+     ]
+    }
+   }
+  ],
+  "notGradableReasons": {
+   "fourth_quarter_three_month": 8525,
+   "incomplete_concept_coverage": 2482,
+   "missing_printed_value": 1591,
+   "mixed_sign_convention": 493,
+   "no_such_fact": 4946,
+   "release_not_paired": 177
+  }
+ },
+ "golden": {
+  "total": 113,
+  "passed": 113,
+  "failed": [],
+  "documents": [
+   {
+    "id": "AAPL26",
+    "total": 21,
+    "passed": 21,
+    "failed": []
+   },
+   {
+    "id": "NVDA26",
+    "total": 19,
+    "passed": 19,
+    "failed": []
+   },
+   {
+    "id": "BA26",
+    "total": 18,
+    "passed": 18,
+    "failed": []
+   },
+   {
+    "id": "DASH26",
+    "total": 18,
+    "passed": 18,
+    "failed": []
+   },
+   {
+    "id": "WMT26",
+    "total": 20,
+    "passed": 20,
+    "failed": []
+   },
+   {
+    "id": "JPM26",
+    "total": 17,
+    "passed": 17,
+    "failed": []
+   }
+  ]
+ },
+ "pointInTime": {
+  "printedValues": {
+   "total": 283557,
+   "violations": []
+  },
+  "answerKeyFacts": {
+   "facts": 139539,
+   "violations": []
+  }
+ },
+ "errors": [],
+ "artifacts": {
+  "statements": {
+   "path": "D:\\research\\alpha-engine\\engine\\flash\\statements.jsonl",
+   "bytes": 20479744,
+   "sha256": "b6f8e83a9cf752078d6ec1a76eed1898d3ed6435a82e1726c784a055900176cd"
+  },
+  "values": {
+   "path": "D:\\research\\alpha-engine\\engine\\flash\\values.jsonl",
+   "bytes": 358156079,
+   "sha256": "9630456dc8dc34f0c42d0ec3e07e0b6f74dd858242a1c1f488efe02380a6ccea"
+  },
+  "grades": {
+   "path": "D:\\research\\alpha-engine\\engine\\flash\\grades.jsonl",
+   "bytes": 64092966,
+   "sha256": "c8e58b4f8208e2482a16fe2093b25050341ad30e6b02945f179f4842d37f7f4d"
+  },
+  "residual": {
+   "path": "D:\\research\\alpha-engine\\engine\\flash\\residual.jsonl",
+   "bytes": 95279132,
+   "sha256": "117332243a6b1137ffe92b338c3762d8f2b53dbfa6bed82d7ec268d6de75d731"
+  }
+ },
+ "knownLimits": [
+  "Only HTML EX-99 exhibits in the local cache are processed; page images and 8-K-body text are out of scope",
+  "Non-GAAP, guidance, segment and comparison/change tables are excluded",
+  "Rows without a supported answer-key match remain in residual.jsonl; percent/ratio rows are not answer-keyed in this version",
+  "Fourth-quarter three-month values and releases without a periodic pairing are not gradable",
+  "No model calls, production writes or schema changes"
+ ]
+}
