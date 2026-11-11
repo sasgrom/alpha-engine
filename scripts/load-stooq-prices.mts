@@ -20,6 +20,8 @@ const DIR = argValue("--dir");
 const ARCHIVE = DIR ?? argValue("--file") ?? "D:/stooq data 102726/d_us_txt.zip";
 const REFRESH = process.argv.includes("--refresh");
 const DRY_RUN = process.argv.includes("--dry-run");
+// --accept T1,T2: held series the owner reviewed and accepted in the archive's version (record the decision in the summary)
+const ACCEPT = new Set((argValue("--accept") ?? "").split(",").map((ticker) => ticker.trim().toUpperCase()).filter(Boolean));
 const sha256 = (data: string | Buffer) => createHash("sha256").update(data).digest("hex");
 const number = (value: unknown) => (value === null || value === undefined ? null : Number(value));
 const toBar = (row: any): PriceBar => ({ date: row.d, open: number(row.open), high: number(row.high), low: number(row.low), close: number(row.close), adjClose: number(row.adjClose), volume: number(row.volume) });
@@ -96,9 +98,9 @@ async function main() {
     let rowsInserted = 0, rowsUpdated = 0;
     for (const [ticker, item] of [...chosen].sort(([a], [b]) => a.localeCompare(b))) {
       const cik = wanted.get(ticker)!;
-      const comparison = compareArchiveBars(await storedBars(db, cik), item.bars);
+      const comparison = compareArchiveBars(await storedBars(db, cik), item.bars, { accept: REFRESH && ACCEPT.has(ticker) });
       comparisons.set(ticker, comparison);
-      const accepted = comparison.kind === "new" || comparison.kind === "identical" || (REFRESH && (comparison.kind === "readjusted" || comparison.kind === "corrected"));
+      const accepted = comparison.kind === "new" || comparison.kind === "identical" || (REFRESH && (comparison.kind === "readjusted" || comparison.kind === "corrected" || Boolean(comparison.accepted)));
       const rows = accepted || (REFRESH && comparison.kind === "revised") ? comparison.rows : [];
       if (!DRY_RUN && rows.length) await upsertBars(cik, ticker, rows, "stooq");
       const updated = rows.length - Math.min(rows.length, comparison.kind === "new" ? rows.length : comparison.newDates);
@@ -143,7 +145,7 @@ async function main() {
       afterCount = Number(countRows[0].rowsTotal);
     }
 
-    const byKind = (kind: string) => [...comparisons].filter(([, value]) => value.kind === kind).map(([ticker, value]) => ({ ticker, pattern: value.pattern, newDatesAppended: value.newDatesAppended, medianRatio: value.factor, earliestRatio: value.earliestRatio, largestStep: value.largestStep, differingBars: value.differing, firstDiffering: value.firstDiffering, lastDiffering: value.lastDiffering, closeViolations: value.closeViolations, newDates: value.newDates }));
+    const byKind = (kind: string) => [...comparisons].filter(([, value]) => value.kind === kind).map(([ticker, value]) => ({ ticker, pattern: value.pattern, newDatesAppended: value.newDatesAppended, acceptedByOwner: value.accepted ?? false, medianRatio: value.factor, earliestRatio: value.earliestRatio, largestStep: value.largestStep, differingBars: value.differing, firstDiffering: value.firstDiffering, lastDiffering: value.lastDiffering, closeViolations: value.closeViolations, newDates: value.newDates }));
     const held = perTicker.filter((row) => !row.accepted).map((row) => row.ticker);
     const [missingGics]: any = await db.execute(sql`SELECT cik, ticker FROM companies WHERE sector IS NULL OR sector = "" ORDER BY ticker`);
     const unmatched = [...requestedTickers].filter((ticker) => !chosen.has(ticker)).map((ticker) => ({ ticker, reason: candidates.has(ticker) ? "Matching file holds no usable bars" : "No matching entry in the archive" }));
@@ -153,7 +155,7 @@ async function main() {
       schemaVersion: 2,
       generatedAt: new Date().toISOString(),
       loadStartedAt: startedAt,
-      mode: { refresh: REFRESH, dryRun: DRY_RUN },
+      mode: { refresh: REFRESH, dryRun: DRY_RUN, acceptedByOwner: [...ACCEPT].sort() },
       archive: identity,
       keyConvention: "SPY keeps cik=0; sector ETFs use -1001 through -1011. Second listings GOOG/FOX/NWS use -2001/-2002/-2003 because the bar key is (cik,date,source); primary listings retain the shared SEC CIK. Negative keys are local price-series identifiers, not SEC CIKs, and require no schema change",
       adjustmentPolicy: "Stooq bars are adjusted for splits and dividends as of the archive date, and a newer archive may also carry dividend adjustments an older one lacked. With --refresh a stored series is replaced by the archive when the stored closes differ from it by one factor (a split or dividend after the stored archive's date), by dividend steps (archive price never above the stored one, the ratio only rising towards the present, no one-day step above 15%), or not at all (corrected: open/high/low/volume only). Any other difference is held: the series keeps its stored bars and receives no new dates until reviewed. Stored dates missing from the archive are kept, never deleted",

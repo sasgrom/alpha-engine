@@ -96,6 +96,8 @@ export interface ArchiveComparison {
   closeViolations: number;
   /** revised only: whether the new dates were appended because the latest common closes agree */
   newDatesAppended?: boolean;
+  /** revised only: the owner accepted the archive's version of this series (--accept) */
+  accepted?: boolean;
   firstDiffering: string | null;
   lastDiffering: string | null;
   rows: PriceBar[];
@@ -110,7 +112,8 @@ const sameBar = (a: PriceBar, b: PriceBar) => (["open", "high", "low", "close", 
 /** Prices in the archive carry at most four decimals, so a ratio of two cheap prices is only known to about 1e-4 / price. */
 const closeTolerance = (stored: number, archive: number) => 2e-4 + 2e-4 / Math.min(stored, archive);
 
-export function compareArchiveBars(stored: PriceBar[], archive: PriceBar[]): ArchiveComparison {
+/** `accept`: the owner reviewed a series that would be held and accepted the archive's version of it. */
+export function compareArchiveBars(stored: PriceBar[], archive: PriceBar[], options: { accept?: boolean } = {}): ArchiveComparison {
   const storedByDate = new Map(stored.map((bar) => [bar.date, bar]));
   const archiveDates = new Set(archive.map((bar) => bar.date));
   const storedOnlyDates = stored.filter((bar) => !archiveDates.has(bar.date)).map((bar) => bar.date).sort();
@@ -149,6 +152,7 @@ export function compareArchiveBars(stored: PriceBar[], archive: PriceBar[]): Arc
   }
   if (largestStep > MAX_DIVIDEND_STEP) dividendPattern = false;
   if (dividendPattern) return { ...base, kind: "readjusted", pattern: "dividend steps", factor, largestStep, closeViolations, rows };
+  if (options.accept) return { ...base, kind: "revised", pattern: null, factor, largestStep, closeViolations, accepted: true, rows };
   // Held: the stored history stays. New dates are still added when the latest common closes agree, so no seam appears.
   const recent = pairs.slice(-RECENT_AGREEMENT);
   const recentAgree = recent.length === RECENT_AGREEMENT && recent.every((pair) => Math.abs(pair.after / pair.before - 1) <= closeTolerance(pair.before, pair.after));

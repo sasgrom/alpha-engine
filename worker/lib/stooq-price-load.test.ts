@@ -111,6 +111,15 @@ describe("Stooq price loading", () => {
       expect(result.rows).toEqual([]);
     });
 
+    it("writes the archive's whole version of a held series only when the owner accepted it", () => {
+      const long = Array.from({ length: 20 }, (_, index) => bar(`2026-09-${String(index + 1).padStart(2, "0")}`, 100 + index));
+      const archive = long.map((row, index) => bar(row.date, row.close * (index < 10 ? 0.5 : 1)));
+      expect(compareArchiveBars(long, archive).rows).toEqual([]);
+      const accepted = compareArchiveBars(long, [...archive, bar("2026-10-01", 130)], { accept: true });
+      expect(accepted).toMatchObject({ kind: "revised", accepted: true });
+      expect(accepted.rows).toHaveLength(11);
+    });
+
     it("appends the new dates of a held series when its latest twenty common closes agree", () => {
       const long = Array.from({ length: 40 }, (_, index) => bar(`2026-${String(7 + Math.floor(index / 20)).padStart(2, "0")}-${String(1 + (index % 20)).padStart(2, "0")}`, 100 + index));
       const archive = long.map((row, index) => (index < 10 ? bar(row.date, row.close * (index % 2 ? 1.2 : 0.8)) : row));
