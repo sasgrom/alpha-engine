@@ -18,6 +18,13 @@ Today `filings.items` is filled only from the "recent" block of the SEC submissi
 (`api/services/edgar.ts:161`), so the earnings flag is mostly missing before 2019 and absent before
 2013, and no acceptance time is stored anywhere.
 
+## LLM use
+
+None. Every step is ordinary code: SEC metadata requests, string matching on cached documents and
+date arithmetic. The `text_rule` flag is a plain text search, not a model judgment. Do not send
+filings to any model, cloud or local. Do not read cached filings into the agent session, except a
+handful of small samples needed as unit-test fixtures; the script does the bulk work.
+
 ## Inputs
 
 - Local MySQL `filings` (51 CIKs; 10-Q 3,380, 10-K 1,097, 8-K 17,320) and `documents`.

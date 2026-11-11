@@ -9,6 +9,11 @@ market, and for each sector. Only 55 tickers are loaded today. The owner's archi
 `D:\stooq data 102726\d_us_txt.zip` (Stooq daily bulk file, 13,289 US stocks and ETFs, through
 2026-10-26) has the rest and has never been loaded.
 
+## LLM use
+
+None. The task is unzip, parse, upsert and count. Do not open price files in the agent session
+beyond a few header lines for test fixtures; the script does the bulk work.
+
 ## Inputs
 
 - `D:\stooq data 102726\d_us_txt.zip`. Entries look like

@@ -149,10 +149,23 @@ Research-50, local MySQL and caches, read-only.
 Known limit: both the 50-company list and the price archive contain only companies that exist
 today, so historical results describe survivors. Step 5 must state this next to every result.
 
-## 3. Decision log
+## 3. Working rules
+
+- **Who does what.** The owner decides. Claude designs and writes the task specs, including any
+  instructions for the local model and the rules for grading its output. Kimi Code writes and runs
+  code to those specs. The local model (qwen3.5:9b on Ollama) does the bulk reading work.
+- **Cost rule.** No paid cloud model processes documents in bulk. Ordinary code comes first; the
+  local model is used only for what code cannot do, on narrow questions with a fixed list of
+  allowed answers. Kimi Code's own model is for writing code, not for reading filings.
+- **Every task spec states its LLM use:** none, or local model only with the exact instructions
+  attached. Instructions for the local model are versioned and accepted only after automatic
+  grading on real documents.
+
+## 4. Decision log
 
 | Date | Decision | Source |
 |---|---|---|
+| 2026-11-10 | Bulk document work runs as code or on the local model, never on a paid cloud model; Claude writes the local-model instructions | owner |
 | 2026-11-10 | Engine is analysis only; trading logic lives in later "gearbox" modules | owner |
 | 2026-11-10 | Target: the stock's own direction plus value-band probabilities; SPY is not a benchmark | owner |
 | 2026-11-10 | Window: earnings release → day before next earnings release; update at the 10-Q/10-K | owner |
@@ -164,7 +177,7 @@ today, so historical results describe survivors. Step 5 must state this next to 
 | 2026-11-10 | Start with the 50; tone / options / 13F / expectations are experimental and gated | owner |
 | 2026-11-10 | Prep work goes to Kimi Code as spec files under `docs/engine/tasks/` | owner |
 
-## 4. Open items for the next steps
+## 5. Open items for the next steps
 
 - Step 2: which numbers to extract from a press release, how extraction is graded against the
   later 10-Q/10-K, sector definition and sector return series, exact σ definition.
