@@ -35,8 +35,9 @@ describe("OptionHypothesisLedger", () => {
   it("keeps a complete, uniquely identified evidence registry", () => {
     expect(optionHypotheses).toHaveLength(22);
     expect(new Set(optionHypotheses.map((item) => item.id)).size).toBe(22);
-    expect(optionHypotheses.find((item) => item.id === "atm-iv")?.evidence).toHaveLength(3);
+    expect(optionHypotheses.find((item) => item.id === "atm-iv")?.evidence).toHaveLength(4);
     expect(latestEvidence(optionHypotheses.find((item) => item.id === "atm-iv")!).kind).toBe("supported");
+    expect(latestEvidence(optionHypotheses.find((item) => item.id === "atm-iv")!).date).toBe("2026-11-11");
     expect(latestEvidence(optionHypotheses.find((item) => item.id === "expected-move")!).kind).toBe("supported");
     expect(latestEvidence(optionHypotheses.find((item) => item.id === "term-slope")!).kind).toBe("refuted");
     expect(latestEvidence(optionHypotheses.find((item) => item.id === "skew-25")!).kind).toBe("refuted");
