@@ -1,0 +1,2910 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-11T11:14:20.707Z",
+ "status": "pilot_complete",
+ "codeCommit": "2b8cbda881612e75475153a410878b693629cb6c",
+ "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+ "eligibleCompanies": 446,
+ "pilotCompanies": 20,
+ "completedCompanies": 20,
+ "counts": {
+  "filings": 11534,
+  "quarters": 1750,
+  "releases": 2116,
+  "bytesDownloaded": 4721857804,
+  "bytesOnDisk": 4721857804,
+  "elapsedSeconds": 1169.1280000000002,
+  "cacheHits": 20,
+  "processedThisRun": 0,
+  "wallSecondsThisRun": 18.741
+ },
+ "overall": {
+  "pass": true,
+  "issues": [],
+  "checks": {
+   "filingsTotal": 11534,
+   "acceptedSince2004": {
+    "total": 11534,
+    "present": 11534,
+    "share": 1
+   },
+   "itemLists8k": {
+    "total": 9717,
+    "present": 9717,
+    "share": 1
+   },
+   "companyYearOutliers": [
+    {
+     "companyYear": "C-PR|2009",
+     "count": 8
+    },
+    {
+     "companyYear": "C-PR|2010",
+     "count": 6
+    },
+    {
+     "companyYear": "C-PR|2012",
+     "count": 6
+    },
+    {
+     "companyYear": "C-PR|2013",
+     "count": 7
+    },
+    {
+     "companyYear": "C-PR|2014",
+     "count": 9
+    },
+    {
+     "companyYear": "MET-PF|2018",
+     "count": 8
+    },
+    {
+     "companyYear": "MET-PF|2005",
+     "count": 6
+    },
+    {
+     "companyYear": "MET-PF|2006",
+     "count": 7
+    },
+    {
+     "companyYear": "MET-PF|2007",
+     "count": 6
+    },
+    {
+     "companyYear": "MET-PF|2008",
+     "count": 8
+    },
+    {
+     "companyYear": "MET-PF|2010",
+     "count": 7
+    },
+    {
+     "companyYear": "MET-PF|2011",
+     "count": 6
+    },
+    {
+     "companyYear": "MET-PF|2019",
+     "count": 8
+    },
+    {
+     "companyYear": "MET-PF|2020",
+     "count": 8
+    },
+    {
+     "companyYear": "MET-PF|2021",
+     "count": 8
+    },
+    {
+     "companyYear": "MET-PF|2022",
+     "count": 8
+    },
+    {
+     "companyYear": "MET-PF|2012",
+     "count": 10
+    },
+    {
+     "companyYear": "MET-PF|2013",
+     "count": 6
+    },
+    {
+     "companyYear": "MET-PF|2014",
+     "count": 8
+    },
+    {
+     "companyYear": "MET-PF|2015",
+     "count": 7
+    },
+    {
+     "companyYear": "MET-PF|2016",
+     "count": 8
+    },
+    {
+     "companyYear": "MET-PF|2017",
+     "count": 7
+    },
+    {
+     "companyYear": "BNY-PK|2008",
+     "count": 8
+    },
+    {
+     "companyYear": "BNY-PK|2009",
+     "count": 9
+    },
+    {
+     "companyYear": "BNY-PK|2010",
+     "count": 8
+    },
+    {
+     "companyYear": "BNY-PK|2011",
+     "count": 10
+    },
+    {
+     "companyYear": "BNY-PK|2012",
+     "count": 11
+    },
+    {
+     "companyYear": "BNY-PK|2013",
+     "count": 8
+    },
+    {
+     "companyYear": "BNY-PK|2015",
+     "count": 6
+    },
+    {
+     "companyYear": "WFC-PZ|2018",
+     "count": 7
+    },
+    {
+     "companyYear": "WFC-PZ|2009",
+     "count": 7
+    },
+    {
+     "companyYear": "MER-PK|2013",
+     "count": 6
+    },
+    {
+     "companyYear": "PRS|2025",
+     "count": 7
+    },
+    {
+     "companyYear": "PRS|2026",
+     "count": 9
+    },
+    {
+     "companyYear": "PRS|2007",
+     "count": 6
+    },
+    {
+     "companyYear": "PRS|2008",
+     "count": 6
+    },
+    {
+     "companyYear": "PRS|2011",
+     "count": 6
+    },
+    {
+     "companyYear": "PRS|2012",
+     "count": 8
+    },
+    {
+     "companyYear": "PRS|2014",
+     "count": 7
+    },
+    {
+     "companyYear": "PRS|2015",
+     "count": 6
+    },
+    {
+     "companyYear": "HBANZ|2025",
+     "count": 6
+    },
+    {
+     "companyYear": "HBANZ|2008",
+     "count": 6
+    },
+    {
+     "companyYear": "KEY-PL|2008",
+     "count": 6
+    },
+    {
+     "companyYear": "AES|2006",
+     "count": 6
+    },
+    {
+     "companyYear": "AES|2007",
+     "count": 6
+    },
+    {
+     "companyYear": "STT-PG|2009",
+     "count": 6
+    },
+    {
+     "companyYear": "STT-PG|2010",
+     "count": 6
+    },
+    {
+     "companyYear": "ELV|2014",
+     "count": 6
+    },
+    {
+     "companyYear": "ELV|2015",
+     "count": 6
+    },
+    {
+     "companyYear": "PNC|2017",
+     "count": 12
+    },
+    {
+     "companyYear": "PNC|2018",
+     "count": 9
+    },
+    {
+     "companyYear": "PNC|2019",
+     "count": 10
+    },
+    {
+     "companyYear": "PNC|2020",
+     "count": 8
+    },
+    {
+     "companyYear": "PNC|2021",
+     "count": 8
+    },
+    {
+     "companyYear": "PNC|2022",
+     "count": 8
+    },
+    {
+     "companyYear": "PNC|2024",
+     "count": 6
+    },
+    {
+     "companyYear": "PNC|2007",
+     "count": 18
+    },
+    {
+     "companyYear": "PNC|2005",
+     "count": 17
+    },
+    {
+     "companyYear": "PNC|2006",
+     "count": 17
+    },
+    {
+     "companyYear": "PNC|2008",
+     "count": 13
+    },
+    {
+     "companyYear": "PNC|2009",
+     "count": 16
+    },
+    {
+     "companyYear": "PNC|2010",
+     "count": 19
+    },
+    {
+     "companyYear": "PNC|2011",
+     "count": 15
+    },
+    {
+     "companyYear": "PNC|2012",
+     "count": 16
+    },
+    {
+     "companyYear": "PNC|2013",
+     "count": 15
+    },
+    {
+     "companyYear": "PNC|2014",
+     "count": 13
+    },
+    {
+     "companyYear": "PNC|2015",
+     "count": 12
+    },
+    {
+     "companyYear": "PNC|2016",
+     "count": 11
+    }
+   ],
+   "periodicAmendments": {
+    "filings": 67,
+    "linkedToQuarters": 67,
+    "amendmentOnlyFilings": 0,
+    "amendmentOnlyPeriods": []
+   },
+   "quarters": {
+    "total": 1750,
+    "originalPeriodicRows": 1750,
+    "uniqueCompanyPeriods": 1750,
+    "duplicateCompanyPeriods": 0,
+    "originalsSince2005": 1750,
+    "rowsSince2005": 1750,
+    "missingOriginalAccessionsSince2005": [],
+    "withSeparateRelease": 1663,
+    "shareWithSeparateRelease": 0.9502857142857143,
+    "lagDays": {
+     "min": 0,
+     "median": 18,
+     "p90": 38,
+     "max": 176,
+     "negative": 0
+    },
+    "nonIncreasingNextPublications": [],
+    "windowsUnder20": [
+     {
+      "cik": 874761,
+      "ticker": "AES",
+      "fiscalPeriodEnd": "2005-09-30",
+      "firstPublicationEt": "2006-01-19T06:11:51",
+      "nextFirstPublicationEt": "2006-01-19T06:13:49",
+      "calendarDays": 0
+     }
+    ],
+    "windowsOver120": [
+     {
+      "cik": 895421,
+      "ticker": "MS-PQ",
+      "fiscalPeriodEnd": "2008-11-30",
+      "firstPublicationEt": "2008-12-17T08:00:48",
+      "nextFirstPublicationEt": "2009-04-22T08:02:25",
+      "calendarDays": 126
+     },
+     {
+      "cik": 874761,
+      "ticker": "AES",
+      "fiscalPeriodEnd": "2005-06-30",
+      "firstPublicationEt": "2005-07-27T17:00:53",
+      "nextFirstPublicationEt": "2006-01-19T06:11:51",
+      "calendarDays": 176
+     },
+     {
+      "cik": 874761,
+      "ticker": "AES",
+      "fiscalPeriodEnd": "2006-03-31",
+      "firstPublicationEt": "2006-04-03T09:25:14",
+      "nextFirstPublicationEt": "2006-08-07T08:01:16",
+      "calendarDays": 126
+     },
+     {
+      "cik": 874761,
+      "ticker": "AES",
+      "fiscalPeriodEnd": "2007-09-30",
+      "firstPublicationEt": "2007-11-06T09:23:15",
+      "nextFirstPublicationEt": "2008-03-14T17:53:35",
+      "calendarDays": 129
+     }
+    ],
+    "multipleEarningsSince2009_06": 144,
+    "earningsFilingLinks": 1909,
+    "chosenReleaseIsFirst": true
+   },
+   "windowSessions": {
+    "count": 1730,
+    "median": 62,
+    "p05": 55,
+    "p95": 67,
+    "share20": 0.9988439306358381,
+    "share30": 0.9982658959537573,
+    "share45": 0.9861271676300578
+   },
+   "windowSessionsFrom2009_06": {
+    "count": 1380,
+    "median": 62,
+    "p05": 57,
+    "p95": 67,
+    "share20": 1,
+    "share30": 0.9992753623188406,
+    "share45": 0.9956521739130435
+   }
+  },
+  "exhibits": {
+   "releases": 2116,
+   "outcomes": 2116,
+   "withFiles": 2090,
+   "withoutFilesWithReason": 26,
+   "missingOutcome": [],
+   "unexplained": []
+  }
+ },
+ "companies": {
+  "C-PR": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 896,
+    "acceptedSince2004": {
+     "total": 896,
+     "present": 896,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 808,
+     "present": 808,
+     "share": 1
+    },
+    "companyYearOutliers": [
+     {
+      "companyYear": "C-PR|2009",
+      "count": 8
+     },
+     {
+      "companyYear": "C-PR|2010",
+      "count": 6
+     },
+     {
+      "companyYear": "C-PR|2012",
+      "count": 6
+     },
+     {
+      "companyYear": "C-PR|2013",
+      "count": 7
+     },
+     {
+      "companyYear": "C-PR|2014",
+      "count": 9
+     }
+    ],
+    "periodicAmendments": {
+     "filings": 0,
+     "linkedToQuarters": 0,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 86,
+     "shareWithSeparateRelease": 0.9772727272727273,
+     "lagDays": {
+      "min": 14,
+      "median": 21,
+      "p90": 39,
+      "max": 46,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 14,
+     "earningsFilingLinks": 103,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 52,
+     "p95": 67,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 52,
+     "p95": 68,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 108,
+    "outcomes": 108,
+    "withFiles": 108,
+    "withoutFilesWithReason": 0,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "MET-PF": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 682,
+    "acceptedSince2004": {
+     "total": 682,
+     "present": 682,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 591,
+     "present": 591,
+     "share": 1
+    },
+    "companyYearOutliers": [
+     {
+      "companyYear": "MET-PF|2018",
+      "count": 8
+     },
+     {
+      "companyYear": "MET-PF|2005",
+      "count": 6
+     },
+     {
+      "companyYear": "MET-PF|2006",
+      "count": 7
+     },
+     {
+      "companyYear": "MET-PF|2007",
+      "count": 6
+     },
+     {
+      "companyYear": "MET-PF|2008",
+      "count": 8
+     },
+     {
+      "companyYear": "MET-PF|2010",
+      "count": 7
+     },
+     {
+      "companyYear": "MET-PF|2011",
+      "count": 6
+     },
+     {
+      "companyYear": "MET-PF|2019",
+      "count": 8
+     },
+     {
+      "companyYear": "MET-PF|2020",
+      "count": 8
+     },
+     {
+      "companyYear": "MET-PF|2021",
+      "count": 8
+     },
+     {
+      "companyYear": "MET-PF|2022",
+      "count": 8
+     },
+     {
+      "companyYear": "MET-PF|2012",
+      "count": 10
+     },
+     {
+      "companyYear": "MET-PF|2013",
+      "count": 6
+     },
+     {
+      "companyYear": "MET-PF|2014",
+      "count": 8
+     },
+     {
+      "companyYear": "MET-PF|2015",
+      "count": 7
+     },
+     {
+      "companyYear": "MET-PF|2016",
+      "count": 8
+     },
+     {
+      "companyYear": "MET-PF|2017",
+      "count": 7
+     }
+    ],
+    "periodicAmendments": {
+     "filings": 3,
+     "linkedToQuarters": 3,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 88,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 1,
+      "median": 6,
+      "p90": 19,
+      "max": 32,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 16,
+     "earningsFilingLinks": 107,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 52,
+     "p95": 70,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 52,
+     "p95": 70,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9855072463768116
+    }
+   },
+   "exhibits": {
+    "releases": 148,
+    "outcomes": 148,
+    "withFiles": 145,
+    "withoutFilesWithReason": 3,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "BNY-PK": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 455,
+    "acceptedSince2004": {
+     "total": 455,
+     "present": 455,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 375,
+     "present": 375,
+     "share": 1
+    },
+    "companyYearOutliers": [
+     {
+      "companyYear": "BNY-PK|2008",
+      "count": 8
+     },
+     {
+      "companyYear": "BNY-PK|2009",
+      "count": 9
+     },
+     {
+      "companyYear": "BNY-PK|2010",
+      "count": 8
+     },
+     {
+      "companyYear": "BNY-PK|2011",
+      "count": 10
+     },
+     {
+      "companyYear": "BNY-PK|2012",
+      "count": 11
+     },
+     {
+      "companyYear": "BNY-PK|2013",
+      "count": 8
+     },
+     {
+      "companyYear": "BNY-PK|2015",
+      "count": 6
+     }
+    ],
+    "periodicAmendments": {
+     "filings": 2,
+     "linkedToQuarters": 2,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 78,
+     "originalPeriodicRows": 78,
+     "uniqueCompanyPeriods": 78,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 78,
+     "rowsSince2005": 78,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 78,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 14,
+      "median": 21,
+      "p90": 42,
+      "max": 47,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 22,
+     "earningsFilingLinks": 114,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 77,
+     "median": 62,
+     "p05": 59,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 59,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 114,
+    "outcomes": 114,
+    "withFiles": 113,
+    "withoutFilesWithReason": 1,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "WFC-PZ": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 1492,
+    "acceptedSince2004": {
+     "total": 1492,
+     "present": 1492,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 1402,
+     "present": 1402,
+     "share": 1
+    },
+    "companyYearOutliers": [
+     {
+      "companyYear": "WFC-PZ|2018",
+      "count": 7
+     },
+     {
+      "companyYear": "WFC-PZ|2009",
+      "count": 7
+     }
+    ],
+    "periodicAmendments": {
+     "filings": 2,
+     "linkedToQuarters": 2,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 88,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 14,
+      "median": 21,
+      "p90": 43,
+      "max": 51,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 2,
+     "earningsFilingLinks": 94,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 59,
+     "p95": 64,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 60,
+     "p95": 63,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 95,
+    "outcomes": 95,
+    "withFiles": 92,
+    "withoutFilesWithReason": 3,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "FITB-PM": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 769,
+    "acceptedSince2004": {
+     "total": 769,
+     "present": 769,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 677,
+     "present": 677,
+     "share": 1
+    },
+    "companyYearOutliers": [],
+    "periodicAmendments": {
+     "filings": 4,
+     "linkedToQuarters": 4,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 88,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 8,
+      "median": 19,
+      "p90": 36,
+      "max": 42,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 1,
+     "earningsFilingLinks": 89,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 59,
+     "p95": 64,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 59,
+     "p95": 64,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 90,
+    "outcomes": 90,
+    "withFiles": 88,
+    "withoutFilesWithReason": 2,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "MS-PQ": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 424,
+    "acceptedSince2004": {
+     "total": 424,
+     "present": 424,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 335,
+     "present": 335,
+     "share": 1
+    },
+    "companyYearOutliers": [],
+    "periodicAmendments": {
+     "filings": 1,
+     "linkedToQuarters": 1,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 85,
+     "shareWithSeparateRelease": 0.9659090909090909,
+     "lagDays": {
+      "min": 13,
+      "median": 19,
+      "p90": 39,
+      "max": 56,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [
+      {
+       "cik": 895421,
+       "ticker": "MS-PQ",
+       "fiscalPeriodEnd": "2008-11-30",
+       "firstPublicationEt": "2008-12-17T08:00:48",
+       "nextFirstPublicationEt": "2009-04-22T08:02:25",
+       "calendarDays": 126
+      }
+     ],
+     "multipleEarningsSince2009_06": 1,
+     "earningsFilingLinks": 89,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 59,
+     "p95": 64,
+     "share20": 0.9885057471264368,
+     "share30": 0.9885057471264368,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 59,
+     "p95": 64,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 89,
+    "outcomes": 89,
+    "withFiles": 87,
+    "withoutFilesWithReason": 2,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "MER-PK": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 520,
+    "acceptedSince2004": {
+     "total": 520,
+     "present": 520,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 432,
+     "present": 432,
+     "share": 1
+    },
+    "companyYearOutliers": [
+     {
+      "companyYear": "MER-PK|2013",
+      "count": 6
+     }
+    ],
+    "periodicAmendments": {
+     "filings": 0,
+     "linkedToQuarters": 0,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 88,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 10,
+      "median": 17,
+      "p90": 41,
+      "max": 52,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 4,
+     "earningsFilingLinks": 93,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 57,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 59,
+     "p95": 64,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 93,
+    "outcomes": 93,
+    "withFiles": 93,
+    "withoutFilesWithReason": 0,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "PRS": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 542,
+    "acceptedSince2004": {
+     "total": 542,
+     "present": 542,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 447,
+     "present": 447,
+     "share": 1
+    },
+    "companyYearOutliers": [
+     {
+      "companyYear": "PRS|2025",
+      "count": 7
+     },
+     {
+      "companyYear": "PRS|2026",
+      "count": 9
+     },
+     {
+      "companyYear": "PRS|2007",
+      "count": 6
+     },
+     {
+      "companyYear": "PRS|2008",
+      "count": 6
+     },
+     {
+      "companyYear": "PRS|2011",
+      "count": 6
+     },
+     {
+      "companyYear": "PRS|2012",
+      "count": 8
+     },
+     {
+      "companyYear": "PRS|2014",
+      "count": 7
+     },
+     {
+      "companyYear": "PRS|2015",
+      "count": 6
+     }
+    ],
+    "periodicAmendments": {
+     "filings": 7,
+     "linkedToQuarters": 7,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 88,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 1,
+      "median": 2,
+      "p90": 21,
+      "max": 29,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 9,
+     "earningsFilingLinks": 100,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 53,
+     "p95": 66,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 56,
+     "p95": 66,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 116,
+    "outcomes": 116,
+    "withFiles": 115,
+    "withoutFilesWithReason": 1,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "USB-PS": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 510,
+    "acceptedSince2004": {
+     "total": 510,
+     "present": 510,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 420,
+     "present": 420,
+     "share": 1
+    },
+    "companyYearOutliers": [],
+    "periodicAmendments": {
+     "filings": 2,
+     "linkedToQuarters": 2,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 88,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 14,
+      "median": 21,
+      "p90": 37,
+      "max": 49,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 0,
+     "earningsFilingLinks": 89,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 58,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 58,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 89,
+    "outcomes": 89,
+    "withFiles": 89,
+    "withoutFilesWithReason": 0,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "RF-PF": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 572,
+    "acceptedSince2004": {
+     "total": 572,
+     "present": 572,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 479,
+     "present": 479,
+     "share": 1
+    },
+    "companyYearOutliers": [],
+    "periodicAmendments": {
+     "filings": 5,
+     "linkedToQuarters": 5,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 88,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 8,
+      "median": 18,
+      "p90": 35,
+      "max": 55,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 2,
+     "earningsFilingLinks": 91,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 57,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 58,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 91,
+    "outcomes": 91,
+    "withFiles": 91,
+    "withoutFilesWithReason": 0,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "HBANZ": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 587,
+    "acceptedSince2004": {
+     "total": 587,
+     "present": 587,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 497,
+     "present": 497,
+     "share": 1
+    },
+    "companyYearOutliers": [
+     {
+      "companyYear": "HBANZ|2025",
+      "count": 6
+     },
+     {
+      "companyYear": "HBANZ|2008",
+      "count": 6
+     }
+    ],
+    "periodicAmendments": {
+     "filings": 2,
+     "linkedToQuarters": 2,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 86,
+     "shareWithSeparateRelease": 0.9772727272727273,
+     "lagDays": {
+      "min": 4,
+      "median": 12,
+      "p90": 29,
+      "max": 47,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 2,
+     "earningsFilingLinks": 92,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 57,
+     "p95": 66,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 59,
+     "p95": 64,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 92,
+    "outcomes": 92,
+    "withFiles": 90,
+    "withoutFilesWithReason": 2,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "KEY-PL": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 405,
+    "acceptedSince2004": {
+     "total": 405,
+     "present": 405,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 315,
+     "present": 315,
+     "share": 1
+    },
+    "companyYearOutliers": [
+     {
+      "companyYear": "KEY-PL|2008",
+      "count": 6
+     }
+    ],
+    "periodicAmendments": {
+     "filings": 2,
+     "linkedToQuarters": 2,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 87,
+     "shareWithSeparateRelease": 0.9886363636363636,
+     "lagDays": {
+      "min": 8,
+      "median": 17,
+      "p90": 36,
+      "max": 40,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 1,
+     "earningsFilingLinks": 89,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 57,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 57,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 90,
+    "outcomes": 90,
+    "withFiles": 89,
+    "withoutFilesWithReason": 1,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "AES": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 411,
+    "acceptedSince2004": {
+     "total": 411,
+     "present": 411,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 315,
+     "present": 315,
+     "share": 1
+    },
+    "companyYearOutliers": [
+     {
+      "companyYear": "AES|2006",
+      "count": 6
+     },
+     {
+      "companyYear": "AES|2007",
+      "count": 6
+     }
+    ],
+    "periodicAmendments": {
+     "filings": 8,
+     "linkedToQuarters": 8,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 18,
+     "shareWithSeparateRelease": 0.20454545454545456,
+     "lagDays": {
+      "min": 0,
+      "median": 9,
+      "p90": 75,
+      "max": 176,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [
+      {
+       "cik": 874761,
+       "ticker": "AES",
+       "fiscalPeriodEnd": "2005-09-30",
+       "firstPublicationEt": "2006-01-19T06:11:51",
+       "nextFirstPublicationEt": "2006-01-19T06:13:49",
+       "calendarDays": 0
+      }
+     ],
+     "windowsOver120": [
+      {
+       "cik": 874761,
+       "ticker": "AES",
+       "fiscalPeriodEnd": "2005-06-30",
+       "firstPublicationEt": "2005-07-27T17:00:53",
+       "nextFirstPublicationEt": "2006-01-19T06:11:51",
+       "calendarDays": 176
+      },
+      {
+       "cik": 874761,
+       "ticker": "AES",
+       "fiscalPeriodEnd": "2006-03-31",
+       "firstPublicationEt": "2006-04-03T09:25:14",
+       "nextFirstPublicationEt": "2006-08-07T08:01:16",
+       "calendarDays": 126
+      },
+      {
+       "cik": 874761,
+       "ticker": "AES",
+       "fiscalPeriodEnd": "2007-09-30",
+       "firstPublicationEt": "2007-11-06T09:23:15",
+       "nextFirstPublicationEt": "2008-03-14T17:53:35",
+       "calendarDays": 129
+      }
+     ],
+     "multipleEarningsSince2009_06": 0,
+     "earningsFilingLinks": 23,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 44,
+     "p95": 77,
+     "share20": 0.9885057471264368,
+     "share30": 0.9885057471264368,
+     "share45": 0.9310344827586207
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 44,
+     "p95": 76,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9420289855072463
+    }
+   },
+   "exhibits": {
+    "releases": 89,
+    "outcomes": 89,
+    "withFiles": 85,
+    "withoutFilesWithReason": 4,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "STT-PG": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 478,
+    "acceptedSince2004": {
+     "total": 478,
+     "present": 478,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 388,
+     "present": 388,
+     "share": 1
+    },
+    "companyYearOutliers": [
+     {
+      "companyYear": "STT-PG|2009",
+      "count": 6
+     },
+     {
+      "companyYear": "STT-PG|2010",
+      "count": 6
+     }
+    ],
+    "periodicAmendments": {
+     "filings": 2,
+     "linkedToQuarters": 2,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 88,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 4,
+      "median": 17,
+      "p90": 34,
+      "max": 44,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 5,
+     "earningsFilingLinks": 96,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 58,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 58,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 97,
+    "outcomes": 97,
+    "withFiles": 96,
+    "withoutFilesWithReason": 1,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "MTB-PL": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 398,
+    "acceptedSince2004": {
+     "total": 398,
+     "present": 398,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 306,
+     "present": 306,
+     "share": 1
+    },
+    "companyYearOutliers": [],
+    "periodicAmendments": {
+     "filings": 4,
+     "linkedToQuarters": 4,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 88,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 11,
+      "median": 20,
+      "p90": 34,
+      "max": 48,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 1,
+     "earningsFilingLinks": 89,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 59,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 59,
+     "p95": 64,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 90,
+    "outcomes": 90,
+    "withFiles": 90,
+    "withoutFilesWithReason": 0,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "GE": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 437,
+    "acceptedSince2004": {
+     "total": 437,
+     "present": 437,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 339,
+     "present": 339,
+     "share": 1
+    },
+    "companyYearOutliers": [],
+    "periodicAmendments": {
+     "filings": 10,
+     "linkedToQuarters": 10,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 80,
+     "shareWithSeparateRelease": 0.9090909090909091,
+     "lagDays": {
+      "min": 0,
+      "median": 14,
+      "p90": 35,
+      "max": 42,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 3,
+     "earningsFilingLinks": 84,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 52,
+     "p95": 70,
+     "share20": 1,
+     "share30": 0.9885057471264368,
+     "share45": 0.9770114942528736
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 52,
+     "p95": 71,
+     "share20": 1,
+     "share30": 0.9855072463768116,
+     "share45": 0.9855072463768116
+    }
+   },
+   "exhibits": {
+    "releases": 92,
+    "outcomes": 92,
+    "withFiles": 92,
+    "withoutFilesWithReason": 0,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "TFC-PR": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 538,
+    "acceptedSince2004": {
+     "total": 538,
+     "present": 538,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 447,
+     "present": 447,
+     "share": 1
+    },
+    "companyYearOutliers": [],
+    "periodicAmendments": {
+     "filings": 3,
+     "linkedToQuarters": 3,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 88,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 5,
+      "median": 18,
+      "p90": 39,
+      "max": 52,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 1,
+     "earningsFilingLinks": 90,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 58,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 59,
+     "p95": 64,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 90,
+    "outcomes": 90,
+    "withFiles": 90,
+    "withoutFilesWithReason": 0,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "ELV": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 422,
+    "acceptedSince2004": {
+     "total": 422,
+     "present": 422,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 332,
+     "present": 332,
+     "share": 1
+    },
+    "companyYearOutliers": [
+     {
+      "companyYear": "ELV|2014",
+      "count": 6
+     },
+     {
+      "companyYear": "ELV|2015",
+      "count": 6
+     }
+    ],
+    "periodicAmendments": {
+     "filings": 2,
+     "linkedToQuarters": 2,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 87,
+     "shareWithSeparateRelease": 0.9886363636363636,
+     "lagDays": {
+      "min": 0,
+      "median": 0,
+      "p90": 28,
+      "max": 66,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 6,
+     "earningsFilingLinks": 95,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 50,
+     "p95": 68,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 50,
+     "p95": 71,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 96,
+    "outcomes": 96,
+    "withFiles": 92,
+    "withoutFilesWithReason": 4,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "PNC": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 614,
+    "acceptedSince2004": {
+     "total": 614,
+     "present": 614,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 520,
+     "present": 520,
+     "share": 1
+    },
+    "companyYearOutliers": [
+     {
+      "companyYear": "PNC|2017",
+      "count": 12
+     },
+     {
+      "companyYear": "PNC|2018",
+      "count": 9
+     },
+     {
+      "companyYear": "PNC|2019",
+      "count": 10
+     },
+     {
+      "companyYear": "PNC|2020",
+      "count": 8
+     },
+     {
+      "companyYear": "PNC|2021",
+      "count": 8
+     },
+     {
+      "companyYear": "PNC|2022",
+      "count": 8
+     },
+     {
+      "companyYear": "PNC|2024",
+      "count": 6
+     },
+     {
+      "companyYear": "PNC|2007",
+      "count": 18
+     },
+     {
+      "companyYear": "PNC|2005",
+      "count": 17
+     },
+     {
+      "companyYear": "PNC|2006",
+      "count": 17
+     },
+     {
+      "companyYear": "PNC|2008",
+      "count": 13
+     },
+     {
+      "companyYear": "PNC|2009",
+      "count": 16
+     },
+     {
+      "companyYear": "PNC|2010",
+      "count": 19
+     },
+     {
+      "companyYear": "PNC|2011",
+      "count": 15
+     },
+     {
+      "companyYear": "PNC|2012",
+      "count": 16
+     },
+     {
+      "companyYear": "PNC|2013",
+      "count": 15
+     },
+     {
+      "companyYear": "PNC|2014",
+      "count": 13
+     },
+     {
+      "companyYear": "PNC|2015",
+      "count": 12
+     },
+     {
+      "companyYear": "PNC|2016",
+      "count": 11
+     }
+    ],
+    "periodicAmendments": {
+     "filings": 6,
+     "linkedToQuarters": 6,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 88,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 9,
+      "median": 21,
+      "p90": 42,
+      "max": 55,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 53,
+     "earningsFilingLinks": 192,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 58,
+     "p95": 64,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 59,
+     "p95": 63,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 257,
+    "outcomes": 257,
+    "withFiles": 255,
+    "withoutFilesWithReason": 2,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  },
+  "NTRSO": {
+   "pass": true,
+   "issues": [],
+   "checks": {
+    "filingsTotal": 382,
+    "acceptedSince2004": {
+     "total": 382,
+     "present": 382,
+     "share": 1
+    },
+    "itemLists8k": {
+     "total": 292,
+     "present": 292,
+     "share": 1
+    },
+    "companyYearOutliers": [],
+    "periodicAmendments": {
+     "filings": 2,
+     "linkedToQuarters": 2,
+     "amendmentOnlyFilings": 0,
+     "amendmentOnlyPeriods": []
+    },
+    "quarters": {
+     "total": 88,
+     "originalPeriodicRows": 88,
+     "uniqueCompanyPeriods": 88,
+     "duplicateCompanyPeriods": 0,
+     "originalsSince2005": 88,
+     "rowsSince2005": 88,
+     "missingOriginalAccessionsSince2005": [],
+     "withSeparateRelease": 88,
+     "shareWithSeparateRelease": 1,
+     "lagDays": {
+      "min": 3,
+      "median": 10,
+      "p90": 39,
+      "max": 54,
+      "negative": 0
+     },
+     "nonIncreasingNextPublications": [],
+     "windowsUnder20": [],
+     "windowsOver120": [],
+     "multipleEarningsSince2009_06": 1,
+     "earningsFilingLinks": 90,
+     "chosenReleaseIsFirst": true
+    },
+    "windowSessions": {
+     "count": 87,
+     "median": 62,
+     "p05": 57,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 0.9885057471264368
+    },
+    "windowSessionsFrom2009_06": {
+     "count": 69,
+     "median": 62,
+     "p05": 57,
+     "p95": 65,
+     "share20": 1,
+     "share30": 1,
+     "share45": 1
+    }
+   },
+   "exhibits": {
+    "releases": 90,
+    "outcomes": 90,
+    "withFiles": 90,
+    "withoutFilesWithReason": 0,
+    "missingOutcome": [],
+    "unexplained": []
+   }
+  }
+ },
+ "countsByForm": {
+  "10-Q": {
+   "10-Q": 1313
+  },
+  "8-K": {
+   "8-K": 9547
+  },
+  "10-K": {
+   "10-K": 437
+  },
+  "8-K/A": {
+   "8-K/A": 170
+  },
+  "10-K/A": {
+   "10-K/A": 26
+  },
+  "10-Q/A": {
+   "10-Q/A": 41
+  }
+ },
+ "countsByYear": {
+  "2005": {
+   "8-K": 429,
+   "8-K/A": 13,
+   "10-K": 19,
+   "10-Q": 55,
+   "10-K/A": 2
+  },
+  "2006": {
+   "8-K": 418,
+   "10-K": 19,
+   "10-Q": 59,
+   "8-K/A": 6,
+   "10-Q/A": 6,
+   "10-K/A": 4
+  },
+  "2007": {
+   "8-K": 450,
+   "10-Q": 59,
+   "8-K/A": 9,
+   "10-K": 19,
+   "10-K/A": 3,
+   "10-Q/A": 5
+  },
+  "2008": {
+   "8-K": 501,
+   "10-Q": 60,
+   "10-K": 20,
+   "8-K/A": 8,
+   "10-Q/A": 4,
+   "10-K/A": 2
+  },
+  "2009": {
+   "8-K": 540,
+   "10-Q": 60,
+   "8-K/A": 7,
+   "10-K": 20,
+   "10-Q/A": 6
+  },
+  "2010": {
+   "8-K": 420,
+   "10-Q": 60,
+   "10-K": 20,
+   "10-K/A": 3,
+   "10-Q/A": 7,
+   "8-K/A": 3
+  },
+  "2011": {
+   "8-K": 471,
+   "10-Q": 60,
+   "10-K": 20,
+   "10-K/A": 2,
+   "8-K/A": 10
+  },
+  "2012": {
+   "8-K": 514,
+   "10-Q": 60,
+   "10-K": 20,
+   "8-K/A": 6,
+   "10-K/A": 2,
+   "10-Q/A": 3
+  },
+  "2013": {
+   "8-K": 493,
+   "10-Q": 60,
+   "10-K": 20,
+   "10-K/A": 1,
+   "8-K/A": 7
+  },
+  "2014": {
+   "10-Q": 60,
+   "8-K": 457,
+   "10-K": 20,
+   "8-K/A": 5,
+   "10-K/A": 1
+  },
+  "2015": {
+   "10-K": 20,
+   "10-Q": 60,
+   "8-K": 498,
+   "8-K/A": 12,
+   "10-K/A": 2,
+   "10-Q/A": 2
+  },
+  "2016": {
+   "10-K": 20,
+   "10-Q": 60,
+   "8-K": 536,
+   "8-K/A": 12,
+   "10-K/A": 1,
+   "10-Q/A": 4
+  },
+  "2017": {
+   "10-K": 20,
+   "10-Q": 60,
+   "8-K": 502,
+   "8-K/A": 7,
+   "10-K/A": 2
+  },
+  "2018": {
+   "10-K": 20,
+   "10-Q": 60,
+   "8-K": 466,
+   "8-K/A": 9
+  },
+  "2019": {
+   "10-K": 20,
+   "10-Q": 60,
+   "8-K": 498,
+   "8-K/A": 8
+  },
+  "2020": {
+   "10-K": 20,
+   "10-Q": 60,
+   "8-K": 421,
+   "8-K/A": 8
+  },
+  "2021": {
+   "10-K": 20,
+   "10-Q": 60,
+   "8-K": 353,
+   "8-K/A": 7,
+   "10-Q/A": 1
+  },
+  "2022": {
+   "10-K": 20,
+   "10-Q": 60,
+   "8-K": 316,
+   "8-K/A": 11
+  },
+  "2023": {
+   "10-K": 20,
+   "10-Q": 60,
+   "8-K": 314,
+   "8-K/A": 5,
+   "10-Q/A": 3
+  },
+  "2024": {
+   "10-K": 20,
+   "10-Q": 60,
+   "8-K": 321,
+   "8-K/A": 10
+  },
+  "2025": {
+   "10-K": 20,
+   "10-Q": 60,
+   "8-K": 332,
+   "8-K/A": 2,
+   "10-K/A": 1
+  },
+  "2026": {
+   "10-K": 20,
+   "10-Q": 60,
+   "8-K": 297,
+   "8-K/A": 5
+  }
+ },
+ "earningsByBasis": {
+  "item_2.02": {
+   "8-K": 2100,
+   "8-K/A": 16
+  }
+ },
+ "exhibitExceptions": [
+  {
+   "cik": 1099219,
+   "ticker": "MET-PF",
+   "accessionNo": "0001193125-14-180174",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 1099219,
+   "ticker": "MET-PF",
+   "accessionNo": "0001193125-17-234225",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 1099219,
+   "ticker": "MET-PF",
+   "accessionNo": "0001193125-18-043518",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 1390777,
+   "ticker": "BNY-PK",
+   "accessionNo": "0001193125-16-430028",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 72971,
+   "ticker": "WFC-PZ",
+   "accessionNo": "0000072971-16-000967",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 72971,
+   "ticker": "WFC-PZ",
+   "accessionNo": "0000072971-18-000307",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 72971,
+   "ticker": "WFC-PZ",
+   "accessionNo": "0001193125-09-027231",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 35527,
+   "ticker": "FITB-PM",
+   "accessionNo": "0001193125-13-320588",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 35527,
+   "ticker": "FITB-PM",
+   "accessionNo": "0001193125-15-183207",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 895421,
+   "ticker": "MS-PQ",
+   "accessionNo": "0000905148-05-002330",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 895421,
+   "ticker": "MS-PQ",
+   "accessionNo": "0000950103-15-001485",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 1137774,
+   "ticker": "PRS",
+   "accessionNo": "0001193125-10-028108",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 49196,
+   "ticker": "HBANZ",
+   "accessionNo": "0001299933-06-006587",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 49196,
+   "ticker": "HBANZ",
+   "accessionNo": "0001299933-07-004082",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 91576,
+   "ticker": "KEY-PL",
+   "accessionNo": "0000950152-08-003064",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 874761,
+   "ticker": "AES",
+   "accessionNo": "0000874761-14-000038",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 874761,
+   "ticker": "AES",
+   "accessionNo": "0000874761-16-000091",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 874761,
+   "ticker": "AES",
+   "accessionNo": "0000874761-18-000002",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 874761,
+   "ticker": "AES",
+   "accessionNo": "0001104659-07-020466",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 93751,
+   "ticker": "STT-PG",
+   "accessionNo": "0001104659-09-002906",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 1156039,
+   "ticker": "ELV",
+   "accessionNo": "0001193125-14-009489",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 1156039,
+   "ticker": "ELV",
+   "accessionNo": "0001193125-15-008817",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 1156039,
+   "ticker": "ELV",
+   "accessionNo": "0001193125-16-427226",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 1156039,
+   "ticker": "ELV",
+   "accessionNo": "0001193125-17-006246",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 713676,
+   "ticker": "PNC",
+   "accessionNo": "0000713676-17-000017",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  },
+  {
+   "cik": 713676,
+   "ticker": "PNC",
+   "accessionNo": "0000713676-19-000020",
+   "status": "no_exhibit",
+   "reason": "No substantive earnings exhibit in the filing index"
+  }
+ ],
+ "indexChecks": {
+  "total": 30,
+  "matched": 30,
+  "failed": 0,
+  "rows": [
+   {
+    "cik": 40545,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000040545-26-000005",
+    "acceptedEt": "2026-01-22T06:38:59",
+    "expectedEt": "2026-01-22T06:38:59",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 1156039,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001193125-20-017551",
+    "acceptedEt": "2020-01-29T06:12:45",
+    "expectedEt": "2020-01-29T06:12:45",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 895421,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000895421-24-000484",
+    "acceptedEt": "2024-10-16T07:28:47",
+    "expectedEt": "2024-10-16T07:28:47",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 1281761,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001281761-20-000081",
+    "acceptedEt": "2020-10-19T17:59:36",
+    "expectedEt": "2020-10-19T17:59:36",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 92230,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000092230-09-000011",
+    "acceptedEt": "2009-01-22T10:25:49",
+    "expectedEt": "2009-01-22T10:25:49",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 72971,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000072971-20-000230",
+    "acceptedEt": "2020-04-14T07:46:22",
+    "expectedEt": "2020-04-14T07:46:22",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 49196,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000049196-26-000084",
+    "acceptedEt": "2026-10-22T06:19:09",
+    "expectedEt": "2026-10-22T06:19:09",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 1137774,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001193125-12-046709",
+    "acceptedEt": "2012-02-08T16:38:30",
+    "expectedEt": "2012-02-08T16:38:30",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 70858,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000070858-20-000003",
+    "acceptedEt": "2020-01-15T06:46:08",
+    "expectedEt": "2020-01-15T06:46:08",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 36270,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001564590-21-019283",
+    "acceptedEt": "2021-04-19T11:05:09",
+    "expectedEt": "2021-04-19T11:05:09",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 91576,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000091576-26-000006",
+    "acceptedEt": "2026-01-20T06:30:36",
+    "expectedEt": "2026-01-20T06:30:36",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 895421,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001157523-16-004228",
+    "acceptedEt": "2016-01-19T06:58:10",
+    "expectedEt": "2016-01-19T06:58:10",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 713676,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001193125-15-343181",
+    "acceptedEt": "2015-10-14T06:38:06",
+    "expectedEt": "2015-10-14T06:38:06",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 36270,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000950152-09-003919",
+    "acceptedEt": "2009-04-21T08:32:07",
+    "expectedEt": "2009-04-21T08:32:07",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 35527,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000035527-25-000002",
+    "acceptedEt": "2025-01-21T06:36:57",
+    "expectedEt": "2025-01-21T06:36:57",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 874761,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000874761-23-000004",
+    "acceptedEt": "2023-02-27T06:02:03",
+    "expectedEt": "2023-02-27T06:02:03",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 831001,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001104659-20-114299",
+    "acceptedEt": "2020-10-13T10:26:06",
+    "expectedEt": "2020-10-13T10:26:06",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 831001,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001104659-12-025434",
+    "acceptedEt": "2012-04-16T09:24:38",
+    "expectedEt": "2012-04-16T09:24:38",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 713676,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001193125-10-163347",
+    "acceptedEt": "2010-07-22T07:40:51",
+    "expectedEt": "2010-07-22T07:40:51",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 73124,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001193125-15-139221",
+    "acceptedEt": "2015-04-21T08:56:04",
+    "expectedEt": "2015-04-21T08:56:04",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 72971,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000950134-08-000645",
+    "acceptedEt": "2008-01-16T08:02:11",
+    "expectedEt": "2008-01-16T08:02:11",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 1099219,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001099219-23-000207",
+    "acceptedEt": "2023-08-02T16:30:56",
+    "expectedEt": "2023-08-02T16:30:56",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 70858,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000070858-23-000131",
+    "acceptedEt": "2023-04-18T06:47:41",
+    "expectedEt": "2023-04-18T06:47:41",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 35527,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001193125-07-008017",
+    "acceptedEt": "2007-01-18T07:01:27",
+    "expectedEt": "2007-01-18T07:01:27",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 1137774,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001137774-26-000210",
+    "acceptedEt": "2026-10-15T16:22:03",
+    "expectedEt": "2026-10-15T16:22:03",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 40545,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000040545-08-000052",
+    "acceptedEt": "2008-10-10T07:49:29",
+    "expectedEt": "2008-10-10T07:49:29",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 91576,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001193125-15-132158",
+    "acceptedEt": "2015-04-16T06:36:03",
+    "expectedEt": "2015-04-16T06:36:03",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 1390777,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001193125-08-153577",
+    "acceptedEt": "2008-07-18T16:07:22",
+    "expectedEt": "2008-07-18T16:07:22",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 91576,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0001193125-13-021452",
+    "acceptedEt": "2013-01-24T07:20:58",
+    "expectedEt": "2013-01-24T07:20:58",
+    "source": "sec_index_page",
+    "match": true
+   },
+   {
+    "cik": 70858,
+    "codeHash": "be36150bbd666cc3941fe5f4997f79bfdb3da964c6071b6c875d072d054f159b",
+    "accessionNo": "0000070858-21-000098",
+    "acceptedEt": "2021-10-14T06:46:02",
+    "expectedEt": "2021-10-14T06:46:02",
+    "source": "sec_index_page",
+    "match": true
+   }
+  ]
+ },
+ "research50": {
+  "filings": {
+   "path": "D:\\research\\alpha-engine\\engine\\events\\filings-50.jsonl",
+   "bytes": 8823008,
+   "sha256": "29bf87c5ba943b691215825ad611e3945ef6b2de33c2ac8f19b0808faf26716d",
+   "expectedSha256": "29bf87c5ba943b691215825ad611e3945ef6b2de33c2ac8f19b0808faf26716d"
+  },
+  "quarters": {
+   "path": "D:\\research\\alpha-engine\\engine\\events\\quarters-50.jsonl",
+   "bytes": 2264505,
+   "sha256": "35e11fc013b935c0457771759248a401895c7e8aa64fcdea42cbfcba8ff2a21f",
+   "expectedSha256": "35e11fc013b935c0457771759248a401895c7e8aa64fcdea42cbfcba8ff2a21f"
+  },
+  "pass": true
+ },
+ "projection": {
+  "projectedRemainingBytes": 100575571225,
+  "projectedRemainingSeconds": 24902.426400000004,
+  "projectedFreeBytes": 624944354023,
+  "minimumFreeBytes": 107374182400,
+  "storagePass": true
+ },
+ "universeEvidence": {
+  "factCompanies": 496,
+  "eligibleCompanies": 446,
+  "factsWithoutStooq": [],
+  "pricesWithoutFacts": []
+ },
+ "artifacts": {
+  "universe": {
+   "path": "D:\\research\\alpha-engine\\engine\\events\\universe-rest.json",
+   "bytes": 33744,
+   "sha256": "8c5aec546a72924aaed0cb3f094035a726584bd955878e2c123aff9437e5cbf5"
+  },
+  "filings": {
+   "path": "D:\\research\\alpha-engine\\engine\\events\\filings-rest.jsonl",
+   "bytes": 5757634,
+   "sha256": "7cb028bbaac76ff60afc67e78f6d3b949152b84770eb25472ccae65fcd690f02"
+  },
+  "quarters": {
+   "path": "D:\\research\\alpha-engine\\engine\\events\\quarters-rest.jsonl",
+   "bytes": 910774,
+   "sha256": "2bf4e386eff334c6d81e11c5efad65893fea37e1a9d0e836d9351615167fe9c3"
+  }
+ },
+ "productionWrite": false,
+ "databaseWrite": false
+}
