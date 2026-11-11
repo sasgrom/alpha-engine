@@ -282,6 +282,15 @@ planted factor, resampling by quarter and by company.
   earnings gave no warning on this list. Passing over signals with the price or the sector in the
   top tenth of its reading lowered the deepest fall of the account from 14.3% to 10.9%.
 
+**First look at companies the engine had not seen (2026-11-11).** Applied unchanged to the 20
+companies of the K06 pilot, 17 of them banks and insurers, the release effect does not repeat: −8.2
+[−14.7, −1.9] per 1000 at 10 sessions, and the decisions leaned on went the engine's way in 46% of
+cases. In both sets financial companies show no continuation after a release (among the 50: 49.5 /
+48.5 / 49.5% beat their sector after the weakest / middle / strongest reaction; the 50 without them:
+42.7 / 47.5 / 56.1%). The result above is therefore a result for non-financial companies, and the
+full K06 list is the test of how far it holds. Separate tables per sector are too thin on this many
+companies.
+
 **Inputs that arrived on 2026-11-11.** Task K03: the statements printed in 3,609 releases, graded
 against the later filing; the release's revenue equals the filed figure in 1,484 of 1,491 comparable
 cases. Local-model second pass over guidance in releases (in progress): about nine in ten of the
