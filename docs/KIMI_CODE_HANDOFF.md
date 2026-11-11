@@ -1094,3 +1094,13 @@ Deliberately not automatic:
 - The owner and Claude are designing the prediction engine step by step. The living design is `docs/engine/DESIGN.md`; step 1 (problem definition) is decided: the engine only analyses, predicts each stock's own direction plus value-band probabilities, uses company windows from one earnings release to the day before the next, and models market, sector and company states. Existing engine code in `api/services/` is not the baseline for this design.
 - Prep work for Kimi Code is specified in `docs/engine/tasks/`. Two tasks are ready: `K01-event-calendar.md` (publication times, earnings-release flags and a per-quarter timeline for the 50 companies) and `K02-stooq-price-load.md` (S&P 500, SPY and sector ETF prices from `D:\stooq data 102726\d_us_txt.zip`). Each spec lists deliverables and acceptance checks; append the delivery report to the spec file.
 - These are documentation-only changes: no source, database, collector or production action was taken. Read-only SELECTs on local MySQL were used for the measurements quoted in the design.
+
+
+
+## 102. K01 event calendar delivered — 2026-11-10/11
+
+- Implemented `scripts/build-event-calendar.mts` + `worker/lib/event-calendar.ts` with resumable SEC submissions caching and deterministic JSONL. Output: **22,240 filings / 4,644 quarters**, no duplicates; forms 10-K 1,092, 10-K/A 112, 10-Q 3,355, 10-Q/A 85, 8-K 17,230, 8-K/A 366. Proxy/DEF filings excluded.
+- Publication acceptance metadata present for **20,977/20,977 (100%) since 2004**; item lists for **16,512/16,512 (100%) of 8-Ks since 2004-08-23**. Header spot-checks: **17 exact matches / 13 old-header 404s**, zero timestamp mismatches among readable headers. Submissions ISO UTC and header New York wall time are normalized separately with DST tests.
+- Quarters: 4,105 (88.39%) have a separate earlier release; lag min 0 / median 9 / p90 32 / max 931, negative 0. Window median 62 sessions, p05 0, p95 69; exact 20/30/45 shares 0% / 0.0218% / 0.2612%. There are 2,946 under-20 and 49 over-120 lags plus 102 company-year outliers, all preserved in the task delivery report rather than hidden.
+- Repeat runs produced byte-identical JSONL: filings 8,823,008 bytes SHA256 `29bf87c5ba943b691215825ad611e3945ef6b2de33c2ac8f19b0808faf26716d`; quarters 1,960,492 bytes SHA256 `8dd75df1d4396c688953aa0e2eadb6f6adad4079a6148a10dda7ae2d7f2a6c44`; summary SHA256 `7a4c6f98778358b50ab4145800c6f4466b24ea312117d0bec8c9d4c77146b302`.
+- Targeted tests 3/3 and TypeScript passed. Delivery report appended to `docs/engine/tasks/K01-event-calendar.md`. No production write, schema change, model call or new service.
