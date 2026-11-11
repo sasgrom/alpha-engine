@@ -79,7 +79,7 @@ const barCache = new Map<number, PriceBar[]>();
 async function bars(cik: number): Promise<PriceBar[]> {
   const cached = barCache.get(cik);
   if (cached) return cached;
-  const [rows]: any = await db.execute(sql`SELECT date, close, adjClose, volume FROM prices WHERE cik=${cik} ORDER BY date`);
+  const [rows]: any = await db.execute(sql`SELECT date, close, adjClose, volume FROM prices WHERE cik=${cik} AND source="stooq" ORDER BY date`);
   const result = rows.map((row: any) => ({
     date: String(row.date).slice(0, 10),
     close: Number(row.adjClose ?? row.close),

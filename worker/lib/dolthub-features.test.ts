@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createSpotLookup, featureFromRows, FEATURE_SCHEMA_VERSION, isFeatureManifestCurrent, parseDoltRow, rowToContract, type DoltCsvRow } from "./dolthub-features";
+import { createSpotLookup, featureFromRows, FEATURE_SCHEMA_VERSION, impliedSpot, isFeatureManifestCurrent, parseDoltRow, rowToContract, type DoltCsvRow } from "./dolthub-features";
 
 function row(overrides: Partial<DoltCsvRow> = {}): DoltCsvRow {
   return {
@@ -33,6 +33,21 @@ describe("DoltHub feature materialization", () => {
     ]);
     expect(lookup("2026-10-27")).toEqual({ price: 99, date: "2026-10-27" });
     expect(lookup("2026-10-25")).toBeNull();
+  });
+
+  it("reads the spot from the quotes by put-call parity, in the strikes' own unadjusted terms", () => {
+    const quote = (expiration: string, strike: string, side: "Call" | "Put", bid: string, ask: string) => row({ expiration, strike, call_put: side, bid, ask });
+    // a stock near 172 before a 4-for-1 split: a split-adjusted close (about 43) would miss every strike
+    const rows = [
+      quote("2019-02-15", "170.00", "Call", "4.00", "4.20"), quote("2019-02-15", "170.00", "Put", "1.90", "2.10"),
+      quote("2019-02-15", "175.00", "Call", "1.60", "1.70"), quote("2019-02-15", "175.00", "Put", "4.40", "4.60"),
+      quote("2019-01-11", "170.00", "Call", "2.50", "2.60"), quote("2019-01-11", "170.00", "Put", "0.40", "0.50"),
+    ].map((item) => ({ ...item, date: "2019-01-09" }));
+    const spot = impliedSpot(rows);
+    expect(spot?.source).toBe("put-call parity");
+    expect(spot?.price).toBeCloseTo(172.1, 6);
+    expect(impliedSpot(rows.filter((item) => item.call_put === "Call"))).toBeNull();
+    expect(impliedSpot([])).toBeNull();
   });
 
   it("reuses DTE features with spot, slope and skew while preserving honest nulls", () => {

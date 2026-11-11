@@ -27,7 +27,7 @@ const cikByTicker = new Map(universe.map((c) => [c.ticker, c.cik]));
 const batches = manifest.batches.filter((b) => b.status === "done" && cikByTicker.has(b.ticker) && years.includes(b.year));
 const db = getDb();
 async function bars(cik: number) {
-  const [rows]: any = await db.execute(sql`SELECT date, close, adjClose FROM prices WHERE cik=${cik} ORDER BY date`);
+  const [rows]: any = await db.execute(sql`SELECT date, close, adjClose FROM prices WHERE cik=${cik} AND source="stooq" ORDER BY date`);
   return rows.map((r: any) => ({ date: String(r.date).slice(0, 10), close: Number(r.adjClose ?? r.close) })).filter((r: any) => Number.isFinite(r.close) && r.close > 0);
 }
 const atmRows: ExpectedMoveRow[] = [], rvRows: ExpectedMoveRow[] = [];
@@ -46,7 +46,7 @@ for (const batch of batches) {
     if (!actual) continue;
     const trailingRv = trailingRealizedVolatility(stockBars, feature.tradeDate, 20);
     if (trailingRv === null) continue;
-    const atmExpected = expectedMove(feature.spot, bucket.atmIv, dte), rvExpected = expectedMove(feature.spot, trailingRv, dte);
+    const atmExpected = expectedMove(actual.entryClose, bucket.atmIv, dte), rvExpected = expectedMove(actual.entryClose, trailingRv, dte);
     if (atmExpected === null || rvExpected === null) continue;
     atmRows.push({ date: feature.tradeDate, expected: atmExpected, actual: actual.move });
     rvRows.push({ date: feature.tradeDate, expected: rvExpected, actual: actual.move });

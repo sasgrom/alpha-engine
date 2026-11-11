@@ -18,9 +18,47 @@ export interface DoltCsvRow {
   rho: string;
 }
 export interface SpotBar { date: string; close: number; adjClose: number | null }
-export interface SpotInfo { price: number; date: string }
+export interface SpotInfo { price: number; date: string; source?: "put-call parity" | "price history" }
 
-export const FEATURE_SCHEMA_VERSION = 2;
+/** 3: spot read from the quotes by put-call parity (was: split- and dividend-adjusted close, wrong before splits). */
+export const FEATURE_SCHEMA_VERSION = 3;
+
+const mid = (row: DoltCsvRow): number | null => {
+  const bid = Number(row.bid), ask = Number(row.ask);
+  return Number.isFinite(bid) && Number.isFinite(ask) && bid > 0 && ask >= bid ? (bid + ask) / 2 : null;
+};
+const days = (from: string, to: string) => (Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000;
+
+/**
+ * Where the stock stood at the close of the snapshot, read from the quotes alone: at the strike where call and put
+ * cost most nearly the same, spot ≈ strike + call − put (put-call parity; carry and dividends are small for the
+ * nearest expiration at least a week away). The quotes and the strikes are in the same unadjusted terms, so a later
+ * split cannot distort it, unlike a split-adjusted close. Null when no strike has both a call and a put quote.
+ */
+export function impliedSpot(rows: DoltCsvRow[]): SpotInfo | null {
+  if (!rows.length) return null;
+  const tradeDate = rows[0].date;
+  const byExpiration = new Map<string, Map<number, { call?: number; put?: number }>>();
+  for (const row of rows) {
+    const price = mid(row), strike = Number(row.strike), side = row.call_put.toLowerCase();
+    if (price === null || !(strike > 0) || (side !== "call" && side !== "put")) continue;
+    const strikes = byExpiration.get(row.expiration) ?? byExpiration.set(row.expiration, new Map()).get(row.expiration)!;
+    const pair = strikes.get(strike) ?? strikes.set(strike, {}).get(strike)!;
+    pair[side] = price;
+  }
+  const usable = [...byExpiration.keys()].filter((expiration) => days(tradeDate, expiration) >= 0).sort();
+  const ordered = [...usable.filter((expiration) => days(tradeDate, expiration) >= 7), ...usable.filter((expiration) => days(tradeDate, expiration) < 7).reverse()];
+  for (const expiration of ordered) {
+    let best: { gap: number; spot: number } | null = null;
+    for (const [strike, pair] of byExpiration.get(expiration)!) {
+      if (pair.call === undefined || pair.put === undefined) continue;
+      const gap = Math.abs(pair.call - pair.put);
+      if (!best || gap < best.gap) best = { gap, spot: strike + pair.call - pair.put };
+    }
+    if (best && best.spot > 0) return { price: best.spot, date: tradeDate, source: "put-call parity" };
+  }
+  return null;
+}
 export function isFeatureManifestCurrent(manifest: { schemaVersion?: number }): boolean {
   return manifest.schemaVersion === FEATURE_SCHEMA_VERSION;
 }
@@ -77,7 +115,7 @@ export function snapshotFromRows(rows: DoltCsvRow[], spot: SpotInfo | null, inge
   });
 }
 
-export function featureFromRows(rows: DoltCsvRow[], spot: SpotInfo | null, ingestedAt: string): OptionFeatureSet {
+export function featureFromRows(rows: DoltCsvRow[], spot: SpotInfo | null, ingestedAt: string): OptionFeatureSet & { spotSource: string | null } {
   const features = buildOptionFeatures(snapshotFromRows(rows, spot, ingestedAt));
-  return { ...features, spotDate: spot?.date ?? null };
+  return { ...features, spotDate: spot?.date ?? null, spotSource: spot?.source ?? null };
 }

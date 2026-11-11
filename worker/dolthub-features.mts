@@ -1,14 +1,15 @@
-/** Stream DoltHub CSV into DTE feature JSONL with spot and resume manifests. */
-import "dotenv/config";
+/**
+ * Stream DoltHub CSV into DTE feature JSONL with resume manifests. The spot of each snapshot is read from its own
+ * quotes (put-call parity), so splits cannot distort the at-the-money selection. Default scope: the 40 tickers of
+ * the frozen option research; --all-exported takes every ticker of the export manifest.
+ */
 import { createReadStream, createWriteStream, existsSync, mkdirSync, readFileSync, renameSync, rmSync } from "node:fs";
 import { createInterface } from "node:readline";
 import { once } from "node:events";
 import path from "node:path";
-import { sql } from "drizzle-orm";
-import { getDb } from "../api/queries/connection";
 import { loadEdgarUniverse } from "./lib/edgar";
 import { mergeBatches, sha256File } from "./lib/dolthub-export";
-import { createSpotLookup, featureFromRows, FEATURE_SCHEMA_VERSION, isFeatureManifestCurrent, parseDoltRow, type DoltCsvRow } from "./lib/dolthub-features";
+import { featureFromRows, FEATURE_SCHEMA_VERSION, impliedSpot, isFeatureManifestCurrent, parseDoltRow, type DoltCsvRow } from "./lib/dolthub-features";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
 
@@ -25,30 +26,25 @@ const fromYear = Number(arg("--from-year") ?? 2019), toYear = Number(arg("--to-y
 const years = explicitYears?.length ? explicitYears : Array.from({ length: toYear - fromYear + 1 }, (_, i) => fromYear + i);
 const prog = startProgress("dolt-features", `input ${inputRoot} · out ${outRoot}`);
 const inputManifest = JSON.parse(readFileSync(path.join(inputRoot, "manifest.json"), "utf8")) as { batches: InputBatch[] };
-const universe = loadEdgarUniverse("dolthub-universe-40.json").filter((c) => !only || c.ticker === only);
-if (only && !universe.length) throw new Error(`Unknown or non-core ticker ${only}`);
-const cikByTicker = new Map(universe.map((c) => [c.ticker, c.cik]));
-const batches = inputManifest.batches.filter((b) => b.status === "done" && cikByTicker.has(b.ticker) && years.includes(b.year));
+const tickers = new Set(process.argv.includes("--all-exported")
+  ? inputManifest.batches.filter((b) => b.status === "done").map((b) => b.ticker)
+  : loadEdgarUniverse("dolthub-universe-40.json").map((c) => c.ticker));
+if (only && !tickers.has(only)) throw new Error(`Unknown or non-core ticker ${only}`);
+const batches = inputManifest.batches.filter((b) => b.status === "done" && tickers.has(b.ticker) && (!only || b.ticker === only) && years.includes(b.year));
 const manifestPath = path.join(outRoot, "manifest.json");
-const old: Manifest = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, "utf8")) : { source: "DoltHub mid-DTE IV with reviewed spot", schemaVersion: FEATURE_SCHEMA_VERSION, generatedAt: new Date().toISOString(), batches: [] };
+const old: Manifest = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, "utf8")) : { source: "DoltHub mid-DTE IV with spot from put-call parity", schemaVersion: FEATURE_SCHEMA_VERSION, generatedAt: new Date().toISOString(), batches: [] };
 const previousByKey = new Map(old.batches.map((b) => [`${b.ticker}|${b.year}`, b]));
-const db = getDb();
-async function spotLookup(cik: number) {
-  const [rows]: any = await db.execute(sql`SELECT date, close, adjClose FROM prices WHERE cik=${cik} ORDER BY date`);
-  return createSpotLookup(rows);
-}
 async function processBatch(batch: InputBatch): Promise<OutputBatch> {
   const inputFile = path.resolve(inputRoot, batch.file);
   const outputFile = path.join(outRoot, batch.ticker, `${batch.year}.jsonl`);
   const tmp = `${outputFile}.tmp`;
   mkdirSync(path.dirname(tmp), { recursive: true });
-  const spotAt = await spotLookup(cikByTicker.get(batch.ticker)!);
   const input = createInterface({ input: createReadStream(inputFile), crlfDelay: Infinity });
   const output = createWriteStream(tmp);
   let currentDate = "", group: DoltCsvRow[] = [], snapshots = 0, rows = 0, firstDate: string | null = null, lastDate: string | null = null;
   const flush = async () => {
     if (!group.length) return;
-    const date = group[0].date, spot = spotAt(date);
+    const date = group[0].date, spot = impliedSpot(group);
     const features = featureFromRows(group, spot, new Date().toISOString());
     if (!output.write(`${JSON.stringify(features)}\n`)) await once(output, "drain");
     snapshots++;
@@ -87,9 +83,9 @@ for (const batch of batches) {
     results.push({ ...batch, rows: 0, snapshots: 0, inputSha256: null, outputSha256: null, firstDate: null, lastDate: null, status: "error", error: String(error).slice(0, 600) });
     prog.log(`! ${batch.ticker} ${batch.year}: ${String(error).slice(0, 300)}`);
   }
-  writeJsonAtomic(manifestPath, { ...old, schemaVersion: FEATURE_SCHEMA_VERSION, generatedAt: new Date().toISOString(), batches: mergeBatches(old.batches, results) }, true);
+  writeJsonAtomic(manifestPath, { ...old, source: "DoltHub mid-DTE IV with spot from put-call parity", schemaVersion: FEATURE_SCHEMA_VERSION, generatedAt: new Date().toISOString(), batches: mergeBatches(old.batches, results) }, true);
 }
 const errors = results.filter((r) => r.status === "error").length;
-writeJsonAtomic(manifestPath, { ...old, schemaVersion: FEATURE_SCHEMA_VERSION, generatedAt: new Date().toISOString(), batches: mergeBatches(old.batches, results) }, true);
+writeJsonAtomic(manifestPath, { ...old, source: "DoltHub mid-DTE IV with spot from put-call parity", schemaVersion: FEATURE_SCHEMA_VERSION, generatedAt: new Date().toISOString(), batches: mergeBatches(old.batches, results) }, true);
 prog.done(`batches ${results.length} · skipped ${skipped} · snapshots ${results.reduce((n, r) => n + r.snapshots, 0)} · errors ${errors}`);
 process.exit(errors ? 1 : 0);

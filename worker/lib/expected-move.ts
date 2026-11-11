@@ -7,11 +7,12 @@ export function expectedMove(spot: number, iv: number, dteDays: number): number 
 }
 
 export interface ExpectedMoveRow { date: string; expected: number; actual: number }
-export function absoluteForwardMove(bars: VolBar[], anchorDate: string, horizon: number): { move: number; exitDate: string } | null {
+export function absoluteForwardMove(bars: VolBar[], anchorDate: string, horizon: number): { move: number; exitDate: string; entryClose: number } | null {
   const entry = entryCloseAfter(bars, anchorDate), result = forwardReturnInfo(bars, anchorDate, horizon);
   if (!entry || !result) return null;
-  // Expected move is in dollars, so the actual move must also be in dollars.
-  return { move: Math.abs(result.ret) * entry.close, exitDate: result.exitDate };
+  // Expected move is in dollars, so the actual move must also be in dollars. Scale the expected move by entryClose
+  // too: both then share the price series' own (adjusted) terms, whatever splits came later.
+  return { move: Math.abs(result.ret) * entry.close, exitDate: result.exitDate, entryClose: entry.close };
 }
 
 export function summarizeExpectedMoves(rows: ExpectedMoveRow[]) {

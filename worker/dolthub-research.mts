@@ -32,7 +32,7 @@ const db = getDb();
 const [companyRows]: any = await db.execute(sql`SELECT cik, sector FROM companies`);
 const sectorByCik = new Map<number, string>(companyRows.map((r: any) => [Number(r.cik), String(r.sector ?? "Unknown")]));
 async function bars(cik: number) {
-  const [rows]: any = await db.execute(sql`SELECT date, close, adjClose FROM prices WHERE cik=${cik} ORDER BY date`);
+  const [rows]: any = await db.execute(sql`SELECT date, close, adjClose FROM prices WHERE cik=${cik} AND source="stooq" ORDER BY date`);
   return rows.map((r: any) => ({ date: String(r.date).slice(0, 10), close: Number(r.adjClose ?? r.close) })).filter((r: any) => Number.isFinite(r.close) && r.close > 0);
 }
 const spyBars = await bars(0);
