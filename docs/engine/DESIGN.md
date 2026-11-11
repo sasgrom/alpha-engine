@@ -219,6 +219,15 @@ today, so historical results describe survivors. Step 5 must state this next to 
 | 2026-11-10 | Factor method: lagged regression on changes, expanding window, e+/e− from past forecasts, output as confidence −1..+1; price reaction as a separate family | owner |
 | 2026-11-10 | Test all factors; join those that are derivatives of one another | owner |
 | 2026-11-10 | No wider company set for now; first reproduce the earlier model, then explain it with schemas, graphs and examples | owner |
+| 2026-11-10 | The engine is built and described on its own procedures; its code and documents make no statements about earlier runs | owner |
+| 2026-11-10 | Sealed period: only the last quarter of decisions (from 2026-07-01) is held back | owner |
+| 2026-11-10 | Company guidance and expectations, not year-ago changes, are the reference for reported figures | owner |
+| 2026-11-10 | Local-model pass over guidance in releases the first pass left unstructured: the 50 first, then the rest; partial results usable while it runs | owner |
+| 2026-11-11 | Task K06 approved: release calendar and release documents for the other S&P 500 companies (pilot of 20, then the full list on the owner's word) | owner |
+| 2026-11-11 | Old forecasts fade with an 8-year half-life (exponential) as the working setting for round two | owner + measurement |
+| 2026-11-11 | Account simulations: yardstick is the index of the universe, entry above a confidence margin, long only with shorts as an option, orders at the next open, exit when the trend reverses | owner |
+| 2026-11-11 | The starting probability is the measured up-rate, never one half; macro corrections are tested as a factor family | owner + measurement |
+| 2026-11-11 | Guards against overheating (stretch, sector lead, valuation, acceleration) are tested like factors and used only where the data supports them | owner + measurement |
 
 ## 5. Open items for the next steps
 
@@ -229,38 +238,55 @@ today, so historical results describe survivors. Step 5 must state this next to 
 - Step 4: final band edges, combining the three states, pooling strength, recency weighting of old
   history.
 - Step 5: walk-forward protocol, scoring rules, baselines, survivorship statement.
-- After the review in section 6: how factors share evidence across companies when one company has
-  about 40 finished quarters per factor; how k is measured; which prior replaces 50%.
+- Round two (see section 6): whether the engine should also predict "beats the index of the
+  universe" beside "beats its sector"; the full list of task K06; the comparison of release revenue
+  with the company's own guidance once the local-model pass is complete.
+- In this repository, after the owner's approval: a daily price series without gaps for the
+  universe, its sector funds and the market fund; market value for valuation factors that is right
+  across stock splits; one Engine page fed by a reviewed report.
 
-## 6. Findings from the earlier model (2026-11-10)
+## 6. Engine version 1: procedure and results (2026-11-10 and 11)
 
-The owner's earlier model (Python scripts and two database dumps, 2021–2024) was rebuilt from the
-dumps and tested. Code and the illustrated page are in the research repository
-(`C:\dev\alpha-engine-lab\src\old-model`, `reports\old-model.html`). These are findings, not
-decisions.
+The engine is research code in a separate repository (`C:\dev\alpha-engine-lab\src\engine`, steps
+0 to 9; `README.md` there holds the procedure, every result and the controls). Its data is under
+`D:\research\alpha-engine\engine\lab\data\engine\`. Nothing of it runs in this repository yet. A
+review of the earlier model's stored runs is kept in the same research repository; nothing in this
+design depends on it.
 
-- **Reproduced.** Every stored number of the REIT run (103 companies) is reproduced from its raw
-  rows through all seven steps, and every stored error rate and probability of the S&P 500 run
-  (493 companies).
-- **The fundamentals were not the companies' own.** In both databases every company carries one
-  identical fundamentals history for 1999–2020 (the figures of a single small REIT); companies'
-  own figures start in 2021. The earlier results therefore say nothing about whether fundamentals
-  predict.
-- **The error rates saw the answers.** e+ and e− were counted once over each company's whole
-  history and used for every quarter of that history. Scored that way, accepted company-quarters
-  rose 79% of the time against 58% for the rest, and forecasts scrambled in time score the same
-  (81% against 58%). With error rates from finished quarters only: 62% against 62%.
-- **Portfolio.** Stored result 21.7% a year (S&P 500 universe, 2006–2021); holding every company
-  of that universe under the same weighting rule 12.6%; the same acceptance rule with past-only
-  error rates 12.1%.
-- **One vote, many times.** A factor voted "up" when its regression's forecast growth was at least
-  the stock's last quarterly move, so 76% of votes were simply the opposite of that move. Twenty
-  factors of a company were worth about two independent ones, while the rule k = factors ÷ 10
-  counted them as ten.
-- **A company's lean did not last.** Whether up-votes preceded rises more or less often than
-  down-votes in the first half of a company's history had no relation to the second half
-  (correlation 0.05, same sign for 50% of companies).
+**Procedure.** Decisions at the close of the first full session after an earnings release and after
+the 10-Q/10-K. Every reading is placed among all earlier readings of its factor; a regression on
+finished outcomes gives the side; tables of side and strength are counted only from forecasts whose
+outcome was known on the day; evidence is trusted as far as its family of factors has shown more
+than noise; a factor's evidence is divided by how much the other factors repeat it (measured k);
+Bayes starts from the up-rate seen so far. Controls in every round: runs with scrambled readings, a
+planted factor, resampling by quarter and by company.
 
-Consequences already covered by sections 1.3, 1.6 and 1.9: error rates from finished windows only,
-each factor forecasting from its own change, measured k, real publication dates. Still to decide:
-see section 5.
+**Results on the 50 companies** (gain in log score per 1000 decisions over the up-rate, 90% interval):
+
+- Release decision, company against its sector, 10 sessions: +5.9 [+2.2, +9.5] in 2013–2022; on the
+  years the design had not seen (2023 to mid-2026) +3.2 [−4.0, +10.7]. Decisions the engine leaned
+  on went its way in 60.6% and 60.5% of cases. The source is the first-session price reaction to
+  the release. No scrambled run reached these numbers.
+- Nothing measurable beyond noise so far: figures from the 10-Q/10-K as year-ago changes; the
+  figures printed in the release itself as year-ago changes (task K03); tone at the release; macro
+  readings for timing the market or the sectors; overheating guards as probabilities of a sharp
+  fall. A small unproven lift: tone of the 10-Q/10-K at 20 to 45 sessions.
+- Account illustration under the owner's set-up (2016–2025, $100,000, long only, entry when the
+  probability that the stock rises is at least 55%, orders at the next open, exit when the trend
+  reverses, ten equal parts): 21.4% a year with 60% of the money in use; the index of the 50 held
+  all the time made 24.6% a year, being a list of today's large companies. Per position the picks
+  made about one point more than the index over the same days in 2016–2022 and no more than the
+  index in 2023–2025, while still beating their own sector funds.
+- Guards: a price in the outermost 2% above its own one-year average was followed by a sharp fall
+  about twice as often as usual (8.3% against 4.4%); acceleration and a price above 100 times
+  earnings gave no warning on this list. Passing over signals with the price or the sector in the
+  top tenth of its reading lowered the deepest fall of the account from 14.3% to 10.9%.
+
+**Inputs that arrived on 2026-11-11.** Task K03: the statements printed in 3,609 releases, graded
+against the later filing; the release's revenue equals the filed figure in 1,484 of 1,491 comparable
+cases. Local-model second pass over guidance in releases (in progress): about nine in ten of the
+releases the first pass could not structure now yield verified statements. Task K06: pilot of 20
+companies passed; the other 426 wait for the owner's word.
+
+**Open test.** The quarter's revenue from the release against what the company itself had guided,
+known at the release decision. It needs the second pass to reach back to 2010.
