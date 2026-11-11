@@ -316,6 +316,14 @@ guidance on the first day. Through the engine the family adds +1.1 [−0.7, +2.8
 sessions on the same decisions (+1.3 in 2013–2022, +0.6 in 2023 to mid-2026) and nothing at 10
 sessions or at the 10-Q/10-K. The quarter's revenue against the company's own guidance exists for
 141 releases of 12 companies, too few for a table. More companies are needed to settle it.
+With all four batches of the second pass (4,368 releases, 17,396 verified statements; 1,644 of
+2,439 release decisions since mid-2010 with guidance known) the raw evidence is stronger and holds
+with the first-session reaction held out: revenue revisions +0.19 at 10 sessions, +0.13 at 20,
++0.14 at 45 (beyond shuffled copies), earnings revisions +0.14 at 20 sessions. Through the engine
+the family adds nothing (−0.3 [−1.7, +1.1] at 5 sessions, 0.0 at 10): on 50 companies the readings
+cover a few hundred decisions in 22–36 companies, and a table needs 150 finished forecasts and
+earned trust before it moves a forecast. The test is the second pass over the K06 companies'
+releases (days of GPU time; owner decision).
 
 **Two variants of the release decision, tested and not adopted (2026-11-11).** Deciding at the
 first close after a publication that arrives between 08:30 and midday (about 150 release decisions
