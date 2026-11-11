@@ -34,6 +34,17 @@ export function planSchwabBars(stored: PriceBar[], candidates: PriceBar[]): Schw
   return plan;
 }
 
+/**
+ * Where a Schwab bar is stored. The app merges sources with Schwab winning on its dates, so a raw Schwab bar on a date
+ * the dividend-adjusted Stooq history already covers would put a false step into that history. Such bars go to
+ * "schwab-hist" (kept for reconciliation and for linking the two sources); only dates after the series' last
+ * Stooq bar go to "schwab".
+ */
+export function splitAtStooqEnd<T extends { date: string }>(bars: T[], lastStooqDate: string | null): { history: T[]; current: T[] } {
+  if (!lastStooqDate) return { history: [], current: bars };
+  return { history: bars.filter((bar) => bar.date <= lastStooqDate), current: bars.filter((bar) => bar.date > lastStooqDate) };
+}
+
 /** Sessions of the calendar (dates of a benchmark series) between a series' first and last date that the series lacks. */
 export function missingSessions(dates: string[], calendar: string[], from: string): string[] {
   const own = new Set(dates);

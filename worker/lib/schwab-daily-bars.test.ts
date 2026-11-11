@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { missingSessions, planSchwabBars } from "./schwab-daily-bars";
+import { missingSessions, planSchwabBars, splitAtStooqEnd } from "./schwab-daily-bars";
 import { schwabPriceSeries, schwabSymbol } from "./schwab-price-series";
 
 const bar = (date: string, close: number, volume: number | null = 1000, open: number | null = close) => ({ date, open, high: close + 1, low: close - 1, close, adjClose: null, volume });
@@ -24,6 +24,12 @@ describe("Schwab daily bars into local prices", () => {
   it("fills a missing field when the close agrees", () => {
     const plan = planSchwabBars([bar("2026-11-06", 100, null, null)], [bar("2026-11-06", 100, 1500, 99)]);
     expect(plan.enrich).toEqual([{ date: "2026-11-06", patch: { open: 99, volume: 1500 } }]);
+  });
+
+  it("keeps Schwab bars out of the dates the Stooq history covers", () => {
+    const bars = [bar("2026-11-09", 100), bar("2026-11-10", 101), bar("2026-11-11", 102)];
+    expect(splitAtStooqEnd(bars, "2026-11-10")).toEqual({ history: bars.slice(0, 2), current: bars.slice(2) });
+    expect(splitAtStooqEnd(bars, null)).toEqual({ history: [], current: bars });
   });
 
   it("finds the sessions a series lacks inside its own span", () => {

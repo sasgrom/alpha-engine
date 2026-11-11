@@ -101,8 +101,8 @@ export const OPERATION_JOBS: OperationJob[] = [
   job({
     id: "schwab-daily-bars", name: "Schwab daily bars into local prices", group: "options", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-fetch-sp500"],
     ...npx("worker/schwab-daily-bars.mts"), purpose: "Store every completed official daily candle of both Schwab archives in local prices, so a day one run misses is filled by the next.",
-    input: "pricehistory files of the schwab and schwab-sp500 archives (about one month each).", output: "Local prices rows with source schwab and worker/.runs/local-generated/schwab-daily-bars.json with inserts, conflicts and holes against SPY's sessions.",
-    destination: "Local MySQL only; the operational pricesDaily push is unchanged.", requirements: ["mysql", "driveD"], notes: "A stored close is never changed: a different close is a conflict and marks the job error; other field differences are listed. Stooq bars stay a separate source.",
+    input: "pricehistory files of the schwab and schwab-sp500 archives (about one month each).", output: "Local prices rows (source schwab after each series' last Stooq bar, schwab-hist on dates the Stooq history covers) and worker/.runs/local-generated/schwab-daily-bars.json with inserts, conflicts and holes against SPY's sessions.",
+    destination: "Local MySQL only; the operational pricesDaily push is unchanged.", requirements: ["mysql", "driveD"], notes: "The app lets Schwab win on its dates, so raw Schwab bars never enter dates of the dividend-adjusted Stooq history (they are kept as schwab-hist). A stored close is never changed: a different close is a conflict and marks the job error; other field differences are listed.",
   }),
   job({
     id: "analytics-snapshot", name: "Analytics and weekly evidence snapshot", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-factors"],
