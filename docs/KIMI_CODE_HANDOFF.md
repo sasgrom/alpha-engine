@@ -1217,3 +1217,11 @@ Gates at 12:38 on the committed state: `npm run check`, `npm test -- --run` (191
 Left uncommitted by Claude: Kimi's handoff sections 112–117, K06 and event-calendar files, scheduler-generated reports.
 
 Next safe actions: after the export, `npx tsx worker/dolthub-export-validate.mts` (without `--full`, which expects the old 40×8 scope) and `npx tsx worker/dolthub-features.mts --all-exported`; check the first `schwab-sp500` manifest; the first scheduled S&P capture and daily bars run tomorrow at 04:30. Owner decisions: the snapshot push (413), PG and BNY, K08, the Manual §1 draft (research repository, findings §11).
+
+Follow-up, 13:30:
+
+- **DoltHub history** finished 11:59–12:51: 510 tickers, 3,407 new ticker-years and 352 empty ones, 51,960,271 new rows; the 321 existing files rebuilt byte for byte as a check, 0 mismatches. `npx tsx worker/dolthub-export-validate.mts`: 3,728 files, 58,786,297 rows, 0 errors, 0 duplicate contracts (352 warnings = empty ticker-years). Data ends 2026-10-28 (clone date).
+- **Option features** rebuilt for every exported ticker (`npx tsx worker/dolthub-features.mts --all-exported`, schema 3): 3,728 batches, 610,034 snapshots, 0 errors, 8 minutes. AAPL spot 503.80 on 2020-08-24 and 129.28 on 2020-08-31 (stored before: 122.19 with an "ATM" IV of 120%).
+- **Option research** re-run on the same 40 companies (`dolthub-expected-move`, `dolthub-research`, `dolthub-vol-target`; outputs on D:): ATM IV forward-RV IC 0.737 → 0.796, paired advantage over RV20 0.071 → 0.129, expected-move coverage 64.85% → 62.32% (RV20 59.79% → 59.47%). Volatility Lab table, Risk Lab profile and the hypothesis log updated (`5ef43c3`); the vol-target change also reflects the new prices and one more month.
+- **First S&P 500 option capture** 13:05–13:26 (after the close): 464/464 complete, 0 errors; SPY and SNDK chains fetched in 60 monthly pieces; 546 MB of chains (about 0.55 GB a day; D: 654 GB free). The scheduler takes over at 04:30 tomorrow.
+- The 200 older `schwab` rows of the 50 (4–9 November) match Schwab's own history to the cent; their differences from Stooq are dividends (PFE, IBM).
