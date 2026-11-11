@@ -13,12 +13,16 @@
 ## 1. Project vision
 
 A programmatic end-to-end system extracting mid-term (quarterly) alpha from S&P 500 equities.
-The system **deliberately avoids** technical price-chart analysis. Instead it builds alpha from
-three sources:
+The system does not trade chart patterns. Price enters in two defined roles only: as the market's
+reading of a publication (the first-session move after a release or filing, measured against the
+stock's sector, the one effect the engine has confirmed on data it was not fitted on), and as risk
+guards (how far a price stands above its own one-year average, how far one sector leads the
+others), used to pass over new positions, never as a forecast. Alpha is built from these sources:
 
 1. **Structural business anomalies** — changes in fundamentals (SEC XBRL facts);
 2. **Narrative/accounting transformations** — MD&A language, footnotes, restatements, litigation (LLM text analysis);
-3. **Option liquidity constraints** — 25-delta skew surface (Stages 5–6, later).
+3. **Option liquidity constraints** — 25-delta skew surface (Stages 5–6, later);
+4. **The market's reading of each publication** — the first-session move after a release or filing, against the stock's sector.
 
 Architectural metaphor: the market is a non-stationary physical system where fundamentals set
 the structural trajectory and derivatives/volatility set the execution boundaries.

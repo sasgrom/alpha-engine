@@ -24,7 +24,8 @@ const DOCS = [
 ];
 
 const entries = DOCS.map((d) => {
-  const content = readFileSync(d.file, "utf8");
+  // Line endings normalized: a Windows checkout (core.autocrlf) must not rewrite every bundled document.
+  const content = readFileSync(d.file, "utf8").replace(/\r\n/g, "\n");
   // JSON.stringify escapes backticks/${} safely for embedding in a TS string slot
   return `  ${JSON.stringify(d.id)}: { title: ${JSON.stringify(d.title)}, lang: ${JSON.stringify(d.lang)}, content: ${JSON.stringify(content)} },`;
 });
