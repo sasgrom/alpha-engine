@@ -77,6 +77,8 @@ Steps:
 - **C. Robust fitting variants**: Huber regression for each factor's direction, robust scaling of surprises,
   trimming of extreme values using only past data.
 - **D. Survivorship**: add the companies that left the index or were delisted, with their prices and filings.
+  To do (owner, 2026-11-11): no paid subscription; load the previous model's SQL data and its earlier Tiingo
+  price imports, cross-check them against Stooq and SEC filings, and use them only if they pass.
 
 **Target hybrid architecture (Variant C):** cloud = control plane (UI, registries, task queue);
 local machine (Mac, later Mac Studio) = worker for heavy lifting (full SEC mirror, LLM processing).

@@ -244,7 +244,18 @@ today, so historical results describe survivors. Step 5 must state this next to 
   releases (the comparison of release revenue with the company's own guidance needs them).
 - In this repository, after the owner's approval: a daily price series without gaps for the
   universe, its sector funds and the market fund; market value for valuation factors that is right
-  across stock splits; one Engine page fed by a reviewed report.
+  across stock splits; one Engine page fed by a reviewed report. Status 2026-11-11: daily prices
+  done (Stooq dump of 2026-11-10 plus Schwab daily bars); market value is task K08; data-health
+  checks are task K09 (manual §2.1, Stage 3 step A).
+- Survivorship (Stage 3 step D), to do: no paid subscription (owner, 2026-11-11); load the previous
+  model's SQL data and its earlier Tiingo price imports, cross-check them against Stooq and SEC
+  filings, and use them only if they pass. Until then every result describes today's survivors.
+- Expectations against the early 8-K figures (owner's proposal, 2026-11-11): what was expected going
+  into a quarter (the company's guidance direction and revisions at the previous release) crossed
+  with what the release then showed (against that guidance, or the change in growth), read as a
+  table of quadrants and as a continuous interaction, with the first-session reaction held out.
+  First raw look on the 50 in the research repository; a candidate family for the engine only if it
+  adds beyond the reaction on the K06 list.
 
 ## 6. Engine version 1: procedure and results (2026-11-10 and 11)
 
