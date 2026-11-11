@@ -239,8 +239,9 @@ today, so historical results describe survivors. Step 5 must state this next to 
   history.
 - Step 5: walk-forward protocol, scoring rules, baselines, survivorship statement.
 - Round two (see section 6): whether the engine should also predict "beats the index of the
-  universe" beside "beats its sector"; the full list of task K06; the comparison of release revenue
-  with the company's own guidance once the local-model pass is complete.
+  universe" beside "beats its sector"; the full list of task K06, which every open question now
+  waits for; after it, whether the local-model pass over guidance runs on the other companies'
+  releases (the comparison of release revenue with the company's own guidance needs them).
 - In this repository, after the owner's approval: a daily price series without gaps for the
   universe, its sector funds and the market fund; market value for valuation factors that is right
   across stock splits; one Engine page fed by a reviewed report.
@@ -270,7 +271,9 @@ planted factor, resampling by quarter and by company.
 - Nothing measurable beyond noise so far: figures from the 10-Q/10-K as year-ago changes; the
   figures printed in the release itself as year-ago changes (task K03); tone at the release; macro
   readings for timing the market or the sectors; overheating guards as probabilities of a sharp
-  fall. A small unproven lift: tone of the 10-Q/10-K at 20 to 45 sessions.
+  fall; four readings from the option chains around the release (the move the options had priced,
+  the surprise against it, the put-call skew, the fall in implied volatility; 918 release decisions
+  since 2019). A small unproven lift: tone of the 10-Q/10-K at 20 to 45 sessions.
 - Account illustration under the owner's set-up (2016–2025, $100,000, long only, entry when the
   probability that the stock rises is at least 55%, orders at the next open, exit when the trend
   reverses, ten equal parts): 21.4% a year with 60% of the money in use; the index of the 50 held
@@ -293,9 +296,29 @@ companies.
 
 **Inputs that arrived on 2026-11-11.** Task K03: the statements printed in 3,609 releases, graded
 against the later filing; the release's revenue equals the filed figure in 1,484 of 1,491 comparable
-cases. Local-model second pass over guidance in releases (in progress): about nine in ten of the
-releases the first pass could not structure now yield verified statements. Task K06: pilot of 20
-companies passed; the other 426 wait for the owner's word.
+cases. Local-model second pass over guidance in releases: the first batch is complete; 1,068 of the
+1,277 releases the first pass could not structure yield verified statements (7,866 statements), and
+1,367 of 2,439 release decisions since mid-2010 now have guidance known, against 560 before. Task
+K06: pilot of 20 companies passed; the other 426 wait for the owner's word.
 
-**Open test.** The quarter's revenue from the release against what the company itself had guided,
-known at the release decision. It needs the second pass to reach back to 2010.
+**Guidance as a factor family (2026-11-11): a candidate, not a result.** A guided line is compared
+only with the company's previous statement on the same line (total with total, segment with
+segment, same basis and target period); every reading keeps the two quotes it came from. Raised
+guidance goes with a slightly better following month (rank correlations +0.05 to +0.19, at the edge
+of what chance gives) and with the first-session reaction itself (0.10 to 0.30): the market prices
+guidance on the first day. Through the engine the family adds +1.1 [−0.7, +2.8] per 1000 at 5
+sessions on the same decisions (+1.3 in 2013–2022, +0.6 in 2023 to mid-2026) and nothing at 10
+sessions or at the 10-Q/10-K. The quarter's revenue against the company's own guidance exists for
+141 releases of 12 companies, too few for a table. More companies are needed to settle it.
+
+**Two variants of the release decision, tested and not adopted (2026-11-11).** Deciding at the
+first close after a publication that arrives between 08:30 and midday (about 150 release decisions
+since 2013 are decided one session later in version 1) improves those cases and does not change
+the total. A release decision also for the quarters whose 10-Q/10-K comes out with the release (471
+since 2013, mostly the largest technology companies) lowers the gain per decision: in those
+quarters a fall on the first session continues and a rise does not. Both are to be run again on the
+full K06 list.
+
+**The test on the other companies is fixed in advance** (last section of the engine README): the
+runs, their order, the three groups (Financials, Energy, all other sectors) and what counts as the
+effect repeating.
