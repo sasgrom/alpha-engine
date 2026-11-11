@@ -7,20 +7,28 @@ import { sql } from "drizzle-orm";
 import { getDb } from "../api/queries/connection";
 import { fetchDoc, secGet } from "../worker/lib/edgar";
 import { acceptanceEt, acceptanceChecks, acceptanceUtc, buildQuarters, earningsFlag, type CalendarFiling } from "../worker/lib/event-calendar";
+import { eventCalendarOptions } from "../worker/lib/event-calendar-options";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 
-const universe = JSON.parse(readFileSync("worker/research-universe-50.json", "utf8")) as { cik: number; ticker: string }[];
+const options = eventCalendarOptions(process.argv.slice(2));
+const universe = JSON.parse(readFileSync(options.universeFile, "utf8")) as { cik: number; ticker: string }[];
 const outputRoot = path.resolve("D:/research/alpha-engine/engine/events");
 mkdirSync(outputRoot, { recursive: true });
 
 function readJson<T>(file: string, fallback: T): T {
   try { return JSON.parse(readFileSync(file, "utf8")) as T; } catch { return fallback; }
 }
+function jsonl(rows: unknown[]): string {
+  return rows.map((row) => JSON.stringify(row)).join("\n") + "\n";
+}
 function writeJsonl(file: string, rows: unknown[]): void {
-  writeFileSync(file, rows.map((row) => JSON.stringify(row)).join("\n") + "\n");
+  writeFileSync(file, jsonl(rows));
 }
 function sha256(file: string): string {
   return createHash("sha256").update(readFileSync(file)).digest("hex");
+}
+function sha256Text(value: string): string {
+  return createHash("sha256").update(value).digest("hex");
 }
 async function secJson(cik: number): Promise<any> {
   const directory = path.join(outputRoot, "sec-submissions");
@@ -87,10 +95,11 @@ function distribution(values: CalendarFiling[], key: "form" | "year" | "basis") 
   return output;
 }
 
-const db = getDb();
-try {
+async function main() {
+  const db = getDb();
+  try {
   const ciks = universe.map((company) => company.cik);
-  const [localRows]: any = await db.execute(sql`SELECT cik, accessionNo, form, filingDate, reportDate, primaryDoc, items FROM filings WHERE cik IN (${sql.join(ciks.map((cik) => sql`${cik}`), sql`, `)}) AND filingDate >= "2000-01-01" AND form IN ("10-Q", "10-K", "8-K", "10-Q/A", "10-K/A", "8-K/A") ORDER BY cik, accessionNo`);
+  const [localRows]: any = await db.execute(sql`SELECT cik, accessionNo, form, filingDate, reportDate, primaryDoc, items FROM filings WHERE cik IN (${sql.join(ciks.map((cik) => sql`${cik}`), sql`, `)}) AND filingDate >= ${options.from} AND form IN ("10-Q", "10-K", "8-K", "10-Q/A", "10-K/A", "8-K/A") ORDER BY cik, accessionNo`);
   const [spyRows]: any = await db.execute(sql`SELECT DISTINCT date FROM prices WHERE cik=0 AND source="stooq" ORDER BY date`);
   const spyDates = spyRows.map((row: any) => String(row.date).slice(0, 10));
   const filings: CalendarFiling[] = [];
@@ -127,8 +136,17 @@ try {
   const byAccession = new Map(filings.map((row) => [`${row.cik}|${row.accessionNo}`, row]));
   if (byAccession.size !== localRows.length) throw new Error(`Filing coverage mismatch: ${byAccession.size}/${localRows.length}`);
   const quarters = buildQuarters(filings, spyDates);
-  const filingsFile = path.join(outputRoot, "filings-50.jsonl");
-  const quartersFile = path.join(outputRoot, "quarters-50.jsonl");
+  const filingsFile = path.join(outputRoot, `filings-${options.suffix}.jsonl`);
+  const quartersFile = path.join(outputRoot, `quarters-${options.suffix}.jsonl`);
+  if (options.check) {
+    const comparisons = [
+      { path: filingsFile, expectedSha256: sha256(filingsFile), actualSha256: sha256Text(jsonl(filings)) },
+      { path: quartersFile, expectedSha256: sha256(quartersFile), actualSha256: sha256Text(jsonl(quarters)) },
+    ];
+    if (comparisons.some((row) => row.expectedSha256 !== row.actualSha256)) throw new Error(`Calendar output mismatch: ${JSON.stringify(comparisons)}`);
+    console.log(JSON.stringify({ check: "byte_identical", comparisons }, null, 2));
+    return;
+  }
   writeJsonl(filingsFile, filings);
   writeJsonl(quartersFile, quarters);
   const checks = acceptanceChecks(filings, quarters);
@@ -175,7 +193,7 @@ try {
       quarters: { path: quartersFile, bytes: statSync(quartersFile).size, sha256: sha256(quartersFile) },
     },
   };
-  writeJsonAtomic("research/engine/event-calendar-50.summary.json", summary, true);
+  writeJsonAtomic(`research/engine/event-calendar-${options.suffix}.summary.json`, summary, true);
   const manifest = {
     schemaVersion: 1,
     generatedAt: summary.generatedAt,
@@ -185,8 +203,11 @@ try {
     filingsSha256: summary.artifacts.filings.sha256,
     quartersSha256: summary.artifacts.quarters.sha256,
   };
-  writeJsonAtomic(path.join(outputRoot, "manifest.json"), manifest, true);
+  writeJsonAtomic(path.join(outputRoot, options.suffix === "50" ? "manifest.json" : `manifest-${options.suffix}.json`), manifest, true);
   console.log(JSON.stringify({ filings: filings.length, quarters: quarters.length, accepted: checks.acceptedSince2004, items: checks.itemLists8k, outliers: checks.companyYearOutliers.length, headerMatches: `${summary.headerChecks.matched}/${summary.headerChecks.total}`, artifacts: summary.artifacts }, null, 2));
-} finally {
-  await db.$client.end();
+  } finally {
+    await db.$client.end();
+  }
 }
+
+await main();
