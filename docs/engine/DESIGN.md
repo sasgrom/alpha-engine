@@ -292,7 +292,11 @@ cases. In both sets financial companies show no continuation after a release (am
 48.5 / 49.5% beat their sector after the weakest / middle / strongest reaction; the 50 without them:
 42.7 / 47.5 / 56.1%). The result above is therefore a result for non-financial companies, and the
 full K06 list is the test of how far it holds. Separate tables per sector are too thin on this many
-companies.
+companies. In the account illustration, leaving out Financials and Energy raises the gain per
+position beyond the index of the 50 from +0.5 to +1.8 points to +1.1 to +2.7 points across six
+settings (two confidence definitions, margins 53, 55 and 57%), and positions opened in 2023–2025
+are ahead in five of the six settings instead of two. The two sectors were chosen on the same data,
+so part of that is hindsight until the full list confirms it.
 
 **Inputs that arrived on 2026-11-11.** Task K03: the statements printed in 3,609 releases, graded
 against the later filing; the release's revenue equals the filed figure in 1,484 of 1,491 comparable
