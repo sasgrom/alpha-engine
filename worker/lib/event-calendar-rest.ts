@@ -7,6 +7,17 @@ export interface RestCompany {
   name: string;
 }
 
+export function stooqTickerMap(rows: { cik: number; priceTicker: string | null }[]): Map<number, string> {
+  const output = new Map<number, string>();
+  for (const row of rows) {
+    if (!row.priceTicker) continue;
+    const existing = output.get(row.cik);
+    if (existing && existing !== row.priceTicker) throw new Error(`Multiple Stooq tickers for CIK ${row.cik}: ${existing}, ${row.priceTicker}`);
+    output.set(row.cik, row.priceTicker);
+  }
+  return output;
+}
+
 export interface ExhibitOutcome {
   accessionNo: string;
   status: "complete" | "no_exhibit" | "error";

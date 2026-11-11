@@ -8,7 +8,7 @@ import path from "node:path";
 import { sql } from "drizzle-orm";
 import { getDb } from "../api/queries/connection";
 import { buildQuarters, type CalendarFiling, type CalendarQuarter } from "../worker/lib/event-calendar";
-import { calendarRowsFromSubmissions, companyPilotChecks, parseIndexAcceptanceEt, projectRestRun, seededQuarterSample, type ExhibitOutcome, type RestCompany } from "../worker/lib/event-calendar-rest";
+import { calendarRowsFromSubmissions, companyPilotChecks, parseIndexAcceptanceEt, projectRestRun, seededQuarterSample, stooqTickerMap, type ExhibitOutcome, type RestCompany } from "../worker/lib/event-calendar-rest";
 import { fetchDoc, isPermanentSecMissing, listFilingDocs, realCacheRoot, secGet } from "../worker/lib/edgar";
 import { exhibitCacheName, selectSubstantiveExhibits } from "../worker/lib/exhibits";
 import { writeJsonAtomic } from "../worker/lib/json-file";
@@ -257,7 +257,7 @@ async function processCompany(company: RestCompany): Promise<{ result: CompanyRe
   const checkpoint = readJsonIfExists<CompanyCheckpoint>(checkpointFile);
   const inheritedBytesDownloaded = checkpoint?.result.bytesDownloaded ?? 0;
   const inheritedElapsedSeconds = checkpoint?.result.elapsedSeconds ?? 0;
-  if (checkpoint && checkpoint.schemaVersion === 1 && checkpoint.codeHash === codeFingerprint && checkpoint.cik === company.cik && checkpoint.inputSha256 === hashBytes(JSON.stringify({ submissions: source.inputSha256, spyDates })) && checkpoint.cacheable && checkpoint.result.cik === company.cik && checkpoint.result.outcomes.every((outcome) => outcome.status !== "complete" || (outcome.files.length > 0 && validExhibitFiles(company.cik, outcome.accessionNo, outcome.files)))) {
+  if (checkpoint && checkpoint.schemaVersion === 1 && checkpoint.codeHash === codeFingerprint && checkpoint.cik === company.cik && checkpoint.inputSha256 === hashBytes(JSON.stringify({ submissions: source.inputSha256, spyDates, ticker: company.ticker })) && checkpoint.cacheable && checkpoint.result.cik === company.cik && checkpoint.result.outcomes.every((outcome) => outcome.status !== "complete" || (outcome.files.length > 0 && validExhibitFiles(company.cik, outcome.accessionNo, outcome.files)))) {
     return { result: checkpoint.result, resumed: true };
   }
   const filings = calendarRowsFromSubmissions(company, source.pages);
@@ -290,7 +290,7 @@ async function processCompany(company: RestCompany): Promise<{ result: CompanyRe
     bytesOnDisk: outcomes.reduce((total, outcome) => total + outcome.files.reduce((sum, file) => sum + file.size, 0), 0),
     elapsedSeconds: inheritedElapsedSeconds + (Date.now() - companyStarted) / 1000,
   };
-  writeJsonAtomic(checkpointFile, { schemaVersion: 1, codeHash: codeFingerprint, cik: company.cik, inputSha256: hashBytes(JSON.stringify({ submissions: source.inputSha256, spyDates })), cacheable: true, result } satisfies CompanyCheckpoint, true);
+  writeJsonAtomic(checkpointFile, { schemaVersion: 1, codeHash: codeFingerprint, cik: company.cik, inputSha256: hashBytes(JSON.stringify({ submissions: source.inputSha256, spyDates, ticker: company.ticker })), cacheable: true, result } satisfies CompanyCheckpoint, true);
   return { result, resumed: false };
 }
 
@@ -301,16 +301,19 @@ let spyDates: string[] = [];
 const db = getDb();
 try {
   const existingUniverse = readJsonIfExists<RestCompany[]>(universeFile);
-  if (!existingUniverse || !universeEvidence) {
+  if (!existingUniverse || !universeEvidence || universeEvidence.tickerSource !== "prices.stooq.ticker") {
     const research50 = new Set((JSON.parse(readFileSync("worker/research-universe-50.json", "utf8")) as { cik: number }[]).map((row) => Number(row.cik)));
-    const [factRows]: any = await db.execute(sql`SELECT c.cik, c.ticker, c.name, fc.factRows, pc.priceRows FROM companies c JOIN (SELECT cik, COUNT(*) factRows FROM facts GROUP BY cik) fc ON fc.cik=c.cik LEFT JOIN (SELECT cik, COUNT(*) priceRows FROM prices WHERE source="stooq" GROUP BY cik) pc ON pc.cik=c.cik ORDER BY fc.factRows DESC, c.cik`);
+    const [factRows]: any = await db.execute(sql`SELECT c.cik, c.ticker, c.name, fc.factRows, pc.priceRows, pc.priceTicker FROM companies c JOIN (SELECT cik, COUNT(*) factRows FROM facts GROUP BY cik) fc ON fc.cik=c.cik LEFT JOIN (SELECT cik, ticker priceTicker, COUNT(*) priceRows FROM prices WHERE source="stooq" GROUP BY cik,ticker) pc ON pc.cik=c.cik ORDER BY fc.factRows DESC, c.cik`);
     const [priceRows]: any = await db.execute(sql`SELECT p.cik, p.ticker, COUNT(*) priceRows, MAX(c.name) name, MAX(f.factRows) factRows FROM (SELECT cik,ticker FROM prices WHERE source="stooq" GROUP BY cik,ticker) p LEFT JOIN companies c ON c.cik=p.cik LEFT JOIN (SELECT cik,COUNT(*) factRows FROM facts GROUP BY cik) f ON f.cik=p.cik WHERE p.cik>0 GROUP BY p.cik,p.ticker ORDER BY p.cik`);
     const factCompanies = factRows.filter((row: any) => !research50.has(Number(row.cik)));
     const eligible = factCompanies.filter((row: any) => Number(row.priceRows) > 0);
-    universe = eligible.map((row: any) => ({ cik: Number(row.cik), ticker: String(row.ticker), name: String(row.name) }));
+    const stooqTickers = stooqTickerMap(factCompanies);
+    universe = eligible.map((row: any) => ({ cik: Number(row.cik), ticker: stooqTickers.get(Number(row.cik))!, name: String(row.name) }));
     universeEvidence = {
       factCompanies: factRows.length,
       eligibleCompanies: universe.length,
+      tickerSource: "prices.stooq.ticker",
+      tickerCorrections: eligible.filter((row: any) => String(row.ticker) !== stooqTickers.get(Number(row.cik))).map((row: any) => ({ cik: Number(row.cik), from: String(row.ticker), to: stooqTickers.get(Number(row.cik)) })),
       factsWithoutStooq: factCompanies.filter((row: any) => !Number(row.priceRows)).map((row: any) => ({ cik: Number(row.cik), ticker: String(row.ticker), factRows: Number(row.factRows) })),
       pricesWithoutFacts: priceRows.filter((row: any) => !research50.has(Number(row.cik)) && !Number(row.factRows)).map((row: any) => ({ cik: Number(row.cik), ticker: String(row.ticker), priceRows: Number(row.priceRows) })),
     };

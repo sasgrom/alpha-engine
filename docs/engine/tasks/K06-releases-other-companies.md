@@ -30,7 +30,10 @@ except a handful of small samples needed as unit-test fixtures.
 Every CIK that has rows in local `facts` and a `prices` series with `source = 'stooq'`, and is not
 in `worker/research-universe-50.json`. Expected: about 450. Write the list once to
 `D:\research\alpha-engine\engine\events\universe-rest.json` (`cik`, `ticker`, `name`) and report
-its size and any company that has figures but no price series (or the reverse).
+its size and any company that has figures but no price series (or the reverse). CIK is the company identity
+key; `ticker` comes from `prices.ticker` for `source='stooq'`, not from the registry's preferred-share or
+secondary symbol. The summary retains every registry-to-traded-symbol correction and rejects ambiguous
+multiple-ticker mappings for one CIK.
 
 ## Steps
 

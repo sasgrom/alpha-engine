@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calendarRowsFromSubmissions, companyPilotChecks, parseIndexAcceptanceEt, projectRestRun, seededQuarterSample, type ExhibitOutcome } from "./event-calendar-rest";
+import { calendarRowsFromSubmissions, companyPilotChecks, parseIndexAcceptanceEt, projectRestRun, seededQuarterSample, stooqTickerMap, type ExhibitOutcome } from "./event-calendar-rest";
 import { buildQuarters, type CalendarFiling } from "./event-calendar";
 
 const company = { cik: 1, ticker: "AAA", name: "Example" };
@@ -44,6 +44,14 @@ describe("REST submissions calendar", () => {
     expect(companyPilotChecks(filings, quarters, []).issues).toContain("1 earnings releases have no exhibit outcome");
     const missing: ExhibitOutcome = { ...complete, files: [], status: "no_exhibit", reason: "no substantive exhibit", bytesDownloaded: 0 };
     expect(companyPilotChecks(filings, quarters, [missing]).pass).toBe(true);
+  });
+
+  it("uses the traded Stooq ticker and rejects ambiguous CIK mappings", () => {
+    const tickers = stooqTickerMap([{ cik: 1, priceTicker: "C" }, { cik: 2, priceTicker: "BRK-B" }, { cik: 3, priceTicker: null }]);
+    expect(tickers.get(1)).toBe("C");
+    expect(tickers.get(2)).toBe("BRK-B");
+    expect(tickers.has(3)).toBe(false);
+    expect(() => stooqTickerMap([{ cik: 1, priceTicker: "GOOG" }, { cik: 1, priceTicker: "GOOGL" }])).toThrow(/Multiple Stooq tickers/);
   });
 
   it("projects remaining bytes, time and the 100 GiB stop guard", () => {
