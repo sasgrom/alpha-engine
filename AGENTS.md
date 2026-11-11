@@ -38,6 +38,19 @@ Progress messages should be short status updates, not questions. Ask the owner o
 - GDELT is frozen, including manual browser access. Do not send any GDELT requests.
 - Code comments, UI strings and test names are English. The Russian manual is the existing sanctioned Russian project artifact.
 
+## 3.1 D:-drive interruption and resume protocol
+
+The external D: drive may disconnect and later remount. Treat every unexpected D: read, write or mount failure as a possible interruption, never as an empty cache or permission to start over.
+
+- Stop the affected collector or builder on the failure and preserve its failed/partial state, logs, raw inputs and completed checkpoints. Do not report success, skip the failed item silently or keep writing derived artifacts from incomplete inputs.
+- Never recreate a missing D: cache on C:, initialize a fresh manifest, delete apparently missing data or launch a full backfill merely because D: is unavailable. Storage migration and deletion remain owner-gated.
+- Long jobs must resume from atomic per-item checkpoints. Reuse a checkpoint only after its schema, code version/hash, source-input hash and release/company identity match. Never treat a temporary or partially written file as a completed checkpoint.
+- After D: remounts, verify the expected archive roots and junction realpaths, available space and representative manifest/raw hashes before resuming. A drive letter alone is not evidence that the correct archive is back.
+- Inspect the old process and its command line before starting anything. If it is still alive, do not start a duplicate; if it exited, identify the last completed checkpoint and resume the existing command. Keep exactly one scheduler and one instance of each collector/builder.
+- Resume idempotently after verification, with the normal maximum of two attempts for the same failing step followed by diagnosis. Do not redownload or rewrite valid completed work merely to make the run look clean.
+- Keep source, tests, task specifications and the handoff on C: and commit verified work promptly. Committed summaries and manifests record expected artifact hashes and counts; they support integrity checks but do not replace the raw D: archive.
+- At every interruption and recovery, update `docs/KIMI_CODE_HANDOFF.md` with the failure, last verified checkpoint, active/exited process state, remount checks, resumed command and resulting counts/hashes. Another session must be able to continue without guessing or repeating completed work.
+
 ## 4. Daily operations workflow
 
 1. Build the local health report:

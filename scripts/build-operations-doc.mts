@@ -19,6 +19,19 @@ for (const module of OPERATION_MODULES) {
   lines.push(`### ${module.name}`, "", module.purpose, "", `- **When:** ${module.when}`, `- **Input:** ${module.input}`, `- **Output:** ${module.output}`, "", "```powershell", module.normalCommand, "```", "");
 }
 lines.push(
+  "### D:-drive interruption recovery",
+  "",
+  "The external D: drive can disconnect and remount later. A missing or unreadable D: path is an infrastructure failure, not an empty archive. Stop the affected collector or builder and preserve its logs, raw inputs and completed checkpoints; never initialize a replacement cache on C:, delete supposedly missing data or start a full backfill from zero.",
+  "",
+  "1. Record the failed/partial state honestly. Do not skip the failed item or publish derived output built from incomplete inputs.",
+  "2. Reuse only atomic completed checkpoints whose schema, code hash, input hash and company/release identity match. Ignore temporary files as completion evidence and do not delete unreviewed work.",
+  "3. After remount, verify expected roots and junction realpaths, free space and representative manifest/raw hashes. The D: drive letter alone does not prove that the right archive is available.",
+  "4. Inspect the old process and command line. If it is alive, do not start a duplicate; if it exited, identify the last verified checkpoint. Keep one scheduler and one instance of each collector/builder.",
+  "5. Resume the existing idempotent command after verification, with at most two attempts for the same failing step before diagnosis. Do not redownload valid completed work.",
+  "6. Regenerate downstream reports and compare counts/hashes before claiming recovery. Record the failure, last verified checkpoint, process state, remount checks, resume command and final evidence in `docs/KIMI_CODE_HANDOFF.md`.",
+  "",
+  "Keep verified source, tests, specifications and handoffs committed on C:. Raw D: artifacts remain outside Git; committed summaries and manifests provide integrity evidence, not a substitute for the raw archive.",
+  "",
   "## 2. Install hidden startup processes",
   "",
   "Run from `C:\\dev\\alpha-engine` after `git pull` and `npm install --no-audit --no-fund`:",
