@@ -254,8 +254,13 @@ today, so historical results describe survivors. Step 5 must state this next to 
   into a quarter (the company's guidance direction and revisions at the previous release) crossed
   with what the release then showed (against that guidance, or the change in growth), read as a
   table of quadrants and as a continuous interaction, with the first-session reaction held out.
-  First raw look on the 50 in the research repository; a candidate family for the engine only if it
-  adds beyond the reaction on the K06 list.
+  First raw look on the 50 (same day, research repository `tools/expectations-vs-8k.py`): when the
+  stock ran up into the release, the release is priced on the first day and nothing follows; when it
+  fell, a quarter with faster revenue growth keeps drifting up and a slower one keeps sliding, beyond
+  what the first-session reaction predicts (better minus worse +0.6%, +0.7%, +1.2% over 5, 10, 20
+  sessions, 1,033 decisions); after lowered company guidance the same, larger, on few cases. Fixed
+  for the K06 test: revenue acceleration after a fall, as one candidate reading (needs the K03
+  release reader on those companies' releases).
 
 ## 6. Engine version 1: procedure and results (2026-11-10 and 11)
 
