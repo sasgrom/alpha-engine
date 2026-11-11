@@ -50,10 +50,10 @@ describe("Methodology handbook", () => {
     expect(host!.textContent).toContain("RV20");
     expect(host!.textContent).toContain("ATM IV");
     expect(host!.textContent).toContain("ΔIC = IC_ATM IV − IC_RV20");
-    expect(host!.textContent).toContain("64.85%");
-    expect(host!.textContent).toContain("0.0706");
-    expect(host!.textContent).toContain("8.45%");
-    expect(host!.textContent).toContain("−9.13 bps / month");
+    expect(host!.textContent).toContain("62.32%");
+    expect(host!.textContent).toContain("0.1288");
+    expect(host!.textContent).toContain("9.03%");
+    expect(host!.textContent).toContain("−4.46 bps / month");
     expect(host!.textContent).toContain("AAPL risk profile");
     expect(host!.textContent).toContain("$11.85");
     expect(host!.textContent).toContain("$8.09");

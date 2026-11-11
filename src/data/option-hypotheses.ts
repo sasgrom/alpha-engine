@@ -27,6 +27,7 @@ export const optionHypotheses: readonly OptionHypothesis[] = [
       { date: "2026-10-29", kind: "qa", summary: "Cross-provider AAPL near-ATM IV MAE 0.00242 across 14 pairs. This is QA, not an IC result." },
       { date: "2026-10-29", kind: "qa", summary: "Yahoo AAPL chains rejected for IV/OI QA: two-sided quotes cover only 0.56% near and 3.45% far; OI is almost absent. EODHD/Cboe result unchanged." },
       { date: "2026-10-29", kind: "supported", summary: "Strong forward-RV evidence: IC 0.737 (95% CI 0.687–0.778), sector-neutral 0.582, all 90 months positive. Volatility use only; incremental baseline test required before production." },
+      { date: "2026-11-11", kind: "supported", summary: "Recomputed on feature schema 3, spot read from the quotes (before, a split-adjusted close mis-chose the at-the-money strike before splits): IC 0.796 (95% CI 0.764–0.821), sector-neutral 0.639, all 91 months positive; paired advantage over RV20 0.129 (95% CI 0.115–0.144). Volatility use only." },
     ],
   },
   {
@@ -37,6 +38,7 @@ export const optionHypotheses: readonly OptionHypothesis[] = [
     evidence: [
       { date: "2026-10-29", kind: "blocked", summary: "Formula candidate only. Coverage testing requires a daily options history." },
       { date: "2026-10-29", kind: "supported", summary: "Calibrated: coverage 64.8% versus RV20 59.8%, MAE 13.58 versus 13.91, RMSE 26.30 versus 28.03. Better than trailing RV, but not directional alpha." },
+      { date: "2026-11-11", kind: "supported", summary: "Recomputed on feature schema 3 (spot read from the quotes): coverage 62.3% versus RV20 59.5%, MAE 13.06 versus 13.61, RMSE 25.97 versus 27.81. Still better than trailing RV, not directional alpha." },
     ],
   },
   {
@@ -47,6 +49,7 @@ export const optionHypotheses: readonly OptionHypothesis[] = [
     evidence: [
       { date: "2026-10-29", kind: "computed", summary: "Computed for 52 latest chains. No time-series or IC test has run." },
       { date: "2026-10-29", kind: "refuted", summary: "Weak and regime-dependent: overall IC −0.070 (95% CI −0.096 to −0.044), but the 2026 holdout CI crosses zero. Not a production signal." },
+      { date: "2026-11-11", kind: "refuted", summary: "Recomputed on feature schema 3 (spot read from the quotes): overall IC −0.057 (95% CI −0.081 to −0.032), 28% of months positive. Still weak; not a production signal." },
     ],
   },
   {
@@ -57,6 +60,7 @@ export const optionHypotheses: readonly OptionHypothesis[] = [
     evidence: [
       { date: "2026-10-29", kind: "blocked", summary: "Requires matched daily IV and price history." },
       { date: "2026-10-29", kind: "refuted", summary: "No stable VRP effect: overall IC −0.029 (95% CI −0.069 to 0.009); odd/even and sector regimes flip signs. Nominal FDR rejection is insufficient." },
+      { date: "2026-11-11", kind: "refuted", summary: "Recomputed on feature schema 3 (spot read from the quotes): overall IC −0.024 (95% CI −0.061 to 0.012). Still no stable effect." },
     ],
   },
   {

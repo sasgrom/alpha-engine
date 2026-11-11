@@ -31,8 +31,8 @@ describe("Volatility risk replay", () => {
     expect(host!.textContent).toContain("2024-01-02");
     expect(host!.textContent).toContain("66.67%");
     expect(host!.textContent).toContain("0.78×");
-    expect(host!.textContent).toContain("64.85%");
-    expect(host!.textContent).toContain("59.79%");
+    expect(host!.textContent).toContain("62.32%");
+    expect(host!.textContent).toContain("59.47%");
     expect(host!.textContent).toContain("Return and capital are your scenario assumptions");
     expect(host!.textContent).toContain("Directional alpha");
     expect(host!.textContent).toContain("Not claimed");

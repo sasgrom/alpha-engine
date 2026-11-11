@@ -137,16 +137,16 @@ export default function Methodology() {
               <table className="methodology-table">
                 <thead><tr><th>Metric</th><th>ATM IV</th><th>RV20</th><th>Interpretation</th></tr></thead>
                 <tbody>
-                  <tr><td>Forward-RV IC</td><td>0.737 <small>95% CI 0.687–0.778</small></td><td>0.667</td><td>Strong volatility information</td></tr>
-                  <tr><td>Sector-neutral IC</td><td>0.582</td><td>0.469</td><td>Survives sector residualization</td></tr>
-                  <tr><td>Paired ΔIC</td><td>0.0706 <small>95% CI 0.0385–0.1001</small></td><td>baseline</td><td>Positive incremental value</td></tr>
-                  <tr><td>Expected-move coverage</td><td>64.85%</td><td>59.79%</td><td>Better interval calibration</td></tr>
-                  <tr><td>MAE</td><td>13.58</td><td>13.91</td><td>Lower absolute error</td></tr>
-                  <tr><td>RMSE</td><td>26.30</td><td>28.03</td><td>Lower tail-sensitive error</td></tr>
-                  <tr><td>Mean actual / expected</td><td>0.899</td><td>1.057</td><td>RV20 overestimates more</td></tr>
-                  <tr><td>Targeted annualized volatility</td><td>8.45%</td><td>9.95%</td><td>15.11% lower with ATM IV</td></tr>
-                  <tr><td>Targeted max drawdown</td><td>11.40%</td><td>14.87%</td><td>Monthly observations, not a daily equity curve</td></tr>
-                  <tr><td>Targeted net-return delta</td><td>−9.13 bps / month <small>95% CI −21.24…+6.42</small></td><td>baseline</td><td>No proven return advantage</td></tr>
+                  <tr><td>Forward-RV IC</td><td>0.796 <small>95% CI 0.764–0.821</small></td><td>0.667</td><td>Strong volatility information</td></tr>
+                  <tr><td>Sector-neutral IC</td><td>0.639</td><td>0.471</td><td>Survives sector residualization</td></tr>
+                  <tr><td>Paired ΔIC</td><td>0.1288 <small>95% CI 0.1150–0.1440</small></td><td>baseline</td><td>Positive incremental value</td></tr>
+                  <tr><td>Expected-move coverage</td><td>62.32%</td><td>59.47%</td><td>Better interval calibration</td></tr>
+                  <tr><td>MAE</td><td>13.06</td><td>13.61</td><td>Lower absolute error</td></tr>
+                  <tr><td>RMSE</td><td>25.97</td><td>27.81</td><td>Lower tail-sensitive error</td></tr>
+                  <tr><td>Mean actual / expected</td><td>0.949</td><td>1.063</td><td>RV20 overestimates more</td></tr>
+                  <tr><td>Targeted annualized volatility</td><td>9.03%</td><td>9.98%</td><td>9.44% lower with ATM IV</td></tr>
+                  <tr><td>Targeted max drawdown</td><td>12.34%</td><td>14.87%</td><td>Monthly observations, not a daily equity curve</td></tr>
+                  <tr><td>Targeted net-return delta</td><td>−4.46 bps / month <small>95% CI −15.96…+9.97</small></td><td>baseline</td><td>No proven return advantage</td></tr>
                 </tbody>
               </table>
             </div>

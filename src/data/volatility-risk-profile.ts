@@ -14,7 +14,9 @@ export const AAPL_RISK_REPLAY = {
   forecastVol: { atmIv: 0.30, rv20: 0.192 },
   expectedMove: { atmIv: 11.851, rv20: 7.601 },
   actualMove: 8.086,
-  calibration: { atmIvCoverage: 0.6485, rv20Coverage: 0.5979 },
+  // Recomputed 2026-11-11 on feature schema 3 (spot read from the quotes; before: 0.6485 and 0.5979, when the
+  // spot was a split-adjusted close and the at-the-money strike was mis-chosen before splits).
+  calibration: { atmIvCoverage: 0.6232, rv20Coverage: 0.5947 },
   provenance: "Reviewed DoltHub option-feature snapshot and availability-anchored local price series",
 } as const;
 
