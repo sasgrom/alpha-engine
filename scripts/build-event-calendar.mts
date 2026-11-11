@@ -154,7 +154,7 @@ try {
     headerChecks.push({ ...evidence, match: evidence.acceptedEt === row.acceptedEt });
   }
   const summary = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     generatedAt: new Date().toISOString(),
     universe: universe.length,
     filingsTotal: filings.length,
