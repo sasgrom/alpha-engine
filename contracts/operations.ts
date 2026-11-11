@@ -92,6 +92,19 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "schwab-context.json automatically pushed through reportFile after successful scheduled runs; no accounts, orders or full-universe streaming.", requirements: ["network", "driveD"], notes: "Hourly context is independent of daily option features. Missing endpoints remain visible; push failure marks the job error after one retry. No GPU is used.",
   }),
   job({
+    id: "schwab-fetch-sp500", name: "Schwab REST daily snapshot · S&P 500 and funds", group: "options", mode: "scheduled", cron: "30 4 * * *", defaultEnabled: true, dependsOn: [],
+    ...npx("worker/schwab-fetch.mts", ["--price-series", "--exclude", "research-universe-50.json", "--skip-preferences", "--root", "D:/research/alpha-engine/schwab-sp500"]),
+    purpose: "Capture chains, quotes, daily price history and instruments for every S&P 500 company outside the research 50 (both listings of dual-class companies), SPY and the eleven sector funds.",
+    input: "Schwab Market Data Production; local token file; edgar-universe.json minus research-universe-50.json, plus the funds.", output: "D:-only raw snapshots under schwab-sp500 with their own resumable manifest.",
+    destination: "Local only: no operational push, no normalized UI snapshot and no production write.", requirements: ["network", "driveD"], notes: "About 465 tickers in roughly 30 minutes, paced below the provider's limit of 120 requests a minute; the access token is renewed during the run. The research-50 lane, its UI snapshot and its production push are unchanged.",
+  }),
+  job({
+    id: "schwab-daily-bars", name: "Schwab daily bars into local prices", group: "options", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-fetch-sp500"],
+    ...npx("worker/schwab-daily-bars.mts"), purpose: "Store every completed official daily candle of both Schwab archives in local prices, so a day one run misses is filled by the next.",
+    input: "pricehistory files of the schwab and schwab-sp500 archives (about one month each).", output: "Local prices rows with source schwab and worker/.runs/local-generated/schwab-daily-bars.json with inserts, conflicts and holes against SPY's sessions.",
+    destination: "Local MySQL only; the operational pricesDaily push is unchanged.", requirements: ["mysql", "driveD"], notes: "A stored close is never changed: a different close is a conflict and marks the job error; other field differences are listed. Stooq bars stay a separate source.",
+  }),
+  job({
     id: "analytics-snapshot", name: "Analytics and weekly evidence snapshot", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-factors"],
     ...npx("scripts/build-analytics-snapshot.mts"), purpose: "Refresh Analytics metrics and weekly evidence from the current DB and option manifests.",
     input: "Local fundamentals, factors, tone, prices, 13F and option feature manifests.", output: "Generated analytics JSON/TypeScript and the English project-strength review.",

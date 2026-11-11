@@ -1,8 +1,16 @@
-/** Schwab REST snapshots with raw-D: provenance and resumable manifests. */
+/**
+ * Schwab REST snapshots with raw-D: provenance and resumable manifests.
+ * Scope flags: --universe <file> (default research-universe-50.json); --price-series instead takes every series of
+ * the daily price jobs (S&P 500 snapshot with both listings of dual-class companies, research universe, SPY, eleven
+ * sector funds); --exclude <file> drops tickers another job already captures; --skip-preferences leaves out the
+ * streaming User Preference call; --root <dir> keeps a separate D: archive and manifest.
+ */
 import "dotenv/config";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statfsSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { isSchwabTokenFresh, loadSchwabToken, refreshSchwabToken, saveSchwabToken, schwabDailyPriceHistoryPath, schwabGet, schwabTokenDirectory, schwabTraderGet } from "./lib/schwab";
+import { schwabDailyPriceHistoryPath, schwabTokenDirectory } from "./lib/schwab";
+import { createSchwabSession } from "./lib/schwab-paced";
+import { schwabPriceSeries, schwabSymbol } from "./lib/schwab-price-series";
 import { sha256Text } from "./lib/schwab-normalize";
 import { isSchwabBodyOverflow, mergeSchwabChunks, monthlySchwabChunks } from "./lib/schwab-chain-chunks";
 import { schwabChainFile, schwabChunkDirectory, schwabChunkDirectoryFromFile, schwabQuoteFile } from "./lib/schwab-snapshot";
@@ -26,15 +34,14 @@ const realRoot = realCacheRoot(root);
 const stats = statfsSync(realRoot);
 if (stats.bavail * stats.bsize < 2 * 1024 ** 3) throw new Error("Less than 2 GiB free on the Schwab raw archive drive");
 
-const clientId = process.env.SCHWAB_CLIENT_ID;
-const clientSecret = process.env.SCHWAB_CLIENT_SECRET;
-let token = loadSchwabToken();
-if (!isSchwabTokenFresh(token)) {
-  if (!clientId || !clientSecret) throw new Error("Access token expired. Set SCHWAB_CLIENT_ID and SCHWAB_CLIENT_SECRET, then run worker/schwab-refresh.mts");
-  token = saveSchwabToken(await refreshSchwabToken(token.refresh_token, clientId, clientSecret));
-  prog.log("access token refreshed");
-}
-const universeAll = dedupeExpectationUniverse(loadEdgarUniverse(universeFile).filter((company) => !only || company.ticker === only));
+const session = createSchwabSession({ log: (line) => prog.log(line) });
+await session.prepare();
+const excludeFile = arg("--exclude");
+const excluded = new Set(excludeFile ? loadEdgarUniverse(excludeFile).map((company) => company.ticker) : []);
+const candidates = process.argv.includes("--price-series")
+  ? schwabPriceSeries().map((series) => ({ cik: series.priceKey, ticker: series.ticker, name: series.ticker }))
+  : dedupeExpectationUniverse(loadEdgarUniverse(universeFile));
+const universeAll = candidates.filter((company) => !excluded.has(company.ticker) && (!only || company.ticker === only));
 if (only && !universeAll.length) throw new Error(`Unknown ticker ${only}`);
 const start = fromTicker ? universeAll.findIndex((company) => company.ticker === fromTicker) : 0;
 if (fromTicker && start < 0) throw new Error(`Unknown --from-ticker ${fromTicker}`);
@@ -46,26 +53,18 @@ function writeTextAtomic(file: string, text: string): void {
   try { writeFileSync(tmp, text); renameSync(tmp, file); }
   finally { rmSync(tmp, { force: true }); }
 }
-async function request(pathname: string, accessToken: string, service: "market" | "trader" = "market"): Promise<string> {
-  const result = service === "trader" ? await schwabTraderGet(pathname, accessToken) : await schwabGet(pathname, accessToken);
-  if (result.status !== 200) {
-    const error = new Error(`HTTP ${result.status}: ${result.body.slice(0, 180)}`) as Error & { httpStatus?: number };
-    error.httpStatus = result.status;
-    throw error;
-  }
-  return result.body;
-}
+const request = (pathname: string, service: "market" | "trader" = "market") => session.get(pathname, service);
 const today = new Date().toISOString().slice(0, 10);
 async function fetchChain(ticker: string, capturedAt: string): Promise<{ raw: string; chunks: number }> {
   try {
-    return { raw: await request(`chains?symbol=${encodeURIComponent(ticker)}&contractType=ALL&includeQuotes=TRUE`, token.access_token), chunks: 1 };
+    return { raw: await request(`chains?symbol=${encodeURIComponent(schwabSymbol(ticker))}&contractType=ALL&includeQuotes=TRUE`), chunks: 1 };
   } catch (error) {
     if (!isSchwabBodyOverflow(error)) throw error;
     const chunks = monthlySchwabChunks(today);
     prog.log(`${ticker}: full chain exceeded the provider body limit; bounded fallback to ${chunks.length} monthly windows`);
     const payloads: { fromDate: string; toDate: string; raw: string }[] = [];
     for (const [index, chunk] of chunks.entries()) {
-      const raw = await request(`chains?symbol=${encodeURIComponent(ticker)}&contractType=ALL&includeQuotes=TRUE&fromDate=${chunk.fromDate}&toDate=${chunk.toDate}`, token.access_token);
+      const raw = await request(`chains?symbol=${encodeURIComponent(schwabSymbol(ticker))}&contractType=ALL&includeQuotes=TRUE&fromDate=${chunk.fromDate}&toDate=${chunk.toDate}`);
       writeTextAtomic(path.join(root, `${schwabChunkDirectory(today, ticker, capturedAt, force)}/${chunk.fromDate}_${chunk.toDate}.json`), raw);
       payloads.push({ ...chunk, raw });
       if ((index + 1) % 6 === 0 || index === chunks.length - 1) prog.log(`${ticker}: ${index + 1}/${chunks.length} chain chunks cached`);
@@ -112,11 +111,11 @@ for (const company of universe) {
     writeTextAtomic(path.join(root, entry.file), chain.raw);
     entry.sourceHash = sha256Text(chain.raw);
     entry.chainChunks = chain.chunks;
-    const quote = await request(`quotes?symbols=${encodeURIComponent(company.ticker)}`, token.access_token);
+    const quote = await request(`quotes?symbols=${encodeURIComponent(schwabSymbol(company.ticker))}`);
     writeTextAtomic(path.join(root, schwabQuoteFile(today, company.ticker, capturedAt, force)), quote);
-    const history = await request(schwabDailyPriceHistoryPath(company.ticker, Date.now()), token.access_token);
+    const history = await request(schwabDailyPriceHistoryPath(schwabSymbol(company.ticker), Date.now()));
     writeTextAtomic(path.join(root, `pricehistory/${company.ticker}.json`), history);
-    const instrument = await request(`instruments?symbol=${encodeURIComponent(company.ticker)}&projection=fundamental`, token.access_token);
+    const instrument = await request(`instruments?symbol=${encodeURIComponent(schwabSymbol(company.ticker))}&projection=fundamental`);
     writeTextAtomic(path.join(root, `instruments/${company.ticker}.json`), instrument);
     entry.status = "complete";
     transportFailures = 0;
@@ -135,8 +134,9 @@ for (const company of universe) {
   }
 }
 let preferenceSummary = "User Preference captured";
-try {
-  const preferences = await request("userPreference", token.access_token, "trader");
+if (process.argv.includes("--skip-preferences")) preferenceSummary = "User Preference not requested";
+else try {
+  const preferences = await request("userPreference", "trader");
   writeTextAtomic(path.join(root, "user-preferences.json"), preferences);
   writeJsonAtomic(path.join(root, "user-preference-status.json"), {
     schemaVersion: 1,
