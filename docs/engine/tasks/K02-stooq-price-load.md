@@ -78,3 +78,87 @@ Rules:
 
 Append a "Delivery report" section to this file with the numbers for checks 1–5 and the key
 convention for ETFs. Add the usual note to `docs/KIMI_CODE_HANDOFF.md`.
+
+## Delivery report
+
+Implemented in `scripts/load-stooq-prices.mts` and `worker/lib/stooq-price-load.ts`. The loader reads
+and hashes `D:\stooq data 102726\d_us_txt.zip` once, parses those verified bytes in memory, and uses
+the existing upsert in batches of at most 500 rows. It does not delete bars or use an LLM. Archive
+size is **542,554,531 bytes**, SHA-256
+`52d556a45701b5e3ba65b61df52b6341de2c2fe9fb628852f99ee2d08239380a`.
+
+Two rerun attempts failed during archive reads with `EPERM` and then `ENOENT`, although the source
+was readable in independent checks and its hash was unchanged. `unzipper.Open.file` opens a separate
+read stream for archive ranges; the final loader instead uses the project's established `Open.buffer`
+pattern on one immutable, hash-verified buffer, avoiding later per-entry filesystem opens. The source
+stays on D:; no permissions or archive contents were changed. The underlying intermittent OS error
+was not otherwise established. Original-bar snapshots are read in ID batches of 10,000, and their
+value hashes are compared in batches of 1,000, rather than retaining millions of raw row objects.
+
+### Key conventions and dual-class correction
+
+- SPY retains `cik=0`. The sector ETF keys are XLB=-1001, XLC=-1002, XLE=-1003, XLF=-1004,
+  XLI=-1005, XLK=-1006, XLP=-1007, XLRE=-1008, XLU=-1009, XLV=-1010 and XLY=-1011.
+- The first archive pass inserted **2,526,859** rows, increasing the Stooq store from **1,097,787**
+  to **3,624,646** rows; all original IDs remained present and **0 original bars differed**. An
+  independent database readback then found that FOX/FOXA, GOOG/GOOGL and NWS/NWSA share a CIK,
+  while `uq_prices_bar` is `(cik,date,source)`. The second listing had therefore overwritten the
+  first on shared dates. This was corrected before delivery rather than reporting archive matches
+  as stored coverage.
+- `stooqPriceCik` assigns local price-series keys GOOG=-2001, FOX=-2002 and NWS=-2003. Primary
+  listings GOOGL, FOXA and NWSA retain the shared SEC CIK. These negative keys are not SEC CIKs;
+  `companies` is unchanged. Consumers resolving a particular listing use the exported mapping.
+  Both the ETF and second-listing conventions avoid real positive CIKs and require no schema change.
+- The loader now checks every requested ticker's stored row count and first/last dates against the
+  archive. It fails if that readback, original-bar preservation, benchmark coverage or the S&P
+  matching threshold fails. The summary contains the readback result.
+
+### Benchmark dates and archive quality
+
+SPY, XLB, XLE, XLF, XLI, XLK, XLP, XLU, XLV and XLY start on **2005-02-25**; XLC starts on
+**2018-06-21**; XLRE starts on **2015-10-08**. All twelve benchmark series end on **2026-10-26**.
+Their row counts are 5,450 each for the 2005 starts, 2,098 for XLC and 2,774 for XLRE.
+
+The complete archive scan found **0** gaps of more than five SPY sessions inside ticker histories,
+**0** non-positive OHLC values, **22** `high < low` observations and **0** duplicate dates. The
+high/low observations are retained and enumerated in the summary: ARE 3, BEN 4, DE 3, FITB 1,
+HUM 1, LII 4, PCG 2 and USB 4. **79** close-to-close moves beyond ±50% are also retained with
+`reviewOnly=true`, not silently removed or treated as validated corporate actions. Six companies
+have no local GICS sector and were not filled by guess: ENLT, IBM, LMT, META, RIVN and XOM_PRE.
+The gap calculation uses a sorted, deduplicated SPY calendar in one pass; regressions cover
+unsorted bars, duplicate unsorted calendar dates and exclusive gap endpoints.
+
+### Known limits
+
+- The archive contains only tickers listed today, so the history describes survivors.
+- SPY and some tickers start on 2005-02-25 in this archive.
+- Bars after 2026-10-26 need a newer archive; this task does not fetch one.
+
+### Acceptance checks and final run evidence
+
+1. **Coverage — pass.** All **502/502 (100%)** S&P snapshot tickers matched, exceeding the 98%
+   threshold; `unmatched=[]`. All **514** requested series matched and passed stored-row/date readback.
+   CSCO is present with **9,213 rows**, from 1990-03-26 through 2026-10-26.
+2. **Benchmarks — pass.** SPY and all eleven sector ETFs are loaded. Each first date is listed above:
+   ten start on 2005-02-25, XLC on 2018-06-21 and XLRE on 2015-10-08. Every benchmark ends 2026-10-26.
+3. **Original bars preserved — pass.** The initial comparison covered all **1,097,787** pre-existing
+   Stooq rows, including the previously loaded 53 tickers: **0 missing original IDs / 0 differing bars**.
+   Comparison covers IDs and bar values, excluding the intentionally refreshed `fetchedAt` timestamp.
+   The final rerun also reported **0 / 0**, with before=after **3,633,084** rows.
+4. **Idempotency — pass.** The completed second run of `npx tsx scripts/load-stooq-prices.mts` wrote
+   **0 new rows**. The store stayed at **3,633,084 rows**; readback verified **514/514** requested
+   series with **0 mismatches**. Across the initial load and dual-class correction, **2,535,297**
+   distinct rows were added. The full Stooq inventory has **517 series**: the 514 requested series plus
+   pre-existing ENLT, RIVN and XOM_PRE histories, which were preserved rather than deleted.
+5. **Checks and production isolation — pass.** `npx vitest run worker/lib/stooq-price-load.test.ts`
+   passed **5/5**; `npm run check`, the full suite (**183 files / 1,009 tests**) and production build
+   passed. `worker/lib/prod-push.ts` constructs `pricesDaily` from Schwab raw files, not this table;
+   Stooq and Schwab remain separate by `(cik,date,source)`. No production write, schema change,
+   deployment, model call or new service occurred.
+
+The successful idempotency run started at `2026-11-11T03:49:36.014Z` and generated its summary at
+`2026-11-11T04:19:17.240Z`. The committed summary is
+`research/engine/price-load-stooq-2026-10-27.summary.json`, **79,885 bytes**, SHA-256
+`5f5404b8c4191cc7cac1bc56837bd9b651da1b9acb27ed22a604d42d00961f2b`. It records
+`readStrategy="single-buffered-read"`, all per-ticker dates/counts, quality findings, original-bar
+comparison, readback and `productionWrite=false`.

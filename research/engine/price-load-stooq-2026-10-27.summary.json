@@ -1,0 +1,4359 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-11T04:19:17.240Z",
+ "loadStartedAt": "2026-11-11T03:49:36.014Z",
+ "archive": {
+  "path": "D:/stooq data 102726/d_us_txt.zip",
+  "bytes": 542554531,
+  "sha256": "52d556a45701b5e3ba65b61df52b6341de2c2fe9fb628852f99ee2d08239380a",
+  "readStrategy": "single-buffered-read"
+ },
+ "keyConvention": "SPY keeps cik=0; sector ETFs use -1001 through -1011. Second listings GOOG/FOX/NWS use -2001/-2002/-2003 because the bar key is (cik,date,source); primary listings retain the shared SEC CIK. Negative keys are local price-series identifiers, not SEC CIKs, and require no schema change",
+ "requested": 514,
+ "matched": 514,
+ "unmatched": [],
+ "sp500": {
+  "requested": 502,
+  "matched": 502,
+  "share": 1
+ },
+ "rowsWritten": 0,
+ "totalRows": 3633084,
+ "existingBars": {
+  "before": 3633084,
+  "after": 3633084,
+  "missingOriginalIds": 0,
+  "differingBars": 0
+ },
+ "readback": {
+  "verifiedTickers": 514,
+  "mismatches": []
+ },
+ "perTicker": [
+  {
+   "cik": 1090872,
+   "ticker": "A",
+   "firstDate": "1999-11-18",
+   "lastDate": "2026-10-26",
+   "rowCount": 6770
+  },
+  {
+   "cik": 320193,
+   "ticker": "AAPL",
+   "firstDate": "1984-09-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 10615
+  },
+  {
+   "cik": 1551152,
+   "ticker": "ABBV",
+   "firstDate": "2013-01-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 3473
+  },
+  {
+   "cik": 1559720,
+   "ticker": "ABNB",
+   "firstDate": "2020-12-10",
+   "lastDate": "2026-10-26",
+   "rowCount": 1475
+  },
+  {
+   "cik": 1800,
+   "ticker": "ABT",
+   "firstDate": "1983-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 10975
+  },
+  {
+   "cik": 947484,
+   "ticker": "ACGL",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1467373,
+   "ticker": "ACN",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 796343,
+   "ticker": "ADBE",
+   "firstDate": "1986-08-14",
+   "lastDate": "2026-10-26",
+   "rowCount": 10125
+  },
+  {
+   "cik": 6281,
+   "ticker": "ADI",
+   "firstDate": "1984-07-19",
+   "lastDate": "2026-10-26",
+   "rowCount": 10647
+  },
+  {
+   "cik": 7084,
+   "ticker": "ADM",
+   "firstDate": "1983-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 10975
+  },
+  {
+   "cik": 8670,
+   "ticker": "ADP",
+   "firstDate": "1983-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 10973
+  },
+  {
+   "cik": 769397,
+   "ticker": "ADSK",
+   "firstDate": "1985-07-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10407
+  },
+  {
+   "cik": 1002910,
+   "ticker": "AEE",
+   "firstDate": "1998-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 7244
+  },
+  {
+   "cik": 4904,
+   "ticker": "AEP",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14324
+  },
+  {
+   "cik": 874761,
+   "ticker": "AES",
+   "firstDate": "1991-06-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 8895
+  },
+  {
+   "cik": 4977,
+   "ticker": "AFL",
+   "firstDate": "1984-07-19",
+   "lastDate": "2026-10-26",
+   "rowCount": 10647
+  },
+  {
+   "cik": 5272,
+   "ticker": "AIG",
+   "firstDate": "1984-09-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 10614
+  },
+  {
+   "cik": 1267238,
+   "ticker": "AIZ",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 354190,
+   "ticker": "AJG",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1086222,
+   "ticker": "AKAM",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 915913,
+   "ticker": "ALB",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1097149,
+   "ticker": "ALGN",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 899051,
+   "ticker": "ALL",
+   "firstDate": "1993-06-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 8403
+  },
+  {
+   "cik": 1579241,
+   "ticker": "ALLE",
+   "firstDate": "2013-12-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 3242
+  },
+  {
+   "cik": 6951,
+   "ticker": "AMAT",
+   "firstDate": "1984-09-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 10613
+  },
+  {
+   "cik": 1748790,
+   "ticker": "AMCR",
+   "firstDate": "2019-06-12",
+   "lastDate": "2026-10-26",
+   "rowCount": 1854
+  },
+  {
+   "cik": 2488,
+   "ticker": "AMD",
+   "firstDate": "1983-03-21",
+   "lastDate": "2026-10-26",
+   "rowCount": 10986
+  },
+  {
+   "cik": 1037868,
+   "ticker": "AME",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 318154,
+   "ticker": "AMGN",
+   "firstDate": "1984-09-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 10613
+  },
+  {
+   "cik": 820027,
+   "ticker": "AMP",
+   "firstDate": "2005-09-15",
+   "lastDate": "2026-10-26",
+   "rowCount": 5310
+  },
+  {
+   "cik": 1053507,
+   "ticker": "AMT",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1018724,
+   "ticker": "AMZN",
+   "firstDate": "1997-05-16",
+   "lastDate": "2026-10-26",
+   "rowCount": 7402
+  },
+  {
+   "cik": 1596532,
+   "ticker": "ANET",
+   "firstDate": "2014-06-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 3116
+  },
+  {
+   "cik": 315293,
+   "ticker": "AON",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 91142,
+   "ticker": "AOS",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1841666,
+   "ticker": "APA",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11292
+  },
+  {
+   "cik": 2969,
+   "ticker": "APD",
+   "firstDate": "1983-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 10974
+  },
+  {
+   "cik": 820313,
+   "ticker": "APH",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1858681,
+   "ticker": "APO",
+   "firstDate": "2011-04-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 3913
+  },
+  {
+   "cik": 1751008,
+   "ticker": "APP",
+   "firstDate": "2021-04-15",
+   "lastDate": "2026-10-26",
+   "rowCount": 1390
+  },
+  {
+   "cik": 1521332,
+   "ticker": "APTV",
+   "firstDate": "2011-11-21",
+   "lastDate": "2026-10-26",
+   "rowCount": 3753
+  },
+  {
+   "cik": 1035443,
+   "ticker": "ARE",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1176948,
+   "ticker": "ARES",
+   "firstDate": "2014-05-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 3139
+  },
+  {
+   "cik": 731802,
+   "ticker": "ATO",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1730168,
+   "ticker": "AVGO",
+   "firstDate": "2009-08-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 4332
+  },
+  {
+   "cik": 8818,
+   "ticker": "AVY",
+   "firstDate": "1984-09-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 10614
+  },
+  {
+   "cik": 1410636,
+   "ticker": "AWK",
+   "firstDate": "2008-04-22",
+   "lastDate": "2026-10-26",
+   "rowCount": 4657
+  },
+  {
+   "cik": 1069183,
+   "ticker": "AXON",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 4962,
+   "ticker": "AXP",
+   "firstDate": "1972-01-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 13805
+  },
+  {
+   "cik": 866787,
+   "ticker": "AZO",
+   "firstDate": "1991-04-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 8955
+  },
+  {
+   "cik": 12927,
+   "ticker": "BA",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14323
+  },
+  {
+   "cik": 70858,
+   "ticker": "BAC",
+   "firstDate": "1986-05-29",
+   "lastDate": "2026-10-26",
+   "rowCount": 10178
+  },
+  {
+   "cik": 9389,
+   "ticker": "BALL",
+   "firstDate": "1984-09-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 10612
+  },
+  {
+   "cik": 10456,
+   "ticker": "BAX",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11292
+  },
+  {
+   "cik": 764478,
+   "ticker": "BBY",
+   "firstDate": "1985-04-19",
+   "lastDate": "2026-10-26",
+   "rowCount": 10460
+  },
+  {
+   "cik": 10795,
+   "ticker": "BDX",
+   "firstDate": "1983-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 10974
+  },
+  {
+   "cik": 1664703,
+   "ticker": "BE",
+   "firstDate": "2018-07-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 2075
+  },
+  {
+   "cik": 38777,
+   "ticker": "BEN",
+   "firstDate": "1984-09-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 10611
+  },
+  {
+   "cik": 14693,
+   "ticker": "BF-B",
+   "firstDate": "2010-08-23",
+   "lastDate": "2026-10-26",
+   "rowCount": 4068
+  },
+  {
+   "cik": 1996862,
+   "ticker": "BG",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 875045,
+   "ticker": "BIIB",
+   "firstDate": "1991-09-17",
+   "lastDate": "2026-10-26",
+   "rowCount": 8833
+  },
+  {
+   "cik": 1075531,
+   "ticker": "BKNG",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1701605,
+   "ticker": "BKR",
+   "firstDate": "2017-07-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 2340
+  },
+  {
+   "cik": 2012383,
+   "ticker": "BLK",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 14272,
+   "ticker": "BMY",
+   "firstDate": "1977-01-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 12556
+  },
+  {
+   "cik": 1390777,
+   "ticker": "BNY",
+   "firstDate": "1984-09-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 10614
+  },
+  {
+   "cik": 1383312,
+   "ticker": "BR",
+   "firstDate": "2007-03-22",
+   "lastDate": "2026-10-26",
+   "rowCount": 4930
+  },
+  {
+   "cik": 1067983,
+   "ticker": "BRK-B",
+   "firstDate": "1996-05-09",
+   "lastDate": "2026-10-26",
+   "rowCount": 7664
+  },
+  {
+   "cik": 79282,
+   "ticker": "BRO",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 885725,
+   "ticker": "BSX",
+   "firstDate": "1992-05-19",
+   "lastDate": "2026-10-26",
+   "rowCount": 8667
+  },
+  {
+   "cik": 1393818,
+   "ticker": "BX",
+   "firstDate": "2007-06-21",
+   "lastDate": "2026-10-26",
+   "rowCount": 4867
+  },
+  {
+   "cik": 1037540,
+   "ticker": "BXP",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 831001,
+   "ticker": "C",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14323
+  },
+  {
+   "cik": 721371,
+   "ticker": "CAH",
+   "firstDate": "1988-01-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 9768
+  },
+  {
+   "cik": 1783180,
+   "ticker": "CARR",
+   "firstDate": "2020-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 1648
+  },
+  {
+   "cik": 726958,
+   "ticker": "CASY",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 18230,
+   "ticker": "CAT",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14324
+  },
+  {
+   "cik": 896159,
+   "ticker": "CB",
+   "firstDate": "1993-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 8450
+  },
+  {
+   "cik": 1374310,
+   "ticker": "CBOE",
+   "firstDate": "2010-06-14",
+   "lastDate": "2026-10-26",
+   "rowCount": 4117
+  },
+  {
+   "cik": 1138118,
+   "ticker": "CBRE",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1051470,
+   "ticker": "CCI",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 815097,
+   "ticker": "CCL",
+   "firstDate": "1989-01-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 9520
+  },
+  {
+   "cik": 813672,
+   "ticker": "CDNS",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1402057,
+   "ticker": "CDW",
+   "firstDate": "2013-06-27",
+   "lastDate": "2026-10-26",
+   "rowCount": 3353
+  },
+  {
+   "cik": 1868275,
+   "ticker": "CEG",
+   "firstDate": "2022-01-20",
+   "lastDate": "2026-10-26",
+   "rowCount": 1196
+  },
+  {
+   "cik": 1324404,
+   "ticker": "CF",
+   "firstDate": "2005-08-10",
+   "lastDate": "2026-10-26",
+   "rowCount": 5335
+  },
+  {
+   "cik": 759944,
+   "ticker": "CFG",
+   "firstDate": "2014-09-24",
+   "lastDate": "2026-10-26",
+   "rowCount": 3040
+  },
+  {
+   "cik": 313927,
+   "ticker": "CHD",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1043277,
+   "ticker": "CHRW",
+   "firstDate": "1997-10-16",
+   "lastDate": "2026-10-26",
+   "rowCount": 7297
+  },
+  {
+   "cik": 1091667,
+   "ticker": "CHTR",
+   "firstDate": "2009-12-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 4225
+  },
+  {
+   "cik": 1739940,
+   "ticker": "CI",
+   "firstDate": "1982-03-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11230
+  },
+  {
+   "cik": 936395,
+   "ticker": "CIEN",
+   "firstDate": "1997-02-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 7474
+  },
+  {
+   "cik": 20286,
+   "ticker": "CINF",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9211
+  },
+  {
+   "cik": 21665,
+   "ticker": "CL",
+   "firstDate": "1977-01-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 12554
+  },
+  {
+   "cik": 21076,
+   "ticker": "CLX",
+   "firstDate": "1983-03-21",
+   "lastDate": "2026-10-26",
+   "rowCount": 10985
+  },
+  {
+   "cik": 1166691,
+   "ticker": "CMCSA",
+   "firstDate": "1988-07-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 9645
+  },
+  {
+   "cik": 1156375,
+   "ticker": "CME",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1058090,
+   "ticker": "CMG",
+   "firstDate": "2006-01-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5220
+  },
+  {
+   "cik": 26172,
+   "ticker": "CMI",
+   "firstDate": "1984-12-18",
+   "lastDate": "2026-10-26",
+   "rowCount": 10534
+  },
+  {
+   "cik": 811156,
+   "ticker": "CMS",
+   "firstDate": "1984-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 10529
+  },
+  {
+   "cik": 1071739,
+   "ticker": "CNC",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1130310,
+   "ticker": "CNP",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14321
+  },
+  {
+   "cik": 927628,
+   "ticker": "COF",
+   "firstDate": "1994-11-16",
+   "lastDate": "2026-10-26",
+   "rowCount": 8033
+  },
+  {
+   "cik": 820318,
+   "ticker": "COHR",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1679788,
+   "ticker": "COIN",
+   "firstDate": "2021-04-14",
+   "lastDate": "2026-10-26",
+   "rowCount": 1391
+  },
+  {
+   "cik": 711404,
+   "ticker": "COO",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1163165,
+   "ticker": "COP",
+   "firstDate": "1982-01-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 11290
+  },
+  {
+   "cik": 1140859,
+   "ticker": "COR",
+   "firstDate": "1995-04-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 7940
+  },
+  {
+   "cik": 909832,
+   "ticker": "COST",
+   "firstDate": "1986-07-09",
+   "lastDate": "2026-10-26",
+   "rowCount": 10152
+  },
+  {
+   "cik": 1175454,
+   "ticker": "CPAY",
+   "firstDate": "2010-12-17",
+   "lastDate": "2026-10-26",
+   "rowCount": 3986
+  },
+  {
+   "cik": 900075,
+   "ticker": "CPRT",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 906345,
+   "ticker": "CPT",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 849395,
+   "ticker": "CRH",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1100682,
+   "ticker": "CRL",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1108524,
+   "ticker": "CRM",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1535527,
+   "ticker": "CRWD",
+   "firstDate": "2019-06-12",
+   "lastDate": "2026-10-26",
+   "rowCount": 1854
+  },
+  {
+   "cik": 858877,
+   "ticker": "CSCO",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9213
+  },
+  {
+   "cik": 1057352,
+   "ticker": "CSGP",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 277948,
+   "ticker": "CSX",
+   "firstDate": "1980-11-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 11584
+  },
+  {
+   "cik": 723254,
+   "ticker": "CTAS",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9211
+  },
+  {
+   "cik": 1058290,
+   "ticker": "CTSH",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1690820,
+   "ticker": "CVNA",
+   "firstDate": "2017-04-28",
+   "lastDate": "2026-10-26",
+   "rowCount": 2387
+  },
+  {
+   "cik": 64803,
+   "ticker": "CVS",
+   "firstDate": "1984-12-17",
+   "lastDate": "2026-10-26",
+   "rowCount": 10541
+  },
+  {
+   "cik": 93410,
+   "ticker": "CVX",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14322
+  },
+  {
+   "cik": 715957,
+   "ticker": "D",
+   "firstDate": "1984-10-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 10596
+  },
+  {
+   "cik": 27904,
+   "ticker": "DAL",
+   "firstDate": "1980-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 11797
+  },
+  {
+   "cik": 1792789,
+   "ticker": "DASH",
+   "firstDate": "2020-12-09",
+   "lastDate": "2026-10-26",
+   "rowCount": 1476
+  },
+  {
+   "cik": 1666700,
+   "ticker": "DD",
+   "firstDate": "1977-01-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 12553
+  },
+  {
+   "cik": 1561550,
+   "ticker": "DDOG",
+   "firstDate": "2019-09-19",
+   "lastDate": "2026-10-26",
+   "rowCount": 1785
+  },
+  {
+   "cik": 315189,
+   "ticker": "DE",
+   "firstDate": "1982-01-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 11291
+  },
+  {
+   "cik": 910521,
+   "ticker": "DECK",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1571996,
+   "ticker": "DELL",
+   "firstDate": "2018-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 1966
+  },
+  {
+   "cik": 29534,
+   "ticker": "DG",
+   "firstDate": "2009-11-12",
+   "lastDate": "2026-10-26",
+   "rowCount": 4262
+  },
+  {
+   "cik": 1022079,
+   "ticker": "DGX",
+   "firstDate": "1996-12-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 7501
+  },
+  {
+   "cik": 882184,
+   "ticker": "DHI",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 313616,
+   "ticker": "DHR",
+   "firstDate": "1987-11-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 9811
+  },
+  {
+   "cik": 1744489,
+   "ticker": "DIS",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14321
+  },
+  {
+   "cik": 1297996,
+   "ticker": "DLR",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 935703,
+   "ticker": "DLTR",
+   "firstDate": "1995-03-09",
+   "lastDate": "2026-10-26",
+   "rowCount": 7958
+  },
+  {
+   "cik": 765880,
+   "ticker": "DOC",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 29905,
+   "ticker": "DOV",
+   "firstDate": "1985-07-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10409
+  },
+  {
+   "cik": 1751788,
+   "ticker": "DOW",
+   "firstDate": "2019-04-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 1902
+  },
+  {
+   "cik": 1286681,
+   "ticker": "DPZ",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 940944,
+   "ticker": "DRI",
+   "firstDate": "1995-05-17",
+   "lastDate": "2026-10-26",
+   "rowCount": 7910
+  },
+  {
+   "cik": 936340,
+   "ticker": "DTE",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14324
+  },
+  {
+   "cik": 1326160,
+   "ticker": "DUK",
+   "firstDate": "1983-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 10975
+  },
+  {
+   "cik": 927066,
+   "ticker": "DVA",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1090012,
+   "ticker": "DVN",
+   "firstDate": "1992-03-17",
+   "lastDate": "2026-10-26",
+   "rowCount": 8707
+  },
+  {
+   "cik": 1093557,
+   "ticker": "DXCM",
+   "firstDate": "2005-04-13",
+   "lastDate": "2026-10-26",
+   "rowCount": 5417
+  },
+  {
+   "cik": 1065088,
+   "ticker": "EBAY",
+   "firstDate": "1998-09-24",
+   "lastDate": "2026-10-26",
+   "rowCount": 7063
+  },
+  {
+   "cik": 1415404,
+   "ticker": "ECHO",
+   "firstDate": "2007-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 4734
+  },
+  {
+   "cik": 31462,
+   "ticker": "ECL",
+   "firstDate": "1988-01-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 9773
+  },
+  {
+   "cik": 1047862,
+   "ticker": "ED",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14324
+  },
+  {
+   "cik": 33185,
+   "ticker": "EFX",
+   "firstDate": "1987-11-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 9815
+  },
+  {
+   "cik": 1095073,
+   "ticker": "EG",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 827052,
+   "ticker": "EIX",
+   "firstDate": "1980-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 11798
+  },
+  {
+   "cik": 1001250,
+   "ticker": "EL",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1156039,
+   "ticker": "ELV",
+   "firstDate": "1993-01-28",
+   "lastDate": "2026-10-26",
+   "rowCount": 8489
+  },
+  {
+   "cik": 105634,
+   "ticker": "EME",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 32604,
+   "ticker": "EMR",
+   "firstDate": "1982-01-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 11293
+  },
+  {
+   "cik": 821189,
+   "ticker": "EOG",
+   "firstDate": "1989-10-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 9330
+  },
+  {
+   "cik": 1101239,
+   "ticker": "EQIX",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 33213,
+   "ticker": "EQT",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 922621,
+   "ticker": "ERIE",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 72741,
+   "ticker": "ES",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 920522,
+   "ticker": "ESS",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1551182,
+   "ticker": "ETN",
+   "firstDate": "1985-07-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10407
+  },
+  {
+   "cik": 65984,
+   "ticker": "ETR",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11292
+  },
+  {
+   "cik": 1711269,
+   "ticker": "EVRG",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1099800,
+   "ticker": "EW",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1109357,
+   "ticker": "EXC",
+   "firstDate": "1980-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 11796
+  },
+  {
+   "cik": 895126,
+   "ticker": "EXE",
+   "firstDate": "2021-02-11",
+   "lastDate": "2026-10-26",
+   "rowCount": 1433
+  },
+  {
+   "cik": 746515,
+   "ticker": "EXPD",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9182
+  },
+  {
+   "cik": 1324424,
+   "ticker": "EXPE",
+   "firstDate": "2005-07-20",
+   "lastDate": "2026-10-26",
+   "rowCount": 5350
+  },
+  {
+   "cik": 1289490,
+   "ticker": "EXR",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 37996,
+   "ticker": "F",
+   "firstDate": "1977-01-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 12554
+  },
+  {
+   "cik": 1539838,
+   "ticker": "FANG",
+   "firstDate": "2012-10-12",
+   "lastDate": "2026-10-26",
+   "rowCount": 3528
+  },
+  {
+   "cik": 815556,
+   "ticker": "FAST",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9210
+  },
+  {
+   "cik": 831259,
+   "ticker": "FCX",
+   "firstDate": "1995-07-10",
+   "lastDate": "2026-10-26",
+   "rowCount": 7876
+  },
+  {
+   "cik": 1013237,
+   "ticker": "FDS",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1048911,
+   "ticker": "FDX",
+   "firstDate": "1980-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 11796
+  },
+  {
+   "cik": 2082247,
+   "ticker": "FDXF",
+   "firstDate": "2026-06-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 103
+  },
+  {
+   "cik": 1031296,
+   "ticker": "FE",
+   "firstDate": "1997-11-10",
+   "lastDate": "2026-10-26",
+   "rowCount": 7283
+  },
+  {
+   "cik": 2011641,
+   "ticker": "FERG",
+   "firstDate": "2021-03-09",
+   "lastDate": "2026-10-26",
+   "rowCount": 1416
+  },
+  {
+   "cik": 1048695,
+   "ticker": "FFIV",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 814547,
+   "ticker": "FICO",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1136893,
+   "ticker": "FIS",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 798354,
+   "ticker": "FISV",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9213
+  },
+  {
+   "cik": 35527,
+   "ticker": "FITB",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9211
+  },
+  {
+   "cik": 1035983,
+   "ticker": "FIX",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 866374,
+   "ticker": "FLEX",
+   "firstDate": "1994-03-18",
+   "lastDate": "2026-10-26",
+   "rowCount": 8200
+  },
+  {
+   "cik": -2002,
+   "ticker": "FOX",
+   "firstDate": "2019-03-13",
+   "lastDate": "2026-10-26",
+   "rowCount": 1917
+  },
+  {
+   "cik": 1754301,
+   "ticker": "FOXA",
+   "firstDate": "2019-03-13",
+   "lastDate": "2026-10-26",
+   "rowCount": 1917
+  },
+  {
+   "cik": 34903,
+   "ticker": "FRT",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1274494,
+   "ticker": "FSLR",
+   "firstDate": "2006-11-16",
+   "lastDate": "2026-10-26",
+   "rowCount": 5014
+  },
+  {
+   "cik": 1262039,
+   "ticker": "FTNT",
+   "firstDate": "2009-11-17",
+   "lastDate": "2026-10-26",
+   "rowCount": 4259
+  },
+  {
+   "cik": 1659166,
+   "ticker": "FTV",
+   "firstDate": "2016-07-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 2592
+  },
+  {
+   "cik": 40533,
+   "ticker": "GD",
+   "firstDate": "1977-01-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 12553
+  },
+  {
+   "cik": 1609711,
+   "ticker": "GDDY",
+   "firstDate": "2015-04-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 2910
+  },
+  {
+   "cik": 40545,
+   "ticker": "GE",
+   "firstDate": "1962-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 16307
+  },
+  {
+   "cik": 1932393,
+   "ticker": "GEHC",
+   "firstDate": "2022-12-16",
+   "lastDate": "2026-10-26",
+   "rowCount": 967
+  },
+  {
+   "cik": 849399,
+   "ticker": "GEN",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9213
+  },
+  {
+   "cik": 1996810,
+   "ticker": "GEV",
+   "firstDate": "2024-04-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 644
+  },
+  {
+   "cik": 882095,
+   "ticker": "GILD",
+   "firstDate": "1992-01-22",
+   "lastDate": "2026-10-26",
+   "rowCount": 8745
+  },
+  {
+   "cik": 40704,
+   "ticker": "GIS",
+   "firstDate": "1983-06-10",
+   "lastDate": "2026-10-26",
+   "rowCount": 10929
+  },
+  {
+   "cik": 320335,
+   "ticker": "GL",
+   "firstDate": "1987-12-30",
+   "lastDate": "2026-10-26",
+   "rowCount": 9778
+  },
+  {
+   "cik": 24741,
+   "ticker": "GLW",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11292
+  },
+  {
+   "cik": 1467858,
+   "ticker": "GM",
+   "firstDate": "2010-11-17",
+   "lastDate": "2026-10-26",
+   "rowCount": 4008
+  },
+  {
+   "cik": 1474735,
+   "ticker": "GNRC",
+   "firstDate": "2010-02-10",
+   "lastDate": "2026-10-26",
+   "rowCount": 4202
+  },
+  {
+   "cik": -2001,
+   "ticker": "GOOG",
+   "firstDate": "2014-03-27",
+   "lastDate": "2026-10-26",
+   "rowCount": 3165
+  },
+  {
+   "cik": 1652044,
+   "ticker": "GOOGL",
+   "firstDate": "2004-08-19",
+   "lastDate": "2026-10-26",
+   "rowCount": 5582
+  },
+  {
+   "cik": 40987,
+   "ticker": "GPC",
+   "firstDate": "1983-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 10975
+  },
+  {
+   "cik": 1123360,
+   "ticker": "GPN",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1121788,
+   "ticker": "GRMN",
+   "firstDate": "2000-12-08",
+   "lastDate": "2026-10-26",
+   "rowCount": 6504
+  },
+  {
+   "cik": 886982,
+   "ticker": "GS",
+   "firstDate": "1999-05-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 6910
+  },
+  {
+   "cik": 277135,
+   "ticker": "GWW",
+   "firstDate": "1984-12-17",
+   "lastDate": "2026-10-26",
+   "rowCount": 10544
+  },
+  {
+   "cik": 45012,
+   "ticker": "HAL",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11292
+  },
+  {
+   "cik": 46080,
+   "ticker": "HAS",
+   "firstDate": "1984-12-18",
+   "lastDate": "2026-10-26",
+   "rowCount": 10543
+  },
+  {
+   "cik": 49196,
+   "ticker": "HBAN",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9213
+  },
+  {
+   "cik": 860730,
+   "ticker": "HCA",
+   "firstDate": "2011-03-15",
+   "lastDate": "2026-10-26",
+   "rowCount": 3928
+  },
+  {
+   "cik": 354950,
+   "ticker": "HD",
+   "firstDate": "1981-09-22",
+   "lastDate": "2026-10-26",
+   "rowCount": 11363
+  },
+  {
+   "cik": 874766,
+   "ticker": "HIG",
+   "firstDate": "1995-12-18",
+   "lastDate": "2026-10-26",
+   "rowCount": 7763
+  },
+  {
+   "cik": 1501585,
+   "ticker": "HII",
+   "firstDate": "2011-04-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 3913
+  },
+  {
+   "cik": 1585689,
+   "ticker": "HLT",
+   "firstDate": "2013-12-12",
+   "lastDate": "2026-10-26",
+   "rowCount": 3236
+  },
+  {
+   "cik": 773840,
+   "ticker": "HON",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14321
+  },
+  {
+   "cik": 2089271,
+   "ticker": "HONA",
+   "firstDate": "2026-06-15",
+   "lastDate": "2026-10-26",
+   "rowCount": 93
+  },
+  {
+   "cik": 1783879,
+   "ticker": "HOOD",
+   "firstDate": "2021-07-29",
+   "lastDate": "2026-10-26",
+   "rowCount": 1317
+  },
+  {
+   "cik": 1645590,
+   "ticker": "HPE",
+   "firstDate": "2015-11-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 2760
+  },
+  {
+   "cik": 47217,
+   "ticker": "HPQ",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14324
+  },
+  {
+   "cik": 48465,
+   "ticker": "HRL",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1000228,
+   "ticker": "HSIC",
+   "firstDate": "1995-11-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 7792
+  },
+  {
+   "cik": 1070750,
+   "ticker": "HST",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 47111,
+   "ticker": "HSY",
+   "firstDate": "1985-07-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10409
+  },
+  {
+   "cik": 48898,
+   "ticker": "HUBB",
+   "firstDate": "2015-12-28",
+   "lastDate": "2026-10-26",
+   "rowCount": 2723
+  },
+  {
+   "cik": 49071,
+   "ticker": "HUM",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11294
+  },
+  {
+   "cik": 4281,
+   "ticker": "HWM",
+   "firstDate": "2016-11-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 2509
+  },
+  {
+   "cik": 1381197,
+   "ticker": "IBKR",
+   "firstDate": "2019-09-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 1797
+  },
+  {
+   "cik": 51143,
+   "ticker": "IBM",
+   "firstDate": "1962-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 16308
+  },
+  {
+   "cik": 1571949,
+   "ticker": "ICE",
+   "firstDate": "2005-11-15",
+   "lastDate": "2026-10-26",
+   "rowCount": 5267
+  },
+  {
+   "cik": 874716,
+   "ticker": "IDXX",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 832101,
+   "ticker": "IEX",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 51253,
+   "ticker": "IFF",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11292
+  },
+  {
+   "cik": 1110803,
+   "ticker": "ILMN",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 879169,
+   "ticker": "INCY",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 50863,
+   "ticker": "INTC",
+   "firstDate": "1972-01-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 13805
+  },
+  {
+   "cik": 896878,
+   "ticker": "INTU",
+   "firstDate": "1993-03-22",
+   "lastDate": "2026-10-26",
+   "rowCount": 8457
+  },
+  {
+   "cik": 1687229,
+   "ticker": "INVH",
+   "firstDate": "2017-02-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 2447
+  },
+  {
+   "cik": 51434,
+   "ticker": "IP",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14324
+  },
+  {
+   "cik": 1478242,
+   "ticker": "IQV",
+   "firstDate": "2013-05-09",
+   "lastDate": "2026-10-26",
+   "rowCount": 3387
+  },
+  {
+   "cik": 1699150,
+   "ticker": "IR",
+   "firstDate": "2017-05-12",
+   "lastDate": "2026-10-26",
+   "rowCount": 2377
+  },
+  {
+   "cik": 1020569,
+   "ticker": "IRM",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1035267,
+   "ticker": "ISRG",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 749251,
+   "ticker": "IT",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 49826,
+   "ticker": "ITW",
+   "firstDate": "1987-11-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 9815
+  },
+  {
+   "cik": 914208,
+   "ticker": "IVZ",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 52988,
+   "ticker": "J",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 728535,
+   "ticker": "JBHT",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 898293,
+   "ticker": "JBL",
+   "firstDate": "1993-05-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 8419
+  },
+  {
+   "cik": 833444,
+   "ticker": "JCI",
+   "firstDate": "1987-12-30",
+   "lastDate": "2026-10-26",
+   "rowCount": 9776
+  },
+  {
+   "cik": 779152,
+   "ticker": "JKHY",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 200406,
+   "ticker": "JNJ",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14323
+  },
+  {
+   "cik": 19617,
+   "ticker": "JPM",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14323
+  },
+  {
+   "cik": 1418135,
+   "ticker": "KDP",
+   "firstDate": "2008-04-28",
+   "lastDate": "2026-10-26",
+   "rowCount": 4653
+  },
+  {
+   "cik": 91576,
+   "ticker": "KEY",
+   "firstDate": "1987-11-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 9812
+  },
+  {
+   "cik": 1601046,
+   "ticker": "KEYS",
+   "firstDate": "2014-11-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 3010
+  },
+  {
+   "cik": 1637459,
+   "ticker": "KHC",
+   "firstDate": "2015-07-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 2845
+  },
+  {
+   "cik": 879101,
+   "ticker": "KIM",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1404912,
+   "ticker": "KKR",
+   "firstDate": "2010-07-14",
+   "lastDate": "2026-10-26",
+   "rowCount": 4096
+  },
+  {
+   "cik": 319201,
+   "ticker": "KLAC",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9211
+  },
+  {
+   "cik": 55785,
+   "ticker": "KMB",
+   "firstDate": "1984-12-17",
+   "lastDate": "2026-10-26",
+   "rowCount": 10544
+  },
+  {
+   "cik": 1506307,
+   "ticker": "KMI",
+   "firstDate": "2011-02-15",
+   "lastDate": "2026-10-26",
+   "rowCount": 3946
+  },
+  {
+   "cik": 21344,
+   "ticker": "KO",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14324
+  },
+  {
+   "cik": 56873,
+   "ticker": "KR",
+   "firstDate": "1977-01-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 12555
+  },
+  {
+   "cik": 1944048,
+   "ticker": "KVUE",
+   "firstDate": "2023-05-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 873
+  },
+  {
+   "cik": 60086,
+   "ticker": "L",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1336920,
+   "ticker": "LDOS",
+   "firstDate": "2006-10-12",
+   "lastDate": "2026-10-26",
+   "rowCount": 5039
+  },
+  {
+   "cik": 920760,
+   "ticker": "LEN",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 920148,
+   "ticker": "LH",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 202058,
+   "ticker": "LHX",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1069202,
+   "ticker": "LII",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1707925,
+   "ticker": "LIN",
+   "firstDate": "2018-11-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 2005
+  },
+  {
+   "cik": 1633978,
+   "ticker": "LITE",
+   "firstDate": "2015-08-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 2823
+  },
+  {
+   "cik": 59478,
+   "ticker": "LLY",
+   "firstDate": "1982-01-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 11293
+  },
+  {
+   "cik": 936468,
+   "ticker": "LMT",
+   "firstDate": "1977-01-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 12553
+  },
+  {
+   "cik": 352541,
+   "ticker": "LNT",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 60667,
+   "ticker": "LOW",
+   "firstDate": "1985-07-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10407
+  },
+  {
+   "cik": 707549,
+   "ticker": "LRCX",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9205
+  },
+  {
+   "cik": 1397187,
+   "ticker": "LULU",
+   "firstDate": "2007-07-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 4843
+  },
+  {
+   "cik": 92380,
+   "ticker": "LUV",
+   "firstDate": "1980-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 11797
+  },
+  {
+   "cik": 1300514,
+   "ticker": "LVS",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1489393,
+   "ticker": "LYB",
+   "firstDate": "2010-04-28",
+   "lastDate": "2026-10-26",
+   "rowCount": 4150
+  },
+  {
+   "cik": 1335258,
+   "ticker": "LYV",
+   "firstDate": "2005-12-14",
+   "lastDate": "2026-10-26",
+   "rowCount": 5247
+  },
+  {
+   "cik": 1141391,
+   "ticker": "MA",
+   "firstDate": "2006-05-24",
+   "lastDate": "2026-10-26",
+   "rowCount": 5137
+  },
+  {
+   "cik": 912595,
+   "ticker": "MAA",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1048286,
+   "ticker": "MAR",
+   "firstDate": "1993-10-13",
+   "lastDate": "2026-10-26",
+   "rowCount": 8314
+  },
+  {
+   "cik": 62996,
+   "ticker": "MAS",
+   "firstDate": "1983-06-10",
+   "lastDate": "2026-10-26",
+   "rowCount": 10928
+  },
+  {
+   "cik": 63908,
+   "ticker": "MCD",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14324
+  },
+  {
+   "cik": 827054,
+   "ticker": "MCHP",
+   "firstDate": "1993-03-19",
+   "lastDate": "2026-10-26",
+   "rowCount": 8457
+  },
+  {
+   "cik": 927653,
+   "ticker": "MCK",
+   "firstDate": "1994-11-15",
+   "lastDate": "2026-10-26",
+   "rowCount": 8034
+  },
+  {
+   "cik": 1059556,
+   "ticker": "MCO",
+   "firstDate": "2000-10-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 6553
+  },
+  {
+   "cik": 1103982,
+   "ticker": "MDLZ",
+   "firstDate": "2006-10-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 5048
+  },
+  {
+   "cik": 1613103,
+   "ticker": "MDT",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11293
+  },
+  {
+   "cik": 1099219,
+   "ticker": "MET",
+   "firstDate": "2000-04-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 6679
+  },
+  {
+   "cik": 1326801,
+   "ticker": "META",
+   "firstDate": "2012-05-18",
+   "lastDate": "2026-10-26",
+   "rowCount": 3630
+  },
+  {
+   "cik": 789570,
+   "ticker": "MGM",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 63754,
+   "ticker": "MKC",
+   "firstDate": "1999-05-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 6895
+  },
+  {
+   "cik": 916076,
+   "ticker": "MLM",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 66740,
+   "ticker": "MMM",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14324
+  },
+  {
+   "cik": 865752,
+   "ticker": "MNST",
+   "firstDate": "1985-12-10",
+   "lastDate": "2026-10-26",
+   "rowCount": 9960
+  },
+  {
+   "cik": 764180,
+   "ticker": "MO",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14323
+  },
+  {
+   "cik": 1285785,
+   "ticker": "MOS",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1510295,
+   "ticker": "MPC",
+   "firstDate": "2011-07-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 3850
+  },
+  {
+   "cik": 1280452,
+   "ticker": "MPWR",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 310158,
+   "ticker": "MRK",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14324
+  },
+  {
+   "cik": 1682852,
+   "ticker": "MRNA",
+   "firstDate": "2018-12-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 1981
+  },
+  {
+   "cik": 62709,
+   "ticker": "MRSH",
+   "firstDate": "1987-12-30",
+   "lastDate": "2026-10-26",
+   "rowCount": 9778
+  },
+  {
+   "cik": 1835632,
+   "ticker": "MRVL",
+   "firstDate": "2000-06-30",
+   "lastDate": "2026-10-26",
+   "rowCount": 6612
+  },
+  {
+   "cik": 895421,
+   "ticker": "MS",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1408198,
+   "ticker": "MSCI",
+   "firstDate": "2007-11-14",
+   "lastDate": "2026-10-26",
+   "rowCount": 4765
+  },
+  {
+   "cik": 789019,
+   "ticker": "MSFT",
+   "firstDate": "1986-03-13",
+   "lastDate": "2026-10-26",
+   "rowCount": 10232
+  },
+  {
+   "cik": 68505,
+   "ticker": "MSI",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5451
+  },
+  {
+   "cik": 36270,
+   "ticker": "MTB",
+   "firstDate": "1991-10-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 8826
+  },
+  {
+   "cik": 1037646,
+   "ticker": "MTD",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 723125,
+   "ticker": "MU",
+   "firstDate": "1989-05-16",
+   "lastDate": "2026-10-26",
+   "rowCount": 9428
+  },
+  {
+   "cik": 1513761,
+   "ticker": "NCLH",
+   "firstDate": "2013-01-18",
+   "lastDate": "2026-10-26",
+   "rowCount": 3463
+  },
+  {
+   "cik": 1120193,
+   "ticker": "NDAQ",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5449
+  },
+  {
+   "cik": 72331,
+   "ticker": "NDSN",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 753308,
+   "ticker": "NEE",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1164727,
+   "ticker": "NEM",
+   "firstDate": "1983-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 10975
+  },
+  {
+   "cik": 1065280,
+   "ticker": "NFLX",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1111711,
+   "ticker": "NI",
+   "firstDate": "1984-10-19",
+   "lastDate": "2026-10-26",
+   "rowCount": 10584
+  },
+  {
+   "cik": 320187,
+   "ticker": "NKE",
+   "firstDate": "1987-08-19",
+   "lastDate": "2026-10-26",
+   "rowCount": 9869
+  },
+  {
+   "cik": 1133421,
+   "ticker": "NOC",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11294
+  },
+  {
+   "cik": 1373715,
+   "ticker": "NOW",
+   "firstDate": "2012-06-29",
+   "lastDate": "2026-10-26",
+   "rowCount": 3601
+  },
+  {
+   "cik": 1013871,
+   "ticker": "NRG",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 702165,
+   "ticker": "NSC",
+   "firstDate": "1982-06-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 11189
+  },
+  {
+   "cik": 1002047,
+   "ticker": "NTAP",
+   "firstDate": "1995-11-21",
+   "lastDate": "2026-10-26",
+   "rowCount": 7779
+  },
+  {
+   "cik": 73124,
+   "ticker": "NTRS",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9213
+  },
+  {
+   "cik": 73309,
+   "ticker": "NUE",
+   "firstDate": "1983-09-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10871
+  },
+  {
+   "cik": 1045810,
+   "ticker": "NVDA",
+   "firstDate": "1999-01-22",
+   "lastDate": "2026-10-26",
+   "rowCount": 6982
+  },
+  {
+   "cik": 906163,
+   "ticker": "NVR",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": -2003,
+   "ticker": "NWS",
+   "firstDate": "2013-06-24",
+   "lastDate": "2026-10-26",
+   "rowCount": 3356
+  },
+  {
+   "cik": 1564708,
+   "ticker": "NWSA",
+   "firstDate": "2013-06-24",
+   "lastDate": "2026-10-26",
+   "rowCount": 3356
+  },
+  {
+   "cik": 1413447,
+   "ticker": "NXPI",
+   "firstDate": "2010-08-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 4080
+  },
+  {
+   "cik": 726728,
+   "ticker": "O",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 878927,
+   "ticker": "ODFL",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5451
+  },
+  {
+   "cik": 1039684,
+   "ticker": "OKE",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 29989,
+   "ticker": "OMC",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9210
+  },
+  {
+   "cik": 1097864,
+   "ticker": "ON",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1341439,
+   "ticker": "ORCL",
+   "firstDate": "1988-03-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 9735
+  },
+  {
+   "cik": 898173,
+   "ticker": "ORLY",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1781335,
+   "ticker": "OTIS",
+   "firstDate": "2020-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 1648
+  },
+  {
+   "cik": 797468,
+   "ticker": "OXY",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11294
+  },
+  {
+   "cik": 1327567,
+   "ticker": "PANW",
+   "firstDate": "2012-07-20",
+   "lastDate": "2026-10-26",
+   "rowCount": 3587
+  },
+  {
+   "cik": 723531,
+   "ticker": "PAYX",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9211
+  },
+  {
+   "cik": 75362,
+   "ticker": "PCAR",
+   "firstDate": "1986-07-09",
+   "lastDate": "2026-10-26",
+   "rowCount": 10150
+  },
+  {
+   "cik": 1004980,
+   "ticker": "PCG",
+   "firstDate": "1980-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 11799
+  },
+  {
+   "cik": 788784,
+   "ticker": "PEG",
+   "firstDate": "1980-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 11799
+  },
+  {
+   "cik": 77476,
+   "ticker": "PEP",
+   "firstDate": "1977-01-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 12556
+  },
+  {
+   "cik": 78003,
+   "ticker": "PFE",
+   "firstDate": "1982-01-04",
+   "lastDate": "2026-10-26",
+   "rowCount": 11291
+  },
+  {
+   "cik": 1126328,
+   "ticker": "PFG",
+   "firstDate": "2001-10-23",
+   "lastDate": "2026-10-26",
+   "rowCount": 6292
+  },
+  {
+   "cik": 80424,
+   "ticker": "PG",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14324
+  },
+  {
+   "cik": 80661,
+   "ticker": "PGR",
+   "firstDate": "1986-07-09",
+   "lastDate": "2026-10-26",
+   "rowCount": 10150
+  },
+  {
+   "cik": 76334,
+   "ticker": "PH",
+   "firstDate": "1985-07-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10409
+  },
+  {
+   "cik": 822416,
+   "ticker": "PHM",
+   "firstDate": "1985-07-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10409
+  },
+  {
+   "cik": 75677,
+   "ticker": "PKG",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1045609,
+   "ticker": "PLD",
+   "firstDate": "1995-08-18",
+   "lastDate": "2026-10-26",
+   "rowCount": 7840
+  },
+  {
+   "cik": 1321655,
+   "ticker": "PLTR",
+   "firstDate": "2020-09-30",
+   "lastDate": "2026-10-26",
+   "rowCount": 1525
+  },
+  {
+   "cik": 1413329,
+   "ticker": "PM",
+   "firstDate": "2008-03-17",
+   "lastDate": "2026-10-26",
+   "rowCount": 4682
+  },
+  {
+   "cik": 713676,
+   "ticker": "PNC",
+   "firstDate": "1988-09-07",
+   "lastDate": "2026-10-26",
+   "rowCount": 9602
+  },
+  {
+   "cik": 77360,
+   "ticker": "PNR",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 764622,
+   "ticker": "PNW",
+   "firstDate": "1984-07-19",
+   "lastDate": "2026-10-26",
+   "rowCount": 10649
+  },
+  {
+   "cik": 1145197,
+   "ticker": "PODD",
+   "firstDate": "2007-05-14",
+   "lastDate": "2026-10-26",
+   "rowCount": 4894
+  },
+  {
+   "cik": 79879,
+   "ticker": "PPG",
+   "firstDate": "1983-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 10975
+  },
+  {
+   "cik": 922224,
+   "ticker": "PPL",
+   "firstDate": "1985-04-08",
+   "lastDate": "2026-10-26",
+   "rowCount": 10466
+  },
+  {
+   "cik": 1137774,
+   "ticker": "PRU",
+   "firstDate": "2001-12-13",
+   "lastDate": "2026-10-26",
+   "rowCount": 6254
+  },
+  {
+   "cik": 1393311,
+   "ticker": "PSA",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1534701,
+   "ticker": "PSX",
+   "firstDate": "2012-05-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 3641
+  },
+  {
+   "cik": 857005,
+   "ticker": "PTC",
+   "firstDate": "2013-12-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 3240
+  },
+  {
+   "cik": 1050915,
+   "ticker": "PWR",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1633917,
+   "ticker": "PYPL",
+   "firstDate": "2015-07-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 2845
+  },
+  {
+   "cik": 2058873,
+   "ticker": "Q",
+   "firstDate": "2025-10-27",
+   "lastDate": "2026-10-26",
+   "rowCount": 251
+  },
+  {
+   "cik": 804328,
+   "ticker": "QCOM",
+   "firstDate": "1991-12-16",
+   "lastDate": "2026-10-26",
+   "rowCount": 8776
+  },
+  {
+   "cik": 884887,
+   "ticker": "RCL",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1713445,
+   "ticker": "RDDT",
+   "firstDate": "2024-03-21",
+   "lastDate": "2026-10-26",
+   "rowCount": 652
+  },
+  {
+   "cik": 910606,
+   "ticker": "REG",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 872589,
+   "ticker": "REGN",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5449
+  },
+  {
+   "cik": 1281761,
+   "ticker": "RF",
+   "firstDate": "2001-05-14",
+   "lastDate": "2026-10-26",
+   "rowCount": 6396
+  },
+  {
+   "cik": 720005,
+   "ticker": "RJF",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1037038,
+   "ticker": "RL",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 943819,
+   "ticker": "RMD",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1024478,
+   "ticker": "ROK",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11291
+  },
+  {
+   "cik": 84839,
+   "ticker": "ROL",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 882835,
+   "ticker": "ROP",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 745732,
+   "ticker": "ROST",
+   "firstDate": "1986-07-09",
+   "lastDate": "2026-10-26",
+   "rowCount": 10150
+  },
+  {
+   "cik": 1060391,
+   "ticker": "RSG",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 101829,
+   "ticker": "RTX",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14321
+  },
+  {
+   "cik": 31791,
+   "ticker": "RVTY",
+   "firstDate": "1983-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 10975
+  },
+  {
+   "cik": 1034054,
+   "ticker": "SBAC",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 829224,
+   "ticker": "SBUX",
+   "firstDate": "1992-06-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 8642
+  },
+  {
+   "cik": 316709,
+   "ticker": "SCHW",
+   "firstDate": "1989-06-30",
+   "lastDate": "2026-10-26",
+   "rowCount": 9397
+  },
+  {
+   "cik": 89800,
+   "ticker": "SHW",
+   "firstDate": "1985-07-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10408
+  },
+  {
+   "cik": 91419,
+   "ticker": "SJM",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 2041610,
+   "ticker": "SKYD",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5449
+  },
+  {
+   "cik": 87347,
+   "ticker": "SLB",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11294
+  },
+  {
+   "cik": 1375365,
+   "ticker": "SMCI",
+   "firstDate": "2020-01-15",
+   "lastDate": "2026-10-26",
+   "rowCount": 1704
+  },
+  {
+   "cik": 91440,
+   "ticker": "SNA",
+   "firstDate": "1985-07-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10407
+  },
+  {
+   "cik": 2023554,
+   "ticker": "SNDK",
+   "firstDate": "2025-02-13",
+   "lastDate": "2026-10-26",
+   "rowCount": 427
+  },
+  {
+   "cik": 883241,
+   "ticker": "SNPS",
+   "firstDate": "1992-02-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 8725
+  },
+  {
+   "cik": 92122,
+   "ticker": "SO",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11292
+  },
+  {
+   "cik": 1964738,
+   "ticker": "SOLV",
+   "firstDate": "2024-04-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 645
+  },
+  {
+   "cik": 1063761,
+   "ticker": "SPG",
+   "firstDate": "1993-12-14",
+   "lastDate": "2026-10-26",
+   "rowCount": 8268
+  },
+  {
+   "cik": 64040,
+   "ticker": "SPGI",
+   "firstDate": "1985-07-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10409
+  },
+  {
+   "cik": 0,
+   "ticker": "SPY",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1032208,
+   "ticker": "SRE",
+   "firstDate": "1998-06-29",
+   "lastDate": "2026-10-26",
+   "rowCount": 7123
+  },
+  {
+   "cik": 1757898,
+   "ticker": "STE",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1022671,
+   "ticker": "STLD",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 93751,
+   "ticker": "STT",
+   "firstDate": "1986-07-09",
+   "lastDate": "2026-10-26",
+   "rowCount": 10151
+  },
+  {
+   "cik": 1137789,
+   "ticker": "STX",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 16918,
+   "ticker": "STZ",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 2005951,
+   "ticker": "SW",
+   "firstDate": "2024-07-10",
+   "lastDate": "2026-10-26",
+   "rowCount": 577
+  },
+  {
+   "cik": 93556,
+   "ticker": "SWK",
+   "firstDate": "1985-07-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10409
+  },
+  {
+   "cik": 4127,
+   "ticker": "SWKS",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1601712,
+   "ticker": "SYF",
+   "firstDate": "2014-07-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 3078
+  },
+  {
+   "cik": 310764,
+   "ticker": "SYK",
+   "firstDate": "1988-02-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 9753
+  },
+  {
+   "cik": 96021,
+   "ticker": "SYY",
+   "firstDate": "1987-07-23",
+   "lastDate": "2026-10-26",
+   "rowCount": 9887
+  },
+  {
+   "cik": 732717,
+   "ticker": "T",
+   "firstDate": "1984-07-19",
+   "lastDate": "2026-10-26",
+   "rowCount": 10650
+  },
+  {
+   "cik": 1260221,
+   "ticker": "TDG",
+   "firstDate": "2006-03-14",
+   "lastDate": "2026-10-26",
+   "rowCount": 5187
+  },
+  {
+   "cik": 1094285,
+   "ticker": "TDY",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 842023,
+   "ticker": "TECH",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1385157,
+   "ticker": "TEL",
+   "firstDate": "2007-06-14",
+   "lastDate": "2026-10-26",
+   "rowCount": 4872
+  },
+  {
+   "cik": 97210,
+   "ticker": "TER",
+   "firstDate": "1987-03-11",
+   "lastDate": "2026-10-26",
+   "rowCount": 9980
+  },
+  {
+   "cik": 92230,
+   "ticker": "TFC",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9210
+  },
+  {
+   "cik": 27419,
+   "ticker": "TGT",
+   "firstDate": "1983-04-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 10975
+  },
+  {
+   "cik": 109198,
+   "ticker": "TJX",
+   "firstDate": "1988-01-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 9772
+  },
+  {
+   "cik": 1973266,
+   "ticker": "TKO",
+   "firstDate": "2000-10-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 6537
+  },
+  {
+   "cik": 97745,
+   "ticker": "TMO",
+   "firstDate": "1987-09-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 9861
+  },
+  {
+   "cik": 1283699,
+   "ticker": "TMUS",
+   "firstDate": "2007-04-18",
+   "lastDate": "2026-10-26",
+   "rowCount": 4912
+  },
+  {
+   "cik": 1811074,
+   "ticker": "TPL",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5446
+  },
+  {
+   "cik": 1116132,
+   "ticker": "TPR",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1389170,
+   "ticker": "TRGP",
+   "firstDate": "2010-12-09",
+   "lastDate": "2026-10-26",
+   "rowCount": 3992
+  },
+  {
+   "cik": 864749,
+   "ticker": "TRMB",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1113169,
+   "ticker": "TROW",
+   "firstDate": "1989-09-13",
+   "lastDate": "2026-10-26",
+   "rowCount": 9340
+  },
+  {
+   "cik": 86312,
+   "ticker": "TRV",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 916365,
+   "ticker": "TSCO",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1318605,
+   "ticker": "TSLA",
+   "firstDate": "2010-06-28",
+   "lastDate": "2026-10-26",
+   "rowCount": 4107
+  },
+  {
+   "cik": 100493,
+   "ticker": "TSN",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1466258,
+   "ticker": "TT",
+   "firstDate": "1985-07-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10409
+  },
+  {
+   "cik": 946581,
+   "ticker": "TTWO",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1447669,
+   "ticker": "TWLO",
+   "firstDate": "2016-06-23",
+   "lastDate": "2026-10-26",
+   "rowCount": 2600
+  },
+  {
+   "cik": 97476,
+   "ticker": "TXN",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11290
+  },
+  {
+   "cik": 217346,
+   "ticker": "TXT",
+   "firstDate": "1984-10-24",
+   "lastDate": "2026-10-26",
+   "rowCount": 10579
+  },
+  {
+   "cik": 860731,
+   "ticker": "TYL",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 100517,
+   "ticker": "UAL",
+   "firstDate": "2006-01-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5221
+  },
+  {
+   "cik": 1543151,
+   "ticker": "UBER",
+   "firstDate": "2019-05-10",
+   "lastDate": "2026-10-26",
+   "rowCount": 1876
+  },
+  {
+   "cik": 74208,
+   "ticker": "UDR",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 352915,
+   "ticker": "UHS",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1403568,
+   "ticker": "ULTA",
+   "firstDate": "2007-10-24",
+   "lastDate": "2026-10-26",
+   "rowCount": 4780
+  },
+  {
+   "cik": 731766,
+   "ticker": "UNH",
+   "firstDate": "1990-03-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 9213
+  },
+  {
+   "cik": 100885,
+   "ticker": "UNP",
+   "firstDate": "1980-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 11798
+  },
+  {
+   "cik": 1090727,
+   "ticker": "UPS",
+   "firstDate": "1999-11-10",
+   "lastDate": "2026-10-26",
+   "rowCount": 6776
+  },
+  {
+   "cik": 1067701,
+   "ticker": "URI",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 36104,
+   "ticker": "USB",
+   "firstDate": "1987-11-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 9810
+  },
+  {
+   "cik": 1403161,
+   "ticker": "V",
+   "firstDate": "2008-03-18",
+   "lastDate": "2026-10-26",
+   "rowCount": 4681
+  },
+  {
+   "cik": 1393052,
+   "ticker": "VEEV",
+   "firstDate": "2013-10-16",
+   "lastDate": "2026-10-26",
+   "rowCount": 3276
+  },
+  {
+   "cik": 1705696,
+   "ticker": "VICI",
+   "firstDate": "2018-02-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 2195
+  },
+  {
+   "cik": 1035002,
+   "ticker": "VLO",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1967680,
+   "ticker": "VLTO",
+   "firstDate": "2023-10-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 769
+  },
+  {
+   "cik": 1396009,
+   "ticker": "VMC",
+   "firstDate": "1988-01-05",
+   "lastDate": "2026-10-26",
+   "rowCount": 9770
+  },
+  {
+   "cik": 906107,
+   "ticker": "VMRK",
+   "firstDate": "1993-08-12",
+   "lastDate": "2026-10-26",
+   "rowCount": 8356
+  },
+  {
+   "cik": 1442145,
+   "ticker": "VRSK",
+   "firstDate": "2009-10-06",
+   "lastDate": "2026-10-26",
+   "rowCount": 4289
+  },
+  {
+   "cik": 1014473,
+   "ticker": "VRSN",
+   "firstDate": "1998-01-30",
+   "lastDate": "2026-10-26",
+   "rowCount": 7226
+  },
+  {
+   "cik": 1674101,
+   "ticker": "VRT",
+   "firstDate": "2018-07-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 2050
+  },
+  {
+   "cik": 875320,
+   "ticker": "VRTX",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5448
+  },
+  {
+   "cik": 1692819,
+   "ticker": "VST",
+   "firstDate": "2017-05-11",
+   "lastDate": "2026-10-26",
+   "rowCount": 2378
+  },
+  {
+   "cik": 740260,
+   "ticker": "VTR",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1792044,
+   "ticker": "VTRS",
+   "firstDate": "2020-10-29",
+   "lastDate": "2026-10-26",
+   "rowCount": 1504
+  },
+  {
+   "cik": 2128626,
+   "ticker": "VYLR",
+   "firstDate": "2026-10-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 17
+  },
+  {
+   "cik": 732712,
+   "ticker": "VZ",
+   "firstDate": "1983-11-21",
+   "lastDate": "2026-10-26",
+   "rowCount": 10813
+  },
+  {
+   "cik": 943452,
+   "ticker": "WAB",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1000697,
+   "ticker": "WAT",
+   "firstDate": "1995-11-17",
+   "lastDate": "2026-10-26",
+   "rowCount": 7780
+  },
+  {
+   "cik": 1327811,
+   "ticker": "WDAY",
+   "firstDate": "2012-10-12",
+   "lastDate": "2026-10-26",
+   "rowCount": 3528
+  },
+  {
+   "cik": 106040,
+   "ticker": "WDC",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 783325,
+   "ticker": "WEC",
+   "firstDate": "1984-10-26",
+   "lastDate": "2026-10-26",
+   "rowCount": 10572
+  },
+  {
+   "cik": 766704,
+   "ticker": "WELL",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 72971,
+   "ticker": "WFC",
+   "firstDate": "1984-11-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 10572
+  },
+  {
+   "cik": 823768,
+   "ticker": "WM",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 107263,
+   "ticker": "WMB",
+   "firstDate": "1981-12-31",
+   "lastDate": "2026-10-26",
+   "rowCount": 11289
+  },
+  {
+   "cik": 104169,
+   "ticker": "WMT",
+   "firstDate": "1972-03-20",
+   "lastDate": "2026-10-26",
+   "rowCount": 13692
+  },
+  {
+   "cik": 11544,
+   "ticker": "WRB",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 719955,
+   "ticker": "WSM",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 105770,
+   "ticker": "WST",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1140536,
+   "ticker": "WTW",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 106535,
+   "ticker": "WY",
+   "firstDate": "1977-01-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 12553
+  },
+  {
+   "cik": 1174922,
+   "ticker": "WYNN",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 72903,
+   "ticker": "XEL",
+   "firstDate": "2000-08-21",
+   "lastDate": "2026-10-26",
+   "rowCount": 6584
+  },
+  {
+   "cik": -1001,
+   "ticker": "XLB",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": -1002,
+   "ticker": "XLC",
+   "firstDate": "2018-06-21",
+   "lastDate": "2026-10-26",
+   "rowCount": 2098
+  },
+  {
+   "cik": -1003,
+   "ticker": "XLE",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": -1004,
+   "ticker": "XLF",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": -1005,
+   "ticker": "XLI",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": -1006,
+   "ticker": "XLK",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": -1007,
+   "ticker": "XLP",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": -1008,
+   "ticker": "XLRE",
+   "firstDate": "2015-10-08",
+   "lastDate": "2026-10-26",
+   "rowCount": 2774
+  },
+  {
+   "cik": -1009,
+   "ticker": "XLU",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": -1010,
+   "ticker": "XLV",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": -1011,
+   "ticker": "XLY",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 2115436,
+   "ticker": "XOM",
+   "firstDate": "1970-01-02",
+   "lastDate": "2026-10-26",
+   "rowCount": 14323
+  },
+  {
+   "cik": 1524472,
+   "ticker": "XYL",
+   "firstDate": "2011-11-03",
+   "lastDate": "2026-10-26",
+   "rowCount": 3765
+  },
+  {
+   "cik": 1512673,
+   "ticker": "XYZ",
+   "firstDate": "2015-11-19",
+   "lastDate": "2026-10-26",
+   "rowCount": 2748
+  },
+  {
+   "cik": 1041061,
+   "ticker": "YUM",
+   "firstDate": "1997-09-17",
+   "lastDate": "2026-10-26",
+   "rowCount": 7321
+  },
+  {
+   "cik": 1136869,
+   "ticker": "ZBH",
+   "firstDate": "2001-08-08",
+   "lastDate": "2026-10-26",
+   "rowCount": 6341
+  },
+  {
+   "cik": 877212,
+   "ticker": "ZBRA",
+   "firstDate": "2005-02-25",
+   "lastDate": "2026-10-26",
+   "rowCount": 5450
+  },
+  {
+   "cik": 1555280,
+   "ticker": "ZTS",
+   "firstDate": "2013-02-01",
+   "lastDate": "2026-10-26",
+   "rowCount": 3454
+  }
+ ],
+ "quality": {
+  "gaps": [],
+  "nonPositive": [],
+  "highLow": [
+   {
+    "ticker": "ARE",
+    "date": "2006-06-06",
+    "high": 6.21779,
+    "low": 61.215
+   },
+   {
+    "ticker": "ARE",
+    "date": "2009-02-27",
+    "high": 4.66319,
+    "low": 27.1203
+   },
+   {
+    "ticker": "ARE",
+    "date": "2010-05-27",
+    "high": 4.66319,
+    "low": 44.6421
+   },
+   {
+    "ticker": "BEN",
+    "date": "2002-09-19",
+    "high": 0.709999,
+    "low": 6.94504
+   },
+   {
+    "ticker": "BEN",
+    "date": "2003-02-14",
+    "high": 0.709999,
+    "low": 6.90201
+   },
+   {
+    "ticker": "BEN",
+    "date": "2011-02-14",
+    "high": 2.84098,
+    "low": 28.0936
+   },
+   {
+    "ticker": "BEN",
+    "date": "2011-05-04",
+    "high": 2.84098,
+    "low": 27.9413
+   },
+   {
+    "ticker": "DE",
+    "date": "1994-01-26",
+    "high": 0.842538,
+    "low": 8.30949
+   },
+   {
+    "ticker": "DE",
+    "date": "1994-02-07",
+    "high": 0.842538,
+    "low": 8.22239
+   },
+   {
+    "ticker": "DE",
+    "date": "1994-02-15",
+    "high": 0.842538,
+    "low": 8.32607
+   },
+   {
+    "ticker": "FITB",
+    "date": "2008-03-28",
+    "high": 1.41004,
+    "low": 13.5044
+   },
+   {
+    "ticker": "HUM",
+    "date": "2008-01-08",
+    "high": 7.54324,
+    "low": 73.9832
+   },
+   {
+    "ticker": "LII",
+    "date": "2005-05-27",
+    "high": 1.8003,
+    "low": 17.7218
+   },
+   {
+    "ticker": "LII",
+    "date": "2006-02-15",
+    "high": 2.7009,
+    "low": 26.3464
+   },
+   {
+    "ticker": "LII",
+    "date": "2007-12-26",
+    "high": 3.6012,
+    "low": 33.2607
+   },
+   {
+    "ticker": "LII",
+    "date": "2008-06-09",
+    "high": 2.7009,
+    "low": 25.7899
+   },
+   {
+    "ticker": "PCG",
+    "date": "2002-03-05",
+    "high": 1.7777,
+    "low": 17.174
+   },
+   {
+    "ticker": "PCG",
+    "date": "2012-09-27",
+    "high": 3.5557,
+    "low": 35.208
+   },
+   {
+    "ticker": "USB",
+    "date": "1995-10-25",
+    "high": 0.779938,
+    "low": 7.61117
+   },
+   {
+    "ticker": "USB",
+    "date": "1995-10-30",
+    "high": 0.779938,
+    "low": 7.64689
+   },
+   {
+    "ticker": "USB",
+    "date": "1995-11-07",
+    "high": 0.779938,
+    "low": 7.57476
+   },
+   {
+    "ticker": "USB",
+    "date": "1995-12-18",
+    "high": 0.779938,
+    "low": 7.62497
+   }
+  ],
+  "duplicateDates": [],
+  "largeMoves": [
+   {
+    "ticker": "AAPL",
+    "from": "2000-09-28",
+    "to": "2000-09-29",
+    "move": -0.5184751772164848,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "AMD",
+    "from": "2016-04-21",
+    "to": "2016-04-22",
+    "move": 0.5229007633587786,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "APA",
+    "from": "2020-03-06",
+    "to": "2020-03-09",
+    "move": -0.5386470636398992,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DXCM",
+    "from": "2008-12-03",
+    "to": "2008-12-04",
+    "move": 0.5025125628140705,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "ECHO",
+    "from": "2007-12-31",
+    "to": "2008-01-02",
+    "move": 0.7307818336719314,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "ECHO",
+    "from": "2025-08-25",
+    "to": "2025-08-26",
+    "move": 0.7024765729585007,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "HBAN",
+    "from": "2008-10-13",
+    "to": "2008-10-14",
+    "move": 0.5007060840729627,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "HOOD",
+    "from": "2021-08-03",
+    "to": "2021-08-04",
+    "move": 0.5040598290598293,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "HST",
+    "from": "2009-11-11",
+    "to": "2009-11-12",
+    "move": -0.9001019036807975,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "HST",
+    "from": "2009-11-12",
+    "to": "2009-11-13",
+    "move": 8.981518463903535,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "INTC",
+    "from": "1972-01-07",
+    "to": "1972-01-14",
+    "move": -0.5031755310265247,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "INTC",
+    "from": "1972-01-26",
+    "to": "1972-01-27",
+    "move": 1.0127833117120253,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "INTC",
+    "from": "1972-06-21",
+    "to": "1972-06-22",
+    "move": 0.5059745228732369,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "LULU",
+    "from": "2007-07-25",
+    "to": "2007-07-27",
+    "move": 0.5555555555555556,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "MNST",
+    "from": "1987-11-16",
+    "to": "1987-11-17",
+    "move": 1,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "MNST",
+    "from": "1987-12-23",
+    "to": "1987-12-24",
+    "move": 1,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "MNST",
+    "from": "1988-01-07",
+    "to": "1988-01-08",
+    "move": 1,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "MNST",
+    "from": "1990-03-02",
+    "to": "1990-03-06",
+    "move": 0.8332898785002869,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "MNST",
+    "from": "1990-10-30",
+    "to": "1990-11-01",
+    "move": 0.5714381495139123,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "MNST",
+    "from": "1990-11-07",
+    "to": "1990-11-08",
+    "move": 0.7777540745797424,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "MNST",
+    "from": "1992-07-16",
+    "to": "1992-07-17",
+    "move": 0.6428767348730047,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "MRNA",
+    "from": "2026-08-18",
+    "to": "2026-08-19",
+    "move": 1.7696950444726811,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "TTWO",
+    "from": "2008-02-22",
+    "to": "2008-02-25",
+    "move": 0.5489631336405532,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "UAL",
+    "from": "2008-07-21",
+    "to": "2008-07-22",
+    "move": 0.685370741482966,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "ULTA",
+    "from": "2007-10-24",
+    "to": "2007-10-25",
+    "move": 0.6566666666666667,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "VRTX",
+    "from": "2012-05-04",
+    "to": "2012-05-07",
+    "move": 0.5535952953755681,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "VRTX",
+    "from": "2013-04-18",
+    "to": "2013-04-19",
+    "move": 0.6190656326839417,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "WMT",
+    "from": "1974-12-05",
+    "to": "1974-12-06",
+    "move": -0.5204080233894768,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "WMT",
+    "from": "1974-12-17",
+    "to": "1974-12-18",
+    "move": 1.0851057748451458,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "AIG",
+    "from": "2008-09-12",
+    "to": "2008-09-15",
+    "move": -0.6078966902231939,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "AIG",
+    "from": "2009-03-13",
+    "to": "2009-03-16",
+    "move": 0.6602229859177184,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "AIG",
+    "from": "2009-08-04",
+    "to": "2009-08-05",
+    "move": 0.6276493740126201,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "BE",
+    "from": "2024-11-14",
+    "to": "2024-11-15",
+    "move": 0.5918674698795181,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "C",
+    "from": "2008-11-21",
+    "to": "2008-11-24",
+    "move": 0.578367012001231,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "CBRE",
+    "from": "2009-03-24",
+    "to": "2009-03-25",
+    "move": 0.6399999999999999,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "CMG",
+    "from": "2006-01-25",
+    "to": "2006-01-26",
+    "move": 1,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "CNP",
+    "from": "2002-07-24",
+    "to": "2002-07-25",
+    "move": 0.6298616607756866,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "CVNA",
+    "from": "2023-06-07",
+    "to": "2023-06-08",
+    "move": 0.5602060528010304,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DD",
+    "from": "1989-01-13",
+    "to": "1989-01-16",
+    "move": -0.8998359144957181,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DD",
+    "from": "1989-01-16",
+    "to": "1989-01-17",
+    "move": 8.954969106712745,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DD",
+    "from": "1991-05-24",
+    "to": "1991-05-28",
+    "move": -0.8992949152542373,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DD",
+    "from": "1991-05-28",
+    "to": "1991-05-29",
+    "move": 8.866104154511318,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DD",
+    "from": "1991-06-28",
+    "to": "1991-07-01",
+    "move": -0.8995476541131917,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DD",
+    "from": "1991-07-01",
+    "to": "1991-07-02",
+    "move": 9.116541747078976,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DD",
+    "from": "1991-08-09",
+    "to": "1991-08-12",
+    "move": -0.9004460662024798,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DD",
+    "from": "1991-08-12",
+    "to": "1991-08-13",
+    "move": 8.973146028753947,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DD",
+    "from": "1991-08-29",
+    "to": "1991-08-30",
+    "move": -0.9004460662024798,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DD",
+    "from": "1991-08-30",
+    "to": "1991-09-03",
+    "move": 8.856529479526653,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DE",
+    "from": "1994-02-10",
+    "to": "1994-02-11",
+    "move": -0.9004914379254021,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "DE",
+    "from": "1994-02-11",
+    "to": "1994-02-14",
+    "move": 8.907470048828658,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "FITB",
+    "from": "1999-08-24",
+    "to": "1999-08-25",
+    "move": -0.8998366338040173,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "FITB",
+    "from": "1999-08-25",
+    "to": "1999-08-26",
+    "move": 8.918698322200003,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "FITB",
+    "from": "2002-07-01",
+    "to": "2002-07-02",
+    "move": -0.9010701415084411,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "FITB",
+    "from": "2002-07-02",
+    "to": "2002-07-03",
+    "move": 8.95428231027986,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "FITB",
+    "from": "2009-02-05",
+    "to": "2009-02-06",
+    "move": 0.6034295555805158,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "FITB",
+    "from": "2009-05-07",
+    "to": "2009-05-08",
+    "move": 0.5868214674123577,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "GL",
+    "from": "2024-04-10",
+    "to": "2024-04-11",
+    "move": -0.5314018869722672,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "HIG",
+    "from": "2008-10-29",
+    "to": "2008-10-30",
+    "move": -0.5155839797617358,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "HIG",
+    "from": "2008-10-31",
+    "to": "2008-11-03",
+    "move": 0.577133121906517,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "HIG",
+    "from": "2008-12-04",
+    "to": "2008-12-05",
+    "move": 1.0234423743847443,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "ICE",
+    "from": "2005-11-15",
+    "to": "2005-11-16",
+    "move": 0.5097335576814661,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "KEY",
+    "from": "2008-10-13",
+    "to": "2008-10-14",
+    "move": 0.5348718763771394,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "LII",
+    "from": "2006-03-16",
+    "to": "2006-03-17",
+    "move": -0.9011061436558762,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "LII",
+    "from": "2006-03-17",
+    "to": "2006-03-20",
+    "move": 8.885260468732646,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "LVS",
+    "from": "2008-10-28",
+    "to": "2008-10-29",
+    "move": 0.7999517956134008,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "MKC",
+    "from": "1999-05-25",
+    "to": "1999-05-26",
+    "move": 1.0286277741590704,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "MS",
+    "from": "2008-10-10",
+    "to": "2008-10-13",
+    "move": 0.8701656699964562,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "NUE",
+    "from": "2007-01-12",
+    "to": "2007-01-16",
+    "move": -0.9006829305116946,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "NUE",
+    "from": "2007-01-16",
+    "to": "2007-01-17",
+    "move": 9.070536191603052,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "OXY",
+    "from": "2020-03-06",
+    "to": "2020-03-09",
+    "move": -0.520140193445219,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "PCG",
+    "from": "2019-01-11",
+    "to": "2019-01-14",
+    "move": -0.5235929505400796,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "PCG",
+    "from": "2019-01-23",
+    "to": "2019-01-24",
+    "move": 0.7459324155193992,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "PLD",
+    "from": "2008-11-12",
+    "to": "2008-11-13",
+    "move": 0.5304846501831941,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "PNW",
+    "from": "1989-12-06",
+    "to": "1989-12-07",
+    "move": 0.9066686344373931,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "RF",
+    "from": "2001-05-14",
+    "to": "2001-05-15",
+    "move": 1.0117156676166688,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "STT",
+    "from": "2009-01-16",
+    "to": "2009-01-20",
+    "move": -0.5903607520225722,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "TRGP",
+    "from": "2020-03-06",
+    "to": "2020-03-09",
+    "move": -0.5290785127402737,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "WMB",
+    "from": "2002-07-19",
+    "to": "2002-07-22",
+    "move": -0.6105254157899824,
+    "reviewOnly": true
+   },
+   {
+    "ticker": "WMB",
+    "from": "2002-07-26",
+    "to": "2002-07-29",
+    "move": 1.0114172472566998,
+    "reviewOnly": true
+   }
+  ],
+  "companiesWithoutGics": [
+   {
+    "cik": 1922641,
+    "ticker": "ENLT"
+   },
+   {
+    "cik": 51143,
+    "ticker": "IBM"
+   },
+   {
+    "cik": 936468,
+    "ticker": "LMT"
+   },
+   {
+    "cik": 1326801,
+    "ticker": "META"
+   },
+   {
+    "cik": 1874178,
+    "ticker": "RIVN"
+   },
+   {
+    "cik": 34088,
+    "ticker": "XOM_PRE"
+   }
+  ]
+ },
+ "productionWrite": false,
+ "productionPushGuard": "prod-push builds pricesDaily from Schwab only, so these stooq rows cannot enter that lane; Stooq and Schwab remain separate by (cik,date,source)",
+ "knownLimits": [
+  "The archive contains only tickers listed today, so the history describes survivors",
+  "SPY and some tickers start on 2005-02-25 in this archive",
+  "Bars after 2026-10-26 need a newer archive; this task does not fetch one"
+ ]
+}
