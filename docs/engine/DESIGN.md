@@ -261,6 +261,18 @@ today, so historical results describe survivors. Step 5 must state this next to 
   sessions, 1,033 decisions); after lowered company guidance the same, larger, on few cases. Fixed
   for the K06 test: revenue acceleration after a fall, as one candidate reading (needs the K03
   release reader on those companies' releases).
+- Macro in the engine (owner, 2026-11-11). The owner's original hypothesis was macro as the market
+  prior p0. It was built (step 8: 15 FRED readings as known on each day, offered to the market's
+  starting probability) and found nothing beyond chance on one market over 20 years; the same
+  readings on the 11 sector funds found nothing either. The engine therefore starts from the
+  measured up-rate of each target, which is what moved the account illustration from 9.1% to 21.4%
+  a year; a hand-set larger prior made it worse. Macro's remaining route is per company: (1) the
+  pass-through reading fixed in the research repository's plan (exposure from the filings, as known
+  on the day, times the macro move of the last 21 sessions; needs task K10's exposure history);
+  (2) a macro-implied surprise for the quarter (exposure times the macro move during the quarter)
+  as a third version of "expectations" against the 8-K; (3) in Stage 5, a sizing limit: a position
+  is capped by the share of operating income a severe (p90) shock would cost, a limit, not a
+  forecast.
 
 ## 6. Engine version 1: procedure and results (2026-11-10 and 11)
 
