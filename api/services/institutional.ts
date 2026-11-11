@@ -159,7 +159,7 @@ export async function fundFlowsGraph(limit = 400): Promise<FundFlowsGraphRespons
     companies: companyRows,
     edges: rows.map((r: any) => {
       const curShares = Number(r.curShares ?? 0), prevShares = Number(r.prevShares ?? 0);
-      const m = flowMetrics(curShares, prevShares, r.curBook === null ? null : Number(r.curBook), r.prevBook === null ? null : Number(r.prevBook));
+      const m = flowMetrics(curShares, prevShares, r.curBook === null ? null : Number(r.curBook), r.prevBook === null ? null : Number(r.prevBook), Number(r.curUsd ?? 0), Number(r.prevUsd ?? 0));
       return {
         fundCik: Number(r.fundCik), cik: Number(r.cik), curUsd: Number(r.curUsd ?? 0),
         deltaUsd: Number(r.curUsd ?? 0) - Number(r.prevUsd ?? 0),
@@ -182,22 +182,27 @@ export async function sectorFlowsDetailed(): Promise<SectorFlowsDetailed> {
   const { cur, prev } = guarded.selection;
   const stable = guarded.comparable.stable;
   if (!prev || stable.length < 2) return { rows: [], guard: guarded.meta };
+  // The book of the stable funds, each fund counted once (joining it to every holding row would count it per holding).
+  const books = ((await db.execute(sql`
+    SELECT SUM(CASE WHEN quarterDate=${cur} THEN totalValueUsd ELSE 0 END) curBook,
+           SUM(CASE WHEN quarterDate=${prev} THEN totalValueUsd ELSE 0 END) prevBook
+    FROM fund_quarters
+    WHERE quarterDate IN (${cur}, ${prev}) AND fundCik IN (${sql.join(stable.map((id) => sql`${id}`), sql`, `)})`))[0] as unknown as any[])[0] ?? {};
+  const curBook = books.curBook === null || books.curBook === undefined ? null : Number(books.curBook);
+  const prevBook = books.prevBook === null || books.prevBook === undefined ? null : Number(books.prevBook);
   const rows = ((await db.execute(sql`
     SELECT c.sector,
            SUM(CASE WHEN h.quarterDate=${cur} THEN h.shares ELSE 0 END) curShares,
            SUM(CASE WHEN h.quarterDate=${prev} THEN h.shares ELSE 0 END) prevShares,
            SUM(CASE WHEN h.quarterDate=${cur} THEN h.valueUsd ELSE 0 END) curUsd,
-           SUM(CASE WHEN h.quarterDate=${prev} THEN h.valueUsd ELSE 0 END) prevUsd,
-           SUM(CASE WHEN q.quarterDate=${cur} THEN q.totalValueUsd ELSE 0 END) curBook,
-           SUM(CASE WHEN q.quarterDate=${prev} THEN q.totalValueUsd ELSE 0 END) prevBook
+           SUM(CASE WHEN h.quarterDate=${prev} THEN h.valueUsd ELSE 0 END) prevUsd
     FROM fund_holdings h
     JOIN companies c ON c.cik = h.heldCik
-    LEFT JOIN fund_quarters q ON q.fundCik=h.fundCik AND q.quarterDate=h.quarterDate
     WHERE h.quarterDate IN (${cur}, ${prev}) AND h.secClass='COM' AND c.sector IS NOT NULL
       AND h.fundCik IN (${sql.join(stable.map((id) => sql`${id}`), sql`, `)})
     GROUP BY c.sector`))[0] as unknown as any[]).map((r: any) => {
     const curShares = Number(r.curShares ?? 0), prevShares = Number(r.prevShares ?? 0);
-    const m = flowMetrics(curShares, prevShares, r.curBook === null ? null : Number(r.curBook), r.prevBook === null ? null : Number(r.prevBook));
+    const m = flowMetrics(curShares, prevShares, curBook, prevBook, Number(r.curUsd ?? 0), Number(r.prevUsd ?? 0));
     return {
       sector: String(r.sector),
       curUsd: Number(r.curUsd ?? 0),
