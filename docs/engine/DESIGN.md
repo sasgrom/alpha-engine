@@ -386,6 +386,12 @@ decisions from 2005 to 2026. The results:
   -0.2 [-0.5, +0.1]). At the filing it gives -0.6 [-1.3, +0.1].
 - **Variants.** Slower fading of old forecasts, clean outcomes, a release decision for every
   quarter and the 12:30 limit each add nothing.
+- **The test could have seen an effect.** An artificial factor with a correlation of 0.1 with the
+  20-session outcome, planted into the same run, is found at every 20-session cell: +2.1 to +3.0
+  per 1000, with intervals of about ±1. At a correlation of 0.05 it is still found at the filing
+  decision, +0.9 [+0.5, +1.2]. So on the full list a family is seen when its link to the outcome
+  is about 0.05 or stronger; on the 50 the line was about 0.1. In 20 runs with scrambled readings
+  no cell exceeds +0.3; the real run stays within -0.5 to +0.4 at every company cell.
 
 Reading: the continuation after a release belongs to the 50, a hand-picked list tilted to winners,
 not to large US companies in general. Version 1 has no evidence of an edge at the release or at the
@@ -396,5 +402,18 @@ be tested on the full list:
 - guidance: the second pass over the other companies' releases is running on the local GPU;
 - expectations against the figures printed in the release: needs task K03's reader over the other
   companies' releases;
-- macro pass-through: needs exposures for the other companies; the rate part can come from the
-  filed figures already local.
+- macro pass-through: the fuel-cost and foreign-revenue parts need an exposure history for all
+  companies. K10 reads them from the 10-K/10-Q documents, which are cached only for the 50.
+
+**Macro pass-through, rate part, on all companies (2026-11-12): no link.** The reading and the test
+were fixed in the engine README before the reading existed. The reading is net debt repricing
+within 24 months (debt due within 12 months and in year two, minus cash and short-term investments)
+per unit of operating income, from the latest 10-K known at the decision. That is K10's definition,
+read from the local filed figures for all 490 companies. It is multiplied by the 10-year Treasury
+yield's move over the 21 observations before the decision, each value as published by then.
+Financials are left out. The extraction agrees with K10's history on the 50 within 0.5% in 98.5%
+to 100% of the four inputs. 25,635 decisions have the reading, about half of all from 2013. Its
+rank correlation with the move against the sector over the next 20 or 45 sessions lies between
+-0.014 and +0.011 in the scored years, at both decisions. Added to version 1 as its own family,
+it changes the gain by -0.1 to +0.0 per 1000 at the four cells fixed in advance, each interval
+within ±0.2. Not kept.

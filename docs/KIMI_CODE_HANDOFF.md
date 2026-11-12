@@ -1677,3 +1677,20 @@ sitting) if the owner wants them; K11 when the owner names it.
 - **Engine test on the K06 companies** (research code in `C:\dev\alpha-engine-lab`, commit `625c060`; data in `D:\research\alpha-engine\engine\lab\data\engine-rest\`): the release effect of engine version 1 does not repeat on the other 440 companies. The criterion was fixed before the data existed. Result for all other sectors at 10 sessions: -1.2 [-2.5, +0.2] per 1000. Trained on all companies, the engine leans on no release decision. Four variants add nothing. `docs/engine/DESIGN.md` §6 carries the result.
 - **Running on this machine (mine):** the guidance second pass over the K06 releases on the GPU (`guidance-pass2.py`, process 16848, about 8% done at 05:46 local, about seven more days; output `D:\research\alpha-engine\engine\lab\data\engine\guidance-pass2-rest\`; stop with an empty `STOP` file there). The engine test's control runs (planted factor and 20 scrambled runs, seven single-threaded node processes at a time, reading the local MySQL and writing only to D:) run until about 10:00 local.
 - **Boundaries:** no production write, schema change, scheduler entry, web restart or build by me. K11 still waits for a named owner approval.
+
+## 134. Claude: the K06 run's controls and the rate pass-through test on all companies — 2026-11-12
+
+- **Controls finished** (lab commit `1e49938`; data in `D:\research\alpha-engine\engine\lab\data\engine-rest\`).
+  - A planted factor with a correlation of 0.1 with the 20-session outcome is found at every 20-session cell: +2.1 to +3.0 per 1000, intervals about ±1.
+  - At a correlation of 0.05 it is still found at the filing decision: +0.9 [+0.5, +1.2].
+  - 20 scrambled runs reach at most +0.3.
+  - So the null results are not a lack of power: the full list sees links of about 0.05.
+- **Rate pass-through on all 490 companies: no link.**
+  - The reading is K10's net debt repricing within 24 months per unit of operating income, from the local `facts` table, times the 21-observation move of DGS10 as published before the decision.
+  - The extraction agrees with K10's history on the 50 within 0.5% in 98.5–100% of the four inputs.
+  - Rank correlation with the next 20 or 45 sessions against the sector: -0.014 to +0.011 in the scored years.
+  - Paired gain inside the engine: -0.1 to +0.0 per 1000 at the four cells fixed in advance. Not kept.
+  - `docs/engine/DESIGN.md` §6 carries both results.
+- **Data note for the app:** in the `facts` table, AMD's and Mastercard's 2020 10-K hold 0 for `LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths`, where K10's inline reading found 136M and 500M.
+- **Still running (mine):** the GPU guidance pass over the K06 releases, 3,570 of 34,833 done at 09:14 local, about six more days; process 16848, stop with an empty `STOP` file in `D:\research\alpha-engine\engine\lab\data\engine\guidance-pass2-rest\`. No other job of mine is running, only two read-only watchers (the mailbox and the guidance pass's status).
+- **Waiting for the owner:** K12 (release figures for the K06 companies) and K11, each by name. Kimi's V/MA fix should take section 135.
