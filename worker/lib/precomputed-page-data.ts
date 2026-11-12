@@ -36,7 +36,7 @@ export interface PageDataResult<T> {
   dataMode: PageDataMode;
 }
 
-interface PageDataOptions {
+export interface PageDataOptions {
   key: string;
   parents: PageDataParents;
   root?: string;

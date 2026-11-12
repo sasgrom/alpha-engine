@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { sql } from "drizzle-orm";
 import { getDb } from "../api/queries/connection";
@@ -8,8 +8,9 @@ import { institutionalSummary, sectorFlowsDetailed } from "../api/services/insti
 import { evaluateCompany } from "../api/services/probability-engine";
 import { dashboardStaticStatsOnRequest, DASHBOARD_STATS_PARENTS, INSTITUTIONAL_PARENTS, MARKET_REPORT_PARENTS, PAGE_DATA_KEYS, PROBABILITY_PARENTS, SECTOR_FLOWS_PARENTS } from "../api/services/page-data";
 import { writeJsonAtomic } from "../worker/lib/json-file";
-import { writePageDataArtifact, type PageDataParents } from "../worker/lib/precomputed-page-data";
+import { writePageDataArtifact, type PageDataArtifact, type PageDataParents } from "../worker/lib/precomputed-page-data";
 import { buildMarketReportGzip, pageDataCodeVersion } from "../worker/lib/market-report-gzip";
+import { reusablePageDataArtifact } from "../worker/lib/page-data-resume";
 
 const option = (name: string) => {
   const index = process.argv.indexOf(name);
@@ -30,6 +31,9 @@ const selected = only.size ? universe.filter((company) => only.has(company.ticke
 if (selected.length !== only.size && only.size) throw new Error(`Universe is missing: ${[...only].filter((ticker) => !universe.some((company) => company.ticker.toUpperCase() === ticker)).join(",")}`);
 if (!selected.length) throw new Error("No companies selected");
 const codeVersion = pageDataCodeVersion();
+const resume = process.argv.includes("--resume");
+const resumeCodeVersion = option("--resume-code-version");
+if (resumeCodeVersion && !resume) throw new Error("--resume-code-version requires --resume");
 const db = getDb();
 const artifacts: any[] = [];
 const failures: string[] = [];
@@ -62,14 +66,27 @@ function writeSummary(status: string): void {
   }, true);
 }
 
+function record(key: string, artifact: PageDataArtifact<unknown>, reused: boolean, elapsedMs: number): void {
+  const bytes = readFileSync(path.join(root, `${key}.json`));
+  const row = { key, bytes: bytes.length, sha256: hash(bytes), generatedAt: artifact.generatedAt, codeVersion: artifact.codeVersion, inputsHash: artifact.inputsHash, versionHash: artifact.versionHash, inputs: artifact.inputs, reused };
+  const index = artifacts.findIndex((existing) => existing.key === key);
+  if (index >= 0) artifacts[index] = row;
+  else artifacts.push(row);
+  writeSummary("running");
+  console.log(JSON.stringify({ key, bytes: bytes.length, reused, elapsedMs }));
+}
+
 function save(key: string, parents: PageDataParents, payload: unknown, inputs: unknown, includeDay = true): void {
   const started = Date.now();
   const artifact = writePageDataArtifact({ key, parents, payload, inputs, includeDay, codeVersion, root });
-  const file = path.join(root, `${key}.json`);
-  const bytes = readFileSync(file);
-  artifacts.push({ key, bytes: bytes.length, sha256: hash(bytes), generatedAt: artifact.generatedAt, inputsHash: artifact.inputsHash, versionHash: artifact.versionHash, inputs });
-  writeSummary("running");
-  console.log(JSON.stringify({ key, bytes: bytes.length, elapsedMs: Date.now() - started }));
+  record(key, artifact, false, Date.now() - started);
+}
+
+function reuse(key: string, parents: PageDataParents, includeDay = true): PageDataArtifact<unknown> | null {
+  if (!resume) return null;
+  const artifact = reusablePageDataArtifact<unknown>({ key, parents, root, includeDay, expectedCodeVersion: resumeCodeVersion ?? codeVersion });
+  if (artifact) record(key, artifact, true, 0);
+  return artifact;
 }
 
 async function companyInputs(cik: number) {
@@ -108,6 +125,7 @@ async function buildStats() {
 
 async function buildInstitutional() {
   for (const company of selected) {
+    if (reuse(PAGE_DATA_KEYS.institutional(company.cik), INSTITUTIONAL_PARENTS)) continue;
     const payload = await institutionalSummary(company.cik);
     const [shares]: any = await db.execute(sql`SELECT val, endDate, accn, filed FROM facts WHERE cik=${company.cik} AND concept='EntityCommonStockSharesOutstanding' ORDER BY endDate DESC LIMIT 1`);
     save(PAGE_DATA_KEYS.institutional(company.cik), INSTITUTIONAL_PARENTS, payload, {
@@ -125,6 +143,7 @@ async function buildSectorFlows() {
 async function buildProbability() {
   const global = await globalInputs();
   for (const company of selected) {
+    if (reuse(PAGE_DATA_KEYS.probability(company.cik), PROBABILITY_PARENTS)) continue;
     const payload = await evaluateCompany(company.cik);
     save(PAGE_DATA_KEYS.probability(company.cik), PROBABILITY_PARENTS, payload, { company: await companyInputs(company.cik), global });
   }
@@ -140,16 +159,22 @@ function buildMarketReport() {
 writeSummary("running");
 try {
   if (groups.includes("stats")) {
-    await buildStats();
+    if (!reuse(PAGE_DATA_KEYS.dashboardStats, DASHBOARD_STATS_PARENTS, false)) await buildStats();
     await buildInstitutional();
   }
   if (groups.includes("institutional")) {
-    await buildSectorFlows();
-    await buildInstitutional();
+    if (!reuse(PAGE_DATA_KEYS.sectorFlows, SECTOR_FLOWS_PARENTS)) await buildSectorFlows();
+    if (!groups.includes("stats")) await buildInstitutional();
     await buildProbability();
   }
   if (groups.includes("probability")) await buildProbability();
-  if (groups.includes("market")) buildMarketReport();
+  if (groups.includes("market")) {
+    const cached = reuse(PAGE_DATA_KEYS.marketReport, MARKET_REPORT_PARENTS, false);
+    if (cached) {
+      marketReport = { ...(cached.payload as any), gzipBytes: statSync(path.join(root, "schwab-market-data.json.gz")).size };
+      writeSummary("running");
+    } else buildMarketReport();
+  }
   writeSummary("complete");
   console.log(JSON.stringify({ status: "complete", groups, companies: selected.length, artifacts: artifacts.length, summaryFile, root }, null, 2));
 } catch (error) {
