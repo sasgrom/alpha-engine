@@ -22,9 +22,8 @@ import { readWorkerCacheDoc } from "./document-cache";
 import { computeCompanyValue } from "../services/valuation";
 import { cachedExternal } from "../services/ext-cache";
 import { latestShortInterest } from "../services/short-interest";
-import { institutionalSummary } from "../services/institutional";
+import { institutionalPageData, probabilityPageData } from "../services/page-data";
 import { companyFactorIc } from "../services/factor-ic";
-import { evaluateCompany } from "../services/probability-engine";
 import { sectionText } from "../services/sections";
 import { buildStatements, STATEMENT_CONCEPTS } from "../services/statements";
 
@@ -385,13 +384,13 @@ export const companyRouter = createRouter({
   shortInterest: authedQuery.input(z.object({ cik: z.number() })).query(({ input }) => latestShortInterest(input.cik)),
 
   /** 5g: institutional ownership aggregates from 13F holdings (fund_holdings). */
-  institutional: authedQuery.input(z.object({ cik: z.number() })).query(({ input }) => institutionalSummary(input.cik)),
+  institutional: authedQuery.input(z.object({ cik: z.number() })).query(({ input }) => institutionalPageData(input.cik)),
 
   /** 6a: factor IC vs forward 1Q/2Q returns (availability-anchored). */
   factorIc: authedQuery.input(z.object({ cik: z.number() })).query(({ input }) => companyFactorIc(input.cik)),
 
   /** 6b: walk-forward next-quarter up-probability + backtest + calibration. */
-  probability: authedQuery.input(z.object({ cik: z.number() })).query(({ input }) => evaluateCompany(input.cik)),
+  probability: authedQuery.input(z.object({ cik: z.number() })).query(({ input }) => probabilityPageData(input.cik)),
 });
 
 // ---------------------------------------------------------------------------

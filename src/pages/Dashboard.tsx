@@ -1,4 +1,5 @@
 import AppLayout from "@/components/AppLayout";
+import PrecomputedAsOf from "@/components/PrecomputedAsOf";
 import OpsStatusBanner from "@/components/OpsStatusBanner";
 import { trpc } from "@/providers/trpc";
 import { useAuth } from "@/hooks/useAuth";
@@ -110,7 +111,10 @@ export default function Dashboard() {
       {/* Guarded 13F flows: the pair and exclusions are visible, never implicit. */}
       {flows.data && flowGuard && (
         <div className="t-panel px-4 py-3 mt-5">
-          <div className="t-label mb-2.5">13F sector flows — {flowGuard.cur} vs {flowGuard.prev ?? "n/a"} · stable funds {flowGuard.stableFunds}</div>
+          <div className="t-label mb-2.5 flex flex-wrap items-center justify-between gap-2">
+            <span>13F sector flows — {flowGuard.cur} vs {flowGuard.prev ?? "n/a"} · stable funds {flowGuard.stableFunds}</span>
+            <PrecomputedAsOf asOf={flows.data.asOf} stale={flows.data.stale} dataMode={flows.data.dataMode} label="13F data" />
+          </div>
           <div className="t-mono text-[10px] text-muted-foreground mb-2" title={flowGuard.warnings.join("\n")}>
             coverage {flowGuard.curFunds}/{flowGuard.expectedFunds} · excluded {flowGuard.missingFunds} missing + {flowGuard.suspectFunds} suspect{flowGuard.partial ? " · partial" : ""}
           </div>

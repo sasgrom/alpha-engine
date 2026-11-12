@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { and, desc, eq, inArray, like, sql, count, max } from "drizzle-orm";
+import { and, desc, eq, inArray, like, sql, count } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { createRouter, authedQuery, adminQuery, effectiveUserId } from "../middleware";
 import { getDb } from "../queries/connection";
@@ -7,38 +7,14 @@ import { companies, filings, facts, jobs, jobLogs, users, userUniverse } from "@
 import { createJob, recordUniverseAction, requestCancel } from "../services/runner";
 import { companyInDb, invalidateScreenerCache } from "../services/membership";
 import { latestMacro } from "../services/macro";
-import { sectorFlows, sectorFlowsDetailed } from "../services/institutional";
+import { dashboardStats, sectorFlowsPageData } from "../services/page-data";
 import * as edgar from "../services/edgar";
 
 // ---------------------------------------------------------------------------
 // dashboard
 // ---------------------------------------------------------------------------
 export const dashboardRouter = createRouter({
-  stats: authedQuery.query(async ({ ctx }) => {
-    const db = getDb();
-    const [c] = await db.select({ n: count() }).from(companies);
-    // 4c (D30): "Universe" = the VIEWER's own active watchlist, not a global flag
-    const [cu] = await db
-      .select({ n: count() })
-      .from(userUniverse)
-      .where(and(eq(userUniverse.userId, effectiveUserId(ctx)), eq(userUniverse.active, true)));
-    const [f] = await db.select({ n: count() }).from(filings);
-    const [fc] = await db.select({ n: count() }).from(facts);
-    const [latest] = await db.select({ d: max(filings.filingDate) }).from(filings);
-    const [running] = await db.select({ n: count() }).from(jobs).where(eq(jobs.status, "running"));
-    const [queued] = await db.select({ n: count() }).from(jobs).where(eq(jobs.status, "queued"));
-    return {
-      companies: c.n,
-      universe: cu.n,
-      filings: f.n,
-      facts: fc.n,
-      latestFilingDate: latest.d,
-      // 4c review fix: the FIFO queue (D24) makes queued jobs invisible in a
-      // running-only counter — report both so the IDLE led stops lying
-      runningJobs: running.n,
-      queuedJobs: queued.n,
-    };
-  }),
+  stats: authedQuery.query(({ ctx }) => dashboardStats(effectiveUserId(ctx))),
 
   /**
    * Latest filings of the VIEWER's universe (4c, D30 — the dashboard is a
@@ -73,8 +49,8 @@ export const dashboardRouter = createRouter({
   macro: authedQuery.query(() => latestMacro()),
 
   /** 13F flows use the same guarded rows in both shapes; detailed adds coverage. */
-  sectorFlows: authedQuery.query(() => sectorFlows()),
-  sectorFlowsDetailed: authedQuery.query(() => sectorFlowsDetailed()),
+  sectorFlows: authedQuery.query(async () => (await sectorFlowsPageData()).rows),
+  sectorFlowsDetailed: authedQuery.query(() => sectorFlowsPageData()),
 });
 
 // ---------------------------------------------------------------------------

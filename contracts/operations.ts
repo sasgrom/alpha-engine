@@ -68,6 +68,42 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local MySQL.", requirements: ["mysql"], notes: "Does not claim new predictive evidence; evaluation remains a separate research job.",
   }),
   job({
+    id: "page-data-dashboard", name: "Precomputed dashboard and institutional data", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["facts-fetch-daily", "sp500-facts-daily", "edgar-fetch-daily"],
+    ...npx("scripts/build-precomputed-page-data.mts", ["--group", "stats"]), purpose: "Precompute global dashboard counts and institutional ownership after SEC fact and filing inputs change.",
+    input: "Local companies, filings, facts and 13F holdings for the research universe.", output: "dashboard-stats.json and per-company institutional artifacts with generation time, input evidence and code version.",
+    destination: "Local precomputed page-data artifacts only; no production write or push lane.", requirements: ["mysql", "review"], notes: "Live user membership and job counters remain on request. Stale artifacts remain visible with an as-of time and stale mark; missing artifacts use the original computation.",
+  }),
+  job({
+    id: "page-data-13f", name: "Precomputed 13F page data", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["13f-refresh"],
+    ...npx("scripts/build-precomputed-page-data.mts", ["--group", "institutional"]), purpose: "Precompute institutional ownership, guarded sector flows and 13F-dependent probability results after holdings change.",
+    input: "Local fund_holdings, fund_quarters and current guarded quarter pair.", output: "Per-company institutional/probability artifacts and sector-flows.json with input lineage.",
+    destination: "Local precomputed page-data artifacts only; no production write or push lane.", requirements: ["mysql", "review"], notes: "The original guarded aggregation runs unchanged. Missing artifacts fall back to on-request computation.",
+  }),
+  job({
+    id: "page-data-fundamentals", name: "Precomputed probability after research factors", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-factors"],
+    ...npx("scripts/build-precomputed-page-data.mts", ["--group", "probability"]), purpose: "Recompute per-company probability artifacts after point-in-time factor materialization changes.",
+    input: "Local factor_points and the existing availability-anchored probability inputs.", output: "One probability artifact per research-universe company with generation time, input evidence and code version.",
+    destination: "Local precomputed page-data artifacts only; no production write or model promotion.", requirements: ["mysql", "review"], notes: "Point-in-time evaluation is unchanged; this is serving precomputation, not a new model or factor.",
+  }),
+  job({
+    id: "page-data-prices", name: "Precomputed probability after daily prices", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-daily-bars"],
+    ...npx("scripts/build-precomputed-page-data.mts", ["--group", "probability"]), purpose: "Recompute probability artifacts after the local daily price history changes.",
+    input: "Local company and SPY daily bars with existing source and availability rules.", output: "Per-company probability artifacts with input lineage.",
+    destination: "Local precomputed page-data artifacts only; no production write or model promotion.", requirements: ["mysql", "review"], notes: "Prices keep their existing source selection and availability discipline.",
+  }),
+  job({
+    id: "page-data-macro", name: "Precomputed probability after macro vintages", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["macro-fred-weekly"],
+    ...npx("scripts/build-precomputed-page-data.mts", ["--group", "probability"]), purpose: "Recompute probability artifacts after eligible macro vintages change.",
+    input: "Local VIX, high-yield spread and yield-curve vintages.", output: "Per-company probability artifacts with macro input evidence.",
+    destination: "Local precomputed page-data artifacts only; no production write or model promotion.", requirements: ["mysql", "review"], notes: "The existing macro prior and availability windows are unchanged.",
+  }),
+  job({
+    id: "page-data-tone", name: "Precomputed probability after EDGAR tone", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["edgar-tone-nightly"],
+    ...npx("scripts/build-precomputed-page-data.mts", ["--group", "probability"]), purpose: "Refresh probability artifacts if the paused EDGAR tone lane is enabled and produces new inputs.",
+    input: "Local EDGAR tone signal rows and existing probability inputs.", output: "Per-company probability artifacts with input lineage.",
+    destination: "Local precomputed page-data artifacts only; no production write or model promotion.", requirements: ["mysql", "review"], notes: "No model call occurs in this builder. The parent tone lane remains paused until separately enabled.",
+  }),
+  job({
     id: "schwab-fetch-daily", name: "Schwab REST daily snapshot", group: "options", mode: "scheduled", cron: "0 4 * * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/schwab-fetch.mts", ["--universe", "research-universe-50.json"]), purpose: "Capture chains, quotes, daily price history and instruments with hashes and availability timestamps.",
     input: "Schwab Market Data Production; local token file; research-universe-50.json.", output: "D:-only raw snapshots and a resumable manifest; User Preference status is recorded separately for streaming setup.",
@@ -76,8 +112,8 @@ export const OPERATION_JOBS: OperationJob[] = [
   job({
     id: "schwab-snapshot", name: "Schwab normalized UI snapshot", group: "options", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-fetch-daily"],
     ...npx("worker/build-schwab-market-data.mts"), purpose: "Normalize the latest valid chain per ticker and expose credential-free static data to /market-data.",
-    input: "Latest Schwab manifest entries and raw chains.", output: "public/reports/schwab-market-data.json with OSI IDs, DTE and QA, fetched on demand by /market-data.",
-    destination: "Normalized snapshot automatically pushed as schwab-market-data.json after exit-ok; raw chains stay local.", requirements: ["review"], notes: "Hash mismatches, truncated chains and provider failures remain visible. Only the normalized report enters the automatic operational lane; no factor promotion.",
+    input: "Latest Schwab manifest entries and raw chains.", output: "public/reports/schwab-market-data.json with OSI IDs, DTE and QA, plus a local hash-verified gzip artifact under worker/.runs/precomputed-page-data.",
+    destination: "Normalized snapshot automatically pushed as schwab-market-data.json after exit-ok; raw chains and the local gzip stay local.", requirements: ["review"], notes: "Hash mismatches, truncated chains and provider failures remain visible. Only the normalized report enters the automatic operational lane; no factor promotion. The existing writer also produces local gzip after the public and bundled JSON writes, independent of the later push outcome.",
   }),
   job({
     id: "schwab-feature-lab", name: "Schwab Feature Lab materialization", group: "options", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-snapshot"],

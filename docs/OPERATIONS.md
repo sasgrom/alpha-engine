@@ -196,10 +196,18 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | S&P 500 incremental companyfacts | scheduled | 30 23 * * * | Local MySQL and the D:-only raw cache; no production write and no research-universe expansion. |
 | Canonical research series | scheduled | after facts-fetch-daily | Local MySQL. |
 | Research factor materialization | scheduled | after research-series | Local MySQL. |
+| Precomputed dashboard and institutional data | scheduled | after facts-fetch-daily + sp500-facts-daily + edgar-fetch-daily | Local precomputed page-data artifacts only; no production write or push lane. |
+| Precomputed 13F page data | scheduled | after 13f-refresh | Local precomputed page-data artifacts only; no production write or push lane. |
+| Precomputed probability after research factors | scheduled | after research-factors | Local precomputed page-data artifacts only; no production write or model promotion. |
+| Precomputed probability after daily prices | scheduled | after schwab-daily-bars | Local precomputed page-data artifacts only; no production write or model promotion. |
+| Precomputed probability after macro vintages | scheduled | after macro-fred-weekly | Local precomputed page-data artifacts only; no production write or model promotion. |
+| Precomputed probability after EDGAR tone | scheduled | after edgar-tone-nightly | Local precomputed page-data artifacts only; no production write or model promotion. |
 | Schwab REST daily snapshot | scheduled | 0 4 * * * | Raw chains remain local; successful scheduled runs automatically push QA-passed daily OHLCV and daily-prices-schwab.json through /api/worker/ingest. |
-| Schwab normalized UI snapshot | scheduled | after schwab-fetch-daily | Normalized snapshot automatically pushed as schwab-market-data.json after exit-ok; raw chains stay local. |
+| Schwab normalized UI snapshot | scheduled | after schwab-fetch-daily | Normalized snapshot automatically pushed as schwab-market-data.json after exit-ok; raw chains and the local gzip stay local. |
 | Schwab Feature Lab materialization | scheduled | after schwab-snapshot | Local Feature Lab UI only; no production factor promotion. |
 | Schwab market context pack | scheduled | 10 * * * * | schwab-context.json automatically pushed through reportFile after successful scheduled runs; no accounts, orders or full-universe streaming. |
+| Schwab REST daily snapshot · S&P 500 and funds | scheduled | 30 4 * * * | Local only: no operational push, no normalized UI snapshot and no production write. |
+| Schwab daily bars into local prices | scheduled | after schwab-fetch-sp500 | Local MySQL only; the operational pricesDaily push is unchanged. |
 | Analytics and weekly evidence snapshot | scheduled | after research-factors | Local static UI artifacts; no production write. |
 | Expectations static report | scheduled | 0 6 * * * | Local static UI artifacts; partial results remain explicitly unreviewed. |
 | FRED and ALFRED weekly vintage refresh | scheduled | 30 5 * * 0 | Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local. |
@@ -379,7 +387,109 @@ npx tsx scripts/build-research-series.mts --universe research-universe-50.json
 npx tsx scripts/materialize-research-factors.mts --universe research-universe-50.json
 ```
 
-### 8. Schwab REST daily snapshot
+### 8. Precomputed dashboard and institutional data
+
+- **ID:** `page-data-dashboard`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** none
+- **Dependencies:** `facts-fetch-daily`, `sp500-facts-daily`, `edgar-fetch-daily`
+- **Purpose:** Precompute global dashboard counts and institutional ownership after SEC fact and filing inputs change.
+- **Input:** Local companies, filings, facts and 13F holdings for the research universe.
+- **Output:** dashboard-stats.json and per-company institutional artifacts with generation time, input evidence and code version.
+- **Destination:** Local precomputed page-data artifacts only; no production write or push lane.
+- **Requirements:** mysql, review
+- **Operational note:** Live user membership and job counters remain on request. Stale artifacts remain visible with an as-of time and stale mark; missing artifacts use the original computation.
+
+```powershell
+npx tsx scripts/build-precomputed-page-data.mts --group stats
+```
+
+### 9. Precomputed 13F page data
+
+- **ID:** `page-data-13f`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** none
+- **Dependencies:** `13f-refresh`
+- **Purpose:** Precompute institutional ownership, guarded sector flows and 13F-dependent probability results after holdings change.
+- **Input:** Local fund_holdings, fund_quarters and current guarded quarter pair.
+- **Output:** Per-company institutional/probability artifacts and sector-flows.json with input lineage.
+- **Destination:** Local precomputed page-data artifacts only; no production write or push lane.
+- **Requirements:** mysql, review
+- **Operational note:** The original guarded aggregation runs unchanged. Missing artifacts fall back to on-request computation.
+
+```powershell
+npx tsx scripts/build-precomputed-page-data.mts --group institutional
+```
+
+### 10. Precomputed probability after research factors
+
+- **ID:** `page-data-fundamentals`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** none
+- **Dependencies:** `research-factors`
+- **Purpose:** Recompute per-company probability artifacts after point-in-time factor materialization changes.
+- **Input:** Local factor_points and the existing availability-anchored probability inputs.
+- **Output:** One probability artifact per research-universe company with generation time, input evidence and code version.
+- **Destination:** Local precomputed page-data artifacts only; no production write or model promotion.
+- **Requirements:** mysql, review
+- **Operational note:** Point-in-time evaluation is unchanged; this is serving precomputation, not a new model or factor.
+
+```powershell
+npx tsx scripts/build-precomputed-page-data.mts --group probability
+```
+
+### 11. Precomputed probability after daily prices
+
+- **ID:** `page-data-prices`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** none
+- **Dependencies:** `schwab-daily-bars`
+- **Purpose:** Recompute probability artifacts after the local daily price history changes.
+- **Input:** Local company and SPY daily bars with existing source and availability rules.
+- **Output:** Per-company probability artifacts with input lineage.
+- **Destination:** Local precomputed page-data artifacts only; no production write or model promotion.
+- **Requirements:** mysql, review
+- **Operational note:** Prices keep their existing source selection and availability discipline.
+
+```powershell
+npx tsx scripts/build-precomputed-page-data.mts --group probability
+```
+
+### 12. Precomputed probability after macro vintages
+
+- **ID:** `page-data-macro`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** none
+- **Dependencies:** `macro-fred-weekly`
+- **Purpose:** Recompute probability artifacts after eligible macro vintages change.
+- **Input:** Local VIX, high-yield spread and yield-curve vintages.
+- **Output:** Per-company probability artifacts with macro input evidence.
+- **Destination:** Local precomputed page-data artifacts only; no production write or model promotion.
+- **Requirements:** mysql, review
+- **Operational note:** The existing macro prior and availability windows are unchanged.
+
+```powershell
+npx tsx scripts/build-precomputed-page-data.mts --group probability
+```
+
+### 13. Precomputed probability after EDGAR tone
+
+- **ID:** `page-data-tone`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** none
+- **Dependencies:** `edgar-tone-nightly`
+- **Purpose:** Refresh probability artifacts if the paused EDGAR tone lane is enabled and produces new inputs.
+- **Input:** Local EDGAR tone signal rows and existing probability inputs.
+- **Output:** Per-company probability artifacts with input lineage.
+- **Destination:** Local precomputed page-data artifacts only; no production write or model promotion.
+- **Requirements:** mysql, review
+- **Operational note:** No model call occurs in this builder. The parent tone lane remains paused until separately enabled.
+
+```powershell
+npx tsx scripts/build-precomputed-page-data.mts --group probability
+```
+
+### 14. Schwab REST daily snapshot
 
 - **ID:** `schwab-fetch-daily`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -396,7 +506,7 @@ npx tsx scripts/materialize-research-factors.mts --universe research-universe-50
 npx tsx worker/schwab-fetch.mts --universe research-universe-50.json
 ```
 
-### 9. Schwab normalized UI snapshot
+### 15. Schwab normalized UI snapshot
 
 - **ID:** `schwab-snapshot`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -404,16 +514,16 @@ npx tsx worker/schwab-fetch.mts --universe research-universe-50.json
 - **Dependencies:** `schwab-fetch-daily`
 - **Purpose:** Normalize the latest valid chain per ticker and expose credential-free static data to /market-data.
 - **Input:** Latest Schwab manifest entries and raw chains.
-- **Output:** public/reports/schwab-market-data.json with OSI IDs, DTE and QA, fetched on demand by /market-data.
-- **Destination:** Normalized snapshot automatically pushed as schwab-market-data.json after exit-ok; raw chains stay local.
+- **Output:** public/reports/schwab-market-data.json with OSI IDs, DTE and QA, plus a local hash-verified gzip artifact under worker/.runs/precomputed-page-data.
+- **Destination:** Normalized snapshot automatically pushed as schwab-market-data.json after exit-ok; raw chains and the local gzip stay local.
 - **Requirements:** review
-- **Operational note:** Hash mismatches, truncated chains and provider failures remain visible. Only the normalized report enters the automatic operational lane; no factor promotion.
+- **Operational note:** Hash mismatches, truncated chains and provider failures remain visible. Only the normalized report enters the automatic operational lane; no factor promotion. The existing writer also produces local gzip after the public and bundled JSON writes, independent of the later push outcome.
 
 ```powershell
 npx tsx worker/build-schwab-market-data.mts
 ```
 
-### 10. Schwab Feature Lab materialization
+### 16. Schwab Feature Lab materialization
 
 - **ID:** `schwab-feature-lab`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -430,7 +540,7 @@ npx tsx worker/build-schwab-market-data.mts
 npx tsx worker/schwab-features.mts
 ```
 
-### 11. Schwab market context pack
+### 17. Schwab market context pack
 
 - **ID:** `schwab-context-hourly`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -447,7 +557,41 @@ npx tsx worker/schwab-features.mts
 npx tsx worker/schwab-context.mts
 ```
 
-### 12. Analytics and weekly evidence snapshot
+### 18. Schwab REST daily snapshot · S&P 500 and funds
+
+- **ID:** `schwab-fetch-sp500`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** 30 4 * * *
+- **Dependencies:** none
+- **Purpose:** Capture chains, quotes, daily price history and instruments for every S&P 500 company outside the research 50 (both listings of dual-class companies), SPY and the eleven sector funds.
+- **Input:** Schwab Market Data Production; local token file; edgar-universe.json minus research-universe-50.json, plus the funds.
+- **Output:** D:-only raw snapshots under schwab-sp500 with their own resumable manifest.
+- **Destination:** Local only: no operational push, no normalized UI snapshot and no production write.
+- **Requirements:** network, driveD
+- **Operational note:** About 465 tickers in roughly 30 minutes, paced below the provider's limit of 120 requests a minute; the access token is renewed during the run. The research-50 lane, its UI snapshot and its production push are unchanged.
+
+```powershell
+npx tsx worker/schwab-fetch.mts --price-series --exclude research-universe-50.json --skip-preferences --root D:/research/alpha-engine/schwab-sp500
+```
+
+### 19. Schwab daily bars into local prices
+
+- **ID:** `schwab-daily-bars`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** none
+- **Dependencies:** `schwab-fetch-sp500`
+- **Purpose:** Store every completed official daily candle of both Schwab archives in local prices, so a day one run misses is filled by the next.
+- **Input:** pricehistory files of the schwab and schwab-sp500 archives (about one month each).
+- **Output:** Local prices rows (source schwab after each series' last Stooq bar, schwab-hist on dates the Stooq history covers) and worker/.runs/local-generated/schwab-daily-bars.json with inserts, conflicts and holes against SPY's sessions.
+- **Destination:** Local MySQL only; the operational pricesDaily push is unchanged.
+- **Requirements:** mysql, driveD
+- **Operational note:** The app lets Schwab win on its dates, so raw Schwab bars never enter dates of the dividend-adjusted Stooq history (they are kept as schwab-hist). A stored close is never changed: a different close is a conflict and marks the job error; other field differences are listed.
+
+```powershell
+npx tsx worker/schwab-daily-bars.mts
+```
+
+### 20. Analytics and weekly evidence snapshot
 
 - **ID:** `analytics-snapshot`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -464,7 +608,7 @@ npx tsx worker/schwab-context.mts
 npx tsx scripts/build-analytics-snapshot.mts
 ```
 
-### 13. Expectations static report
+### 21. Expectations static report
 
 - **ID:** `expectations-report`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -481,7 +625,7 @@ npx tsx scripts/build-analytics-snapshot.mts
 npx tsx worker/build-expectations-report.mts --cohorts --scope full-history
 ```
 
-### 14. FRED and ALFRED weekly vintage refresh
+### 22. FRED and ALFRED weekly vintage refresh
 
 - **ID:** `macro-fred-weekly`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -498,7 +642,7 @@ npx tsx worker/build-expectations-report.mts --cohorts --scope full-history
 npx tsx worker/macro-fred-fetch.mts --group all
 ```
 
-### 15. OFAC daily event refresh
+### 23. OFAC daily event refresh
 
 - **ID:** `macro-events-daily`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -515,7 +659,7 @@ npx tsx worker/macro-fred-fetch.mts --group all
 npx tsx worker/macro-events-fetch.mts --pages 1
 ```
 
-### 16. Macro manifest and availability QA
+### 24. Macro manifest and availability QA
 
 - **ID:** `macro-manifest-qa`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -532,7 +676,7 @@ npx tsx worker/macro-events-fetch.mts --pages 1
 npx tsx worker/macro-manifest-qa.mts
 ```
 
-### 17. Company macro exposure evidence
+### 25. Company macro exposure evidence
 
 - **ID:** `company-exposure-evidence`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -549,7 +693,7 @@ npx tsx worker/macro-manifest-qa.mts
 npx tsx scripts/build-company-exposure.mts --universe research-universe-50.json
 ```
 
-### 18. Pilot SEC exposure evidence refresh
+### 26. Pilot SEC exposure evidence refresh
 
 - **ID:** `pilot-exposure-evidence`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -566,7 +710,7 @@ npx tsx scripts/build-company-exposure.mts --universe research-universe-50.json
 npx tsx scripts/build-pilot-exposure-evidence.mts
 ```
 
-### 19. Availability-anchored macro scenarios
+### 27. Availability-anchored macro scenarios
 
 - **ID:** `macro-scenarios`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -583,7 +727,7 @@ npx tsx scripts/build-pilot-exposure-evidence.mts
 npx tsx scripts/build-macro-scenarios.mts
 ```
 
-### 20. Historical macro shock calibration
+### 28. Historical macro shock calibration
 
 - **ID:** `shock-calibration`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -600,7 +744,7 @@ npx tsx scripts/build-macro-scenarios.mts
 npx tsx scripts/build-shock-calibration.mts
 ```
 
-### 21. OFAC first-release macro event study
+### 29. OFAC first-release macro event study
 
 - **ID:** `macro-event-study`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -617,7 +761,7 @@ npx tsx scripts/build-shock-calibration.mts
 npx tsx scripts/build-macro-event-study.mts
 ```
 
-### 22. Macro Transmission Atlas
+### 30. Macro Transmission Atlas
 
 - **ID:** `macro-transmission-atlas`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -634,7 +778,7 @@ npx tsx scripts/build-macro-event-study.mts
 npx tsx scripts/build-macro-transmission-atlas.mts
 ```
 
-### 23. Production UI rebuild
+### 31. Production UI rebuild
 
 - **ID:** `ui-production-build`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -651,7 +795,7 @@ npx tsx scripts/build-macro-transmission-atlas.mts
 npm run build
 ```
 
-### 24. Local morning brief
+### 32. Local morning brief
 
 - **ID:** `daily-digest`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -668,7 +812,7 @@ npm run build
 npx tsx scripts/daily-digest.mts --hours 36
 ```
 
-### 25. Daily operations health report
+### 33. Daily operations health report
 
 - **ID:** `daily-operations-report`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -685,7 +829,7 @@ npx tsx scripts/daily-digest.mts --hours 36
 npx tsx scripts/build-daily-operations-report.mts
 ```
 
-### 26. Weekly coverage and drift report
+### 34. Weekly coverage and drift report
 
 - **ID:** `weekly-coverage-report`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -702,7 +846,7 @@ npx tsx scripts/build-daily-operations-report.mts
 npx tsx scripts/build-weekly-coverage.mts
 ```
 
-### 27. Alpha Bridge captain executor
+### 35. Alpha Bridge captain executor
 
 - **ID:** `alpha-bridge-agent`
 - **Mode:** paused; **enabled by default:** no
@@ -719,7 +863,7 @@ npx tsx scripts/build-weekly-coverage.mts
 npx tsx worker/alpha-bridge-agent.mts
 ```
 
-### 28. 13F holdings and full-book refresh
+### 36. 13F holdings and full-book refresh
 
 - **ID:** `13f-refresh`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -736,7 +880,7 @@ npx tsx worker/alpha-bridge-agent.mts
 npx tsx scripts/13f-refresh.mts --quarters 4
 ```
 
-### 29. EDGAR local tone scoring
+### 37. EDGAR local tone scoring
 
 - **ID:** `edgar-tone-nightly`
 - **Mode:** paused; **enabled by default:** no
@@ -753,7 +897,7 @@ npx tsx scripts/13f-refresh.mts --quarters 4
 npx tsx worker/edgar-tone.mts --universe edgar-universe.json --concurrency 2
 ```
 
-### 30. Quarterly cohort pack builder
+### 38. Quarterly cohort pack builder
 
 - **ID:** `expectations-cohorts`
 - **Mode:** paused; **enabled by default:** no
@@ -770,7 +914,7 @@ npx tsx worker/edgar-tone.mts --universe edgar-universe.json --concurrency 2
 npx tsx worker/edgar-cohorts.mts --universe research-universe-50.json
 ```
 
-### 31. Cohort LLM extraction
+### 39. Cohort LLM extraction
 
 - **ID:** `expectations-extract`
 - **Mode:** paused; **enabled by default:** no
@@ -787,7 +931,7 @@ npx tsx worker/edgar-cohorts.mts --universe research-universe-50.json
 npx tsx worker/edgar-cohort-extract.mts --universe research-universe-50.json
 ```
 
-### 32. Independent extraction benchmark
+### 40. Independent extraction benchmark
 
 - **ID:** `expectations-benchmark`
 - **Mode:** paused; **enabled by default:** no
@@ -804,7 +948,7 @@ npx tsx worker/edgar-cohort-extract.mts --universe research-universe-50.json
 npx tsx worker/expectations-benchmark.mts --cohorts
 ```
 
-### 33. Legacy Cboe option snapshot
+### 41. Legacy Cboe option snapshot
 
 - **ID:** `options-cboe-fetch`
 - **Mode:** paused; **enabled by default:** no
@@ -821,7 +965,7 @@ npx tsx worker/expectations-benchmark.mts --cohorts
 npx tsx worker/options-fetch.mts --source cboe --universe research-universe-50.json
 ```
 
-### 34. Offline DTE option features
+### 42. Offline DTE option features
 
 - **ID:** `options-features`
 - **Mode:** paused; **enabled by default:** no
@@ -838,7 +982,7 @@ npx tsx worker/options-fetch.mts --source cboe --universe research-universe-50.j
 npx tsx worker/option-features.mts
 ```
 
-### 35. Offline option provider QA
+### 43. Offline option provider QA
 
 - **ID:** `options-qa`
 - **Mode:** paused; **enabled by default:** no
@@ -855,7 +999,7 @@ npx tsx worker/option-features.mts
 npx tsx worker/options-qa.mts
 ```
 
-### 36. Schwab token keepalive
+### 44. Schwab token keepalive
 
 - **ID:** `schwab-refresh-manual`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -872,7 +1016,7 @@ npx tsx worker/options-qa.mts
 npx tsx worker/schwab-refresh.mts
 ```
 
-### 37. Read-only research reconciliation
+### 45. Read-only research reconciliation
 
 - **ID:** `research-reconciliation`
 - **Mode:** manual; **enabled by default:** no
@@ -889,7 +1033,7 @@ npx tsx worker/schwab-refresh.mts
 npx tsx scripts/research-reconciliation.mts
 ```
 
-### 38. Fundamental integrity and continuity audit
+### 46. Fundamental integrity and continuity audit
 
 - **ID:** `fundamental-integrity-audit`
 - **Mode:** manual; **enabled by default:** no
@@ -906,7 +1050,7 @@ npx tsx scripts/research-reconciliation.mts
 npx tsx scripts/fundamental-integrity-audit.mts
 ```
 
-### 39. EDGAR coverage and continuity gap analysis
+### 47. EDGAR coverage and continuity gap analysis
 
 - **ID:** `edgar-gap-analysis`
 - **Mode:** manual; **enabled by default:** no
@@ -923,7 +1067,7 @@ npx tsx scripts/fundamental-integrity-audit.mts
 npx tsx scripts/edgar-gap-analysis.mts
 ```
 
-### 40. Schwab fundamental gap mapping
+### 48. Schwab fundamental gap mapping
 
 - **ID:** `schwab-fundamental-gap-map`
 - **Mode:** manual; **enabled by default:** no
@@ -940,7 +1084,7 @@ npx tsx scripts/edgar-gap-analysis.mts
 npx tsx scripts/schwab-fundamental-gap-map.mts
 ```
 
-### 41. Per-company EDGAR remediation and Schwab fallback
+### 49. Per-company EDGAR remediation and Schwab fallback
 
 - **ID:** `remediate-company`
 - **Mode:** manual; **enabled by default:** no
@@ -957,7 +1101,7 @@ npx tsx scripts/schwab-fundamental-gap-map.mts
 npx tsx scripts/remediate-company.mts
 ```
 
-### 42. Availability-anchored tone event study
+### 50. Availability-anchored tone event study
 
 - **ID:** `tone-event-study`
 - **Mode:** manual; **enabled by default:** no
@@ -974,7 +1118,7 @@ npx tsx scripts/remediate-company.mts
 npx tsx scripts/tone-event-study.mts
 ```
 
-### 43. Tone IC and turnover evaluation
+### 51. Tone IC and turnover evaluation
 
 - **ID:** `tone-ic`
 - **Mode:** manual; **enabled by default:** no
@@ -991,7 +1135,7 @@ npx tsx scripts/tone-event-study.mts
 npx tsx scripts/tone-ic.mts
 ```
 
-### 44. DoltHub historical option export
+### 52. DoltHub historical option export
 
 - **ID:** `dolthub-export`
 - **Mode:** manual; **enabled by default:** no
@@ -1008,7 +1152,7 @@ npx tsx scripts/tone-ic.mts
 npx tsx worker/dolthub-export.mts
 ```
 
-### 45. DoltHub export validation
+### 53. DoltHub export validation
 
 - **ID:** `dolthub-validate`
 - **Mode:** manual; **enabled by default:** no
@@ -1025,7 +1169,7 @@ npx tsx worker/dolthub-export.mts
 npx tsx worker/dolthub-export-validate.mts
 ```
 
-### 46. Historical option feature materialization
+### 54. Historical option feature materialization
 
 - **ID:** `dolthub-features`
 - **Mode:** manual; **enabled by default:** no
@@ -1042,7 +1186,7 @@ npx tsx worker/dolthub-export-validate.mts
 npx tsx worker/dolthub-features.mts
 ```
 
-### 47. Preregistered option hypothesis research
+### 55. Preregistered option hypothesis research
 
 - **ID:** `dolthub-research`
 - **Mode:** manual; **enabled by default:** no
@@ -1059,7 +1203,7 @@ npx tsx worker/dolthub-features.mts
 npx tsx worker/dolthub-research.mts
 ```
 
-### 48. Expected-move calibration
+### 56. Expected-move calibration
 
 - **ID:** `expected-move-calibration`
 - **Mode:** manual; **enabled by default:** no
@@ -1076,7 +1220,7 @@ npx tsx worker/dolthub-research.mts
 npx tsx worker/dolthub-expected-move.mts
 ```
 
-### 49. Volatility-target historical replay
+### 57. Volatility-target historical replay
 
 - **ID:** `volatility-target-replay`
 - **Mode:** manual; **enabled by default:** no
@@ -1093,7 +1237,7 @@ npx tsx worker/dolthub-expected-move.mts
 npx tsx worker/dolthub-vol-target.mts
 ```
 
-### 50. Stooq price archive import
+### 58. Stooq price archive import
 
 - **ID:** `price-archive-import`
 - **Mode:** manual; **enabled by default:** no
@@ -1110,7 +1254,7 @@ npx tsx worker/dolthub-vol-target.mts
 npx tsx scripts/import-research-prices-file.mts --file D:\path\to\prices.zip
 ```
 
-### 51. Signals production dry-run
+### 59. Signals production dry-run
 
 - **ID:** `signals-dry-review`
 - **Mode:** manual; **enabled by default:** no
@@ -1127,7 +1271,7 @@ npx tsx scripts/import-research-prices-file.mts --file D:\path\to\prices.zip
 npx tsx scripts/push-local-signals.mts --source edgar --dry
 ```
 
-### 52. Facts production dry-run
+### 60. Facts production dry-run
 
 - **ID:** `facts-dry-review`
 - **Mode:** manual; **enabled by default:** no
@@ -1144,7 +1288,7 @@ npx tsx scripts/push-local-signals.mts --source edgar --dry
 npx tsx scripts/push-local-facts.mts --universe research-universe-50.json --dry
 ```
 
-### 53. Reviewed signals production push
+### 61. Reviewed signals production push
 
 - **ID:** `signals-production-push`
 - **Mode:** blocked; **enabled by default:** no
@@ -1161,7 +1305,7 @@ npx tsx scripts/push-local-facts.mts --universe research-universe-50.json --dry
 npx tsx scripts/push-local-signals.mts --source edgar
 ```
 
-### 54. Reviewed facts production push
+### 62. Reviewed facts production push
 
 - **ID:** `facts-production-push`
 - **Mode:** blocked; **enabled by default:** no
@@ -1178,7 +1322,7 @@ npx tsx scripts/push-local-signals.mts --source edgar
 npx tsx scripts/push-local-facts.mts --universe research-universe-50.json
 ```
 
-### 55. EDGAR tone readiness audit
+### 63. EDGAR tone readiness audit
 
 - **ID:** `edgar-tone-readiness-audit`
 - **Mode:** manual; **enabled by default:** no
@@ -1195,7 +1339,7 @@ npx tsx scripts/push-local-facts.mts --universe research-universe-50.json
 npx tsx worker/edgar-tone-audit.mts --universe edgar-universe.json
 ```
 
-### 56. Independent-universe and macro-regime validation
+### 64. Independent-universe and macro-regime validation
 
 - **ID:** `macro-regime-validation`
 - **Mode:** manual; **enabled by default:** no
@@ -1212,7 +1356,7 @@ npx tsx worker/edgar-tone-audit.mts --universe edgar-universe.json
 npx tsx scripts/macro-validation.mts
 ```
 
-### 57. Sector-neutral portfolio evaluation
+### 65. Sector-neutral portfolio evaluation
 
 - **ID:** `sector-portfolio-evaluation`
 - **Mode:** manual; **enabled by default:** no
@@ -1229,7 +1373,7 @@ npx tsx scripts/macro-validation.mts
 npx tsx scripts/sector-portfolio-eval.mts
 ```
 
-### 58. Sector volatility-target holdout evaluation
+### 66. Sector volatility-target holdout evaluation
 
 - **ID:** `sector-vol-target-evaluation`
 - **Mode:** manual; **enabled by default:** no
@@ -1246,7 +1390,7 @@ npx tsx scripts/sector-portfolio-eval.mts
 npx tsx scripts/sector-vol-target-eval.mts
 ```
 
-### 59. Frozen research protocol validation
+### 67. Frozen research protocol validation
 
 - **ID:** `research-protocol-check`
 - **Mode:** manual; **enabled by default:** no
@@ -1263,7 +1407,7 @@ npx tsx scripts/sector-vol-target-eval.mts
 npx tsx scripts/validate-research-protocol.mts
 ```
 
-### 60. 13F top-300 universe rebuild
+### 68. 13F top-300 universe rebuild
 
 - **ID:** `13f-top300-universe`
 - **Mode:** manual; **enabled by default:** no
@@ -1280,7 +1424,7 @@ npx tsx scripts/validate-research-protocol.mts
 npx tsx scripts/build-13f-top300.mts
 ```
 
-### 61. Research coverage expansion
+### 69. Research coverage expansion
 
 - **ID:** `coverage-expansion`
 - **Mode:** blocked; **enabled by default:** no
@@ -1297,7 +1441,7 @@ npx tsx scripts/build-13f-top300.mts
 Not scheduled — design a 300+ point-in-time universe with departed/delisted names first
 ```
 
-### 62. signals.note migration gate
+### 70. signals.note migration gate
 
 - **ID:** `signals-note-migration`
 - **Mode:** blocked; **enabled by default:** no
@@ -1314,7 +1458,7 @@ Not scheduled — design a 300+ point-in-time universe with departed/delisted na
 Manual reviewed DDL only after backup and restore evidence
 ```
 
-### 63. Schwab OAuth browser authorization
+### 71. Schwab OAuth browser authorization
 
 - **ID:** `schwab-oauth-callback`
 - **Mode:** manual; **enabled by default:** no
@@ -1331,7 +1475,7 @@ Manual reviewed DDL only after backup and restore evidence
 npx tsx worker/schwab-callback.mts
 ```
 
-### 64. Optional ORATS option lane
+### 72. Optional ORATS option lane
 
 - **ID:** `options-orats-optional`
 - **Mode:** blocked; **enabled by default:** no
@@ -1348,7 +1492,7 @@ npx tsx worker/schwab-callback.mts
 Not active — optional worker/options-orats.mts lane requires separately reviewed credentials
 ```
 
-### 65. Legacy cloud ad-hoc job queue
+### 73. Legacy cloud ad-hoc job queue
 
 - **ID:** `cloud-adhoc-jobs`
 - **Mode:** blocked; **enabled by default:** no
@@ -1365,7 +1509,7 @@ Not active — optional worker/options-orats.mts lane requires separately review
 No home cron — legacy /jobs actions require a separate deliberate review
 ```
 
-### 66. MySQL backup and restore gate
+### 74. MySQL backup and restore gate
 
 - **ID:** `mysql-backup-restore`
 - **Mode:** manual; **enabled by default:** no
@@ -1382,7 +1526,7 @@ No home cron — legacy /jobs actions require a separate deliberate review
 npx tsx scripts/prod-backup.mts --full --source-env DATABASE_URL --restore-target SCRATCH_DATABASE_URL
 ```
 
-### 67. Selective AAPL/SPY streaming
+### 75. Selective AAPL/SPY streaming
 
 - **ID:** `schwab-selective-stream`
 - **Mode:** blocked; **enabled by default:** no
@@ -1399,7 +1543,7 @@ npx tsx scripts/prod-backup.mts --full --source-env DATABASE_URL --restore-targe
 Not implemented — M5 only after REST/UI review
 ```
 
-### 68. GDELT collector and backfill
+### 76. GDELT collector and backfill
 
 - **ID:** `gdelt-frozen`
 - **Mode:** frozen; **enabled by default:** no

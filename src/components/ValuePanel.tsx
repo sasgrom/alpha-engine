@@ -10,6 +10,7 @@ import { Link } from "react-router";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { BookOpen, Info } from "lucide-react";
 import { FactorCard, SignalChip } from "@/components/FactorCard";
+import PrecomputedAsOf from "@/components/PrecomputedAsOf";
 import { factorMeta } from "../../api/services/factor-meta";
 
 const pct = (v: number | null, d = 1) => (v === null ? "—" : (v * 100).toFixed(d) + "%");
@@ -199,7 +200,10 @@ function ProbabilityCard({ cik }: { cik: number }) {
     <div className="t-panel px-5 py-4">
       <div className="t-label mb-1 flex items-center justify-between">
         <span>Next-quarter up-probability — walk-forward Bayes</span>
-        <span className="t-mono text-[9px] text-muted-foreground/70">prior from FRED regime · not a trading instruction</span>
+        <span className="flex flex-wrap items-center gap-2">
+          <span className="t-mono text-[9px] text-muted-foreground/70">prior from FRED regime · not a trading instruction</span>
+          <PrecomputedAsOf asOf={d.asOf} stale={d.stale} dataMode={d.dataMode} label="research data" />
+        </span>
       </div>
       <div className="flex flex-wrap items-end gap-x-8 gap-y-2">
         <div className="t-mono text-[26px] font-semibold">

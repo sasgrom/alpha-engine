@@ -101,7 +101,7 @@ app.post("/api/worker/apply-expectations-reviewed", async (c) => {
 });
 app.get("/reports/:name", async (c) => {
   const { reportFileResponse } = await import("./services/report-files");
-  return reportFileResponse(c.req.param("name"));
+  return reportFileResponse(c.req.param("name"), { acceptEncoding: c.req.header("accept-encoding") });
 });
 
 // 3i: orphan sweep at worker start — jobs left "running"/"queued" by a dead

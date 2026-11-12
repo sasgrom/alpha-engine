@@ -22,6 +22,7 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { rememberView } from "@/desk/preferences";
+import PrecomputedAsOf from "@/components/PrecomputedAsOf";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { jobToast } from "@/lib/job-toast";
@@ -369,6 +370,7 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
             : "IDLE"}
         </span>
       </div>
+      {stats.data && <PrecomputedAsOf asOf={stats.data.asOf} stale={stats.data.stale} dataMode={stats.data.dataMode} label="stats" />}
     </div>
   );
 

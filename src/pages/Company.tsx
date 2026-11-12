@@ -23,6 +23,7 @@ import { fmtFyEnd } from "@/lib/format";
 import Statements from "@/components/Statements";
 import PriceOverview from "@/components/PriceOverview";
 import ValuePanel from "@/components/ValuePanel";
+import PrecomputedAsOf from "@/components/PrecomputedAsOf";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceDot, ReferenceLine } from "recharts";
 
 /** Compact formatter for large financial magnitudes (1.2B, 340M, …). */
@@ -738,7 +739,10 @@ function InstitutionalPanel({ cik }: { cik: number }) {
   const shr = (v: number | null) => v === null ? "—" : v >= 1e9 ? `${(v / 1e9).toFixed(2)}B` : v >= 1e6 ? `${(v / 1e6).toFixed(1)}M` : v.toLocaleString("en-US");
   return (
     <div className="t-panel px-5 py-4">
-      <div className="t-label mb-2">Institutional ownership (13F) — quarter {d.quarterDate} · QoQ vs {d.previousQuarterDate ?? "n/a"}</div>
+      <div className="t-label mb-2 flex flex-wrap items-center justify-between gap-2">
+        <span>Institutional ownership (13F) — quarter {d.quarterDate} · QoQ vs {d.previousQuarterDate ?? "n/a"}</span>
+        <PrecomputedAsOf asOf={d.asOf} stale={d.stale} dataMode={d.dataMode} label="13F data" />
+      </div>
       {d.guard && (
         <div className="t-mono text-[10px] text-muted-foreground mb-2" title={d.guard.warnings.join("\n")}>
           stable funds {d.guard.stableFunds} · coverage {d.guard.curFunds}/{d.guard.expectedFunds} · excluded {d.guard.missingFunds + d.guard.suspectFunds}{d.guard.partial ? " · partial" : ""}
