@@ -12,10 +12,11 @@ import { polar, ROTUNDA, TWO_PI, type HallLayout } from "./layout";
 /** The hall's outer wall, behind the bookcases, in metres from the middle of the floor. */
 export const WALL_RADIUS = ROTUNDA.radius + ROTUNDA.bookDepth + 0.45;
 /**
- * The doorway in the south wall (towards +z): its width and height, how deep the wall is there, and how far over its
- * head the middle of the Main Street plaque hangs (the streams of money from and to outside end just over it).
+ * The doorway in the south wall (towards +z), under the gallery that runs round the hall: its width and height, how
+ * deep the wall is there, and how far over its head the middle of the Main Street plaque hangs (on the gallery's wall,
+ * above the rail; the streams of money from and to outside end just over it).
  */
-export const DOORWAY = { width: 9, height: 6.6, depth: 0.7, plaqueAbove: 1.76 } as const;
+export const DOORWAY = { width: 9, height: 6.2, depth: 0.7, plaqueAbove: 3.65 } as const;
 
 export interface HallTextures {
   marbleTiles: THREE.Texture[];
@@ -331,37 +332,44 @@ export function buildHall(layout: HallLayout, textures: HallTextures | null, dar
     group.add(capital);
   }
 
-  // the gallery: a floor ring, its fascia, a brass rail on balusters
+  // panelling in wood, the texture repeated every 3.2 m along the wall and up it (not stretched round the whole hall)
+  const panelledWall = (wallAt: number, a0: number, a1: number, y0: number, y1: number, segments?: number) => {
+    const geometry = arcWall(wallAt, a0, a1, y0, y1, "in", segments);
+    const uv = geometry.getAttribute("uv") as THREE.BufferAttribute;
+    for (let index = 0; index < uv.count; index++) uv.setXY(index, (uv.getX(index) * (a1 - a0) * wallAt) / 3.2, (y0 + uv.getY(index) * (y1 - y0)) / 3.2);
+    geometry.setAttribute("uv1", uv.clone());
+    return geometry;
+  };
+
+  // the gallery, all the way round (over the doorway too): a floor ring, its fascia, a brass rail on balusters
   {
     const inner = radius - 1.9;
-    const gallery = new THREE.Mesh(arcRing(inner, wallRadius, wallStart, wallEnd, galleryHeight, "up"), woodPlain);
+    const gallery = new THREE.Mesh(arcRing(inner, wallRadius, -Math.PI, Math.PI, galleryHeight, "up"), woodPlain);
     gallery.receiveShadow = true;
     group.add(gallery);
-    group.add(new THREE.Mesh(arcRing(inner, wallRadius, wallStart, wallEnd, galleryHeight - 0.55, "down"), woodPlain));
-    group.add(new THREE.Mesh(arcWall(inner, wallStart, wallEnd, galleryHeight - 0.55, galleryHeight, "in"), wood));
+    group.add(new THREE.Mesh(arcRing(inner, wallRadius, -Math.PI, Math.PI, galleryHeight - 0.55, "down"), woodPlain));
+    group.add(new THREE.Mesh(panelledWall(inner, -Math.PI, Math.PI, galleryHeight - 0.55, galleryHeight), wood));
     const railRadius = inner + 0.12;
-    const rail = new THREE.Mesh(arcWall(railRadius, wallStart, wallEnd, galleryHeight + 1.02, galleryHeight + 1.1, "in"), brass);
+    const rail = new THREE.Mesh(arcWall(railRadius, -Math.PI, Math.PI, galleryHeight + 1.02, galleryHeight + 1.1, "in"), brass);
     group.add(rail);
-    const count = Math.floor(((wallEnd - wallStart) * railRadius) / 0.32);
+    const count = Math.floor((TWO_PI * railRadius) / 0.32);
     const baluster = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.035, 0.05, 1.02, 8), marble, count);
     const matrix = new THREE.Matrix4();
     for (let index = 0; index < count; index++) {
-      const angle = wallStart + ((index + 0.5) / count) * (wallEnd - wallStart);
+      const angle = -Math.PI + ((index + 0.5) / count) * TWO_PI;
       const [x, , z] = polar(angle, railRadius);
       matrix.makeTranslation(x, galleryHeight + 0.51, z);
       baluster.setMatrixAt(index, matrix);
     }
     group.add(baluster);
-    // the gallery's own wall, panelled up to the windows
-    group.add(new THREE.Mesh(arcWall(wallRadius, wallStart, wallEnd, galleryHeight, galleryHeight + 3.4, "in"), wood));
+    // the gallery's own wall, panelled up to the windows, also over the doorway
+    group.add(new THREE.Mesh(panelledWall(wallRadius, -Math.PI, Math.PI, galleryHeight, galleryHeight + 3.4, 160), wood));
   }
 
   // the upper wall in plaster with tall arched windows over the piers
   {
     const upper = arcWall(wallRadius, -Math.PI, Math.PI, galleryHeight + 3.4, wallTop, "in", 160);
     group.add(new THREE.Mesh(upper, plaster));
-    const lower = arcWall(wallRadius + 0.02, wallEnd, wallStart + TWO_PI, galleryHeight, galleryHeight + 3.4, "in", 12);
-    group.add(new THREE.Mesh(lower, plaster));
     const glass = new THREE.MeshBasicMaterial({ color: dark ? 0x26324a : 0xc9d3dd, fog: false });
     const frame = new THREE.MeshStandardMaterial({ color: dark ? 0x3a3128 : 0xcfc5b3, roughness: 0.6 });
     const windowShape = (width: number, height: number) => {
@@ -429,11 +437,7 @@ export function buildHall(layout: HallLayout, textures: HallTextures | null, dar
   const { width: doorWidth, height: doorHeight, depth: doorDepth } = DOORWAY;
   const edge = Math.asin(doorWidth / 2 / wallRadius);
   const panelled = (a0: number, a1: number, y0: number, y1: number) => {
-    const geometry = arcWall(wallRadius, a0, a1, y0, y1, "in");
-    const uv = geometry.getAttribute("uv") as THREE.BufferAttribute;
-    for (let index = 0; index < uv.count; index++) uv.setXY(index, (uv.getX(index) * (a1 - a0) * wallRadius) / 3.2, (y0 + uv.getY(index) * (y1 - y0)) / 3.2);
-    geometry.setAttribute("uv1", uv.clone());
-    const mesh = new THREE.Mesh(geometry, wood);
+    const mesh = new THREE.Mesh(panelledWall(wallRadius, a0, a1, y0, y1), wood);
     mesh.receiveShadow = true;
     group.add(mesh);
   };

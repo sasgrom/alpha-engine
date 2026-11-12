@@ -210,7 +210,7 @@ export class MoneyStreams {
     this.group.add(this.bubbles);
   }
 
-  /** Replaces the streams. The widest rotation stream is 2.4 m wide, the widest thread 0.7 m; width follows the dollars. */
+  /** Replaces the streams. The widest rotation stream is 2.4 m wide, the widest thread 0.9 m; width follows the dollars. */
   set(specs: StreamSpec[]): void {
     for (const item of this.built) {
       item.mesh.geometry.dispose();
@@ -219,7 +219,13 @@ export class MoneyStreams {
     }
     this.built = [];
     this.riders = [];
-    const top = { rotation: Math.max(1, ...specs.filter((spec) => spec.kind === "rotation").map((spec) => spec.usd)), thread: Math.max(1, ...specs.filter((spec) => spec.kind === "thread").map((spec) => spec.usd)) };
+    // widths follow the dollars among the streams that are lit (dimmed ones are capped at the widest), so a sector in
+    // focus shows its own streams at full width beside the hall's largest
+    const widest = (kind: StreamSpec["kind"]) => {
+      const lit = specs.filter((spec) => spec.kind === kind && spec.lit);
+      return Math.max(1, ...(lit.length ? lit : specs.filter((spec) => spec.kind === kind)).map((spec) => spec.usd));
+    };
+    const top = { rotation: widest("rotation"), thread: widest("thread") };
     for (const spec of specs) {
       const span = spec.from.distanceTo(spec.to);
       const middle = spec.from.clone().add(spec.to).multiplyScalar(0.5);
@@ -229,8 +235,8 @@ export class MoneyStreams {
           : new THREE.Vector3(middle.x, Math.max(spec.from.y, spec.to.y) + 1.5 + span * 0.18, middle.z);
       const curve = new THREE.QuadraticBezierCurve3(spec.from, control, spec.to);
       const length = curve.getLength();
-      const share = spec.usd / (spec.kind === "rotation" ? top.rotation : top.thread);
-      const width = spec.kind === "rotation" ? 0.18 + 2.2 * share : 0.06 + 0.64 * share;
+      const share = Math.min(1, spec.usd / (spec.kind === "rotation" ? top.rotation : top.thread));
+      const width = spec.kind === "rotation" ? 0.18 + 2.2 * share : 0.1 + 0.8 * share;
       const material = new THREE.MeshBasicMaterial({
         map: this.bandTexture,
         vertexColors: true,

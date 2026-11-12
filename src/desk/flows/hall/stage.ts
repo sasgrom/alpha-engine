@@ -718,7 +718,12 @@ export class HallStage {
     if (!data || !this.building) return;
     const specs: StreamSpec[] = [];
     const quiet = this.selection.kind !== null && this.selection.threads.length > 0;
-    for (const link of data.mode === "held" ? [] : data.links.filter((item) => item.from !== item.to).slice(0, 16)) {
+    // the quarter's largest streams, and with a sector in focus its own largest, in and out: a smaller sector's money
+    // rarely ranks among the hall's largest streams, and would otherwise show none
+    const links = data.mode === "held" ? [] : data.links.filter((item) => item.from !== item.to);
+    const shown = links.slice(0, 16);
+    if (data.focus !== null) for (const link of links.filter((item) => item.from === data.focus || item.to === data.focus).slice(0, 12)) if (!shown.includes(link)) shown.push(link);
+    for (const link of shown) {
       const from = this.anchorOf(link.from);
       const to = this.anchorOf(link.to);
       if (!from || !to) continue;
@@ -825,9 +830,11 @@ export class HallStage {
     const alcove = this.layout.alcoves.find((item) => item.sector === sector);
     if (!alcove) return;
     const half = THREE.MathUtils.degToRad(this.camera.fov / 2);
-    const distance = clamp((alcove.width / 2 + 1.5) / (Math.tan(half) * Math.max(0.6, this.openAspect())), 9, 22);
+    const distance = clamp((alcove.width / 2 + 1.5) / (Math.tan(half) * Math.max(0.6, this.openAspect())), 11, 22);
     const middle = ROTUNDA.shelfBase + (ROTUNDA.rows * ROTUNDA.rowHeight) / 2 + 0.6;
-    this.fly(this.aim(new THREE.Vector3(...polar(alcove.mid, ROTUNDA.radius - distance, middle + 2.2)), new THREE.Vector3(...polar(alcove.mid, ROTUNDA.radius, middle))));
+    // looking a little above the bookcase's middle: the books in the lower half of the view, the sector's streams
+    // rising from over the bookcase in the upper half
+    this.fly(this.aim(new THREE.Vector3(...polar(alcove.mid, ROTUNDA.radius - distance, middle + 3.4)), new THREE.Vector3(...polar(alcove.mid, ROTUNDA.radius, middle + 1.9))));
   }
 
   flyHome(): void {
@@ -854,8 +861,9 @@ export class HallStage {
     const { kind, id } = this.selection;
     if (kind === "company" && id !== null) {
       const book = this.layout.books[this.bookIndex.get(id) ?? -1];
-      // back across the floor and above the crowd in front of the bookcase, the book and its traders in view
-      if (book) this.fly(this.aim(new THREE.Vector3(...polar(book.angle - 0.06, ROTUNDA.radius - 14, book.y + 5.2)), new THREE.Vector3(...polar(book.angle, ROTUNDA.radius - 3, book.y))));
+      // in front of the bookcase, a little above the crowd, near enough that the book and the money running to and from
+      // it fill the view
+      if (book) this.fly(this.aim(new THREE.Vector3(...polar(book.angle - 0.05, ROTUNDA.radius - 9.5, book.y + 2.8)), new THREE.Vector3(...polar(book.angle, ROTUNDA.radius - 2.5, book.y + 0.3))));
     } else if (kind === "fund" && id !== null) {
       const head = this.crowd?.headOf(id);
       if (!head) return;
