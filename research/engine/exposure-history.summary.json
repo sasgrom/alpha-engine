@@ -1,0 +1,3059 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-12T13:35:02.672Z",
+ "inputHash": "6598a4cb2c9a32ec8cc21ba252fce0bebdbb7d35e0f54b1a4a52fa5c62d3c9c3",
+ "manifestHash": "618f29f98c1ca7b364336583bacdc10403a8cd6d4cba27486c15b42ac65b4e73",
+ "scope": "cached_inline_xbrl",
+ "manifestDocuments": 5151,
+ "unavailablePrimaryDocuments": [
+  {
+   "cik": 1045810,
+   "ticker": "NVDA",
+   "accessionNo": "0001012870-00-003358",
+   "form": "10-Q",
+   "filingDate": "2000-06-14",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 1045810,
+   "ticker": "NVDA",
+   "accessionNo": "0001012870-00-004766",
+   "form": "10-Q",
+   "filingDate": "2000-09-13",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 1045810,
+   "ticker": "NVDA",
+   "accessionNo": "0001012870-00-006127",
+   "form": "10-Q",
+   "filingDate": "2000-12-08",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 2488,
+   "ticker": "AMD",
+   "accessionNo": "0001012870-00-004459",
+   "form": "10-Q",
+   "filingDate": "2000-08-16",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 2488,
+   "ticker": "AMD",
+   "accessionNo": "0001012870-00-005706",
+   "form": "10-Q",
+   "filingDate": "2000-11-13",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 50863,
+   "ticker": "INTC",
+   "accessionNo": "0000050863-00-000115",
+   "form": "10-Q",
+   "filingDate": "2000-08-14",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 50863,
+   "ticker": "INTC",
+   "accessionNo": "0000050863-00-000130",
+   "form": "10-Q",
+   "filingDate": "2000-11-14",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 320187,
+   "ticker": "NKE",
+   "accessionNo": "0000320187-00-000009",
+   "form": "10-Q",
+   "filingDate": "2000-10-16",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 320187,
+   "ticker": "NKE",
+   "accessionNo": "0000320187-01-000002",
+   "form": "10-Q",
+   "filingDate": "2001-01-16",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 320187,
+   "ticker": "NKE",
+   "accessionNo": "0000320187-01-000007",
+   "form": "10-Q",
+   "filingDate": "2001-04-16",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 927628,
+   "ticker": "COF",
+   "accessionNo": "0000927628-00-000014",
+   "form": "10-Q",
+   "filingDate": "2000-08-14",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 927628,
+   "ticker": "COF",
+   "accessionNo": "0000927628-00-000021",
+   "form": "10-Q",
+   "filingDate": "2000-11-08",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 78003,
+   "ticker": "PFE",
+   "accessionNo": "0000078003-00-000039",
+   "form": "10-Q",
+   "filingDate": "2000-08-15",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 78003,
+   "ticker": "PFE",
+   "accessionNo": "0000078003-00-000049",
+   "form": "10-Q",
+   "filingDate": "2000-11-15",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 831259,
+   "ticker": "FCX",
+   "accessionNo": "0000831259-00-000018",
+   "form": "10-Q",
+   "filingDate": "2000-08-02",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 831259,
+   "ticker": "FCX",
+   "accessionNo": "0000831259-00-500003",
+   "form": "10-Q",
+   "filingDate": "2000-11-01",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 12927,
+   "ticker": "BA",
+   "accessionNo": "0000012927-00-000007",
+   "form": "10-Q",
+   "filingDate": "2000-08-02",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 12927,
+   "ticker": "BA",
+   "accessionNo": "0000012927-00-000009",
+   "form": "10-Q",
+   "filingDate": "2000-11-06",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 12927,
+   "ticker": "BA",
+   "accessionNo": "0000012927-01-000004",
+   "form": "10-K",
+   "filingDate": "2001-03-09",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 753308,
+   "ticker": "NEE",
+   "accessionNo": "0000753308-00-000014",
+   "form": "10-Q",
+   "filingDate": "2000-08-02",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 753308,
+   "ticker": "NEE",
+   "accessionNo": "0000753308-00-500016",
+   "form": "10-Q",
+   "filingDate": "2000-11-14",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 789019,
+   "ticker": "MSFT",
+   "accessionNo": "0001032210-00-001961",
+   "form": "10-K",
+   "filingDate": "2000-09-28",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 789019,
+   "ticker": "MSFT",
+   "accessionNo": "0001032210-00-500038",
+   "form": "10-Q",
+   "filingDate": "2000-11-14",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 789019,
+   "ticker": "MSFT",
+   "accessionNo": "0001032210-01-000273",
+   "form": "10-Q",
+   "filingDate": "2001-02-14",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 723125,
+   "ticker": "MU",
+   "accessionNo": "0001012870-00-003721",
+   "form": "10-Q",
+   "filingDate": "2000-07-12",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 59478,
+   "ticker": "LLY",
+   "accessionNo": "0000950131-00-004887",
+   "form": "10-Q",
+   "filingDate": "2000-08-14",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 59478,
+   "ticker": "LLY",
+   "accessionNo": "0000950131-00-006365",
+   "form": "10-Q",
+   "filingDate": "2000-11-14",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 59478,
+   "ticker": "LLY",
+   "accessionNo": "0000950131-01-001634",
+   "form": "10-K",
+   "filingDate": "2001-03-28",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 1053507,
+   "ticker": "AMT",
+   "accessionNo": "0000927016-00-003012",
+   "form": "10-Q",
+   "filingDate": "2000-08-14",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 1053507,
+   "ticker": "AMT",
+   "accessionNo": "0000927016-00-003903",
+   "form": "10-Q",
+   "filingDate": "2000-11-13",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 1053507,
+   "ticker": "AMT",
+   "accessionNo": "0000927016-01-001627",
+   "form": "10-K",
+   "filingDate": "2001-04-02",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 51143,
+   "ticker": "IBM",
+   "accessionNo": "0001005477-00-005771",
+   "form": "10-Q",
+   "filingDate": "2000-08-14",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 51143,
+   "ticker": "IBM",
+   "accessionNo": "0001005477-00-007765",
+   "form": "10-Q",
+   "filingDate": "2000-11-13",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 51143,
+   "ticker": "IBM",
+   "accessionNo": "0001005477-01-003309",
+   "form": "10-Q",
+   "filingDate": "2001-05-15",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 936468,
+   "ticker": "LMT",
+   "accessionNo": "0000928385-00-002182",
+   "form": "10-Q",
+   "filingDate": "2000-08-11",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 936468,
+   "ticker": "LMT",
+   "accessionNo": "0000928385-00-003036",
+   "form": "10-Q",
+   "filingDate": "2000-11-13",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 936468,
+   "ticker": "LMT",
+   "accessionNo": "0000928385-01-000795",
+   "form": "10-K",
+   "filingDate": "2001-03-09",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 732717,
+   "ticker": "T",
+   "accessionNo": "0000732717-00-000054",
+   "form": "10-Q",
+   "filingDate": "2000-08-10",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 732717,
+   "ticker": "T",
+   "accessionNo": "0000732717-00-000065",
+   "form": "10-Q",
+   "filingDate": "2000-11-13",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 200406,
+   "ticker": "JNJ",
+   "accessionNo": "0000200406-00-000003",
+   "form": "10-Q",
+   "filingDate": "2000-08-15",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 200406,
+   "ticker": "JNJ",
+   "accessionNo": "0000200406-00-000004",
+   "form": "10-Q",
+   "filingDate": "2000-10-31",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 80424,
+   "ticker": "PG",
+   "accessionNo": "0000080424-00-000040",
+   "form": "10-K",
+   "filingDate": "2000-09-13",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 80424,
+   "ticker": "PG",
+   "accessionNo": "0000080424-00-000053",
+   "form": "10-Q",
+   "filingDate": "2000-11-02",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 80424,
+   "ticker": "PG",
+   "accessionNo": "0000080424-01-000004",
+   "form": "10-Q",
+   "filingDate": "2001-02-01",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 104169,
+   "ticker": "WMT",
+   "accessionNo": "0000104169-00-000004",
+   "form": "10-Q",
+   "filingDate": "2000-06-08",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 104169,
+   "ticker": "WMT",
+   "accessionNo": "0000104169-00-000009",
+   "form": "10-Q",
+   "filingDate": "2000-08-25",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 104169,
+   "ticker": "WMT",
+   "accessionNo": "0000104169-00-000010",
+   "form": "10-Q",
+   "filingDate": "2000-11-30",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 93410,
+   "ticker": "CVX",
+   "accessionNo": "0000093410-00-000011",
+   "form": "10-Q",
+   "filingDate": "2000-08-09",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 93410,
+   "ticker": "CVX",
+   "accessionNo": "0000093410-00-000022",
+   "form": "10-Q",
+   "filingDate": "2000-11-08",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 93410,
+   "ticker": "CVX",
+   "accessionNo": "0000093410-01-000015",
+   "form": "10-K",
+   "filingDate": "2001-03-28",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  },
+  {
+   "cik": 858877,
+   "ticker": "CSCO",
+   "accessionNo": "0000891618-00-003345",
+   "form": "10-Q",
+   "filingDate": "2000-06-13",
+   "reason": "pre_inline_xbrl_primary_document_not_cached"
+  }
+ ],
+ "historyFile": "research/engine/exposure-history.jsonl",
+ "archiveFile": "D:\\research\\alpha-engine\\exposure-history.jsonl",
+ "bytes": 11225147,
+ "sha256": "98a5d49fd3e92469ca84b3a72cc84479dc28d277f2808a0a837de4a65990c39d",
+ "documents": 5100,
+ "documentsWithMeasures": 1435,
+ "documentsWithoutMeasures": 3665,
+ "emptyDocumentPolicy": "no_supported_exposure_measure_is_not_an_error",
+ "measures": 6111,
+ "countsByMeasure": {
+  "cashShortTerm": 1237,
+  "debtMaturingNext12": 1187,
+  "debtMaturingYearTwo": 422,
+  "floatingRateShare": 15,
+  "foreignRevenueShare": 876,
+  "fuelCost": 71,
+  "interestExpense": 1105,
+  "oilAndGasRevenue": 70,
+  "operatingIncome": 1128
+ },
+ "countsByCompany": {
+  "AAPL": {
+   "documents": 129,
+   "measures": 128,
+   "byMeasure": {
+    "debtMaturingNext12": 31,
+    "cashShortTerm": 31,
+    "operatingIncome": 31,
+    "interestExpense": 19,
+    "foreignRevenueShare": 8,
+    "debtMaturingYearTwo": 8
+   },
+   "documentsWithMeasures": 31
+  },
+  "AIG": {
+   "documents": 132,
+   "measures": 49,
+   "byMeasure": {
+    "interestExpense": 30,
+    "foreignRevenueShare": 7,
+    "debtMaturingNext12": 9,
+    "debtMaturingYearTwo": 3
+   },
+   "documentsWithMeasures": 30
+  },
+  "AMD": {
+   "documents": 126,
+   "measures": 125,
+   "byMeasure": {
+    "debtMaturingNext12": 23,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "interestExpense": 30,
+    "foreignRevenueShare": 7,
+    "debtMaturingYearTwo": 5
+   },
+   "documentsWithMeasures": 30
+  },
+  "AMT": {
+   "documents": 113,
+   "measures": 137,
+   "byMeasure": {
+    "foreignRevenueShare": 13,
+    "debtMaturingNext12": 30,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "interestExpense": 30,
+    "debtMaturingYearTwo": 4
+   },
+   "documentsWithMeasures": 30
+  },
+  "AMZN": {
+   "documents": 115,
+   "measures": 134,
+   "byMeasure": {
+    "debtMaturingNext12": 30,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "interestExpense": 30,
+    "foreignRevenueShare": 7,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 30
+  },
+  "ANET": {
+   "documents": 50,
+   "measures": 92,
+   "byMeasure": {
+    "foreignRevenueShare": 30,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "interestExpense": 2
+   },
+   "documentsWithMeasures": 30
+  },
+  "AVGO": {
+   "documents": 34,
+   "measures": 173,
+   "byMeasure": {
+    "foreignRevenueShare": 23,
+    "debtMaturingNext12": 30,
+    "debtMaturingYearTwo": 30,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "interestExpense": 30
+   },
+   "documentsWithMeasures": 30
+  },
+  "BA": {
+   "documents": 129,
+   "measures": 140,
+   "byMeasure": {
+    "foreignRevenueShare": 33,
+    "debtMaturingNext12": 33,
+    "cashShortTerm": 33,
+    "operatingIncome": 33,
+    "debtMaturingYearTwo": 8
+   },
+   "documentsWithMeasures": 33
+  },
+  "CAT": {
+   "documents": 127,
+   "measures": 95,
+   "byMeasure": {
+    "foreignRevenueShare": 30,
+    "operatingIncome": 30,
+    "debtMaturingNext12": 7,
+    "debtMaturingYearTwo": 7,
+    "cashShortTerm": 21
+   },
+   "documentsWithMeasures": 30
+  },
+  "COF": {
+   "documents": 120,
+   "measures": 74,
+   "byMeasure": {
+    "debtMaturingNext12": 33,
+    "interestExpense": 33,
+    "debtMaturingYearTwo": 8
+   },
+   "documentsWithMeasures": 33
+  },
+  "COP": {
+   "documents": 97,
+   "measures": 132,
+   "byMeasure": {
+    "foreignRevenueShare": 30,
+    "oilAndGasRevenue": 30,
+    "debtMaturingNext12": 30,
+    "cashShortTerm": 30,
+    "debtMaturingYearTwo": 5,
+    "interestExpense": 7
+   },
+   "documentsWithMeasures": 30
+  },
+  "COST": {
+   "documents": 127,
+   "measures": 147,
+   "byMeasure": {
+    "foreignRevenueShare": 28,
+    "debtMaturingNext12": 28,
+    "cashShortTerm": 28,
+    "operatingIncome": 28,
+    "interestExpense": 28,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 28
+  },
+  "CSCO": {
+   "documents": 125,
+   "measures": 168,
+   "byMeasure": {
+    "foreignRevenueShare": 28,
+    "debtMaturingNext12": 28,
+    "debtMaturingYearTwo": 28,
+    "cashShortTerm": 28,
+    "operatingIncome": 28,
+    "interestExpense": 28
+   },
+   "documentsWithMeasures": 28
+  },
+  "CVX": {
+   "documents": 126,
+   "measures": 122,
+   "byMeasure": {
+    "foreignRevenueShare": 31,
+    "debtMaturingNext12": 31,
+    "cashShortTerm": 12,
+    "interestExpense": 31,
+    "debtMaturingYearTwo": 7,
+    "oilAndGasRevenue": 10
+   },
+   "documentsWithMeasures": 31
+  },
+  "DAL": {
+   "documents": 128,
+   "measures": 197,
+   "byMeasure": {
+    "cashShortTerm": 41,
+    "operatingIncome": 41,
+    "fuelCost": 41,
+    "interestExpense": 31,
+    "debtMaturingNext12": 33,
+    "debtMaturingYearTwo": 10
+   },
+   "documentsWithMeasures": 41
+  },
+  "DASH": {
+   "documents": 24,
+   "measures": 82,
+   "byMeasure": {
+    "foreignRevenueShare": 24,
+    "cashShortTerm": 24,
+    "operatingIncome": 24,
+    "interestExpense": 10
+   },
+   "documentsWithMeasures": 24
+  },
+  "FCX": {
+   "documents": 123,
+   "measures": 135,
+   "byMeasure": {
+    "cashShortTerm": 31,
+    "operatingIncome": 31,
+    "interestExpense": 31,
+    "foreignRevenueShare": 7,
+    "debtMaturingNext12": 28,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 31
+  },
+  "FSLR": {
+   "documents": 80,
+   "measures": 142,
+   "byMeasure": {
+    "debtMaturingYearTwo": 21,
+    "cashShortTerm": 28,
+    "operatingIncome": 30,
+    "interestExpense": 30,
+    "foreignRevenueShare": 7,
+    "debtMaturingNext12": 26
+   },
+   "documentsWithMeasures": 30
+  },
+  "GOOGL": {
+   "documents": 45,
+   "measures": 154,
+   "byMeasure": {
+    "foreignRevenueShare": 31,
+    "cashShortTerm": 31,
+    "operatingIncome": 31,
+    "interestExpense": 31,
+    "debtMaturingNext12": 23,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 31
+  },
+  "GS": {
+   "documents": 108,
+   "measures": 66,
+   "byMeasure": {
+    "debtMaturingNext12": 15,
+    "debtMaturingYearTwo": 17,
+    "cashShortTerm": 17,
+    "interestExpense": 17
+   },
+   "documentsWithMeasures": 17
+  },
+  "HD": {
+   "documents": 129,
+   "measures": 133,
+   "byMeasure": {
+    "foreignRevenueShare": 29,
+    "cashShortTerm": 29,
+    "operatingIncome": 29,
+    "interestExpense": 29,
+    "debtMaturingNext12": 10,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 29
+  },
+  "IBM": {
+   "documents": 125,
+   "measures": 55,
+   "byMeasure": {
+    "foreignRevenueShare": 11,
+    "debtMaturingNext12": 11,
+    "debtMaturingYearTwo": 11,
+    "cashShortTerm": 11,
+    "interestExpense": 11
+   },
+   "documentsWithMeasures": 11
+  },
+  "INTC": {
+   "documents": 130,
+   "measures": 122,
+   "byMeasure": {
+    "debtMaturingNext12": 31,
+    "cashShortTerm": 15,
+    "operatingIncome": 31,
+    "interestExpense": 31,
+    "foreignRevenueShare": 7,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 31
+  },
+  "JNJ": {
+   "documents": 127,
+   "measures": 127,
+   "byMeasure": {
+    "foreignRevenueShare": 30,
+    "debtMaturingNext12": 30,
+    "cashShortTerm": 30,
+    "interestExpense": 30,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 30
+  },
+  "JPM": {
+   "documents": 126,
+   "measures": 86,
+   "byMeasure": {
+    "debtMaturingNext12": 33,
+    "cashShortTerm": 2,
+    "interestExpense": 33,
+    "foreignRevenueShare": 8,
+    "debtMaturingYearTwo": 10
+   },
+   "documentsWithMeasures": 33
+  },
+  "KMI": {
+   "documents": 64,
+   "measures": 139,
+   "byMeasure": {
+    "oilAndGasRevenue": 30,
+    "debtMaturingNext12": 30,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "interestExpense": 5,
+    "foreignRevenueShare": 7,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 30
+  },
+  "LIN": {
+   "documents": 35,
+   "measures": 130,
+   "byMeasure": {
+    "debtMaturingNext12": 30,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "foreignRevenueShare": 8,
+    "debtMaturingYearTwo": 7,
+    "interestExpense": 25
+   },
+   "documentsWithMeasures": 30
+  },
+  "LLY": {
+   "documents": 126,
+   "measures": 138,
+   "byMeasure": {
+    "foreignRevenueShare": 30,
+    "debtMaturingNext12": 30,
+    "cashShortTerm": 30,
+    "interestExpense": 27,
+    "debtMaturingYearTwo": 6,
+    "floatingRateShare": 15
+   },
+   "documentsWithMeasures": 30
+  },
+  "LMT": {
+   "documents": 123,
+   "measures": 153,
+   "byMeasure": {
+    "foreignRevenueShare": 31,
+    "debtMaturingNext12": 29,
+    "cashShortTerm": 31,
+    "operatingIncome": 31,
+    "interestExpense": 31
+   },
+   "documentsWithMeasures": 31
+  },
+  "LULU": {
+   "documents": 77,
+   "measures": 80,
+   "byMeasure": {
+    "foreignRevenueShare": 29,
+    "operatingIncome": 29,
+    "debtMaturingNext12": 22
+   },
+   "documentsWithMeasures": 29
+  },
+  "MA": {
+   "documents": 99,
+   "measures": 159,
+   "byMeasure": {
+    "foreignRevenueShare": 31,
+    "debtMaturingNext12": 28,
+    "cashShortTerm": 31,
+    "operatingIncome": 31,
+    "interestExpense": 31,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 31
+  },
+  "META": {
+   "documents": 58,
+   "measures": 106,
+   "byMeasure": {
+    "foreignRevenueShare": 30,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "interestExpense": 10,
+    "debtMaturingNext12": 3,
+    "debtMaturingYearTwo": 3
+   },
+   "documentsWithMeasures": 30
+  },
+  "MRNA": {
+   "documents": 32,
+   "measures": 78,
+   "byMeasure": {
+    "cashShortTerm": 27,
+    "operatingIncome": 27,
+    "foreignRevenueShare": 24
+   },
+   "documentsWithMeasures": 27
+  },
+  "MSFT": {
+   "documents": 129,
+   "measures": 90,
+   "byMeasure": {
+    "foreignRevenueShare": 15,
+    "debtMaturingNext12": 15,
+    "debtMaturingYearTwo": 15,
+    "cashShortTerm": 15,
+    "operatingIncome": 15,
+    "interestExpense": 15
+   },
+   "documentsWithMeasures": 15
+  },
+  "MU": {
+   "documents": 128,
+   "measures": 139,
+   "byMeasure": {
+    "debtMaturingNext12": 28,
+    "cashShortTerm": 28,
+    "operatingIncome": 28,
+    "interestExpense": 28,
+    "foreignRevenueShare": 7,
+    "debtMaturingYearTwo": 20
+   },
+   "documentsWithMeasures": 28
+  },
+  "NEE": {
+   "documents": 129,
+   "measures": 97,
+   "byMeasure": {
+    "debtMaturingNext12": 30,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 30
+  },
+  "NFLX": {
+   "documents": 98,
+   "measures": 129,
+   "byMeasure": {
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "interestExpense": 30,
+    "debtMaturingNext12": 28,
+    "foreignRevenueShare": 11
+   },
+   "documentsWithMeasures": 30
+  },
+  "NKE": {
+   "documents": 123,
+   "measures": 72,
+   "byMeasure": {
+    "debtMaturingNext12": 29,
+    "cashShortTerm": 29,
+    "foreignRevenueShare": 7,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 29
+  },
+  "NVDA": {
+   "documents": 105,
+   "measures": 137,
+   "byMeasure": {
+    "foreignRevenueShare": 29,
+    "cashShortTerm": 29,
+    "operatingIncome": 29,
+    "interestExpense": 29,
+    "debtMaturingNext12": 21
+   },
+   "documentsWithMeasures": 29
+  },
+  "PFE": {
+   "documents": 128,
+   "measures": 100,
+   "byMeasure": {
+    "debtMaturingNext12": 33,
+    "debtMaturingYearTwo": 3,
+    "cashShortTerm": 32,
+    "interestExpense": 32
+   },
+   "documentsWithMeasures": 33
+  },
+  "PG": {
+   "documents": 129,
+   "measures": 133,
+   "byMeasure": {
+    "debtMaturingNext12": 36,
+    "cashShortTerm": 8,
+    "operatingIncome": 36,
+    "interestExpense": 36,
+    "debtMaturingYearTwo": 9,
+    "foreignRevenueShare": 8
+   },
+   "documentsWithMeasures": 36
+  },
+  "PLD": {
+   "documents": 116,
+   "measures": 88,
+   "byMeasure": {
+    "debtMaturingNext12": 15,
+    "debtMaturingYearTwo": 15,
+    "cashShortTerm": 15,
+    "operatingIncome": 15,
+    "interestExpense": 15,
+    "foreignRevenueShare": 13
+   },
+   "documentsWithMeasures": 15
+  },
+  "PLTR": {
+   "documents": 25,
+   "measures": 65,
+   "byMeasure": {
+    "foreignRevenueShare": 19,
+    "cashShortTerm": 19,
+    "operatingIncome": 19,
+    "interestExpense": 8
+   },
+   "documentsWithMeasures": 19
+  },
+  "RCL": {
+   "documents": 88,
+   "measures": 206,
+   "byMeasure": {
+    "foreignRevenueShare": 30,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "fuelCost": 30,
+    "interestExpense": 30,
+    "debtMaturingNext12": 28,
+    "debtMaturingYearTwo": 28
+   },
+   "documentsWithMeasures": 30
+  },
+  "SMCI": {
+   "documents": 75,
+   "measures": 167,
+   "byMeasure": {
+    "foreignRevenueShare": 29,
+    "debtMaturingNext12": 29,
+    "cashShortTerm": 29,
+    "operatingIncome": 29,
+    "interestExpense": 29,
+    "debtMaturingYearTwo": 22
+   },
+   "documentsWithMeasures": 29
+  },
+  "T": {
+   "documents": 126,
+   "measures": 134,
+   "byMeasure": {
+    "debtMaturingNext12": 30,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "interestExpense": 30,
+    "foreignRevenueShare": 7,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 30
+  },
+  "TSLA": {
+   "documents": 66,
+   "measures": 120,
+   "byMeasure": {
+    "foreignRevenueShare": 23,
+    "debtMaturingNext12": 23,
+    "cashShortTerm": 23,
+    "operatingIncome": 23,
+    "interestExpense": 23,
+    "debtMaturingYearTwo": 5
+   },
+   "documentsWithMeasures": 23
+  },
+  "UNH": {
+   "documents": 125,
+   "measures": 127,
+   "byMeasure": {
+    "debtMaturingNext12": 30,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "interestExpense": 30,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 30
+  },
+  "V": {
+   "documents": 77,
+   "measures": 157,
+   "byMeasure": {
+    "foreignRevenueShare": 30,
+    "cashShortTerm": 30,
+    "operatingIncome": 30,
+    "interestExpense": 30,
+    "debtMaturingYearTwo": 9,
+    "debtMaturingNext12": 28
+   },
+   "documentsWithMeasures": 30
+  },
+  "WMT": {
+   "documents": 124,
+   "measures": 152,
+   "byMeasure": {
+    "foreignRevenueShare": 29,
+    "debtMaturingNext12": 29,
+    "cashShortTerm": 29,
+    "operatingIncome": 29,
+    "interestExpense": 29,
+    "debtMaturingYearTwo": 7
+   },
+   "documentsWithMeasures": 29
+  }
+ },
+ "latestAnnualCompanies": 50,
+ "beforeCoverage": {
+  "rates": {
+   "computable": 26,
+   "historical_only": 17,
+   "not_applicable": 0,
+   "not_computable": 7
+  },
+  "oil": {
+   "computable": 1,
+   "historical_only": 3,
+   "not_applicable": 0,
+   "not_computable": 46
+  },
+  "usd": {
+   "computable": 0,
+   "historical_only": 8,
+   "not_applicable": 0,
+   "not_computable": 42
+  },
+  "credit": {
+   "computable": 36,
+   "historical_only": 6,
+   "not_applicable": 0,
+   "not_computable": 8
+  }
+ },
+ "afterCoverage": {
+  "rates": {
+   "computable": 38,
+   "historical_only": 2,
+   "not_applicable": 6,
+   "not_computable": 4
+  },
+  "oil": {
+   "computable": 5,
+   "historical_only": 0,
+   "not_applicable": 0,
+   "not_computable": 45
+  },
+  "usd": {
+   "computable": 44,
+   "historical_only": 1,
+   "not_applicable": 0,
+   "not_computable": 5
+  },
+  "credit": {
+   "computable": 46,
+   "historical_only": 1,
+   "not_applicable": 0,
+   "not_computable": 3
+  }
+ },
+ "staleEvidenceAudit": [
+  {
+   "ticker": "AMD",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2016-09-24",
+    "availableAt": "2016-10-26",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2025-12-27",
+    "availableAt": "2026-02-04",
+    "accessionNo": "0000002488-26-000018",
+    "concepts": [
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+     "us-gaap:OperatingIncomeLoss"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-02-04",
+      "accessionNo": "0000002488-26-000018",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000018/amd-20251227.htm",
+      "sourceHash": "60ba8730b27313a0f9a7e1cadf35756c568d13c9527f392f35228bdbfa3a660e",
+      "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+      "value": 875000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-942",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+        "contextRef": "c-6",
+        "rawValue": "875",
+        "value": 875000000,
+        "unitRef": "usd",
+        "format": null,
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-6\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" scale=\"6\" id=\"f-942\">875</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "NFLX",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2021-09-30",
+    "availableAt": "2021-10-21",
+    "concepts": [
+     "LongTermDebt"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2025-12-31",
+    "availableAt": "2026-01-23",
+    "accessionNo": "0001065280-26-000034",
+    "concepts": [
+     "us-gaap:ShortTermBorrowings",
+     "us-gaap:OperatingIncomeLoss"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-01-23",
+      "accessionNo": "0001065280-26-000034",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000034/nflx-20251231.htm",
+      "sourceHash": "46ddfd7d1fe81354a5c183921669e837b06fae02b7752451090ced87e7348e24",
+      "note": "Current-debt aggregate us-gaap:ShortTermBorrowings used as a next-12-month refinancing proxy because the standard maturity total is not tagged",
+      "value": 998865000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-292",
+        "concept": "us-gaap:ShortTermBorrowings",
+        "contextRef": "c-3",
+        "rawValue": "998,865",
+        "value": 998865000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "3",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-3\" decimals=\"-3\" name=\"us-gaap:ShortTermBorrowings\" format=\"ixt:num-dot-decimal\" scale=\"3\" id=\"f-292\">998,865</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "TSLA",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2018-12-31",
+    "availableAt": "2019-02-19",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2025-12-31",
+    "availableAt": "2026-01-29",
+    "accessionNo": "0001628280-26-003952",
+    "concepts": [
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+     "us-gaap:OperatingIncomeLoss"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-01-29",
+      "accessionNo": "0001628280-26-003952",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1318605/000162828026003952/tsla-20251231.htm",
+      "sourceHash": "55a9fe4523c928212463f80bc3f5dab8e8edce8a34fd9bbecfd93a5cf2c16759",
+      "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+      "value": 1576000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-1088",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+        "contextRef": "c-4",
+        "rawValue": "1,576",
+        "value": 1576000000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-4\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1088\">1,576</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "PFE",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2020-12-31",
+    "availableAt": "2021-02-25",
+    "concepts": [
+     "LongTermDebt"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2025-12-31",
+    "availableAt": "2026-02-26",
+    "accessionNo": "0000078003-26-000026",
+    "concepts": [
+     "us-gaap:LongTermDebtCurrent"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-02-26",
+      "accessionNo": "0000078003-26-000026",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/78003/000007800326000026/pfe-20251231.htm",
+      "sourceHash": "f62f82f13300ee2e5c01579a20ece2b2844ee588578e6bfbe988aca5d167a1f5",
+      "note": "Current-debt aggregate us-gaap:LongTermDebtCurrent used as a next-12-month refinancing proxy because the standard maturity total is not tagged",
+      "value": 2997000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-228",
+        "concept": "us-gaap:LongTermDebtCurrent",
+        "contextRef": "c-18",
+        "rawValue": "2,997",
+        "value": 2997000000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-18\" decimals=\"-6\" name=\"us-gaap:LongTermDebtCurrent\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-228\">2,997</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "FCX",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2020-09-30",
+    "availableAt": "2020-11-06",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2025-12-31",
+    "availableAt": "2026-02-13",
+    "accessionNo": "0000831259-26-000012",
+    "concepts": [
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+     "us-gaap:OperatingIncomeLoss"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-02-13",
+      "accessionNo": "0000831259-26-000012",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/831259/000083125926000012/fcx-20251231.htm",
+      "sourceHash": "7e4930930d9b2780d72aec43e26a308a11d7548aacd806a8b5df41044979ff5b",
+      "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+      "value": 500000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-800",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+        "contextRef": "c-27",
+        "rawValue": "0.5",
+        "value": 500000000,
+        "unitRef": "usd",
+        "format": null,
+        "scale": "9",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-27\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" scale=\"9\" id=\"f-800\">0.5</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "ANET",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2014-06-30",
+    "availableAt": "2014-08-08",
+    "concepts": [
+     "LongTermDebtCurrent",
+     "LongTermDebtNoncurrent"
+    ]
+   },
+   "after": {
+    "status": "historical_only",
+    "periodEnd": "2014-06-30",
+    "availableAt": "2014-08-08",
+    "accessionNo": null,
+    "concepts": [
+     "LongTermDebtCurrent",
+     "LongTermDebtNoncurrent"
+    ],
+    "evidence": []
+   },
+   "cause": "debt maturing within 12 months; debt maturing in year two"
+  },
+  {
+   "ticker": "SMCI",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2013-03-31",
+    "availableAt": "2013-05-10",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2026-06-30",
+    "availableAt": "2026-08-31",
+    "accessionNo": "0001375365-26-000022",
+    "concepts": [
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+     "us-gaap:OperatingIncomeLoss"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-08-31",
+      "accessionNo": "0001375365-26-000022",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1375365/000137536526000022/smci-20260630.htm",
+      "sourceHash": "94ae364320b92c6885f7bcda937c53fe9eabaf3119d78237fbd6c47572d82b2d",
+      "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+      "value": 2039774000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-1016",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+        "contextRef": "c-6",
+        "rawValue": "2,039,774",
+        "value": 2039774000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "3",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-6\" decimals=\"-3\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"3\" id=\"f-1016\">2,039,774</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "FSLR",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2020-09-30",
+    "availableAt": "2020-10-28",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2025-12-31",
+    "availableAt": "2026-02-24",
+    "accessionNo": "0001274494-26-000021",
+    "concepts": [
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+     "us-gaap:OperatingIncomeLoss"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-02-24",
+      "accessionNo": "0001274494-26-000021",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1274494/000127449426000021/fslr-20251231.htm",
+      "sourceHash": "039bd535fca84d672fefe939c17aaff0f68a82f1530392772d2effad417e9781",
+      "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+      "value": 90899000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-1140",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+        "contextRef": "c-23",
+        "rawValue": "90,899",
+        "value": 90899000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "3",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-23\" decimals=\"-3\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"3\" id=\"f-1140\">90,899</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "LLY",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2024-12-31",
+    "availableAt": "2025-10-30T23:59:59.999Z",
+    "concepts": [
+     "LongTermDebt",
+     "LongTermDebtPercentageBearingVariableInterestRate"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2025-12-31",
+    "availableAt": "2026-02-12",
+    "accessionNo": "0000059478-26-000013",
+    "concepts": [
+     "us-gaap:DebtCurrent"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-02-12",
+      "accessionNo": "0000059478-26-000013",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/59478/000005947826000013/lly-20251231.htm",
+      "sourceHash": "2315333689a7e42721d47a858127054a648cbe4e0b403b9c63a23780e434161f",
+      "note": "Current-debt aggregate us-gaap:DebtCurrent used as a next-12-month refinancing proxy because the standard maturity total is not tagged",
+      "value": 1635000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-169",
+        "concept": "us-gaap:DebtCurrent",
+        "contextRef": "c-16",
+        "rawValue": "1,635",
+        "value": 1635000000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-16\" decimals=\"-6\" name=\"us-gaap:DebtCurrent\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-169\">1,635</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "JPM",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2014-06-30",
+    "availableAt": "2014-08-04",
+    "concepts": [
+     "LongTermDebt"
+    ]
+   },
+   "after": {
+    "status": "not_applicable",
+    "periodEnd": null,
+    "availableAt": null,
+    "accessionNo": null,
+    "concepts": [],
+    "evidence": []
+   },
+   "cause": "rate_exposure_works_through_interest_margin"
+  },
+  {
+   "ticker": "KMI",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2014-12-31",
+    "availableAt": "2015-02-23",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2025-12-31",
+    "availableAt": "2026-02-13",
+    "accessionNo": "0001506307-26-000011",
+    "concepts": [
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+     "us-gaap:OperatingIncomeLoss"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-02-13",
+      "accessionNo": "0001506307-26-000011",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1506307/000150630726000011/kmi-20251231.htm",
+      "sourceHash": "5d1d8f05160f5e7adf974fd69ccf8872184a56604e8873483c5feac7f4f6fa60",
+      "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+      "value": 1226000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-1320",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+        "contextRef": "c-17",
+        "rawValue": "1,226",
+        "value": 1226000000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-17\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1320\">1,226</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "GOOGL",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2025-03-31",
+    "availableAt": "2025-04-25",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2025-12-31",
+    "availableAt": "2026-02-05",
+    "accessionNo": "0001652044-26-000018",
+    "concepts": [
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+     "us-gaap:OperatingIncomeLoss"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-02-05",
+      "accessionNo": "0001652044-26-000018",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1652044/000165204426000018/goog-20251231.htm",
+      "sourceHash": "a77b1c3407e664956c15f18678d3a7b7735d1682b7effb8fbfb3b68bf6791525",
+      "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+      "value": 2000000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-1104",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+        "contextRef": "c-20",
+        "rawValue": "2,000",
+        "value": 2000000000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-20\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1104\">2,000</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "PG",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2015-06-30",
+    "availableAt": "2015-10-26",
+    "concepts": [
+     "LongTermDebt"
+    ]
+   },
+   "after": {
+    "status": "historical_only",
+    "periodEnd": "2015-06-30",
+    "availableAt": "2015-10-26",
+    "accessionNo": null,
+    "concepts": [
+     "LongTermDebt"
+    ],
+    "evidence": []
+   },
+   "cause": "cash and short-term investments"
+  },
+  {
+   "ticker": "MA",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2011-03-31",
+    "availableAt": "2011-05-03",
+    "concepts": [
+     "LongTermDebt"
+    ]
+   },
+   "after": {
+    "status": "not_applicable",
+    "periodEnd": null,
+    "availableAt": null,
+    "accessionNo": null,
+    "concepts": [],
+    "evidence": []
+   },
+   "cause": "rate_exposure_works_through_interest_margin"
+  },
+  {
+   "ticker": "V",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2021-12-31",
+    "availableAt": "2022-01-28",
+    "concepts": [
+     "LongTermDebt"
+    ]
+   },
+   "after": {
+    "status": "not_applicable",
+    "periodEnd": null,
+    "availableAt": null,
+    "accessionNo": null,
+    "concepts": [],
+    "evidence": []
+   },
+   "cause": "rate_exposure_works_through_interest_margin"
+  },
+  {
+   "ticker": "COST",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2022-05-08",
+    "availableAt": "2022-06-02",
+    "concepts": [
+     "LongTermDebt"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2026-08-30",
+    "availableAt": "2026-10-07",
+    "accessionNo": "0000909832-26-000093",
+    "concepts": [
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+     "us-gaap:OperatingIncomeLoss"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-10-07",
+      "accessionNo": "0000909832-26-000093",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/909832/000090983226000093/cost-20260830.htm",
+      "sourceHash": "704143b0f22d2ca64ce9d551bb048a679dab08e5cf98bb0f5c0fb201981c84a1",
+      "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+      "value": 2250000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-534",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+        "contextRef": "c-12",
+        "rawValue": "2,250",
+        "value": 2250000000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-12\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-534\">2,250</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "COP",
+   "channel": "rates",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2026-09-30",
+    "availableAt": "2026-11-05",
+    "concepts": [
+     "LongTermDebtAndCapitalLeaseObligations",
+     "PercentageOfDebtHedgedByInterestRateDerivatives"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2025-12-31",
+    "availableAt": "2026-02-17",
+    "accessionNo": "0001163165-26-000009",
+    "concepts": [
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-02-17",
+      "accessionNo": "0001163165-26-000009",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1163165/000116316526000009/cop-20251231.htm",
+      "sourceHash": "df8f8a15a4a078e010da04094bf43d6424df6bb594198891ce9e1640e1b45a1a",
+      "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+      "value": 713000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-884",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+        "contextRef": "c-8",
+        "rawValue": "713",
+        "value": 713000000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-8\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-884\">713</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "PLTR",
+   "channel": "credit",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2020-12-31",
+    "availableAt": "2021-02-26T23:59:59.999Z",
+    "concepts": [
+     "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths"
+    ]
+   },
+   "after": {
+    "status": "historical_only",
+    "periodEnd": "2020-12-31",
+    "availableAt": "2021-02-26T23:59:59.999Z",
+    "accessionNo": null,
+    "concepts": [
+     "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths"
+    ],
+    "evidence": []
+   },
+   "cause": "debt maturing within 12 months; debt maturing in year two"
+  },
+  {
+   "ticker": "NFLX",
+   "channel": "credit",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2021-09-30",
+    "availableAt": "2021-10-21T23:59:59.999Z",
+    "concepts": [
+     "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextRollingTwelveMonths"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2026-09-30",
+    "availableAt": "2026-10-21",
+    "accessionNo": "0001065280-26-000291",
+    "concepts": [
+     "us-gaap:ShortTermBorrowings"
+    ],
+    "evidence": [
+     {
+      "form": "10-Q",
+      "filingDate": "2026-10-21",
+      "accessionNo": "0001065280-26-000291",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1065280/000106528026000291/nflx-20260930.htm",
+      "sourceHash": "4feaa9aef9fd59638f6c5a1171a6909159137bee68c10841021602720b033d8c",
+      "note": "Current-debt aggregate us-gaap:ShortTermBorrowings used as a next-12-month refinancing proxy because the standard maturity total is not tagged",
+      "value": 2474796000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-294",
+        "concept": "us-gaap:ShortTermBorrowings",
+        "contextRef": "c-2",
+        "rawValue": "2,474,796",
+        "value": 2474796000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "3",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-2\" decimals=\"-3\" name=\"us-gaap:ShortTermBorrowings\" format=\"ixt:num-dot-decimal\" scale=\"3\" id=\"f-294\">2,474,796</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "LLY",
+   "channel": "credit",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2024-12-31",
+    "availableAt": "2025-02-19T23:59:59.999Z",
+    "concepts": [
+     "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2026-09-30",
+    "availableAt": "2026-10-29",
+    "accessionNo": "0000059478-26-000108",
+    "concepts": [
+     "us-gaap:DebtCurrent"
+    ],
+    "evidence": [
+     {
+      "form": "10-Q",
+      "filingDate": "2026-10-29",
+      "accessionNo": "0000059478-26-000108",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/59478/000005947826000108/lly-20260930.htm",
+      "sourceHash": "e1ac7db9e748b4adc938ba6cd810e2e6504e2d95c6a26649c55602c92e40f9a3",
+      "note": "Current-debt aggregate us-gaap:DebtCurrent used as a next-12-month refinancing proxy because the standard maturity total is not tagged",
+      "value": 2517000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-156",
+        "concept": "us-gaap:DebtCurrent",
+        "contextRef": "c-15",
+        "rawValue": "2,517",
+        "value": 2517000000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-15\" decimals=\"-6\" name=\"us-gaap:DebtCurrent\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-156\">2,517</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "AMT",
+   "channel": "credit",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2022-12-31",
+    "availableAt": "2023-02-23T23:59:59.999Z",
+    "concepts": [
+     "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2026-09-30",
+    "availableAt": "2026-10-27",
+    "accessionNo": "0001053507-26-000157",
+    "concepts": [
+     "us-gaap:LongTermDebtCurrent"
+    ],
+    "evidence": [
+     {
+      "form": "10-Q",
+      "filingDate": "2026-10-27",
+      "accessionNo": "0001053507-26-000157",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1053507/000105350726000157/amt-20260930.htm",
+      "sourceHash": "bed12b93a8da949e80776f508e337f45b65ab681003240c3fc5fb4c75df1c1b4",
+      "note": "Current-debt aggregate us-gaap:LongTermDebtCurrent used as a next-12-month refinancing proxy because the standard maturity total is not tagged",
+      "value": 5363500000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-105",
+        "concept": "us-gaap:LongTermDebtCurrent",
+        "contextRef": "c-17",
+        "rawValue": "5,363.5",
+        "value": 5363500000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-17\" decimals=\"-5\" name=\"us-gaap:LongTermDebtCurrent\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-105\">5,363.5</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "LMT",
+   "channel": "credit",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2012-12-31",
+    "availableAt": "2013-02-28T23:59:59.999Z",
+    "concepts": [
+     "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2026-09-27",
+    "availableAt": "2026-10-22",
+    "accessionNo": "0001628280-26-066928",
+    "concepts": [
+     "us-gaap:LongTermDebtCurrent"
+    ],
+    "evidence": [
+     {
+      "form": "10-Q",
+      "filingDate": "2026-10-22",
+      "accessionNo": "0001628280-26-066928",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/936468/000162828026066928/lmt-20260927.htm",
+      "sourceHash": "1fdd8850f1102e842ea0208e9430322b645765195a89dd1d37286726abe23fbe",
+      "note": "Current-debt aggregate us-gaap:LongTermDebtCurrent used as a next-12-month refinancing proxy because the standard maturity total is not tagged",
+      "value": 0,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-164",
+        "concept": "us-gaap:LongTermDebtCurrent",
+        "contextRef": "c-14",
+        "rawValue": "—",
+        "value": 0,
+        "unitRef": "usd",
+        "format": "ixt:fixed-zero",
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-14\" decimals=\"-6\" name=\"us-gaap:LongTermDebtCurrent\" format=\"ixt:fixed-zero\" scale=\"6\" id=\"f-164\">&#8212;</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  },
+  {
+   "ticker": "AIG",
+   "channel": "credit",
+   "before": {
+    "status": "historical_only",
+    "periodEnd": "2018-12-31",
+    "availableAt": "2019-02-15T23:59:59.999Z",
+    "concepts": [
+     "LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths"
+    ]
+   },
+   "after": {
+    "status": "computable",
+    "periodEnd": "2025-12-31",
+    "availableAt": "2026-02-12",
+    "accessionNo": "0000005272-26-000023",
+    "concepts": [
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextRollingTwelveMonths"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-02-12",
+      "accessionNo": "0000005272-26-000023",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/5272/000000527226000023/aig-20251231.htm",
+      "sourceHash": "b45baf22e30736537d35f6d198c5424080967e855fb10aac5a954d770ee6f671",
+      "note": "Sum of secured/unsecured debt-type aggregate totals; instrument-level rows and overlapping dimensions excluded",
+      "value": 36000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-4992",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextRollingTwelveMonths",
+        "contextRef": "c-1476",
+        "rawValue": "29",
+        "value": 29000000,
+        "unitRef": "usd",
+        "format": null,
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-1476\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextRollingTwelveMonths\" scale=\"6\" id=\"f-4992\">29</ix:nonFraction>"
+       },
+       {
+        "id": "f-4999",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextRollingTwelveMonths",
+        "contextRef": "c-1477",
+        "rawValue": "7",
+        "value": 7000000,
+        "unitRef": "usd",
+        "format": null,
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-1477\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextRollingTwelveMonths\" scale=\"6\" id=\"f-4999\">7</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
+   },
+   "cause": "current_inline_xbrl_maturity_total_recovered"
+  }
+ ],
+ "maturityChecks": [
+  {
+   "ticker": "AAPL",
+   "form": "10-K",
+   "filingDate": "2026-11-03",
+   "accessionNo": "0000320193-26-000026",
+   "sourceUrl": "https://www.sec.gov/Archives/edgar/data/320193/000032019326000026/aapl-20260926.htm",
+   "sourceHash": "6f2514b17c6edaebde4fd85a6cc4b0bcc1e0084f5ff2eeb3e07b9613179863d8",
+   "next12": {
+    "value": 9991000000,
+    "unit": "USD",
+    "periodEnd": "2026-09-26",
+    "facts": [
+     {
+      "id": "f-1014",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "contextRef": "c-19",
+      "rawValue": "9,991",
+      "value": 9991000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-19\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1014\">9,991</ix:nonFraction>"
+     }
+    ]
+   },
+   "yearTwo": {
+    "value": 9300000000,
+    "unit": "USD",
+    "periodEnd": "2026-09-26",
+    "facts": [
+     {
+      "id": "f-1015",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "contextRef": "c-19",
+      "rawValue": "9,300",
+      "value": 9300000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-19\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1015\">9,300</ix:nonFraction>"
+     }
+    ]
+   },
+   "scenarioStatus": "computable",
+   "metrics": [
+    {
+     "name": "interest_upper_bound",
+     "value": -374310000,
+     "unit": "USD/year",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 9991000000 + yearTwoMaturities 9300000000 − cashAndShortTermInvestments 56722000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-09-28",
+     "periodEnd": "2026-09-26",
+     "availableAt": "2026-11-03",
+     "stale": false
+    },
+    {
+     "name": "interest_upper_bound",
+     "value": -0.0023681063879592316,
+     "unit": "ratio",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 9991000000 + yearTwoMaturities 9300000000 − cashAndShortTermInvestments 56722000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock; divided by operatingIncome 158063000000",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-09-28",
+     "periodEnd": "2026-09-26",
+     "availableAt": "2026-11-03",
+     "stale": false
+    }
+   ],
+   "missing": [
+    "oil and gas revenue",
+    "fuel cost"
+   ]
+  },
+  {
+   "ticker": "AMD",
+   "form": "10-K",
+   "filingDate": "2026-02-04",
+   "accessionNo": "0000002488-26-000018",
+   "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000018/amd-20251227.htm",
+   "sourceHash": "60ba8730b27313a0f9a7e1cadf35756c568d13c9527f392f35228bdbfa3a660e",
+   "next12": {
+    "value": 875000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-27",
+    "facts": [
+     {
+      "id": "f-942",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "contextRef": "c-6",
+      "rawValue": "875",
+      "value": 875000000,
+      "unitRef": "usd",
+      "format": null,
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-6\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" scale=\"6\" id=\"f-942\">875</ix:nonFraction>"
+     }
+    ]
+   },
+   "yearTwo": null,
+   "scenarioStatus": "computable",
+   "metrics": [
+    {
+     "name": "interest_upper_bound",
+     "value": -96770000,
+     "unit": "USD/year",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 875000000 − cashAndShortTermInvestments 10552000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2024-12-29",
+     "periodEnd": "2025-12-27",
+     "availableAt": "2026-02-04",
+     "stale": false
+    },
+    {
+     "name": "interest_upper_bound",
+     "value": -0.026196534921494315,
+     "unit": "ratio",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 875000000 − cashAndShortTermInvestments 10552000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock; divided by operatingIncome 3694000000",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2024-12-29",
+     "periodEnd": "2025-12-27",
+     "availableAt": "2026-02-04",
+     "stale": false
+    }
+   ],
+   "missing": [
+    "oil and gas revenue",
+    "debt maturing in year two",
+    "fuel cost"
+   ]
+  },
+  {
+   "ticker": "INTC",
+   "form": "10-K",
+   "filingDate": "2026-01-23",
+   "accessionNo": "0000050863-26-000011",
+   "sourceUrl": "https://www.sec.gov/Archives/edgar/data/50863/000005086326000011/intc-20251227.htm",
+   "sourceHash": "e05758b52f2bd3af91a224e8da19e33042d60368a2460c390f937597d8558f1f",
+   "next12": {
+    "value": 2500000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-27",
+    "facts": [
+     {
+      "id": "f-1559",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "contextRef": "c-8",
+      "rawValue": "2,500",
+      "value": 2500000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-8\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1559\">2,500</ix:nonFraction>"
+     }
+    ]
+   },
+   "yearTwo": {
+    "value": 3826000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-27",
+    "facts": [
+     {
+      "id": "f-1560",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "contextRef": "c-8",
+      "rawValue": "3,826",
+      "value": 3826000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-8\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1560\">3,826</ix:nonFraction>"
+     }
+    ]
+   },
+   "scenarioStatus": "computable",
+   "metrics": [
+    {
+     "name": "interest_upper_bound",
+     "value": -310900000,
+     "unit": "USD/year",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 2500000000 + yearTwoMaturities 3826000000 − cashAndShortTermInvestments 37416000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2024-12-29",
+     "periodEnd": "2025-12-27",
+     "availableAt": "2026-01-23",
+     "stale": false
+    }
+   ],
+   "missing": [
+    "oil and gas revenue",
+    "fuel cost"
+   ]
+  },
+  {
+   "ticker": "AMZN",
+   "form": "10-K",
+   "filingDate": "2026-02-06",
+   "accessionNo": "0001018724-26-000004",
+   "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1018724/000101872426000004/amzn-20251231.htm",
+   "sourceHash": "eae12f4d7c85a86a695ae698520985730ecc0ceec42fd5dde1d6454283a0eafb",
+   "next12": {
+    "value": 2752000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-954",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "contextRef": "c-9",
+      "rawValue": "2,752",
+      "value": 2752000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-9\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-954\">2,752</ix:nonFraction>"
+     }
+    ]
+   },
+   "yearTwo": {
+    "value": 8832000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-955",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "contextRef": "c-9",
+      "rawValue": "8,832",
+      "value": 8832000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-9\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-955\">8,832</ix:nonFraction>"
+     }
+    ]
+   },
+   "scenarioStatus": "computable",
+   "metrics": [
+    {
+     "name": "interest_upper_bound",
+     "value": -1114450000,
+     "unit": "USD/year",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 2752000000 + yearTwoMaturities 8832000000 − cashAndShortTermInvestments 123029000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-01-01",
+     "periodEnd": "2025-12-31",
+     "availableAt": "2026-02-06",
+     "stale": false
+    },
+    {
+     "name": "interest_upper_bound",
+     "value": -0.01393497968115036,
+     "unit": "ratio",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 2752000000 + yearTwoMaturities 8832000000 − cashAndShortTermInvestments 123029000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock; divided by operatingIncome 79975000000",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-01-01",
+     "periodEnd": "2025-12-31",
+     "availableAt": "2026-02-06",
+     "stale": false
+    }
+   ],
+   "missing": [
+    "oil and gas revenue",
+    "fuel cost"
+   ]
+  },
+  {
+   "ticker": "TSLA",
+   "form": "10-K",
+   "filingDate": "2026-01-29",
+   "accessionNo": "0001628280-26-003952",
+   "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1318605/000162828026003952/tsla-20251231.htm",
+   "sourceHash": "55a9fe4523c928212463f80bc3f5dab8e8edce8a34fd9bbecfd93a5cf2c16759",
+   "next12": {
+    "value": 1576000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-1088",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "contextRef": "c-4",
+      "rawValue": "1,576",
+      "value": 1576000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-4\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1088\">1,576</ix:nonFraction>"
+     }
+    ]
+   },
+   "yearTwo": {
+    "value": 1233000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-1091",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "contextRef": "c-4",
+      "rawValue": "1,233",
+      "value": 1233000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-4\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1091\">1,233</ix:nonFraction>"
+     }
+    ]
+   },
+   "scenarioStatus": "computable",
+   "metrics": [
+    {
+     "name": "interest_upper_bound",
+     "value": -412500000,
+     "unit": "USD/year",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 1576000000 + yearTwoMaturities 1233000000 − cashAndShortTermInvestments 44059000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-01-01",
+     "periodEnd": "2025-12-31",
+     "availableAt": "2026-01-29",
+     "stale": false
+    },
+    {
+     "name": "interest_upper_bound",
+     "value": -0.0947187141216992,
+     "unit": "ratio",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 1576000000 + yearTwoMaturities 1233000000 − cashAndShortTermInvestments 44059000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock; divided by operatingIncome 4355000000",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-01-01",
+     "periodEnd": "2025-12-31",
+     "availableAt": "2026-01-29",
+     "stale": false
+    }
+   ],
+   "missing": [
+    "oil and gas revenue",
+    "fuel cost"
+   ]
+  },
+  {
+   "ticker": "BA",
+   "form": "10-K",
+   "filingDate": "2026-01-30",
+   "accessionNo": "0001628280-26-004357",
+   "sourceUrl": "https://www.sec.gov/Archives/edgar/data/12927/000162828026004357/ba-20251231.htm",
+   "sourceHash": "1d9366127af726cc07202881824c2ab56a8e718eaaa9ed21bc15857380a3f26b",
+   "next12": {
+    "value": 8351000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-1615",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "contextRef": "c-14",
+      "rawValue": "8,351",
+      "value": 8351000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-14\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1615\">8,351</ix:nonFraction>"
+     }
+    ]
+   },
+   "yearTwo": {
+    "value": 4403000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-1616",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "contextRef": "c-14",
+      "rawValue": "4,403",
+      "value": 4403000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-14\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1616\">4,403</ix:nonFraction>"
+     }
+    ]
+   },
+   "scenarioStatus": "computable",
+   "metrics": [
+    {
+     "name": "interest_upper_bound",
+     "value": -166460000,
+     "unit": "USD/year",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 8351000000 + yearTwoMaturities 4403000000 − cashAndShortTermInvestments 29400000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-01-01",
+     "periodEnd": "2025-12-31",
+     "availableAt": "2026-01-30",
+     "stale": false
+    },
+    {
+     "name": "interest_upper_bound",
+     "value": -0.03888343844896052,
+     "unit": "ratio",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 8351000000 + yearTwoMaturities 4403000000 − cashAndShortTermInvestments 29400000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock; divided by operatingIncome 4281000000",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-01-01",
+     "periodEnd": "2025-12-31",
+     "availableAt": "2026-01-30",
+     "stale": false
+    }
+   ],
+   "missing": [
+    "oil and gas revenue",
+    "fuel cost"
+   ]
+  },
+  {
+   "ticker": "RCL",
+   "form": "10-K",
+   "filingDate": "2026-02-11",
+   "accessionNo": "0000884887-26-000007",
+   "sourceUrl": "https://www.sec.gov/Archives/edgar/data/884887/000088488726000007/rcl-20251231.htm",
+   "sourceHash": "d086b2c02c75a60bdc163b66958a19730f7dba93011bcfdac34c107e6d74e67c",
+   "next12": {
+    "value": 3187000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-789",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "contextRef": "c-28",
+      "rawValue": "3,187",
+      "value": 3187000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-28\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-789\">3,187</ix:nonFraction>"
+     }
+    ]
+   },
+   "yearTwo": {
+    "value": 2627000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-790",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "contextRef": "c-28",
+      "rawValue": "2,627",
+      "value": 2627000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-28\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-790\">2,627</ix:nonFraction>"
+     }
+    ]
+   },
+   "scenarioStatus": "computable",
+   "metrics": [
+    {
+     "name": "interest_upper_bound",
+     "value": 49890000,
+     "unit": "USD/year",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 3187000000 + yearTwoMaturities 2627000000 − cashAndShortTermInvestments 825000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-01-01",
+     "periodEnd": "2025-12-31",
+     "availableAt": "2026-02-11",
+     "stale": false
+    },
+    {
+     "name": "interest_upper_bound",
+     "value": 0.010160896130346233,
+     "unit": "ratio",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 3187000000 + yearTwoMaturities 2627000000 − cashAndShortTermInvestments 825000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock; divided by operatingIncome 4910000000",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-01-01",
+     "periodEnd": "2025-12-31",
+     "availableAt": "2026-02-11",
+     "stale": false
+    }
+   ],
+   "missing": [
+    "oil and gas revenue"
+   ]
+  },
+  {
+   "ticker": "DAL",
+   "form": "10-K",
+   "filingDate": "2026-02-11",
+   "accessionNo": "0000027904-26-000013",
+   "sourceUrl": "https://www.sec.gov/Archives/edgar/data/27904/000002790426000013/dal-20251231.htm",
+   "sourceHash": "5c925229ed0662d7107cac0827e72563a429fff76d8771bc3fab4532f20cc37b",
+   "next12": {
+    "value": 1367000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-792",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "contextRef": "c-4",
+      "rawValue": "1,367",
+      "value": 1367000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-4\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-792\">1,367</ix:nonFraction>"
+     }
+    ]
+   },
+   "yearTwo": {
+    "value": 1878000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-794",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "contextRef": "c-4",
+      "rawValue": "1,878",
+      "value": 1878000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-4\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-794\">1,878</ix:nonFraction>"
+     }
+    ]
+   },
+   "scenarioStatus": "computable",
+   "metrics": [
+    {
+     "name": "interest_upper_bound",
+     "value": -10650000,
+     "unit": "USD/year",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 1367000000 + yearTwoMaturities 1878000000 − cashAndShortTermInvestments 4310000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-01-01",
+     "periodEnd": "2025-12-31",
+     "availableAt": "2026-02-11",
+     "stale": false
+    },
+    {
+     "name": "interest_upper_bound",
+     "value": -0.001829268292682927,
+     "unit": "ratio",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 1367000000 + yearTwoMaturities 1878000000 − cashAndShortTermInvestments 4310000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock; divided by operatingIncome 5822000000",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-01-01",
+     "periodEnd": "2025-12-31",
+     "availableAt": "2026-02-11",
+     "stale": false
+    }
+   ],
+   "missing": [
+    "foreign revenue share or comparable geographic total",
+    "oil and gas revenue"
+   ]
+  },
+  {
+   "ticker": "MSFT",
+   "form": "10-K",
+   "filingDate": "2026-07-29",
+   "accessionNo": "0001193125-26-323660",
+   "sourceUrl": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm",
+   "sourceHash": "b3d512604af2d08324ac85810e1a865dcdfa9662b5d4797deba10d555d5ec18d",
+   "next12": {
+    "value": 9250000000,
+    "unit": "USD",
+    "periodEnd": "2026-06-30",
+    "facts": [
+     {
+      "id": "F_96a1227a-2fdd-4947-81c2-9d2f88189996",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "contextRef": "C_ca004a37-7abb-4b0e-8638-a7c6b14ebb45",
+      "rawValue": "9,250",
+      "value": 9250000000,
+      "unitRef": "U_USD",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction id=\"F_96a1227a-2fdd-4947-81c2-9d2f88189996\" contextRef=\"C_ca004a37-7abb-4b0e-8638-a7c6b14ebb45\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" unitRef=\"U_USD\" scale=\"6\" decimals=\"-6\" format=\"ixt:num-dot-decimal\">9,250</ix:nonFraction>"
+     }
+    ]
+   },
+   "yearTwo": {
+    "value": 0,
+    "unit": "USD",
+    "periodEnd": "2026-06-30",
+    "facts": [
+     {
+      "id": "F_220649fd-eef5-400b-88be-a9492f413e64",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "contextRef": "C_ca004a37-7abb-4b0e-8638-a7c6b14ebb45",
+      "rawValue": "0",
+      "value": 0,
+      "unitRef": "U_USD",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction id=\"F_220649fd-eef5-400b-88be-a9492f413e64\" contextRef=\"C_ca004a37-7abb-4b0e-8638-a7c6b14ebb45\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo\" unitRef=\"U_USD\" scale=\"6\" decimals=\"-6\" format=\"ixt:num-dot-decimal\">0</ix:nonFraction>"
+     }
+    ]
+   },
+   "scenarioStatus": "computable",
+   "metrics": [
+    {
+     "name": "interest_upper_bound",
+     "value": -675930000,
+     "unit": "USD/year",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 9250000000 + yearTwoMaturities 0 − cashAndShortTermInvestments 76843000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-07-01",
+     "periodEnd": "2026-06-30",
+     "availableAt": "2026-07-29",
+     "stale": false
+    },
+    {
+     "name": "interest_upper_bound",
+     "value": -0.004354181026430554,
+     "unit": "ratio",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 9250000000 + yearTwoMaturities 0 − cashAndShortTermInvestments 76843000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock; divided by operatingIncome 155237000000",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-07-01",
+     "periodEnd": "2026-06-30",
+     "availableAt": "2026-07-29",
+     "stale": false
+    }
+   ],
+   "missing": [
+    "oil and gas revenue",
+    "fuel cost"
+   ]
+  },
+  {
+   "ticker": "COP",
+   "form": "10-K",
+   "filingDate": "2026-02-17",
+   "accessionNo": "0001163165-26-000009",
+   "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1163165/000116316526000009/cop-20251231.htm",
+   "sourceHash": "df8f8a15a4a078e010da04094bf43d6424df6bb594198891ce9e1640e1b45a1a",
+   "next12": {
+    "value": 713000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-884",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "contextRef": "c-8",
+      "rawValue": "713",
+      "value": 713000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-8\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-884\">713</ix:nonFraction>"
+     }
+    ]
+   },
+   "yearTwo": {
+    "value": 786000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-886",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "contextRef": "c-8",
+      "rawValue": "786",
+      "value": 786000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-8\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-886\">786</ix:nonFraction>"
+     }
+    ]
+   },
+   "scenarioStatus": "computable",
+   "metrics": [
+    {
+     "name": "interest_upper_bound",
+     "value": -54820000,
+     "unit": "USD/year",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 713000000 + yearTwoMaturities 786000000 − cashAndShortTermInvestments 6981000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo"
+     ],
+     "periodStart": null,
+     "periodEnd": "2025-12-31",
+     "availableAt": "2026-02-17",
+     "stale": false
+    }
+   ],
+   "missing": [
+    "operating income",
+    "fuel cost"
+   ]
+  },
+  {
+   "ticker": "MU",
+   "form": "10-K",
+   "filingDate": "2026-10-09",
+   "accessionNo": "0000723125-26-000023",
+   "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000072312526000023/mu-20260903.htm",
+   "sourceHash": "8a60d6efd3a279b37e72b5eccafbd4ed8be25f930dda0a3bfda180eda8ec3947",
+   "next12": {
+    "value": 0,
+    "unit": "USD",
+    "periodEnd": "2026-09-03",
+    "facts": [
+     {
+      "id": "f-748",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "contextRef": "c-6",
+      "rawValue": "—",
+      "value": 0,
+      "unitRef": "usd",
+      "format": "ixt:fixed-zero",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-6\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:fixed-zero\" scale=\"6\" id=\"f-748\">&#8212;</ix:nonFraction>"
+     }
+    ]
+   },
+   "yearTwo": {
+    "value": 0,
+    "unit": "USD",
+    "periodEnd": "2026-09-03",
+    "facts": [
+     {
+      "id": "f-750",
+      "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "contextRef": "c-6",
+      "rawValue": "—",
+      "value": 0,
+      "unitRef": "usd",
+      "format": "ixt:fixed-zero",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-6\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo\" format=\"ixt:fixed-zero\" scale=\"6\" id=\"f-750\">&#8212;</ix:nonFraction>"
+     }
+    ]
+   },
+   "scenarioStatus": "computable",
+   "metrics": [
+    {
+     "name": "interest_upper_bound",
+     "value": -434340000,
+     "unit": "USD/year",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 0 + yearTwoMaturities 0 − cashAndShortTermInvestments 43434000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-08-29",
+     "periodEnd": "2026-09-03",
+     "availableAt": "2026-10-09",
+     "stale": false
+    },
+    {
+     "name": "interest_upper_bound",
+     "value": -0.004372256895510369,
+     "unit": "ratio",
+     "impactType": "upper_bound",
+     "formula": "(nextTwelveMonthMaturities 0 + yearTwoMaturities 0 − cashAndShortTermInvestments 43434000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock; divided by operatingIncome 99340000000",
+     "concepts": [
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:OperatingIncomeLoss"
+     ],
+     "periodStart": "2025-08-29",
+     "periodEnd": "2026-09-03",
+     "availableAt": "2026-10-09",
+     "stale": false
+    }
+   ],
+   "missing": [
+    "oil and gas revenue",
+    "fuel cost"
+   ]
+  }
+ ],
+ "financialInterestMargin": [
+  {
+   "ticker": "GS",
+   "reasons": [
+    "rate_exposure_works_through_interest_margin"
+   ]
+  },
+  {
+   "ticker": "COF",
+   "reasons": [
+    "rate_exposure_works_through_interest_margin"
+   ]
+  },
+  {
+   "ticker": "JPM",
+   "reasons": [
+    "rate_exposure_works_through_interest_margin"
+   ]
+  },
+  {
+   "ticker": "MA",
+   "reasons": [
+    "rate_exposure_works_through_interest_margin"
+   ]
+  },
+  {
+   "ticker": "V",
+   "reasons": [
+    "rate_exposure_works_through_interest_margin"
+   ]
+  },
+  {
+   "ticker": "AIG",
+   "reasons": [
+    "rate_exposure_works_through_interest_margin"
+   ]
+  }
+ ],
+ "atlasComparison": {
+  "rates": {
+   "available": 17,
+   "unavailable": 33,
+   "reasons": {
+    "atlas_company_not_covered": 33
+   }
+  },
+  "oil": {
+   "available": 3,
+   "unavailable": 47,
+   "reasons": {
+    "atlas_company_not_covered": 47
+   }
+  },
+  "usd": {
+   "available": 44,
+   "unavailable": 6,
+   "reasons": {
+    "atlas_company_not_covered": 6
+   }
+  },
+  "credit": {
+   "available": 17,
+   "unavailable": 33,
+   "reasons": {
+    "atlas_company_not_covered": 33
+   }
+  }
+ },
+ "atlasAsOf": "2026-11-11T13:56:04.034Z",
+ "scenarioAsOf": "2026-11-12T13:35:05.138Z",
+ "hashes": {
+  "history": "98a5d49fd3e92469ca84b3a72cc84479dc28d277f2808a0a837de4a65990c39d",
+  "exposureLatest": "80a3ab359360bf9105de6bed27782c83ed5656483e03ac9e61c215e8ea51df30",
+  "scenarios": "ddc4986b112524fe3143c3e0ff5805c31f78f5d8f432deefce860a6f51f177c3",
+  "atlas": "69c7fe5848a98188ae5e44b5e293ecf785fe2fb287544b61ac82c10255d00b13"
+ },
+ "errors": [],
+ "productionWrite": false,
+ "databaseWrite": false,
+ "status": "complete",
+ "published": true
+}
