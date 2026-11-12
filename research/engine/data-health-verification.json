@@ -1,0 +1,115 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-12T09:00:33.364Z",
+ "status": "pass",
+ "checks": [
+  {
+   "name": "ten_checks",
+   "pass": true,
+   "actual": 10
+  },
+  {
+   "name": "runtime_under_15_minutes",
+   "pass": true,
+   "actual": 665421
+  },
+  {
+   "name": "complete",
+   "pass": true,
+   "actual": "complete"
+  },
+  {
+   "name": "entry_count",
+   "pass": true,
+   "actual": 95997
+  },
+  {
+   "name": "23_gap_series",
+   "pass": true,
+   "actual": {
+    "series": 23,
+    "chtr": {
+     "expected": 25,
+     "actual": 25,
+     "first": [
+      "2009-12-07",
+      "2009-12-21",
+      "2009-12-22",
+      "2009-12-23",
+      "2009-12-28"
+     ],
+     "definition": "Distinct SPY dates in stooq+schwab since 2006-11-10, missing inside each series' own first..last span; schwab-hist excluded (worker/schwab-daily-bars.mts)"
+    }
+   }
+  },
+  {
+   "name": "aapl_derived_fixed",
+   "pass": true,
+   "actual": "70 derived non-additive points; AAPL derived quarters after K08: 0"
+  },
+  {
+   "name": "tmus_txn",
+   "pass": true,
+   "actual": "present"
+  },
+  {
+   "name": "accepted_pg_bny",
+   "pass": true,
+   "actual": "PG 1, BNY 8"
+  },
+  {
+   "name": "old_high_low_22",
+   "pass": true,
+   "actual": 22
+  },
+  {
+   "name": "required_quote_splits",
+   "pass": true,
+   "actual": "AAPL 4, NVDA 10"
+  },
+  {
+   "name": "expectation_evidence",
+   "pass": true,
+   "actual": 6787
+  },
+  {
+   "name": "all_option_snapshots",
+   "pass": true,
+   "actual": "610034 snapshots / 1225501 buckets"
+  },
+  {
+   "name": "strike_sample",
+   "pass": true,
+   "actual": {
+    "dates": 94,
+    "checks": 41874,
+    "pass": 41571,
+    "failed": 303
+   }
+  },
+  {
+   "name": "markdown_required_evidence",
+   "pass": true,
+   "actual": "required strings"
+  }
+ ],
+ "files": [
+  {
+   "file": "public/reports/data-health.json",
+   "sha256": "d8174cc26b6ce27be316d538c1241e9f71e228c21fd1d842294b8c1643bd0671",
+   "bytes": 235311
+  },
+  {
+   "file": "public/reports/data-health.md",
+   "sha256": "608ee2a458dbad134487ede9daf000b19607f3a877dd247c51540f64d377bcf7",
+   "bytes": 75819
+  },
+  {
+   "file": "research/engine/quarantine.json",
+   "sha256": "c2095b4624acf6b933cd38c914cdb3ed8788fa7f2e9efc78b8cd95ca3d23b010",
+   "bytes": 32574576
+  }
+ ],
+ "productionWrite": false,
+ "databaseWrite": false
+}

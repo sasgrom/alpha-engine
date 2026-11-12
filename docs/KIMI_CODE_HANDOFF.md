@@ -1596,3 +1596,13 @@ pin where the money was large, one flag for the 23 companies abroad, a tooltip p
 0 failed; 470 US companies; today's address only) into `research/engine/company-headquarters.json`, and the flow
 build adds `hq` to the overview's companies (optional field). Flow files rebuilt at 00:38 (the build took 14 minutes
 next to Kimi's option pass and a facts fetch; usually about two). Gates as above plus 4 new map tests.
+
+
+## 129. K09 data health and quarantine delivered — 2026-11-12
+
+- Source **c4244b9** is pushed. Ten read-only checks produced **95,997 findings** (58,990 quarantine, 36,306 review, 701 info) in **665.421 s** using the validated option checkpoint. Checkpoint reuse is gated by feature-manifest generation and latest Schwab date; its latest build took 1,283,136 ms under contention, while the resumed full run met the 15-minute limit.
+- Required evidence: **23 gap series / CHTR 25**, TMUS and TXN, **PG 1 / BNY 8** reviewed steps, **22** old invalid bars, **AAPL 4:1 / NVDA 10:1**, and **66** split events. AAPL derived quarters are fixed at zero; other universes retain 70 findings. Options: **610,034 snapshots / 1,225,501 buckets**, **94 strike dates / 41,874 checks / 303 findings**. Extraction evidence: **26,787 results / 6,787 rejected statements**.
+- Artifacts: `public/reports/data-health.{json,md}` and `research/engine/quarantine.json`. Operations has a live summary and both links; the report policy is local-only, with no production push lane. The scheduler reports **78 registered jobs** after a safe restart; the new job waits for its normal dependency chain and no scheduled lastRun is claimed.
+- Gates: `npm run check`, **224 files / 1,262 tests**, `npm run build`, `git diff --check`, K09 typecheck, 31 focused tests and the 13/13 report verifier. Joint web restart 6812 → **2620**, one listener, final auth 200, no page errors or failed requests.
+- No production write, deployment, schema change, LLM, GDELT or alpha promotion. Unrelated generated exposure/analytics files remain uncommitted. Full evidence hashes are in `docs/engine/tasks/K09-data-health.md`.
+- **Next safe action:** inspect the scheduled data-health lastRun after its normal parents complete. Option schema 4 for retained strikes remains a separate owner decision.

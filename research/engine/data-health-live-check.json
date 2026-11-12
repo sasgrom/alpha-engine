@@ -1,0 +1,21 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-12T09:32:55.877Z",
+ "status": "pass",
+ "finalAuth": 200,
+ "summary": "Data health\nbuilt Nov 12, 12:48 AM · 10 checks · 95997 findings · 58990 quarantine · 36306 review · 701 reviewed/info\ndegraded\nReport\nJSON",
+ "links": [
+  {
+   "href": "/reports/data-health.md",
+   "text": "Report "
+  },
+  {
+   "href": "/reports/data-health.json",
+   "text": "JSON "
+  }
+ ],
+ "pageErrors": [],
+ "failedRequests": [],
+ "productionWrite": false,
+ "databaseWrite": false
+}
