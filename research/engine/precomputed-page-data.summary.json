@@ -1,0 +1,2887 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-12T02:40:23.812Z",
+ "status": "complete",
+ "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+ "groups": [
+  "stats",
+  "institutional",
+  "market"
+ ],
+ "universe": {
+  "file": "worker/research-universe-50.json",
+  "requestedCompanies": 50,
+  "sha256": "7368f521034795c8a1246a13be1269facf2e54cc23fea59c7e04497b4462e5a2"
+ },
+ "only": [],
+ "counts": {
+  "artifacts": 103,
+  "institutional": 50,
+  "probability": 50
+ },
+ "artifacts": [
+  {
+   "key": "dashboard-stats",
+   "bytes": 1095,
+   "sha256": "7bdfc755008576fc55969a883216a4a876cd2c02d33a65f4ede295e037bb6e75",
+   "generatedAt": "2026-11-12T02:12:01.179Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "27b30f7cecd53ebd47c721732728dd20e24f8aeb557c42139aee8ef1fe1493ef",
+   "versionHash": "a947ca57110086a454731be573f86c85cce5d085b14c5d4ca523637c7fc80495",
+   "inputs": {
+    "companies": 496,
+    "filings": 23479,
+    "facts": 12875136,
+    "latestFilingDate": "2026-11-05",
+    "factMaxId": 24807489,
+    "filingMaxId": 2309529
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1045810",
+   "bytes": 2650,
+   "sha256": "62e6f031160244598ea58197380c5174cd6ea2d2c2ef498f827571cc4148f6b1",
+   "generatedAt": "2026-11-12T02:23:28.738Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "93a40aad29dbc008c9904529afb9876cad51c59635622e076f68a643f518d715",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 512,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 12027,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5678,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 117,
+    "latestToneEvent": "2026-05-12 00:00:00",
+    "latestSharesOut": {
+     "value": 24100000000,
+     "endDate": "2026-08-21",
+     "accessionNo": "0001045810-26-000075",
+     "filed": "2026-08-26"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-2488",
+   "bytes": 2638,
+   "sha256": "f52526a83a3ee0b160a6c0b437458eb3035114a6d888c7fbd48afcea3a08611e",
+   "generatedAt": "2026-11-12T02:23:40.864Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "9af1dfe871a8e5649882ac9cd405896589f01e5608eb7121368d91073cdd9795",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 558,
+    "latestFactorFiledAt": "2026-11-04 00:00:00",
+    "priceBars": 16033,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5279,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 459,
+    "latestToneEvent": "2026-11-04 00:00:00",
+    "latestSharesOut": {
+     "value": 1640087251,
+     "endDate": "2026-10-28",
+     "accessionNo": "0000002488-26-000191",
+     "filed": "2026-11-04"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-50863",
+   "bytes": 2646,
+   "sha256": "9e1e12874eea4854f1d3f084ec7ca5f6565b5066d8325e3429b08aebc358dc75",
+   "generatedAt": "2026-11-12T02:23:52.975Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "8097eec2e6aa87676120e5b614e28e1d4b06358406008ba4c1cd17f5bfca2c1e",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 471,
+    "latestFactorFiledAt": "2026-10-30 00:00:00",
+    "priceBars": 18850,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5242,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 441,
+    "latestToneEvent": "2026-10-29 00:00:00",
+    "latestSharesOut": {
+     "value": 5315000000,
+     "endDate": "2026-10-23",
+     "accessionNo": "0000050863-26-000191",
+     "filed": "2026-10-30"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1321655",
+   "bytes": 2516,
+   "sha256": "a2f5f9c26de8117d63a6bbf3e286f34fede65c1bd8af301bd8d720178ed9d9d8",
+   "generatedAt": "2026-11-12T02:24:05.260Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "5e170cc302459eb7c25f272e3b1b3a66074fb279c9fef62a5550d3923dc55cf7",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 329,
+    "latestFactorFiledAt": "2026-11-03 00:00:00",
+    "priceBars": 3076,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 4149,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 62,
+    "latestToneEvent": "2026-11-03 00:00:00",
+    "latestSharesOut": null
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1326801",
+   "bytes": 2533,
+   "sha256": "35b88e6ba66e6b31f7e974e0a6af1a341f9f6be817af8ee99342620f107e6eb0",
+   "generatedAt": "2026-11-12T02:24:17.967Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "f05195cfc6bee695f88d1246da74a0778303a56ffef4268cd0b1bf2b8c273e05",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 439,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 7286,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5921,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 69,
+    "latestToneEvent": "2026-11-05 00:00:00",
+    "latestSharesOut": null
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1065280",
+   "bytes": 2653,
+   "sha256": "532a407bcf2dbe28762e75066ee76501e7ba79efae503c1c2c3e81b78f21077e",
+   "generatedAt": "2026-11-12T02:24:30.575Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "7cff68f778b5e28f7394bad79a33a68bb065b392c94cfee1b9c03508979d581b",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 540,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 10495,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5444,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 276,
+    "latestToneEvent": "2026-10-21 00:00:00",
+    "latestSharesOut": {
+     "value": 4106325903,
+     "endDate": "2026-09-30",
+     "accessionNo": "0001065280-26-000291",
+     "filed": "2026-10-21"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1018724",
+   "bytes": 2645,
+   "sha256": "15c50952d150abb63c3fe7fa80469b0f0e01d6c2e2602970fe1a940386e3207c",
+   "generatedAt": "2026-11-12T02:24:42.458Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "f08b294374f2985b465de1cb7a6ff6c1df1e8f689fab390f7f29303564110f35",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 502,
+    "latestFactorFiledAt": "2026-10-30 00:00:00",
+    "priceBars": 12447,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 6000,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 316,
+    "latestToneEvent": "2026-10-29 00:00:00",
+    "latestSharesOut": {
+     "value": 10813138306,
+     "endDate": "2026-10-21",
+     "accessionNo": "0001018724-26-000040",
+     "filed": "2026-10-30"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1318605",
+   "bytes": 2659,
+   "sha256": "0fdbdb20728723c1f8b25cf708c57f53a0f09dfc2a4e45649a55e3d9d8e3b4d0",
+   "generatedAt": "2026-11-12T02:24:53.674Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "8a926f0f2e5c05f3a50ed8053a7968a03bfd589b1d0bbc1a4360aacbb6c368fe",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 536,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 8240,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5344,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 199,
+    "latestToneEvent": "2026-10-27 00:00:00",
+    "latestSharesOut": {
+     "value": 3952757946,
+     "endDate": "2026-10-15",
+     "accessionNo": "0001628280-26-066775",
+     "filed": "2026-10-22"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-320187",
+   "bytes": 2649,
+   "sha256": "6147a1dffc611c1d3ccde9e72129fdf34b4a278852c8945f44da79354cccb3d7",
+   "generatedAt": "2026-11-12T02:25:05.983Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "8810f54ceb3f6bb8b2aa9a327e692f7b5048252e44bfd84f02bb5294a72ae977",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 447,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 14915,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5211,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 378,
+    "latestToneEvent": "2026-10-02 00:00:00",
+    "latestSharesOut": {
+     "value": 855351589,
+     "endDate": "2015-07-17",
+     "accessionNo": "0000320187-15-000113",
+     "filed": "2015-07-23"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1397187",
+   "bytes": 2627,
+   "sha256": "d29e1c6388044d24a0583aeadf673ee7cffecaaef2f426f0b473cefce3d42df3",
+   "generatedAt": "2026-11-12T02:25:17.623Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "655977153d58d2b326f1feaad177ef610d40b2a873d9f925e7841979d62e4294",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 497,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 9711,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 4640,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 201,
+    "latestToneEvent": "2026-10-27 00:00:00",
+    "latestSharesOut": {
+     "value": 105594064,
+     "endDate": "2026-08-28",
+     "accessionNo": "0001397187-26-000127",
+     "filed": "2026-09-03"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-884887",
+   "bytes": 1835,
+   "sha256": "accd31c96ad131c7a82d08d5e7027bffa5548241f9011e380bdf520c167a6d60",
+   "generatedAt": "2026-11-12T02:25:30.349Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "522542b00214f4702bdffcc9dc06b8783dbee0a4c210c7836af2f8a48f193fdf",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 395,
+    "latestFactorFiledAt": "2026-10-27 00:00:00",
+    "priceBars": 10496,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 0,
+    "latestHoldingQuarter": null,
+    "toneSignals": 232,
+    "latestToneEvent": "2026-10-27 00:00:00",
+    "latestSharesOut": {
+     "value": 267470925,
+     "endDate": "2026-10-23",
+     "accessionNo": "0000884887-26-000044",
+     "filed": "2026-10-27"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-886982",
+   "bytes": 1846,
+   "sha256": "488df4b05b85c0d25184461cfc61f7a6d558b790347930044c641fdc585d98e0",
+   "generatedAt": "2026-11-12T02:25:43.519Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "549d95bc7b55a2179e49f837a86e5b9420dd51a8435e71839c334e10c59e5699",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 400,
+    "latestFactorFiledAt": "2026-11-02 00:00:00",
+    "priceBars": 11956,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 1416,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 466,
+    "latestToneEvent": "2026-11-02 00:00:00",
+    "latestSharesOut": {
+     "value": 288434583,
+     "endDate": "2026-10-16",
+     "accessionNo": "0000886982-26-000532",
+     "filed": "2026-11-02"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-927628",
+   "bytes": 1846,
+   "sha256": "ed60ae96a344104bb6b412cc5c017d54d8c62bd3520fe5da211a66706a5c81dd",
+   "generatedAt": "2026-11-12T02:25:56.850Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "a743c1b86e67939c16a637da42c422a30eb0fc3608be651bc95475bf17c3bf1c",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 439,
+    "latestFactorFiledAt": "2026-11-03 00:00:00",
+    "priceBars": 13079,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 1301,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 560,
+    "latestToneEvent": "2026-11-03 00:00:00",
+    "latestSharesOut": {
+     "value": 601533153,
+     "endDate": "2026-09-30",
+     "accessionNo": "0000927628-26-000152",
+     "filed": "2026-11-03"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-731766",
+   "bytes": 2658,
+   "sha256": "8df0784e8ff303a0e1ae8cb1de34c95d29cea16cff70b9d76e02bb71df8fb4f5",
+   "generatedAt": "2026-11-12T02:26:09.520Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "8d4edc8ce5cf1b357d394d5e1ea0285e7a57d2b56cadf8d3c63692befbf82e48",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 443,
+    "latestFactorFiledAt": "2026-11-03 00:00:00",
+    "priceBars": 14260,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5642,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 375,
+    "latestToneEvent": "2026-11-03 00:00:00",
+    "latestSharesOut": {
+     "value": 896022611,
+     "endDate": "2026-10-30",
+     "accessionNo": "0000731766-26-000266",
+     "filed": "2026-11-03"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-78003",
+   "bytes": 2629,
+   "sha256": "f98e2165a1e612a60975c67dff79dad07e3e3e969ffb39291cb27b8740baff99",
+   "generatedAt": "2026-11-12T02:26:22.352Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "2b690be72c2ca14df3b9174991452d97fc8014bb8a5c953b3f90abfc9815ff7c",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 385,
+    "latestFactorFiledAt": "2026-11-03 00:00:00",
+    "priceBars": 16337,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5140,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 380,
+    "latestToneEvent": "2026-11-03 00:00:00",
+    "latestSharesOut": {
+     "value": 5699853733,
+     "endDate": "2026-10-28",
+     "accessionNo": "0000078003-26-000127",
+     "filed": "2026-11-03"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-831259",
+   "bytes": 2653,
+   "sha256": "c819406b3adb10623ce0491f16db6e4eafab86290802227db4c3e2207498575e",
+   "generatedAt": "2026-11-12T02:26:36.231Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "6575b039351cec1aa4aa45eef5c087aa31f7469eaf2c4eedc77846df67ea8224",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 331,
+    "latestFactorFiledAt": "2026-11-06 00:00:00",
+    "priceBars": 12921,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 4782,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 422,
+    "latestToneEvent": "2026-10-27 00:00:00",
+    "latestSharesOut": {
+     "value": 1434936034,
+     "endDate": "2026-10-31",
+     "accessionNo": "0000831259-26-000051",
+     "filed": "2026-11-06"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-12927",
+   "bytes": 1845,
+   "sha256": "0de2f8c820c9723290034d110cdb289661ad543b7b402900632f5cb364a288b9",
+   "generatedAt": "2026-11-12T02:15:37.673Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "55fde222116714226b825b2bdffe81fd5b545539994f2ca6430d8f1235a05474",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 465,
+    "latestFactorFiledAt": "2026-10-27 00:00:00",
+    "priceBars": 19370,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 1261,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 394,
+    "latestToneEvent": "2026-10-27 00:00:00",
+    "latestSharesOut": {
+     "value": 792449940,
+     "endDate": "2026-10-20",
+     "accessionNo": "0001628280-26-067508",
+     "filed": "2026-10-27"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1045609",
+   "bytes": 2626,
+   "sha256": "13b3d14f014f6a891c19bf423160654250d953c59313c98005a73b2093215bd2",
+   "generatedAt": "2026-11-12T02:15:50.500Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "cd016959f1081e020a89965b3726316d35db4b21fe184da0803e7d0062736a4d",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 458,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 12867,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 4934,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 196,
+    "latestToneEvent": "2026-10-30 00:00:00",
+    "latestSharesOut": {
+     "value": 932338000,
+     "endDate": "2026-04-28",
+     "accessionNo": "0001193125-26-197850",
+     "filed": "2026-04-30"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-753308",
+   "bytes": 1847,
+   "sha256": "d377f05dce1c54aea9653a95b3b1d3a4717e44fa0bf0c66b37f2ee3c7d3b7bf3",
+   "generatedAt": "2026-11-12T02:16:02.572Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "159856669b99b407416c61786ef02c01c2b45bc9c0b8e8798c69b2e1885295b6",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 430,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 10496,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 1385,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 519,
+    "latestToneEvent": "2026-11-05 00:00:00",
+    "latestSharesOut": {
+     "value": 2085341456,
+     "endDate": "2026-03-31",
+     "accessionNo": "0000753308-26-000031",
+     "filed": "2026-04-23"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-789019",
+   "bytes": 2643,
+   "sha256": "a8cab55eb6ab2e90d9c3596baeae3e1bf6ce0b6f78f32ff1cd4080259855a5b1",
+   "generatedAt": "2026-11-12T02:16:15.342Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "2827dcdd7b94b56a64c78f3aac06d7f586f8532aacd7ecc4c2a9d8a8a9980083",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 510,
+    "latestFactorFiledAt": "2026-10-28 00:00:00",
+    "priceBars": 15277,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 6134,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 371,
+    "latestToneEvent": "2026-11-04 00:00:00",
+    "latestSharesOut": {
+     "value": 7426194552,
+     "endDate": "2026-10-22",
+     "accessionNo": "0001193125-26-436133",
+     "filed": "2026-10-28"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1730168",
+   "bytes": 2661,
+   "sha256": "73ba41b1a9fa4cf3cea351926e031a6e6e11d5be8059f7250cd25cdd4e78f78a",
+   "generatedAt": "2026-11-12T02:16:27.819Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "4282041abc805aef8aedafe81523855027bc8be8f4bb597d95049d6ca756893a",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 350,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 8690,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5361,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 113,
+    "latestToneEvent": "2026-09-02 00:00:00",
+    "latestSharesOut": {
+     "value": 4773629865,
+     "endDate": "2026-08-28",
+     "accessionNo": "0001730168-26-000080",
+     "filed": "2026-09-10"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1596532",
+   "bytes": 2654,
+   "sha256": "db7a18b4c37620519a832b2d6ee27ef905cd28b2c2c09733ab73900a055ffcb4",
+   "generatedAt": "2026-11-12T02:16:40.272Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "cd865d52b9db16b734cd7cf76f452dbba291c9e5b001a0362c0e676a9311a62f",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 461,
+    "latestFactorFiledAt": "2026-11-04 00:00:00",
+    "priceBars": 6258,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 1658,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 129,
+    "latestToneEvent": "2026-11-03 00:00:00",
+    "latestSharesOut": {
+     "value": 1263402335,
+     "endDate": "2026-10-29",
+     "accessionNo": "0001596532-26-000254",
+     "filed": "2026-11-04"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-723125",
+   "bytes": 2657,
+   "sha256": "d2e7ab6bd33b9d49b8f85d5386d3c9cf340081bf69f6492ac928c1d27b7338dc",
+   "generatedAt": "2026-11-12T02:16:53.402Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "adf32c1e6abd4eb356e21ccb1c8b4ff7a9df2655d9b015b771fd9c856ce352f2",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 540,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 14474,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5247,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 482,
+    "latestToneEvent": "2026-10-09 00:00:00",
+    "latestSharesOut": {
+     "value": 1131423212,
+     "endDate": "2026-10-02",
+     "accessionNo": "0000723125-26-000023",
+     "filed": "2026-10-09"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1375365",
+   "bytes": 1844,
+   "sha256": "c7e6b22fe2de664293255a84a834e87a3b31e1cda0620a6561a0a64aefaf4df6",
+   "generatedAt": "2026-11-12T02:17:05.730Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "e5e04b723749e1edfe4a75b85b09644b2969591c9fb5e9bc4c4fe543f7678549",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 494,
+    "latestFactorFiledAt": "2026-11-06 00:00:00",
+    "priceBars": 6656,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 24,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 224,
+    "latestToneEvent": "2026-11-06 00:00:00",
+    "latestSharesOut": {
+     "value": 659227367,
+     "endDate": "2026-10-31",
+     "accessionNo": "0001375365-26-000027",
+     "filed": "2026-11-06"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1274494",
+   "bytes": 2642,
+   "sha256": "4207f669a912b15e363ebd09e28f146a46f25cd9e90d2da014fd72d1b404ccc9",
+   "generatedAt": "2026-11-12T02:17:19.966Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "6d633ae504b26d087801832ce77cb131741dcac94d4cc900fc9be17114fe717b",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 555,
+    "latestFactorFiledAt": "2026-10-29 00:00:00",
+    "priceBars": 10054,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 4119,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 274,
+    "latestToneEvent": "2026-10-29 00:00:00",
+    "latestSharesOut": {
+     "value": 107481151,
+     "endDate": "2026-10-23",
+     "accessionNo": "0001274494-26-000212",
+     "filed": "2026-10-29"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1682852",
+   "bytes": 2629,
+   "sha256": "5f3eeedd694b9a9e2d61e8f405d7db4ebc5488c756235aa949bdc0ca2336430c",
+   "generatedAt": "2026-11-12T02:17:31.833Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "9b2345f0829d4ec74683953ba53ad1c021f5982c741a6a7bb98c7ec5f2cd2f27",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 316,
+    "latestFactorFiledAt": "2026-11-06 00:00:00",
+    "priceBars": 3988,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 4349,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 108,
+    "latestToneEvent": "2026-11-06 00:00:00",
+    "latestSharesOut": {
+     "value": 404620975,
+     "endDate": "2026-10-30",
+     "accessionNo": "0001682852-26-000197",
+     "filed": "2026-11-06"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-59478",
+   "bytes": 2652,
+   "sha256": "cc312342faa08c0d2bbd1933b25e50c11f808e5e1466f55bbac9cf251ded08ec",
+   "generatedAt": "2026-11-12T02:17:44.395Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "13a1c8af4b59f526ee372dfd33771255627ef9eb2b4240d7325fa42cbd572c6a",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 366,
+    "latestFactorFiledAt": "2026-10-29 00:00:00",
+    "priceBars": 16339,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5429,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 403,
+    "latestToneEvent": "2026-10-29 00:00:00",
+    "latestSharesOut": {
+     "value": 940745031,
+     "endDate": "2026-10-26",
+     "accessionNo": "0000059478-26-000108",
+     "filed": "2026-10-29"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-27904",
+   "bytes": 2645,
+   "sha256": "0c8d8b6fb9ad3b15c1c5cf331c22a59cefdf794663a339d80c02b6d3049d39b4",
+   "generatedAt": "2026-11-12T02:17:57.834Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "5bf758bd8b39432f3c0905dbd7be875a753e056104a23d054600a91b413f9ef4",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 415,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 16725,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 4623,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 550,
+    "latestToneEvent": "2026-11-06 00:00:00",
+    "latestSharesOut": {
+     "value": 657912380,
+     "endDate": "2026-09-30",
+     "accessionNo": "0000027904-26-000038",
+     "filed": "2026-10-09"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1792789",
+   "bytes": 2526,
+   "sha256": "7d5c96ea1c4ce10c5550c4ea9961704ee7ceb0e47a9670413895e56cce761183",
+   "generatedAt": "2026-11-12T02:18:10.972Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "239bff1b50b832fc27d8e490b01c1ef756867e50a5a1b7d37deca648e09ec558",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 270,
+    "latestFactorFiledAt": "2026-10-30 00:00:00",
+    "priceBars": 2978,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 3916,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 47,
+    "latestToneEvent": "2026-11-04 00:00:00",
+    "latestSharesOut": null
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-354950",
+   "bytes": 2690,
+   "sha256": "ced0fd2aa915574cee5ae8a8c4fa91489337b8e1c282ab670ab6b9a88c0d2a67",
+   "generatedAt": "2026-11-12T02:18:25.138Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "b1e459355da86fa2fbd36626b89095934b3f1dc38865a3f2448734238d5f9d52",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 535,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 16409,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5224,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 297,
+    "latestToneEvent": "2026-08-25 00:00:00",
+    "latestSharesOut": {
+     "value": 997689626,
+     "endDate": "2026-08-18",
+     "accessionNo": "0001628280-26-058715",
+     "filed": "2026-08-25"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-18230",
+   "bytes": 2643,
+   "sha256": "635b6fc4ae21074ff42c5f9996673b00987f6bd697090d9410349f8eabd0a201",
+   "generatedAt": "2026-11-12T02:18:37.325Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "db3f5c9f213ed8cac966732253e96d11a2e0621e1272722074ccd5c9eabc0ccf",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 415,
+    "latestFactorFiledAt": "2026-11-04 00:00:00",
+    "priceBars": 19370,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5070,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 693,
+    "latestToneEvent": "2026-11-04 00:00:00",
+    "latestSharesOut": {
+     "value": 457594174,
+     "endDate": "2026-09-30",
+     "accessionNo": "0000018230-26-000057",
+     "filed": "2026-11-04"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1053507",
+   "bytes": 2617,
+   "sha256": "142894bab92edd25c320bfe62995edad5afb193f671eade7ca1de66abc83fb21",
+   "generatedAt": "2026-11-12T02:18:58.555Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "c8f6187edb639fad6bf8629cc6ad61c67e8e6a0e4d78a759fcc5d484a88d2bc2",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 433,
+    "latestFactorFiledAt": "2026-10-27 00:00:00",
+    "priceBars": 10497,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5130,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 476,
+    "latestToneEvent": "2026-10-27 00:00:00",
+    "latestSharesOut": {
+     "value": 463763555,
+     "endDate": "2026-10-20",
+     "accessionNo": "0001053507-26-000157",
+     "filed": "2026-10-27"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-19617",
+   "bytes": 2040,
+   "sha256": "3a10e6fbc399d0fd1347d52b4e1e1b9908000148441a01eff1fae5c541382044",
+   "generatedAt": "2026-11-12T02:19:13.059Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "0d03cbb0e8adf41a5269e489b43d174fa6ebce935e7381a61c6c0971cd047821",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 381,
+    "latestFactorFiledAt": "2026-11-03 00:00:00",
+    "priceBars": 19369,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 6,
+    "latestHoldingQuarter": "2026-06-30",
+    "toneSignals": 2651,
+    "latestToneEvent": "2026-11-05 00:00:00",
+    "latestSharesOut": {
+     "value": 2655609509,
+     "endDate": "2026-09-30",
+     "accessionNo": "0001628280-26-069523",
+     "filed": "2026-11-03"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1506307",
+   "bytes": 1847,
+   "sha256": "3e87538de2456f6f628f94bed6c8d9915a6048215a0f80656e738f447c8c9687",
+   "generatedAt": "2026-11-12T02:19:27.311Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "a1db61c576f3cd7c3e0d6a72ab9e954de00dce5c6a31497a56871eac060b2628",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 475,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
+    "priceBars": 7921,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 1236,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 230,
+    "latestToneEvent": "2026-10-23 00:00:00",
+    "latestSharesOut": {
+     "value": 2227715229,
+     "endDate": "2026-10-22",
+     "accessionNo": "0001506307-26-000132",
+     "filed": "2026-10-23"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-320193",
+   "bytes": 2639,
+   "sha256": "5db9d9b3ab96dc0ebf2374bd3bab6c74ed975865f801c3dbf0aef518936cd457",
+   "generatedAt": "2026-11-12T02:19:41.437Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "33094671b2b2a35a1c3bc09d7775684a60ed5768e4506a6bdb9e175b6d71cb71",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 554,
+    "latestFactorFiledAt": "2026-11-03 00:00:00",
+    "priceBars": 15660,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5756,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 173,
+    "latestToneEvent": "2026-11-03 00:00:00",
+    "latestSharesOut": {
+     "value": 14532182000,
+     "endDate": "2026-10-23",
+     "accessionNo": "0000320193-26-000026",
+     "filed": "2026-11-03"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-51143",
+   "bytes": 2619,
+   "sha256": "967af22bf677a1c00cc6f324f9f11a0189c34eaa1f26c5787b0daad56e706177",
+   "generatedAt": "2026-11-12T02:19:55.236Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "336a029abd70a9ffb0bb0bc132da4950a9ff5f951515d0dfebe95c10f117ace3",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 442,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 21353,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 4927,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 218,
+    "latestToneEvent": "2026-10-21 00:00:00",
+    "latestSharesOut": {
+     "value": 945120805,
+     "endDate": "2026-09-30",
+     "accessionNo": "0000051143-26-000095",
+     "filed": "2026-10-22"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-936468",
+   "bytes": 2628,
+   "sha256": "5f80e3745104211ef5ea96d78611d2caa99140485dc20f6994385699e0af663e",
+   "generatedAt": "2026-11-12T02:20:07.246Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "fa8aaf67e3c05fd711852ac77d49a5aecf8604eefeab4d98d115c683d1f5e6cc",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 477,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 17599,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 4696,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 199,
+    "latestToneEvent": "2026-10-22 00:00:00",
+    "latestSharesOut": {
+     "value": 231004640,
+     "endDate": "2026-10-19",
+     "accessionNo": "0001628280-26-066928",
+     "filed": "2026-10-22"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-732717",
+   "bytes": 2628,
+   "sha256": "d5f379d8bd3750fe429159cce06318ac80531e7ca2b2850027191a6d16b5a596",
+   "generatedAt": "2026-11-12T02:20:19.829Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "16a64dd2691af16f2081b24dc8679b5f81b98de6f0b036a78e025f2f2374c1a4",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 389,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 15696,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 7599,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 676,
+    "latestToneEvent": "2026-10-21 00:00:00",
+    "latestSharesOut": {
+     "value": 6736473433,
+     "endDate": "2026-10-15",
+     "accessionNo": "0000732717-26-000372",
+     "filed": "2026-10-21"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1652044",
+   "bytes": 2511,
+   "sha256": "aa3c0661c30a9e719122985b9776115c93a9995374d24510db6d432e6187e54d",
+   "generatedAt": "2026-11-12T02:20:33.282Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "16c10e1104c0aff004d09d1661af2c7370b10e0936ede3c74abe99f43a657b7c",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 406,
+    "latestFactorFiledAt": "2026-10-29 00:00:00",
+    "priceBars": 10627,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5928,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 129,
+    "latestToneEvent": "2026-11-05 00:00:00",
+    "latestSharesOut": null
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-200406",
+   "bytes": 2625,
+   "sha256": "3b5edd806952884c49665f8d774997f53a269447443700232dbd5f88d9d77741",
+   "generatedAt": "2026-11-12T02:20:44.934Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "9c71e1db4a6e0bf3d47fe1609e860288b511b9e89cfe0ba34d11036d1c283958",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 502,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 19369,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5287,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 303,
+    "latestToneEvent": "2026-10-21 00:00:00",
+    "latestSharesOut": {
+     "value": 2407310266,
+     "endDate": "2026-10-15",
+     "accessionNo": "0000200406-26-000197",
+     "filed": "2026-10-21"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-80424",
+   "bytes": 2622,
+   "sha256": "70dd7936cfdf518671eda359c9d5f9647d25c64f48a0588f6bbf571c0d0189d3",
+   "generatedAt": "2026-11-12T02:20:57.236Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "d9fe73cfbf2ce4ad14293f85c2488ccb0d5558ed972db6f38668bbd96697200c",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 367,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 19370,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5356,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 470,
+    "latestToneEvent": "2026-10-22 00:00:00",
+    "latestSharesOut": {
+     "value": 2317783143,
+     "endDate": "2026-09-30",
+     "accessionNo": "0000080424-26-000256",
+     "filed": "2026-10-22"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-104169",
+   "bytes": 2632,
+   "sha256": "79bbe3a2e58483dd5c098f3f2803e573594dff95d4c4743dfe1355cf7443f5d3",
+   "generatedAt": "2026-11-12T02:21:09.252Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "a810f579d776a2a6f291ae5e6d462e86c1441f4048a36395f02e48121c8694fe",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 400,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 18739,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5241,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 311,
+    "latestToneEvent": "2026-10-23 00:00:00",
+    "latestSharesOut": {
+     "value": 7933746241,
+     "endDate": "2026-08-26",
+     "accessionNo": "0000104169-26-000154",
+     "filed": "2026-08-28"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-93410",
+   "bytes": 1835,
+   "sha256": "5f8160cdf2225b64fc6ebe3c57c5aaf3f43619205233fbbb7195b8fd08701270",
+   "generatedAt": "2026-11-12T02:21:21.980Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "f5e7e698fe38ed393cc427bb628e40e1b9f226b41468f113786d029aee7db6a3",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 367,
+    "latestFactorFiledAt": "2026-11-05 00:00:00",
+    "priceBars": 19368,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 0,
+    "latestHoldingQuarter": null,
+    "toneSignals": 303,
+    "latestToneEvent": "2026-11-05 00:00:00",
+    "latestSharesOut": {
+     "value": 1965421686,
+     "endDate": "2026-09-30",
+     "accessionNo": "0000093410-26-000200",
+     "filed": "2026-11-05"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1141391",
+   "bytes": 2634,
+   "sha256": "94d5f1dde3315160046f8d874bf7a03009ea4a6fb57e721c91b8422ae36a20c3",
+   "generatedAt": "2026-11-12T02:21:35.317Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "8337ede6d440a9b319a98e281b046e00f231ed98cb191be8e951eb7902385de6",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 357,
+    "latestFactorFiledAt": "2026-10-29 00:00:00",
+    "priceBars": 10183,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5474,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 267,
+    "latestToneEvent": "2026-10-29 00:00:00",
+    "latestSharesOut": {
+     "value": 122530193,
+     "endDate": "2010-10-27",
+     "accessionNo": "0001193125-10-243917",
+     "filed": "2010-11-02"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1403161",
+   "bytes": 2638,
+   "sha256": "61c4db837aa584f3874e5d20171555cc0afccded95049e6e5aa37c79aa975cf6",
+   "generatedAt": "2026-11-12T02:21:49.091Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "37471b44075979731e456ed582854e54e02b5b097b478fb262b3f8bfe9e2931a",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 212,
+    "latestFactorFiledAt": "2026-11-05 00:00:00",
+    "priceBars": 9388,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5699,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 288,
+    "latestToneEvent": "2026-10-27 00:00:00",
+    "latestSharesOut": {
+     "value": 469280842,
+     "endDate": "2010-01-27",
+     "accessionNo": "0001193125-10-020834",
+     "filed": "2010-02-03"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-909832",
+   "bytes": 2626,
+   "sha256": "e4a746f79e029669c83c7a337775ab366a0cee80fa866e20eb2adf475242d9d3",
+   "generatedAt": "2026-11-12T02:22:03.649Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "d17e720f24c022060b1b60f9c593473d79ecadc6d8d11e63d814e34b01e74e58",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 494,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 15197,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5264,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 275,
+    "latestToneEvent": "2026-09-24 00:00:00",
+    "latestSharesOut": {
+     "value": 443129349,
+     "endDate": "2026-09-29",
+     "accessionNo": "0000909832-26-000093",
+     "filed": "2026-10-07"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-5272",
+   "bytes": 2648,
+   "sha256": "7d47142914e81d57b4928023834aff8dc8d1fbd47e0efeed6120685b7fc23521",
+   "generatedAt": "2026-11-12T02:22:18.547Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "e0a5007ff8cf8142e787c0c3da3f5840644f8dab5a3142ae404905d9251843ef",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 402,
+    "latestFactorFiledAt": "2026-11-04 00:00:00",
+    "priceBars": 15661,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 4776,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 632,
+    "latestToneEvent": "2026-11-04 00:00:00",
+    "latestSharesOut": {
+     "value": 518438878,
+     "endDate": "2026-10-29",
+     "accessionNo": "0000005272-26-000104",
+     "filed": "2026-11-04"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1163165",
+   "bytes": 2652,
+   "sha256": "b1732150e52c93bd369cf486db361079a86a6e4b422cd59600a2741222df33fa",
+   "generatedAt": "2026-11-12T02:22:36.725Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "cc91ceb9dff6811e02bbf14cd0adb75895e33644069f535ddc873d315e1b9f13",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 367,
+    "latestFactorFiledAt": "2026-11-05 00:00:00",
+    "priceBars": 16336,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 4971,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 265,
+    "latestToneEvent": "2026-11-05 00:00:00",
+    "latestSharesOut": {
+     "value": 1182335057,
+     "endDate": "2026-09-30",
+     "accessionNo": "0001163165-26-000045",
+     "filed": "2026-11-05"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-1707925",
+   "bytes": 1834,
+   "sha256": "cd646252d7326d6cb6db5892bd6397e4adb50cfd560174f92b01e282a87ed3df",
+   "generatedAt": "2026-11-12T02:22:50.188Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "a75bec23381995e4fcd3bce47c3d25b19a8ebc249210f6e9a44034bf85c8d43c",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 368,
+    "latestFactorFiledAt": "2026-10-29 00:00:00",
+    "priceBars": 7051,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 0,
+    "latestHoldingQuarter": null,
+    "toneSignals": 57,
+    "latestToneEvent": "2026-05-13 00:00:00",
+    "latestSharesOut": {
+     "value": 459083779,
+     "endDate": "2026-09-30",
+     "accessionNo": "0001628280-26-068079",
+     "filed": "2026-10-29"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "institutional-858877",
+   "bytes": 2638,
+   "sha256": "b672dd8a5a5cafb46a71d547fda17b4e21c12bfb074e6fb2347a9f1ada0b9077",
+   "generatedAt": "2026-11-12T02:23:02.038Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "c1c45e3d27830ab2b75fcc4ccf0bdee48023ea277046ec43cf7c6c30dc70a097",
+   "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
+   "inputs": {
+    "factorPoints": 504,
+    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "priceBars": 14257,
+    "latestPriceDate": "2026-11-10",
+    "companyHoldings": 5183,
+    "latestHoldingQuarter": "2026-09-30",
+    "toneSignals": 354,
+    "latestToneEvent": "2026-10-29 00:00:00",
+    "latestSharesOut": {
+     "value": 3942586873,
+     "endDate": "2026-08-27",
+     "accessionNo": "0000858877-26-000132",
+     "filed": "2026-09-02"
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "sector-flows",
+   "bytes": 3773,
+   "sha256": "dd50d5ee9834ccdfb05b82b22114cd4b46b7c2a59ef6749f09efdce2dbba2a22",
+   "generatedAt": "2026-11-12T02:23:17.157Z",
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "inputsHash": "2aba4641262bc7125ec81d37d2fa100c9c471d859232df8a1a5e4ac9141a62f6",
+   "versionHash": "4de676fa69e4989745ea7e82dbbf0b46419e0a061298455bbc2a7c3fe1bff69d",
+   "inputs": {
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    },
+    "guard": {
+     "cur": "2026-06-30",
+     "prev": "2026-03-31",
+     "expectedFunds": 306,
+     "curFunds": 306,
+     "skippedLatestQuarter": "2026-09-30",
+     "partial": true,
+     "warnings": [
+      "Skipped 2026-09-30: filing window open or insufficient fund coverage.",
+      "6 funds excluded because one quarter is missing."
+     ],
+     "stableFunds": 301,
+     "missingFunds": 6,
+     "suspectFunds": 0
+    }
+   },
+   "reused": true
+  },
+  {
+   "key": "probability-1045810",
+   "bytes": 26233,
+   "sha256": "88bb96fbe9d23dee1658001a160a58fdb426077079caa3acc8d4227bec62a263",
+   "generatedAt": "2026-11-12T02:36:48.828Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "8729ea9058a7f04f0b0f1e19bc75c54c7c6862536c1bfa8cbf3dcd07e6b7f956",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 512,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 12027,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5678,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 117,
+     "latestToneEvent": "2026-05-12 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-2488",
+   "bytes": 48855,
+   "sha256": "05f6ea786976aae13e84dc44811bb4ed71a0cc3da816a8384385b145cabc4110",
+   "generatedAt": "2026-11-12T02:36:54.743Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "ce5c7263165d9f2d6ef993af142b88ac48db831396870a065f63526999c4dc28",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 558,
+     "latestFactorFiledAt": "2026-11-04 00:00:00",
+     "priceBars": 16033,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5279,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 459,
+     "latestToneEvent": "2026-11-04 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-50863",
+   "bytes": 53320,
+   "sha256": "269dafc36552269c71072bf04b0e8ffc75c70dd74b91142227242950fe9eccdb",
+   "generatedAt": "2026-11-12T02:37:01.558Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "41bc7e390c09d56321a169bf2d7f5137f8e944c6a1084a1efeec6d40fcc2b898",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 471,
+     "latestFactorFiledAt": "2026-10-30 00:00:00",
+     "priceBars": 18850,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5242,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 441,
+     "latestToneEvent": "2026-10-29 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1321655",
+   "bytes": 15199,
+   "sha256": "5cdc6c9471e7f428abdda1e54c81c17ac03524858cb037cc0a895bf3a83e1591",
+   "generatedAt": "2026-11-12T02:37:03.409Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "c4ab087b05a65c94121d96c82eec8438077e5fc2b93f32020b2d7f8e44b6bb33",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 329,
+     "latestFactorFiledAt": "2026-11-03 00:00:00",
+     "priceBars": 3076,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 4149,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 62,
+     "latestToneEvent": "2026-11-03 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1326801",
+   "bytes": 23465,
+   "sha256": "f6af3183e7c11cb06de419ab7b98194ef0f7446b8fb2ae16a89f67564dba310e",
+   "generatedAt": "2026-11-12T02:37:06.111Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "dbff7662406a7bfcb093653f285b8342153b1bd40a53658c128dac5b46f6af1a",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 439,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 7286,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5921,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 69,
+     "latestToneEvent": "2026-11-05 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1065280",
+   "bytes": 36106,
+   "sha256": "ab383b4fa3cfcda6ab9e82c842391522e01e1a52e5fdad7adde6c0cd810581b3",
+   "generatedAt": "2026-11-12T02:37:11.049Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "0ed787978cc132a30d3cfb8f512d5a4cb5011563ed89071bce381b651d9c074b",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 540,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 10495,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5444,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 276,
+     "latestToneEvent": "2026-10-21 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1018724",
+   "bytes": 38897,
+   "sha256": "753a1c1f43b55822ea009d009192dae4222a23d76587ad4d5fd321ac6cdf2bee",
+   "generatedAt": "2026-11-12T02:37:17.808Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "4c8e86f82c655503785cbb6d6f14ee29d740af95cd46b971e419e3bc37479e55",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 502,
+     "latestFactorFiledAt": "2026-10-30 00:00:00",
+     "priceBars": 12447,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 6000,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 316,
+     "latestToneEvent": "2026-10-29 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1318605",
+   "bytes": 33059,
+   "sha256": "2ff556c8ac856aea7cd666bc80d8dae78e14579f5b10b3876898f99e59a18eb1",
+   "generatedAt": "2026-11-12T02:37:21.030Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "986841b55d38c7cb09d7f72f345a511b709dacf9310560586ba5d6d66cf54812",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 536,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 8240,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5344,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 199,
+     "latestToneEvent": "2026-10-27 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-320187",
+   "bytes": 39795,
+   "sha256": "e228e15d2aa3cc388e7e93e617682a9ac7f5af3557ea3a2a1296e253fb88b338",
+   "generatedAt": "2026-11-12T02:37:25.832Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "3e83b4aaffc2c173058d18604d2afce22da9797f6742f5df6ab5d198b53438e5",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 447,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 14915,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5211,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 378,
+     "latestToneEvent": "2026-10-02 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1397187",
+   "bytes": 26689,
+   "sha256": "a5145a79894b9357f77bc4e2ac76d842162065822940dd8a1127e29cb6d062b3",
+   "generatedAt": "2026-11-12T02:37:28.859Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "0f542f8949a7b3310081cc7ead6405e09127ebd2ba9d9cad8da530a4ba28c40a",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 497,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 9711,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 4640,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 201,
+     "latestToneEvent": "2026-10-27 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-884887",
+   "bytes": 33056,
+   "sha256": "8a1f1e489e20037d6fadeccfe0b0e13716b6a03fa9268322a0c57d9797ec0264",
+   "generatedAt": "2026-11-12T02:37:30.600Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "9d68ef1fbefae85746e8a6a71deff6a5b375e3144f1105c56dcb5f9c00164534",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 395,
+     "latestFactorFiledAt": "2026-10-27 00:00:00",
+     "priceBars": 10496,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 0,
+     "latestHoldingQuarter": null,
+     "toneSignals": 232,
+     "latestToneEvent": "2026-10-27 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-886982",
+   "bytes": 49547,
+   "sha256": "4b842b1011e672665847336a2f49d1887491dccd01278f05b34ecc210df54c8a",
+   "generatedAt": "2026-11-12T02:37:34.756Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "fcf0d1fe44761ae668a8f714e73495411ade38cc903147a7d226cad6eb59c5b6",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 400,
+     "latestFactorFiledAt": "2026-11-02 00:00:00",
+     "priceBars": 11956,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 1416,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 466,
+     "latestToneEvent": "2026-11-02 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-927628",
+   "bytes": 60603,
+   "sha256": "09532ab26f3758b29f3aa9fc8f9353f20ef70df2a54fa0dae89dcde96d713520",
+   "generatedAt": "2026-11-12T02:37:40.060Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "a108a5dc038b2a751eb89972294a2263dd0d467d6697d622cfc9bca78a5e55ed",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 439,
+     "latestFactorFiledAt": "2026-11-03 00:00:00",
+     "priceBars": 13079,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 1301,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 560,
+     "latestToneEvent": "2026-11-03 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-731766",
+   "bytes": 42331,
+   "sha256": "2e59ccbd64cd372a3fc989472b891c93d9229f097201d9ed808619f3af38a17e",
+   "generatedAt": "2026-11-12T02:37:45.770Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "e72ca0c83c589d998f0b9c2f8c51337c063cd2ac93d589eb3eee0baef683a73d",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 443,
+     "latestFactorFiledAt": "2026-11-03 00:00:00",
+     "priceBars": 14260,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5642,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 375,
+     "latestToneEvent": "2026-11-03 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-78003",
+   "bytes": 43716,
+   "sha256": "0c05ec2a0c88ed47657fd6a57e5322dce3d874b374eb195e6a9ec7a45cfec76c",
+   "generatedAt": "2026-11-12T02:37:51.559Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "dfa22f57439b70614ebce962c3236372f0d7383a573ba4102154d87c14f5583a",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 385,
+     "latestFactorFiledAt": "2026-11-03 00:00:00",
+     "priceBars": 16337,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5140,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 380,
+     "latestToneEvent": "2026-11-03 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-831259",
+   "bytes": 44537,
+   "sha256": "1a8f112d8c9f2ed02005a222814bea9cdf9194ce1983f5a7a7417a7a733ca19a",
+   "generatedAt": "2026-11-12T02:37:56.678Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "07e4e06c71506ef6fb87c521851951675d949c951804552978753913dec8677f",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 331,
+     "latestFactorFiledAt": "2026-11-06 00:00:00",
+     "priceBars": 12921,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 4782,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 422,
+     "latestToneEvent": "2026-10-27 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-12927",
+   "bytes": 38214,
+   "sha256": "805b375fa2c7a5c27c7c77c4722fa01fc522e1a9b85913670beab2cc2b1f8db0",
+   "generatedAt": "2026-11-12T02:37:59.753Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "b2b703bca400a7557bdeab3ca454f443fb48db88c9bcc1883e4e38b091777262",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 465,
+     "latestFactorFiledAt": "2026-10-27 00:00:00",
+     "priceBars": 19370,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 1261,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 394,
+     "latestToneEvent": "2026-10-27 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1045609",
+   "bytes": 35779,
+   "sha256": "6cadd16bc59ae887b8d558565510592278edf3041416f810c8768a2072085df9",
+   "generatedAt": "2026-11-12T02:38:03.602Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "7bb626a4c1e085bd0918187cf67d8e42d3ef9474a1dbb66087d663e1a1c3d72d",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 458,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 12867,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 4934,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 196,
+     "latestToneEvent": "2026-10-30 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-753308",
+   "bytes": 54353,
+   "sha256": "9fc68e53afb54a2a43437de2038c4324459e1151acee879da4b96165a565b5b3",
+   "generatedAt": "2026-11-12T02:38:09.182Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "8a56e9f77984dc35a2a0aec1c52a76b34827770d5e80ba8c66eafa89a8c16fa3",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 430,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 10496,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 1385,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 519,
+     "latestToneEvent": "2026-11-05 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-789019",
+   "bytes": 33429,
+   "sha256": "94c3d1a9562ba62e367476a8d7da7ae1d53e6e35edc625cb13f10ae0617c40e3",
+   "generatedAt": "2026-11-12T02:38:13.299Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "6fb6d017d42853190341e994d799acb42215fc81c7560a34260146bb754d2788",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 510,
+     "latestFactorFiledAt": "2026-10-28 00:00:00",
+     "priceBars": 15277,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 6134,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 371,
+     "latestToneEvent": "2026-11-04 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1730168",
+   "bytes": 23842,
+   "sha256": "8dc04e082247ba9036a49b487fa3c91e63e1c78639f5f605de0167cdc84d3673",
+   "generatedAt": "2026-11-12T02:38:15.496Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "141d616c2820677fbb40e740e1a566122e7a41ab328e41707bc2ed2873bb363f",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 350,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 8690,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5361,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 113,
+     "latestToneEvent": "2026-09-02 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1596532",
+   "bytes": 24234,
+   "sha256": "6846aab2aaea1adf8b306b0c6d6a550a5a67fc1b04cacb143912b58a93d66335",
+   "generatedAt": "2026-11-12T02:38:16.364Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "97a1b147c63335a9f24747742a49643e9ce7d07acccaf9c7964c8e69a88777a8",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 461,
+     "latestFactorFiledAt": "2026-11-04 00:00:00",
+     "priceBars": 6258,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 1658,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 129,
+     "latestToneEvent": "2026-11-03 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-723125",
+   "bytes": 50152,
+   "sha256": "b7a178390394bf8374cbc11f92d3497a2138c518f2d03a107319cbff1100dad6",
+   "generatedAt": "2026-11-12T02:38:22.990Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "fea555c43bd64927570cd76b7ea0760857fb05e2e9418b9f1dc8a69b49c72699",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 540,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 14474,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5247,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 482,
+     "latestToneEvent": "2026-10-09 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1375365",
+   "bytes": 19661,
+   "sha256": "2f56b9bfef4c61f2c3e50c8352487c765c86be6e6b72d33f37a6bd147e71352f",
+   "generatedAt": "2026-11-12T02:38:23.794Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "72da5fcdaa6e52eaa5b485b562145b0e5e2ae219be31700b9559de258fcac10c",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 494,
+     "latestFactorFiledAt": "2026-11-06 00:00:00",
+     "priceBars": 6656,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 24,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 224,
+     "latestToneEvent": "2026-11-06 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1274494",
+   "bytes": 37836,
+   "sha256": "7c4a4d17e9ba7f8564205ccae47c8163cafe8bdaa3ef69b51dd5832f4d677def",
+   "generatedAt": "2026-11-12T02:38:27.904Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "9ea1f95e88055669e1db1505c66457ee1e127f5a59f76ec79ddce6cd5f1f88c8",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 555,
+     "latestFactorFiledAt": "2026-10-29 00:00:00",
+     "priceBars": 10054,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 4119,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 274,
+     "latestToneEvent": "2026-10-29 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1682852",
+   "bytes": 18338,
+   "sha256": "1d06a1ed1143b481543b5b59d420893934b651970b1137a0dc77f67322bf3054",
+   "generatedAt": "2026-11-12T02:38:29.324Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "f89d85b13dd1ea8927f748144250a0888f89d2b0955250ee1499db0768dc0eb6",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 316,
+     "latestFactorFiledAt": "2026-11-06 00:00:00",
+     "priceBars": 3988,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 4349,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 108,
+     "latestToneEvent": "2026-11-06 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-59478",
+   "bytes": 40252,
+   "sha256": "597d64bbba506663d1b19b59870901ebc57c9d87f8846ed754cb6c71f22ed464",
+   "generatedAt": "2026-11-12T02:38:34.144Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "2992e89441d8d8c67f02d2c76b3afc15c9e092f4a561c060f47bfb56b12c28ca",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 366,
+     "latestFactorFiledAt": "2026-10-29 00:00:00",
+     "priceBars": 16339,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5429,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 403,
+     "latestToneEvent": "2026-10-29 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-27904",
+   "bytes": 55810,
+   "sha256": "cc22eb161b46c8503cdb6299279ea07d0b3df0622085724b9b3f2a42109ca545",
+   "generatedAt": "2026-11-12T02:38:40.371Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "755a74c342baa95380738e5a26515a8d0c97398626bbcc84db5e45f0dc82bc58",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 415,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 16725,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 4623,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 550,
+     "latestToneEvent": "2026-11-06 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1792789",
+   "bytes": 14977,
+   "sha256": "40ae254ac0b154edee3c518dfeb8e6bef26a380cb049ec6ae2f8eea7bf505958",
+   "generatedAt": "2026-11-12T02:38:42.070Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "26a91b205e701e989cccb96a9198e44a3eb7878a35d085b9cb29b93d342a5078",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 270,
+     "latestFactorFiledAt": "2026-10-30 00:00:00",
+     "priceBars": 2978,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 3916,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 47,
+     "latestToneEvent": "2026-11-04 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-354950",
+   "bytes": 39535,
+   "sha256": "c7c51f32c531dd3fd84ae876144c5bac27c2bb7a532a18a77089ba92c0b75d9a",
+   "generatedAt": "2026-11-12T02:38:46.697Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "c51250bffa9bc8d95dd39c3609b5bcbd469650072ec126dedcf6842d5740964c",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 535,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 16409,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5224,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 297,
+     "latestToneEvent": "2026-08-25 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-18230",
+   "bytes": 57765,
+   "sha256": "89ee2ea37595041ae3632f8b30cfba35e3a8b8c9067ed56d48066e6456d9d2ab",
+   "generatedAt": "2026-11-12T02:38:54.641Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "91fab7e99c77285b54e5647fd498672329e8597dcc84234f9ae2a60f7b1d0133",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 415,
+     "latestFactorFiledAt": "2026-11-04 00:00:00",
+     "priceBars": 19370,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5070,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 693,
+     "latestToneEvent": "2026-11-04 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1053507",
+   "bytes": 46756,
+   "sha256": "299fa33055616241dc3db9dc3233f5d903df8788f9d7a1259fa62382f18e0b74",
+   "generatedAt": "2026-11-12T02:38:59.901Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "0c2e6ddcf677072270194af54daa6015e2f0e945608315c3765bd7ca427669be",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 433,
+     "latestFactorFiledAt": "2026-10-27 00:00:00",
+     "priceBars": 10497,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5130,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 476,
+     "latestToneEvent": "2026-10-27 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-19617",
+   "bytes": 99180,
+   "sha256": "a39bc99b13698fb7eaa64bfb0a4cb0290e88677ac4ade4e44f72b3228562aa6e",
+   "generatedAt": "2026-11-12T02:39:08.016Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "cabc1c7b546f157bdaf55ad92fc04f7d2b311b86b8ba4234fcf1bc9396b95d70",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 381,
+     "latestFactorFiledAt": "2026-11-03 00:00:00",
+     "priceBars": 19369,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 6,
+     "latestHoldingQuarter": "2026-06-30",
+     "toneSignals": 2651,
+     "latestToneEvent": "2026-11-05 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1506307",
+   "bytes": 33230,
+   "sha256": "15200c3c1b7943c203787ca56503b8bfcffb8f8e193a2349ae7627319fcf98f5",
+   "generatedAt": "2026-11-12T02:39:09.988Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "40644475cdea3a0913a906763e6b35c41cad6b37d7b52bedfb6f2a8fb9f83447",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 475,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
+     "priceBars": 7921,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 1236,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 230,
+     "latestToneEvent": "2026-10-23 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-320193",
+   "bytes": 30074,
+   "sha256": "585999e78fa766a0bf68f4127742fce21ac31b08f6cf9b95b8f7de315d47b8db",
+   "generatedAt": "2026-11-12T02:39:13.550Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "9429b977a4fe9a7ca64ac68af1288621b645423f84a3360e460167c10d46bb5b",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 554,
+     "latestFactorFiledAt": "2026-11-03 00:00:00",
+     "priceBars": 15660,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5756,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 173,
+     "latestToneEvent": "2026-11-03 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-51143",
+   "bytes": 29536,
+   "sha256": "35e1247b30c9a0eda55c9255012a0b10c3245fb0666af5c09234d6fdaeb034da",
+   "generatedAt": "2026-11-12T02:39:16.132Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "175e25883a9f9b2385c9c8847bae37298bdebe773e4942d06e0eb172c02d1dcb",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 442,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 21353,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 4927,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 218,
+     "latestToneEvent": "2026-10-21 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-936468",
+   "bytes": 30090,
+   "sha256": "dd9116b8d66e39cb75a29bac3503ebbc58f6fa236142a9a7401f69925b2881c5",
+   "generatedAt": "2026-11-12T02:39:19.593Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "007e934fd28a4438881b9841d2e474b5f9e437bce546e7627ab9ed040eb64ac6",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 477,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 17599,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 4696,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 199,
+     "latestToneEvent": "2026-10-22 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-732717",
+   "bytes": 63067,
+   "sha256": "74539b1c7f7eb09c50f8fb37c3d65d6461f12b1724901509581afadce38511ce",
+   "generatedAt": "2026-11-12T02:39:26.723Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "5ffe460644a960e013d18d204acfa4bac8740f6e5b0011a883c2b3195c48498f",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 389,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 15696,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 7599,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 676,
+     "latestToneEvent": "2026-10-21 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1652044",
+   "bytes": 24382,
+   "sha256": "c0e4039a339f0a6ca7b90fc4838ebc01e8129937a83ca262f5b826d8ef4f5d31",
+   "generatedAt": "2026-11-12T02:39:29.136Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "d3dae9ffc4a3e2871d4f9e8914ade95e70d47ba956d85e73544d5434b87643bd",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 406,
+     "latestFactorFiledAt": "2026-10-29 00:00:00",
+     "priceBars": 10627,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5928,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 129,
+     "latestToneEvent": "2026-11-05 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-200406",
+   "bytes": 39136,
+   "sha256": "419d272c40b03689fb774aa3c7de78f074571f998bab0cb15f285f44c11a4e16",
+   "generatedAt": "2026-11-12T02:39:33.662Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "8bafb813dd4f4e266d59d24fb15b934d36217c13af2a90d0ea8bc9c59857423d",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 502,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 19369,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5287,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 303,
+     "latestToneEvent": "2026-10-21 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-80424",
+   "bytes": 42540,
+   "sha256": "5642afc0a41953f717d186ea8c5372993bd825bb7d507fa9a6522767a7f143eb",
+   "generatedAt": "2026-11-12T02:39:39.400Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "2ef57fd51e49f17504bb797c4f9a351144318572b12b6dc8223f9dcc1b96d253",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 367,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 19370,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5356,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 470,
+     "latestToneEvent": "2026-10-22 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-104169",
+   "bytes": 40310,
+   "sha256": "208b074f1e9f864fc661550b908c13277c0345e03e2eb2d9d569df13a311db27",
+   "generatedAt": "2026-11-12T02:39:44.455Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "fed2cd217540d22b36a1e5f39531706b2febb2df80be823c982c51ee36df2b3e",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 400,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 18739,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5241,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 311,
+     "latestToneEvent": "2026-10-23 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-93410",
+   "bytes": 37973,
+   "sha256": "b5cf7288f0873d94f5f3f3e5636dd502fe2e5af942bb8c7784f03b27e0877ad2",
+   "generatedAt": "2026-11-12T02:39:47.388Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "5239ba5f7015586384c18099dd4c311f5c97c0438a50ad836a8c90d70510311b",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 367,
+     "latestFactorFiledAt": "2026-11-05 00:00:00",
+     "priceBars": 19368,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 0,
+     "latestHoldingQuarter": null,
+     "toneSignals": 303,
+     "latestToneEvent": "2026-11-05 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1141391",
+   "bytes": 34445,
+   "sha256": "aaf8ad65b72f4ff4c043220ae651dcb2abd78b5a4dcb70d4e6b9eb154fb36ced",
+   "generatedAt": "2026-11-12T02:39:51.853Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "99e1c9a9f2f42d2a67ac32a5e145638db9f52b0afb11d15fc9f823470aa4c35e",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 357,
+     "latestFactorFiledAt": "2026-10-29 00:00:00",
+     "priceBars": 10183,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5474,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 267,
+     "latestToneEvent": "2026-10-29 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1403161",
+   "bytes": 41028,
+   "sha256": "6f60a4456249f9ca9b5856659092ad6fff1a43d9c438ea1f50a58e901cc543af",
+   "generatedAt": "2026-11-12T02:39:56.333Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "dc8c17f549733f0e01deab76fda9a3a2a48fc317f839dc15009672ab1b2b72fc",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 212,
+     "latestFactorFiledAt": "2026-11-05 00:00:00",
+     "priceBars": 9388,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5699,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 288,
+     "latestToneEvent": "2026-10-27 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-909832",
+   "bytes": 40216,
+   "sha256": "19b6cbd1e896a7786b64af6d843ac15494f9b2e505e92744baf0a92f997da730",
+   "generatedAt": "2026-11-12T02:40:01.245Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "3e6847b92e08ed1fa3e8b520814f407e860f0af9f56780e8278c63f9fe350c5d",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 494,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 15197,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5264,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 275,
+     "latestToneEvent": "2026-09-24 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-5272",
+   "bytes": 58866,
+   "sha256": "f206abd9ed7761947fa329f606cb2b9f793038d59f20bffebfecf4a0c0ecf4ce",
+   "generatedAt": "2026-11-12T02:40:08.765Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "9471389920dc65b3e5e00f133a72207e23f7f612b807c666648c5c1b04b15244",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 402,
+     "latestFactorFiledAt": "2026-11-04 00:00:00",
+     "priceBars": 15661,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 4776,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 632,
+     "latestToneEvent": "2026-11-04 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1163165",
+   "bytes": 37027,
+   "sha256": "73191110b612e83c41393434970483d19dc768169f09029a0be3ea3f55586381",
+   "generatedAt": "2026-11-12T02:40:12.906Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "6909b4f2e6cdce9af2e2bd31758953ca015aff41a67eb0f8ec7afad748c47230",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 367,
+     "latestFactorFiledAt": "2026-11-05 00:00:00",
+     "priceBars": 16336,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 4971,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 265,
+     "latestToneEvent": "2026-11-05 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-1707925",
+   "bytes": 15419,
+   "sha256": "b58577132bb7dc32d5bf091396a35a0afb4b72b0a1ae97b422848c8ff86d3c8e",
+   "generatedAt": "2026-11-12T02:40:13.354Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "41e1b836575ef5af1811d3f9cf3448432849b6cc37d155bcd903751b8a061317",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 368,
+     "latestFactorFiledAt": "2026-10-29 00:00:00",
+     "priceBars": 7051,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 0,
+     "latestHoldingQuarter": null,
+     "toneSignals": 57,
+     "latestToneEvent": "2026-05-13 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "probability-858877",
+   "bytes": 41641,
+   "sha256": "3b57df2050a67964438acb497aaad95e0b79cab1a11e97eeedbf020d0e1c9372",
+   "generatedAt": "2026-11-12T02:40:17.557Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "117f8be7e3132da46f0e0324d6700db735a0f08f8c9c942c0c334109339f0a05",
+   "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
+   "inputs": {
+    "company": {
+     "factorPoints": 504,
+     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "priceBars": 14257,
+     "latestPriceDate": "2026-11-10",
+     "companyHoldings": 5183,
+     "latestHoldingQuarter": "2026-09-30",
+     "toneSignals": 354,
+     "latestToneEvent": "2026-10-29 00:00:00"
+    },
+    "global": {
+     "macroPoints": 408876,
+     "latestMacroDate": "2026-11-06",
+     "spyBars": 10491,
+     "latestSpyDate": "2026-11-10",
+     "fundHoldings": 1617656,
+     "latestFundQuarter": "2026-09-30"
+    }
+   },
+   "reused": false
+  },
+  {
+   "key": "market-report-gzip",
+   "bytes": 1224,
+   "sha256": "3062ab05597c1fa2e8e15599d0ddfe34e3e4c442939c573b5768fc20d361eb4d",
+   "generatedAt": "2026-11-12T02:40:23.805Z",
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "inputsHash": "0febd23e17bfe6a9c2c6b190fa3006064f3b9019c5fb2169b60371e4e736cbf8",
+   "versionHash": "4cda97aab1959899ba5ba9971f563f3e1829057d4d8b11ec12f1629fc30204a9",
+   "inputs": {
+    "gzipFile": "schwab-market-data.json.gz",
+    "sourceGeneratedAt": "2026-11-11T20:16:22.234Z",
+    "sourceBytes": 76788384,
+    "sourceMtimeMs": 1794428189094.2488,
+    "sourceSha256": "7f025317e64783ad990ad56a514d3c4fbf2533d8aab01d02449a063bfd03e5e4",
+    "gzipSha256": "93533271a7658d9b6ef7c42fc85e50f7e24ba005b2b3ba06bc9759d556730167"
+   },
+   "reused": false
+  }
+ ],
+ "marketReport": {
+  "gzipFile": "schwab-market-data.json.gz",
+  "sourceGeneratedAt": "2026-11-11T20:16:22.234Z",
+  "sourceBytes": 76788384,
+  "sourceMtimeMs": 1794428189094.2488,
+  "sourceSha256": "7f025317e64783ad990ad56a514d3c4fbf2533d8aab01d02449a063bfd03e5e4",
+  "gzipSha256": "93533271a7658d9b6ef7c42fc85e50f7e24ba005b2b3ba06bc9759d556730167",
+  "gzipBytes": 5301467
+ },
+ "failures": [],
+ "productionWrite": false,
+ "databaseWrite": false
+}

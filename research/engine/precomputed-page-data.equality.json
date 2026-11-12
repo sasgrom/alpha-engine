@@ -1,0 +1,341 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-12T02:44:52.887Z",
+ "status": "pass",
+ "tolerance": 1e-12,
+ "companies": [
+  {
+   "cik": 1045810,
+   "ticker": "NVDA"
+  },
+  {
+   "cik": 1045609,
+   "ticker": "PLD"
+  },
+  {
+   "cik": 753308,
+   "ticker": "NEE"
+  },
+  {
+   "cik": 19617,
+   "ticker": "JPM"
+  },
+  {
+   "cik": 320193,
+   "ticker": "AAPL"
+  },
+  {
+   "cik": 2488,
+   "ticker": "AMD"
+  },
+  {
+   "cik": 50863,
+   "ticker": "INTC"
+  },
+  {
+   "cik": 1321655,
+   "ticker": "PLTR"
+  },
+  {
+   "cik": 1326801,
+   "ticker": "META"
+  },
+  {
+   "cik": 1065280,
+   "ticker": "NFLX"
+  }
+ ],
+ "requiredCompaniesPresent": true,
+ "factorIc": "unchanged_on_request",
+ "checks": [
+  {
+   "key": "dashboard-stats",
+   "pass": true,
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "generatedAt": "2026-11-12T02:12:01.179Z",
+   "stale": false,
+   "bytes": 1095,
+   "sha256": "7bdfc755008576fc55969a883216a4a876cd2c02d33a65f4ede295e037bb6e75",
+   "onRequestMs": 20126,
+   "compared": 4,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "sector-flows",
+   "pass": true,
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "generatedAt": "2026-11-12T02:23:17.157Z",
+   "stale": false,
+   "bytes": 3773,
+   "sha256": "dd50d5ee9834ccdfb05b82b22114cd4b46b7c2a59ef6749f09efdce2dbba2a22",
+   "onRequestMs": 17475,
+   "compared": 77,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "institutional-1045810",
+   "pass": true,
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "generatedAt": "2026-11-12T02:23:28.738Z",
+   "stale": false,
+   "bytes": 2650,
+   "sha256": "62e6f031160244598ea58197380c5174cd6ea2d2c2ef498f827571cc4148f6b1",
+   "onRequestMs": 16384,
+   "compared": 38,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "probability-1045810",
+   "pass": true,
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "generatedAt": "2026-11-12T02:36:48.828Z",
+   "stale": false,
+   "bytes": 26233,
+   "sha256": "88bb96fbe9d23dee1658001a160a58fdb426077079caa3acc8d4227bec62a263",
+   "onRequestMs": 3416,
+   "compared": 804,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "institutional-1045609",
+   "pass": true,
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "generatedAt": "2026-11-12T02:15:50.500Z",
+   "stale": false,
+   "bytes": 2626,
+   "sha256": "13b3d14f014f6a891c19bf423160654250d953c59313c98005a73b2093215bd2",
+   "onRequestMs": 15907,
+   "compared": 38,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "probability-1045609",
+   "pass": true,
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "generatedAt": "2026-11-12T02:38:03.602Z",
+   "stale": false,
+   "bytes": 35779,
+   "sha256": "6cadd16bc59ae887b8d558565510592278edf3041416f810c8768a2072085df9",
+   "onRequestMs": 4313,
+   "compared": 1108,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "institutional-753308",
+   "pass": true,
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "generatedAt": "2026-11-12T02:16:02.572Z",
+   "stale": false,
+   "bytes": 1847,
+   "sha256": "d377f05dce1c54aea9653a95b3b1d3a4717e44fa0bf0c66b37f2ee3c7d3b7bf3",
+   "onRequestMs": 15018,
+   "compared": 18,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "probability-753308",
+   "pass": true,
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "generatedAt": "2026-11-12T02:38:09.182Z",
+   "stale": false,
+   "bytes": 54353,
+   "sha256": "9fc68e53afb54a2a43437de2038c4324459e1151acee879da4b96165a565b5b3",
+   "onRequestMs": 5401,
+   "compared": 1712,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "institutional-19617",
+   "pass": true,
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "generatedAt": "2026-11-12T02:19:13.059Z",
+   "stale": false,
+   "bytes": 2040,
+   "sha256": "3a10e6fbc399d0fd1347d52b4e1e1b9908000148441a01eff1fae5c541382044",
+   "onRequestMs": 14700,
+   "compared": 22,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "probability-19617",
+   "pass": true,
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "generatedAt": "2026-11-12T02:39:08.016Z",
+   "stale": false,
+   "bytes": 99180,
+   "sha256": "a39bc99b13698fb7eaa64bfb0a4cb0290e88677ac4ade4e44f72b3228562aa6e",
+   "onRequestMs": 8714,
+   "compared": 3156,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "institutional-320193",
+   "pass": true,
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "generatedAt": "2026-11-12T02:19:41.437Z",
+   "stale": false,
+   "bytes": 2639,
+   "sha256": "5db9d9b3ab96dc0ebf2374bd3bab6c74ed975865f801c3dbf0aef518936cd457",
+   "onRequestMs": 15574,
+   "compared": 38,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "probability-320193",
+   "pass": true,
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "generatedAt": "2026-11-12T02:39:13.550Z",
+   "stale": false,
+   "bytes": 30074,
+   "sha256": "585999e78fa766a0bf68f4127742fce21ac31b08f6cf9b95b8f7de315d47b8db",
+   "onRequestMs": 4560,
+   "compared": 927,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "institutional-2488",
+   "pass": true,
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "generatedAt": "2026-11-12T02:23:40.864Z",
+   "stale": false,
+   "bytes": 2638,
+   "sha256": "f52526a83a3ee0b160a6c0b437458eb3035114a6d888c7fbd48afcea3a08611e",
+   "onRequestMs": 16196,
+   "compared": 38,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "probability-2488",
+   "pass": true,
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "generatedAt": "2026-11-12T02:36:54.743Z",
+   "stale": false,
+   "bytes": 48855,
+   "sha256": "05f6ea786976aae13e84dc44811bb4ed71a0cc3da816a8384385b145cabc4110",
+   "onRequestMs": 6490,
+   "compared": 1540,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "institutional-50863",
+   "pass": true,
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "generatedAt": "2026-11-12T02:23:52.975Z",
+   "stale": false,
+   "bytes": 2646,
+   "sha256": "9e1e12874eea4854f1d3f084ec7ca5f6565b5066d8325e3429b08aebc358dc75",
+   "onRequestMs": 15110,
+   "compared": 38,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "probability-50863",
+   "pass": true,
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "generatedAt": "2026-11-12T02:37:01.558Z",
+   "stale": false,
+   "bytes": 53320,
+   "sha256": "269dafc36552269c71072bf04b0e8ffc75c70dd74b91142227242950fe9eccdb",
+   "onRequestMs": 7247,
+   "compared": 1680,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "institutional-1321655",
+   "pass": true,
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "generatedAt": "2026-11-12T02:24:05.260Z",
+   "stale": false,
+   "bytes": 2516,
+   "sha256": "a2f5f9c26de8117d63a6bbf3e286f34fede65c1bd8af301bd8d720178ed9d9d8",
+   "onRequestMs": 14435,
+   "compared": 38,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "probability-1321655",
+   "pass": true,
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "generatedAt": "2026-11-12T02:37:03.409Z",
+   "stale": false,
+   "bytes": 15199,
+   "sha256": "5cdc6c9471e7f428abdda1e54c81c17ac03524858cb037cc0a895bf3a83e1591",
+   "onRequestMs": 1807,
+   "compared": 448,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "institutional-1326801",
+   "pass": true,
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "generatedAt": "2026-11-12T02:24:17.967Z",
+   "stale": false,
+   "bytes": 2533,
+   "sha256": "35b88e6ba66e6b31f7e974e0a6af1a341f9f6be817af8ee99342620f107e6eb0",
+   "onRequestMs": 15030,
+   "compared": 38,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "probability-1326801",
+   "pass": true,
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "generatedAt": "2026-11-12T02:37:06.111Z",
+   "stale": false,
+   "bytes": 23465,
+   "sha256": "f6af3183e7c11cb06de419ab7b98194ef0f7446b8fb2ae16a89f67564dba310e",
+   "onRequestMs": 2701,
+   "compared": 716,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "institutional-1065280",
+   "pass": true,
+   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "generatedAt": "2026-11-12T02:24:30.575Z",
+   "stale": false,
+   "bytes": 2653,
+   "sha256": "532a407bcf2dbe28762e75066ee76501e7ba79efae503c1c2c3e81b78f21077e",
+   "onRequestMs": 14516,
+   "compared": 38,
+   "differences": [],
+   "differenceCount": 0
+  },
+  {
+   "key": "probability-1065280",
+   "pass": true,
+   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "generatedAt": "2026-11-12T02:37:11.049Z",
+   "stale": false,
+   "bytes": 36106,
+   "sha256": "ab383b4fa3cfcda6ab9e82c842391522e01e1a52e5fdad7adde6c0cd810581b3",
+   "onRequestMs": 4263,
+   "compared": 1123,
+   "differences": [],
+   "differenceCount": 0
+  }
+ ],
+ "pass": true,
+ "productionWrite": false,
+ "databaseWrite": false
+}
