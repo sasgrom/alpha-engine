@@ -10,6 +10,7 @@ import { buildMacroTransmissionAtlas } from "../api/services/macro-transmission"
 import type { MacroEventStudyReport } from "../api/services/macro-event-study";
 import type { FundamentalSeriesRow } from "../api/services/fundamental-integrity";
 import { loadEdgarUniverse } from "../worker/lib/edgar";
+import { parseExposureHistory } from "../worker/lib/exposure-history";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 import { startProgress } from "../worker/lib/progress";
 
@@ -52,10 +53,17 @@ for (const [index, company] of universe.entries()) {
   });
   prog.item(index + 1, universe.length, `${company.ticker} · ${bars.length} price bars`);
 }
+const historySummary = JSON.parse(readFileSync(path.resolve("research/engine/exposure-history.summary.json"), "utf8")) as { status: string; published: boolean; historyFile: string; sha256: string };
+if (historySummary.status !== "complete" || !historySummary.published) throw new Error("Complete exposure history is required before rebuilding the atlas");
+const historyText = readFileSync(path.resolve(historySummary.historyFile), "utf8");
+const { createHash } = await import("node:crypto");
+if (createHash("sha256").update(historyText).digest("hex") !== historySummary.sha256) throw new Error("Exposure history hash differs from its reviewed summary");
+const exposureHistory = parseExposureHistory(historyText);
 const report = buildMacroTransmissionAtlas({
   macroObservations: eventStudy.observations,
   companies,
   spyBars,
+  exposureHistory,
   asOf: eventStudy.asOf,
   generatedAt: new Date().toISOString(),
   dataMode: eventStudy.dataMode,

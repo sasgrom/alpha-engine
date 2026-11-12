@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { buildMacroTransmissionAtlas, evaluateTransmissionModel, fitTransmissionModel, type AtlasRecord } from "./macro-transmission";
+import { buildMacroTransmissionAtlas, evaluateTransmissionModel, fitTransmissionModel, withInlineExposureHistory, type AtlasRecord } from "./macro-transmission";
 import { buildMacroEventStudyReport } from "./macro-event-study";
+import { buildCompanyExposure } from "./company-exposure";
 import type { FundamentalSeriesRow } from "./fundamental-integrity";
 import type { NormalizedMacroPoint } from "../../worker/lib/fred";
 import type { PoliticalEvent } from "../../worker/lib/political-events";
@@ -145,5 +146,26 @@ describe("macro transmission atlas", () => {
     expect(report.coverage.exposurePartial).toBe(report.coverage.candidatePairs);
     expect(report.records).toEqual([]);
     expect(report.studies.every((study) => study.status === "insufficient_coverage")).toBe(true);
+  });
+
+  it("uses inline exposure only when available and divides flows by matching-period operating income", () => {
+    const legacy = buildCompanyExposure({ cik: 1, ticker: "C1", name: "C1", sector: "Technology", rows: fundamentals(1) }, AS_OF);
+    const history: import("../../worker/lib/exposure-aggregation").ExposureFiling[] = [{
+      cik: 1, ticker: "C1", accessionNo: "annual", form: "10-K", filingDate: "2020-01-10", sourceUrl: "https://sec.gov/annual", sourceHash: "hash", missing: [],
+      measures: [
+        { kind: "foreignRevenueShare", value: 0.6, unit: "ratio", periodStart: "2019-01-01", periodEnd: "2019-12-31", availableAt: "2020-01-10", facts: [] },
+        { kind: "fuelCost", value: 100, unit: "USD", periodStart: "2019-01-01", periodEnd: "2019-12-31", availableAt: "2020-01-10", facts: [] },
+        { kind: "operatingIncome", value: 200, unit: "USD", periodStart: "2019-01-01", periodEnd: "2019-12-31", availableAt: "2020-01-10", facts: [] },
+      ],
+    }];
+    const before = withInlineExposureHistory(legacy, history, "2020-01-09T23:59:59.999Z");
+    expect(before.foreignRevenueShare.value).toBe(legacy.foreignRevenueShare.value);
+    expect(before.fuelCostToOperatingIncome.value).not.toBe(0.5);
+    const current = withInlineExposureHistory(legacy, history, "2020-03-01T00:00:00Z");
+    expect(current.foreignRevenueShare.value).toBe(0.6);
+    expect(current.fuelCostToOperatingIncome.value).toBe(0.5);
+    expect(current.fuelCostToOperatingIncome.sourceFiled).toBe("2020-01-10");
+    const mismatched: import("../../worker/lib/exposure-aggregation").ExposureFiling[] = [{ ...history[0], accessionNo: "mismatch", form: "10-Q", filingDate: "2020-02-01", measures: history[0].measures.map(measure => measure.kind === "operatingIncome" ? { ...measure, periodStart: "2019-10-01" } : measure.kind === "fuelCost" ? { ...measure, value: 120 } : measure) }];
+    expect(withInlineExposureHistory(legacy, mismatched, "2020-03-01T00:00:00Z").fuelCostToOperatingIncome.value).not.toBe(0.6);
   });
 });

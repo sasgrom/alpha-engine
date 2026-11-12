@@ -1,0 +1,10 @@
+{
+ "schemaVersion": 1,
+ "asOf": "2026-11-02T00:00:00Z",
+ "records": [
+  { "ticker": "RCL", "channel": "rates", "exposureKind": "debt_burden", "horizon": "1", "shock": 0.01, "exposure": 2, "abnormalReturn": -0.01, "exposureSourceFiled": "2026-10-30" },
+  { "ticker": "RCL", "channel": "credit", "exposureKind": "debt_burden", "horizon": "1", "shock": 0.01, "exposure": 2, "abnormalReturn": -0.01, "exposureSourceFiled": "2026-10-30" },
+  { "ticker": "DAL", "channel": "oil", "exposureKind": "fuel_cost", "horizon": "1", "shock": 0.1, "exposure": 1, "abnormalReturn": -0.02, "exposureSourceFiled": "2026-10-30" },
+  { "ticker": "RCL", "channel": "usd", "exposureKind": "foreign_revenue", "horizon": "1", "shock": 0.05, "exposure": 0.5, "abnormalReturn": -0.01, "exposureSourceFiled": "2026-10-30" }
+ ]
+}

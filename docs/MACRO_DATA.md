@@ -209,9 +209,15 @@ The probe inspects fresh SEC companyfacts for DAL, RCL, CVX, COP and PFE. The bu
 
 ## 10. Macro Scenario Engine
 
+Build the cache-only exposure history, the atlas and then the scenarios, in that order:
+
 ```powershell
+npx tsx scripts/build-exposure-history.mts
+npx tsx scripts/build-macro-transmission-atlas.mts
 npx tsx scripts/build-macro-scenarios.mts --macro-root D:\research\alpha-engine\macro
 ```
+
+The history builder reads only the cached SEC primary 10-K/10-Q documents on D:. It preserves each filing's accession, source hash and exact inline-XBRL facts, including dimensional revenue, maturity tables and `ixt:fixed-zero` values. Every measure uses `availableAt = filingDate`; no value is revised backwards into an earlier filing. D: realpath checks are mandatory, per-company checkpoints are resumable and a partial run never replaces the last complete history. `research/engine/exposure-history.jsonl` is used up to 20 MiB; larger histories stay on D: with a committed summary. The repository JSONL is marked `-text` in `.gitattributes` so checkout cannot change its hash.
 
 Optional shocks and historical as-of:
 
@@ -219,27 +225,27 @@ Optional shocks and historical as-of:
 npx tsx scripts/build-macro-scenarios.mts --rate-shock 0.01 --oil-shock 0.20 --usd-shock 0.05 --credit-shock 0.01 --as-of 2026-01-31T00:00:00Z
 ```
 
-The engine reads normalized FRED baselines, pilot SEC evidence and company exposure rows. Every baseline uses `availableAt` and `researchEligibleAt`; SEC evidence must also have `availableAt/sourceFiled <= asOf`. Future evidence is excluded rather than backdated.
+The engine reads normalized FRED baselines, pilot SEC evidence, company exposure rows, the latest exposure evidence and atlas records. Every baseline uses `availableAt` and `researchEligibleAt`; SEC evidence must also have `availableAt/sourceFiled <= asOf`. Future evidence is excluded rather than backdated. `exposure-latest.json` and `macro-transmission-atlas.json` are local-only report files (`automatic: false`), not a production transport.
 
-- **Rates:** `debt × (1 − fixedInterestShare) × (1 − interestRateHedgeShare) × rateShock`, in USD/year. If hedge share is unknown, the result is an **upper bound**, not a point estimate. The formula assumes immediate full repricing and is not a maturity-specific forecast.
-- **Oil:** fuel cost, oil revenue and purchased oil/gas are multiplied by the oil shock. These are **gross exposure** values before hedges, basis, pass-through and tax, not profit forecasts. Stale evidence is `historical_only`.
-- **USD:** `−foreignRevenueShare × usdShockPct` is only a translation elasticity. It is not earnings impact and does not infer derivative direction. No valid share means `not_computable`.
-- **Credit:** remains `not_computable` until new-issuance spread, maturity and rating terms exist.
+- **Rates:** when latest-10-K evidence exists, `(next12 + yearTwo + directlyTaggedFloatingDebt − cashAndShortTermInvestments) × rateShock`, in USD/year and, when positive operating income is reported, as a ratio of it. Floating/maturity overlap is disclosed, not silently netted. Cash earns the same shock. When the standard next-12-month total is absent, an explicit current-debt aggregate may be used and is labeled as a proxy. Missing required inputs fall back to the older explicit debt-based upper bound, whose immediate-full-repricing assumption remains visible. Financial-sector companies are `not_applicable` with `rate_exposure_works_through_interest_margin`.
+- **Oil:** dimensional oil/gas revenue, directly tagged fuel cost and purchased oil/gas are multiplied by the oil shock. Explicit product, energy and oil/gas segment members are required; intersegment eliminations and unrelated minerals, pipelines and services do not become oil exposure. These are **gross exposure** values before hedges, basis, pass-through and tax, not profit forecasts. Stale legacy metrics are omitted when replaced by current inline evidence.
+- **USD:** `−foreignRevenueShare × usdShockPct` is only a translation elasticity. Geographic facts must match the period and a consolidated total, with reconciliation across concept aliases only when the table supports it. It is not earnings impact and does not infer derivative direction. No valid share means `not_computable`.
+- **Credit:** the next-12-month maturity is multiplied by the spread shock as an explicit full-refinancing upper bound. Secured/unsecured type totals may be summed only after excluding instrument rows and other dimensions. Current-debt aggregates are labeled when they replace a missing standard maturity total. A new-issuance estimate remains unevaluated without its terms. A reported fixed-zero maturity is zero, not missing evidence.
 
 The output is `public/reports/macro-scenarios.json` and `.md`. Use `--out /tmp/macro-scenarios.json` for an isolated smoke run. Scenario shocks are user-defined assumptions, not FRED forecasts.
 
 ## 11. Scenario Lab UI and review invariants
 
-Open owner-only **`/scenario-lab`**. It loads the three reviewed reports at runtime, recomputes every shock in the browser and exports the current JSON. No scenario state is inferred from missing reports.
+Open owner-only **`/scenario-lab`**. It loads the scenario, pilot/company exposure, latest-exposure and atlas reports at runtime, recomputes every shock in the browser and exports the current JSON. Calibration is optional. No scenario state is inferred from missing reports.
 
-- `complete` means every pilot computes; `partial` means only a subset computes.
+- `complete` means every company computes; `partial` means only a subset computes. `not_applicable` is not counted as a fabricated current computation.
 - `upper_bound` is used when hedge share is unknown; `gross_exposure` is not net income.
 - FRED baseline carries full source URL, hash, vintage and research availability.
 - Fuel and oil evidence preserves `periodStart`, so YTD periods cannot be mistaken for standalone quarters.
 - TTM built from non-consecutive quarters is `partial`, never silently `available`.
 - Targeted company rebuilds preserve the original `universeSha256`.
 
-The evidence inspector shows exact formula, concepts, period, availability and reasons for `not_computable`. Empty states include the build commands rather than fabricated data. A fixture, when used for tests, is explicitly marked `dataMode: "fixture"` and is never presented as a live FRED baseline.
+The evidence inspector shows exact formula, concepts, period, availability, filing accession, source hash and inline fact excerpts. Measured market response is the atlas median of abnormal return divided by the observed macro shock, with an empirical event/horizon p05/p95 interval. That interval is **not** a confidence interval or forecast, and atlas coverage is explicitly unavailable when the company/channel is absent. Empty states include the build commands rather than fabricated data. A fixture, when used for tests, is explicitly marked `dataMode: "fixture"` and is never presented as a live FRED baseline.
 
 ## 12. Shock calibration
 
@@ -270,12 +276,13 @@ The operations registry automates the existing local macro pipeline without addi
 | `macro-manifest-qa` | Daily 05:55 | Audit hashes, rows, required coverage and availability |
 | `company-exposure-evidence` | After `research-factors` | Rebuild aligned company exposure evidence |
 | `pilot-exposure-evidence` | Daily 06:05 | Refresh five pilots from SEC companyfacts |
-| `macro-scenarios` | After QA + both evidence reports | Recompute Scenario Lab baselines and impacts |
+| `exposure-history` (manual cache-only prerequisite) | After new cached SEC filings | Rebuild immutable filing-anchored exposure history; no collection or scheduler entry |
+| `macro-scenarios` | After QA + both evidence reports + complete history and atlas | Recompute Scenario Lab baselines and impacts |
 | `shock-calibration` | After QA | Recompute historical shock distributions and CIs |
 | `macro-event-study` | After QA | Recompute the first-release OFAC event study |
-| `macro-transmission-atlas` | After event study + research factors | Estimate company-level shock × exposure transmission with frozen OOS |
+| `macro-transmission-atlas` | After event study + research factors + complete history | Estimate company-level shock × exposure transmission with frozen OOS |
 
-`macro-manifest-qa` deliberately has no parent dependency. A weekly FRED refresh must not block daily OFAC QA through the scheduler's 48-hour dependency freshness window. Derived builders still require successful current QA and evidence parents.
+`macro-manifest-qa` deliberately has no parent dependency. A weekly FRED refresh must not block daily OFAC QA through the scheduler's 48-hour dependency freshness window. Derived builders still require successful current QA and evidence parents. The history command only reads cached SEC documents; it does not register another collector or scheduler job. Existing scheduled jobs consume the last complete history rather than silently treating a missing or partial history as empty.
 
 Daily Operations reads artifact evidence in addition to scheduler status:
 
@@ -293,10 +300,11 @@ npx tsx worker/macro-events-fetch.mts --pages 1
 npx tsx worker/macro-manifest-qa.mts
 npx tsx scripts/build-company-exposure.mts --universe research-universe-50.json
 npx tsx scripts/build-pilot-exposure-evidence.mts
-npx tsx scripts/build-macro-scenarios.mts --macro-root D:\research\alpha-engine\macro
+npx tsx scripts/build-exposure-history.mts
 npx tsx scripts/build-shock-calibration.mts --macro-root D:\research\alpha-engine\macro
 npx tsx scripts/build-macro-event-study.mts --macro-root D:\research\alpha-engine\macro
 npx tsx scripts/build-macro-transmission-atlas.mts
+npx tsx scripts/build-macro-scenarios.mts --macro-root D:\research\alpha-engine\macro
 npx tsx scripts/build-daily-operations-report.mts --macro-root D:\research\alpha-engine\macro
 ```
 
@@ -326,17 +334,17 @@ Outputs are `public/reports/macro-event-study.json` and `.md`, including per-eve
 npx tsx scripts/build-macro-transmission-atlas.mts
 ```
 
-Atlas joins the first-release macro event observations to canonical SEC exposure and market-model abnormal returns. Use `--universe research-universe-50.json` for the evaluated S&P panel or `--only TICKER` for a bounded diagnostic run. The CLI reads `public/reports/macro-event-study.json`, local `series_points` and daily prices; it does not fetch production data.
+Atlas joins the first-release macro event observations to canonical SEC exposure and market-model abnormal returns. Use `--universe research-universe-50.json` for the evaluated S&P panel or `--only TICKER` for a bounded diagnostic run. The CLI reads `public/reports/macro-event-study.json`, local `series_points`, daily prices and the complete exposure history; it does not fetch production data. The history must have `status: complete`, `published: true` and the SHA256 recorded in `research/engine/exposure-history.summary.json`.
 
 ### Exposure panel
 
-Exposure is rebuilt at every event's `researchEligibleAt`, using only `quality=available`, non-stale evidence:
+Exposure is rebuilt at every event's `researchEligibleAt`, using only `quality=available`, non-stale evidence. Inline-XBRL measures are selected from filings available at that timestamp, never from a later filing. Fuel and oil flows are divided by operating income from the **same filing and same period**; an incompatible or missing denominator does not create a ratio.
 
 - `debt_burden`: debt / operating income. This is a balance-sheet rate-sensitivity proxy, **not** a floating-rate share or a maturity-specific repricing schedule;
 - `fuel_cost`: fuel cost / operating income;
 - `oil_revenue`: oil and gas revenue / operating income;
 - `oil_cost`: purchased oil and gas cost / operating income;
-- `foreign_revenue`: directly comparable foreign revenue share.
+- `foreign_revenue`: directly comparable foreign revenue share, including dimensional geographic evidence.
 
 Partial, stale, negative or missing ratios are excluded and counted. No sector means, zero imputation or current-exposure backfill is allowed. Oil ratios use additive optional fields, so older exposure reports without them simply produce missing evidence.
 

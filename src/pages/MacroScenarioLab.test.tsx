@@ -15,7 +15,7 @@ describe("Macro Scenario Lab", () => {
   beforeEach(async () => {
     vi.stubGlobal("fetch", async (input: RequestInfo | URL) => {
       const url = String(input);
-      const file = url === "/reports/macro-scenarios.json" ? "src/test-fixtures/macro-scenarios.json" : url === "/reports/shock-calibration.json" ? "src/test-fixtures/shock-calibration.json" : `public${url}`;
+      const file = url === "/reports/macro-scenarios.json" || url === "/reports/shock-calibration.json" || url === "/reports/exposure-latest.json" || url === "/reports/macro-transmission-atlas.json" ? `src/test-fixtures${url.slice("/reports".length)}` : `public${url}`;
       return new Response(readFileSync(file, "utf8"), { status: 200 });
     });
     host = document.createElement("div");
@@ -50,6 +50,8 @@ describe("Macro Scenario Lab", () => {
     await act(async () => { rcl.click(); });
     expect(host!.textContent).toContain("assumes immediate full repricing of exposed debt");
     expect(host!.textContent).toContain("hedge_share_unknown_upper_bound");
+    expect(host!.textContent).toContain("Measured market response");
+    expect(host!.textContent).toContain("empirical event/horizon distribution, not a confidence interval or forecast");
   });
 
   it("uses calibrated FRED presets and confidence intervals", () => {

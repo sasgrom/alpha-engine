@@ -53,3 +53,41 @@ project loads carries no dimensional facts. The rate shock assumes all debt repr
 ## Delivery
 
 Delivery report in this file, the usual handoff note, and a mailbox message to Claude.
+
+## Delivery report — 2026-11-12
+
+Delivered locally with no production write, deployment, schema change, LLM or GDELT request. The new report-file policies for `exposure-latest.json` and `macro-transmission-atlas.json` are `automatic: false`.
+
+### Acceptance evidence
+
+Coverage is `computable / historical_only / not_applicable / not_computable`:
+
+- Rates: **26 / 17 / 0 / 7 → 38 / 2 / 6 / 4**.
+- Oil: **1 / 3 / 0 / 46 → 5 / 0 / 0 / 45**. Current evidence covers COP, CVX and KMI oil/gas revenue and DAL/RCL fuel costs; FCX refined copper is correctly excluded.
+- USD: **0 / 8 / 0 / 42 → 44 / 1 / 0 / 5**, exceeding the 40/50 target.
+- Credit: **36 / 6 / 0 / 8 → 46 / 1 / 0 / 3**.
+
+The 17 original stale rate cases now comprise 12 computable, two historical-only and three not-applicable. The six stale credit cases now comprise five computable and one historical-only. `staleEvidenceAudit` in `research/engine/exposure-history.summary.json` preserves every before/after value, accession, concept and exact recovered fact. PLTR remains historical-only because its latest 10-K has no standard or current-debt maturity figure. NFLX, LLY, AMT and LMT use explicitly labeled current-debt aggregates; AIG uses secured/unsecured type totals without summing instrument-level duplicates. NFLX's more precise `2,474,796 × 10^3 USD` is retained instead of the rounded `2,475 × 10^6 USD`.
+
+The maturity checks cover AAPL, AMD, INTC, AMZN, TSLA, BA, RCL, DAL, MSFT and COP, plus MU's regression. Every entry has its latest-10-K accession, source URL/hash and exact fact excerpt. MU's next-12-month and year-two values are both zero (`ixt:fixed-zero`), not missing. GS, COF, JPM, MA, V and AIG are `not_applicable` for rates with `rate_exposure_works_through_interest_margin`.
+
+The atlas has **7,376 records**. Scenario comparisons are available for 17 rate, 17 credit, 44 USD and three oil companies; all other company/channel pairs say `atlas_company_not_covered`. Responses show median abnormal return per observed macro shock and an empirical event/horizon p05/p95 interval, not a confidence interval or forecast. Atlas `partial` and failed OOS gates remain visible; there is no alpha promotion.
+
+### History and artifacts
+
+- `research/engine/exposure-history.jsonl`: **1,435 evidence-bearing filings, 6,111 measures, 50 companies, 11,225,147 bytes**. The 5,100 parsed documents include 3,665 with no supported measure; they are not treated as errors or given fabricated rows. Another 51 pre-inline-XBRL primary documents are explicitly unavailable, not silently treated as an empty archive.
+- Measures: foreign revenue share 876; oil/gas revenue 70; fuel cost 71; next-12-month debt 1,187; year-two debt 422; floating-rate share 15; cash/short-term investments 1,237; operating income 1,128; interest expense 1,105. Per-company document/measure counts are in the summary.
+- Every row has `availableAt = filingDate`, accession, source URL/hash, period and exact facts. Full parser verification found 1,435 filings and 6,111 measures with no availability mismatch.
+- History SHA256: `98a5d49fd3e92469ca84b3a72cc84479dc28d277f2808a0a837de4a65990c39d`. The D: archive and repository JSONL have the same bytes; `.gitattributes` prevents line-ending changes.
+- `research/engine/exposure-latest.json` and `public/reports/exposure-latest.json` provide the latest annual and per-measure evidence for the browser. The local scenario and atlas payloads are `public/reports/macro-scenarios.json` and `public/reports/macro-transmission-atlas.json`.
+- Final hashes in the summary: exposure-latest `80a3ab359360bf9105de6bed27782c83ed5656483e03ac9e61c215e8ea51df30`; scenarios `ddc4986b112524fe3143c3e0ff5805c31f78f5d8f432deefce860a6f51f177c3`; atlas `69c7fe5848a98188ae5e44b5e293ecf785fe2fb287544b61ac82c10255d00b13`.
+
+The builder streams rows and checkpoints complete companies on D:. A D: disconnect or modern missing primary document prevents publication; it never initializes a C: replacement archive. The original in-memory failure was fixed without deleting any cache or publishing a partial history.
+
+### Verification and delivery
+
+- `npm run check`: passed.
+- `VITEST_MAX_WORKERS=2 npm test -- --run --reporter=dot`: **230 files, 1,291 tests passed**.
+- `npm run build`: passed; `git diff --check`: passed.
+- Real browser against the rebuilt local server: 50 companies, AAPL maturity/cash evidence and exact shock doubling, USD atlas coverage, AIG split maturity evidence with `USD/year`, current COP oil revenue, and JPM's interest-margin status. All required report URLs returned 200 and no page errors occurred. Screenshots are in `worker/.runs/k10-scenario-{rates,usd,credit}.png` (uncommitted).
+- One local production-mode listener was restarted after verifying its process: pid **16900**. No additional collector or scheduler entry was added. Source and evidence are committed separately; unrelated generated exposure/analytics files are not included.

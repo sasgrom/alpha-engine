@@ -8,6 +8,8 @@ import type { ShockCalibrationReport } from "../../api/services/shock-calibratio
 import type { PilotEvidenceReport } from "../../api/services/pilot-exposure-evidence";
 import type { CompanyExposureReport } from "../../api/services/company-exposure";
 import type { NormalizedMacroPoint } from "../../worker/lib/fred";
+import type { ExposureFiling } from "../../worker/lib/exposure-aggregation";
+import type { AtlasRecord } from "../../api/services/scenario-rate-atlas";
 
 interface ScenarioBundle {
   report: MacroScenarioReport;
@@ -15,6 +17,9 @@ interface ScenarioBundle {
   exposure: CompanyExposureReport;
   calibration: ShockCalibrationReport | null;
   macroSeries: Record<string, NormalizedMacroPoint[]>;
+  exposureHistory?: ExposureFiling[];
+  atlasRecords?: AtlasRecord[];
+  atlasAsOf?: string;
 }
 const CHANNELS: ScenarioChannel[] = ["rates", "oil", "usd", "credit"];
 const SHOCK_PRESETS: Record<ScenarioChannel, { label: string; value: number }[]> = {
@@ -35,6 +40,12 @@ function fetchCalibration(): Promise<ShockCalibrationReport | null> {
     .then((response) => response.status === 404 ? null : response.ok ? response.json() as Promise<ShockCalibrationReport> : Promise.reject(new Error(`Calibration HTTP ${response.status}`)))
     .catch(() => null);
 }
+async function fetchOptionalReport<T>(url: string): Promise<T | null> {
+  const response = await fetch(url, { cache: "no-store" });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(`${url} HTTP ${response.status}`);
+  return response.json() as Promise<T>;
+}
 function requestBundle(): Promise<ScenarioBundle> {
   if (!bundleRequest) {
     bundleRequest = Promise.all([
@@ -42,16 +53,19 @@ function requestBundle(): Promise<ScenarioBundle> {
       fetch("/reports/pilot-exposure-evidence.json", { cache: "no-store" }),
       fetch("/reports/company-exposures.json", { cache: "no-store" }),
       fetchCalibration(),
-    ]).then(async ([scenarioResponse, pilotResponse, exposureResponse, calibration]) => {
+      fetchOptionalReport<{ companies: ExposureFiling[]; latestMeasures?: ExposureFiling[] }>("/reports/exposure-latest.json"),
+      fetchOptionalReport<{ asOf: string; records: AtlasRecord[] }>("/reports/macro-transmission-atlas.json"),
+    ]).then(async ([scenarioResponse, pilotResponse, exposureResponse, calibration, history, atlas]) => {
       for (const response of [scenarioResponse, pilotResponse, exposureResponse]) if (!response.ok) throw new Error(`Snapshot HTTP ${response.status}`);
       const [report, pilot, exposure] = await Promise.all([scenarioResponse.json(), pilotResponse.json(), exposureResponse.json()]) as [MacroScenarioReport, PilotEvidenceReport, CompanyExposureReport];
       if (report.schemaVersion !== 1 || !Array.isArray(report.scenarios) || !Array.isArray(pilot.companies) || !Array.isArray(exposure.companies)) throw new Error("Unsupported scenario schema");
+      if (history && (!Array.isArray(history.companies) || !Array.isArray(history.latestMeasures))) throw new Error("Unsupported exposure history schema");
       const macroSeries: Record<string, NormalizedMacroPoint[]> = {};
       for (const scenario of report.scenarios) {
         if (!scenario.baseline) continue;
         macroSeries[scenario.baseline.seriesId] = [{ ...scenario.baseline, availablePrecision: "day" }];
       }
-      return { report, pilot, exposure, calibration, macroSeries };
+      return { report, pilot, exposure, calibration, macroSeries, exposureHistory: history ? [...history.companies, ...(history.latestMeasures ?? [])] : undefined, atlasRecords: atlas?.records, atlasAsOf: atlas?.asOf };
     }).catch((error: unknown) => { bundleRequest = null; throw error; });
   }
   return bundleRequest;
@@ -90,7 +104,7 @@ export default function MacroScenarioLab() {
   const report = useMemo<MacroScenarioReport | null>(() => {
     if (!bundle) return null;
     const definitions: MacroScenarioDefinition[] = CHANNELS.map((item) => ({ channel: item, shock: shocks[item] }));
-    return buildMacroScenarioReport({ dataMode: bundle.report.dataMode, asOf: bundle.report.asOf, definitions, macroSeries: bundle.macroSeries, pilot: bundle.pilot.companies, exposures: bundle.exposure.companies });
+    return buildMacroScenarioReport({ dataMode: bundle.report.dataMode, asOf: bundle.report.asOf, definitions, macroSeries: bundle.macroSeries, pilot: bundle.pilot.companies, exposures: bundle.exposure.companies, exposureHistory: bundle.exposureHistory, atlasRecords: bundle.atlasRecords, atlasAsOf: bundle.atlasAsOf });
   }, [bundle, shocks]);
   const scenario = report?.scenarios.find((item) => item.channel === channel) ?? null;
   const impacts = useMemo(() => (scenario?.impacts ?? []).filter((impact) =>
@@ -152,7 +166,7 @@ export default function MacroScenarioLab() {
             <AlertTriangle size={22} />
             <h2>Scenario evidence is unavailable</h2>
             <p>Build the FRED archive, pilot evidence and company exposure reports first. No scenario state is inferred from missing files.</p>
-            <code>npx tsx scripts/build-pilot-exposure-evidence.mts --source db --universe research-universe-50.json<br />npx tsx scripts/build-company-exposure.mts --universe research-universe-50.json --pilot-evidence public/reports/pilot-exposure-evidence.json<br />npx tsx scripts/build-macro-scenarios.mts --macro-source file --macro-root D:\research\alpha-engine\macro</code>
+            <code>npx tsx scripts/build-pilot-exposure-evidence.mts --source db --universe research-universe-50.json<br />npx tsx scripts/build-company-exposure.mts --universe research-universe-50.json --pilot-evidence public/reports/pilot-exposure-evidence.json<br />npx tsx scripts/build-exposure-history.mts<br />npx tsx scripts/build-macro-transmission-atlas.mts<br />npx tsx scripts/build-macro-scenarios.mts --macro-source file --macro-root D:\research\alpha-engine\macro</code>
           </section>
         )}
 
@@ -178,6 +192,7 @@ export default function MacroScenarioLab() {
                 <option value="ALL">All statuses</option>
                 <option value="computable">Current · computable</option>
                 <option value="historical_only">Historical only</option>
+                <option value="not_applicable">Not applicable · interest margin</option>
                 <option value="not_computable">Not computable</option>
               </select>
               <button type="button" className="scenario-download" onClick={download}><Download size={14} /> Export current JSON</button>
@@ -210,16 +225,18 @@ export default function MacroScenarioLab() {
               <section className="scenario-panel scenario-impact-panel">
                 <div className="scenario-panel-heading"><FileCheck2 size={15} /><h2>Company impacts</h2><span>{impacts.length} shown · {coverage.total} total</span></div>
                 <div className="scenario-impact-table" role="table" aria-label="Company scenario impacts">
-                  <div className="scenario-impact-head" role="row"><span>Company</span><span>Status</span><span>Metric</span><span>Value</span><span>Period</span></div>
+                  <div className="scenario-impact-head" role="row"><span>Company</span><span>Status</span><span>Metric</span><span>Value</span><span>Period</span><span>Measured response</span></div>
                   {impacts.map((impact) => {
                     const first = impact.metrics[0];
+                    const measured = impact.measuredResponse;
                     return (
                       <button type="button" role="row" key={impact.ticker} className={`scenario-impact-row ${ticker === impact.ticker ? "active" : ""}`} onClick={() => setTicker(impact.ticker)}>
                         <span className="scenario-ticker">{impact.ticker}</span>
                         <span className={`scenario-status ${statusClass(impact.status)}`}>{impact.status}</span>
-                        <span>{first?.name ?? "not_computable"}{first && <small className="scenario-impact-type">{first.impactType}</small>}</span>
-                        <span className="scenario-number-value">{first ? `${money(first.value)} ${first.unit}` : "—"}</span>
+                        <span>{first?.name ?? impact.status}{first && <small className="scenario-impact-type">{first.impactType}</small>}</span>
+                        <span className="scenario-number-value">{first ? first.unit === "ratio" ? `${(first.value * 100).toFixed(3)}%` : `${money(first.value)} ${first.unit}` : "—"}</span>
                         <span>{first?.periodEnd ?? impact.reasons[0] ?? "—"}</span>
+                        <span>{measured?.status === "available" ? `${((measured.median ?? 0) * 100).toFixed(2)}%` : "—"}<small className="scenario-impact-type">{measured?.status === "available" ? measured.disagreement ?? "descriptive only" : measured?.reason ?? "not provided"}</small></span>
                       </button>
                     );
                   })}
@@ -233,12 +250,22 @@ export default function MacroScenarioLab() {
                 <>
                   <div className="scenario-inspector-title"><strong>{selectedImpact.ticker}</strong><span className={`scenario-status ${statusClass(selectedImpact.status)}`}>{selectedImpact.status}</span></div>
                   {selectedImpact.reasons.length > 0 && <div className="scenario-reason"><span>Reason</span><p>{selectedImpact.reasons.join(" · ")}</p></div>}
+                  {selectedImpact.measuredResponse && <article className="scenario-evidence-block"><h3>Measured market response</h3>
+                    {selectedImpact.measuredResponse.status === "available" ? <dl>
+                      <div><dt>Median / shock</dt><dd>{((selectedImpact.measuredResponse.median ?? 0) * 100).toFixed(3)}%</dd></div>
+                      <div><dt>p05 … p95</dt><dd>{selectedImpact.measuredResponse.interval?.map(value => `${(value * 100).toFixed(3)}%`).join(" … ")}</dd></div>
+                      <div><dt>Observations</dt><dd>{selectedImpact.measuredResponse.count} · horizons {selectedImpact.measuredResponse.horizons?.join(", ")} trading days</dd></div>
+                      <div><dt>Atlas exposure</dt><dd>{selectedImpact.measuredResponse.exposureKinds?.join(", ")}</dd></div>
+                      <div><dt>Comparison</dt><dd>{selectedImpact.measuredResponse.disagreement ?? "No filing direction to compare"}</dd></div>
+                    </dl> : <p className="scenario-formula">Unavailable: {selectedImpact.measuredResponse.reason}.</p>}
+                    {selectedImpact.measuredResponse.note && <p className="scenario-formula">{selectedImpact.measuredResponse.note}</p>}
+                  </article>}
                   {selectedImpact.metrics.map((metric) => (
-                    <article key={metric.name} className="scenario-evidence-block">
+                    <article key={`${metric.name}-${metric.unit}`} className="scenario-evidence-block">
                       <h3>{metric.name} · {metric.impactType}</h3>
                       <p className="scenario-formula">{metric.formula}</p>
                       <dl>
-                        <div><dt>Value</dt><dd>{money(metric.value)} {metric.unit}</dd></div>
+                        <div><dt>Value</dt><dd>{metric.unit === "ratio" ? `${(metric.value * 100).toFixed(3)}%` : `${money(metric.value)} ${metric.unit}`}</dd></div>
                         <div><dt>Concepts</dt><dd>{metric.concepts.join(", ") || "—"}</dd></div>
                         <div><dt>Period</dt><dd>{metric.periodStart ? `${metric.periodStart} → ` : ""}{metric.periodEnd ?? "—"}</dd></div>
                         <div><dt>Available</dt><dd>{metric.availableAt ?? "—"}</dd></div>
@@ -246,6 +273,13 @@ export default function MacroScenarioLab() {
                       </dl>
                     </article>
                   ))}
+                  {selectedImpact.exposureEvidence?.map(filing => <article key={filing.accessionNo} className="scenario-evidence-block">
+                    <h3>SEC {filing.form} · {filing.filingDate}</h3>
+                    <dl><div><dt>Accession</dt><dd>{filing.accessionNo}</dd></div><div><dt>Source</dt><dd>{filing.sourceUrl ? <a href={filing.sourceUrl} target="_blank" rel="noreferrer">Cached primary filing</a> : "Cached primary filing"}</dd></div><div><dt>SHA256</dt><dd className="scenario-hash">{filing.sourceHash ?? "—"}</dd></div></dl>
+                    {filing.measures.map(measure => <div key={measure.kind}><p className="scenario-formula"><strong>{measure.kind}</strong> · {measure.unit === "ratio" ? `${(measure.value * 100).toFixed(3)}%` : `${money(measure.value)} ${measure.unit}`} · {measure.note}</p>
+                      {measure.facts.map(fact => <details key={fact.id}><summary>{fact.id} · {fact.concept} · {fact.rawValue} {fact.unitRef} · scale {fact.scale ?? "0"}</summary><pre className="scenario-fact">{fact.excerpt}</pre></details>)}
+                    </div>)}
+                  </article>)}
                 </>
               ) : (
                 <>

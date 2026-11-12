@@ -1,5 +1,6 @@
 /** Build availability-anchored macro scenarios from FRED baselines and SEC exposure evidence. */
 import "dotenv/config";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { inArray } from "drizzle-orm";
@@ -31,9 +32,14 @@ const definitions: MacroScenarioDefinition[] = [
 ];
 const pilotPath = path.resolve(arg("--pilot") ?? "public/reports/pilot-exposure-evidence.json");
 const exposurePath = path.resolve(arg("--exposure") ?? "public/reports/company-exposures.json");
-for (const file of [pilotPath, exposurePath]) if (!existsSync(file)) throw new Error(`Missing ${file}. Build pilot and company exposure reports first.`);
+const exposureHistoryPath = path.resolve(arg("--exposure-history") ?? "public/reports/exposure-latest.json");
+const atlasPath = path.resolve(arg("--atlas") ?? "public/reports/macro-transmission-atlas.json");
+for (const file of [pilotPath, exposurePath, exposureHistoryPath, atlasPath]) if (!existsSync(file)) throw new Error(`Missing ${file}. Build exposure history and the macro transmission atlas first.`);
 const pilotReport = JSON.parse(readFileSync(pilotPath, "utf8")) as PilotEvidenceReport;
 const exposureReport = JSON.parse(readFileSync(exposurePath, "utf8")) as CompanyExposureReport;
+const exposureLatest = JSON.parse(readFileSync(exposureHistoryPath, "utf8")) as { companies: import("../worker/lib/exposure-aggregation").ExposureFiling[]; latestMeasures: import("../worker/lib/exposure-aggregation").ExposureFiling[] };
+const atlas = JSON.parse(readFileSync(atlasPath, "utf8")) as { asOf: string; records: import("../api/services/scenario-rate-atlas").AtlasRecord[] };
+const exposureHistory = [...exposureLatest.companies, ...exposureLatest.latestMeasures];
 const channelSeries: Record<ScenarioChannel, string> = { rates: "DGS10", oil: "DCOILWTICO", usd: "DTWEXBGS", credit: "BAMLH0A0HYM2" };
 const seriesIds = [...new Set(Object.values(channelSeries))];
 const metadata: Record<string, { unit: string; frequency: string }> = {
@@ -114,14 +120,16 @@ if (macroSource === "file") {
 }
 
 const prog = startProgress("macro-scenarios", `${definitions.length} scenarios · ${pilotReport.companies.length} companies · availability anchored`);
-const report = buildMacroScenarioReport({ dataMode: process.argv.includes("--fixture") ? "fixture" : "live", asOf, definitions, macroSeries, pilot: pilotReport.companies, exposures: exposureReport.companies });
+const previousPath = path.resolve("public/reports/macro-scenarios.json");
+const previous = existsSync(previousPath) ? JSON.parse(readFileSync(previousPath, "utf8")) as MacroScenarioReport : null;
+const report = buildMacroScenarioReport({ dataMode: process.argv.includes("--fixture") ? "fixture" : "live", asOf, definitions, macroSeries, pilot: pilotReport.companies, exposures: exposureReport.companies, exposureHistory, atlasRecords: atlas.records, atlasAsOf: atlas.asOf });
 const jsonPath = path.resolve(arg("--out") ?? "public/reports/macro-scenarios.json");
 const markdownPath = jsonPath.replace(/\.json$/i, ".md");
 writeJsonAtomic(jsonPath, report, true);
 const publish = !arg("--out");
 const distDir = path.resolve("dist/public/reports");
 if (publish && existsSync(distDir)) writeJsonAtomic(path.join(distDir, "macro-scenarios.json"), report, true);
-const lines = ["# Macro scenarios", "", `As of: ${report.asOf}`, "Upper bounds and gross exposure are not profit forecasts. Stale evidence is historical only. Credit uses scheduled twelve-month refinancing upper bounds; new-issuance estimates remain not evaluated.", ""];
+const lines = ["# Macro scenarios", "", `As of: ${report.asOf}`, "Upper bounds and gross exposure are not profit forecasts. Rate impacts use scheduled latest-10-K maturities and cash when available. Atlas responses are empirical event/horizon distributions, not confidence intervals or forecasts.", ""];
 for (const scenario of report.scenarios) {
   lines.push(`## ${scenario.channel.toUpperCase()} · shock ${scenario.shock} · ${scenario.status}`, "");
   if (scenario.baseline) lines.push(`Baseline: ${scenario.baseline.seriesId} ${scenario.baseline.value} → ${scenario.baseline.scenarioValue} ${scenario.baseline.unit} · observation ${scenario.baseline.observationPeriod} · available ${scenario.baseline.availableAt} · provenance ${scenario.baseline.provenance ?? "official_normalized_archive"}${scenario.baseline.stale ? " · stale" : ""}`, "");
@@ -129,11 +137,74 @@ for (const scenario of report.scenarios) {
   for (const impact of scenario.impacts) {
     lines.push(`- ${impact.ticker}: **${impact.status}**${impact.reasons.length ? ` · ${impact.reasons.join("; ")}` : ""}`);
     for (const metric of impact.metrics) lines.push(`  - ${metric.name}: ${metric.value} ${metric.unit} · ${metric.impactType} · ${metric.periodStart ? `${metric.periodStart} → ` : ""}${metric.periodEnd}${metric.stale ? " · stale" : ""}`);
+    const measured = impact.measuredResponse;
+    lines.push(measured?.status === "available"
+      ? `  - Measured atlas response: median ${measured.median} · empirical p05/p95 ${measured.interval?.join(" … ")} · ${measured.count} observations · horizons ${measured.horizons?.join(",")} · ${measured.exposureKinds?.join(",")} · ${measured.disagreement ?? "no filing direction to compare"}`
+      : `  - Measured atlas response: unavailable · ${measured?.reason ?? "not provided"}`);
+    for (const filing of impact.exposureEvidence ?? []) {
+      lines.push(`  - SEC ${filing.form} ${filing.filingDate} · accession ${filing.accessionNo} · ${filing.sourceUrl ?? "cached primary filing"} · SHA256 ${filing.sourceHash ?? "unknown"}`);
+      for (const measure of filing.measures) {
+        lines.push(`    - ${measure.kind}: ${measure.value} ${measure.unit} · ${measure.note ?? "direct filing evidence"}`);
+        for (const fact of measure.facts) lines.push(`      - ${fact.id} · ${fact.concept} · ${fact.contextRef} · ${fact.rawValue} ${fact.unitRef} · ${fact.excerpt}`);
+      }
+    }
   }
   lines.push("");
 }
 const markdown = `${lines.join("\n")}\n`;
 writeFileSync(markdownPath, markdown, "utf8");
 if (publish && existsSync(distDir)) writeFileSync(path.join(distDir, "macro-scenarios.md"), markdown, "utf8");
-prog.done(`scenarios ${report.scenarios.length} · ${jsonPath}`);
+const statusList = ["computable", "historical_only", "not_applicable", "not_computable"] as const;
+const afterCoverage = Object.fromEntries(report.scenarios.map(scenario => [scenario.channel, Object.fromEntries(statusList.map(status => [status, scenario.impacts.filter(impact => impact.status === status).length]))]));
+const previousSummaryPath = path.resolve("research/engine/exposure-history.summary.json");
+const previousSummary = existsSync(previousSummaryPath) ? JSON.parse(readFileSync(previousSummaryPath, "utf8")) : null;
+const staleBaseline = previousSummary?.staleEvidenceAudit ?? (previous?.scenarios ?? []).filter(scenario => scenario.channel === "rates" || scenario.channel === "credit").flatMap(scenario => scenario.impacts.filter(impact => impact.status === "historical_only").map(impact => ({ ticker: impact.ticker, channel: scenario.channel, before: { status: impact.status, periodEnd: impact.metrics[0]?.periodEnd ?? null, availableAt: impact.metrics[0]?.availableAt ?? null, concepts: impact.metrics[0]?.concepts ?? [] } })));
+const staleEvidenceAudit = staleBaseline.map((row: { ticker: string; channel: string; before: unknown }) => {
+  const current = report.scenarios.find(item => item.channel === row.channel)?.impacts.find(item => item.ticker === row.ticker);
+  const annual = exposureLatest.companies.find(company => company.ticker === row.ticker);
+  const recovered = current?.exposureEvidence?.some(filing => filing.measures.some(measure => measure.kind === "debtMaturingNext12"));
+  const evidence = (current?.exposureEvidence ?? []).flatMap(filing => filing.measures.filter(measure => measure.kind === "debtMaturingNext12").map(measure => ({ form: filing.form, filingDate: filing.filingDate, accessionNo: filing.accessionNo, sourceUrl: filing.sourceUrl ?? null, sourceHash: filing.sourceHash ?? null, note: measure.note ?? null, value: measure.value, unit: measure.unit, facts: measure.facts.map(fact => ({ id: fact.id, concept: fact.concept, contextRef: fact.contextRef, rawValue: fact.rawValue, value: fact.value, unitRef: fact.unitRef, format: fact.format ?? null, scale: fact.scale, sign: fact.sign, excerpt: fact.excerpt })) })));
+  return {
+    ...row,
+    after: { status: current?.status ?? "missing", periodEnd: current?.metrics[0]?.periodEnd ?? null, availableAt: current?.metrics[0]?.availableAt ?? null, accessionNo: current?.exposureEvidence?.[0]?.accessionNo ?? null, concepts: current?.metrics[0]?.concepts ?? [], evidence },
+    cause: current?.status === "not_applicable" ? "rate_exposure_works_through_interest_margin" : recovered ? "current_inline_xbrl_maturity_total_recovered" : annual?.missing.filter(reason => reason.includes("matur") || reason.includes("cash")).join("; ") || "latest_10k_maturity_evidence_unavailable",
+  };
+});
+const maturityTickers = ["AAPL", "AMD", "INTC", "AMZN", "TSLA", "BA", "RCL", "DAL", "MSFT", "COP", "MU"];
+const maturityChecks = maturityTickers.map(ticker => {
+  const filing = exposureLatest.companies.find(company => company.ticker === ticker);
+  if (!filing) throw new Error(`No latest annual exposure filing for ${ticker}`);
+  const detail = (kind: "debtMaturingNext12" | "debtMaturingYearTwo") => {
+    const measure = filing.measures.find(item => item.kind === kind);
+    return measure ? { value: measure.value, unit: measure.unit, periodEnd: measure.periodEnd, facts: measure.facts.map(fact => ({ id: fact.id, concept: fact.concept, contextRef: fact.contextRef, rawValue: fact.rawValue, value: fact.value, unitRef: fact.unitRef, format: fact.format ?? null, scale: fact.scale, sign: fact.sign, excerpt: fact.excerpt })) } : null;
+  };
+  const impact = report.scenarios.find(scenario => scenario.channel === "rates")?.impacts.find(item => item.ticker === ticker);
+  return { ticker, form: filing.form, filingDate: filing.filingDate, accessionNo: filing.accessionNo, sourceUrl: filing.sourceUrl ?? null, sourceHash: filing.sourceHash ?? null, next12: detail("debtMaturingNext12"), yearTwo: detail("debtMaturingYearTwo"), scenarioStatus: impact?.status ?? null, metrics: impact?.metrics ?? [], missing: filing.missing };
+});
+if (maturityChecks.some(check => !check.next12)) throw new Error("A named latest-10-K maturity acceptance check has no exact fact");
+const atlasComparison = Object.fromEntries(report.scenarios.map(scenario => [scenario.channel, {
+  available: scenario.impacts.filter(impact => impact.measuredResponse?.status === "available").length,
+  unavailable: scenario.impacts.filter(impact => impact.measuredResponse?.status !== "available").length,
+  reasons: Object.fromEntries([...new Set(scenario.impacts.map(impact => impact.measuredResponse?.reason).filter(Boolean))].map(reason => [reason, scenario.impacts.filter(impact => impact.measuredResponse?.reason === reason).length])),
+}]));
+if (publish) {
+  const summaryPath = path.resolve("research/engine/exposure-history.summary.json");
+  const summary = JSON.parse(readFileSync(summaryPath, "utf8"));
+  if (summary.status !== "complete" || summary.published !== true) throw new Error("Exposure history is incomplete; refusing to mark scenario evidence complete");
+  const hash = (file: string) => createHash("sha256").update(readFileSync(file)).digest("hex");
+  Object.assign(summary, {
+    afterCoverage,
+    staleEvidenceAudit,
+    maturityChecks,
+    financialInterestMargin: report.scenarios.find(scenario => scenario.channel === "rates")?.impacts.filter(impact => impact.status === "not_applicable").map(impact => ({ ticker: impact.ticker, reasons: impact.reasons })) ?? [],
+    atlasComparison,
+    atlasAsOf: atlas.asOf,
+    scenarioAsOf: report.asOf,
+    hashes: { history: summary.sha256, exposureLatest: hash(exposureHistoryPath), scenarios: hash(jsonPath), atlas: hash(atlasPath) },
+    productionWrite: false,
+    databaseWrite: false,
+  });
+  writeJsonAtomic(summaryPath, summary, true);
+}
+prog.done(`scenarios ${report.scenarios.length} · dollar ${afterCoverage.usd.computable}/${pilotReport.companies.length} · maturity checks ${maturityChecks.length} · ${jsonPath}`);
 process.exit(0);

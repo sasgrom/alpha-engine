@@ -1,9 +1,12 @@
+import { attachMeasuredResponse, latestAnnualExposure, maturityRateImpact, mergeInlineExposure } from "./scenario-rate-atlas";
 import type { NormalizedMacroPoint } from "../../worker/lib/fred";
+import type { ExposureFiling } from "../../worker/lib/exposure-aggregation";
 import type { CompanyExposureRow, ExposureMetric } from "./company-exposure";
 import type { ExposureEvidence, PilotEvidence } from "./pilot-exposure-evidence";
+import type { AtlasRecord, MeasuredResponse } from "./scenario-rate-atlas";
 
 export type ScenarioChannel = "rates" | "oil" | "usd" | "credit";
-export type ScenarioStatus = "computable" | "historical_only" | "not_computable";
+export type ScenarioStatus = "computable" | "historical_only" | "not_applicable" | "not_computable";
 export interface MacroScenarioDefinition { channel: ScenarioChannel; shock: number }
 export interface ScenarioMetric {
   name: "interest_upper_bound" | "interest_estimate" | "fuel_cost_gross" | "oil_revenue_gross" | "oil_cost_gross" | "usd_translation_elasticity" | "credit_refinancing_upper_bound";
@@ -22,6 +25,8 @@ export interface CompanyScenarioImpact {
   status: ScenarioStatus;
   reasons: string[];
   metrics: ScenarioMetric[];
+  measuredResponse?: MeasuredResponse;
+  exposureEvidence?: ExposureFiling[];
 }
 export interface MacroScenario {
   channel: ScenarioChannel;
@@ -62,6 +67,8 @@ export interface MacroScenarioReport {
     creditRequiresNewIssuanceTerms: true;
     totalDebtUpperBoundWhenRateShareUnknown: true;
     creditRefinancingUpperBound: true;
+    maturityBasedRateShock: true;
+    atlasResponsesDescriptive: true;
   };
   scenarios: MacroScenario[];
 }
@@ -72,6 +79,9 @@ export interface MacroScenarioInput {
   macroSeries: Record<string, NormalizedMacroPoint[]>;
   pilot: PilotEvidence[];
   exposures: CompanyExposureRow[];
+  exposureHistory?: ExposureFiling[];
+  atlasRecords?: AtlasRecord[];
+  atlasAsOf?: string;
 }
 
 const SERIES: Record<ScenarioChannel, string> = { rates: "DGS10", oil: "DCOILWTICO", usd: "DTWEXBGS", credit: "BAMLH0A0HYM2" };
@@ -251,6 +261,8 @@ function shiftedRateBaseline(point: NormalizedMacroPoint, shock: number): number
 
 export function buildMacroScenarioReport(input: MacroScenarioInput): MacroScenarioReport {
   const exposures = new Map(input.exposures.map((company) => [company.ticker, company]));
+  const historyByTicker = new Map<string, ExposureFiling[]>();
+  for (const filing of input.exposureHistory ?? []) historyByTicker.set(filing.ticker, [...(historyByTicker.get(filing.ticker) ?? []), filing]);
   const scenarios = input.definitions.map((definition): MacroScenario => {
     if (!Number.isFinite(definition.shock) || Math.abs(definition.shock) > MAX_SHOCK[definition.channel]) {
       return { channel: definition.channel, shock: definition.shock, shockUnit: UNIT[definition.channel], baseline: null, status: "not_computable", reasons: ["shock_out_of_bounds"], impacts: [] };
@@ -283,11 +295,23 @@ export function buildMacroScenarioReport(input: MacroScenarioInput): MacroScenar
       ...(point.provenance ? { provenance: point.provenance } : {}),
       stale: baselineStale,
     };
+    const atlasRecords = input.atlasAsOf && input.atlasAsOf > input.asOf ? undefined : input.atlasRecords;
     const impacts = input.pilot.map((pilot) => {
-      if (definition.channel === "rates") return rateImpact(pilot, exposures.get(pilot.ticker), definition.shock, input.asOf);
-      if (definition.channel === "oil") return oilImpact(pilot, definition.shock, input.asOf);
-      if (definition.channel === "usd") return usdImpact(pilot, definition.shock, input.asOf);
-      return creditImpact(pilot, definition.shock, input.asOf);
+      const exposure = exposures.get(pilot.ticker);
+      const history = historyByTicker.get(pilot.ticker);
+      let impact: CompanyScenarioImpact;
+      if (definition.channel === "rates") {
+        const legacy = rateImpact(pilot, exposure, definition.shock, input.asOf);
+        const annual = latestAnnualExposure(history, input.asOf);
+        const current = exposure?.sector === "Financials" || annual ? maturityRateImpact(exposure, annual ?? undefined, definition.shock, input.asOf) : legacy;
+        impact = current.status === "not_computable" && legacy.status !== "not_computable"
+          ? { ...legacy, reasons: [...legacy.reasons, "latest_10k_maturity_unavailable_legacy_evidence_retained"] }
+          : current;
+      } else {
+        const legacy = definition.channel === "oil" ? oilImpact(pilot, definition.shock, input.asOf) : definition.channel === "usd" ? usdImpact(pilot, definition.shock, input.asOf) : creditImpact(pilot, definition.shock, input.asOf);
+        impact = mergeInlineExposure(legacy, definition.channel, history, definition.shock, input.asOf);
+      }
+      return attachMeasuredResponse(impact, definition.channel, atlasRecords, input.asOf);
     });
     return { channel: definition.channel, shock: definition.shock, shockUnit: UNIT[definition.channel], baseline, status: scenarioStatus(impacts, baselineStale), reasons: [], impacts };
   });
@@ -303,6 +327,8 @@ export function buildMacroScenarioReport(input: MacroScenarioInput): MacroScenar
       creditRequiresNewIssuanceTerms: true,
       totalDebtUpperBoundWhenRateShareUnknown: true,
       creditRefinancingUpperBound: true,
+      maturityBasedRateShock: true,
+      atlasResponsesDescriptive: true,
     },
     scenarios,
   };

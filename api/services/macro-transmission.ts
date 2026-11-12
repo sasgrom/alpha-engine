@@ -1,4 +1,5 @@
 import type { FundamentalSeriesRow } from "./fundamental-integrity";
+import type { ExposureFiling, ExposureMeasure } from "../../worker/lib/exposure-aggregation";
 import { buildCompanyExposure, type ExposureMetric, type CompanyExposureRow } from "./company-exposure";
 import { carAt, marketModelEventStudy, type EventBar } from "./event-study";
 import type { MacroEventHorizon, MacroEventObservation, MacroEventSplit } from "./macro-event-study";
@@ -89,6 +90,7 @@ export interface MacroTransmissionInput {
   macroObservations: MacroEventObservation[];
   companies: { cik: number; ticker: string; sector: string | null; rows: FundamentalSeriesRow[]; bars: EventBar[] }[];
   spyBars: EventBar[];
+  exposureHistory?: ExposureFiling[];
   asOf: string;
   generatedAt: string;
   dataMode?: "live" | "fixture";
@@ -219,6 +221,51 @@ export function evaluateTransmissionModel(fit: TransmissionModelFit, records: At
   };
 }
 
+function historyMetric(measure: ExposureMeasure, operating: ExposureMeasure | undefined, asOf: string): ExposureMetric | null {
+  if (!Number.isFinite(measure.value) || measure.value < 0 || !measure.periodEnd || measure.periodEnd > asOf.slice(0, 10) || measure.availableAt > asOf) return null;
+  let value = measure.value;
+  const facts = [...measure.facts];
+  if (measure.unit !== "ratio") {
+    if (!operating || operating.value <= 0 || operating.periodStart !== measure.periodStart || operating.periodEnd !== measure.periodEnd || operating.availableAt > asOf) return null;
+    value /= operating.value;
+    facts.push(...operating.facts);
+  }
+  if (measure.unit === "ratio" && (value < 0 || value > 1)) return null;
+  return {
+    value,
+    unit: "ratio",
+    concepts: unique(facts.map(fact => fact.concept.replace(/^.*:/, ""))),
+    periodEnd: measure.periodEnd,
+    sourceFiled: measure.availableAt,
+    quality: "available",
+    note: measure.unit === "ratio" ? "Same-filing inline-XBRL geographic share" : "Inline-XBRL flow divided by same-filing, same-period operating income",
+    stale: (Date.parse(asOf) - Date.parse(`${measure.periodEnd}T00:00:00Z`)) / 86_400_000 > 550,
+  };
+}
+
+export function withInlineExposureHistory(row: CompanyExposureRow, history: ExposureFiling[], asOf: string): CompanyExposureRow {
+  const result = { ...row };
+  const eligible = history.filter(filing => filing.ticker === row.ticker && filing.filingDate <= asOf.slice(0, 10)).sort((a, b) => a.filingDate.localeCompare(b.filingDate) || a.accessionNo.localeCompare(b.accessionNo));
+  for (const kind of ["foreignRevenueShare", "fuelCost", "oilAndGasRevenue", "oilCost"] as const) {
+    const filing = eligible.filter(item => item.measures.some(measure => measure.kind === kind && measure.availableAt <= asOf)).at(-1);
+    const measure = filing?.measures.find(item => item.kind === kind);
+    if (!filing || !measure) continue;
+    const metric = historyMetric(measure, filing.measures.find(item => item.kind === "operatingIncome"), asOf);
+    if (!metric) continue;
+    if (kind === "foreignRevenueShare") result.foreignRevenueShare = metric;
+    if (kind === "fuelCost") result.fuelCostToOperatingIncome = metric;
+    if (kind === "oilAndGasRevenue") {
+      result.oilRevenue = { ...metric, value: measure.value, unit: "USD" };
+      result.oilRevenueToOperatingIncome = metric;
+    }
+    if (kind === "oilCost") {
+      result.oilCost = { ...metric, value: measure.value, unit: "USD" };
+      result.oilCostToOperatingIncome = metric;
+    }
+  }
+  return result;
+}
+
 function exposureMetric(row: CompanyExposureRow, kind: AtlasExposureKind): ExposureMetric | undefined {
   if (kind === "debt_burden") return row.debtToOperatingIncome;
   if (kind === "fuel_cost") return row.fuelCostToOperatingIncome;
@@ -237,7 +284,7 @@ export function buildMacroTransmissionAtlas(input: MacroTransmissionInput): Macr
   for (const macro of input.macroObservations) {
     if (macro.researchEligibleAt > input.asOf) continue;
     for (const company of input.companies) {
-      const exposure = buildCompanyExposure({ cik: company.cik, ticker: company.ticker, name: company.ticker, sector: company.sector, rows: company.rows }, macro.researchEligibleAt);
+      const exposure = withInlineExposureHistory(buildCompanyExposure({ cik: company.cik, ticker: company.ticker, name: company.ticker, sector: company.sector, rows: company.rows }, macro.researchEligibleAt), input.exposureHistory ?? [], macro.researchEligibleAt);
       const result = marketModelEventStudy(company.bars, input.spyBars, macro.publishedAt.slice(0, 10), { session: "post_close", horizon: 63 });
       for (const exposureKind of exposureKinds(macro.channel)) {
         coverage.candidatePairs++;

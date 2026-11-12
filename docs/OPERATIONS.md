@@ -734,15 +734,17 @@ npx tsx scripts/build-pilot-exposure-evidence.mts
 - **ID:** `macro-scenarios`
 - **Mode:** scheduled; **enabled by default:** yes
 - **Cron:** none
-- **Dependencies:** `macro-manifest-qa`, `company-exposure-evidence`, `pilot-exposure-evidence`
+- **Dependencies:** `macro-manifest-qa`, `company-exposure-evidence`, `pilot-exposure-evidence`; additionally, a complete local exposure-history summary and the Macro Transmission Atlas artifact are required.
 - **Purpose:** Recompute rate, oil, USD and credit scenarios after QA and current SEC exposure evidence.
-- **Input:** Normalized FRED baselines, pilot evidence and company exposures.
-- **Output:** macro-scenarios.json and .md with formulas, provenance and computability status.
+- **Input:** Normalized FRED baselines, pilot evidence, company exposures, latest inline-XBRL exposure evidence and atlas records.
+- **Output:** macro-scenarios.json and .md with formulas, filing excerpts, measured atlas responses, provenance and computability status.
 - **Destination:** Local Scenario Lab only; no production write.
 - **Requirements:** driveD, review
-- **Operational note:** Upper bounds and gross exposure are not profit forecasts. Missing or stale evidence remains historical-only or not computable.
+- **Operational note:** Rate shocks use scheduled latest-10-K maturities plus directly tagged floating debt minus cash when available; the legacy full-repricing bound is retained only as a fallback. Upper bounds and gross exposure are not profit forecasts. Missing or stale evidence remains historical-only or not computable. The cache-only `npx tsx scripts/build-exposure-history.mts` command is a manual prerequisite, not a new collector or scheduler entry.
 
 ```powershell
+npx tsx scripts/build-exposure-history.mts
+npx tsx scripts/build-macro-transmission-atlas.mts
 npx tsx scripts/build-macro-scenarios.mts
 ```
 
@@ -785,15 +787,16 @@ npx tsx scripts/build-macro-event-study.mts
 - **ID:** `macro-transmission-atlas`
 - **Mode:** scheduled; **enabled by default:** yes
 - **Cron:** none
-- **Dependencies:** `macro-event-study`, `research-factors`
+- **Dependencies:** `macro-event-study`, `research-factors`; additionally, the local complete exposure-history summary is required and its hash is verified.
 - **Purpose:** Estimate company-level macro transmission with point-in-time SEC exposure, market-model returns and frozen discovery-only OOS evaluation.
-- **Input:** First-release macro event observations, canonical series, daily company and SPY prices.
+- **Input:** First-release macro event observations, canonical series, daily company and SPY prices, and filing-anchored inline-XBRL exposure history.
 - **Output:** macro-transmission-atlas.json and .md with sector FE interactions, event-bootstrap CI95 and OOS metrics.
 - **Destination:** Local research artifact only; no production write or probability promotion.
 - **Requirements:** mysql, driveD, review
-- **Operational note:** Exposure must be available and non-stale at event eligibility. Debt burden is a proxy, not a floating-rate share. OOS coefficients are never refit.
+- **Operational note:** Exposure must be available and non-stale at event eligibility. Inline fuel/oil flows use operating income from the same filing and period. Debt burden is a proxy, not a floating-rate share. OOS coefficients are never refit. The history builder is a manual cache-only prerequisite, not another collector.
 
 ```powershell
+npx tsx scripts/build-exposure-history.mts
 npx tsx scripts/build-macro-transmission-atlas.mts
 ```
 
