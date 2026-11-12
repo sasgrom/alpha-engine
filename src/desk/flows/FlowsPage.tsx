@@ -174,12 +174,17 @@ export default function FlowsPage() {
 
   const onPick = useCallback(
     (target: StageTarget) => {
-      if (target.kind === "company") nav.company(target.id);
-      else if (target.kind === "fund") nav.fund(target.id);
-      else if (target.kind === "sector") nav.sector(sector === target.name ? null : target.name);
+      // a second click on the book or the person already chosen lets it go (the hall flies back to where the reader was)
+      if (target.kind === "company") {
+        if (target.id === company) set({ company: null });
+        else nav.company(target.id);
+      } else if (target.kind === "fund") {
+        if (target.id === fund) set({ fund: null });
+        else nav.fund(target.id);
+      } else if (target.kind === "sector") nav.sector(sector === target.name ? null : target.name);
       else if (target.kind === "outside") nav.sector(null);
     },
-    [nav, sector],
+    [nav, sector, company, fund, set],
   );
 
   if (!audienceReady) return <Shimmer height={420} />;
@@ -353,7 +358,7 @@ export default function FlowsPage() {
                 <li>A figure is a man or a woman when a public source names the firm's leader; a wooden mannequin otherwise. Clothes follow the holdings: suits for banks and industry, tech wear for technology, casual in between.</li>
                 <li>The streams overhead are the estimated rotation, as wide as the dollars: red where money left, blue where it arrived. All flows, Bought, Sold: every stream, or only the money going in where it was bought (blue), or only the money coming out where it was sold (red). The doorway opens onto Main Street, everything outside these stocks; the plaque over it shows what came in from outside and what went out.</li>
                 <li>Over each bookcase its scoreboard shows what came in and went out, with the net on the plaque above. Click a top-ten board on the walls to stand in front of it, then a row to select it.</li>
-                <li>Select a person to see its money run to the books, or a book to see who traded it. Change the quarter and the people walk to their new places.</li>
+                <li>Select a person to see its money run to the books, or a book to see who traded it; select it again to let it go, and the view goes back to where you were. Change the quarter and the people walk to their new places.</li>
                 <li>All, Winners, Losers: a winner's book did better in the quarter than all tracked funds together, a loser's worse. The others walk out and wait outside until you switch back.</li>
                 <li>People: the famous faces behind the tracked funds (Buffett, Griffin, Dalio, Cathie Wood and others) stand for their firms' money; the public figures and investors whose trades are not collected wait by the entrance.</li>
                 <li>Older firms (on the SEC's records since its first years) are older people, some with canes; the youngest firms ride scooters and bikes; larger funds are taller and broader.</li>

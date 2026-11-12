@@ -178,7 +178,7 @@ export default function Library3D({ overview, row, mode, real, focus, selection,
           {tip.lines.map((line) => (
             <div key={line[0]} className="row"><span>{line[0]}</span><span>{line[1]}</span></div>
           ))}
-          <div className="desk-muted">{tip.hint}</div>
+          <div className="desk-muted">{(hover.target.kind === "company" || hover.target.kind === "fund") && hover.target.kind === selection.kind && hover.target.id === selection.id ? "Click again to let it go and go back" : tip.hint}</div>
         </div>
       )}
     </div>

@@ -155,6 +155,8 @@ export class HallStage {
   private readonly keys = new Set<string>();
   private readonly pose: Pose = { ...HOME };
   private flight: { from: Pose; to: Pose; started: number; duration: number } | null = null;
+  /** Where the reader stood before choosing the current selection: letting it go flies back there. */
+  private returnPose: Pose | null = null;
   private game = false;
   private inset = 0;
   private insetBottom = 0;
@@ -748,13 +750,21 @@ export class HallStage {
   }
 
   setSelection(selection: StageSelection): void {
-    const changed = selection.kind !== this.selection.kind || selection.id !== this.selection.id;
-    const threadsArrived = selection.threads.length > 0 && this.selection.threads.length === 0;
+    const previous = this.selection;
+    const changed = selection.kind !== previous.kind || selection.id !== previous.id;
+    const threadsArrived = selection.threads.length > 0 && previous.threads.length === 0;
     this.selection = selection;
     if (!this.building) return;
     this.updateStreams();
     this.settling = true;
-    if (changed || threadsArrived) this.flyToSelection();
+    if (changed && selection.kind === null) {
+      // the selection let go: back to where the reader stood before choosing it (or stay, when it came with the address)
+      if (this.returnPose) this.fly(this.returnPose);
+      this.returnPose = null;
+    } else if (changed || threadsArrived) {
+      if (changed && previous.kind === null) this.returnPose = { ...this.pose };
+      this.flyToSelection();
+    }
     this.placeHalo();
     this.refreshLabels();
   }
@@ -1030,7 +1040,12 @@ export class HallStage {
     let next: StageTarget | null = null;
     // the streams overhead are thin: a top-ten board behind one is what the reader is pointing at
     const behind = hits[0]?.object.userData.stream ? hits.find((item) => typeof item.object.userData.board === "number") : undefined;
-    const hit = behind ?? hits[0];
+    // a bookcase's pane stands just in front of the books (a book pushed back for a sale sits behind it): it names the
+    // bookcase only where no book (or anything else) lies behind it
+    const panes = this.building?.panes ?? [];
+    const isPane = (object: THREE.Object3D) => panes.includes(object as THREE.Mesh);
+    const past = hits[0] && isPane(hits[0].object) ? hits.find((item) => !isPane(item.object)) : undefined;
+    const hit = behind ?? past ?? hits[0];
     this.hoveredBoard = typeof hit?.object.userData.board === "number" ? hit.object.userData.board : null;
     if (hit) {
       if (hit.object === this.books && hit.instanceId !== undefined) next = { kind: "company", id: this.layout.books[hit.instanceId].cik };
