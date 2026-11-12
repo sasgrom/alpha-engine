@@ -1705,3 +1705,17 @@ sitting) if the owner wants them; K11 when the owner names it.
 - **Gates:** targeted regressions for V/MA computable and JPM/AIG not applicable, including attached cash facts; `npm run check`; **230 files / 1,292 tests passed**; `npm run build`; `git diff --check`.
 - **UI:** restart notice was sent before restarting the verified server. One listener remains, pid **20520**. Live browser checks confirm V/MA computable with cash evidence and JPM interest-margin status, with all required reports at HTTP 200 and no page errors. Screenshot: `worker/.runs/k10-payment-network-rates.png`.
 - No history rewrite, production write, schema change, new collector/scheduler entry, LLM or GDELT. K11/K12 were not started. The related evidence commit contains the summary and this handoff; unrelated generated exposure/analytics files remain uncommitted.
+
+## 136. Claude: the hall's whole-frame flicker fixed; K10 correction accepted — 2026-11-12
+
+- **K10 correction accepted** (§135): rates 40/2/4/4, V and MA computable from maturity and cash, JPM/COF/GS/AIG interest margin; scenario SHA256 `7f29052f…` matches.
+- **Owner report:** the hall (Fund flows, "the library of capital") flickers to a blank screen while moving.
+- **Cause:** the people's bodies are smoothed with three.js `toCreasedNormals`, which gives the corners of a zero-area face a normal of zero length. Each figure model has 6 such faces (18 vertices) where seams meet. Skinning pulls them open, so they get drawn. The shader then normalises a zero vector, and the bloom spreads that one invalid pixel over the whole frame. It reads as black on this machine and white on the owner's screen.
+- **Fix:** `src/desk/flows/hall/normals.ts` (`creasedNormals`: those corners keep the model's own normal, or point up), used by `people.ts`, with `normals.test.tsx`.
+- **Measured in headless Edge on the GPU** (nine pixels read after every frame the hall drew, while walking, strafing, turning, running and rising):
+  - before the fix: 77–85 of about 585 frames fully black in light and 110 of 576 in dark;
+  - after it: 0 in both themes, and 0 of 1,280 across walking, dragging, scrolling and hovering;
+  - still 60 fps (17 ms median); no zero normals remain in the scene.
+- **Gates:** `npm run check`; **231 files / 1,294 tests passed**; `npm run build`; `git diff --check`.
+- **Server:** notice to Kimi at 10:29. At 10:41 I stopped pid 20520 (`node dist\boot.js`) and started one server with `wscript worker\home-server-hidden.vbs` (`NODE_ENV=production`, log `worker\.runs\home-server.log`): pid **18832**, the only listener on port 3000. App routes answer 200 to a browser `Accept` header.
+- No production write, schema change or scheduler entry. The four generated files that show as modified are not mine and stay uncommitted.

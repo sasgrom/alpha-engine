@@ -11,10 +11,11 @@
  */
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { mergeGeometries, toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { clone as cloneSkinned } from "three/addons/utils/SkeletonUtils.js";
 import type { Carry } from "./character";
 import { polar, ROTUNDA, walkLength, walkPoint, type Slot } from "./layout";
+import { creasedNormals } from "./normals";
 
 export type FigureKind = "man-suit" | "man-longsleeves" | "man-a" | "man-b" | "woman" | "woman-casual" | "woman-dress" | "woman-tanktop";
 export type BodyKind = FigureKind | "mannequin";
@@ -118,8 +119,8 @@ function mergeFigure(scene: THREE.Object3D, partNames: Parts): THREE.SkinnedMesh
     for (let index = 0; index < count; index++) colors.set([color.r, color.g, color.b], index * 3);
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
     geometry.setAttribute("part", new THREE.BufferAttribute(new Float32Array(count).fill(partOf(partNames, material.name)), 1));
-    // smooth shading over the low-poly surfaces, keeping the edges sharper than 60 degrees
-    return toCreasedNormals(geometry, Math.PI / 3);
+    // smooth shading over the low-poly surfaces, keeping the edges sharper than 60 degrees (and no zero normals)
+    return creasedNormals(geometry, Math.PI / 3);
   });
   const merged = mergeGeometries(geometries, false);
   if (!merged) throw new Error("The figure's parts could not be merged");
