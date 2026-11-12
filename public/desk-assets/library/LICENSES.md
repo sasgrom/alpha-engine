@@ -32,6 +32,12 @@ colour, OpenGL normal, and ambient occlusion / roughness / metalness where the s
 - textures/brown_leather_* (https://polyhaven.com/a/brown_leather), the relief of the book covers
 - env/vestibule_1k.hdr (https://polyhaven.com/a/vestibule), the reflections
 
+## The map table: us-atlas (ISC), Census Bureau boundaries (public domain)
+
+usa/states-albers-10m.json from us-atlas 3.0.1 by Michael Bostock (https://github.com/topojson/us-atlas), the Census
+Bureau's 2017 cartographic boundary files as TopoJSON, projected to Albers USA. The ISC licence text is in
+usa/us-atlas-LICENSE.txt.
+
 ## Lettering: Cinzel (SIL Open Font License 1.1)
 
 fonts/Cinzel-wght.ttf, Cinzel by Natanael Gama (https://github.com/NDISCOVER/Cinzel), the carved signs over the

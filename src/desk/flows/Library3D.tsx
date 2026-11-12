@@ -82,7 +82,7 @@ export default function Library3D({ overview, row, mode, real, focus, selection,
     setLoading("loading");
     const built = new HallStage(
       host.current,
-      overview.companies.map((entry) => ({ cik: entry.cik, ticker: entry.ticker, name: entry.name, sector: entry.sector, held: entry.held })),
+      overview.companies.map((entry) => ({ cik: entry.cik, ticker: entry.ticker, name: entry.name, sector: entry.sector, held: entry.held, hq: entry.hq })),
       overview.funds.map((entry) => ({ cik: entry.cik, name: entry.name, category: entry.category, tracked: entry.tracked })),
       sectorOrder,
       dark,
@@ -185,6 +185,24 @@ function tooltip(
     else if (home) lines.push(["Stands at", home]);
     lines.push(["Led by", figure?.leader ?? "not on record here"]);
     return { title: entry?.name ?? `Fund ${target.id}`, lines, hint: "Select to follow its money to the shelves" };
+  }
+  if (target.kind === "state") {
+    let net = 0;
+    let count = 0;
+    const names: [string, number][] = [];
+    for (const entry of context.overview.companies) {
+      if (entry.hq !== target.code) continue;
+      count++;
+      const flow = data.company.get(entry.cik)?.net ?? 0;
+      net += flow;
+      names.push([entry.ticker, flow]);
+    }
+    names.sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+    return {
+      title: target.name,
+      lines: [[`Net flow, ${quarter}`, count ? signedCap(net) : "—"], ["Companies headquartered here", String(count)], ...names.slice(0, 3).filter((item) => item[1] !== 0).map(([ticker, flow]) => [ticker, signedCap(flow)] as [string, string])],
+      hint: "Headquarters as of today, from the companies' SEC records",
+    };
   }
   if (target.kind === "sector") {
     const sector = data.sectors.get(target.name);

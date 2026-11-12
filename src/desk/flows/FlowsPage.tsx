@@ -153,7 +153,7 @@ export default function FlowsPage() {
       if (target.kind === "company") nav.company(target.id);
       else if (target.kind === "fund") nav.fund(target.id);
       else if (target.kind === "sector") nav.sector(sector === target.name ? null : target.name);
-      else nav.sector(null);
+      else if (target.kind === "outside") nav.sector(null);
     },
     [nav, sector],
   );

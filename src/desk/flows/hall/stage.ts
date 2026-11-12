@@ -20,8 +20,9 @@ import type { Look } from "./figures";
 import { angleOf, crowdSlots, crowdWedges, hallLayout, polar, ROTUNDA, staffSlots, type HallCompany, type HallLayout } from "./layout";
 import { Crowd, loadPrototypes, type BodyKind } from "./people";
 import { MoneyStreams, type StreamSpec } from "./streams";
+import { MapTable, type StateFlow, type UsaTopology } from "./usa-map";
 
-export interface StageCompany extends HallCompany { name: string }
+export interface StageCompany extends HallCompany { name: string; /** US state of the headquarters (null: abroad or not stated). */ hq?: string | null }
 export interface StageFund { cik: number; name: string; category: string; tracked: number }
 
 export interface StageFigure { body: BodyKind; scale: number; staff: boolean; leader: string | null; look: Look }
@@ -56,7 +57,8 @@ export type StageTarget =
   | { kind: "company"; id: number }
   | { kind: "fund"; id: number }
   | { kind: "sector"; name: string }
-  | { kind: "outside" };
+  | { kind: "outside" }
+  | { kind: "state"; code: string; name: string };
 
 export interface StageEvents {
   onHover: (target: StageTarget | null, x: number, y: number) => void;
@@ -81,6 +83,8 @@ export class HallStage {
   private readonly bloom: UnrealBloomPass;
   private readonly layout: HallLayout;
   private building: HallBuilding | null = null;
+  private map: MapTable | null = null;
+  private readonly headquarters = new Map<number, string | null>();
   private books: THREE.InstancedMesh | null = null;
   private readonly bookIndex = new Map<number, number>();
   private readonly pull: Float32Array;
@@ -136,6 +140,7 @@ export class HallStage {
     this.negative = new THREE.Color(palette.neg);
     this.calm = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
     this.layout = hallLayout(companies, sectorOrder);
+    for (const company of companies) if (company.hq !== undefined) this.headquarters.set(company.cik, company.hq);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -220,7 +225,7 @@ export class HallStage {
   private async load(): Promise<void> {
     try {
       const font = new FontFace("Cinzel", "url(/desk-assets/library/fonts/Cinzel-wght.ttf)", { weight: "400 900" });
-      const [textures, environment, prototypes] = await Promise.all([
+      const [textures, environment, prototypes, , usa] = await Promise.all([
         loadHallTextures(this.renderer).catch(() => null),
         new HDRLoader().loadAsync("/desk-assets/library/env/vestibule_1k.hdr").catch(() => null),
         loadPrototypes().catch((error: unknown) => {
@@ -228,6 +233,7 @@ export class HallStage {
           return null;
         }),
         font.load().then((face) => document.fonts.add(face)).catch(() => null),
+        fetch("/desk-assets/library/usa/states-albers-10m.json").then((response) => (response.ok ? (response.json() as Promise<UsaTopology>) : null)).catch(() => null),
       ]);
       if (this.disposed) return;
       if (environment) {
@@ -245,6 +251,10 @@ export class HallStage {
       this.scene.add(this.building.group);
       for (const sign of this.building.signs) sign.paint();
       this.buildBooks(textures?.leather ?? null);
+      if (usa) {
+        this.map = new MapTable(usa, this.dark, new THREE.MeshStandardMaterial({ color: this.dark ? 0x2b2018 : 0x4a3727, roughness: 0.55, metalness: 0.05 }));
+        this.scene.add(this.map.group);
+      }
       if (prototypes) {
         this.crowd = new Crowd(prototypes, this.calm);
         this.scene.add(this.crowd.group);
@@ -416,7 +426,24 @@ export class HallStage {
     this.settling = true;
     this.updatePeople(moved);
     this.updateStreams();
+    this.updateMap();
     this.refreshLabels();
+  }
+
+  /** The map table: each state tinted by the quarter's net flow into the companies headquartered there, flags where it was large. */
+  private updateMap(): void {
+    const data = this.data;
+    if (!data || !this.map) return;
+    const flows = new Map<string, StateFlow>();
+    const abroad: StateFlow = { net: 0, companies: 0 };
+    for (const [cik, entry] of data.company) {
+      if (!this.headquarters.has(cik)) continue;
+      const state = this.headquarters.get(cik);
+      const flow = state ? flows.get(state) ?? flows.set(state, { net: 0, companies: 0 }).get(state)! : abroad;
+      flow.net += entry.net;
+      flow.companies++;
+    }
+    this.map.update(flows, abroad, this.palette.pos, this.palette.neg, mixOklab);
   }
 
   /**
@@ -757,6 +784,7 @@ export class HallStage {
     if (this.books) targets.push(this.books);
     if (this.crowd) targets.push(...this.crowd.pickers);
     if (this.building) targets.push(this.building.door, ...this.building.panes);
+    if (this.map) targets.push(...this.map.tiles);
     const hits = this.raycaster.intersectObjects(targets, false);
     let next: StageTarget | null = null;
     const hit = hits[0];
@@ -765,6 +793,7 @@ export class HallStage {
       else if (typeof hit.object.userData.cik === "number") next = { kind: "fund", id: hit.object.userData.cik };
       else if (hit.object === this.building?.door) next = { kind: "outside" };
       else if (typeof hit.object.userData.sector === "string") next = { kind: "sector", name: hit.object.userData.sector };
+      else if (typeof hit.object.userData.state === "string") next = { kind: "state", code: hit.object.userData.state, name: this.map?.nameOf(hit.object.userData.state) ?? hit.object.userData.state };
     }
     const same = JSON.stringify(next) === JSON.stringify(this.hovered);
     this.hovered = next;
@@ -838,6 +867,7 @@ export class HallStage {
     }
     // from high under the dome the streams thin out so the crowds below show through
     this.streams.update(this.calm ? 0 : this.clock, clamp(1 - (this.camera.position.y - 11) / 9, 0.22, 1));
+    if (!this.calm) this.map?.flutter(this.clock);
     this.composer.render();
     this.placeLabels();
   };
@@ -856,6 +886,7 @@ export class HallStage {
     window.removeEventListener("keyup", this.onKeyUp);
     window.removeEventListener("blur", this.onBlur);
     this.crowd?.dispose();
+    this.map?.dispose();
     this.streams.dispose();
     this.scene.traverse((object) => {
       const mesh = object as THREE.Mesh;

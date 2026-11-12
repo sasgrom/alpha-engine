@@ -633,6 +633,14 @@ for (const file of fundFiles) {
 }
 for (const row of flowQuarters) row.fundReturns.sort((a, b) => a[0] - b[0]);
 
+// --- headquarters for the hall's map table (scripts/build-company-headquarters.mts; US states only) -----------------------------------
+const US_STATES = new Set("AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" "));
+const headquarters = new Map<number, string>();
+const headquartersFile = path.resolve("research/engine/company-headquarters.json");
+if (existsSync(headquartersFile)) {
+  for (const row of (JSON.parse(readFileSync(headquartersFile, "utf8")) as { companies: { cik: number; state: string | null }[] }).companies) if (row.state && US_STATES.has(row.state)) headquarters.set(row.cik, row.state);
+}
+
 // --- overview --------------------------------------------------------------------------------------------------------------------------
 const lastFlows = flowQuarters.at(-1)!;
 const lastCompanyNet = new Map<number, number>();
@@ -661,7 +669,7 @@ const overview: FundFlowsOverview = {
     // funds that report today first, the largest first; then those whose last report is older
     .sort((a, b) => Number(b.latestQuarter === latest) - Number(a.latestQuarter === latest) || b.tracked - a.tracked),
   companies: companyFiles
-    .map((file) => ({ cik: file.cik, ticker: file.ticker, name: file.name, sector: file.sector, held: companyQuarter.get(file.cik)?.get(latest)?.held ?? 0, holders: companyQuarter.get(file.cik)?.get(latest)?.holders ?? 0, net: lastCompanyNet.get(file.cik) ?? 0 }))
+    .map((file) => ({ cik: file.cik, ticker: file.ticker, name: file.name, sector: file.sector, held: companyQuarter.get(file.cik)?.get(latest)?.held ?? 0, holders: companyQuarter.get(file.cik)?.get(latest)?.holders ?? 0, net: lastCompanyNet.get(file.cik) ?? 0, hq: headquarters.get(file.cik) ?? null }))
     .filter((row) => row.held > 0)
     .sort((a, b) => b.held - a.held),
 };

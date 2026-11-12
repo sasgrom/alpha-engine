@@ -162,6 +162,11 @@ export interface FlowCompanyDirectoryRow {
   held: number;
   holders: number;
   net: number;
+  /**
+   * The US state of the company's business address (two letters) from its SEC record, today's address; null when
+   * the address is abroad or not stated. Optional: files built before it have none.
+   */
+  hq?: string | null;
 }
 
 export interface FundFlowsOverview {

@@ -125,7 +125,8 @@ export const DEV_NOTES = {
       "Filing dates: outcomes “once the filings were public” start at the 45-day deadline, not at each report's own date.",
       "Confidential holdings: 92 later additions to reports have no table in the cache, and Norges Bank's reports become public a year late.",
       "A phone layout for the hall; on a narrow screen the reading view is the usable one.",
-      "The hall's next round: the map table as a map of the United States with flags where the money went (company headquarters), a few props in each bookcase's alcove, laptops for the technology holders, people visiting the other bookcases where they hold sizable stakes, covers and logos on the books, and the switch from funds to famous traders.",
+      "The hall's next round: a few props over the bookcases, laptops for the technology holders, people visiting the other bookcases where they hold sizable stakes, covers and logos on the books, and the switch from funds to famous traders.",
+      "The map table places a company at today's headquarters (its SEC record keeps no history), so a company that moved, such as Tesla or Oracle to Texas, counts there in earlier quarters too; 23 companies headquartered abroad share one flag.",
       "Leaders: 92 of the largest filers have a leader from public sources (men and women as the sources name them); the other funds stand as wooden mannequins.",
     ],
     better: [

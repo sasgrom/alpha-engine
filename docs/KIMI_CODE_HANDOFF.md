@@ -1587,3 +1587,12 @@ table as a map of the United States with flags where the money went, a few props
 technology holders, people visiting the other bookcases where they hold sizable stakes, covers and logos on the
 books, the switch from funds to famous traders with politicians as placeholders until the owner decides the
 legal question); a scheduler entry for the two flow builds after `13f-refresh`.
+
+**Addendum, 2026-11-12 00:45 — the map table.** The round table is now the United States as a table top
+(`src/desk/flows/hall/usa-map.ts`, us-atlas `states-albers-10m`, ISC, in `public/desk-assets/library/usa/`): each
+state tinted by the quarter's net flow into the companies headquartered there, brass border inlay, a pennant on a
+pin where the money was large, one flag for the 23 companies abroad, a tooltip per state. Headquarters come from
+`npx tsx scripts/build-company-headquarters.mts` (SEC submissions through `worker/lib/edgar.ts`, 493 requests,
+0 failed; 470 US companies; today's address only) into `research/engine/company-headquarters.json`, and the flow
+build adds `hq` to the overview's companies (optional field). Flow files rebuilt at 00:38 (the build took 14 minutes
+next to Kimi's option pass and a facts fetch; usually about two). Gates as above plus 4 new map tests.

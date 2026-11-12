@@ -228,30 +228,6 @@ export function buildHall(layout: HallLayout, textures: HallTextures | null, dar
     group.add(band);
   }
 
-  // the map table in the middle: a round oak table on a pedestal, its top a green leather field
-  {
-    const { mapRadius } = ROTUNDA;
-    const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.6, 0.78, 32), woodPlain);
-    pedestal.position.y = 0.39;
-    pedestal.castShadow = true;
-    group.add(pedestal);
-    const top = new THREE.Mesh(new THREE.CylinderGeometry(mapRadius, mapRadius - 0.08, 0.14, 96), woodPlain);
-    top.position.y = 0.85;
-    top.castShadow = true;
-    top.receiveShadow = true;
-    group.add(top);
-    const field = new THREE.Mesh(new THREE.CircleGeometry(mapRadius - 0.22, 96), new THREE.MeshStandardMaterial({ color: dark ? 0x1f3a2c : 0x2f5a43, roughness: 0.85 }));
-    field.rotation.x = -Math.PI / 2;
-    field.position.y = 0.925;
-    field.receiveShadow = true;
-    field.name = "map-field";
-    group.add(field);
-    const rim = new THREE.Mesh(new THREE.TorusGeometry(mapRadius - 0.2, 0.025, 6, 128), brass);
-    rim.rotation.x = Math.PI / 2;
-    rim.position.y = 0.925;
-    group.add(rim);
-  }
-
   // the lower wall behind the bookcases, panelled, with the opening of the entrance
   {
     const geometry = arcWall(wallRadius, wallStart, wallEnd, 0, galleryHeight, "in");

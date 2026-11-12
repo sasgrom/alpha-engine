@@ -1,0 +1,3952 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-12T08:20:02.422Z",
+ "source": "SEC EDGAR submissions (data.sec.gov/submissions), business address (mailing address when no business address); today's address only",
+ "companies": [
+  {
+   "cik": 1800,
+   "ticker": "ABT",
+   "name": "Abbott Laboratories",
+   "city": "ABBOTT PARK",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 2488,
+   "ticker": "AMD",
+   "name": "Advanced Micro Devices",
+   "city": "SANTA CLARA",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 2969,
+   "ticker": "APD",
+   "name": "Air Products",
+   "city": "ALLENTOWN",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 4127,
+   "ticker": "SWKS",
+   "name": "Skyworks Solutions",
+   "city": "IRVINE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 4281,
+   "ticker": "HWM",
+   "name": "Howmet Aerospace",
+   "city": "PITTSBURGH",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 4904,
+   "ticker": "AEP",
+   "name": "American Electric Power",
+   "city": "COLUMBUS",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 4962,
+   "ticker": "AXP",
+   "name": "American Express",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 4977,
+   "ticker": "AFL",
+   "name": "Aflac",
+   "city": "COLUMBUS",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 5272,
+   "ticker": "AIG",
+   "name": "American International Group",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 6281,
+   "ticker": "ADI",
+   "name": "Analog Devices",
+   "city": "WILMINGTON",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 6951,
+   "ticker": "AMAT",
+   "name": "Applied Materials",
+   "city": "SANTA CLARA",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 7084,
+   "ticker": "ADM",
+   "name": "Archer Daniels Midland",
+   "city": "CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 8670,
+   "ticker": "ADP",
+   "name": "Automatic Data Processing",
+   "city": "ROSELAND",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 8818,
+   "ticker": "AVY",
+   "name": "Avery Dennison",
+   "city": "MENTOR",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 9389,
+   "ticker": "BALL",
+   "name": "Ball Corporation",
+   "city": "WESTMINSTER",
+   "state": "CO",
+   "place": "CO"
+  },
+  {
+   "cik": 10456,
+   "ticker": "BAX",
+   "name": "Baxter International",
+   "city": "DEERFIELD",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 10795,
+   "ticker": "BDX",
+   "name": "Becton Dickinson",
+   "city": "FRANKLIN LAKES",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 11544,
+   "ticker": "WRB",
+   "name": "W. R. Berkley Corporation",
+   "city": "GREENWICH",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 12927,
+   "ticker": "BA",
+   "name": "Boeing",
+   "city": "ARLINGTON",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 14272,
+   "ticker": "BMY",
+   "name": "Bristol Myers Squibb",
+   "city": "PRINCETON",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 14693,
+   "ticker": "BF-B",
+   "name": "Brown–Forman",
+   "city": "LOUISVILLE",
+   "state": "KY",
+   "place": "KY"
+  },
+  {
+   "cik": 16918,
+   "ticker": "STZ",
+   "name": "Constellation Brands",
+   "city": "ROCHESTER",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 18230,
+   "ticker": "CAT",
+   "name": "Caterpillar Inc.",
+   "city": "IRVING",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 19617,
+   "ticker": "JPM",
+   "name": "JPMorgan Chase",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 20286,
+   "ticker": "CINF",
+   "name": "Cincinnati Financial",
+   "city": "FAIRFIELD",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 21076,
+   "ticker": "CLX",
+   "name": "Clorox",
+   "city": "OAKLAND",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 21344,
+   "ticker": "KO",
+   "name": "The Coca-Cola Company",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 21665,
+   "ticker": "CL",
+   "name": "Colgate-Palmolive",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 24741,
+   "ticker": "GLW",
+   "name": "Corning Inc.",
+   "city": "CORNING",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 26172,
+   "ticker": "CMI",
+   "name": "Cummins",
+   "city": "COLUMBUS",
+   "state": "IN",
+   "place": "IN"
+  },
+  {
+   "cik": 27904,
+   "ticker": "DAL",
+   "name": "Delta Air Lines",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 29534,
+   "ticker": "DG",
+   "name": "Dollar General",
+   "city": "GOODLETTSVILLE",
+   "state": "TN",
+   "place": "TN"
+  },
+  {
+   "cik": 29905,
+   "ticker": "DOV",
+   "name": "Dover Corporation",
+   "city": "DOWNERS GROVE",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 29989,
+   "ticker": "OMC",
+   "name": "Omnicom Group",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 31462,
+   "ticker": "ECL",
+   "name": "Ecolab",
+   "city": "SAINT PAUL",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 31791,
+   "ticker": "RVTY",
+   "name": "Revvity",
+   "city": "WALTHAM",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 32604,
+   "ticker": "EMR",
+   "name": "Emerson Electric",
+   "city": "ST LOUIS",
+   "state": "MO",
+   "place": "MO"
+  },
+  {
+   "cik": 33185,
+   "ticker": "EFX",
+   "name": "Equifax",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 33213,
+   "ticker": "EQT",
+   "name": "EQT Corporation",
+   "city": "CANONSBURG",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 34903,
+   "ticker": "FRT",
+   "name": "Federal Realty Investment Trust",
+   "city": "NORTH BETHESDA",
+   "state": "MD",
+   "place": "MD"
+  },
+  {
+   "cik": 35527,
+   "ticker": "FITB",
+   "name": "Fifth Third Bancorp",
+   "city": "CINCINNATI",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 36104,
+   "ticker": "USB",
+   "name": "U.S. Bancorp",
+   "city": "MINNEAPOLIS",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 36270,
+   "ticker": "MTB",
+   "name": "M&T Bank",
+   "city": "BUFFALO",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 37996,
+   "ticker": "F",
+   "name": "Ford Motor Company",
+   "city": "DEARBORN",
+   "state": "MI",
+   "place": "MI"
+  },
+  {
+   "cik": 38777,
+   "ticker": "BEN",
+   "name": "Franklin Resources",
+   "city": "SAN MATEO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 40533,
+   "ticker": "GD",
+   "name": "General Dynamics",
+   "city": "RESTON",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 40545,
+   "ticker": "GE",
+   "name": "GE Aerospace",
+   "city": "EVENDALE",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 40704,
+   "ticker": "GIS",
+   "name": "General Mills",
+   "city": "MINNEAPOLIS",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 40987,
+   "ticker": "GPC",
+   "name": "Genuine Parts Company",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 45012,
+   "ticker": "HAL",
+   "name": "Halliburton",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 47111,
+   "ticker": "HSY",
+   "name": "The Hershey Company",
+   "city": "HERSHEY",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 47217,
+   "ticker": "HPQ",
+   "name": "HP Inc.",
+   "city": "PALO ALTO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 48465,
+   "ticker": "HRL",
+   "name": "Hormel Foods",
+   "city": "AUSTIN",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 48898,
+   "ticker": "HUBB",
+   "name": "Hubbell Incorporated",
+   "city": "SHELTON",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 49071,
+   "ticker": "HUM",
+   "name": "Humana",
+   "city": "LOUISVILLE",
+   "state": "KY",
+   "place": "KY"
+  },
+  {
+   "cik": 49196,
+   "ticker": "HBAN",
+   "name": "Huntington Bancshares",
+   "city": "COLUMBUS",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 49826,
+   "ticker": "ITW",
+   "name": "Illinois Tool Works",
+   "city": "GLENVIEW",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 50863,
+   "ticker": "INTC",
+   "name": "Intel",
+   "city": "SANTA CLARA",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 51143,
+   "ticker": "IBM",
+   "name": "IBM",
+   "city": "ARMONK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 51253,
+   "ticker": "IFF",
+   "name": "International Flavors & Fragrances",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 51434,
+   "ticker": "IP",
+   "name": "International Paper",
+   "city": "MEMPHIS",
+   "state": "TN",
+   "place": "TN"
+  },
+  {
+   "cik": 52988,
+   "ticker": "J",
+   "name": "Jacobs Solutions",
+   "city": "DALLAS",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 55785,
+   "ticker": "KMB",
+   "name": "Kimberly-Clark",
+   "city": "IRVING",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 56873,
+   "ticker": "KR",
+   "name": "Kroger",
+   "city": "CINCINNATI",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 59478,
+   "ticker": "LLY",
+   "name": "Lilly (Eli)",
+   "city": "INDIANAPOLIS",
+   "state": "IN",
+   "place": "IN"
+  },
+  {
+   "cik": 60086,
+   "ticker": "L",
+   "name": "Loews Corporation",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 60667,
+   "ticker": "LOW",
+   "name": "Lowe's",
+   "city": "MOORESVILLE",
+   "state": "NC",
+   "place": "NC"
+  },
+  {
+   "cik": 62709,
+   "ticker": "MRSH",
+   "name": "Marsh McLennan",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 62996,
+   "ticker": "MAS",
+   "name": "Masco",
+   "city": "LIVONIA",
+   "state": "MI",
+   "place": "MI"
+  },
+  {
+   "cik": 63754,
+   "ticker": "MKC",
+   "name": "McCormick & Company",
+   "city": "HUNT VALLEY",
+   "state": "MD",
+   "place": "MD"
+  },
+  {
+   "cik": 63908,
+   "ticker": "MCD",
+   "name": "McDonald's",
+   "city": "CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 64040,
+   "ticker": "SPGI",
+   "name": "S&P Global",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 64803,
+   "ticker": "CVS",
+   "name": "CVS Health",
+   "city": "WOONSOCKET",
+   "state": "RI",
+   "place": "RI"
+  },
+  {
+   "cik": 65984,
+   "ticker": "ETR",
+   "name": "Entergy",
+   "city": "NEW ORLEANS",
+   "state": "LA",
+   "place": "LA"
+  },
+  {
+   "cik": 66740,
+   "ticker": "MMM",
+   "name": "3M",
+   "city": "ST PAUL",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 68505,
+   "ticker": "MSI",
+   "name": "Motorola Solutions",
+   "city": "CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 70858,
+   "ticker": "BAC",
+   "name": "Bank of America",
+   "city": "CHARLOTTE",
+   "state": "NC",
+   "place": "NC"
+  },
+  {
+   "cik": 72331,
+   "ticker": "NDSN",
+   "name": "Nordson Corporation",
+   "city": "WESTLAKE",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 72741,
+   "ticker": "ES",
+   "name": "Eversource Energy",
+   "city": "SPRINGFIELD",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 72903,
+   "ticker": "XEL",
+   "name": "Xcel Energy",
+   "city": "MINNEAPOLIS",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 72971,
+   "ticker": "WFC",
+   "name": "Wells Fargo",
+   "city": "SAN FRANCISCO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 73124,
+   "ticker": "NTRS",
+   "name": "Northern Trust",
+   "city": "CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 73309,
+   "ticker": "NUE",
+   "name": "Nucor",
+   "city": "CHARLOTTE",
+   "state": "NC",
+   "place": "NC"
+  },
+  {
+   "cik": 74208,
+   "ticker": "UDR",
+   "name": "UDR, Inc.",
+   "city": "HIGHLANDS RANCH",
+   "state": "CO",
+   "place": "CO"
+  },
+  {
+   "cik": 75362,
+   "ticker": "PCAR",
+   "name": "Paccar",
+   "city": "BELLEVUE",
+   "state": "WA",
+   "place": "WA"
+  },
+  {
+   "cik": 75677,
+   "ticker": "PKG",
+   "name": "Packaging Corporation of America",
+   "city": "LAKE FOREST",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 77360,
+   "ticker": "PNR",
+   "name": "Pentair",
+   "city": "LONDON",
+   "state": "X0",
+   "place": "United Kingdom"
+  },
+  {
+   "cik": 77476,
+   "ticker": "PEP",
+   "name": "PepsiCo",
+   "city": "PURCHASE",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 78003,
+   "ticker": "PFE",
+   "name": "Pfizer",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 79282,
+   "ticker": "BRO",
+   "name": "Brown & Brown",
+   "city": "DAYTONA BEACH",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 79879,
+   "ticker": "PPG",
+   "name": "PPG Industries",
+   "city": "PITTSBURGH",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 80424,
+   "ticker": "PG",
+   "name": "Procter & Gamble",
+   "city": "CINCINNATI",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 80661,
+   "ticker": "PGR",
+   "name": "Progressive Corporation",
+   "city": "MAYFIELD VILLAGE",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 84839,
+   "ticker": "ROL",
+   "name": "Rollins, Inc.",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 86312,
+   "ticker": "TRV",
+   "name": "The Travelers Companies",
+   "city": "SAINT PAUL",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 87347,
+   "ticker": "SLB",
+   "name": "Schlumberger",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 89800,
+   "ticker": "SHW",
+   "name": "Sherwin-Williams",
+   "city": "CLEVELAND",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 91142,
+   "ticker": "AOS",
+   "name": "A. O. Smith",
+   "city": "MILWAUKEE",
+   "state": "WI",
+   "place": "WI"
+  },
+  {
+   "cik": 91419,
+   "ticker": "SJM",
+   "name": "The J.M. Smucker Company",
+   "city": "ORRVILLE",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 91440,
+   "ticker": "SNA",
+   "name": "Snap-on",
+   "city": "KENOSHA",
+   "state": "WI",
+   "place": "WI"
+  },
+  {
+   "cik": 91576,
+   "ticker": "KEY",
+   "name": "KeyCorp",
+   "city": "CLEVELAND",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 92122,
+   "ticker": "SO",
+   "name": "Southern Company",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 92230,
+   "ticker": "TFC",
+   "name": "Truist Financial",
+   "city": "CHARLOTTE",
+   "state": "NC",
+   "place": "NC"
+  },
+  {
+   "cik": 92380,
+   "ticker": "LUV",
+   "name": "Southwest Airlines",
+   "city": "DALLAS",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 93410,
+   "ticker": "CVX",
+   "name": "Chevron Corporation",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 93556,
+   "ticker": "SWK",
+   "name": "Stanley Black & Decker",
+   "city": "NEW BRITAIN",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 93751,
+   "ticker": "STT",
+   "name": "State Street Corporation",
+   "city": "BOSTON",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 96021,
+   "ticker": "SYY",
+   "name": "Sysco",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 97210,
+   "ticker": "TER",
+   "name": "Teradyne",
+   "city": "NORTH READING",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 97476,
+   "ticker": "TXN",
+   "name": "Texas Instruments",
+   "city": "DALLAS",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 97745,
+   "ticker": "TMO",
+   "name": "Thermo Fisher Scientific",
+   "city": "WALTHAM",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 100493,
+   "ticker": "TSN",
+   "name": "Tyson Foods",
+   "city": "SPRINGDALE",
+   "state": "AR",
+   "place": "AR"
+  },
+  {
+   "cik": 100517,
+   "ticker": "UAL",
+   "name": "United Airlines Holdings",
+   "city": "CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 100885,
+   "ticker": "UNP",
+   "name": "Union Pacific Corporation",
+   "city": "OMAHA",
+   "state": "NE",
+   "place": "NE"
+  },
+  {
+   "cik": 101829,
+   "ticker": "RTX",
+   "name": "RTX Corporation",
+   "city": "ARLINGTON",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 104169,
+   "ticker": "WMT",
+   "name": "Walmart",
+   "city": "BENTONVILLE",
+   "state": "AR",
+   "place": "AR"
+  },
+  {
+   "cik": 105634,
+   "ticker": "EME",
+   "name": "Emcor",
+   "city": "NORWALK",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 105770,
+   "ticker": "WST",
+   "name": "West Pharmaceutical Services",
+   "city": "EXTON",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 106040,
+   "ticker": "WDC",
+   "name": "Western Digital",
+   "city": "SAN JOSE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 106535,
+   "ticker": "WY",
+   "name": "Weyerhaeuser",
+   "city": "SEATTLE",
+   "state": "WA",
+   "place": "WA"
+  },
+  {
+   "cik": 107263,
+   "ticker": "WMB",
+   "name": "Williams Companies",
+   "city": "TULSA",
+   "state": "OK",
+   "place": "OK"
+  },
+  {
+   "cik": 109198,
+   "ticker": "TJX",
+   "name": "TJX Companies",
+   "city": "FRAMINGHAM",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 200406,
+   "ticker": "JNJ",
+   "name": "Johnson & Johnson",
+   "city": "NEW BRUNSWICK",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 202058,
+   "ticker": "LHX",
+   "name": "L3Harris",
+   "city": "MELBOURNE",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 217346,
+   "ticker": "TXT",
+   "name": "Textron",
+   "city": "PROVIDENCE",
+   "state": "RI",
+   "place": "RI"
+  },
+  {
+   "cik": 277135,
+   "ticker": "GWW",
+   "name": "W. W. Grainger",
+   "city": "LAKE FOREST",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 277948,
+   "ticker": "CSX",
+   "name": "CSX Corporation",
+   "city": "JACKSONVILLE",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 310158,
+   "ticker": "MRK",
+   "name": "Merck & Co.",
+   "city": "RAHWAY",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 310764,
+   "ticker": "SYK",
+   "name": "Stryker Corporation",
+   "city": "PORTAGE",
+   "state": "MI",
+   "place": "MI"
+  },
+  {
+   "cik": 313616,
+   "ticker": "DHR",
+   "name": "Danaher Corporation",
+   "city": "WASHINGTON",
+   "state": "DC",
+   "place": "DC"
+  },
+  {
+   "cik": 313927,
+   "ticker": "CHD",
+   "name": "Church & Dwight",
+   "city": "EWING",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 315189,
+   "ticker": "DE",
+   "name": "Deere & Company",
+   "city": "MOLINE",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 315293,
+   "ticker": "AON",
+   "name": "Aon plc",
+   "city": "DUBLIN 2",
+   "state": "L2",
+   "place": "Ireland"
+  },
+  {
+   "cik": 316709,
+   "ticker": "SCHW",
+   "name": "Charles Schwab Corporation",
+   "city": "WESTLAKE",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 318154,
+   "ticker": "AMGN",
+   "name": "Amgen",
+   "city": "THOUSAND OAKS",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 319201,
+   "ticker": "KLAC",
+   "name": "KLA Corporation",
+   "city": "MILPITAS",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 320187,
+   "ticker": "NKE",
+   "name": "Nike, Inc.",
+   "city": "BEAVERTON",
+   "state": "OR",
+   "place": "OR"
+  },
+  {
+   "cik": 320193,
+   "ticker": "AAPL",
+   "name": "Apple Inc.",
+   "city": "CUPERTINO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 320335,
+   "ticker": "GL",
+   "name": "Globe Life",
+   "city": "MCKINNEY",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 352541,
+   "ticker": "LNT",
+   "name": "Alliant Energy",
+   "city": "MADISON",
+   "state": "WI",
+   "place": "WI"
+  },
+  {
+   "cik": 352915,
+   "ticker": "UHS",
+   "name": "Universal Health Services",
+   "city": "KING OF PRUSSIA",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 354190,
+   "ticker": "AJG",
+   "name": "Arthur J. Gallagher & Co.",
+   "city": "ROLLING MEADOWS",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 354950,
+   "ticker": "HD",
+   "name": "The Home Depot",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 702165,
+   "ticker": "NSC",
+   "name": "Norfolk Southern",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 707549,
+   "ticker": "LRCX",
+   "name": "Lam Research",
+   "city": "FREMONT",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 711404,
+   "ticker": "COO",
+   "name": "The Cooper Companies",
+   "city": "SAN RAMON",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 713676,
+   "ticker": "PNC",
+   "name": "PNC Financial Services",
+   "city": "PITTSBURGH",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 715957,
+   "ticker": "D",
+   "name": "Dominion Energy",
+   "city": "RICHMOND",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 719955,
+   "ticker": "WSM",
+   "name": "Williams-Sonoma, Inc.",
+   "city": "SAN FRANCISCO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 720005,
+   "ticker": "RJF",
+   "name": "Raymond James Financial",
+   "city": "ST PETERSBURG",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 721371,
+   "ticker": "CAH",
+   "name": "Cardinal Health",
+   "city": "DUBLIN",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 723125,
+   "ticker": "MU",
+   "name": "Micron Technology",
+   "city": "BOISE",
+   "state": "ID",
+   "place": "ID"
+  },
+  {
+   "cik": 723254,
+   "ticker": "CTAS",
+   "name": "Cintas",
+   "city": "CINCINNATI",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 723531,
+   "ticker": "PAYX",
+   "name": "Paychex",
+   "city": "ROCHESTER",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 726728,
+   "ticker": "O",
+   "name": "Realty Income",
+   "city": "SAN DIEGO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 726958,
+   "ticker": "CASY",
+   "name": "Casey's",
+   "city": "ANKENY",
+   "state": "IA",
+   "place": "IA"
+  },
+  {
+   "cik": 728535,
+   "ticker": "JBHT",
+   "name": "J.B. Hunt",
+   "city": "LOWELL",
+   "state": "AR",
+   "place": "AR"
+  },
+  {
+   "cik": 731766,
+   "ticker": "UNH",
+   "name": "UnitedHealth Group",
+   "city": "EDEN PRAIRIE",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 731802,
+   "ticker": "ATO",
+   "name": "Atmos Energy",
+   "city": "DALLAS",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 732712,
+   "ticker": "VZ",
+   "name": "Verizon",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 732717,
+   "ticker": "T",
+   "name": "AT&T",
+   "city": "DALLAS",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 740260,
+   "ticker": "VTR",
+   "name": "Ventas",
+   "city": "CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 745732,
+   "ticker": "ROST",
+   "name": "Ross Stores",
+   "city": "DUBLIN",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 746515,
+   "ticker": "EXPD",
+   "name": "Expeditors International",
+   "city": "BELLEVUE",
+   "state": "WA",
+   "place": "WA"
+  },
+  {
+   "cik": 749251,
+   "ticker": "IT",
+   "name": "Gartner",
+   "city": "STAMFORD",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 753308,
+   "ticker": "NEE",
+   "name": "NextEra Energy",
+   "city": "JUNO BEACH",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 759944,
+   "ticker": "CFG",
+   "name": "Citizens Financial Group",
+   "city": "PROVIDENCE",
+   "state": "RI",
+   "place": "RI"
+  },
+  {
+   "cik": 764180,
+   "ticker": "MO",
+   "name": "Altria",
+   "city": "RICHMOND",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 764478,
+   "ticker": "BBY",
+   "name": "Best Buy",
+   "city": "RICHFIELD",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 764622,
+   "ticker": "PNW",
+   "name": "Pinnacle West Capital",
+   "city": "PHOENIX",
+   "state": "AZ",
+   "place": "AZ"
+  },
+  {
+   "cik": 765880,
+   "ticker": "DOC",
+   "name": "Healthpeak Properties",
+   "city": "DENVER",
+   "state": "CO",
+   "place": "CO"
+  },
+  {
+   "cik": 769397,
+   "ticker": "ADSK",
+   "name": "Autodesk",
+   "city": "SAN FRANCISCO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 773840,
+   "ticker": "HON",
+   "name": "Honeywell Technologies",
+   "city": "CHARLOTTE",
+   "state": "NC",
+   "place": "NC"
+  },
+  {
+   "cik": 779152,
+   "ticker": "JKHY",
+   "name": "Jack Henry & Associates",
+   "city": "MONETT",
+   "state": "MO",
+   "place": "MO"
+  },
+  {
+   "cik": 783325,
+   "ticker": "WEC",
+   "name": "WEC Energy Group",
+   "city": "MILWAUKEE",
+   "state": "WI",
+   "place": "WI"
+  },
+  {
+   "cik": 788784,
+   "ticker": "PEG",
+   "name": "Public Service Enterprise Group",
+   "city": "NEWARK",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 789019,
+   "ticker": "MSFT",
+   "name": "Microsoft",
+   "city": "REDMOND",
+   "state": "WA",
+   "place": "WA"
+  },
+  {
+   "cik": 789570,
+   "ticker": "MGM",
+   "name": "MGM Resorts",
+   "city": "LAS VEGAS",
+   "state": "NV",
+   "place": "NV"
+  },
+  {
+   "cik": 796343,
+   "ticker": "ADBE",
+   "name": "Adobe Inc.",
+   "city": "SAN JOSE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 797468,
+   "ticker": "OXY",
+   "name": "Occidental Petroleum",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 798354,
+   "ticker": "FISV",
+   "name": "Fiserv",
+   "city": "MILWAUKEE",
+   "state": "WI",
+   "place": "WI"
+  },
+  {
+   "cik": 804328,
+   "ticker": "QCOM",
+   "name": "Qualcomm",
+   "city": "SAN DIEGO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 811156,
+   "ticker": "CMS",
+   "name": "CMS Energy",
+   "city": "JACKSON",
+   "state": "MI",
+   "place": "MI"
+  },
+  {
+   "cik": 813672,
+   "ticker": "CDNS",
+   "name": "Cadence Design Systems",
+   "city": "SAN JOSE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 814547,
+   "ticker": "FICO",
+   "name": "Fair Isaac",
+   "city": "BOZEMAN",
+   "state": "MT",
+   "place": "MT"
+  },
+  {
+   "cik": 815097,
+   "ticker": "CCL",
+   "name": "Carnival Corporation",
+   "city": "MIAMI",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 815556,
+   "ticker": "FAST",
+   "name": "Fastenal",
+   "city": "WINONA",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 820027,
+   "ticker": "AMP",
+   "name": "Ameriprise Financial",
+   "city": "MINNEAPOLIS",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 820313,
+   "ticker": "APH",
+   "name": "Amphenol",
+   "city": "WALLINGFORD",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 820318,
+   "ticker": "COHR",
+   "name": "Coherent Corp.",
+   "city": "SAXONBURG",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 821189,
+   "ticker": "EOG",
+   "name": "EOG Resources",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 822416,
+   "ticker": "PHM",
+   "name": "PulteGroup",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 823768,
+   "ticker": "WM",
+   "name": "Waste Management",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 827052,
+   "ticker": "EIX",
+   "name": "Edison International",
+   "city": "ROSEMEAD",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 827054,
+   "ticker": "MCHP",
+   "name": "Microchip Technology",
+   "city": "CHANDLER",
+   "state": "AZ",
+   "place": "AZ"
+  },
+  {
+   "cik": 829224,
+   "ticker": "SBUX",
+   "name": "Starbucks",
+   "city": "SEATTLE",
+   "state": "WA",
+   "place": "WA"
+  },
+  {
+   "cik": 831001,
+   "ticker": "C",
+   "name": "Citigroup",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 831259,
+   "ticker": "FCX",
+   "name": "Freeport-McMoRan",
+   "city": "PHOENIX",
+   "state": "AZ",
+   "place": "AZ"
+  },
+  {
+   "cik": 832101,
+   "ticker": "IEX",
+   "name": "IDEX Corporation",
+   "city": "NORTHBROOK",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 833444,
+   "ticker": "JCI",
+   "name": "Johnson Controls",
+   "city": "CORK",
+   "state": "L2",
+   "place": "Ireland"
+  },
+  {
+   "cik": 842023,
+   "ticker": "TECH",
+   "name": "Bio-Techne",
+   "city": "MINNEAPOLIS",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 849395,
+   "ticker": "CRH",
+   "name": "CRH plc",
+   "city": "DUBLIN 16",
+   "state": "L2",
+   "place": "Ireland"
+  },
+  {
+   "cik": 849399,
+   "ticker": "GEN",
+   "name": "Gen Digital",
+   "city": "TEMPE",
+   "state": "AZ",
+   "place": "AZ"
+  },
+  {
+   "cik": 857005,
+   "ticker": "PTC",
+   "name": "PTC Inc.",
+   "city": "BOSTON",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 858877,
+   "ticker": "CSCO",
+   "name": "Cisco",
+   "city": "SAN JOSE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 860730,
+   "ticker": "HCA",
+   "name": "HCA Healthcare",
+   "city": "NASHVILLE",
+   "state": "TN",
+   "place": "TN"
+  },
+  {
+   "cik": 860731,
+   "ticker": "TYL",
+   "name": "Tyler Technologies",
+   "city": "PLANO",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 864749,
+   "ticker": "TRMB",
+   "name": "Trimble Inc.",
+   "city": "WESTMINSTER",
+   "state": "CO",
+   "place": "CO"
+  },
+  {
+   "cik": 865752,
+   "ticker": "MNST",
+   "name": "Monster Beverage",
+   "city": "CORONA",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 866374,
+   "ticker": "FLEX",
+   "name": "Flex Ltd.",
+   "city": "AUSTIN",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 866787,
+   "ticker": "AZO",
+   "name": "AutoZone",
+   "city": "MEMPHIS",
+   "state": "TN",
+   "place": "TN"
+  },
+  {
+   "cik": 872589,
+   "ticker": "REGN",
+   "name": "Regeneron Pharmaceuticals",
+   "city": "TARRYTOWN",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 874716,
+   "ticker": "IDXX",
+   "name": "Idexx Laboratories",
+   "city": "WESTBROOK",
+   "state": "ME",
+   "place": "ME"
+  },
+  {
+   "cik": 874761,
+   "ticker": "AES",
+   "name": "AES Corporation",
+   "city": "ARLINGTON",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 874766,
+   "ticker": "HIG",
+   "name": "The Hartford",
+   "city": "HARTFORD",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 875045,
+   "ticker": "BIIB",
+   "name": "Biogen",
+   "city": "CAMBRIDGE",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 875320,
+   "ticker": "VRTX",
+   "name": "Vertex Pharmaceuticals",
+   "city": "BOSTON",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 877212,
+   "ticker": "ZBRA",
+   "name": "Zebra Technologies",
+   "city": "LINCOLNSHIRE",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 878927,
+   "ticker": "ODFL",
+   "name": "Old Dominion",
+   "city": "THOMASVILLE",
+   "state": "NC",
+   "place": "NC"
+  },
+  {
+   "cik": 879101,
+   "ticker": "KIM",
+   "name": "Kimco Realty",
+   "city": "JERICHO",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 879169,
+   "ticker": "INCY",
+   "name": "Incyte",
+   "city": "WILMINGTON",
+   "state": "DE",
+   "place": "DE"
+  },
+  {
+   "cik": 882095,
+   "ticker": "GILD",
+   "name": "Gilead Sciences",
+   "city": "FOSTER CITY",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 882184,
+   "ticker": "DHI",
+   "name": "D. R. Horton",
+   "city": "ARLINGTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 882835,
+   "ticker": "ROP",
+   "name": "Roper Technologies",
+   "city": "SARASOTA",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 883241,
+   "ticker": "SNPS",
+   "name": "Synopsys",
+   "city": "SUNNYVALE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 884887,
+   "ticker": "RCL",
+   "name": "Royal Caribbean Group",
+   "city": "MIAMI",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 885725,
+   "ticker": "BSX",
+   "name": "Boston Scientific",
+   "city": "MARLBOROUGH",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 886982,
+   "ticker": "GS",
+   "name": "Goldman Sachs",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 895126,
+   "ticker": "EXE",
+   "name": "Expand Energy",
+   "city": "SPRING",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 895421,
+   "ticker": "MS",
+   "name": "Morgan Stanley",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 896159,
+   "ticker": "CB",
+   "name": "Chubb Limited",
+   "city": "ZURICH",
+   "state": "V8",
+   "place": "Switzerland"
+  },
+  {
+   "cik": 896878,
+   "ticker": "INTU",
+   "name": "Intuit",
+   "city": "MOUNTAIN VIEW",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 898173,
+   "ticker": "ORLY",
+   "name": "O'Reilly Automotive",
+   "city": "SPRINGFIELD",
+   "state": "MO",
+   "place": "MO"
+  },
+  {
+   "cik": 898293,
+   "ticker": "JBL",
+   "name": "Jabil",
+   "city": "ST PETERSBURG",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 899051,
+   "ticker": "ALL",
+   "name": "Allstate",
+   "city": "NORTHBROOK",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 900075,
+   "ticker": "CPRT",
+   "name": "Copart",
+   "city": "DALLAS",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 906107,
+   "ticker": "VMRK",
+   "name": "Vivmark Residential",
+   "city": "CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 906163,
+   "ticker": "NVR",
+   "name": "NVR, Inc.",
+   "city": "RESTON",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 906345,
+   "ticker": "CPT",
+   "name": "Camden Property Trust",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 909832,
+   "ticker": "COST",
+   "name": "Costco",
+   "city": "ISSAQUAH",
+   "state": "WA",
+   "place": "WA"
+  },
+  {
+   "cik": 910521,
+   "ticker": "DECK",
+   "name": "Deckers Brands",
+   "city": "GOLETA",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 910606,
+   "ticker": "REG",
+   "name": "Regency Centers",
+   "city": "JACKSONVILLE",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 912595,
+   "ticker": "MAA",
+   "name": "Mid-America Apartment Communities",
+   "city": "GERMANTOWN",
+   "state": "TN",
+   "place": "TN"
+  },
+  {
+   "cik": 914208,
+   "ticker": "IVZ",
+   "name": "Invesco",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 915913,
+   "ticker": "ALB",
+   "name": "Albemarle Corporation",
+   "city": "CHARLOTTE",
+   "state": "NC",
+   "place": "NC"
+  },
+  {
+   "cik": 916076,
+   "ticker": "MLM",
+   "name": "Martin Marietta Materials",
+   "city": "RALEIGH",
+   "state": "NC",
+   "place": "NC"
+  },
+  {
+   "cik": 916365,
+   "ticker": "TSCO",
+   "name": "Tractor Supply",
+   "city": "BRENTWOOD",
+   "state": "TN",
+   "place": "TN"
+  },
+  {
+   "cik": 920148,
+   "ticker": "LH",
+   "name": "Labcorp",
+   "city": "BURLINGTON",
+   "state": "NC",
+   "place": "NC"
+  },
+  {
+   "cik": 920522,
+   "ticker": "ESS",
+   "name": "Essex Property Trust",
+   "city": "SAN MATEO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 920760,
+   "ticker": "LEN",
+   "name": "Lennar",
+   "city": "MIAMI",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 922224,
+   "ticker": "PPL",
+   "name": "PPL Corporation",
+   "city": "ALLENTOWN",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 922621,
+   "ticker": "ERIE",
+   "name": "Erie Indemnity",
+   "city": "ERIE",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 927066,
+   "ticker": "DVA",
+   "name": "DaVita",
+   "city": "DENVER",
+   "state": "CO",
+   "place": "CO"
+  },
+  {
+   "cik": 927628,
+   "ticker": "COF",
+   "name": "Capital One",
+   "city": "MCLEAN",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 927653,
+   "ticker": "MCK",
+   "name": "McKesson",
+   "city": "IRVING",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 935703,
+   "ticker": "DLTR",
+   "name": "Dollar Tree",
+   "city": "CHESAPEAKE",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 936340,
+   "ticker": "DTE",
+   "name": "DTE Energy",
+   "city": "DETROIT",
+   "state": "MI",
+   "place": "MI"
+  },
+  {
+   "cik": 936395,
+   "ticker": "CIEN",
+   "name": "Ciena",
+   "city": "HANOVER",
+   "state": "MD",
+   "place": "MD"
+  },
+  {
+   "cik": 936468,
+   "ticker": "LMT",
+   "name": "Lockheed Martin",
+   "city": "BETHESDA",
+   "state": "MD",
+   "place": "MD"
+  },
+  {
+   "cik": 940944,
+   "ticker": "DRI",
+   "name": "Darden Restaurants",
+   "city": "ORLANDO",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 943452,
+   "ticker": "WAB",
+   "name": "Wabtec",
+   "city": "PITTSBURGH",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 943819,
+   "ticker": "RMD",
+   "name": "ResMed",
+   "city": "SAN DIEGO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 946581,
+   "ticker": "TTWO",
+   "name": "Take-Two Interactive",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 947484,
+   "ticker": "ACGL",
+   "name": "Arch Capital Group",
+   "city": "PEMBROKE",
+   "state": "D0",
+   "place": "Bermuda"
+  },
+  {
+   "cik": 1000228,
+   "ticker": "HSIC",
+   "name": "Henry Schein",
+   "city": "MELVILLE",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1000697,
+   "ticker": "WAT",
+   "name": "Waters Corporation",
+   "city": "MILFORD",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 1001250,
+   "ticker": "EL",
+   "name": "The Estée Lauder Companies",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1002047,
+   "ticker": "NTAP",
+   "name": "NetApp",
+   "city": "SAN JOSE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1002910,
+   "ticker": "AEE",
+   "name": "Ameren",
+   "city": "ST LOUIS",
+   "state": "MO",
+   "place": "MO"
+  },
+  {
+   "cik": 1004980,
+   "ticker": "PCG",
+   "name": "PG&E Corporation",
+   "city": "OAKLAND",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1013237,
+   "ticker": "FDS",
+   "name": "FactSet",
+   "city": "NORWALK",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 1013871,
+   "ticker": "NRG",
+   "name": "NRG Energy",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1014473,
+   "ticker": "VRSN",
+   "name": "Verisign",
+   "city": "RESTON",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 1018724,
+   "ticker": "AMZN",
+   "name": "Amazon",
+   "city": "SEATTLE",
+   "state": "WA",
+   "place": "WA"
+  },
+  {
+   "cik": 1020569,
+   "ticker": "IRM",
+   "name": "Iron Mountain",
+   "city": "PORTSMOUTH",
+   "state": "NH",
+   "place": "NH"
+  },
+  {
+   "cik": 1022079,
+   "ticker": "DGX",
+   "name": "Quest Diagnostics",
+   "city": "SECAUCUS",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 1022671,
+   "ticker": "STLD",
+   "name": "Steel Dynamics",
+   "city": "FORT WAYNE",
+   "state": "IN",
+   "place": "IN"
+  },
+  {
+   "cik": 1024478,
+   "ticker": "ROK",
+   "name": "Rockwell Automation",
+   "city": "MILWAUKEE",
+   "state": "WI",
+   "place": "WI"
+  },
+  {
+   "cik": 1031296,
+   "ticker": "FE",
+   "name": "FirstEnergy",
+   "city": "AKRON",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 1032208,
+   "ticker": "SRE",
+   "name": "Sempra",
+   "city": "SAN DIEGO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1034054,
+   "ticker": "SBAC",
+   "name": "SBA Communications",
+   "city": "BOCA RATON",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 1035002,
+   "ticker": "VLO",
+   "name": "Valero Energy",
+   "city": "SAN ANTONIO",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1035267,
+   "ticker": "ISRG",
+   "name": "Intuitive Surgical",
+   "city": "SUNNYVALE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1035443,
+   "ticker": "ARE",
+   "name": "Alexandria Real Estate Equities",
+   "city": "PASADENA",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1035983,
+   "ticker": "FIX",
+   "name": "Comfort Systems USA",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1037038,
+   "ticker": "RL",
+   "name": "Ralph Lauren Corporation",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1037540,
+   "ticker": "BXP",
+   "name": "BXP, Inc.",
+   "city": "BOSTON",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 1037646,
+   "ticker": "MTD",
+   "name": "Mettler Toledo",
+   "city": "COLUMBUS",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 1037868,
+   "ticker": "AME",
+   "name": "Ametek",
+   "city": "BERWYN",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 1039684,
+   "ticker": "OKE",
+   "name": "Oneok",
+   "city": "TULSA",
+   "state": "OK",
+   "place": "OK"
+  },
+  {
+   "cik": 1041061,
+   "ticker": "YUM",
+   "name": "Yum! Brands",
+   "city": "LOUISVILLE",
+   "state": "KY",
+   "place": "KY"
+  },
+  {
+   "cik": 1043277,
+   "ticker": "CHRW",
+   "name": "C.H. Robinson",
+   "city": "EDEN PRAIRIE",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 1045609,
+   "ticker": "PLD",
+   "name": "Prologis",
+   "city": "SAN FRANCISCO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1045810,
+   "ticker": "NVDA",
+   "name": "Nvidia",
+   "city": "SANTA CLARA",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1047862,
+   "ticker": "ED",
+   "name": "Consolidated Edison",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1048286,
+   "ticker": "MAR",
+   "name": "Marriott International",
+   "city": "BETHESDA",
+   "state": "MD",
+   "place": "MD"
+  },
+  {
+   "cik": 1048695,
+   "ticker": "FFIV",
+   "name": "F5, Inc.",
+   "city": "SEATTLE",
+   "state": "WA",
+   "place": "WA"
+  },
+  {
+   "cik": 1048911,
+   "ticker": "FDX",
+   "name": "FedEx",
+   "city": "MEMPHIS",
+   "state": "TN",
+   "place": "TN"
+  },
+  {
+   "cik": 1050915,
+   "ticker": "PWR",
+   "name": "Quanta Services",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1051470,
+   "ticker": "CCI",
+   "name": "Crown Castle",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1053507,
+   "ticker": "AMT",
+   "name": "American Tower",
+   "city": "BOSTON",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 1057352,
+   "ticker": "CSGP",
+   "name": "CoStar Group",
+   "city": "ARLINGTON",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 1058090,
+   "ticker": "CMG",
+   "name": "Chipotle Mexican Grill",
+   "city": "NEWPORT BEACH",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1058290,
+   "ticker": "CTSH",
+   "name": "Cognizant",
+   "city": "TEANECK",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 1059556,
+   "ticker": "MCO",
+   "name": "Moody's Corporation",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1060391,
+   "ticker": "RSG",
+   "name": "Republic Services",
+   "city": "PHOENIX",
+   "state": "AZ",
+   "place": "AZ"
+  },
+  {
+   "cik": 1063761,
+   "ticker": "SPG",
+   "name": "Simon Property Group",
+   "city": "INDIANAPOLIS",
+   "state": "IN",
+   "place": "IN"
+  },
+  {
+   "cik": 1065088,
+   "ticker": "EBAY",
+   "name": "eBay Inc.",
+   "city": "SAN JOSE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1065280,
+   "ticker": "NFLX",
+   "name": "Netflix",
+   "city": "LOS GATOS",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1067701,
+   "ticker": "URI",
+   "name": "United Rentals",
+   "city": "STAMFORD",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 1067983,
+   "ticker": "BRK-B",
+   "name": "Berkshire Hathaway",
+   "city": "OMAHA",
+   "state": "NE",
+   "place": "NE"
+  },
+  {
+   "cik": 1069183,
+   "ticker": "AXON",
+   "name": "Axon Enterprise",
+   "city": "SCOTTSDALE",
+   "state": "AZ",
+   "place": "AZ"
+  },
+  {
+   "cik": 1069202,
+   "ticker": "LII",
+   "name": "Lennox International",
+   "city": "RICHARDSON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1070750,
+   "ticker": "HST",
+   "name": "Host Hotels & Resorts",
+   "city": "BETHESDA",
+   "state": "MD",
+   "place": "MD"
+  },
+  {
+   "cik": 1071739,
+   "ticker": "CNC",
+   "name": "Centene Corporation",
+   "city": "ST LOUIS",
+   "state": "MO",
+   "place": "MO"
+  },
+  {
+   "cik": 1075531,
+   "ticker": "BKNG",
+   "name": "Booking Holdings",
+   "city": "NORWALK",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 1086222,
+   "ticker": "AKAM",
+   "name": "Akamai Technologies",
+   "city": "CAMBRIDGE",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 1090012,
+   "ticker": "DVN",
+   "name": "Devon Energy",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1090727,
+   "ticker": "UPS",
+   "name": "United Parcel Service",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 1090872,
+   "ticker": "A",
+   "name": "Agilent Technologies",
+   "city": "SANTA CLARA",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1091667,
+   "ticker": "CHTR",
+   "name": "Charter Communications",
+   "city": "STAMFORD",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 1093557,
+   "ticker": "DXCM",
+   "name": "Dexcom",
+   "city": "SAN DIEGO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1094285,
+   "ticker": "TDY",
+   "name": "Teledyne Technologies",
+   "city": "THOUSAND OAKS",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1095073,
+   "ticker": "EG",
+   "name": "Everest Group",
+   "city": "HAMILTON",
+   "state": "D0",
+   "place": "Bermuda"
+  },
+  {
+   "cik": 1097149,
+   "ticker": "ALGN",
+   "name": "Align Technology",
+   "city": "TEMPE",
+   "state": "AZ",
+   "place": "AZ"
+  },
+  {
+   "cik": 1097864,
+   "ticker": "ON",
+   "name": "ON Semiconductor",
+   "city": "SCOTTSDALE",
+   "state": "AZ",
+   "place": "AZ"
+  },
+  {
+   "cik": 1099219,
+   "ticker": "MET",
+   "name": "MetLife",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1099800,
+   "ticker": "EW",
+   "name": "Edwards Lifesciences",
+   "city": "IRVINE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1100682,
+   "ticker": "CRL",
+   "name": "Charles River Laboratories",
+   "city": "WILMINGTON",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 1101239,
+   "ticker": "EQIX",
+   "name": "Equinix",
+   "city": "REDWOOD CITY",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1103982,
+   "ticker": "MDLZ",
+   "name": "Mondelez International",
+   "city": "CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 1108524,
+   "ticker": "CRM",
+   "name": "Salesforce",
+   "city": "SAN FRANCISCO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1109357,
+   "ticker": "EXC",
+   "name": "Exelon",
+   "city": "CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 1110803,
+   "ticker": "ILMN",
+   "name": "Illumina, Inc.",
+   "city": "SAN DIEGO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1111711,
+   "ticker": "NI",
+   "name": "NiSource",
+   "city": "MERRILLVILLE",
+   "state": "IN",
+   "place": "IN"
+  },
+  {
+   "cik": 1120193,
+   "ticker": "NDAQ",
+   "name": "Nasdaq, Inc.",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1121788,
+   "ticker": "GRMN",
+   "name": "Garmin",
+   "city": "SCHAFFHAUSEN",
+   "state": null,
+   "place": null
+  },
+  {
+   "cik": 1123360,
+   "ticker": "GPN",
+   "name": "Global Payments",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 1126328,
+   "ticker": "PFG",
+   "name": "Principal Financial Group",
+   "city": "DES MOINES",
+   "state": "IA",
+   "place": "IA"
+  },
+  {
+   "cik": 1130310,
+   "ticker": "CNP",
+   "name": "CenterPoint Energy",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1133421,
+   "ticker": "NOC",
+   "name": "Northrop Grumman",
+   "city": "FALLS CHURCH",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 1136869,
+   "ticker": "ZBH",
+   "name": "Zimmer Biomet",
+   "city": "WARSAW",
+   "state": "IN",
+   "place": "IN"
+  },
+  {
+   "cik": 1136893,
+   "ticker": "FIS",
+   "name": "Fidelity National Information Services",
+   "city": "JACKSONVILLE",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 1137774,
+   "ticker": "PRU",
+   "name": "Prudential Financial",
+   "city": "NEWARK",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 1137789,
+   "ticker": "STX",
+   "name": "Seagate Technology",
+   "city": "SINGAPORE",
+   "state": "U0",
+   "place": "Singapore"
+  },
+  {
+   "cik": 1138118,
+   "ticker": "CBRE",
+   "name": "CBRE Group",
+   "city": "DALLAS",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1140536,
+   "ticker": "WTW",
+   "name": "Willis Towers Watson",
+   "city": "LONDON ENGLAND",
+   "state": "X0",
+   "place": "United Kingdom"
+  },
+  {
+   "cik": 1140859,
+   "ticker": "COR",
+   "name": "Cencora",
+   "city": "CONSHOHOCKEN",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 1141391,
+   "ticker": "MA",
+   "name": "Mastercard",
+   "city": "PURCHASE",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1145197,
+   "ticker": "PODD",
+   "name": "Insulet Corporation",
+   "city": "ACTON",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 1156039,
+   "ticker": "ELV",
+   "name": "Elevance Health",
+   "city": "INDIANAPOLIS",
+   "state": "IN",
+   "place": "IN"
+  },
+  {
+   "cik": 1156375,
+   "ticker": "CME",
+   "name": "CME Group",
+   "city": "CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 1163165,
+   "ticker": "COP",
+   "name": "ConocoPhillips",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1164727,
+   "ticker": "NEM",
+   "name": "Newmont",
+   "city": "DENVER",
+   "state": "CO",
+   "place": "CO"
+  },
+  {
+   "cik": 1166691,
+   "ticker": "CMCSA",
+   "name": "Comcast",
+   "city": "PHILADELPHIA",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 1174922,
+   "ticker": "WYNN",
+   "name": "Wynn Resorts",
+   "city": "LAS VEGAS",
+   "state": "NV",
+   "place": "NV"
+  },
+  {
+   "cik": 1175454,
+   "ticker": "CPAY",
+   "name": "Corpay",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 1176948,
+   "ticker": "ARES",
+   "name": "Ares Management",
+   "city": "LOS ANGELES",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1260221,
+   "ticker": "TDG",
+   "name": "TransDigm Group",
+   "city": "CLEVELAND",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 1262039,
+   "ticker": "FTNT",
+   "name": "Fortinet",
+   "city": "SUNNYVALE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1267238,
+   "ticker": "AIZ",
+   "name": "Assurant",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 1274494,
+   "ticker": "FSLR",
+   "name": "First Solar",
+   "city": "PHOENIX",
+   "state": "AZ",
+   "place": "AZ"
+  },
+  {
+   "cik": 1280452,
+   "ticker": "MPWR",
+   "name": "Monolithic Power Systems",
+   "city": "WEST PALM BEACH",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 1281761,
+   "ticker": "RF",
+   "name": "Regions Financial Corporation",
+   "city": "BIRMINGHAM",
+   "state": "AL",
+   "place": "AL"
+  },
+  {
+   "cik": 1283699,
+   "ticker": "TMUS",
+   "name": "T-Mobile US",
+   "city": "BELLEVUE",
+   "state": "WA",
+   "place": "WA"
+  },
+  {
+   "cik": 1285785,
+   "ticker": "MOS",
+   "name": "The Mosaic Company",
+   "city": "TAMPA",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 1286681,
+   "ticker": "DPZ",
+   "name": "Domino's",
+   "city": "ANN ARBOR",
+   "state": "MI",
+   "place": "MI"
+  },
+  {
+   "cik": 1289490,
+   "ticker": "EXR",
+   "name": "Extra Space Storage",
+   "city": "SALT LAKE CITY",
+   "state": "UT",
+   "place": "UT"
+  },
+  {
+   "cik": 1297996,
+   "ticker": "DLR",
+   "name": "Digital Realty",
+   "city": "AUSTIN",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1300514,
+   "ticker": "LVS",
+   "name": "Las Vegas Sands",
+   "city": "LAS VEGAS",
+   "state": "NV",
+   "place": "NV"
+  },
+  {
+   "cik": 1318605,
+   "ticker": "TSLA",
+   "name": "Tesla, Inc.",
+   "city": "AUSTIN",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1321655,
+   "ticker": "PLTR",
+   "name": "Palantir Technologies",
+   "city": "AVENTURA",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 1324404,
+   "ticker": "CF",
+   "name": "CF Industries",
+   "city": "NORTHBROOK",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 1324424,
+   "ticker": "EXPE",
+   "name": "Expedia Group",
+   "city": "SEATTLE",
+   "state": "WA",
+   "place": "WA"
+  },
+  {
+   "cik": 1326160,
+   "ticker": "DUK",
+   "name": "Duke Energy",
+   "city": "CHARLOTTE",
+   "state": "NC",
+   "place": "NC"
+  },
+  {
+   "cik": 1326801,
+   "ticker": "META",
+   "name": "Meta Platforms",
+   "city": "MENLO PARK",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1327567,
+   "ticker": "PANW",
+   "name": "Palo Alto Networks",
+   "city": "SANTA CLARA",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1327811,
+   "ticker": "WDAY",
+   "name": "Workday, Inc.",
+   "city": "PLEASANTON",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1335258,
+   "ticker": "LYV",
+   "name": "Live Nation Entertainment",
+   "city": "BEVERLY HILLS",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1336920,
+   "ticker": "LDOS",
+   "name": "Leidos",
+   "city": "RESTON",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 1341439,
+   "ticker": "ORCL",
+   "name": "Oracle Corporation",
+   "city": "AUSTIN",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1373715,
+   "ticker": "NOW",
+   "name": "ServiceNow",
+   "city": "SANTA CLARA",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1374310,
+   "ticker": "CBOE",
+   "name": "Cboe Global Markets",
+   "city": "CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 1375365,
+   "ticker": "SMCI",
+   "name": "Supermicro",
+   "city": "SAN JOSE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1381197,
+   "ticker": "IBKR",
+   "name": "Interactive Brokers",
+   "city": "GREENWICH",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 1383312,
+   "ticker": "BR",
+   "name": "Broadridge Financial Solutions",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1385157,
+   "ticker": "TEL",
+   "name": "TE Connectivity",
+   "city": "GALWAY",
+   "state": null,
+   "place": null
+  },
+  {
+   "cik": 1389170,
+   "ticker": "TRGP",
+   "name": "Targa Resources",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1390777,
+   "ticker": "BNY",
+   "name": "BNY Mellon",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1393052,
+   "ticker": "VEEV",
+   "name": "Veeva Systems",
+   "city": "PLEASANTON",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1393311,
+   "ticker": "PSA",
+   "name": "Public Storage",
+   "city": "FRISCO",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1393818,
+   "ticker": "BX",
+   "name": "Blackstone Inc.",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1396009,
+   "ticker": "VMC",
+   "name": "Vulcan Materials Company",
+   "city": "BIRMINGHAM",
+   "state": "AL",
+   "place": "AL"
+  },
+  {
+   "cik": 1397187,
+   "ticker": "LULU",
+   "name": "Lululemon Athletica",
+   "city": "VANCOUVER",
+   "state": "A1",
+   "place": "British Columbia, Canada"
+  },
+  {
+   "cik": 1402057,
+   "ticker": "CDW",
+   "name": "CDW Corporation",
+   "city": "VERNON HILLS",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 1403161,
+   "ticker": "V",
+   "name": "Visa Inc.",
+   "city": "SAN FRANCISCO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1403568,
+   "ticker": "ULTA",
+   "name": "Ulta Beauty",
+   "city": "BOLINGBROOK",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 1404912,
+   "ticker": "KKR",
+   "name": "KKR & Co.",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1408198,
+   "ticker": "MSCI",
+   "name": "MSCI",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1410636,
+   "ticker": "AWK",
+   "name": "American Water Works",
+   "city": "CAMDEN",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 1413329,
+   "ticker": "PM",
+   "name": "Philip Morris International",
+   "city": "STAMFORD",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 1413447,
+   "ticker": "NXPI",
+   "name": "NXP Semiconductors",
+   "city": "EINDHOVEN",
+   "state": "P7",
+   "place": "Netherlands"
+  },
+  {
+   "cik": 1415404,
+   "ticker": "ECHO",
+   "name": "EchoStar",
+   "city": "ENGLEWOOD",
+   "state": "CO",
+   "place": "CO"
+  },
+  {
+   "cik": 1418135,
+   "ticker": "KDP",
+   "name": "Keurig Dr Pepper",
+   "city": "FRISCO",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1442145,
+   "ticker": "VRSK",
+   "name": "Verisk Analytics",
+   "city": "JERSEY CITY",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 1447669,
+   "ticker": "TWLO",
+   "name": "Twilio",
+   "city": "San Francisco",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1466258,
+   "ticker": "TT",
+   "name": "Trane Technologies",
+   "city": "CO. DUBLIN",
+   "state": "L2",
+   "place": "Ireland"
+  },
+  {
+   "cik": 1467373,
+   "ticker": "ACN",
+   "name": "Accenture",
+   "city": "DUBLIN",
+   "state": "L2",
+   "place": "Ireland"
+  },
+  {
+   "cik": 1467858,
+   "ticker": "GM",
+   "name": "General Motors",
+   "city": "DETROIT",
+   "state": "MI",
+   "place": "MI"
+  },
+  {
+   "cik": 1474735,
+   "ticker": "GNRC",
+   "name": "Generac",
+   "city": "WAUKESHA",
+   "state": "WI",
+   "place": "WI"
+  },
+  {
+   "cik": 1478242,
+   "ticker": "IQV",
+   "name": "IQVIA",
+   "city": "DURHAM",
+   "state": "NC",
+   "place": "NC"
+  },
+  {
+   "cik": 1489393,
+   "ticker": "LYB",
+   "name": "LyondellBasell",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1501585,
+   "ticker": "HII",
+   "name": "Huntington Ingalls Industries",
+   "city": "NEWPORT NEWS",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 1506307,
+   "ticker": "KMI",
+   "name": "Kinder Morgan",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1510295,
+   "ticker": "MPC",
+   "name": "Marathon Petroleum",
+   "city": "FINDLAY",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 1512673,
+   "ticker": "XYZ",
+   "name": "Block, Inc.",
+   "city": "OAKLAND",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1513761,
+   "ticker": "NCLH",
+   "name": "Norwegian Cruise Line Holdings",
+   "city": "MIAMI",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 1521332,
+   "ticker": "APTV",
+   "name": "Aptiv",
+   "city": "SCHAFFHAUSEN",
+   "state": "V8",
+   "place": "Switzerland"
+  },
+  {
+   "cik": 1524472,
+   "ticker": "XYL",
+   "name": "Xylem Inc.",
+   "city": "WASHINGTON",
+   "state": "DC",
+   "place": "DC"
+  },
+  {
+   "cik": 1534701,
+   "ticker": "PSX",
+   "name": "Phillips 66",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1535527,
+   "ticker": "CRWD",
+   "name": "CrowdStrike",
+   "city": "AUSTIN",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1539838,
+   "ticker": "FANG",
+   "name": "Diamondback Energy",
+   "city": "MIDLAND",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1543151,
+   "ticker": "UBER",
+   "name": "Uber",
+   "city": "SAN FRANCISCO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1551152,
+   "ticker": "ABBV",
+   "name": "AbbVie",
+   "city": "NORTH CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 1551182,
+   "ticker": "ETN",
+   "name": "Eaton Corporation",
+   "city": "DUBLIN",
+   "state": "L2",
+   "place": "Ireland"
+  },
+  {
+   "cik": 1555280,
+   "ticker": "ZTS",
+   "name": "Zoetis",
+   "city": "PARSIPPANY",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 1559720,
+   "ticker": "ABNB",
+   "name": "Airbnb",
+   "city": "SAN FRANCISCO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1561550,
+   "ticker": "DDOG",
+   "name": "Datadog",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1564708,
+   "ticker": "NWSA",
+   "name": "News Corp",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1571949,
+   "ticker": "ICE",
+   "name": "Intercontinental Exchange",
+   "city": "ATLANTA",
+   "state": "GA",
+   "place": "GA"
+  },
+  {
+   "cik": 1571996,
+   "ticker": "DELL",
+   "name": "Dell Technologies",
+   "city": "ROUND ROCK",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1579241,
+   "ticker": "ALLE",
+   "name": "Allegion",
+   "city": "CARMEL",
+   "state": "IN",
+   "place": "IN"
+  },
+  {
+   "cik": 1585689,
+   "ticker": "HLT",
+   "name": "Hilton Worldwide",
+   "city": "MCLEAN",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 1596532,
+   "ticker": "ANET",
+   "name": "Arista Networks",
+   "city": "SANTA CLARA",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1601046,
+   "ticker": "KEYS",
+   "name": "Keysight Technologies",
+   "city": "SANTA ROSA",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1601712,
+   "ticker": "SYF",
+   "name": "Synchrony Financial",
+   "city": "STAMFORD",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 1609711,
+   "ticker": "GDDY",
+   "name": "GoDaddy",
+   "city": "TEMPE",
+   "state": "AZ",
+   "place": "AZ"
+  },
+  {
+   "cik": 1613103,
+   "ticker": "MDT",
+   "name": "Medtronic",
+   "city": "GALWAY",
+   "state": null,
+   "place": null
+  },
+  {
+   "cik": 1633917,
+   "ticker": "PYPL",
+   "name": "PayPal",
+   "city": "SAN JOSE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1633978,
+   "ticker": "LITE",
+   "name": "Lumentum",
+   "city": "SAN JOSE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1637459,
+   "ticker": "KHC",
+   "name": "Kraft Heinz",
+   "city": "PITTSBURGH",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 1645590,
+   "ticker": "HPE",
+   "name": "Hewlett Packard Enterprise",
+   "city": "SPRING",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1652044,
+   "ticker": "GOOGL",
+   "name": "Alphabet Inc.",
+   "city": "MOUNTAIN VIEW",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1659166,
+   "ticker": "FTV",
+   "name": "Fortive",
+   "city": "EVERETT",
+   "state": "WA",
+   "place": "WA"
+  },
+  {
+   "cik": 1664703,
+   "ticker": "BE",
+   "name": "Bloom Energy",
+   "city": "SAN JOSE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1666700,
+   "ticker": "DD",
+   "name": "DuPont",
+   "city": "WILMINGTON",
+   "state": "DE",
+   "place": "DE"
+  },
+  {
+   "cik": 1674101,
+   "ticker": "VRT",
+   "name": "Vertiv",
+   "city": "WESTERVILLE",
+   "state": "OH",
+   "place": "OH"
+  },
+  {
+   "cik": 1679788,
+   "ticker": "COIN",
+   "name": "Coinbase",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1682852,
+   "ticker": "MRNA",
+   "name": "Moderna",
+   "city": "CAMBRIDGE",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 1687229,
+   "ticker": "INVH",
+   "name": "Invitation Homes",
+   "city": "DALLAS",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1690820,
+   "ticker": "CVNA",
+   "name": "Carvana",
+   "city": "TEMPE",
+   "state": "AZ",
+   "place": "AZ"
+  },
+  {
+   "cik": 1692819,
+   "ticker": "VST",
+   "name": "Vistra Corp .",
+   "city": "IRVING",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1699150,
+   "ticker": "IR",
+   "name": "Ingersoll Rand",
+   "city": "DAVIDSON",
+   "state": "NC",
+   "place": "NC"
+  },
+  {
+   "cik": 1701605,
+   "ticker": "BKR",
+   "name": "Baker Hughes",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1705696,
+   "ticker": "VICI",
+   "name": "Vici Properties",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1707925,
+   "ticker": "LIN",
+   "name": "Linde plc",
+   "city": "WOKING SURREY",
+   "state": "X0",
+   "place": "United Kingdom"
+  },
+  {
+   "cik": 1711269,
+   "ticker": "EVRG",
+   "name": "Evergy",
+   "city": "KANSAS CITY",
+   "state": "MO",
+   "place": "MO"
+  },
+  {
+   "cik": 1713445,
+   "ticker": "RDDT",
+   "name": "Reddit",
+   "city": "SAN FRANCISCO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1730168,
+   "ticker": "AVGO",
+   "name": "Broadcom",
+   "city": "PALO ALTO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1739940,
+   "ticker": "CI",
+   "name": "Cigna",
+   "city": "BLOOMFIELD",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 1744489,
+   "ticker": "DIS",
+   "name": "The Walt Disney Company",
+   "city": "BURBANK",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1748790,
+   "ticker": "AMCR",
+   "name": "Amcor",
+   "city": "WARMLEY, BRISTOL",
+   "state": null,
+   "place": null
+  },
+  {
+   "cik": 1751008,
+   "ticker": "APP",
+   "name": "AppLovin",
+   "city": "PALO ALTO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1751788,
+   "ticker": "DOW",
+   "name": "Dow Inc.",
+   "city": "MIDLAND",
+   "state": "MI",
+   "place": "MI"
+  },
+  {
+   "cik": 1754301,
+   "ticker": "FOXA",
+   "name": "Fox Corporation",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1757898,
+   "ticker": "STE",
+   "name": "Steris",
+   "city": "DUBLIN",
+   "state": "L2",
+   "place": "Ireland"
+  },
+  {
+   "cik": 1781335,
+   "ticker": "OTIS",
+   "name": "Otis Worldwide",
+   "city": "FARMINGTON",
+   "state": "CT",
+   "place": "CT"
+  },
+  {
+   "cik": 1783180,
+   "ticker": "CARR",
+   "name": "Carrier Global",
+   "city": "PALM BEACH GARDENS",
+   "state": "FL",
+   "place": "FL"
+  },
+  {
+   "cik": 1783879,
+   "ticker": "HOOD",
+   "name": "Robinhood Markets",
+   "city": "MENLO PARK",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1792044,
+   "ticker": "VTRS",
+   "name": "Viatris",
+   "city": "CANONSBURG",
+   "state": "PA",
+   "place": "PA"
+  },
+  {
+   "cik": 1792789,
+   "ticker": "DASH",
+   "name": "DoorDash",
+   "city": "SAN FRANCISCO",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1811074,
+   "ticker": "TPL",
+   "name": "Texas Pacific Land Corporation",
+   "city": "DALLAS",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1835632,
+   "ticker": "MRVL",
+   "name": "Marvell Technology",
+   "city": "WILMINGTON",
+   "state": "DE",
+   "place": "DE"
+  },
+  {
+   "cik": 1841666,
+   "ticker": "APA",
+   "name": "APA Corporation",
+   "city": "HOUSTON",
+   "state": "TX",
+   "place": "TX"
+  },
+  {
+   "cik": 1858681,
+   "ticker": "APO",
+   "name": "Apollo Global Management",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1868275,
+   "ticker": "CEG",
+   "name": "Constellation Energy",
+   "city": "BALTIMORE",
+   "state": "MD",
+   "place": "MD"
+  },
+  {
+   "cik": 1874178,
+   "ticker": "RIVN",
+   "name": "Rivian Automotive, Inc. / DE",
+   "city": "IRVINE",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 1932393,
+   "ticker": "GEHC",
+   "name": "GE HealthCare",
+   "city": "CHICAGO",
+   "state": "IL",
+   "place": "IL"
+  },
+  {
+   "cik": 1944048,
+   "ticker": "KVUE",
+   "name": "Kenvue Inc.",
+   "city": "SUMMIT",
+   "state": "NJ",
+   "place": "NJ"
+  },
+  {
+   "cik": 1964738,
+   "ticker": "SOLV",
+   "name": "Solventum",
+   "city": "EAGAN",
+   "state": "MN",
+   "place": "MN"
+  },
+  {
+   "cik": 1967680,
+   "ticker": "VLTO",
+   "name": "Veralto",
+   "city": "WALTHAM",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 1973266,
+   "ticker": "TKO",
+   "name": "TKO Group Holdings",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 1996810,
+   "ticker": "GEV",
+   "name": "GE Vernova",
+   "city": "CAMBRIDGE",
+   "state": "MA",
+   "place": "MA"
+  },
+  {
+   "cik": 1996862,
+   "ticker": "BG",
+   "name": "Bunge Global",
+   "city": "GENEVA",
+   "state": "V8",
+   "place": "Switzerland"
+  },
+  {
+   "cik": 2005951,
+   "ticker": "SW",
+   "name": "Smurfit Westrock",
+   "city": "DUBLIN 4",
+   "state": null,
+   "place": null
+  },
+  {
+   "cik": 2011641,
+   "ticker": "FERG",
+   "name": "Ferguson Enterprises",
+   "city": "NEWPORT NEWS",
+   "state": "VA",
+   "place": "VA"
+  },
+  {
+   "cik": 2012383,
+   "ticker": "BLK",
+   "name": "BlackRock",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 2023554,
+   "ticker": "SNDK",
+   "name": "Sandisk",
+   "city": "MILPITAS",
+   "state": "CA",
+   "place": "CA"
+  },
+  {
+   "cik": 2041610,
+   "ticker": "SKYD",
+   "name": "Skydance",
+   "city": "NEW YORK",
+   "state": "NY",
+   "place": "NY"
+  },
+  {
+   "cik": 2058873,
+   "ticker": "Q",
+   "name": "Qnity Electronics",
+   "city": "WILMINGTON",
+   "state": "DE",
+   "place": "DE"
+  },
+  {
+   "cik": 2082247,
+   "ticker": "FDXF",
+   "name": "FedEx Freight",
+   "city": "MEMPHIS",
+   "state": "TN",
+   "place": "TN"
+  },
+  {
+   "cik": 2089271,
+   "ticker": "HONA",
+   "name": "Honeywell Aerospace",
+   "city": "PHOENIX",
+   "state": "AZ",
+   "place": "AZ"
+  },
+  {
+   "cik": 2115436,
+   "ticker": "XOM",
+   "name": "ExxonMobil",
+   "city": "SPRING",
+   "state": "TX",
+   "place": "TX"
+  }
+ ],
+ "failed": []
+}
