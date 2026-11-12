@@ -11,8 +11,9 @@
  */
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+import { mergeGeometries, toCreasedNormals } from "three/addons/utils/BufferGeometryUtils.js";
 import { clone as cloneSkinned } from "three/addons/utils/SkeletonUtils.js";
+import type { Carry } from "./character";
 import { polar, ROTUNDA, walkLength, walkPoint, type Slot } from "./layout";
 
 export type FigureKind = "man-suit" | "man-longsleeves" | "man-a" | "man-b" | "woman" | "woman-casual" | "woman-dress" | "woman-tanktop";
@@ -117,7 +118,8 @@ function mergeFigure(scene: THREE.Object3D, partNames: Parts): THREE.SkinnedMesh
     for (let index = 0; index < count; index++) colors.set([color.r, color.g, color.b], index * 3);
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
     geometry.setAttribute("part", new THREE.BufferAttribute(new Float32Array(count).fill(partOf(partNames, material.name)), 1));
-    return geometry;
+    // smooth shading over the low-poly surfaces, keeping the edges sharper than 60 degrees
+    return toCreasedNormals(geometry, Math.PI / 3);
   });
   const merged = mergeGeometries(geometries, false);
   if (!merged) throw new Error("The figure's parts could not be merged");
@@ -276,9 +278,12 @@ export interface PersonSpec {
   body: BodyKind;
   /** Height as a share of a grown person's (it follows the money). */
   scale: number;
-  /** Width and depth on top of that: a little slimmer or broader. */
+  /** Width and depth on top of that: slimmer for the smallest funds, broader for the largest. */
   girth: number;
   colours: Colours;
+  /** What the person carries or rides, and its walking pace against an ordinary walk. */
+  carry: Carry;
+  pace: number;
 }
 
 /** A shared skeleton with its animation, at the origin and out of the scene; people are drawn from it where they stand. */
@@ -495,7 +500,7 @@ export class Crowd {
     const current = { x: person.root.position.x, z: person.root.position.z, angle: Math.atan2(person.root.position.x, -person.root.position.z) };
     const length = walkLength(current, slot);
     // nobody takes more than about six seconds to cross the hall
-    const speed = Math.min(6.5, Math.max(1.4, length / 5.5));
+    const speed = Math.min(8, Math.max(1.4, length / 5.5) * person.spec.pace);
     person.trip = { from: person.trip ? current : { ...from, x: current.x, z: current.z, angle: current.angle }, to: slot, t: 0, speed, length: Math.max(0.01, length), wait: ((cik * 0.377) % 1) * 1.1 };
   }
 
@@ -514,7 +519,7 @@ export class Crowd {
           trip.wait -= seconds;
         } else {
           // the walking rig whose pace is nearest the person's speed
-          this.use(person, this.rig(person.body, true, trip.speed < 2.4 ? 0 : trip.speed < 4.2 ? 1 : 2));
+          this.use(person, person.spec.carry === "scooter" ? this.standing(person) : this.rig(person.body, true, trip.speed < 2.4 ? 0 : trip.speed < 4.2 ? 1 : 2));
           trip.t = Math.min(1, trip.t + (seconds * trip.speed) / trip.length);
           const [x, z] = walkPoint(trip.from, trip.to, trip.t);
           const [ax, az] = walkPoint(trip.from, trip.to, Math.min(1, trip.t + 0.02));
@@ -580,6 +585,17 @@ export class Crowd {
     const person = this.people.get(cik);
     if (!person || person.away) return null;
     return out.set(person.root.position.x, 1.92 * person.spec.scale, person.root.position.z);
+  }
+
+  /** Every person in the hall (not outside): its fund, the group that carries it, what it carries, and whether it is on its way. */
+  forEachPresent(visit: (cik: number, root: THREE.Object3D, carry: Carry, moving: boolean) => void): void {
+    for (const person of this.people.values()) if (!person.away) visit(person.spec.cik, person.root, person.spec.carry, Boolean(person.trip && person.trip.wait <= 0));
+  }
+
+  /** Standing at its place, in the hall: free to set off on a visit. */
+  idle(cik: number): boolean {
+    const person = this.people.get(cik);
+    return Boolean(person && !person.trip && !person.away && !person.leaving);
   }
 
   /** People still on their way. */

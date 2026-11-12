@@ -151,6 +151,11 @@ export interface FlowFundDirectoryRow {
   growthAllFunds: number | null;
   /** Average spread (bought − sold) of its trades over the following four quarters. */
   tradeSpread4: number | null;
+  /**
+   * Date of the filer's first electronic SEC filing (EDGAR's records begin in 1993-1996), the hall's measure of the
+   * firm's age. Optional: files built before it have none.
+   */
+  firstFiled?: string | null;
 }
 
 export interface FlowCompanyDirectoryRow {

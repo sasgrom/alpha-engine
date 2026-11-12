@@ -1,0 +1,2216 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-12T09:25:34.447Z",
+ "source": "SEC EDGAR submissions (data.sec.gov/submissions): date of the first electronic filing; EDGAR's records begin in 1993-1996",
+ "funds": [
+  {
+   "cik": 3520,
+   "name": "FRED ALGER MANAGEMENT, LLC",
+   "firstFiling": "1996-03-08",
+   "formerNames": [
+    "FRED ALGER MANAGEMENT INC",
+    "ALGER FRED MANAGEMENT INC"
+   ]
+  },
+  {
+   "cik": 9631,
+   "name": "BANK OF NOVA SCOTIA",
+   "firstFiling": "2000-11-08",
+   "formerNames": [
+    "BANK OF NOVA SCOTIA /"
+   ]
+  },
+  {
+   "cik": 14661,
+   "name": "BROWN BROTHERS HARRIMAN & CO",
+   "firstFiling": "1997-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 19617,
+   "name": "JPMORGAN CHASE & CO",
+   "firstFiling": "1994-01-20",
+   "formerNames": [
+    "JPMORGAN CHASE & CO",
+    "J P MORGAN CHASE & CO",
+    "CHASE MANHATTAN CORP /DE/",
+    "CHEMICAL BANKING CORP"
+   ]
+  },
+  {
+   "cik": 35527,
+   "name": "FIFTH THIRD BANCORP",
+   "firstFiling": "1994-02-10",
+   "formerNames": []
+  },
+  {
+   "cik": 36104,
+   "name": "US BANCORP \\DE",
+   "firstFiling": "1994-01-18",
+   "formerNames": [
+    "FIRST BANK SYSTEM INC"
+   ]
+  },
+  {
+   "cik": 36270,
+   "name": "M&T BANK CORP",
+   "firstFiling": "1994-03-10",
+   "formerNames": [
+    "FIRST EMPIRE STATE CORP"
+   ]
+  },
+  {
+   "cik": 38777,
+   "name": "FRANKLIN RESOURCES INC",
+   "firstFiling": "1994-01-06",
+   "formerNames": [
+    "FRANKLIN RESOURCES INC"
+   ]
+  },
+  {
+   "cik": 53417,
+   "name": "JENNISON ASSOCIATES LLC",
+   "firstFiling": "1996-12-06",
+   "formerNames": [
+    "JENNISON ASSOCIATES CAPITAL CORP"
+   ]
+  },
+  {
+   "cik": 70858,
+   "name": "BANK OF AMERICA CORP",
+   "firstFiling": "1994-02-22",
+   "formerNames": [
+    "BANKAMERICA CORP/DE/",
+    "NATIONSBANK CORP"
+   ]
+  },
+  {
+   "cik": 72971,
+   "name": "WELLS FARGO & COMPANY",
+   "firstFiling": "1994-01-12",
+   "formerNames": [
+    "WELLS FARGO & CO/MN",
+    "NORWEST CORP"
+   ]
+  },
+  {
+   "cik": 73124,
+   "name": "NORTHERN TRUST CORP",
+   "firstFiling": "1994-01-04",
+   "formerNames": []
+  },
+  {
+   "cik": 92230,
+   "name": "TRUIST FINANCIAL CORP",
+   "firstFiling": "1994-02-14",
+   "formerNames": [
+    "BB&T CORP",
+    "SOUTHERN NATIONAL CORP /NC/"
+   ]
+  },
+  {
+   "cik": 93751,
+   "name": "State Street",
+   "firstFiling": "1994-02-11",
+   "formerNames": [
+    "STATE STREET CORP",
+    "STATE STREET Corp",
+    "STATE STREET BOSTON CORP"
+   ]
+  },
+  {
+   "cik": 102909,
+   "name": "Vanguard Group",
+   "firstFiling": "1999-04-12",
+   "formerNames": [
+    "VANGUARD GROUP INC"
+   ]
+  },
+  {
+   "cik": 107136,
+   "name": "&PARTNERS",
+   "firstFiling": "2002-06-24",
+   "formerNames": [
+    "WILEY BROS.-AINTREE CAPITAL, LLC",
+    "WILEY BROS AINTREE CAPITAL LLC                          /BD"
+   ]
+  },
+  {
+   "cik": 200217,
+   "name": "Dodge & Cox",
+   "firstFiling": "1996-02-13",
+   "formerNames": []
+  },
+  {
+   "cik": 310051,
+   "name": "KING LUTHER CAPITAL MANAGEMENT CORP",
+   "firstFiling": "1994-02-08",
+   "formerNames": []
+  },
+  {
+   "cik": 312069,
+   "name": "BARCLAYS PLC",
+   "firstFiling": "1999-02-03",
+   "formerNames": []
+  },
+  {
+   "cik": 312272,
+   "name": "COMMONWEALTH EQUITY SERVICES, LLC",
+   "firstFiling": "2002-03-05",
+   "formerNames": [
+    "COMMONWEALTH EQUITY SERVICES, LLC.",
+    "COMMONWEALTH EQUITY SERVICES, INC.",
+    "COMMONWEALTH EQUITY SERVICES, LLP",
+    "COMMONWEALTH EQUITY SERVICES INC                        /BD"
+   ]
+  },
+  {
+   "cik": 312348,
+   "name": "LOOMIS SAYLES & CO L P",
+   "firstFiling": "1999-05-11",
+   "formerNames": []
+  },
+  {
+   "cik": 313028,
+   "name": "BARROW HANLEY MEWHINNEY & STRAUSS LLC",
+   "firstFiling": "1994-02-28",
+   "formerNames": [
+    "BARROW HANLEY MEWHINNEY & STRAUSS INC"
+   ]
+  },
+  {
+   "cik": 314949,
+   "name": "GLENMEDE TRUST CO NA",
+   "firstFiling": "1996-02-13",
+   "formerNames": [
+    "GLENMEDE TRUST CO"
+   ]
+  },
+  {
+   "cik": 315032,
+   "name": "STATE FARM MUTUAL AUTOMOBILE INSURANCE CO",
+   "firstFiling": "1994-02-01",
+   "formerNames": [
+    "STATE FARM MUTUAL AUTOMOBILE INSURANCE CO"
+   ]
+  },
+  {
+   "cik": 315066,
+   "name": "Fidelity (FMR)",
+   "firstFiling": "1994-01-12",
+   "formerNames": [
+    "FMR CORP"
+   ]
+  },
+  {
+   "cik": 318989,
+   "name": "FIL Ltd",
+   "firstFiling": "1994-05-13",
+   "formerNames": [
+    "FIDELITY INTERNATIONAL LTD"
+   ]
+  },
+  {
+   "cik": 350894,
+   "name": "SEI INVESTMENTS CO",
+   "firstFiling": "1995-02-14",
+   "formerNames": [
+    "SEI CORP"
+   ]
+  },
+  {
+   "cik": 354204,
+   "name": "DIMENSIONAL FUND ADVISORS LP",
+   "firstFiling": "1995-05-17",
+   "formerNames": [
+    "DIMENSIONAL FUND ADVISORS INC"
+   ]
+  },
+  {
+   "cik": 701059,
+   "name": "MML INVESTORS SERVICES, LLC",
+   "firstFiling": "2002-02-27",
+   "formerNames": [
+    "MML INVESTORS SERVICES, INC."
+   ]
+  },
+  {
+   "cik": 713676,
+   "name": "PNC FINANCIAL SERVICES GROUP, INC.",
+   "firstFiling": "1994-01-26",
+   "formerNames": [
+    "PNC FINANCIAL SERVICES GROUP INC",
+    "PNC BANK CORP"
+   ]
+  },
+  {
+   "cik": 720005,
+   "name": "RAYMOND JAMES FINANCIAL INC",
+   "firstFiling": "1995-02-13",
+   "formerNames": []
+  },
+  {
+   "cik": 720672,
+   "name": "STIFEL FINANCIAL CORP",
+   "firstFiling": "1994-04-11",
+   "formerNames": []
+  },
+  {
+   "cik": 728083,
+   "name": "FIRST MANHATTAN CO. LLC.",
+   "firstFiling": "1997-02-05",
+   "formerNames": [
+    "FIRST MANHATTAN CO"
+   ]
+  },
+  {
+   "cik": 748054,
+   "name": "AMERICAN CENTURY COMPANIES INC",
+   "firstFiling": "1994-02-10",
+   "formerNames": [
+    "TWENTIETH CENTURY COMPANIES INC"
+   ]
+  },
+  {
+   "cik": 762152,
+   "name": "STATE OF MICHIGAN RETIREMENT SYSTEM",
+   "firstFiling": "1997-04-24",
+   "formerNames": [
+    "STATE TREASURER STATE OF MICHIGAN"
+   ]
+  },
+  {
+   "cik": 763212,
+   "name": "Primecap Management",
+   "firstFiling": "1997-05-01",
+   "formerNames": []
+  },
+  {
+   "cik": 764068,
+   "name": "Legal & General",
+   "firstFiling": "1999-05-18",
+   "formerNames": []
+  },
+  {
+   "cik": 796848,
+   "name": "TEACHER RETIREMENT SYSTEM OF TEXAS",
+   "firstFiling": "1999-08-17",
+   "formerNames": []
+  },
+  {
+   "cik": 800177,
+   "name": "DANSKE BANK A/S",
+   "firstFiling": "2002-02-21",
+   "formerNames": [
+    "DEN DANSKE BANK AKTIESELSKAB                    /FI"
+   ]
+  },
+  {
+   "cik": 810265,
+   "name": "NEW YORK STATE COMMON RETIREMENT FUND",
+   "firstFiling": "1999-01-21",
+   "formerNames": []
+  },
+  {
+   "cik": 813917,
+   "name": "Harris Associates",
+   "firstFiling": "1994-02-11",
+   "formerNames": []
+  },
+  {
+   "cik": 815917,
+   "name": "JONES FINANCIAL COMPANIES LLLP",
+   "firstFiling": "1994-03-28",
+   "formerNames": [
+    "JONES FINANCIAL COMPANIES LP LLP",
+    "JONES FINANCIAL COS LP",
+    "JONES FINANCIAL COMPANIES L P"
+   ]
+  },
+  {
+   "cik": 820027,
+   "name": "AMERIPRISE FINANCIAL INC",
+   "firstFiling": "1994-02-14",
+   "formerNames": [
+    "AMERICAN EXPRESS FINANCIAL CORP",
+    "AMERICAN EXPRESS FINANCIAL ADVISORS",
+    "IDS FINANCIAL CORP/MN/"
+   ]
+  },
+  {
+   "cik": 820478,
+   "name": "STRS OHIO",
+   "firstFiling": "1997-09-19",
+   "formerNames": [
+    "STATE TEACHERS RETIREMENT SYSTEM OF OHIO"
+   ]
+  },
+  {
+   "cik": 831001,
+   "name": "CITIGROUP INC",
+   "firstFiling": "1994-01-05",
+   "formerNames": [
+    "CITIGROUP INC",
+    "TRAVELERS GROUP INC",
+    "TRAVELERS INC"
+   ]
+  },
+  {
+   "cik": 850529,
+   "name": "Fisher Investments",
+   "firstFiling": "1994-02-14",
+   "formerNames": [
+    "FISHER INVESTMENTS INC"
+   ]
+  },
+  {
+   "cik": 853758,
+   "name": "MERCER GLOBAL ADVISORS INC",
+   "firstFiling": "2019-04-12",
+   "formerNames": []
+  },
+  {
+   "cik": 854157,
+   "name": "STATE OF WISCONSIN INVESTMENT BOARD",
+   "firstFiling": "1994-01-27",
+   "formerNames": []
+  },
+  {
+   "cik": 860644,
+   "name": "Aristotle Capital Management, LLC",
+   "firstFiling": "1999-05-24",
+   "formerNames": [
+    "REED CONNER & BIRDWELL LLC",
+    "REED CONNER & BIRDWELL INC"
+   ]
+  },
+  {
+   "cik": 861177,
+   "name": "UBS AM, a distinct business unit of UBS ASSET MANAGEMENT AMERICAS LLC",
+   "firstFiling": "1994-02-24",
+   "formerNames": [
+    "UBS ASSET MANAGEMENT AMERICAS LLC",
+    "UBS ASSET MANAGEMENT AMERICAS INC",
+    "UBS GLOBAL ASSET MANAGEMENT AMERICAS INC",
+    "BRINSON PARTNERS INC/IL"
+   ]
+  },
+  {
+   "cik": 863748,
+   "name": "ROYAL LONDON ASSET MANAGEMENT LTD",
+   "firstFiling": "2003-08-11",
+   "formerNames": []
+  },
+  {
+   "cik": 869178,
+   "name": "VAN ECK ASSOCIATES CORP",
+   "firstFiling": "1996-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 869589,
+   "name": "NISSAY ASSET MANAGEMENT CORP /JAPAN",
+   "firstFiling": "2018-02-14",
+   "formerNames": [
+    "NISSAY ASSET MANAGEMENT CORP /JAPAN/ /ADV"
+   ]
+  },
+  {
+   "cik": 873630,
+   "name": "HSBC HOLDINGS PLC",
+   "firstFiling": "1999-05-19",
+   "formerNames": []
+  },
+  {
+   "cik": 882928,
+   "name": "TIAA-CREF INDIVIDUAL & INSTITUTIONAL SERVICES, LLC",
+   "firstFiling": "2002-02-28",
+   "formerNames": [
+    "TIAA-CREF INDIVIDUAL & INSTITUTIONAL SERVICES, INC."
+   ]
+  },
+  {
+   "cik": 883677,
+   "name": "PANAGORA ASSET MANAGEMENT INC",
+   "firstFiling": "1999-05-07",
+   "formerNames": []
+  },
+  {
+   "cik": 884414,
+   "name": "JACOBS LEVY EQUITY MANAGEMENT, INC",
+   "firstFiling": "1999-05-11",
+   "formerNames": [
+    "JACOBS LEVY EQUITY MANAGEMENT INC"
+   ]
+  },
+  {
+   "cik": 884546,
+   "name": "Charles Schwab Investment Management",
+   "firstFiling": "1999-05-14",
+   "formerNames": [
+    "SCHWAB CHARLES INVESTMENT MANAGEMENT INC"
+   ]
+  },
+  {
+   "cik": 886982,
+   "name": "GOLDMAN SACHS GROUP INC",
+   "firstFiling": "1998-08-24",
+   "formerNames": [
+    "GOLDMAN SACHS GROUP INC/"
+   ]
+  },
+  {
+   "cik": 895421,
+   "name": "MORGAN STANLEY",
+   "firstFiling": "1993-11-08",
+   "formerNames": [
+    "MORGAN STANLEY",
+    "MORGAN STANLEY",
+    "MORGAN STANLEY DEAN WITTER & CO",
+    "MORGAN STANLEY DEAN WITTER DISCOVER & CO",
+    "DEAN WITTER DISCOVER & CO"
+   ]
+  },
+  {
+   "cik": 898286,
+   "name": "CAISSE DE DEPOT ET PLACEMENT DU QUEBEC",
+   "firstFiling": "1999-11-03",
+   "formerNames": []
+  },
+  {
+   "cik": 900973,
+   "name": "Winslow Capital Management, LLC",
+   "firstFiling": "1999-06-07",
+   "formerNames": [
+    "WINSLOW CAPITAL MANAGEMENT INC /MN"
+   ]
+  },
+  {
+   "cik": 902219,
+   "name": "Wellington Management",
+   "firstFiling": "1994-12-09",
+   "formerNames": [
+    "WELLINGTON MANAGEMENT GROUP LLP",
+    "WELLINGTON MANAGEMENT CO LLP",
+    "WELLINGTON MANAGEMENT CO"
+   ]
+  },
+  {
+   "cik": 902367,
+   "name": "BLAIR WILLIAM & CO",
+   "firstFiling": "1994-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 912938,
+   "name": "MASSACHUSETTS FINANCIAL SERVICES CO",
+   "firstFiling": "1994-02-10",
+   "formerNames": [
+    "MASSACHUSETTS FINANCIAL SERVICES CO /MA/"
+   ]
+  },
+  {
+   "cik": 914208,
+   "name": "Invesco Ltd.",
+   "firstFiling": "1994-01-07",
+   "formerNames": [
+    "Invesco Asset Management Deutschland GMBH",
+    "Invesco Ltd",
+    "INVESCO PLC/LONDON/",
+    "AMVESCAP PLC/LONDON/",
+    "AMVESCAP /LONDON/",
+    "INVESCO PLC /LONDON"
+   ]
+  },
+  {
+   "cik": 919079,
+   "name": "CalPERS",
+   "firstFiling": "1994-02-24",
+   "formerNames": []
+  },
+  {
+   "cik": 919859,
+   "name": "MACKENZIE FINANCIAL CORP",
+   "firstFiling": "1996-06-11",
+   "formerNames": []
+  },
+  {
+   "cik": 921739,
+   "name": "NOMURA ASSET MANAGEMENT INTERNATIONAL INC.",
+   "firstFiling": "1996-02-07",
+   "formerNames": [
+    "MACQUARIE MANAGEMENT HOLDINGS, INC.",
+    "Delaware Management Holdings, Inc.",
+    "DELAWARE MANAGEMENT HOLDINGS CO INC",
+    "DELAWARE MANAGEMENT HOLDINGS INC"
+   ]
+  },
+  {
+   "cik": 923093,
+   "name": "TUDOR INVESTMENT CORP ET AL",
+   "firstFiling": "1996-05-10",
+   "formerNames": []
+  },
+  {
+   "cik": 926171,
+   "name": "NATIONAL BANK OF CANADA",
+   "firstFiling": "1998-03-02",
+   "formerNames": []
+  },
+  {
+   "cik": 927971,
+   "name": "BANK OF MONTREAL",
+   "firstFiling": "1998-02-18",
+   "formerNames": [
+    "BANK OF MONTREAL /CAN/"
+   ]
+  },
+  {
+   "cik": 928047,
+   "name": "MANUFACTURERS LIFE INSURANCE COMPANY, THE",
+   "firstFiling": "1997-02-12",
+   "formerNames": [
+    "MANUFACTURERES LIFE INSURANCE CO"
+   ]
+  },
+  {
+   "cik": 932540,
+   "name": "GROUP ONE TRADING LLC",
+   "firstFiling": "2002-11-29",
+   "formerNames": [
+    "GROUP ONE TRADING, L.P.",
+    "GROUP ONE TRADING L P"
+   ]
+  },
+  {
+   "cik": 933478,
+   "name": "VANGUARD FIDUCIARY TRUST CO",
+   "firstFiling": "1998-03-11",
+   "formerNames": []
+  },
+  {
+   "cik": 937615,
+   "name": "NISA INVESTMENT ADVISORS, LLC",
+   "firstFiling": "1999-05-13",
+   "formerNames": [
+    "NISA INVESTMENT ADVISORS L.L.C.",
+    "NISA INVESTMENT ADVISORS L L C"
+   ]
+  },
+  {
+   "cik": 937729,
+   "name": "FAYEZ SAROFIM & CO",
+   "firstFiling": "1995-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 938076,
+   "name": "STATE BOARD OF ADMINISTRATION OF FLORIDA RETIREMENT SYSTEM",
+   "firstFiling": "1999-02-08",
+   "formerNames": []
+  },
+  {
+   "cik": 944388,
+   "name": "1832 Asset Management L.P.",
+   "firstFiling": "1998-03-16",
+   "formerNames": [
+    "GCIC Ltd.",
+    "GOODMAN & COMPANY, INVESTMENT COUNSEL LTD.",
+    "Goodman & Company, Investment Counsel Ltd.",
+    "DYNAMIC MUTUAL FUNDS LTD",
+    "DUNDEE INVESTMENT MANAGEMENT & RESEARCH LTD",
+    "GOODMAN & CO LTD"
+   ]
+  },
+  {
+   "cik": 945631,
+   "name": "EAGLE CAPITAL MANAGEMENT LLC",
+   "firstFiling": "1999-08-13",
+   "formerNames": []
+  },
+  {
+   "cik": 947263,
+   "name": "TORONTO DOMINION BANK",
+   "firstFiling": "1996-04-19",
+   "formerNames": []
+  },
+  {
+   "cik": 947529,
+   "name": "VANGUARD ADVISERS INC",
+   "firstFiling": "2014-10-28",
+   "formerNames": [
+    "VANGUARD ADVISERS INC                                   /ADV"
+   ]
+  },
+  {
+   "cik": 948046,
+   "name": "DEUTSCHE BANK AG",
+   "firstFiling": "1996-10-17",
+   "formerNames": []
+  },
+  {
+   "cik": 948669,
+   "name": "PARNASSUS INVESTMENTS, LLC",
+   "firstFiling": "1999-05-14",
+   "formerNames": [
+    "PARNASSUS INVESTMENTS /CA"
+   ]
+  },
+  {
+   "cik": 1000275,
+   "name": "ROYAL BANK OF CANADA",
+   "firstFiling": "1996-07-05",
+   "formerNames": [
+    "ROYAL BANK OF CANADA",
+    "ROYAL BANK OF CANADA \\"
+   ]
+  },
+  {
+   "cik": 1001085,
+   "name": "BROOKFIELD Corp",
+   "firstFiling": "1998-02-10",
+   "formerNames": [
+    "BROOKFIELD ASSET MANAGEMENT INC.",
+    "BRASCAN CORP/",
+    "EDPERBRASCAN CORP"
+   ]
+  },
+  {
+   "cik": 1003518,
+   "name": "AGF MANAGEMENT LTD",
+   "firstFiling": "2002-03-01",
+   "formerNames": []
+  },
+  {
+   "cik": 1007280,
+   "name": "PUBLIC EMPLOYEES RETIREMENT SYSTEM OF OHIO",
+   "firstFiling": "1998-02-13",
+   "formerNames": []
+  },
+  {
+   "cik": 1009076,
+   "name": "COMMERCE BANK",
+   "firstFiling": "1999-05-13",
+   "formerNames": [
+    "COMMERCE BANK N A/MO"
+   ]
+  },
+  {
+   "cik": 1009207,
+   "name": "D. E. Shaw",
+   "firstFiling": "1996-02-26",
+   "formerNames": [
+    "SHAW D E & CO INC"
+   ]
+  },
+  {
+   "cik": 1017918,
+   "name": "BAMCO INC",
+   "firstFiling": "1996-08-30",
+   "formerNames": [
+    "BANCO INC"
+   ]
+  },
+  {
+   "cik": 1020066,
+   "name": "SANDS CAPITAL MANAGEMENT, LLC",
+   "firstFiling": "1999-05-06",
+   "formerNames": [
+    "SANDS CAPITAL MANAGEMENT, LP",
+    "SANDS CAPITAL MANAGEMENT INC"
+   ]
+  },
+  {
+   "cik": 1021223,
+   "name": "KAYNE ANDERSON RUDNICK INVESTMENT MANAGEMENT LLC",
+   "firstFiling": "1999-05-14",
+   "formerNames": [
+    "KAYNE ANDERSON RUDNICK INVESTMENT MANAGEMENT LLC",
+    "KAYNE ANDERSON INVESTMENT MANAGEMENT LLC"
+   ]
+  },
+  {
+   "cik": 1021926,
+   "name": "CIBC Asset Management Inc",
+   "firstFiling": "1998-02-13",
+   "formerNames": [
+    "CIBC Global Asset Management Inc",
+    "TAL GLOBAL ASSET MANAGEMENT INC",
+    "TAL INVESTMENT COUNSEL LTD"
+   ]
+  },
+  {
+   "cik": 1021944,
+   "name": "Temasek",
+   "firstFiling": "1996-10-17",
+   "formerNames": [
+    "TEMASEK HOLDINGS LTD"
+   ]
+  },
+  {
+   "cik": 1027796,
+   "name": "PZENA INVESTMENT MANAGEMENT LLC",
+   "firstFiling": "1999-04-28",
+   "formerNames": []
+  },
+  {
+   "cik": 1029160,
+   "name": "Soros Fund Management",
+   "firstFiling": "1997-01-03",
+   "formerNames": []
+  },
+  {
+   "cik": 1036325,
+   "name": "DAVIS SELECTED ADVISERS",
+   "firstFiling": "1997-03-27",
+   "formerNames": []
+  },
+  {
+   "cik": 1037389,
+   "name": "Renaissance Technologies",
+   "firstFiling": "1999-05-17",
+   "formerNames": [
+    "RENAISSANCE TECHNOLOGIES CORP"
+   ]
+  },
+  {
+   "cik": 1040188,
+   "name": "VICTORY CAPITAL MANAGEMENT INC",
+   "firstFiling": "2008-11-13",
+   "formerNames": []
+  },
+  {
+   "cik": 1040197,
+   "name": "MAI Capital Management",
+   "firstFiling": "1999-05-27",
+   "formerNames": [
+    "MAI Wealth Advisors",
+    "MCCORMACK ADVISORS INTERNATIONAL",
+    "INVESTMENT ADVISORS INTERNATIONAL INC/OH"
+   ]
+  },
+  {
+   "cik": 1040273,
+   "name": "Third Point",
+   "firstFiling": "1997-06-02",
+   "formerNames": [
+    "THIRD POINT MANAGEMENT CO LLC"
+   ]
+  },
+  {
+   "cik": 1045810,
+   "name": "NVIDIA CORP",
+   "firstFiling": "1998-03-06",
+   "formerNames": [
+    "NVIDIA CORP/CA"
+   ]
+  },
+  {
+   "cik": 1055964,
+   "name": "NOMURA ASSET MANAGEMENT CO LTD",
+   "firstFiling": "1999-05-07",
+   "formerNames": []
+  },
+  {
+   "cik": 1056053,
+   "name": "TD ASSET MANAGEMENT INC",
+   "firstFiling": "1998-02-18",
+   "formerNames": []
+  },
+  {
+   "cik": 1056288,
+   "name": "FEDERATED HERMES, INC.",
+   "firstFiling": "1998-03-20",
+   "formerNames": [
+    "FEDERATED INVESTORS INC /PA/"
+   ]
+  },
+  {
+   "cik": 1061165,
+   "name": "Lone Pine Capital",
+   "firstFiling": "1998-05-06",
+   "formerNames": []
+  },
+  {
+   "cik": 1061186,
+   "name": "WCM INVESTMENT MANAGEMENT, LLC",
+   "firstFiling": "1999-05-06",
+   "formerNames": [
+    "WCM INVESTMENT MANAGEMENT/CA"
+   ]
+  },
+  {
+   "cik": 1061768,
+   "name": "Baupost Group",
+   "firstFiling": "1999-05-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1067983,
+   "name": "Berkshire Hathaway",
+   "firstFiling": "1998-08-10",
+   "formerNames": [
+    "NBH INC"
+   ]
+  },
+  {
+   "cik": 1068837,
+   "name": "VOYA INVESTMENT MANAGEMENT LLC",
+   "firstFiling": "1999-05-17",
+   "formerNames": [
+    "ING INVESTMENT MANAGEMENT LLC"
+   ]
+  },
+  {
+   "cik": 1068855,
+   "name": "Asset Management One Co., Ltd.",
+   "firstFiling": "1999-05-17",
+   "formerNames": [
+    "DIAM Co., Ltd.",
+    "DLIBJ ASSET MANAGEMENT CO LTD",
+    "DAI ICHI LIFE ASSET MANAGEMENT CO LTD"
+   ]
+  },
+  {
+   "cik": 1081019,
+   "name": "CALIFORNIA STATE TEACHERS RETIREMENT SYSTEM",
+   "firstFiling": "1999-03-10",
+   "formerNames": []
+  },
+  {
+   "cik": 1082327,
+   "name": "FULLER & THALER ASSET MANAGEMENT, INC.",
+   "firstFiling": "1999-05-07",
+   "formerNames": [
+    "FULLER & THALER ASSET MANAGEMENT /CA"
+   ]
+  },
+  {
+   "cik": 1086619,
+   "name": "SCHRODER INVESTMENT MANAGEMENT GROUP",
+   "firstFiling": "1999-05-18",
+   "formerNames": []
+  },
+  {
+   "cik": 1088875,
+   "name": "BAILLIE GIFFORD & CO",
+   "firstFiling": "1999-06-18",
+   "formerNames": []
+  },
+  {
+   "cik": 1089877,
+   "name": "KEYBANK NATIONAL ASSOCIATION",
+   "firstFiling": "1999-07-02",
+   "formerNames": []
+  },
+  {
+   "cik": 1102578,
+   "name": "EARNEST PARTNERS LLC",
+   "firstFiling": "2000-02-11",
+   "formerNames": []
+  },
+  {
+   "cik": 1103804,
+   "name": "Viking Global",
+   "firstFiling": "2000-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1109448,
+   "name": "AllianceBernstein",
+   "firstFiling": "2000-03-28",
+   "formerNames": [
+    "ALLIANCEBERNSTEIN L.P.",
+    "ALLIANCE CAPITAL MANAGEMENT L P"
+   ]
+  },
+  {
+   "cik": 1115418,
+   "name": "RHUMBLINE ADVISERS",
+   "firstFiling": "2000-09-28",
+   "formerNames": []
+  },
+  {
+   "cik": 1125816,
+   "name": "FIRST TRUST ADVISORS LP",
+   "firstFiling": "2001-05-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1126328,
+   "name": "PRINCIPAL FINANCIAL GROUP INC",
+   "firstFiling": "2000-10-17",
+   "formerNames": []
+  },
+  {
+   "cik": 1135730,
+   "name": "Coatue Management",
+   "firstFiling": "2001-03-02",
+   "formerNames": []
+  },
+  {
+   "cik": 1137774,
+   "name": "PRUDENTIAL FINANCIAL INC",
+   "firstFiling": "2001-04-09",
+   "formerNames": []
+  },
+  {
+   "cik": 1140022,
+   "name": "AVIVA PLC",
+   "firstFiling": "2001-08-13",
+   "formerNames": [
+    "CGNU PLC"
+   ]
+  },
+  {
+   "cik": 1141802,
+   "name": "NORTHWESTERN MUTUAL WEALTH MANAGEMENT CO",
+   "firstFiling": "2005-02-14",
+   "formerNames": [
+    "NORTHWESTERN MUTUAL TRUST CO"
+   ]
+  },
+  {
+   "cik": 1163648,
+   "name": "CI INVESTMENTS INC.",
+   "firstFiling": "2002-02-14",
+   "formerNames": [
+    "CI MUTUAL FUNDS INC"
+   ]
+  },
+  {
+   "cik": 1163653,
+   "name": "NOMURA HOLDINGS INC",
+   "firstFiling": "2002-01-22",
+   "formerNames": []
+  },
+  {
+   "cik": 1164508,
+   "name": "Arrowstreet Capital",
+   "firstFiling": "2002-02-06",
+   "formerNames": [
+    "ARROWSTREET CAPITAL LIMITED PARTNERSHIP"
+   ]
+  },
+  {
+   "cik": 1164833,
+   "name": "HOTCHKIS & WILEY CAPITAL MANAGEMENT LLC",
+   "firstFiling": "2002-02-13",
+   "formerNames": []
+  },
+  {
+   "cik": 1165408,
+   "name": "Adage Capital",
+   "firstFiling": "2002-01-24",
+   "formerNames": [
+    "ADAGE CAPITAL PARTNERS GP LLC"
+   ]
+  },
+  {
+   "cik": 1166559,
+   "name": "GATES FOUNDATION TRUST",
+   "firstFiling": "2002-02-14",
+   "formerNames": [
+    "BILL & MELINDA GATES FOUNDATION TRUST",
+    "GATES BILL & MELINDA FOUNDATION"
+   ]
+  },
+  {
+   "cik": 1166588,
+   "name": "BNP PARIBAS FINANCIAL MARKETS",
+   "firstFiling": "2002-02-13",
+   "formerNames": [
+    "BNP PARIBAS ARBITRAGE, SNC",
+    "BNP PARIBAS ARBITRAGE, SA",
+    "BNP PARIBAS ARBITRAGE SA"
+   ]
+  },
+  {
+   "cik": 1167483,
+   "name": "Tiger Global",
+   "firstFiling": "2002-02-14",
+   "formerNames": [
+    "TIGER TECHNOLOGY MANAGEMENT LLC",
+    "TIGER TECHNOLOGY MANAGEMENT"
+   ]
+  },
+  {
+   "cik": 1167557,
+   "name": "AQR Capital Management",
+   "firstFiling": "2002-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1177206,
+   "name": "LOS ANGELES CAPITAL MANAGEMENT LLC",
+   "firstFiling": "2002-08-08",
+   "formerNames": [
+    "LOS ANGELES CAPITAL MANAGEMENT & EQUITY RESEARCH INC"
+   ]
+  },
+  {
+   "cik": 1177719,
+   "name": "WESTFIELD CAPITAL MANAGEMENT CO LP",
+   "firstFiling": "2002-07-24",
+   "formerNames": [
+    "WESTFIELD CAPITAL MANAGEMENT CO LLC"
+   ]
+  },
+  {
+   "cik": 1179392,
+   "name": "Two Sigma",
+   "firstFiling": "2003-02-14",
+   "formerNames": [
+    "TWO SIGMA INVESTMENTS LLC"
+   ]
+  },
+  {
+   "cik": 1191672,
+   "name": "CREDIT AGRICOLE S A",
+   "firstFiling": "2002-09-26",
+   "formerNames": []
+  },
+  {
+   "cik": 1207017,
+   "name": "LAZARD ASSET MANAGEMENT LLC",
+   "firstFiling": "2003-05-15",
+   "formerNames": []
+  },
+  {
+   "cik": 1214717,
+   "name": "Geode Capital Management",
+   "firstFiling": "2003-02-14",
+   "formerNames": [
+    "GEODE CAPITAL MANAGEMENT LLC"
+   ]
+  },
+  {
+   "cik": 1218210,
+   "name": "NORDEA INVESTMENT MANAGEMENT AB",
+   "firstFiling": "2003-02-14",
+   "formerNames": [
+    "NORDEA INVESTMENT MANAGEMENT SVERIGE AB",
+    "NORDEA INVESTMENT MANAGEMENT BANK DEMARK A/S"
+   ]
+  },
+  {
+   "cik": 1218710,
+   "name": "BALYASNY ASSET MANAGEMENT L.P.",
+   "firstFiling": "2003-02-14",
+   "formerNames": [
+    "BALYASNY ASSET MANAGEMENT L.P.",
+    "BALYASNY ASSET MANAGEMENT LLC"
+   ]
+  },
+  {
+   "cik": 1230239,
+   "name": "ALKEON CAPITAL MANAGEMENT LLC",
+   "firstFiling": "2003-05-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1273087,
+   "name": "Millennium Management",
+   "firstFiling": "2003-12-12",
+   "formerNames": [
+    "MILLENNIUM MANAGEMENT, L.L.C."
+   ]
+  },
+  {
+   "cik": 1274981,
+   "name": "NATIXIS",
+   "firstFiling": "2003-12-31",
+   "formerNames": [
+    "NATEXIS BANQUES POPULAIRES SA"
+   ]
+  },
+  {
+   "cik": 1283718,
+   "name": "CPP Investments",
+   "firstFiling": "2004-03-16",
+   "formerNames": []
+  },
+  {
+   "cik": 1316507,
+   "name": "Calamos Advisors LLC",
+   "firstFiling": "2005-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1318757,
+   "name": "MARSHALL WACE, LLP",
+   "firstFiling": "2005-02-25",
+   "formerNames": [
+    "Marshall Wace LLP"
+   ]
+  },
+  {
+   "cik": 1323645,
+   "name": "CAPITAL FUND MANAGEMENT S.A.",
+   "firstFiling": "2005-05-02",
+   "formerNames": []
+  },
+  {
+   "cik": 1325447,
+   "name": "First Eagle Investment Management, LLC",
+   "firstFiling": "2006-02-08",
+   "formerNames": [
+    "Arnhold & S. Bleichroeder Advisers, LLC"
+   ]
+  },
+  {
+   "cik": 1335644,
+   "name": "SCOTIA CAPITAL INC.",
+   "firstFiling": "2005-08-12",
+   "formerNames": []
+  },
+  {
+   "cik": 1336528,
+   "name": "Pershing Square Capital",
+   "firstFiling": "2005-08-22",
+   "formerNames": []
+  },
+  {
+   "cik": 1344551,
+   "name": "ASSETMARK, INC",
+   "firstFiling": "2005-11-08",
+   "formerNames": [
+    "GENWORTH FINANCIAL WEALTH MANAGEMENT, INC",
+    "GENWORTH FINANCIAL ASSET MANAGEMENT INC",
+    "GE PRIVATE ASSET MANAGEMENT INC"
+   ]
+  },
+  {
+   "cik": 1345929,
+   "name": "BROWN ADVISORY INC",
+   "firstFiling": "2005-11-22",
+   "formerNames": [
+    "BROWN ADVISORY HOLDINGS INC"
+   ]
+  },
+  {
+   "cik": 1348883,
+   "name": "Clearbridge Investments, LLC",
+   "firstFiling": "2006-01-10",
+   "formerNames": [
+    "Clearbridge Advisors, LLC",
+    "CAM North America, LLC"
+   ]
+  },
+  {
+   "cik": 1350694,
+   "name": "Bridgewater Associates",
+   "firstFiling": "2006-02-14",
+   "formerNames": [
+    "Bridgewater Associates, Inc."
+   ]
+  },
+  {
+   "cik": 1351917,
+   "name": "MENORA MIVTACHIM HOLDINGS LTD.",
+   "firstFiling": "2006-02-02",
+   "formerNames": [
+    "MENORAH HOLDINGS LTD."
+   ]
+  },
+  {
+   "cik": 1352662,
+   "name": "GMO",
+   "firstFiling": "2006-02-08",
+   "formerNames": []
+  },
+  {
+   "cik": 1357955,
+   "name": "ProShare Advisors LLC",
+   "firstFiling": "2006-03-29",
+   "formerNames": []
+  },
+  {
+   "cik": 1364742,
+   "name": "BlackRock",
+   "firstFiling": "2006-06-09",
+   "formerNames": [
+    "BlackRock Inc.",
+    "BlackRock, Inc.",
+    "New BlackRock, Inc."
+   ]
+  },
+  {
+   "cik": 1368163,
+   "name": "Zurcher Kantonalbank (Zurich Cantonalbank)",
+   "firstFiling": "2006-07-18",
+   "formerNames": [
+    "Zurcher Kantonalbank"
+   ]
+  },
+  {
+   "cik": 1373442,
+   "name": "Mariner, LLC",
+   "firstFiling": "2006-08-21",
+   "formerNames": [
+    "Mariner Wealth Advisors, LLC"
+   ]
+  },
+  {
+   "cik": 1374170,
+   "name": "Norges Bank",
+   "firstFiling": "2006-09-06",
+   "formerNames": []
+  },
+  {
+   "cik": 1386060,
+   "name": "Boston Partners",
+   "firstFiling": "2007-04-18",
+   "formerNames": [
+    "Robeco Investment Management, Inc."
+   ]
+  },
+  {
+   "cik": 1388391,
+   "name": "Walleye Trading LLC",
+   "firstFiling": "2007-02-02",
+   "formerNames": []
+  },
+  {
+   "cik": 1389426,
+   "name": "Rafferty Asset Management, LLC",
+   "firstFiling": "2007-02-13",
+   "formerNames": []
+  },
+  {
+   "cik": 1389958,
+   "name": "PEAK6 LLC",
+   "firstFiling": "2007-02-14",
+   "formerNames": [
+    "ALEPH6 LLC"
+   ]
+  },
+  {
+   "cik": 1390777,
+   "name": "Bank of New York Mellon Corp",
+   "firstFiling": "2007-02-23",
+   "formerNames": []
+  },
+  {
+   "cik": 1393825,
+   "name": "Hudson Bay Capital Management LP",
+   "firstFiling": "2007-03-23",
+   "formerNames": [
+    "Hudson Bay Capital Management, L.P."
+   ]
+  },
+  {
+   "cik": 1396318,
+   "name": "PUBLIC SECTOR PENSION INVESTMENT BOARD",
+   "firstFiling": "2007-06-25",
+   "formerNames": []
+  },
+  {
+   "cik": 1397960,
+   "name": "Woodbridge CO LTD",
+   "firstFiling": "2007-04-30",
+   "formerNames": []
+  },
+  {
+   "cik": 1403438,
+   "name": "LPL Financial LLC",
+   "firstFiling": "2007-06-22",
+   "formerNames": [
+    "LPL Financial CORP",
+    "Linsco/Private Ledger Corp."
+   ]
+  },
+  {
+   "cik": 1407543,
+   "name": "ENVESTNET ASSET MANAGEMENT INC",
+   "firstFiling": "2007-07-17",
+   "formerNames": []
+  },
+  {
+   "cik": 1418329,
+   "name": "Ninety One UK Ltd",
+   "firstFiling": "2007-11-20",
+   "formerNames": [
+    "Investec Asset Management LTD"
+   ]
+  },
+  {
+   "cik": 1418333,
+   "name": "MACQUARIE GROUP LTD",
+   "firstFiling": "2007-10-31",
+   "formerNames": []
+  },
+  {
+   "cik": 1418773,
+   "name": "Robeco Institutional Asset Management B.V.",
+   "firstFiling": "2007-11-20",
+   "formerNames": []
+  },
+  {
+   "cik": 1420473,
+   "name": "Financial Engines Advisors L.L.C.",
+   "firstFiling": "2008-02-07",
+   "formerNames": []
+  },
+  {
+   "cik": 1421224,
+   "name": "CIBC WORLD MARKET INC.",
+   "firstFiling": "2008-02-11",
+   "formerNames": [
+    "CIBC World Markets Inc."
+   ]
+  },
+  {
+   "cik": 1422848,
+   "name": "Capital Research Global Investors",
+   "firstFiling": "2008-01-10",
+   "formerNames": []
+  },
+  {
+   "cik": 1422849,
+   "name": "Capital World Investors",
+   "firstFiling": "2008-01-10",
+   "formerNames": []
+  },
+  {
+   "cik": 1423053,
+   "name": "Citadel",
+   "firstFiling": "2008-03-07",
+   "formerNames": []
+  },
+  {
+   "cik": 1426196,
+   "name": "CAPSTONE INVESTMENT ADVISORS, LLC",
+   "firstFiling": "2008-02-20",
+   "formerNames": []
+  },
+  {
+   "cik": 1434819,
+   "name": "APG Asset Management N.V.",
+   "firstFiling": "2008-05-13",
+   "formerNames": [
+    "APG All Pensions Group NV",
+    "APG ALL Pensions Group NV",
+    "APG All Pensions Group"
+   ]
+  },
+  {
+   "cik": 1441689,
+   "name": "Korea Investment CORP",
+   "firstFiling": "2008-08-07",
+   "formerNames": []
+  },
+  {
+   "cik": 1445893,
+   "name": "CTC LLC",
+   "firstFiling": "2008-10-09",
+   "formerNames": []
+  },
+  {
+   "cik": 1446194,
+   "name": "Susquehanna",
+   "firstFiling": "2008-11-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1452861,
+   "name": "IMC-Chicago, LLC",
+   "firstFiling": "2009-02-09",
+   "formerNames": []
+  },
+  {
+   "cik": 1453072,
+   "name": "Alyeska Investment Group, L.P.",
+   "firstFiling": "2009-02-17",
+   "formerNames": []
+  },
+  {
+   "cik": 1454984,
+   "name": "Ensign Peak Advisors, Inc",
+   "firstFiling": "2009-03-03",
+   "formerNames": []
+  },
+  {
+   "cik": 1456670,
+   "name": "DnB Asset Management AS",
+   "firstFiling": "2009-02-19",
+   "formerNames": [
+    "DnB NOR Asset Management AS"
+   ]
+  },
+  {
+   "cik": 1462020,
+   "name": "Chevy Chase Trust Holdings, LLC",
+   "firstFiling": "2009-05-11",
+   "formerNames": [
+    "Chevy Chase Trust Holdings, Inc."
+   ]
+  },
+  {
+   "cik": 1462160,
+   "name": "Mitsubishi UFJ Trust & Banking Corp",
+   "firstFiling": "2009-08-04",
+   "formerNames": []
+  },
+  {
+   "cik": 1465109,
+   "name": "Neuberger Berman Group LLC",
+   "firstFiling": "2009-06-11",
+   "formerNames": []
+  },
+  {
+   "cik": 1466153,
+   "name": "Artisan Partners Limited Partnership",
+   "firstFiling": "2009-08-13",
+   "formerNames": [
+    "Artisan Partners Limited Partnership"
+   ]
+  },
+  {
+   "cik": 1466546,
+   "name": "Mitsubishi UFJ Asset Management Co., Ltd.",
+   "firstFiling": "2009-08-07",
+   "formerNames": [
+    "Mitsubishi UFJ Kokusai Asset Management Co., Ltd."
+   ]
+  },
+  {
+   "cik": 1475365,
+   "name": "Sumitomo Mitsui Trust Group, Inc.",
+   "firstFiling": "2009-11-06",
+   "formerNames": [
+    "Sumitomo Mitsui Trust Group, Inc.",
+    "Sumitomo Mitsui Trust Holdings, Inc.",
+    "Chuo Mitsui Trust Holdings, Inc."
+   ]
+  },
+  {
+   "cik": 1481045,
+   "name": "Daiwa Securities Group Inc.",
+   "firstFiling": "2010-01-26",
+   "formerNames": []
+  },
+  {
+   "cik": 1482880,
+   "name": "Savant Capital, LLC",
+   "firstFiling": "2010-05-13",
+   "formerNames": [
+    "Savant Capital Management Inc"
+   ]
+  },
+  {
+   "cik": 1483066,
+   "name": "State of New Jersey Common Pension Fund D",
+   "firstFiling": "2010-02-05",
+   "formerNames": []
+  },
+  {
+   "cik": 1488542,
+   "name": "SIMPLEX TRADING, LLC",
+   "firstFiling": "2011-03-01",
+   "formerNames": [
+    "SET TRADING PARTNERS, LLC",
+    "MULTIPLEX TRADING LLC"
+   ]
+  },
+  {
+   "cik": 1505817,
+   "name": "Fiera Capital Corp",
+   "firstFiling": "2010-11-16",
+   "formerNames": [
+    "FIERA SCEPTRE INC."
+   ]
+  },
+  {
+   "cik": 1508097,
+   "name": "Sanders Capital, LLC",
+   "firstFiling": "2011-02-08",
+   "formerNames": []
+  },
+  {
+   "cik": 1510387,
+   "name": "Gotham Asset Management, LLC",
+   "firstFiling": "2011-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1512024,
+   "name": "CAPTRUST FINANCIAL ADVISORS",
+   "firstFiling": "2011-02-04",
+   "formerNames": []
+  },
+  {
+   "cik": 1517137,
+   "name": "Starboard Value",
+   "firstFiling": "2011-04-05",
+   "formerNames": []
+  },
+  {
+   "cik": 1517857,
+   "name": "Soroban Capital Partners LP",
+   "firstFiling": "2011-04-11",
+   "formerNames": [
+    "Soroban Capital Partners LLC"
+   ]
+  },
+  {
+   "cik": 1521001,
+   "name": "Parallax Volatility Advisers, L.P.",
+   "firstFiling": "2011-05-18",
+   "formerNames": [
+    "Parallax Volatility Advisers, LLC"
+   ]
+  },
+  {
+   "cik": 1529090,
+   "name": "AKUNA SECURITIES LLC",
+   "firstFiling": "2013-03-12",
+   "formerNames": []
+  },
+  {
+   "cik": 1535323,
+   "name": "Allianz Asset Management GmbH",
+   "firstFiling": "2012-08-14",
+   "formerNames": [
+    "Allianz Asset Management AG"
+   ]
+  },
+  {
+   "cik": 1535845,
+   "name": "HEALTHCARE OF ONTARIO PENSION PLAN TRUST FUND",
+   "firstFiling": "2020-02-12",
+   "formerNames": [
+    "HEALTHCARE OF ONTARIO PENSION PLAN TRUST FUND"
+   ]
+  },
+  {
+   "cik": 1540235,
+   "name": "Creative Planning",
+   "firstFiling": "2012-01-24",
+   "formerNames": []
+  },
+  {
+   "cik": 1540569,
+   "name": "EP Wealth Advisors, LLC",
+   "firstFiling": "2012-02-14",
+   "formerNames": [
+    "EP Wealth Advisors, Inc."
+   ]
+  },
+  {
+   "cik": 1541617,
+   "name": "Altimeter Capital",
+   "firstFiling": "2012-02-14",
+   "formerNames": [
+    "Altimeter Capital Management, LLC"
+   ]
+  },
+  {
+   "cik": 1542153,
+   "name": "Focus Partners Wealth",
+   "firstFiling": "2012-02-15",
+   "formerNames": [
+    "Colony Group, LLC"
+   ]
+  },
+  {
+   "cik": 1544599,
+   "name": "Bank Julius Baer & Co. Ltd, Zurich",
+   "firstFiling": "2020-05-13",
+   "formerNames": []
+  },
+  {
+   "cik": 1546007,
+   "name": "Assenagon Asset Management S.A.",
+   "firstFiling": "2017-02-27",
+   "formerNames": []
+  },
+  {
+   "cik": 1550100,
+   "name": "Vanguard Investments Australia, Ltd.",
+   "firstFiling": "2012-05-17",
+   "formerNames": []
+  },
+  {
+   "cik": 1555170,
+   "name": "Allworth Financial LP",
+   "firstFiling": "2012-08-29",
+   "formerNames": [
+    "Hanson McClain, Inc."
+   ]
+  },
+  {
+   "cik": 1556921,
+   "name": "VOLORIDGE INVESTMENT MANAGEMENT, LLC",
+   "firstFiling": "2014-02-07",
+   "formerNames": []
+  },
+  {
+   "cik": 1557017,
+   "name": "Capula Management Ltd",
+   "firstFiling": "2016-02-12",
+   "formerNames": []
+  },
+  {
+   "cik": 1562230,
+   "name": "Capital International Investors",
+   "firstFiling": "2012-11-14",
+   "formerNames": [
+    "Capital International Investors",
+    "Capital Research & Management Co - Division 3"
+   ]
+  },
+  {
+   "cik": 1566475,
+   "name": "Cerity Partners LLC",
+   "firstFiling": "2017-02-13",
+   "formerNames": [
+    "HPM Partners LLC"
+   ]
+  },
+  {
+   "cik": 1569395,
+   "name": "Mirae Asset Global Investments Co., Ltd.",
+   "firstFiling": "2013-02-12",
+   "formerNames": []
+  },
+  {
+   "cik": 1578621,
+   "name": "LMR Partners LLP",
+   "firstFiling": "2014-04-25",
+   "formerNames": []
+  },
+  {
+   "cik": 1582202,
+   "name": "Swiss National Bank",
+   "firstFiling": "2013-08-09",
+   "formerNames": []
+  },
+  {
+   "cik": 1587381,
+   "name": "USS Investment Management Ltd",
+   "firstFiling": "2013-10-24",
+   "formerNames": []
+  },
+  {
+   "cik": 1587973,
+   "name": "State of Tennessee, Department of Treasury",
+   "firstFiling": "2013-11-14",
+   "formerNames": [
+    "State of Tennessee, Treasury Department"
+   ]
+  },
+  {
+   "cik": 1588340,
+   "name": "Vontobel Holding Ltd.",
+   "firstFiling": "2013-10-03",
+   "formerNames": []
+  },
+  {
+   "cik": 1593051,
+   "name": "Retirement Systems of Alabama",
+   "firstFiling": "2015-02-11",
+   "formerNames": []
+  },
+  {
+   "cik": 1595888,
+   "name": "JANE STREET GROUP, LLC",
+   "firstFiling": "2014-05-15",
+   "formerNames": []
+  },
+  {
+   "cik": 1596800,
+   "name": "Connor, Clark & Lunn Investment Management Ltd.",
+   "firstFiling": "2014-05-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1600064,
+   "name": "Tidal Investments LLC",
+   "firstFiling": "2014-02-27",
+   "formerNames": [
+    "Toroso Investments, LLC"
+   ]
+  },
+  {
+   "cik": 1603466,
+   "name": "Point72",
+   "firstFiling": "2014-04-08",
+   "formerNames": []
+  },
+  {
+   "cik": 1607841,
+   "name": "SC US, LTD.",
+   "firstFiling": "2014-06-11",
+   "formerNames": []
+  },
+  {
+   "cik": 1608046,
+   "name": "National Pension Service",
+   "firstFiling": "2014-11-07",
+   "formerNames": []
+  },
+  {
+   "cik": 1610520,
+   "name": "UBS Group AG",
+   "firstFiling": "2014-06-17",
+   "formerNames": []
+  },
+  {
+   "cik": 1632341,
+   "name": "Belvedere Trading LLC",
+   "firstFiling": "2015-02-11",
+   "formerNames": []
+  },
+  {
+   "cik": 1632972,
+   "name": "WEALTH ENHANCEMENT ADVISORY SERVICES, LLC",
+   "firstFiling": "2015-02-10",
+   "formerNames": []
+  },
+  {
+   "cik": 1633516,
+   "name": "NewEdge Advisors, LLC",
+   "firstFiling": "2015-02-17",
+   "formerNames": [
+    "GWM Advisors LLC",
+    "Goss Wealth Management LLC"
+   ]
+  },
+  {
+   "cik": 1637460,
+   "name": "Man Group plc",
+   "firstFiling": "2015-03-23",
+   "formerNames": []
+  },
+  {
+   "cik": 1637689,
+   "name": "Swiss Life Asset Management Ltd",
+   "firstFiling": "2025-12-02",
+   "formerNames": []
+  },
+  {
+   "cik": 1642575,
+   "name": "Squarepoint Ops LLC",
+   "firstFiling": "2015-05-15",
+   "formerNames": []
+  },
+  {
+   "cik": 1644956,
+   "name": "WILLIAM BLAIR INVESTMENT MANAGEMENT, LLC",
+   "firstFiling": "2015-10-09",
+   "formerNames": []
+  },
+  {
+   "cik": 1647251,
+   "name": "TCI Fund Management",
+   "firstFiling": "2015-08-17",
+   "formerNames": []
+  },
+  {
+   "cik": 1648711,
+   "name": "Baird Financial Group, Inc.",
+   "firstFiling": "2015-08-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1650150,
+   "name": "Lido Advisors, LLC",
+   "firstFiling": "2017-05-15",
+   "formerNames": []
+  },
+  {
+   "cik": 1652044,
+   "name": "Alphabet Inc.",
+   "firstFiling": "2015-10-02",
+   "formerNames": []
+  },
+  {
+   "cik": 1663865,
+   "name": "Orbis Allan Gray Ltd",
+   "firstFiling": "2016-05-16",
+   "formerNames": []
+  },
+  {
+   "cik": 1665241,
+   "name": "Schonfeld Strategic Advisors LLC",
+   "firstFiling": "2016-05-16",
+   "formerNames": []
+  },
+  {
+   "cik": 1666335,
+   "name": "Rokos Capital Management LLP",
+   "firstFiling": "2019-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1666741,
+   "name": "Cetera Investment Advisers",
+   "firstFiling": "2016-02-16",
+   "formerNames": []
+  },
+  {
+   "cik": 1677044,
+   "name": "OSAIC HOLDINGS, INC.",
+   "firstFiling": "2016-10-07",
+   "formerNames": [
+    "Advisor Group Holdings, Inc.",
+    "ADVISOR GROUP HOLDINGS, INC."
+   ]
+  },
+  {
+   "cik": 1680208,
+   "name": "VANGUARD ASSET MANAGEMENT, Ltd",
+   "firstFiling": "2016-05-03",
+   "formerNames": []
+  },
+  {
+   "cik": 1685676,
+   "name": "STOREBRAND ASSET MANAGEMENT AS",
+   "firstFiling": "2016-09-29",
+   "formerNames": []
+  },
+  {
+   "cik": 1692234,
+   "name": "Russell Investments Group, Ltd.",
+   "firstFiling": "2017-01-23",
+   "formerNames": []
+  },
+  {
+   "cik": 1694164,
+   "name": "AustralianSuper Pty Ltd",
+   "firstFiling": "2017-01-11",
+   "formerNames": []
+  },
+  {
+   "cik": 1694217,
+   "name": "DZ BANK AG Deutsche Zentral Genossenschafts Bank, Frankfurt am Main",
+   "firstFiling": "2017-02-15",
+   "formerNames": []
+  },
+  {
+   "cik": 1697233,
+   "name": "GQG Partners LLC",
+   "firstFiling": "2017-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1697748,
+   "name": "ARK Invest",
+   "firstFiling": "2013-06-25",
+   "formerNames": []
+  },
+  {
+   "cik": 1700574,
+   "name": "Holocene Advisors, LP",
+   "firstFiling": "2018-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1704268,
+   "name": "Mubadala Investment Co PJSC",
+   "firstFiling": "2017-07-05",
+   "formerNames": []
+  },
+  {
+   "cik": 1705339,
+   "name": "MIRAE ASSET GLOBAL ETFS HOLDINGS Ltd.",
+   "firstFiling": "2017-05-10",
+   "formerNames": []
+  },
+  {
+   "cik": 1711924,
+   "name": "CIBC Bancorp USA Inc.",
+   "firstFiling": "2021-08-16",
+   "formerNames": []
+  },
+  {
+   "cik": 1716774,
+   "name": "Aberdeen Group plc",
+   "firstFiling": "2017-11-14",
+   "formerNames": [
+    "abrdn plc",
+    "Standard Life Aberdeen plc"
+   ]
+  },
+  {
+   "cik": 1717443,
+   "name": "KLP KAPITALFORVALTNING AS",
+   "firstFiling": "2025-02-11",
+   "formerNames": []
+  },
+  {
+   "cik": 1722329,
+   "name": "Newport Trust Company, LLC",
+   "firstFiling": "2017-11-13",
+   "formerNames": [
+    "Newport Trust Co"
+   ]
+  },
+  {
+   "cik": 1729829,
+   "name": "Qube Research & Technologies Ltd",
+   "firstFiling": "2018-05-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1730073,
+   "name": "PFA Pension, Forsikringsaktieselskab",
+   "firstFiling": "2026-02-02",
+   "formerNames": []
+  },
+  {
+   "cik": 1739439,
+   "name": "Rockefeller Capital Management L.P.",
+   "firstFiling": "2018-05-09",
+   "formerNames": []
+  },
+  {
+   "cik": 1745981,
+   "name": "WORLDQUANT MILLENNIUM ADVISORS LLC",
+   "firstFiling": "2018-08-14",
+   "formerNames": [
+    "WORLDQUANT MILLENNIUM QUANTITATIVE STRATEGIES LLC"
+   ]
+  },
+  {
+   "cik": 1747057,
+   "name": "D1 Capital Partners L.P.",
+   "firstFiling": "2019-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1758720,
+   "name": "Walleye Capital LLC",
+   "firstFiling": "2018-11-14",
+   "formerNames": [
+    "Walleye Trading Advisors, LLC"
+   ]
+  },
+  {
+   "cik": 1759654,
+   "name": "Quantinno Capital Management LP",
+   "firstFiling": "2019-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1761013,
+   "name": "Cresset Asset Management, LLC",
+   "firstFiling": "2019-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1763921,
+   "name": "Wealthfront Advisers LLC",
+   "firstFiling": "2019-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1767640,
+   "name": "PUBLIC INVESTMENT FUND",
+   "firstFiling": "2019-02-13",
+   "formerNames": []
+  },
+  {
+   "cik": 1784547,
+   "name": "Woodline Partners LP",
+   "firstFiling": "2020-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1791786,
+   "name": "Elliott Investment Management",
+   "firstFiling": "2020-01-13",
+   "formerNames": []
+  },
+  {
+   "cik": 1811242,
+   "name": "Vanguard Global Advisers, LLC",
+   "firstFiling": "2020-05-15",
+   "formerNames": []
+  },
+  {
+   "cik": 1830819,
+   "name": "Kestra Advisory Services, LLC",
+   "firstFiling": "2020-11-12",
+   "formerNames": []
+  },
+  {
+   "cik": 1837309,
+   "name": "Polar Capital Holdings Plc",
+   "firstFiling": "2021-02-16",
+   "formerNames": []
+  },
+  {
+   "cik": 1846237,
+   "name": "Valor Management LLC",
+   "firstFiling": "2021-02-16",
+   "formerNames": []
+  },
+  {
+   "cik": 1847328,
+   "name": "Nykredit A/S",
+   "firstFiling": "2026-08-13",
+   "formerNames": []
+  },
+  {
+   "cik": 1859606,
+   "name": "Optiver Holding B.V.",
+   "firstFiling": "2021-05-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1871926,
+   "name": "Nuveen, LLC",
+   "firstFiling": "2025-05-12",
+   "formerNames": []
+  },
+  {
+   "cik": 1881567,
+   "name": "Clear Street Group Inc.",
+   "firstFiling": "2021-09-03",
+   "formerNames": []
+  },
+  {
+   "cik": 1890906,
+   "name": "Allspring Global Investments Holdings, LLC",
+   "firstFiling": "2021-12-09",
+   "formerNames": []
+  },
+  {
+   "cik": 1948780,
+   "name": "Corient Private Wealth LP",
+   "firstFiling": "2023-02-15",
+   "formerNames": [
+    "Corient Private Wealth LLC",
+    "CI Private Wealth, LLC"
+   ]
+  },
+  {
+   "cik": 1963565,
+   "name": "Value Aligned Research Advisors, LLC",
+   "firstFiling": "2023-01-30",
+   "formerNames": []
+  },
+  {
+   "cik": 1978885,
+   "name": "Empower Advisory Group, LLC",
+   "firstFiling": "2023-05-25",
+   "formerNames": []
+  },
+  {
+   "cik": 1993888,
+   "name": "Pictet Asset Management Holding SA",
+   "firstFiling": "2023-11-14",
+   "formerNames": []
+  },
+  {
+   "cik": 1997464,
+   "name": "Marex Group Ltd",
+   "firstFiling": "2023-12-06",
+   "formerNames": [
+    "Marex Group plc"
+   ]
+  },
+  {
+   "cik": 1999606,
+   "name": "TD Waterhouse Canada Inc.",
+   "firstFiling": "2023-11-13",
+   "formerNames": []
+  },
+  {
+   "cik": 2001019,
+   "name": "NEOS Investment Management LLC",
+   "firstFiling": "2023-11-14",
+   "formerNames": []
+  },
+  {
+   "cik": 2011612,
+   "name": "Pathstone Holdings, LLC",
+   "firstFiling": "2024-02-14",
+   "formerNames": []
+  },
+  {
+   "cik": 2012383,
+   "name": "BlackRock",
+   "firstFiling": "2024-02-20",
+   "formerNames": [
+    "BlackRock, Inc.",
+    "BlackRock Funding, Inc. /DE"
+   ]
+  },
+  {
+   "cik": 2022297,
+   "name": "Federation des caisses Desjardins du Quebec",
+   "firstFiling": "2024-05-15",
+   "formerNames": []
+  },
+  {
+   "cik": 2024579,
+   "name": "Jain Global LLC",
+   "firstFiling": "2025-02-10",
+   "formerNames": []
+  },
+  {
+   "cik": 2057170,
+   "name": "Universal- Beteiligungs- und Servicegesellschaft mbH",
+   "firstFiling": "2025-02-28",
+   "formerNames": []
+  },
+  {
+   "cik": 2062680,
+   "name": "Rakuten Investment Management, Inc.",
+   "firstFiling": "2025-05-15",
+   "formerNames": []
+  },
+  {
+   "cik": 2094379,
+   "name": "CAPITOLIS LIQUID GLOBAL MARKETS LLC",
+   "firstFiling": "2023-01-03",
+   "formerNames": []
+  },
+  {
+   "cik": 2100119,
+   "name": "VANGUARD CAPITAL MANAGEMENT LLC",
+   "firstFiling": "2026-04-27",
+   "formerNames": []
+  },
+  {
+   "cik": 2100121,
+   "name": "VANGUARD PORTFOLIO MANAGEMENT LLC",
+   "firstFiling": "2026-02-05",
+   "formerNames": []
+  },
+  {
+   "cik": 2107286,
+   "name": "Eurizon Capital SGR S.p.A.",
+   "firstFiling": "2026-02-10",
+   "formerNames": []
+  },
+  {
+   "cik": 2113507,
+   "name": "PeakShares LLC",
+   "firstFiling": "2026-03-10",
+   "formerNames": []
+  },
+  {
+   "cik": 2127509,
+   "name": "SEB Asset Management AB",
+   "firstFiling": "2026-05-07",
+   "formerNames": []
+  },
+  {
+   "cik": 2146052,
+   "name": "Jupiter Topco LLC",
+   "firstFiling": "2026-07-16",
+   "formerNames": []
+  },
+  {
+   "cik": 2146944,
+   "name": "Evelyn Partners Group Ltd",
+   "firstFiling": "2026-08-07",
+   "formerNames": []
+  }
+ ],
+ "failed": []
+}

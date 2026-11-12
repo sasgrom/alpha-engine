@@ -17,20 +17,42 @@ import { FLOW_OUTSIDE, type FlowLink } from "@contracts/fund-flows";
 import { mixOklab, type ChartPalette } from "../../charts/color";
 import { buildHall, loadHallTextures, type HallBuilding } from "./building";
 import type { Look } from "./figures";
-import { angleOf, crowdSlots, crowdWedges, hallLayout, polar, ROTUNDA, staffSlots, type HallCompany, type HallLayout } from "./layout";
+import type { Carry } from "./character";
+import { angleOf, crowdSlots, crowdWedges, hallLayout, polar, ROTUNDA, staffSlots, type HallCompany, type HallLayout, type Slot } from "./layout";
 import { Crowd, loadPrototypes, type BodyKind } from "./people";
 import { MoneyStreams, type StreamSpec } from "./streams";
 import { MapTable, type StateFlow, type UsaTopology } from "./usa-map";
 import { MainStreet } from "./mainstreet";
 import { Providence } from "./providence";
 import { Scoreboards, TopBoards, type SectorScore, type TopList } from "./boards";
-import { BRONZE, emblemFor } from "./props";
+import { bikeGeometry, BRONZE, caneGeometry, emblemFor, laptopGeometry, scooterGeometry } from "./props";
+import { nextVisits, stayFor } from "./visits";
 import { atlasCell, SPINE_ATLAS, spineAtlas, spineMaterial, type LogoAtlas } from "./spines";
 
 export interface StageCompany extends HallCompany { name: string; /** US state of the headquarters (null: abroad or not stated). */ hq?: string | null }
 export interface StageFund { cik: number; name: string; category: string; tracked: number }
 
-export interface StageFigure { body: BodyKind; scale: number; staff: boolean; leader: string | null; look: Look }
+export interface StageFigure {
+  body: BodyKind;
+  scale: number;
+  staff: boolean;
+  leader: string | null;
+  look: Look;
+  /** From the firm's history and size: build, grey hair for the old firms (null keeps the look's), what it carries, its pace. */
+  girth: number;
+  hair: string | null;
+  carry: Carry;
+  pace: number;
+}
+
+/** Where things are held, in a person's own space (1.74 m tall, facing +z): under the right arm, in the right hand, underfoot, beside. */
+const HELD: Record<Exclude<Carry, null>, THREE.Matrix4> = {
+  laptop: new THREE.Matrix4().compose(new THREE.Vector3(-0.25, 0.98, 0.03), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, Math.PI / 2)), new THREE.Vector3(1, 1, 1)),
+  cane: new THREE.Matrix4().compose(new THREE.Vector3(-0.3, 0, 0.2), new THREE.Quaternion().setFromEuler(new THREE.Euler(-0.1, 0, 0)), new THREE.Vector3(1, 1, 1)),
+  scooter: new THREE.Matrix4().makeTranslation(0, 0, 0.05),
+  bike: new THREE.Matrix4().makeTranslation(-0.55, 0, 0.1),
+};
+const BIKES = ["#2f6f4f", "#8a2f2f", "#2f4f8a", "#c9a14f", "#3a3a3a", "#e8e6e1"];
 
 export interface StageData {
   /** Per company: net flow of the quarter, value held, and the stock's return since the quarter end. */
@@ -45,13 +67,16 @@ export interface StageData {
   deflator: number;
   focus: string | null;
   /** Every fund that reported the quarter: its home bookcase (null: none) and how it is drawn. */
-  places: Map<number, { home: string | null }>;
+  places: Map<number, { home: string | null; stakes?: { sector: string; weight: number }[] }>;
   figures: Map<number, StageFigure>;
   /** The funds kept in the hall by the switch between all, the winners and the losers (null: everybody). */
   keep: Set<number> | null;
   /** The quarter's name ("Q2 2026"), and the lists on the top-ten boards. */
   quarter: string;
   lists: TopList[];
+  /** The "people" audience: the names to show for funds (famous faces), and placeholders by the entrance (null and none for funds). */
+  names: Map<number, string> | null;
+  placeholders: { id: number; name: string; note: string }[];
 }
 
 export interface StageSelection {
@@ -112,6 +137,13 @@ export class HallStage {
   private data: StageData | null = null;
   private selection: StageSelection = { kind: null, id: null, threads: [] };
   private placed = false;
+  /** Where each fund in a crowd belongs (visits start and end there), how many stand at each bookcase, and the visits under way. */
+  private readonly homes = new Map<number, { slot: Slot; face: { x: number; z: number } }>();
+  private readonly crowdSize = new Map<string, number>();
+  private readonly visits = new Map<number, { phase: "going" | "staying" | "returning"; until: number; spot: string }>();
+  private visitClock = 0;
+  private visitRound = 0;
+  private readonly carried = new Map<Carry, THREE.InstancedMesh>();
   private hovered: StageTarget | null = null;
   private readonly pointer = new THREE.Vector2(2, 2);
   private pointerClient: [number, number] = [0, 0];
@@ -301,6 +333,19 @@ export class HallStage {
       if (prototypes) {
         this.crowd = new Crowd(prototypes, this.calm);
         this.scene.add(this.crowd.group);
+        const kinds: [Exclude<Carry, null>, THREE.BufferGeometry, THREE.Material][] = [
+          ["laptop", laptopGeometry(), new THREE.MeshStandardMaterial({ color: 0x3a3d42, roughness: 0.45, metalness: 0.6 })],
+          ["cane", caneGeometry(), new THREE.MeshStandardMaterial({ color: 0x3a2618, roughness: 0.5 })],
+          ["scooter", scooterGeometry(), new THREE.MeshStandardMaterial({ color: 0x9aa3ad, roughness: 0.4, metalness: 0.7 })],
+          ["bike", bikeGeometry(), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.45, metalness: 0.4 })],
+        ];
+        for (const [kind, geometry, material] of kinds) {
+          const mesh = new THREE.InstancedMesh(geometry, material, 400);
+          mesh.count = 0;
+          mesh.frustumCulled = false;
+          this.scene.add(mesh);
+          this.carried.set(kind, mesh);
+        }
       }
       if (this.data) this.setData(this.data);
       this.setSelection(this.selection);
@@ -383,15 +428,19 @@ export class HallStage {
     }
     // the people with the largest net trades, and whoever the selection involves
     const people = new Set<number>();
-    if (this.selection.kind === null) for (const [cik] of [...data.fund].filter(([cik]) => !data.keep || data.keep.has(cik)).sort((a, b) => Math.abs(b[1].bought - b[1].sold) - Math.abs(a[1].bought - a[1].sold)).slice(0, 6)) people.add(cik);
+    if (this.selection.kind === null && data.names) for (const cik of data.names.keys()) if (!data.keep || data.keep.has(cik)) people.add(cik);
+    else if (this.selection.kind === null) for (const [cik] of [...data.fund].filter(([cik]) => !data.keep || data.keep.has(cik)).sort((a, b) => Math.abs(b[1].bought - b[1].sold) - Math.abs(a[1].bought - a[1].sold)).slice(0, 6)) people.add(cik);
     if (this.selection.kind === "fund" && this.selection.id !== null) people.add(this.selection.id);
     if (this.selection.kind === "company") for (const thread of this.selection.threads.slice(0, 16)) people.add(thread.id);
+    for (const placeholder of data.placeholders) this.labels.push(this.label(`${placeholder.name} · not collected`, "desk", new THREE.Vector3(), 46, { kind: "fund", id: placeholder.id }, placeholder.id));
     for (const cik of people) {
       const fund = this.funds.find((item) => item.cik === cik);
       if (!fund) continue;
       const entry = data.fund.get(cik);
       const net = entry ? entry.bought - entry.sold : 0;
-      this.labels.push(this.label(fund.name.length > 26 ? `${fund.name.slice(0, 25)}…` : fund.name, `desk ${net > 0 ? "in" : net < 0 ? "out" : ""}`, new THREE.Vector3(), 46, { kind: "fund", id: cik }, cik));
+      const name = data.names?.get(cik) ?? fund.name;
+      // famous names read from across the hall
+      this.labels.push(this.label(name.length > 26 ? `${name.slice(0, 25)}…` : name, `desk ${net > 0 ? "in" : net < 0 ? "out" : ""}`, new THREE.Vector3(), data.names ? 95 : 46, { kind: "fund", id: cik }, cik));
     }
   }
 
@@ -519,6 +568,9 @@ export class HallStage {
   private updatePeople(walk: boolean): void {
     const data = this.data;
     if (!data || !this.crowd) return;
+    this.homes.clear();
+    this.crowdSize.clear();
+    this.visits.clear();
     const specs = [...data.places.keys()].flatMap((cik) => {
       const figure = data.figures.get(cik);
       if (!figure) return [];
@@ -529,9 +581,17 @@ export class HallStage {
       const quiet = this.dark ? "#4a4842" : "#8f8b82";
       const jacket = new THREE.Color(gross > 0 ? mixOklab(quiet, net >= 0 ? this.palette.pos : this.palette.neg, 0.45 + 0.55 * Math.min(1, Math.abs(net) / gross / 0.5)) : quiet);
       const { look } = figure;
-      return [{ cik, body: figure.body, scale: figure.scale, girth: look.girth, colours: { jacket, pants: new THREE.Color(look.pants), shirt: new THREE.Color(look.shirt), hair: new THREE.Color(look.hair), wood: new THREE.Color(look.wood) } }];
+      return [{ cik, body: figure.body, scale: figure.scale, girth: figure.girth, carry: figure.carry, pace: figure.pace, colours: { jacket, pants: new THREE.Color(look.pants), shirt: new THREE.Color(look.shirt), hair: new THREE.Color(figure.hair ?? look.hair), wood: new THREE.Color(look.wood) } }];
     });
+    // the public figures whose trades are not collected wait just inside the entrance, in grey
+    const grey = new THREE.Color(this.dark ? "#5a5852" : "#9a968e");
+    for (const placeholder of data.placeholders) specs.push({ cik: placeholder.id, body: "mannequin", scale: 0.8, girth: 1, carry: null, pace: 1, colours: { jacket: grey.clone(), pants: grey.clone(), shirt: grey.clone(), hair: grey.clone(), wood: new THREE.Color("#b8b2a6") } });
     this.crowd.sync(specs);
+    data.placeholders.forEach((placeholder, index) => {
+      const angle = Math.PI + (index - (data.placeholders.length - 1) / 2) * 0.05;
+      const [x, , z] = polar(angle, ROTUNDA.radius - 4.5);
+      this.crowd!.place(placeholder.id, { x, z, angle }, { x: 0, z: 0 }, false);
+    });
     // crowds per bookcase, the largest funds nearest the books; the staff round the map table
     const groups = new Map<string, number[]>();
     const staff: number[] = [];
@@ -554,6 +614,7 @@ export class HallStage {
         continue;
       }
       members.sort((a, b) => sizeOf(b) - sizeOf(a) || a - b);
+      this.crowdSize.set(sector, members.length);
       const slots = crowdSlots(alcove, members.length, wedges.get(sector));
       const centre = slots.reduce((sum, slot) => ({ x: sum.x + slot.x / slots.length, z: sum.z + slot.z / slots.length }), { x: 0, z: 0 });
       members.forEach((cik, index) => {
@@ -562,6 +623,7 @@ export class HallStage {
         const turn = (cik * 0.618) % 1;
         const books = polar(alcove.mid + (slot.angle - alcove.mid) * 0.5, ROTUNDA.radius);
         const face = turn < 0.55 ? { x: books[0], z: books[2] } : { x: centre.x, z: centre.z };
+        this.homes.set(cik, { slot, face });
         this.crowd!.place(cik, slot, face, walk && this.placed);
       });
     }
@@ -573,6 +635,77 @@ export class HallStage {
       this.crowd!.place(cik, slot, { x: slot.x * 2, z: slot.z * 2 }, walk && this.placed);
     });
     this.placed = true;
+  }
+
+  /**
+   * Now and then a fund with a sizable stake in another sector walks over to that bookcase, stands at the edge of
+   * the crowd there for a while and walks back: two at a time, never more than eight away, none while a quarter's
+   * walk is under way, never the selected fund.
+   */
+  private updateVisits(seconds: number): void {
+    const data = this.data;
+    const crowd = this.crowd;
+    if (!data || !crowd || this.calm) return;
+    for (const [cik, visit] of this.visits) {
+      if (visit.phase === "going" && crowd.idle(cik)) {
+        visit.phase = "staying";
+        visit.until = this.clock + stayFor(cik);
+      } else if (visit.phase === "staying" && this.clock >= visit.until) {
+        const home = this.homes.get(cik);
+        if (home) crowd.place(cik, home.slot, home.face, true);
+        visit.phase = "returning";
+      } else if (visit.phase === "returning" && crowd.idle(cik)) this.visits.delete(cik);
+    }
+    this.visitClock += seconds;
+    if (this.visitClock < 2.5 || this.visits.size >= 8 || crowd.walking() > this.visits.size + 2) return;
+    this.visitClock = 0;
+    const busy = new Set<number>(this.visits.keys());
+    if (this.selection.kind === "fund" && this.selection.id !== null) busy.add(this.selection.id);
+    const shelved = new Set(this.layout.alcoves.map((alcove) => alcove.sector));
+    const visitors = [...this.homes.keys()].flatMap((cik) => {
+      const place = data.places.get(cik);
+      const stakes = (place?.stakes ?? []).filter((stake) => stake.sector !== place?.home && shelved.has(stake.sector));
+      return stakes.length && crowd.idle(cik) ? [{ cik, stakes }] : [];
+    });
+    const wedges = crowdWedges(this.layout.alcoves);
+    const taken = new Set([...this.visits.values()].map((visit) => visit.spot));
+    for (const visit of nextVisits(visitors, busy, this.visitRound++, 2)) {
+      const alcove = this.layout.alcoves.find((item) => item.sector === visit.sector)!;
+      const count = this.crowdSize.get(visit.sector) ?? 0;
+      // a free place at the edge of the crowd there
+      const free = crowdSlots(alcove, count + 14, wedges.get(visit.sector)).slice(count);
+      const index = free.findIndex((_, at) => !taken.has(`${visit.sector}|${(at + visit.cik) % free.length}`));
+      if (index < 0) continue;
+      const at = (index + visit.cik) % free.length;
+      const spot = `${visit.sector}|${at}`;
+      taken.add(spot);
+      const slot = free[at];
+      const books = polar(alcove.mid + (slot.angle - alcove.mid) * 0.5, ROTUNDA.radius);
+      crowd.place(visit.cik, slot, { x: books[0], z: books[2] }, true);
+      this.visits.set(visit.cik, { phase: "going", until: 0, spot });
+    }
+  }
+
+  /** What people carry or ride, wherever they stand or go: laptops, canes, scooters, bikes. */
+  private placeCarried(): void {
+    if (!this.crowd || !this.carried.size) return;
+    const matrix = new THREE.Matrix4();
+    const counts = new Map<Carry, number>();
+    const colour = new THREE.Color();
+    this.crowd.forEachPresent((cik, root, carry) => {
+      const mesh = carry ? this.carried.get(carry) : undefined;
+      if (!carry || !mesh) return;
+      const index = counts.get(carry) ?? 0;
+      if (index >= mesh.instanceMatrix.count) return;
+      mesh.setMatrixAt(index, matrix.multiplyMatrices(root.matrixWorld, HELD[carry]));
+      if (carry === "bike") mesh.setColorAt(index, colour.set(BIKES[cik % BIKES.length]));
+      counts.set(carry, index + 1);
+    });
+    for (const [carry, mesh] of this.carried) {
+      mesh.count = counts.get(carry) ?? 0;
+      mesh.instanceMatrix.needsUpdate = true;
+      if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    }
   }
 
   private anchorOf(sector: string): THREE.Vector3 | null {
@@ -934,6 +1067,8 @@ export class HallStage {
     }
     this.placeBooks(false);
     this.crowd?.update(this.calm ? 0 : seconds);
+    this.updateVisits(seconds);
+    this.placeCarried();
     if (this.halo.visible && this.selection.kind === "fund" && this.selection.id !== null) {
       const head = this.crowd?.headOf(this.selection.id);
       if (head) this.halo.position.copy(head);

@@ -8,7 +8,9 @@ import { FLOW_OUTSIDE, FUND_CATEGORY_LABEL, type FlowQuarter, type FundFlowsOver
 import type { ChartPalette } from "../charts/color";
 import { fmtCap, fmtPct } from "../format";
 import { deflatorSince, hallSectorOrder, quarterLabel, signedCap, standingOf, type Who } from "./data";
-import { bodyFor, decodePlaces, figureScale, leaderAt, lookFor, outfitFor } from "./hall/figures";
+import { characterFor, firstFiledOf } from "./hall/character";
+import { FAMOUS_BY_CIK, NOT_COLLECTED } from "./hall/famous";
+import { bodyFor, decodePlaces, FIGURE_SIZE, figureScale, leaderAt, lookFor, outfitFor } from "./hall/figures";
 import { topLists } from "./hall/lists";
 import { HallStage, type StageData, type StageFigure, type StageSelection, type StageTarget } from "./hall/stage";
 
@@ -32,10 +34,12 @@ export interface LibraryProps {
   game: boolean;
   /** Who is in the hall: every fund, or only the quarter's winners or losers. */
   who: Who;
+  /** The funds as themselves, or as the famous faces behind them (and placeholders for those not collected). */
+  audience: "funds" | "people";
   onPick: (target: StageTarget) => void;
 }
 
-export default function Library3D({ overview, row, mode, real, focus, selection, dark, palette, homeSignal, aboveSignal, inset, insetBottom, game, who, onPick }: LibraryProps) {
+export default function Library3D({ overview, row, mode, real, focus, selection, dark, palette, homeSignal, aboveSignal, inset, insetBottom, game, who, audience, onPick }: LibraryProps) {
   const host = useRef<HTMLDivElement>(null);
   const stage = useRef<HallStage | null>(null);
   const pick = useRef(onPick);
@@ -48,20 +52,34 @@ export default function Library3D({ overview, row, mode, real, focus, selection,
   const fund = useMemo(() => new Map(overview.funds.map((entry) => [entry.cik, entry])), [overview]);
   const sectorOrder = useMemo(() => hallSectorOrder(overview), [overview]);
   const places = useMemo(() => decodePlaces(row, overview.sectorNames ?? []), [row, overview]);
+  const firstFiled = useMemo(() => new Map(overview.funds.map((entry) => [entry.cik, entry.firstFiled ?? null])), [overview]);
   const figures = useMemo(() => {
     const result = new Map<number, StageFigure>();
     for (const [cik, place] of places) {
       const entry = fund.get(cik);
       const staff = entry?.category === "index";
-      const leader = leaderAt(cik, row.quarter);
+      const face = audience === "people" ? FAMOUS_BY_CIK.get(cik) : undefined;
+      const leader = face ? { name: face.name, gender: face.gender } : leaderAt(cik, row.quarter);
       // the library's staff wear suits; everyone else dresses for where the money stands
-      const body = bodyFor(leader?.gender, staff ? "suit" : outfitFor(place.home), cik);
-      result.set(cik, { body, scale: figureScale(entry?.tracked ?? 0), staff, leader: leader?.name ?? null, look: lookFor(cik) });
+      const outfit = staff ? "suit" : outfitFor(place.home);
+      const body = bodyFor(leader?.gender, outfit, cik);
+      // famous faces are seen from across the hall: never smaller than 0.85 of a person
+      const scale = face ? Math.max(0.85, figureScale(entry?.tracked ?? 0)) : figureScale(entry?.tracked ?? 0);
+      // age from the firm's history, build from its size, what it carries from both
+      const character = characterFor(cik, firstFiledOf(cik, firstFiled), (scale - FIGURE_SIZE.smallest) / (FIGURE_SIZE.largest - FIGURE_SIZE.smallest), outfit === "tech", staff);
+      result.set(cik, { body, scale, staff, leader: leader?.name ?? null, look: lookFor(cik), girth: character.girth, hair: character.hair, carry: character.carry, pace: character.pace });
     }
     return result;
-  }, [places, fund, row.quarter]);
+  }, [places, fund, row.quarter, audience, firstFiled]);
 
-  const keep = useMemo(() => standingOf(row, who).keep, [row, who]);
+  // in the "people" audience only the famous faces stay, under their own names
+  const names = useMemo(() => (audience === "people" ? new Map([...places.keys()].flatMap((cik) => (FAMOUS_BY_CIK.has(cik) ? [[cik, FAMOUS_BY_CIK.get(cik)!.name] as [number, string]] : []))) : null), [audience, places]);
+  const placeholders = useMemo(() => (audience === "people" ? NOT_COLLECTED.map((person, index) => ({ id: -(index + 1), name: person.name, note: person.note })) : []), [audience]);
+  const keep = useMemo(() => {
+    const standing = standingOf(row, who).keep;
+    if (!names) return standing;
+    return new Set([...names.keys()].filter((cik) => !standing || standing.has(cik)));
+  }, [row, who, names]);
   const lists = useMemo(() => topLists(overview, row, mode, who), [overview, row, mode, who]);
   const data = useMemo<StageData>(
     () => ({
@@ -77,8 +95,10 @@ export default function Library3D({ overview, row, mode, real, focus, selection,
       keep,
       quarter: quarterLabel(row.quarter),
       lists,
+      names,
+      placeholders,
     }),
-    [overview, row, mode, real, focus, places, figures, keep, lists],
+    [overview, row, mode, real, focus, places, figures, keep, lists, names, placeholders],
   );
 
   useEffect(() => {
@@ -178,6 +198,10 @@ function tooltip(
       hint: "Select to see who bought and who sold",
     };
   }
+  if (target.kind === "fund" && target.id < 0) {
+    const placeholder = data.placeholders.find((item) => item.id === target.id);
+    return { title: placeholder?.name ?? "Not collected", lines: [["Trades", placeholder?.note ?? "not collected"]], hint: "Waiting by the entrance until their trades are in the books" };
+  }
   if (target.kind === "fund") {
     const entry = context.fund.get(target.id);
     const flow = data.fund.get(target.id);
@@ -187,8 +211,11 @@ function tooltip(
     if (entry) lines.push(["Kind", FUND_CATEGORY_LABEL[entry.category]]);
     if (figure?.staff) lines.push(["Stands", "with the library's staff at the map"]);
     else if (home) lines.push(["Stands at", home]);
-    lines.push(["Led by", figure?.leader ?? "not on record here"]);
-    return { title: entry?.name ?? `Fund ${target.id}`, lines, hint: "Select to follow its money to the shelves" };
+    const face = data.names?.has(target.id) ? FAMOUS_BY_CIK.get(target.id) : undefined;
+    if (face) lines.unshift(["", face.role]);
+    else lines.push(["Led by", figure?.leader ?? "not on record here"]);
+    if (figure?.carry) lines.push(["Carries", figure.carry === "bike" ? "a bicycle" : figure.carry === "scooter" ? "a scooter" : `a ${figure.carry}`]);
+    return { title: face ? face.name : entry?.name ?? `Fund ${target.id}`, lines, hint: "Select to follow its money to the shelves" };
   }
   if (target.kind === "stream") {
     const name = (sector: string) => (sector === FLOW_OUTSIDE ? "Main Street and everything outside" : sector);

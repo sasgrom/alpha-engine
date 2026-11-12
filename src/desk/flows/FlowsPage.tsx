@@ -60,6 +60,7 @@ export default function FlowsPage() {
   const show = params.get("show");
   const mode: Mode = show === "outcome" ? "outcome" : show === "held" ? "held" : "flow";
   const real = params.get("real") === "1";
+  const audience = params.get("audience") === "people" ? "people" : "funds";
   const whoParam = params.get("who");
   const who: Who = whoParam === "winners" || whoParam === "losers" ? whoParam : "all";
   // the panel follows the selection until the reader picks a tab; a new selection takes it back
@@ -241,7 +242,7 @@ export default function FlowsPage() {
       <>
         <div className="desk-lib" ref={hall} data-game={game ? "on" : undefined}>
           <Suspense fallback={<div className="desk-lib-stage"><Shimmer height={520} /></div>}>
-            <Library3D overview={data} row={row} mode={mode} real={real} focus={sector} selection={selection} dark={theme.resolved === "dark"} palette={palette} homeSignal={homeSignal} aboveSignal={aboveSignal} inset={panelOpen ? 418 : 0} insetBottom={150} game={game} who={who} onPick={onPick} />
+            <Library3D overview={data} row={row} mode={mode} real={real} focus={sector} selection={selection} dark={theme.resolved === "dark"} palette={palette} homeSignal={homeSignal} aboveSignal={aboveSignal} inset={panelOpen ? 418 : 0} insetBottom={150} game={game} who={who} audience={audience} onPick={onPick} />
           </Suspense>
           {game && (
             <div className="desk-lib-keys" aria-hidden="true">
@@ -257,6 +258,15 @@ export default function FlowsPage() {
             <p>
               <strong>{quarterLabel(row.quarter)}</strong> · {row.funds} funds · bought <strong>{fmtCap(row.bought)}</strong> · sold <strong>{fmtCap(row.sold)}</strong>
             </p>
+            <div className="desk-lib-who">
+              <Segmented<"funds" | "people">
+                label="Who stands in the hall"
+                value={audience}
+                onChange={(next) => set({ audience: next === "people" ? "people" : null })}
+                options={[{ value: "funds", label: "Funds" }, { value: "people", label: "People" }]}
+              />
+              {audience === "people" && <p className="desk-muted">The best-known faces behind the tracked funds, each standing for its firm's money; those whose trades are not collected wait by the entrance.</p>}
+            </div>
             {standing.bar !== null && standing.winners + standing.losers > 0 && (
               <div className="desk-lib-who">
                 <Segmented<Who>
@@ -309,6 +319,8 @@ export default function FlowsPage() {
                 <li>The streams overhead are the estimated rotation, as wide as the dollars: red where money left, blue where it arrived. The entrance is everything outside these stocks.</li>
                 <li>Select a person to see its money run to the books, or a book to see who traded it. Change the quarter and the people walk to their new places.</li>
                 <li>All, Winners, Losers: a winner's book did better in the quarter than all tracked funds together, a loser's worse. The others walk out and wait outside until you switch back.</li>
+                <li>People: the famous faces behind the tracked funds (Buffett, Griffin, Dalio, Cathie Wood and others) stand for their firms' money; the public figures and investors whose trades are not collected wait by the entrance.</li>
+                <li>Older firms (on the SEC's records since its first years) are older people, some with canes; the youngest firms ride scooters and bikes; larger funds are taller and broader.</li>
                 <li>Drag to look around, scroll or W A S D to walk, R and F to rise and fall. The game view fills the screen. The reading view has the same figures as charts and tables.</li>
               </ul>
             </div>

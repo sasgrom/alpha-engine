@@ -636,6 +636,10 @@ for (const row of flowQuarters) row.fundReturns.sort((a, b) => a[0] - b[0]);
 // --- headquarters for the hall's map table (scripts/build-company-headquarters.mts; US states only) -----------------------------------
 const US_STATES = new Set("AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY".split(" "));
 const headquarters = new Map<number, string>();
+// the firms' first SEC filings (scripts/build-fund-first-filings.mts), for the age of their figures in the hall
+const firstFilings = new Map<number, string | null>();
+const firstFilingsFile = path.resolve("research/engine/fund-first-filings.json");
+if (existsSync(firstFilingsFile)) for (const row of (JSON.parse(readFileSync(firstFilingsFile, "utf8")) as { funds: { cik: number; firstFiling: string | null }[] }).funds) firstFilings.set(row.cik, row.firstFiling);
 const headquartersFile = path.resolve("research/engine/company-headquarters.json");
 if (existsSync(headquartersFile)) {
   for (const row of (JSON.parse(readFileSync(headquartersFile, "utf8")) as { companies: { cik: number; state: string | null }[] }).companies) if (row.state && US_STATES.has(row.state)) headquarters.set(row.cik, row.state);
@@ -664,6 +668,7 @@ const overview: FundFlowsOverview = {
         cik: file.cik, name: file.name, category: file.category, tags: file.tags, latestQuarter: file.latestQuarter, tracked: file.tracked, book: file.book, positions: file.positions,
         top10Share: file.top10Share, turnover: file.turnover, quarters: file.series.length, net: file.latestQuarter === latest ? lastPoint.net : null,
         growth: lastPoint.growth, growthAllFunds: lastPoint.growthAllFunds, tradeSpread4: spreads.length ? sum(spreads) / spreads.length : null,
+        firstFiled: firstFilings.get(file.cik) ?? null,
       };
     })
     // funds that report today first, the largest first; then those whose last report is older

@@ -1636,3 +1636,23 @@ build`, `git diff --check`. Headless Edge screenshots in light and dark: entranc
 build by size, scooters and bikes for the youngest firms, laptops, visits to other bookcases, the "People"
 audience with famous faces). **Proposed for Kimi**: K11 (`docs/engine/tasks/K11-hall-filers-and-schedule.md`,
 not approved yet) after K10.
+
+
+## 131. Claude: the hall's people round — character, carried things, visits, the People audience — 2026-11-12 (local night)
+
+- **Figures**: smooth shading on the low-poly people (creased normals, edges above 60° kept). Age from the firm's first
+  SEC filing (`scripts/build-fund-first-filings.mts` → `research/engine/fund-first-filings.json`, 310 of 310; the flow
+  build adds `firstFiled` to the overview's funds, optional): on EDGAR by 1996 senior (grey or white hair, some with
+  a cane, slower), by 2009 middle-aged, later young (the youngest firms some on scooters or pushing bikes, faster);
+  build by fund size; every other technology holder carries a laptop (`hall/character.ts`, `hall/props.ts`).
+  BlackRock and Vanguard take their age from their older filer.
+- **Visits**: now and then a fund with a sizable stake in another sector walks to that bookcase, stays 7–11 s and
+  walks back (`hall/visits.ts`; two at a time, at most eight, never during a quarter's walk or for the selection).
+- **People audience** (`?audience=people`): only the famous faces behind 23 tracked filers stay, under their names
+  (`hall/famous.ts`, each with its public page; never smaller than 0.85 of a person, names read across the hall);
+  six placeholders wait by the entrance (Pelosi and Trump: trades not collected, legal question for the owner; Burry,
+  Druckenmiller, Tepper, Icahn: 13F reports not in the books, K11).
+- Flow files rebuilt (310 funds, first filings and headquarters included). GPU check: 60 fps, 9 ms of script.
+
+Gates as for section 130 plus the character, visits and lists tests. Next: Mixamo clips (talking, typing,
+sitting) if the owner wants them; K11 when the owner names it.
