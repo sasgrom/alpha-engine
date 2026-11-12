@@ -65,9 +65,9 @@ export default function FlowsPage() {
   const audience = params.get("audience") === "people" ? "people" : "funds";
   const whoParam = params.get("who");
   const who: Who = whoParam === "winners" || whoParam === "losers" ? whoParam : "all";
-  // the streams of money whole, or only their blue halves (where the money arrived) or red halves (where it left)
+  // all the streams of money, only what was bought (going in, blue) or only what was sold (coming out, red)
   const streamsParam = params.get("streams");
-  const streams: StreamPart = streamsParam === "blue" ? "arriving" : streamsParam === "red" ? "leaving" : "all";
+  const streams: StreamPart = streamsParam === "bought" || streamsParam === "blue" ? "bought" : streamsParam === "sold" || streamsParam === "red" ? "sold" : "all";
   // the panel follows the selection until the reader picks a tab; a new selection takes it back
   const selectionKey = fund ? `fund ${fund}` : company ? `company ${company}` : "";
   const [chosenTab, setChosenTab] = useState<{ tab: Tab; key: string } | null>(null);
@@ -303,10 +303,10 @@ export default function FlowsPage() {
                 )}
                 {mode !== "held" && (
                   <Segmented<StreamPart>
-                    label="Which part of the streams of money shows"
+                    label="Which streams of money show"
                     value={streams}
-                    onChange={(next) => set({ streams: next === "arriving" ? "blue" : next === "leaving" ? "red" : null })}
-                    options={[{ value: "all", label: "All flows" }, { value: "arriving", label: "Blue only" }, { value: "leaving", label: "Red only" }]}
+                    onChange={(next) => set({ streams: next === "all" ? null : next })}
+                    options={[{ value: "all", label: "All flows" }, { value: "bought", label: "Bought" }, { value: "sold", label: "Sold" }]}
                   />
                 )}
               </div>
@@ -315,7 +315,7 @@ export default function FlowsPage() {
               <p className="desk-lib-note">{who === "winners" ? "Books that did better" : "Books that did worse"} than all tracked funds together ({fmtPct(standing.bar, 1)}); the others wait outside.</p>
             )}
             {headOpen && mode !== "held" && streams !== "all" && (
-              <p className="desk-lib-note">{streams === "arriving" ? "Blue: each stream where its money arrived." : "Red: each stream where its money left."}</p>
+              <p className="desk-lib-note">{streams === "bought" ? "Bought, in blue: the money going into the books it was spent on." : "Sold, in red: the money coming out of the books that were sold."}</p>
             )}
             {sector && (
               <button type="button" className="desk-badge accent" onClick={() => nav.sector(null)} style={{ cursor: "pointer", marginTop: 6 }}>
@@ -351,7 +351,7 @@ export default function FlowsPage() {
                 <li>A book pulled out toward you was bought this quarter, a book pushed back was sold. The further, the more dollars.</li>
                 <li>The people are the funds. Each stands at the bookcase where it bought most this quarter (or where it leans most), the largest funds tallest. A blue jacket bought more than it sold, a red jacket sold more. The index giants keep the library at the map table in the middle.</li>
                 <li>A figure is a man or a woman when a public source names the firm's leader; a wooden mannequin otherwise. Clothes follow the holdings: suits for banks and industry, tech wear for technology, casual in between.</li>
-                <li>The streams overhead are the estimated rotation, as wide as the dollars: red where money left, blue where it arrived. All flows, Blue only, Red only: every stream whole, or only the half of each where the money arrived, or where it left. The doorway opens onto Main Street, everything outside these stocks; the plaque over it shows what came in from outside and what went out.</li>
+                <li>The streams overhead are the estimated rotation, as wide as the dollars: red where money left, blue where it arrived. All flows, Bought, Sold: every stream, or only the money going in where it was bought (blue), or only the money coming out where it was sold (red). The doorway opens onto Main Street, everything outside these stocks; the plaque over it shows what came in from outside and what went out.</li>
                 <li>Over each bookcase its scoreboard shows what came in and went out, with the net on the plaque above. Click a top-ten board on the walls to stand in front of it, then a row to select it.</li>
                 <li>Select a person to see its money run to the books, or a book to see who traded it. Change the quarter and the people walk to their new places.</li>
                 <li>All, Winners, Losers: a winner's book did better in the quarter than all tracked funds together, a loser's worse. The others walk out and wait outside until you switch back.</li>

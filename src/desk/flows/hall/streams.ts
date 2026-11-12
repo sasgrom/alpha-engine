@@ -2,17 +2,37 @@
  * Streams of money in the hall. A stream is a ribbon as wide as the dollars it carries, red where the money left and
  * blue where it arrived, with bands that flow along it and bubbles marked "$" riding on it: more money, more bubbles.
  * Rotation streams arc under the dome from bookcase to bookcase; threads run between a person and the books it
- * traded. The reader can show every stream whole, or only the blue half of each (where the money arrived) or only the
- * red half (where it left).
+ * traded. The reader can show all of it, only what was bought (the money going in, in blue) or only what was sold
+ * (the money coming out, in red).
  */
 import * as THREE from "three";
 
-/** Which part of every stream shows: all of it, the half where the money arrived (blue), or where it left (red). */
-export type StreamPart = "all" | "arriving" | "leaving";
-const PART_CODE: Record<StreamPart, number> = { all: 0, arriving: 1, leaving: 2 };
-/** The halves meet in the middle of a stream, with a soft edge this wide either side. */
-const HALF = { middle: 0.5, edge: 0.12 } as const;
-const shows = (part: number, t: number) => part === 0 || (part === 1 ? t >= HALF.middle : t < HALF.middle);
+/** Which streams show: all, only the money going in where it was bought (blue), or coming out where it was sold (red). */
+export type StreamPart = "all" | "bought" | "sold";
+
+/**
+ * How much of one stream shows under a choice: all of it, none, or the part towards where the money arrived (it was
+ * bought there) or from where it left (it was sold there). A cut stream fades out three quarters of the way along, so
+ * it still points the way the money went.
+ */
+type Cut = "whole" | "arriving" | "leaving" | "none";
+const CUT_CODE: Record<Cut, number> = { whole: 0, arriving: 1, leaving: 2, none: 3 };
+const FADE = { arriving: [0.2, 0.45], leaving: [0.55, 0.8] } as const;
+
+function cutOf(spec: StreamSpec, part: StreamPart): Cut {
+  if (part === "all") return "whole";
+  // a thread is all bought or all sold; a rotation stream was sold where it starts and bought where it ends
+  if (spec.side) return spec.side === part ? "whole" : "none";
+  return part === "bought" ? "arriving" : "leaving";
+}
+
+/** Whether the point a share `t` along a stream shows under a cut (the bubbles and pointing follow the fade's middle). */
+function showing(cut: Cut, t: number): boolean {
+  if (cut === "whole") return true;
+  if (cut === "arriving") return t >= (FADE.arriving[0] + FADE.arriving[1]) / 2;
+  if (cut === "leaving") return t <= (FADE.leaving[0] + FADE.leaving[1]) / 2;
+  return false;
+}
 
 export interface StreamSpec {
   from: THREE.Vector3;
@@ -25,13 +45,19 @@ export interface StreamSpec {
   lit: boolean;
   /** What the stream joins, for its tooltip (rotation streams). */
   label?: { from: string; to: string };
+  /** A thread is money bought (into a book) or sold (out of it); rotation streams carry both and leave this out. */
+  side?: "bought" | "sold";
 }
+
+/** Each ribbon's own shader values: how much of it shows, and the single colour it takes when only one side shows. */
+interface StreamUniforms { streamCut: { value: number }; streamSolid: { value: number }; streamTone: { value: THREE.Color } }
 
 interface Built {
   spec: StreamSpec;
   curve: THREE.QuadraticBezierCurve3;
   length: number;
   mesh: THREE.Mesh;
+  uniforms: StreamUniforms;
 }
 
 const SEGMENTS = 64;
@@ -81,19 +107,23 @@ function fadeNear(material: THREE.Material): void {
   material.customProgramCacheKey = () => "hall-stream-near";
 }
 
-/** As `fadeNear`, for a ribbon: and only the part of it the reader chose (its position along the stream is `along`). */
-function ribbonShader(material: THREE.Material, part: { value: number }): void {
+/**
+ * As `fadeNear`, for a ribbon: and only the part of it the reader chose, in one colour when only one side shows (the
+ * position along the stream is `along`; the values are the ribbon's own `uniforms`).
+ */
+function ribbonShader(material: THREE.Material, uniforms: StreamUniforms): void {
   material.onBeforeCompile = (shader) => {
-    shader.uniforms.streamPart = part;
+    Object.assign(shader.uniforms, uniforms);
     shader.vertexShader = shader.vertexShader
-      .replace("#include <common>", "#include <common>\nattribute float along;\nvarying float vAlong;\nvarying float vEyeDistance;")
+      .replace("#include <common>", "#include <common>\nattribute float along;\nuniform float streamSolid;\nuniform vec3 streamTone;\nvarying float vAlong;\nvarying float vEyeDistance;")
+      .replace("#include <color_vertex>", "#include <color_vertex>\nvColor.rgb = mix(vColor.rgb, streamTone, streamSolid);")
       .replace("#include <project_vertex>", "#include <project_vertex>\nvEyeDistance = -mvPosition.z;\nvAlong = along;");
     shader.fragmentShader = shader.fragmentShader
-      .replace("#include <common>", "#include <common>\nuniform float streamPart;\nvarying float vAlong;\nvarying float vEyeDistance;")
+      .replace("#include <common>", "#include <common>\nuniform float streamCut;\nvarying float vAlong;\nvarying float vEyeDistance;")
       .replace(
         "#include <opaque_fragment>",
-        `float arriving = smoothstep(${(HALF.middle - HALF.edge).toFixed(2)}, ${(HALF.middle + HALF.edge).toFixed(2)}, vAlong);
-diffuseColor.a *= smoothstep(3.0, 12.0, vEyeDistance) * (streamPart < 0.5 ? 1.0 : streamPart < 1.5 ? arriving : 1.0 - arriving);
+        `float keep = streamCut < 0.5 ? 1.0 : streamCut < 1.5 ? smoothstep(${FADE.arriving[0]}, ${FADE.arriving[1]}, vAlong) : streamCut < 2.5 ? 1.0 - smoothstep(${FADE.leaving[0]}, ${FADE.leaving[1]}, vAlong) : 0.0;
+diffuseColor.a *= smoothstep(3.0, 12.0, vEyeDistance) * keep;
 #include <opaque_fragment>`,
       );
   };
@@ -161,8 +191,8 @@ export class MoneyStreams {
   private riders: { stream: number; phase: number; speed: number }[] = [];
   private readonly dark: boolean;
   private fade = 1;
-  /** Shared by every ribbon's shader: which part of the streams shows (see `StreamPart`). */
-  private readonly part = { value: 0 };
+  /** Which streams show (see `StreamPart`). */
+  private part: StreamPart = "all";
   private seconds = 0;
 
   constructor(dark: boolean) {
@@ -209,7 +239,8 @@ export class MoneyStreams {
         side: THREE.DoubleSide,
         depthWrite: false,
       });
-      ribbonShader(material, this.part);
+      const uniforms: StreamUniforms = { streamCut: { value: 0 }, streamSolid: { value: 0 }, streamTone: { value: new THREE.Color() } };
+      ribbonShader(material, uniforms);
       material.userData.opacity = material.opacity;
       material.opacity *= this.fade;
       const repeats = Math.max(1, Math.round(length / 6));
@@ -220,7 +251,10 @@ export class MoneyStreams {
       mesh.frustumCulled = false;
       this.group.add(mesh);
       const streamIndex = this.built.length;
-      this.built.push({ spec, curve, length, mesh });
+      mesh.userData.built = streamIndex;
+      const item = { spec, curve, length, mesh, uniforms };
+      this.built.push(item);
+      this.apply(item);
       if (!spec.lit) continue;
       const count = Math.round(Math.max(spec.kind === "rotation" ? 6 : 3, Math.min(spec.kind === "rotation" ? 140 : 30, share * (spec.kind === "rotation" ? 140 : 30))));
       for (let index = 0; index < count && this.riders.length < MAX_BUBBLES; index++) {
@@ -241,16 +275,28 @@ export class MoneyStreams {
     return this.built.filter((item) => item.mesh.userData.stream).map((item) => item.mesh);
   }
 
-  /** Shows every stream whole, or only the half of each where the money arrived (blue) or where it left (red). */
+  /** Shows all the streams, only what was bought (the money going in, in blue) or only what was sold (coming out, in red). */
   setPart(part: StreamPart): void {
-    this.part.value = PART_CODE[part];
+    this.part = part;
+    for (const item of this.built) this.apply(item);
     this.update(this.seconds, this.fade);
   }
 
-  /** Whether the point of a stream at these texture coordinates is showing (a hidden half cannot be pointed at). */
+  /** One stream under the current choice: how much of it shows, and in which single colour when only one side shows. */
+  private apply(item: Built): void {
+    const cut = cutOf(item.spec, this.part);
+    item.uniforms.streamCut.value = CUT_CODE[cut];
+    item.uniforms.streamSolid.value = this.part === "all" ? 0 : 1;
+    item.uniforms.streamTone.value.copy(this.part === "sold" ? item.spec.start : item.spec.end);
+    item.mesh.visible = cut !== "none";
+  }
+
+  /** Whether the point of a stream at these texture coordinates is showing (a hidden part cannot be pointed at). */
   showsAt(mesh: THREE.Object3D, uv: THREE.Vector2 | undefined): boolean {
-    if (!uv || this.part.value === 0) return true;
-    return shows(this.part.value, uv.x / ((mesh.userData.repeats as number | undefined) ?? 1));
+    const item = this.built[mesh.userData.built as number];
+    if (!item || this.part === "all") return true;
+    if (!uv) return mesh.visible;
+    return showing(cutOf(item.spec, this.part), uv.x / ((mesh.userData.repeats as number | undefined) ?? 1));
   }
 
   update(seconds: number, fade = 1): void {
@@ -268,16 +314,17 @@ export class MoneyStreams {
     const colors = this.bubbles.geometry.getAttribute("color") as THREE.BufferAttribute;
     const point = new THREE.Vector3();
     const color = new THREE.Color();
-    // only the bubbles on the part of the streams that shows are drawn
+    // only the bubbles on the part of the streams that shows are drawn, in the stream's colour there
     let shown = 0;
     for (const rider of this.riders) {
       const item = this.built[rider.stream];
       const t = (rider.phase + seconds * rider.speed) % 1;
-      if (!shows(this.part.value, t)) continue;
+      if (!showing(cutOf(item.spec, this.part), t)) continue;
       item.curve.getPoint(t, point);
       // the bubbles ride a little above the ribbon so they read against it
       positions.setXYZ(shown, point.x, point.y + 0.22, point.z);
-      color.copy(item.spec.start).lerp(item.spec.end, THREE.MathUtils.smoothstep(t, 0.15, 0.85));
+      if (this.part === "all") color.copy(item.spec.start).lerp(item.spec.end, THREE.MathUtils.smoothstep(t, 0.15, 0.85));
+      else color.copy(this.part === "sold" ? item.spec.start : item.spec.end);
       colors.setXYZ(shown, color.r, color.g, color.b);
       shown++;
     }

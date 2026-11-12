@@ -735,7 +735,7 @@ export class HallStage {
       const face = new THREE.Vector3(...polar(book.angle, ROTUNDA.radius - 0.4, book.y));
       const bought = thread.usd > 0;
       const tone = bought ? this.positive : this.negative;
-      specs.push({ from: bought ? person : face, to: bought ? face : person, usd: Math.abs(thread.usd), start: tone, end: tone, kind: "thread", lit: true });
+      specs.push({ from: bought ? person : face, to: bought ? face : person, usd: Math.abs(thread.usd), start: tone, end: tone, kind: "thread", lit: true, side: bought ? "bought" : "sold" });
     }
     this.streams.set(specs);
   }
@@ -992,7 +992,7 @@ export class HallStage {
   }
 
   /** The full-screen game view: the keys work wherever the focus is, and the hall takes the focus at once. */
-  /** Every stream whole, or only the half of each where the money arrived (blue) or where it left (red). */
+  /** All the streams, only what was bought (the money going in, in blue) or only what was sold (coming out, in red). */
   setStreamPart(part: StreamPart): void {
     this.streams.setPart(part);
     this.settling = true;

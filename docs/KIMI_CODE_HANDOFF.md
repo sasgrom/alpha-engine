@@ -1736,8 +1736,11 @@ sitting) if the owner wants them; K11 when the owner names it.
   - beyond it is a real Main Street in 3D: steps down to a square, painted shopfronts and offices of several heights on both sides (two 4096 × 1024 canvases), gables, cornices, awnings, lamps, trees, parked and moving cars, and a sky fading into the hall's haze;
   - afternoon in the light theme, night in the dark one, with lit windows, lamps and car lights glowing;
   - a plaque over the doorway shows what came in from outside and what went out, and the outside streams end just over it.
-- **Streams switch** (owner's request): All flows · Blue only · Red only shows every stream whole, or only the half of each where the money arrived or where it left. It lives in the address as `?streams=blue|red`.
-  - The cut is in the ribbon shader (`along` attribute, shared uniform), the bubbles are filtered the same way, and a hidden half cannot be pointed at.
+- **Streams switch** (owner's request, renamed at the owner's word): All flows · Bought · Sold, in the address as `?streams=bought|sold`.
+  - The owner reads blue as entering a position and red as exiting one, so each choice shows a single colour. Bought shows each rotation stream in blue towards where the money arrived. Sold shows it in red from where the money left. Either way the stream fades out three quarters along, so it still points the way.
+  - A selected fund's or book's threads are each bought or sold, and show whole or not at all.
+  - The ribbon shader carries its own values per stream (`along` attribute, `streamCut`, `streamSolid`, `streamTone`). In three.js r18x `vColor` has four components, so only `.rgb` is mixed.
+  - The bubbles follow the same rule, and a hidden part cannot be pointed at.
   - In the holdings view the switch is hidden and the hall shows all.
 - **Measured** in headless Edge on the GPU:
   - 60 fps standing (entrance, above, a company) and walking (median 16.7 ms, 95th percentile 16.9 ms) in both themes;
