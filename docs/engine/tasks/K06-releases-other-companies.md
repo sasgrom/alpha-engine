@@ -355,3 +355,105 @@ and excluded from both correction commits.
 
 The remaining **426 companies were not started**. This correction does not change the requirement for an
 explicit owner decision before the long extraction.
+
+
+## Delivery report — full 446-company universe complete (2026-11-11/12)
+
+Builder source commit: **`e8209ffb1eef5a63c88c91e3ec07b325a76c7574`**; code hash
+`f53ecaf6d70f4e1e097f07966a6cf8b89d4674a35f6e159178359666c1a2492b`.
+The owner approved the remaining 426 companies explicitly. All **446/446** eligible companies are now
+complete, with `status="pilot_complete"`, `overall.pass=true` and every company check passing. There are
+no facts-without-Stooq or Stooq-without-facts gaps. No model call, production write, database write,
+schema change, scheduler change or new service occurred. Raw evidence remains on D:.
+
+### Acceptance checks
+
+1. **Every K01 check on every company — pass (446/446).** Totals: **156,487 filings**, **34,044
+   quarters**, **36,900 releases**, **27,044,856,134 downloaded bytes** and **27,374,741,302 exhibit
+   bytes on disk**. Acceptance timestamps are present for **156,487/156,487 (100%)** filings and item
+   lists for **121,474/121,474 (100%)** 8-Ks. The calendar has **0 duplicate company-periods**, **0
+   missing non-deduped originals**, **0 negative lags**, **0 non-increasing bounded next publications**,
+   and `chosenReleaseIsFirst=true`. There are **34,045** original periodic rows since 2005 and **34,044**
+   selected quarter rows; the one deliberate later-original dedupe is documented below. Separate earlier
+   releases pair with **32,538/34,044 = 95.5763%** of quarters. Lag min/median/p90/max is **0/6/24/637
+   days**. Since 2009-06, **1,589** quarters retain multiple earnings filings, with **34,914** total
+   earnings-filing links. The **689** company-year outliers and **49** amendment-only filings remain
+   explicit in the summary rather than being clipped or silently dropped.
+2. **Research-50 unchanged — pass.** `filings-50.jsonl` is **8,823,008 bytes**, SHA-256
+   `29bf87c5ba943b691215825ad611e3945ef6b2de33c2ac8f19b0808faf26716d`; `quarters-50.jsonl` is
+   **2,264,505 bytes**, SHA-256 `35e11fc013b935c0457771759248a401895c7e8aa64fcdea42cbfcba8ff2a21f`.
+   Both hashes were independently recomputed from the D: artifacts. A separate cutoff check showed that
+   the refreshed SPY input, rather than the new anomaly rules, explains the 18 changed window-session
+   values when rebuilding beyond K01's original 2026-10-26 price cutoff.
+3. **Seeded SEC index check — pass.** All **30/30** sampled earnings-release acceptance times match the
+   SEC index pages exactly, with **0 failures**. The final repeat run required no new index-evidence
+   fetch: every selected evidence file already matched the current code hash and expected timestamp.
+4. **Exhibit coverage — pass with 656 explicit exceptions.** **36,244** releases have at least one exhibit;
+   **656** have `status="no_exhibit"` and the reason `No substantive earnings exhibit in the filing index`.
+   Missing outcomes **0**, unexplained missing exhibits **0**, final exhibit-error outcomes **0**. Every
+   exception retains CIK, traded ticker, accession, status and reason in the committed summary. Cached
+   exhibit reuse requires matching byte count and SHA-256.
+5. **Gates and repeatability — pass.** Targeted tests **17/17**; full suite **192 files / 1,073 tests**;
+   forced TypeScript check, production build and `git diff --check` all pass on the delivered source.
+   Consecutive complete cached runs each report **446 cache hits / 0 companies reprocessed**. Independent
+   hashing confirms byte-identical universe, filing and quarter artifacts; only generation-time fields,
+   progress/summary/manifest timestamps and wall-clock measurements differ. The independent verification
+   also parses all **156,487** filing rows and **34,044** quarter rows, checks their unique keys and
+   aggregate counts, and requires every company check and artifact hash to pass.
+
+Window-session evidence across **33,596** bounded windows: median **62**, p05 **48**, p95 **74**; shares
+holding at least 20/30/45 sessions are **99.9286% / 99.8541% / 97.1723%**. From 2009-06 (**27,521**
+windows): median **62**, p05 **48**, p95 **74**, with shares **99.9891% / 99.9491% / 98.0088%**.
+Out-of-order candidate links are explicitly unbounded rather than included in these calculations.
+
+### Preserved anomalies and not-applicable scope
+
+- Four next-publication links have `nextFirstPublicationEt=null` and `windowSessions=null` under the
+  owner-approved rule, with exact timestamp evidence in `outOfOrderNextPublications`: TMUS `2006-09-30`,
+  FLEX `2012-10-27`, LEN `2005-01-30`, and BKR `2017-03-31`. They are not hidden as missing metadata or
+  converted into fabricated bounded windows.
+- TXN `2010-06-30` keeps the earliest original 10-Q, accession `0001140361-10-029928`, accepted
+  **2010-07-21T17:58:03 ET**. The later original `0001140361-10-029984`, accepted
+  **2010-07-22T11:50:22 ET**, remains in `filings-rest.jsonl` and in `duplicateOriginalPeriods` with its
+  form, timestamps and primary document. It is not incorrectly counted as a missing original.
+- ENLT is explicitly `notApplicable`: no in-scope 10-Q, 10-K, 8-K or amendment submissions since 2005.
+  Publication and item-list ratios are not fabricated as either 0% or 100%. Missing metadata on a nonempty
+  in-scope company still fails, as covered by the regression tests.
+
+### Recovery and storage evidence
+
+A cached acceptance rebuild stopped after company 270 when Windows returned `EPERM` renaming
+`quarters-rest.jsonl` on D:. This was not treated as an empty archive or silently restarted. After the
+archive became readable, the expected roots and free space were checked and no builder remained active.
+The interrupted TDY checkpoint passed: **326 filings / 88 quarters / 92 releases / 95 verified exhibit
+files**. The preceding FANG checkpoint also passed, with **94 verified exhibit files**. Both matched the
+current code hash and all company checks. The same command then resumed from those checkpoints; no valid
+exhibit was redownloaded and no completed company was reprocessed.
+
+Final cumulative company-processing time is **17,139.685 seconds**. The complete cached acceptance and
+repeat runs took **1,006.670 seconds** and **1,069.567 seconds** respectively; these are cached-assembly
+wall times, not a claim of uninterrupted initial extraction time. Final projection: **0 remaining bytes /
+0 remaining seconds**, **692,412,076,032 projected free bytes**, above the required **107,374,182,400
+bytes (100 GiB)**, so `storagePass=true`.
+
+### Final artifacts and hashes
+
+Final summary generation time: **2026-11-12T00:18:32.630Z**. The independently saved baseline was
+generated at **2026-11-12T00:00:10.096Z**. Both complete runs produced the same three primary hashes.
+
+| Artifact | Bytes | SHA-256 |
+|---|---:|---|
+| `D:\research\alpha-engine\engine\events\universe-rest.json` | 33,606 | `f6d828f039078e5ea2c45af30a8092fc271522af523b8b97ef52c06eaece6fff` |
+| `D:\research\alpha-engine\engine\events\filings-rest.jsonl` | 77,303,161 | `825193f90ef3cb8e3bbc38602d1ee5b052769fe8a5873dd71e59ec5a37d83427` |
+| `D:\research\alpha-engine\engine\events\quarters-rest.jsonl` | 17,504,145 | `d36ec5cb90974a80601d728a0a320ae7fd4172a495b51718651f52fbca36ff29` |
+| `D:\research\alpha-engine\engine\events\progress-rest.json` | 107,611 | `755b0c578abe5c17cd18041d5c505f497b68a373f39fd8c7774e2545dfb62d91` |
+| `research/engine/event-calendar-rest.summary.json` | 1,131,260 | `d1780c79f29bd2462de4bb86d7d1de9b901e62ce05d04b74b7344a90903f4af1` |
+| `D:\research\alpha-engine\engine\events\manifest-rest.json` | 1,812 | `deddd1fca16c30a8981c188aef73a46bf00c6339e7945d2e46bfe609fe4e563f` |
+
+The manifest records source commit `e8209ff`, all 446 companies, final status/counts, artifact hashes and
+`productionWrite=false` / `databaseWrite=false`. Per-company checkpoints remain in
+`D:\research\alpha-engine\engine\events\rest-companies\`; SEC index evidence remains in
+`D:\research\alpha-engine\engine\events\index-checks-rest\`. The committed summary contains the complete
+company metrics, exhibit-exception list, anomalies, form/year distributions, universe lineage and storage
+projection. Scheduler-generated changes to `public/reports/company-exposures.json`, `.md` and
+`src/data/analytics-snapshot.ts` are not part of this delivery.
