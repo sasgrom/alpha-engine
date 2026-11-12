@@ -164,6 +164,7 @@ export default function DeskShell({ children }: { children: ReactNode }) {
             { label: "Macro", path: "/desk/research/macro", group: "Desk" as const, keywords: "rates credit oil dollar exposure scenario" },
             { label: "Ownership", path: "/desk/research/ownership", group: "Desk" as const, keywords: "insiders 13f institutions short interest" },
             { label: "Library", path: "/desk/research/library", group: "Desk" as const, keywords: "methods handbook glossary classic tools" },
+            { label: "Fund flows", path: "/desk/flows", group: "Desk" as const, keywords: "13f institutions funds money rotation sectors bought sold hall library of capital" },
           ]
         : []),
       ...(isAdmin ? [{ label: "Operations", path: "/desk/operations", group: "Desk" as const, keywords: "health scheduler jobs checks" }] : []),
@@ -187,7 +188,7 @@ export default function DeskShell({ children }: { children: ReactNode }) {
 
   const navItems = [
     ...NAV,
-    ...(isPresentation ? [{ label: "Research", path: "/desk/research" }] : []),
+    ...(isPresentation ? [{ label: "Research", path: "/desk/research" }, { label: "Flows", path: "/desk/flows" }] : []),
     { label: "Watchlist", path: "/desk/watchlist" },
     ...(isAdmin ? [{ label: "Operations", path: "/desk/operations" }] : []),
   ];

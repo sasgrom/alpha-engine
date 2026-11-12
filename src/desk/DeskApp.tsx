@@ -14,6 +14,7 @@ const Volatility = lazy(() => import("./pages/research/Volatility"));
 const Macro = lazy(() => import("./pages/research/Macro"));
 const Ownership = lazy(() => import("./pages/research/Ownership"));
 const Library = lazy(() => import("./pages/research/Library"));
+const Flows = lazy(() => import("./flows/FlowsPage"));
 const Watchlist = lazy(() => import("./pages/Watchlist"));
 const Operations = lazy(() => import("./pages/Operations"));
 
@@ -40,6 +41,7 @@ export default function DeskApp() {
           <Route path="research/macro" element={<Macro />} />
           <Route path="research/ownership" element={<Ownership />} />
           <Route path="research/library" element={<Library />} />
+          <Route path="flows" element={<Flows />} />
           <Route path="watchlist" element={<Watchlist />} />
           <Route path="operations" element={<Operations />} />
           <Route path="*" element={<DeskNotFound />} />

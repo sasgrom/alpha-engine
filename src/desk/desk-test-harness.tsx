@@ -9,6 +9,7 @@ import { MemoryRouter, Route, Routes } from "react-router";
 import { TRPCProvider } from "@/providers/trpc";
 import type { DeskCompany, DeskSnapshot } from "@contracts/desk-snapshot";
 import DeskApp from "./DeskApp";
+import { FLOWS_COMPANY, FLOWS_FUND, FLOWS_OVERVIEW } from "./flows/flows-fixtures";
 
 const returns = (d1: number) => ({ d1, w1: d1 * 2, m1: d1 * 3, m3: d1 * 4, ytd: d1 * 5, y1: d1 * 6 });
 
@@ -90,6 +91,9 @@ function answer(procedure: string, role: string): unknown {
     case "dashboard.macro": return [{ seriesId: "DGS10", label: "10Y Treasury yield", unit: "pct", date: "2026-11-05", value: 4.12 }];
     case "dashboard.sectorFlowsDetailed": return { rows: [{ sector: "Information Technology", deltaUsd: 12e9, curUsd: 900e9, deltaShares: 1e6, curShares: 9e9, deltaWeightPp: 0.42 }], guard: null };
     case "universe.add": case "universe.remove": return { ok: true };
+    case "desk.flowsOverview": return FLOWS_OVERVIEW;
+    case "desk.flowsFund": return FLOWS_FUND;
+    case "desk.flowsCompany": return FLOWS_COMPANY;
     case "admin.usersList": return [];
     default: return null;
   }
@@ -120,6 +124,7 @@ export async function mountDesk(role: "admin" | "user", path = "/desk", ready = 
   await Promise.all([
     import("./pages/Today"), import("./pages/Watchlist"), import("./pages/research/Signals"), import("./pages/research/Earnings"),
     import("./pages/research/Volatility"), import("./pages/research/Macro"), import("./pages/research/Ownership"), import("./pages/research/Library"),
+    import("./flows/FlowsPage"),
   ]);
   // jsdom has neither; the palette (cmdk) needs both to mount
   Element.prototype.scrollIntoView = () => {};

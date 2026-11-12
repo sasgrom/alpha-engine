@@ -110,11 +110,17 @@ function titleWord(word: string): string {
   return word.charAt(0) + word.slice(1).toLowerCase();
 }
 
-/** "STATE STREET CORP (STT, STT-PG) (CIK 0000093751)" → "State Street Corp". Mixed-case names are kept. */
+/**
+ * "STATE STREET CORP (STT, STT-PG) (CIK 0000093751)" → "State Street Corp". Mixed-case names are kept.
+ * Stored names are cut at 128 characters, so a ticker list can end without its closing bracket; both patterns are
+ * single character classes (linear time) — a nested quantifier here once froze on exactly such a name.
+ */
 export function entityName(raw: string | null | undefined): string {
   const name = (raw ?? "")
-    .replace(/\s*\(CIK\s*\d+\)/gi, "")
-    .replace(/\s*\((?:[A-Z0-9.\-/]+(?:,\s*)?)+\)/g, "")
+    .replace(/\s*\(CIK[\s\d]*\)?/gi, "")
+    .replace(/\s*\([A-Z0-9.,\-/\s]*\)/g, "")
+    .replace(/\s*\([A-Z0-9.,\-/\s]*$/, "")
+    .replace(/\s*\/[A-Z]{2,3}\/?\s*$/, "")
     .replace(/\s+/g, " ")
     .trim();
   if (!name || /[a-z]/.test(name)) return name;

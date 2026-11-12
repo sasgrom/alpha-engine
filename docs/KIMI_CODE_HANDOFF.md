@@ -1437,3 +1437,84 @@ page. Times are Pacific.
 - Verification: `npm run check`, forced worker/script type check, focused tests, full suite **209 files / 1,156 tests** with `VITEST_MAX_WORKERS=2`, production build and `git diff --check` pass. The default parallel run twice hit the existing 5 s `worker-expectations` timeout under load; it passes alone in 2.077 s and was not edited or bypassed. Claude's desk/registry/lock fixes are integrated; unrelated generated reports and new fund-flow files are excluded from K07 commits.
 - Evidence: `research/engine/precomputed-page-data.summary.json` **96,763 bytes**, SHA256 `3f68026a6e9dae8e990a4ed3b8c174b026339d2dc294c7d28263ea966e1b7cb8`; `precomputed-page-data.equality.json` **9,004 bytes**, `16de3e10ba93d37af292459fd65ab0aa3e4045f9b4114c486d413147c85884f0`; `precomputed-page-data.delivery.json` **185,630 bytes**, `c52f3c5001ffb85a6a073965401b9b154401327838801700b6c32f86ff5709d0`. Full delivery report appended to `docs/engine/tasks/K07-precomputed-page-data.md`. No production write, database write, schema change, model call, deployment or alpha promotion occurred.
 - Next approved task: **K08**, split-safe market values. First read its spec and independently confirm the **20-year `schwab-hist`** input coverage before changing code. K09 remains queued behind K08 and is not started.
+
+## 126. Claude: fund-flow view at /desk/flows, built from the filed 13F reports; the stored 13F table is wrong and is not used — 2026-11-11 (local evening)
+
+**What exists now**
+
+- `/desk/flows` (owner and NDA reviewers, like the other research pages): a hall drawn with three.js ("the library of
+  capital": one bookcase per sector, one book per company, the funds at desks, streams for the estimated sector
+  rotation, threads from a selected fund or company to what it traded) and a reading view with the same figures as
+  charts and tables. Everything selected lives in the address (`?q=&fund=&company=&sector=&show=outcome&real=1&view=reading`).
+  Without WebGL the page opens as the reading view.
+- Data: `scripts/build-fund-books.mts` (cached filed reports → books on D:, `D:\research\alpha-engine\fund-books`,
+  per-filing checkpoints; first pass 9 min over 7,219 filings, later runs about 1 min) and
+  `scripts/build-fund-flows.mts` (books → `worker/.runs/desk-flows/`, 804 files, 43 MB, about 1 min), served by
+  `desk.flowsOverview`, `desk.flowsFund`, `desk.flowsCompany`. **Not scheduled**: run the two in that order after a
+  13F refresh. Read-only on the database; no schema change; nothing on production.
+- Latest result: 23 flow quarters Q4 2020–Q2 2026; Q2 2026 307 funds reported, 289 counted, $2.22tn bought,
+  $2.03tn sold; 493 of 496 companies (ENLT, VYLR and XOM_PRE have no filed securities).
+
+**Finding that matters beyond this page: `fund_holdings` is not a faithful copy of the filings** (measured 2026-06-30
+against the cached reports in `worker/cache/13f`; not changed by me)
+
+1. One row per security is kept (`mergeQuarterFilings` in `worker/lib/thirteenf.ts`: "duplicate cusip:class keys use
+   the latest row") while filers list a security once per manager and voting arrangement. Stored $17.2tn of the
+   $37.6tn filed for the same securities: BlackRock $5.6bn of $4,405bn, Fidelity $7.6bn of $1,392bn, JPMorgan 1.1%.
+   163 of 306 funds store under 98% of what they filed.
+2. `putCall` is not read: option rows are stored as shares.
+3. 119 of 496 companies have no mapped CUSIP and are absent (XOM, CVX, VZ, C, BAC, MS, CMCSA, PM, LIN, ACN …). Nine
+   mapped CUSIPs belong to other issuers: 87971M103 TELUS→T, 706327103 Pembina→PPL, 29269R105 Enerflex→EFX,
+   05508R106 B&G Foods→DHR, 87236Y108 TD Ameritrade→AMT, 22587M106 Cresco→CL, 25380B102→DGX, 48133Q408→JPM,
+   668771116→GEN.
+4. The dollars-versus-thousands correction is right for all but four filings (it needs five priced rows and reads a
+   book full of bonds as "thousands").
+5. Cache: for 116 filings the cached table is a byte copy of the cover page (confidential-treatment additions;
+   Norges Bank's reports, which become public a year later as an amendment); two cached tables are partial.
+
+Everything reading `fund_holdings` / `fund_quarters` inherits 1–3: the classic Ownership pages, the 13F position
+events in `signals`, the K07 institutional page data. Repairing the table means re-loading about two million rows and
+regenerating the events: **an owner decision, then a spec**. The books are a ready reference: the manifest lists every
+matched security, rejected map row, unit decision and split.
+
+**How the books are made** (each rule has a unit test in `worker/lib/thirteenf-table.test.ts` or
+`worker/lib/fund-flows.test.ts`)
+
+- every row of every table summed per security; shares, principal amounts and options kept apart;
+- the unit of a filing from prices (241 filings state thousands after the 2023 rule change, 55 stated dollars
+  before it; 3 fit no unit and are left out);
+- security → company by price levels: filed price ÷ split-adjusted close (`schwab-hist`) is exactly the split factor
+  since, which also puts all shares on today's basis (52 splits recognised); other share classes by a steady price
+  ratio (one Berkshire A = 1,500 B); 517 securities for 493 companies;
+- amendments: a restatement replaces, new holdings add, and a "new holdings" filing that repeats 80% of the book
+  replaces it (JPMorgan files whole reports again under that label);
+- a position whose shares and value contradict each other at the price of the other books keeps the smaller reading
+  (BMO valued Alphabet at the pre-split $2,700 for two years).
+
+**What the flows leave out, and the page says so**: funds most of whose positions moved one way at once (reporting
+changes) and one-off blocks far outside a fund's habit (Invesco, Q4 2025, about $390bn when the QQQ trust became
+reportable); companies whose holders' share counts all changed by one factor (stock-funded mergers; Honeywell's 2026
+spin-off with a 1-for-2 consolidation); companies most of whose holders appear at once (listings, spin-offs).
+
+**Price-history notes**: `schwab-hist` lowers history for special dividends by a dollar amount, not a ratio (CME,
+COP, EOG, DVN, TDG, WRB, TPL) and scales it for spin-offs; the series under GEN before November 2022 is Genesis
+Healthcare's (ticker reuse).
+
+**Verification (2026-11-11, 21:38–21:45)**
+
+- Shared tree (with Kimi's K08 work in progress): `npm run check` clean; full suite **217 files / 1,225 tests** pass
+  (`VITEST_MAX_WORKERS=2`).
+- HEAD plus my files only (clean copy on D:, without `.env`): `tsc -b` clean, `npm run build` passes, suite
+  **213 of 214 files / 1,202 tests**; the one file failing there is `api/services/reviewer-http.test.ts`, which needs
+  `.env` and passes in the main tree.
+- Headless Edge (software WebGL), 1600×960, light and dark: hall, sector, fund, company, "what it earned" after
+  inflation, reading view; hovering a book shows its figures, selecting it sets `?company=`, a sector label sets
+  `?sector=`, play steps through the quarters, the wheel walks without scrolling the page; no page errors; no
+  horizontal overflow at 390 px.
+- Web server restarted once at 21:00:57 (pid 8368 → 18276) on a bundle of HEAD plus my server files, after a mailbox
+  notice. **Caution**: Kimi's `npm run build` at 21:31 rewrote `dist/boot.js` from the working tree, so the next
+  restart loads the uncommitted K08 server code too.
+
+**Next safe actions**: owner decision on the 13F table repair; a scheduler entry for the two builds after
+`13f-refresh`; the build notes on the page list the rest (successor links between filers, options in the hall, a
+test of whether following the money pays).

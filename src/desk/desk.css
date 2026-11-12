@@ -1692,3 +1692,342 @@ button.desk-list-row {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---------------------------------------------------------------- fund flows: the library */
+.desk-root {
+  --d-flow-in: #2a78d6;
+  --d-flow-out: #e34948;
+  --d-glass: color-mix(in srgb, var(--d-raised) 84%, transparent);
+}
+
+.desk-root[data-theme="dark"] {
+  --d-flow-in: #3987e5;
+  --d-flow-out: #e66767;
+  --d-glass: color-mix(in srgb, var(--d-surface) 80%, transparent);
+}
+
+.desk-flow-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 2px;
+  background: var(--d-axis);
+}
+
+.desk-flow-dot[data-way="in"] {
+  background: var(--d-flow-in);
+}
+
+.desk-flow-dot[data-way="out"] {
+  background: var(--d-flow-out);
+}
+
+/* the hall runs edge to edge under the header; the page sets --desk-vw to the width without the scrollbar */
+.desk-lib {
+  position: relative;
+  width: var(--desk-vw, 100%);
+  height: calc(100vh - 61px);
+  min-height: 580px;
+  margin: -28px 0 0 calc(50% - var(--desk-vw, 100%) / 2);
+  overflow: hidden;
+  background: var(--d-page);
+  border-bottom: 1px solid var(--d-border);
+}
+
+.desk-lib-stage {
+  position: absolute;
+  inset: 0;
+}
+
+.desk-lib-labels {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.desk-lib-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 2px 7px;
+  border: 1px solid var(--d-border);
+  border-radius: 7px;
+  background: var(--d-glass);
+  backdrop-filter: blur(6px);
+  color: var(--d-ink);
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 560;
+  line-height: 1.35;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+button.desk-lib-label {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.desk-lib-label.sector {
+  padding: 4px 10px;
+  font-size: 12.5px;
+  font-weight: 620;
+  border-radius: 9px;
+}
+
+.desk-lib-label.sector.in,
+.desk-lib-label.book.in,
+.desk-lib-label.desk.in {
+  box-shadow: inset 3px 0 0 var(--d-flow-in);
+}
+
+.desk-lib-label.sector.out,
+.desk-lib-label.book.out,
+.desk-lib-label.desk.out {
+  box-shadow: inset 3px 0 0 var(--d-flow-out);
+}
+
+.desk-lib-label.sector.dim {
+  color: var(--d-muted);
+  box-shadow: none;
+}
+
+.desk-lib-label.sector.on {
+  border-color: var(--d-accent);
+  background: var(--d-raised);
+}
+
+.desk-lib-label.book {
+  font-family: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.desk-lib-label.mark,
+.desk-lib-label.door {
+  border: none;
+  background: transparent;
+  backdrop-filter: none;
+  color: var(--d-ink-2);
+  font-size: 11.5px;
+  font-weight: 560;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.desk-lib-head {
+  position: absolute;
+  top: 18px;
+  left: max(18px, calc((100% - var(--d-max)) / 2 + var(--d-gutter)));
+  max-width: min(520px, calc(100% - 36px));
+  padding: 14px 16px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius);
+  background: var(--d-glass);
+  backdrop-filter: blur(10px);
+}
+
+.desk-lib-head h1 {
+  margin: 0 0 4px;
+  font-size: 21px;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+
+.desk-lib-head p {
+  margin: 0;
+  color: var(--d-ink-2);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.desk-lib-head p strong {
+  color: var(--d-ink);
+  font-weight: 620;
+}
+
+.desk-lib-tools {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100% - 580px);
+  padding: 6px 8px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius);
+  background: var(--d-glass);
+  backdrop-filter: blur(10px);
+}
+
+.desk-lib-panel {
+  position: absolute;
+  top: 84px;
+  right: 18px;
+  bottom: 18px;
+  width: min(400px, calc(100% - 36px));
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius);
+  background: var(--d-glass);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--d-shadow);
+  overflow: hidden;
+}
+
+.desk-lib-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 8px 8px 0;
+  border-bottom: 1px solid var(--d-border);
+}
+
+.desk-lib-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 190px;
+  padding: 8px 10px 9px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--d-ink-2);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 560;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.desk-lib-tabs button:hover {
+  color: var(--d-ink);
+}
+
+.desk-lib-tabs button[aria-selected="true"] {
+  color: var(--d-ink);
+  border-bottom-color: var(--d-ink);
+}
+
+.desk-lib-clear {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  color: var(--d-muted);
+}
+
+.desk-lib-clear:hover {
+  background: var(--d-hover);
+  color: var(--d-ink);
+}
+
+.desk-lib-panel-body {
+  flex: 1;
+  min-height: 0;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.desk-card > .desk-lib-tabs {
+  margin: -8px -8px 14px;
+}
+
+.desk-card > .desk-lib-panel-body {
+  padding: 0;
+  overflow: visible;
+}
+
+.desk-lib-foot {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  display: grid;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius);
+  background: var(--d-glass);
+  backdrop-filter: blur(10px);
+}
+
+.desk-lib-foot[data-panel="open"] {
+  right: calc(min(400px, 100% - 36px) + 30px);
+}
+
+.desk-lib-time {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.desk-lib-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  color: var(--d-ink-2);
+  font-size: 12px;
+}
+
+.desk-lib-help {
+  position: absolute;
+  top: 84px;
+  left: max(18px, calc((100% - var(--d-max)) / 2 + var(--d-gutter)));
+  max-width: 440px;
+  margin-top: 96px;
+  padding: 14px 16px;
+  border: 1px solid var(--d-border);
+  border-radius: var(--d-radius);
+  background: var(--d-raised);
+  box-shadow: var(--d-shadow);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.desk-lib-help ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 5px;
+  color: var(--d-ink-2);
+}
+
+.desk-lib-tip {
+  width: 270px;
+}
+
+@media (max-width: 1100px) {
+  .desk-lib-tools {
+    top: 112px;
+    left: 18px;
+    right: 18px;
+    max-width: none;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+
+  .desk-lib-help {
+    margin-top: 80px;
+    max-width: calc(100% - 36px);
+  }
+
+  .desk-lib-panel {
+    top: auto;
+    height: 46%;
+  }
+
+  .desk-lib-foot[data-panel="open"] {
+    display: none;
+  }
+}

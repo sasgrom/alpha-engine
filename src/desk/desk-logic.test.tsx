@@ -119,6 +119,14 @@ describe("formatting", () => {
     expect(entityName("FMR LLC")).toBe("FMR LLC");
     expect(entityName("T. ROWE PRICE ASSOCIATES, INC.")).toBe("T. Rowe Price Associates, Inc.");
     expect(entityName("BlackRock, Inc.")).toBe("BlackRock, Inc.");
+    // a name cut off inside its ticker list (stored names end at 128 characters) must clean up at once
+    const truncated = "WELLS FARGO & COMPANY/MN (WFC, WFCNP, WFC-PA, WFC-PC, WFC-PD, WFC-PL, WFC-PY, WFC-PZ, WFC-PA, WFC-PC, WFC-PD, WFC-PL, WFC-PY, WF";
+    const started = Date.now();
+    expect(entityName(truncated)).toBe("Wells Fargo & Company");
+    expect(entityName("PRIMECAP MANAGEMENT CO/CA/ (CIK 0000763212)")).toBe("Primecap Management Co");
+    expect(Date.now() - started).toBeLessThan(50);
+    expect(entityName("FIFTH THIRD BANCORP (FITB, FITB-PA, FITB-PI) (CIK 0000035527)")).toBe("Fifth Third Bancorp");
+    expect(entityName("BERKSHIRE HATHAWAY INC (BRK-A, BRK-B) (CIK 00010679")).toBe("Berkshire Hathaway Inc");
     expect(personName("Newstead Jennifer")).toBe("Jennifer Newstead");
     expect(personName("COOK TIMOTHY D")).toBe("Timothy D Cook");
     expect(personName("Smith John Jr")).toBe("John Smith Jr");

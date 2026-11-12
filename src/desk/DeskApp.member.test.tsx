@@ -37,4 +37,10 @@ describe("desk view for a member", () => {
     });
     expect(host.textContent).not.toContain("Database browser");
   });
+
+  it("sends a member who opens the fund-flow address back to Today without asking for the flow files", async () => {
+    desk = await mountDesk("user", "/desk/flows?fund=1067983&company=320193");
+    expect(desk.host.textContent).toContain("S&P 500 companies closed higher");
+    expect(desk.calls.filter((call) => call.startsWith("desk.flows"))).toEqual([]);
+  });
 });

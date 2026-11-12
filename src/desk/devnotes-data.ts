@@ -109,10 +109,29 @@ export const DEV_NOTES = {
       "A controlled test of insider buying: the benchmark shown is a dry run without intervals.",
       "Ranking companies by institutional accumulation.",
       "Short-interest history and readings for the whole index.",
+      "Correct 13F positions: the stored table keeps one filed row per security and misses 119 of the 496 companies, so every 13F figure on this page is too low for managers that file many rows (BlackRock, Fidelity, the banks). The Flows page reads the filed reports directly and does not have this defect.",
     ],
     better: [
-      ["Flows by conviction (new positions, top-ten weights, fund type)", "time only: the holdings of 311 funds are stored"],
+      ["The 13F panel built on the rebuilt books", "a decision on re-loading the stored table from the cached filings (it changes about two million rows)"],
       ["The 13F panel appearing at once", "K07's precomputed sector flows (in progress)"],
+    ],
+  },
+  flows: {
+    missing: [
+      "Successor links between filers: when a manager starts reporting under a new entity (BlackRock in 2024, Vanguard in 2026) the old and the new are two funds here, and the quarter of the change has no flows for them.",
+      "Stock-funded mergers where the acquirer's holder list changes (many holders of the target become new holders of the acquirer) still read as purchases. Exchanges that leave the holder list unchanged are recognised and left out.",
+      "Options: puts and calls are read from the reports and shown per fund, but not drawn in the hall or counted in any flow.",
+      "Securities outside the 496 covered companies (funds, bonds, foreign shares) are one door marked Outside; the reports hold them, the hall does not show them.",
+      "Filing dates: outcomes “once the filings were public” start at the 45-day deadline, not at each report's own date.",
+      "Confidential holdings: 92 later additions to reports have no table in the cache, and Norges Bank's reports become public a year late.",
+      "A phone layout for the hall; on a narrow screen the reading view is the usable one.",
+    ],
+    better: [
+      ["A test of whether following the money pays, with intervals and a hold-out period", "time: the figures shown are a description of 22 quarters, not a test"],
+      ["Books that open: a company's page inside the hall with price, reports and the funds around it", "time only"],
+      ["Walking the hall by keyboard alone, with every book and desk reachable in order", "time; the reading view is the accessible twin until then"],
+      ["History before the third quarter of 2020", "the older 13F reports, which were never downloaded"],
+      ["Daily rebuild after new reports arrive", "a scheduler entry for the two build scripts (they take about two minutes together)"],
     ],
   },
   library: {
