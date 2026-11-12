@@ -14,6 +14,8 @@ export const REPORT_FILE_POLICY: Record<string, ReportFilePolicy> = {
   "universe-coverage-50.json": { contentType: "application/json", automatic: true },
   "insider-form4.json": { contentType: "application/json", automatic: true },
   "company-exposures.json": { contentType: "application/json", automatic: false },
+  "data-health.json": { contentType: "application/json", automatic: false },
+  "data-health.md": { contentType: "text/markdown", automatic: false },
   "macro-scenarios.json": { contentType: "application/json", automatic: false },
   "expectations-report.json": { contentType: "application/json", automatic: false },
   // Read by pages (Scenario Lab, Feature Lab, Analytics); served locally, not part of the automatic push.

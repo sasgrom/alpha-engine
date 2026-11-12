@@ -18,7 +18,7 @@ export interface DoltCsvRow {
   rho: string;
 }
 export interface SpotBar { date: string; close: number; adjClose: number | null }
-export interface SpotInfo { price: number; date: string; source?: "put-call parity" | "price history" }
+export interface SpotInfo { price: number; date: string; source?: "put-call parity" | "price history"; strike?: number }
 
 /** 3: spot read from the quotes by put-call parity (was: split- and dividend-adjusted close, wrong before splits). */
 export const FEATURE_SCHEMA_VERSION = 3;
@@ -49,13 +49,13 @@ export function impliedSpot(rows: DoltCsvRow[]): SpotInfo | null {
   const usable = [...byExpiration.keys()].filter((expiration) => days(tradeDate, expiration) >= 0).sort();
   const ordered = [...usable.filter((expiration) => days(tradeDate, expiration) >= 7), ...usable.filter((expiration) => days(tradeDate, expiration) < 7).reverse()];
   for (const expiration of ordered) {
-    let best: { gap: number; spot: number } | null = null;
+    let best: { gap: number; spot: number; strike: number } | null = null;
     for (const [strike, pair] of byExpiration.get(expiration)!) {
       if (pair.call === undefined || pair.put === undefined) continue;
       const gap = Math.abs(pair.call - pair.put);
-      if (!best || gap < best.gap) best = { gap, spot: strike + pair.call - pair.put };
+      if (!best || gap < best.gap) best = { gap, spot: strike + pair.call - pair.put, strike };
     }
-    if (best && best.spot > 0) return { price: best.spot, date: tradeDate, source: "put-call parity" };
+    if (best && best.spot > 0) return { price: best.spot, date: tradeDate, source: "put-call parity", strike: best.strike };
   }
   return null;
 }

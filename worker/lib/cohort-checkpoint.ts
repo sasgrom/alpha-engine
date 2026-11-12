@@ -72,7 +72,7 @@ function readSnapshot(cacheDir: string): CohortResultFile | null {
 export function readCohortEntries<T extends CohortEntryKey>(cacheDir: string): T[] {
   const entries = new Map<string, T>();
   const snapshot = readSnapshot(cacheDir);
-  for (const entry of snapshot?.entries ?? []) entries.set(entryKey(entry), entry as T);
+  for (const entry of snapshot?.entries ?? []) entries.set(entryKey(entry), entry as unknown as T);
   const directory = entryDirectory(cacheDir);
   if (existsSync(directory)) {
     for (const file of readdirSync(directory).filter((name) => name.endsWith(".json")).sort()) {

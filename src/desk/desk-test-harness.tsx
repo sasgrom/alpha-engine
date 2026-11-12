@@ -57,6 +57,22 @@ const evidence = (value: number | null) => ({ value, periodEnd: "2026-09-26", qu
 
 /** Minimal copies of the classic report files the research tools read. */
 const REPORTS: Record<string, unknown> = {
+  "daily-operations.json": {
+    generatedAt: "2026-11-12T00:00:00.000Z",
+    date: "2026-11-12",
+    status: "ok",
+    scheduler: { status: "ok", heartbeatAt: "2026-11-12T00:00:00.000Z", currentJobId: null, queuedJobs: 0, nextRunAt: null, enabledJobs: 1 },
+    schwab: { status: "ok", tickersExpected: 50, tickersCompleted: 50, tickersCapturedToday: 50, manifestErrors: 0, latestCapture: "2026-11-12T00:00:00.000Z" },
+    summary: { checksOk: 1, checksWarning: 0, checksError: 0, checksPending: 0, jobsDoneToday: 1, jobsFailedToday: 0, jobsEnabled: 1 },
+    checks: [],
+    jobs: [],
+  },
+  "data-health.json": {
+    generatedAt: "2026-11-12T00:00:00.000Z",
+    status: "complete",
+    health: "degraded",
+    summary: { checks: 10, findings: 23, info: 8, review: 4, quarantine: 11 },
+  },
   "company-exposures.json": {
     generatedAt: "2026-11-11T11:18:47.607Z",
     coverage: { companies: 1, debt: 1 },

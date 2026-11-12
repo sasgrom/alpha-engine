@@ -231,6 +231,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "daily-operations.json and .md automatically pushed through reportFile after exit-ok and served from the fresher of DB/static.", requirements: [], notes: "Runs independently after the morning jobs so failed parents cannot suppress the health report. A critical report is evidence, not a scheduler process failure; its push failure still marks the job error.",
   }),
   job({
+    id: "data-health", name: "Data health and quarantine", group: "maintenance", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-series", "schwab-daily-bars", "edgar-exhibits-daily", "schwab-feature-lab"],
+    ...npx("scripts/build-data-health.mts"), purpose: "Check price, filing, extraction and option inputs and record point-in-time quarantine evidence without rewriting data.",
+    input: "Local prices, facts, series_points, K06 calendar, extraction results and Dolt option features.", output: "public/reports/data-health.json and .md plus research/engine/quarantine.json with per-check evidence, and an existing dist/public/reports bundle.",
+    destination: "Local read-only QA artifacts; no production write, schema change or retroactive data removal.", requirements: ["mysql", "driveD", "review"], notes: "All option snapshots receive spot/IV checks; parity strikes are checked on monthly first trading dates and the latest date through the Dolt clone.",
+  }),
+  job({
     id: "weekly-coverage-report", name: "Weekly coverage and drift report", group: "maintenance", mode: "scheduled", cron: "45 7 * * 1", defaultEnabled: true, dependsOn: ["daily-operations-report"],
     ...npx("scripts/build-weekly-coverage.mts"), purpose: "Compare the latest two inventory snapshots per table with row deltas, content hashes and latest dates.",
     input: "The current reviewed inventory and the previous local inventory snapshot.", output: "weekly-coverage.json and .md with per-table counts, deltas and hash drift.",

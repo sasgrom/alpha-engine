@@ -44,11 +44,25 @@ interface OpsReport {
   jobs: OpsJob[];
 }
 
+interface DataHealthReport {
+  generatedAt: string;
+  status: string;
+  health: string;
+  summary: { checks: number; findings: number; info: number; review: number; quarantine: number };
+}
+
 async function fetchReport(): Promise<OpsReport | null> {
   const response = await fetch("/reports/daily-operations.json", { cache: "no-store", credentials: "include" });
   if (response.status === 404) return null;
   if (!response.ok) throw new Error(`The operations report answered ${response.status}`);
   return (await response.json()) as OpsReport;
+}
+
+async function fetchDataHealth(): Promise<DataHealthReport | null> {
+  const response = await fetch("/reports/data-health.json", { cache: "no-store", credentials: "include" });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(`The data-health report answered ${response.status}`);
+  return (await response.json()) as DataHealthReport;
 }
 
 const OWNER_TOOL_TEXT: Record<string, string> = {
@@ -73,6 +87,7 @@ export default function Operations() {
   const { isAdmin } = useDesk();
   const [filter, setFilter] = useState<"attention" | "all">("attention");
   const report = useQuery({ queryKey: ["desk", "daily-operations"], queryFn: fetchReport, enabled: isAdmin, refetchInterval: 60_000 });
+  const health = useQuery({ queryKey: ["desk", "data-health"], queryFn: fetchDataHealth, enabled: isAdmin, refetchInterval: 60_000 });
   const snapshot = useDeskSnapshot();
   const checks = useMemo(() => {
     const rows = [...(report.data?.checks ?? [])].sort((a, b) => (ORDER[statusKind(a.status)] ?? 3) - (ORDER[statusKind(b.status)] ?? 3));
@@ -120,6 +135,22 @@ export default function Operations() {
             <StatusLabel status="ok" label="Registry tickers agree with the index" />
           )}
           {snapshot.data.inputs.companiesWithoutPrices.length > 0 && <StatusLabel status="warning" label={`${snapshot.data.inputs.companiesWithoutPrices.length} companies without prices`} />}
+        </div>
+      )}
+
+      {(health.data || health.error) && (
+        <div className="desk-card" style={{ marginBottom: 16, display: "flex", flexWrap: "wrap", gap: "8px 28px", alignItems: "center", fontSize: 13 }}>
+          <strong style={{ fontWeight: 620 }}>Data health</strong>
+          {health.data ? (
+            <>
+              <span className="desk-ink-2">built {fmtDateTime(health.data.generatedAt)} · {health.data.summary.checks} checks · {health.data.summary.findings} findings · {health.data.summary.quarantine} quarantine · {health.data.summary.review} review · {health.data.summary.info} reviewed/info</span>
+              <StatusLabel status={health.data.health === "ok" ? "ok" : "warning"} label={health.data.health} />
+              <a className="desk-button" href="/reports/data-health.md" target="_blank" rel="noreferrer">Report <ArrowUpRight size={13} aria-hidden="true" /></a>
+              <a className="desk-button" href="/reports/data-health.json" target="_blank" rel="noreferrer">JSON <ArrowUpRight size={13} aria-hidden="true" /></a>
+            </>
+          ) : (
+            <StatusLabel status="warning" label={(health.error as Error).message} />
+          )}
         </div>
       )}
 

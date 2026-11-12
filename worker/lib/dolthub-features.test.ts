@@ -46,6 +46,7 @@ describe("DoltHub feature materialization", () => {
     const spot = impliedSpot(rows);
     expect(spot?.source).toBe("put-call parity");
     expect(spot?.price).toBeCloseTo(172.1, 6);
+    expect(spot?.strike).toBe(170);
     expect(impliedSpot(rows.filter((item) => item.call_put === "Call"))).toBeNull();
     expect(impliedSpot([])).toBeNull();
   });

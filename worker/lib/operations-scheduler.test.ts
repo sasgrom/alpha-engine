@@ -31,6 +31,11 @@ describe("operations registry", () => {
     expect(OPERATION_JOBS.length).toBeGreaterThanOrEqual(30);
   });
 
+  it("registers data health after the daily data jobs", () => {
+    expect(OPERATION_JOB_MAP["data-health"].dependsOn).toEqual(["research-series", "schwab-daily-bars", "edgar-exhibits-daily", "schwab-feature-lab"]);
+    expect(OPERATION_JOB_MAP["data-health"].defaultEnabled).toBe(true);
+  });
+
   it("points every executable job at a real script", () => {
     for (const job of OPERATION_JOBS) {
       if (job.executable === "npx") expect(existsSync(path.join(OPERATIONS_ROOT, job.args[1])), job.id).toBe(true);

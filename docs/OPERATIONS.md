@@ -223,6 +223,7 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Production UI rebuild | scheduled | after analytics-snapshot + schwab-feature-lab + expectations-report | Local production server files only; no cloud deployment. |
 | Local morning brief | scheduled | 15 7 * * * | Local probation when INGEST_URL is set; no automatic reviewed production promotion is added by the scheduler. |
 | Daily operations health report | scheduled | 20 7 * * * | daily-operations.json and .md automatically pushed through reportFile after exit-ok and served from the fresher of DB/static. |
+| Data health and quarantine | scheduled | after research-series + schwab-daily-bars + edgar-exhibits-daily + schwab-feature-lab | Local read-only QA artifacts; no production write, schema change or retroactive data removal. |
 | Weekly coverage and drift report | scheduled | 45 7 * * 1 | weekly-coverage.json and .md automatically pushed through reportFile after exit-ok and exposed in Workers → Weekly coverage. |
 | Alpha Bridge captain executor | paused | */2 * * * * | Local command protocol only; no production transport. |
 | 13F holdings and full-book refresh | scheduled | 0 5 * * 1,4 | Local MySQL; production transfer is a separate reviewed manual job. |
@@ -847,7 +848,24 @@ npx tsx scripts/daily-digest.mts --hours 36
 npx tsx scripts/build-daily-operations-report.mts
 ```
 
-### 35. Weekly coverage and drift report
+### 35. Data health and quarantine
+
+- **ID:** `data-health`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** none
+- **Dependencies:** `research-series`, `schwab-daily-bars`, `edgar-exhibits-daily`, `schwab-feature-lab`
+- **Purpose:** Check price, filing, extraction and option inputs and record point-in-time quarantine evidence without rewriting data.
+- **Input:** Local prices, facts, series_points, K06 calendar, extraction results and Dolt option features.
+- **Output:** public/reports/data-health.json and .md plus research/engine/quarantine.json with per-check evidence, and an existing dist/public/reports bundle.
+- **Destination:** Local read-only QA artifacts; no production write, schema change or retroactive data removal.
+- **Requirements:** mysql, driveD, review
+- **Operational note:** All option snapshots receive spot/IV checks; parity strikes are checked on monthly first trading dates and the latest date through the Dolt clone.
+
+```powershell
+npx tsx scripts/build-data-health.mts
+```
+
+### 36. Weekly coverage and drift report
 
 - **ID:** `weekly-coverage-report`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -864,7 +882,7 @@ npx tsx scripts/build-daily-operations-report.mts
 npx tsx scripts/build-weekly-coverage.mts
 ```
 
-### 36. Alpha Bridge captain executor
+### 37. Alpha Bridge captain executor
 
 - **ID:** `alpha-bridge-agent`
 - **Mode:** paused; **enabled by default:** no
@@ -881,7 +899,7 @@ npx tsx scripts/build-weekly-coverage.mts
 npx tsx worker/alpha-bridge-agent.mts
 ```
 
-### 37. 13F holdings and full-book refresh
+### 38. 13F holdings and full-book refresh
 
 - **ID:** `13f-refresh`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -898,7 +916,7 @@ npx tsx worker/alpha-bridge-agent.mts
 npx tsx scripts/13f-refresh.mts --quarters 4
 ```
 
-### 38. EDGAR local tone scoring
+### 39. EDGAR local tone scoring
 
 - **ID:** `edgar-tone-nightly`
 - **Mode:** paused; **enabled by default:** no
@@ -915,7 +933,7 @@ npx tsx scripts/13f-refresh.mts --quarters 4
 npx tsx worker/edgar-tone.mts --universe edgar-universe.json --concurrency 2
 ```
 
-### 39. Quarterly cohort pack builder
+### 40. Quarterly cohort pack builder
 
 - **ID:** `expectations-cohorts`
 - **Mode:** paused; **enabled by default:** no
@@ -932,7 +950,7 @@ npx tsx worker/edgar-tone.mts --universe edgar-universe.json --concurrency 2
 npx tsx worker/edgar-cohorts.mts --universe research-universe-50.json
 ```
 
-### 40. Cohort LLM extraction
+### 41. Cohort LLM extraction
 
 - **ID:** `expectations-extract`
 - **Mode:** paused; **enabled by default:** no
@@ -949,7 +967,7 @@ npx tsx worker/edgar-cohorts.mts --universe research-universe-50.json
 npx tsx worker/edgar-cohort-extract.mts --universe research-universe-50.json
 ```
 
-### 41. Independent extraction benchmark
+### 42. Independent extraction benchmark
 
 - **ID:** `expectations-benchmark`
 - **Mode:** paused; **enabled by default:** no
@@ -966,7 +984,7 @@ npx tsx worker/edgar-cohort-extract.mts --universe research-universe-50.json
 npx tsx worker/expectations-benchmark.mts --cohorts
 ```
 
-### 42. Legacy Cboe option snapshot
+### 43. Legacy Cboe option snapshot
 
 - **ID:** `options-cboe-fetch`
 - **Mode:** paused; **enabled by default:** no
@@ -983,7 +1001,7 @@ npx tsx worker/expectations-benchmark.mts --cohorts
 npx tsx worker/options-fetch.mts --source cboe --universe research-universe-50.json
 ```
 
-### 43. Offline DTE option features
+### 44. Offline DTE option features
 
 - **ID:** `options-features`
 - **Mode:** paused; **enabled by default:** no
@@ -1000,7 +1018,7 @@ npx tsx worker/options-fetch.mts --source cboe --universe research-universe-50.j
 npx tsx worker/option-features.mts
 ```
 
-### 44. Offline option provider QA
+### 45. Offline option provider QA
 
 - **ID:** `options-qa`
 - **Mode:** paused; **enabled by default:** no
@@ -1017,7 +1035,7 @@ npx tsx worker/option-features.mts
 npx tsx worker/options-qa.mts
 ```
 
-### 45. Schwab token keepalive
+### 46. Schwab token keepalive
 
 - **ID:** `schwab-refresh-manual`
 - **Mode:** scheduled; **enabled by default:** yes
@@ -1034,7 +1052,7 @@ npx tsx worker/options-qa.mts
 npx tsx worker/schwab-refresh.mts
 ```
 
-### 46. Read-only research reconciliation
+### 47. Read-only research reconciliation
 
 - **ID:** `research-reconciliation`
 - **Mode:** manual; **enabled by default:** no
@@ -1051,7 +1069,7 @@ npx tsx worker/schwab-refresh.mts
 npx tsx scripts/research-reconciliation.mts
 ```
 
-### 47. Fundamental integrity and continuity audit
+### 48. Fundamental integrity and continuity audit
 
 - **ID:** `fundamental-integrity-audit`
 - **Mode:** manual; **enabled by default:** no
@@ -1068,7 +1086,7 @@ npx tsx scripts/research-reconciliation.mts
 npx tsx scripts/fundamental-integrity-audit.mts
 ```
 
-### 48. EDGAR coverage and continuity gap analysis
+### 49. EDGAR coverage and continuity gap analysis
 
 - **ID:** `edgar-gap-analysis`
 - **Mode:** manual; **enabled by default:** no
@@ -1085,7 +1103,7 @@ npx tsx scripts/fundamental-integrity-audit.mts
 npx tsx scripts/edgar-gap-analysis.mts
 ```
 
-### 49. Schwab fundamental gap mapping
+### 50. Schwab fundamental gap mapping
 
 - **ID:** `schwab-fundamental-gap-map`
 - **Mode:** manual; **enabled by default:** no
@@ -1102,7 +1120,7 @@ npx tsx scripts/edgar-gap-analysis.mts
 npx tsx scripts/schwab-fundamental-gap-map.mts
 ```
 
-### 50. Per-company EDGAR remediation and Schwab fallback
+### 51. Per-company EDGAR remediation and Schwab fallback
 
 - **ID:** `remediate-company`
 - **Mode:** manual; **enabled by default:** no
@@ -1119,7 +1137,7 @@ npx tsx scripts/schwab-fundamental-gap-map.mts
 npx tsx scripts/remediate-company.mts
 ```
 
-### 51. Availability-anchored tone event study
+### 52. Availability-anchored tone event study
 
 - **ID:** `tone-event-study`
 - **Mode:** manual; **enabled by default:** no
@@ -1136,7 +1154,7 @@ npx tsx scripts/remediate-company.mts
 npx tsx scripts/tone-event-study.mts
 ```
 
-### 52. Tone IC and turnover evaluation
+### 53. Tone IC and turnover evaluation
 
 - **ID:** `tone-ic`
 - **Mode:** manual; **enabled by default:** no
@@ -1153,7 +1171,7 @@ npx tsx scripts/tone-event-study.mts
 npx tsx scripts/tone-ic.mts
 ```
 
-### 53. DoltHub historical option export
+### 54. DoltHub historical option export
 
 - **ID:** `dolthub-export`
 - **Mode:** manual; **enabled by default:** no
@@ -1170,7 +1188,7 @@ npx tsx scripts/tone-ic.mts
 npx tsx worker/dolthub-export.mts
 ```
 
-### 54. DoltHub export validation
+### 55. DoltHub export validation
 
 - **ID:** `dolthub-validate`
 - **Mode:** manual; **enabled by default:** no
@@ -1187,7 +1205,7 @@ npx tsx worker/dolthub-export.mts
 npx tsx worker/dolthub-export-validate.mts
 ```
 
-### 55. Historical option feature materialization
+### 56. Historical option feature materialization
 
 - **ID:** `dolthub-features`
 - **Mode:** manual; **enabled by default:** no
@@ -1204,7 +1222,7 @@ npx tsx worker/dolthub-export-validate.mts
 npx tsx worker/dolthub-features.mts
 ```
 
-### 56. Preregistered option hypothesis research
+### 57. Preregistered option hypothesis research
 
 - **ID:** `dolthub-research`
 - **Mode:** manual; **enabled by default:** no
@@ -1221,7 +1239,7 @@ npx tsx worker/dolthub-features.mts
 npx tsx worker/dolthub-research.mts
 ```
 
-### 57. Expected-move calibration
+### 58. Expected-move calibration
 
 - **ID:** `expected-move-calibration`
 - **Mode:** manual; **enabled by default:** no
@@ -1238,7 +1256,7 @@ npx tsx worker/dolthub-research.mts
 npx tsx worker/dolthub-expected-move.mts
 ```
 
-### 58. Volatility-target historical replay
+### 59. Volatility-target historical replay
 
 - **ID:** `volatility-target-replay`
 - **Mode:** manual; **enabled by default:** no
@@ -1255,7 +1273,7 @@ npx tsx worker/dolthub-expected-move.mts
 npx tsx worker/dolthub-vol-target.mts
 ```
 
-### 59. Stooq price archive import
+### 60. Stooq price archive import
 
 - **ID:** `price-archive-import`
 - **Mode:** manual; **enabled by default:** no
@@ -1272,7 +1290,7 @@ npx tsx worker/dolthub-vol-target.mts
 npx tsx scripts/import-research-prices-file.mts --file D:\path\to\prices.zip
 ```
 
-### 60. Signals production dry-run
+### 61. Signals production dry-run
 
 - **ID:** `signals-dry-review`
 - **Mode:** manual; **enabled by default:** no
@@ -1289,7 +1307,7 @@ npx tsx scripts/import-research-prices-file.mts --file D:\path\to\prices.zip
 npx tsx scripts/push-local-signals.mts --source edgar --dry
 ```
 
-### 61. Facts production dry-run
+### 62. Facts production dry-run
 
 - **ID:** `facts-dry-review`
 - **Mode:** manual; **enabled by default:** no
@@ -1306,7 +1324,7 @@ npx tsx scripts/push-local-signals.mts --source edgar --dry
 npx tsx scripts/push-local-facts.mts --universe research-universe-50.json --dry
 ```
 
-### 62. Reviewed signals production push
+### 63. Reviewed signals production push
 
 - **ID:** `signals-production-push`
 - **Mode:** blocked; **enabled by default:** no
@@ -1323,7 +1341,7 @@ npx tsx scripts/push-local-facts.mts --universe research-universe-50.json --dry
 npx tsx scripts/push-local-signals.mts --source edgar
 ```
 
-### 63. Reviewed facts production push
+### 64. Reviewed facts production push
 
 - **ID:** `facts-production-push`
 - **Mode:** blocked; **enabled by default:** no
@@ -1340,7 +1358,7 @@ npx tsx scripts/push-local-signals.mts --source edgar
 npx tsx scripts/push-local-facts.mts --universe research-universe-50.json
 ```
 
-### 64. EDGAR tone readiness audit
+### 65. EDGAR tone readiness audit
 
 - **ID:** `edgar-tone-readiness-audit`
 - **Mode:** manual; **enabled by default:** no
@@ -1357,7 +1375,7 @@ npx tsx scripts/push-local-facts.mts --universe research-universe-50.json
 npx tsx worker/edgar-tone-audit.mts --universe edgar-universe.json
 ```
 
-### 65. Independent-universe and macro-regime validation
+### 66. Independent-universe and macro-regime validation
 
 - **ID:** `macro-regime-validation`
 - **Mode:** manual; **enabled by default:** no
@@ -1374,7 +1392,7 @@ npx tsx worker/edgar-tone-audit.mts --universe edgar-universe.json
 npx tsx scripts/macro-validation.mts
 ```
 
-### 66. Sector-neutral portfolio evaluation
+### 67. Sector-neutral portfolio evaluation
 
 - **ID:** `sector-portfolio-evaluation`
 - **Mode:** manual; **enabled by default:** no
@@ -1391,7 +1409,7 @@ npx tsx scripts/macro-validation.mts
 npx tsx scripts/sector-portfolio-eval.mts
 ```
 
-### 67. Sector volatility-target holdout evaluation
+### 68. Sector volatility-target holdout evaluation
 
 - **ID:** `sector-vol-target-evaluation`
 - **Mode:** manual; **enabled by default:** no
@@ -1408,7 +1426,7 @@ npx tsx scripts/sector-portfolio-eval.mts
 npx tsx scripts/sector-vol-target-eval.mts
 ```
 
-### 68. Frozen research protocol validation
+### 69. Frozen research protocol validation
 
 - **ID:** `research-protocol-check`
 - **Mode:** manual; **enabled by default:** no
@@ -1425,7 +1443,7 @@ npx tsx scripts/sector-vol-target-eval.mts
 npx tsx scripts/validate-research-protocol.mts
 ```
 
-### 69. 13F top-300 universe rebuild
+### 70. 13F top-300 universe rebuild
 
 - **ID:** `13f-top300-universe`
 - **Mode:** manual; **enabled by default:** no
@@ -1442,7 +1460,7 @@ npx tsx scripts/validate-research-protocol.mts
 npx tsx scripts/build-13f-top300.mts
 ```
 
-### 70. Research coverage expansion
+### 71. Research coverage expansion
 
 - **ID:** `coverage-expansion`
 - **Mode:** blocked; **enabled by default:** no
@@ -1459,7 +1477,7 @@ npx tsx scripts/build-13f-top300.mts
 Not scheduled — design a 300+ point-in-time universe with departed/delisted names first
 ```
 
-### 71. signals.note migration gate
+### 72. signals.note migration gate
 
 - **ID:** `signals-note-migration`
 - **Mode:** blocked; **enabled by default:** no
@@ -1476,7 +1494,7 @@ Not scheduled — design a 300+ point-in-time universe with departed/delisted na
 Manual reviewed DDL only after backup and restore evidence
 ```
 
-### 72. Schwab OAuth browser authorization
+### 73. Schwab OAuth browser authorization
 
 - **ID:** `schwab-oauth-callback`
 - **Mode:** manual; **enabled by default:** no
@@ -1493,7 +1511,7 @@ Manual reviewed DDL only after backup and restore evidence
 npx tsx worker/schwab-callback.mts
 ```
 
-### 73. Optional ORATS option lane
+### 74. Optional ORATS option lane
 
 - **ID:** `options-orats-optional`
 - **Mode:** blocked; **enabled by default:** no
@@ -1510,7 +1528,7 @@ npx tsx worker/schwab-callback.mts
 Not active — optional worker/options-orats.mts lane requires separately reviewed credentials
 ```
 
-### 74. Legacy cloud ad-hoc job queue
+### 75. Legacy cloud ad-hoc job queue
 
 - **ID:** `cloud-adhoc-jobs`
 - **Mode:** blocked; **enabled by default:** no
@@ -1527,7 +1545,7 @@ Not active — optional worker/options-orats.mts lane requires separately review
 No home cron — legacy /jobs actions require a separate deliberate review
 ```
 
-### 75. MySQL backup and restore gate
+### 76. MySQL backup and restore gate
 
 - **ID:** `mysql-backup-restore`
 - **Mode:** manual; **enabled by default:** no
@@ -1544,7 +1562,7 @@ No home cron — legacy /jobs actions require a separate deliberate review
 npx tsx scripts/prod-backup.mts --full --source-env DATABASE_URL --restore-target SCRATCH_DATABASE_URL
 ```
 
-### 76. Selective AAPL/SPY streaming
+### 77. Selective AAPL/SPY streaming
 
 - **ID:** `schwab-selective-stream`
 - **Mode:** blocked; **enabled by default:** no
@@ -1561,7 +1579,7 @@ npx tsx scripts/prod-backup.mts --full --source-env DATABASE_URL --restore-targe
 Not implemented — M5 only after REST/UI review
 ```
 
-### 77. GDELT collector and backfill
+### 78. GDELT collector and backfill
 
 - **ID:** `gdelt-frozen`
 - **Mode:** frozen; **enabled by default:** no

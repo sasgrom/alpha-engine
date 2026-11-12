@@ -34,7 +34,8 @@ Prices (`prices`, sources `stooq`, `schwab`, `schwab-hist`):
 3. **Bars:** non-positive values, high below low, unchanged OHLC with zero volume over 3+ sessions, one-day moves
    beyond ±50% with no split or corporate action found (review, not removal). Test: the 22 high-below-low bars of
    the 2026-10-26 Stooq dump.
-4. **Gaps:** sessions of SPY's calendar a series lacks inside its own span (23 series today, CHTR 25 sessions in
+4. **Gaps:** sessions of SPY's combined Stooq + Schwab calendar since 2006-11-10 that a series lacks inside its own
+   span, excluding `schwab-hist` (23 series today, CHTR 25 missing sessions over its span, the first five in
    December 2009).
 
 Filed figures (`facts`, `series_points`):
