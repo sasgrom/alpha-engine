@@ -22,7 +22,6 @@ const NAV = [
   { label: "Today", path: "/desk" },
   { label: "Markets", path: "/desk/markets" },
   { label: "Screener", path: "/desk/screener" },
-  { label: "Research", path: "/desk/research" },
 ];
 
 function BrandGlyph() {
@@ -45,6 +44,7 @@ export default function DeskShell({ children }: { children: ReactNode }) {
   const isAdmin = user?.role === "admin";
   const isReviewer = Boolean(reviewer.status.data?.isReviewer);
   const isPresentation = isAdmin || Boolean(reviewer.status.data?.isReviewer && reviewer.status.data.ndaAccepted);
+  const audienceReady = isAdmin || (!!user && !reviewer.status.isLoading);
   const snapshot = trpc.desk.snapshot.useQuery(undefined, { enabled: !!user, staleTime: 5 * 60_000, refetchOnWindowFocus: false, retry: 1 });
   const unread = trpc.messages.unreadCount.useQuery(undefined, { enabled: !!user && !isReviewer, refetchInterval: 30_000 });
   const [searchOpen, setSearchOpen] = useState(false);
@@ -155,7 +155,17 @@ export default function DeskShell({ children }: { children: ReactNode }) {
       { label: "Today", path: "/desk", group: "Desk", keywords: "home overview brief" },
       { label: "Markets", path: "/desk/markets", group: "Desk", keywords: "map heatmap sectors treemap" },
       { label: "Screener", path: "/desk/screener", group: "Desk", keywords: "table filter sort companies" },
-      { label: "Research", path: "/desk/research", group: "Desk", keywords: "tools labs" },
+      { label: "Watchlist", path: "/desk/watchlist", group: "Desk", keywords: "follow companies list" },
+      ...(isPresentation
+        ? [
+            { label: "Signals", path: "/desk/research", group: "Desk" as const, keywords: "research evidence alpha ledger" },
+            { label: "Earnings", path: "/desk/research/earnings", group: "Desk" as const, keywords: "reports reactions drift calendar guidance" },
+            { label: "Volatility", path: "/desk/research/volatility", group: "Desk" as const, keywords: "options implied realized expected move sizing risk" },
+            { label: "Macro", path: "/desk/research/macro", group: "Desk" as const, keywords: "rates credit oil dollar exposure scenario" },
+            { label: "Ownership", path: "/desk/research/ownership", group: "Desk" as const, keywords: "insiders 13f institutions short interest" },
+            { label: "Library", path: "/desk/research/library", group: "Desk" as const, keywords: "methods handbook glossary classic tools" },
+          ]
+        : []),
       ...(isAdmin ? [{ label: "Operations", path: "/desk/operations", group: "Desk" as const, keywords: "health scheduler jobs checks" }] : []),
       ...classicDestinations(isAdmin, isPresentation),
     ],
@@ -163,8 +173,8 @@ export default function DeskShell({ children }: { children: ReactNode }) {
   );
 
   const context = useMemo<DeskContextValue>(
-    () => ({ palette: CHART_PALETTE[theme.resolved], theme, isAdmin, isPresentation, userName: user?.name ?? user?.username ?? "", openSearch: () => setSearchOpen(true) }),
-    [theme, isAdmin, isPresentation, user?.name, user?.username],
+    () => ({ palette: CHART_PALETTE[theme.resolved], theme, isAdmin, isPresentation, audienceReady, userName: user?.name ?? user?.username ?? "", openSearch: () => setSearchOpen(true) }),
+    [theme, isAdmin, isPresentation, audienceReady, user?.name, user?.username],
   );
 
   if (isLoading || !user) {
@@ -175,7 +185,12 @@ export default function DeskShell({ children }: { children: ReactNode }) {
     );
   }
 
-  const navItems = [...NAV, ...(isAdmin ? [{ label: "Operations", path: "/desk/operations" }] : [])];
+  const navItems = [
+    ...NAV,
+    ...(isPresentation ? [{ label: "Research", path: "/desk/research" }] : []),
+    { label: "Watchlist", path: "/desk/watchlist" },
+    ...(isAdmin ? [{ label: "Operations", path: "/desk/operations" }] : []),
+  ];
   const current = (path: string) => (path === "/desk" ? location.pathname === "/desk" || location.pathname === "/desk/" : location.pathname.startsWith(path));
   const unreadCount = unread.data?.count ?? 0;
   const roleLabel = isAdmin ? "Owner" : isReviewer ? "Reviewer" : "Member";

@@ -8,7 +8,13 @@ const Today = lazy(() => import("./pages/Today"));
 const Markets = lazy(() => import("./pages/Markets"));
 const Screener = lazy(() => import("./pages/Screener"));
 const CompanyPage = lazy(() => import("./pages/Company"));
-const Research = lazy(() => import("./pages/Research"));
+const Signals = lazy(() => import("./pages/research/Signals"));
+const Earnings = lazy(() => import("./pages/research/Earnings"));
+const Volatility = lazy(() => import("./pages/research/Volatility"));
+const Macro = lazy(() => import("./pages/research/Macro"));
+const Ownership = lazy(() => import("./pages/research/Ownership"));
+const Library = lazy(() => import("./pages/research/Library"));
+const Watchlist = lazy(() => import("./pages/Watchlist"));
 const Operations = lazy(() => import("./pages/Operations"));
 
 function DeskNotFound() {
@@ -28,7 +34,13 @@ export default function DeskApp() {
           <Route path="markets" element={<Markets />} />
           <Route path="screener" element={<Screener />} />
           <Route path="company/:ticker" element={<CompanyPage />} />
-          <Route path="research" element={<Research />} />
+          <Route path="research" element={<Signals />} />
+          <Route path="research/earnings" element={<Earnings />} />
+          <Route path="research/volatility" element={<Volatility />} />
+          <Route path="research/macro" element={<Macro />} />
+          <Route path="research/ownership" element={<Ownership />} />
+          <Route path="research/library" element={<Library />} />
+          <Route path="watchlist" element={<Watchlist />} />
           <Route path="operations" element={<Operations />} />
           <Route path="*" element={<DeskNotFound />} />
         </Routes>

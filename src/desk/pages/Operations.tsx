@@ -8,6 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowUpRight, RefreshCw } from "lucide-react";
 import { Card, Kpi, Notice, Segmented, Shimmer, StatusLabel } from "../components";
 import { useDesk, useDocumentTitle } from "../context";
+import { useDeskSnapshot } from "../data";
+import { classicDestinations } from "../destinations";
+import { DevNotes } from "../DevNotes";
 import { fmtDateTime, readable, statusKind } from "../format";
 
 interface OpsCheck {
@@ -48,6 +51,13 @@ async function fetchReport(): Promise<OpsReport | null> {
   return (await response.json()) as OpsReport;
 }
 
+const OWNER_TOOL_TEXT: Record<string, string> = {
+  "/admin": "Users, reviewers, manuals, price import.",
+  "/workers": "Run and stop collectors, logs, the runbook.",
+  "/database": "Stored tables, filings and concept series.",
+  "/lab": "Sentiment scoring of filing sections.",
+};
+
 const ORDER: Record<string, number> = { critical: 0, error: 0, warning: 1, pending: 2, unknown: 3, ok: 4 };
 
 function duration(start: string | null, end: string | null): string {
@@ -63,6 +73,7 @@ export default function Operations() {
   const { isAdmin } = useDesk();
   const [filter, setFilter] = useState<"attention" | "all">("attention");
   const report = useQuery({ queryKey: ["desk", "daily-operations"], queryFn: fetchReport, enabled: isAdmin, refetchInterval: 60_000 });
+  const snapshot = useDeskSnapshot();
   const checks = useMemo(() => {
     const rows = [...(report.data?.checks ?? [])].sort((a, b) => (ORDER[statusKind(a.status)] ?? 3) - (ORDER[statusKind(b.status)] ?? 3));
     return filter === "attention" ? rows.filter((row) => statusKind(row.status) !== "ok") : rows;
@@ -98,6 +109,19 @@ export default function Operations() {
         <Kpi label="Jobs today" value={`${data.summary.jobsDoneToday} done`} note={`${data.summary.jobsFailedToday} failed · ${data.summary.jobsEnabled} enabled`} />
         <Kpi label="Checks passing" value={`${data.summary.checksOk} / ${data.checks.length}`} note={`${data.summary.checksPending} pending`} />
       </div>
+
+      {snapshot.data && (
+        <div className="desk-card" style={{ marginBottom: 16, display: "flex", flexWrap: "wrap", gap: "8px 28px", alignItems: "center", fontSize: 13 }}>
+          <strong style={{ fontWeight: 620 }}>Desk snapshot</strong>
+          <span className="desk-ink-2">built {fmtDateTime(snapshot.data.generatedAt)} · closes through {snapshot.data.session} · {snapshot.data.companies.length} companies · {snapshot.data.inputs.optionTickers} with option features</span>
+          {(snapshot.data.inputs.registryIssues?.length ?? 0) > 0 ? (
+            <StatusLabel status="error" label={`Registry: ${snapshot.data.inputs.registryIssues!.length} tickers differ from the index (${snapshot.data.inputs.registryIssues!.slice(0, 3).join("; ")})`} />
+          ) : (
+            <StatusLabel status="ok" label="Registry tickers agree with the index" />
+          )}
+          {snapshot.data.inputs.companiesWithoutPrices.length > 0 && <StatusLabel status="warning" label={`${snapshot.data.inputs.companiesWithoutPrices.length} companies without prices`} />}
+        </div>
+      )}
 
       <div className="desk-grid">
         <Card
@@ -159,6 +183,19 @@ export default function Operations() {
           </div>
         </Card>
       </div>
+      <h2 className="desk-section-title">Owner tools</h2>
+      <div className="desk-grid">
+        {classicDestinations(true, true)
+          .filter((destination) => destination.group === "Owner tools")
+          .map((destination) => (
+            <Link key={destination.path} to={destination.path} className="desk-card desk-span-3" style={{ display: "grid", gap: 6 }}>
+              <strong style={{ fontWeight: 620 }}>{destination.label}</strong>
+              <span className="desk-ink-2" style={{ fontSize: 13 }}>{OWNER_TOOL_TEXT[destination.path] ?? ""}</span>
+              <span className="desk-link desk-nowrap" style={{ fontSize: 12.5 }}>Classic view <ArrowUpRight size={13} aria-hidden="true" /></span>
+            </Link>
+          ))}
+      </div>
+      <DevNotes page="operations" />
     </div>
   );
 }

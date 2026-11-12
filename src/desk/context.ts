@@ -8,6 +8,8 @@ export interface DeskContextValue {
   isAdmin: boolean;
   /** Owner, or a reviewer who accepted the NDA: the audience of the research tools. */
   isPresentation: boolean;
+  /** False while a non-owner's reviewer status is still loading (the audience is not known yet). */
+  audienceReady: boolean;
   userName: string;
   openSearch: () => void;
 }

@@ -1369,3 +1369,58 @@ forth for now". Times are Pacific.
   leftovers, no `dashboard.stats`, Ctrl+K search).
 - **Next**: the desk-snapshot scheduler job after K07's job; the registry ticker correction if the owner wants it;
   moving research tools into the desk one by one.
+
+## 124. Claude: registry tickers fixed at the source, scheduler crash fixed and restarted, desk round two, desk-snapshot scheduled — 2026-11-11 (local evening)
+
+Owner decisions of 17:30 (Claude's window): "Scheduling the snapshot -> yes, company registry -> yes, lets fix once and
+for all"; continue with the research tools, workspace and owner tools ("feel free to join tools, shuffle, split ...
+it needs to be functional, not confusing - the key is that platform needs to extract alpha"); leave dev notes on each
+page. Times are Pacific.
+
+- **Registry tickers (local MySQL only).** 66 index members carried another security of the same filer as ticker
+  (MER-PK for BAC, ORCL-PD for ORCL, CCZ for CMCSA, VYLD for JPM, BRK-A for BRK-B, SATS for ECHO ...) and META, IBM and
+  LMT had no sector or industry. Cause: `scripts/seed-sp500-companies.mts` took the last SEC directory row per CIK, and
+  `ingestOneCompany` overwrote the ticker with whatever was requested. The fix of 2026-11-05 (`67b4f3f`,
+  `canonicalTicker`) had been deleted twice by commits made from a stale cloud checkout (`595c0fb`, `fc8d52f`), together
+  with its tests. Restored and extended: `api/services/canonical-ticker.ts` (GICS snapshot is the authority;
+  `registryCorrections` audits rows), the hunk in `api/services/runner.ts`, the seed script (ticker from the GICS
+  snapshot, exchange only from the exact directory row), tests (13). Applied at 17:43 with
+  `npx tsx scripts/remediate-registry-tickers.mts --apply`: backup of `companies` and `user_universe` (198,267 bytes,
+  SHA256 `6a49b52eb25c6ec1…`), one transaction with an expected-before guard per UPDATE, 66 tickers + 3 sectors + 3
+  industries, 0 watchlist rows, post-check clean, second dry run plans nothing. Evidence:
+  `worker/.runs/registry-ticker-remediation/2026-11-12T014306394Z/`. Classic `/company/BAC` resolves again. The desk
+  snapshot build now reports `inputs.registryIssues` and the desk Operations page shows it, so a regression is visible
+  in the data. **Production is untouched** (the script refuses any non-loopback database) and needs the owner's own
+  reviewed run. After any cloud-side commit, check that home-delivered files still exist.
+- **Scheduler was down from 13:42 to 18:17.** It ended on `EPERM: operation not permitted, rename
+  operations-state.json.<pid>.tmp -> operations-state.json` in `saveOperationsState` when a job finished (a transient
+  Windows lock on the state file); no scheduled job ran in between. Fix: `renameWithRetry` in
+  `worker/lib/json-file.ts` (waits out EPERM/EBUSY/EACCES for up to 2 s, then throws), used by `writeJsonAtomic` and
+  by the scheduler's `atomicText`; `worker/lib/json-file.test.ts`. Restarted at 18:17:51 through the
+  `AlphaEngine-Operations-Scheduler` task after proving no scheduler process existed: one chain, fresh heartbeat,
+  "77 registered jobs · one execution lane", catching up with `stocktwits-hourly` first.
+- **Web server** restarted at 18:17:36 (one listener) with the build that carries K07 `32692c2`, the desk round two
+  and the lock fix; a front-end-only rebuild at 18:22 needed no restart.
+- **desk-snapshot job** (owner approved): `contracts/operations.ts`, dependsOn `schwab-daily-bars`,
+  `scripts/build-desk-snapshot.mts`; runbook regenerated (77 jobs). The snapshot gained optional fields (no schema
+  bump): move since the report, 12-minus-1-month momentum, short interest, Form 4 activity of 90 days, the registry
+  check.
+- **Desk round two** (`src/desk/**`): Research is regrouped by question, for the owner and NDA reviewers as in the
+  classic view — Signals (a ledger of 14 families of readings with the measured result of each, copied from
+  `docs/engine/DESIGN.md` §6 and the volatility handbook: 5 candidates, 2 risk-only, 4 with nothing beyond noise, 3
+  untested; today's strongest readings under each; no engine probabilities before the 446-company test), Earnings
+  (reported with the two-session reaction and the move since, coming up with projected dates and implied moves),
+  Volatility (implied against realized, sizing calculator, the handbook's headline results), Macro (backdrop, what is
+  computable per shock channel, rate sensitivity as an upper bound), Ownership (insider purchases and multi-insider
+  windows with the dry-run benchmark, 13F flows by sector, short interest), Library (the classic pages and what the
+  desk already covers of each). Watchlist page and a Follow button on company pages (`universe.add/remove`; no data
+  job for registry companies). Operations shows the snapshot and registry line and links the owner consoles. Every
+  page ends with owner-only build notes (`src/desk/devnotes-data.ts`: missing / could be better and what we are short
+  of). The insider ledger entry quotes the canonical dry run of 2026-11-10 22:43 (median excess −0.09%, +0.38%,
+  +0.29% at 1, 5, 20 sessions; no interval, no controls).
+- **Gates at 18:13** (before the lock fix and three layout fixes, which were then checked by their own tests, type
+  check and build): `npm run check`; `VITEST_MAX_WORKERS=2 npm test -- --run` 207 files / 1,150 tests; `npm run build`;
+  `git diff --check`; worker and script type check clean; ESLint on the desk files clean. Live check after the
+  restart: 11 pages, first content under 1 s, no console errors or failed requests, no horizontal overflow at 390 px.
+- **Open**: guidance per company in the desk (the Expectations report is 26 MB); Messages, Jobs, Admin, Database and
+  the Sentiment lab are still classic pages; the same registry correction on production (owner).

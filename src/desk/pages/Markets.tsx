@@ -6,6 +6,7 @@ import { useWidth } from "../charts/scale";
 import { Card, CompanyLink, Delta, Notice, Segmented, Shimmer } from "../components";
 import { useDesk, useDocumentTitle } from "../context";
 import { periodLabel, useDeskSnapshot } from "../data";
+import { DevNotes } from "../DevNotes";
 import { fmtCap, fmtDate, fmtPrice } from "../format";
 
 const PERIOD_OPTIONS = DESK_PERIODS.map((period) => ({ value: period, label: periodLabel(period) }));
@@ -121,6 +122,7 @@ export default function Markets() {
         Sector returns are weighted by market value. Returns use stored daily closes, adjusted for splits and dividends; the
         one-week to one-year columns compare with the last close on or before the same calendar date.
       </p>
+      <DevNotes page="markets" />
     </div>
   );
 }

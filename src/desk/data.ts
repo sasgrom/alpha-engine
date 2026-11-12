@@ -2,12 +2,62 @@
  * Desk data: the precomputed snapshot (one request, shared by every desk page through the query cache) and the
  * pure derivations the pages show. Nothing here invents a value: a missing input stays null and is shown as such.
  */
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { trpc } from "@/providers/trpc";
 import { DESK_PERIOD_LABELS, type DeskCompany, type DeskPeriod, type DeskSnapshot } from "@contracts/desk-snapshot";
 import { daysBetween, fmtPct } from "./format";
 
 export function useDeskSnapshot() {
   return trpc.desk.snapshot.useQuery(undefined, { staleTime: 5 * 60_000, refetchOnWindowFocus: false, retry: 1 });
+}
+
+/**
+ * A whitelisted report file (the classic research artifacts). Reports are served to the owner and to reviewers who
+ * accepted the NDA; a missing file is null, not an error.
+ */
+export function useReport<T>(name: string, enabled = true) {
+  return useQuery({
+    queryKey: ["desk", "report", name],
+    enabled,
+    staleTime: 10 * 60_000,
+    refetchOnWindowFocus: false,
+    queryFn: async (): Promise<T | null> => {
+      const response = await fetch(`/reports/${name}`, { credentials: "include" });
+      if (response.status === 404) return null;
+      if (!response.ok) throw new Error(`${name} answered ${response.status}`);
+      return (await response.json()) as T;
+    },
+  });
+}
+
+/**
+ * The viewer's watchlist: the per-user universe of the classic view. Following an index company only adds a
+ * membership row (the company is already in the registry, so no data job starts).
+ */
+export function useWatchlist() {
+  const utils = trpc.useUtils();
+  const list = trpc.universe.list.useQuery({ search: "", onlyUniverse: true, page: 0, pageSize: 200 }, { staleTime: 60_000 });
+  const [error, setError] = useState<string | null>(null);
+  const done = () => {
+    setError(null);
+    void utils.universe.list.invalidate();
+    void utils.screener.table.invalidate();
+    void utils.dashboard.latestFilings.invalidate();
+  };
+  const add = trpc.universe.add.useMutation({ onSuccess: done, onError: (failure) => setError(failure.message) });
+  const remove = trpc.universe.remove.useMutation({ onSuccess: done, onError: (failure) => setError(failure.message) });
+  const rows = useMemo(() => (list.data?.rows ?? []).map((row) => ({ cik: row.cik, ticker: row.ticker, name: row.name ?? null })), [list.data]);
+  const ciks = useMemo(() => new Set(rows.map((row) => row.cik)), [rows]);
+  return {
+    rows,
+    ciks,
+    isLoading: list.isLoading,
+    busy: add.isPending || remove.isPending,
+    error,
+    follow: (company: Pick<DeskCompany, "ticker">) => add.mutate({ ticker: company.ticker }),
+    unfollow: (cik: number) => remove.mutate({ cik }),
+  };
 }
 
 export function periodLabel(period: DeskPeriod): string {

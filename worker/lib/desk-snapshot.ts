@@ -9,9 +9,11 @@ import {
   DESK_SNAPSHOT_SCHEMA_VERSION,
   type DeskBreadth,
   type DeskCompany,
+  type DeskInsiderSummary,
   type DeskOptions,
   type DeskReturns,
   type DeskSector,
+  type DeskShortInterest,
   type DeskSnapshot,
   type DeskSnapshotInputs,
 } from "../../contracts/desk-snapshot";
@@ -199,6 +201,69 @@ export function earningsReaction(series: Close[], reportDate: string): { reactio
   return onDay ? { reaction: onDay.close / before.close - 1, sessions: 1 } : null;
 }
 
+/** Return from the close that ends the reaction window (the first session after the report) to the latest close. */
+export function earningsDrift(series: Close[], reportDate: string): { drift: number; sessions: number } | null {
+  const start = series.findIndex((point) => point.date > reportDate);
+  if (start < 0 || start >= series.length - 1) return null;
+  return { drift: series[series.length - 1].close / series[start].close - 1, sessions: series.length - 1 - start };
+}
+
+/** Close a month before the session against the close a year before it; null when either base is missing. */
+export function momentum12m1(series: Close[], session: string): number | null {
+  const recent = closeOnOrBefore(series, addMonths(session, -1));
+  const old = closeOnOrBefore(series, addMonths(session, -12));
+  if (!recent || !old || daysBetween(old.date, addMonths(session, -12)) > MAX_BASE_GAP_DAYS) return null;
+  return recent.close / old.close - 1;
+}
+
+export interface ShortInterestRow {
+  date: string;
+  shares: number | null;
+  pctFloat: number | null;
+  daysToCover: number | null;
+}
+
+/** Latest reading and the change in shares short from the one before it. */
+export function shortInterestSummary(rows: ShortInterestRow[]): DeskShortInterest | null {
+  const sorted = [...rows].sort((a, b) => b.date.localeCompare(a.date));
+  const latest = sorted[0];
+  if (!latest) return null;
+  const prior = sorted.find((row) => row.date < latest.date && row.shares !== null && row.shares > 0);
+  return {
+    date: latest.date,
+    shares: latest.shares,
+    pctFloat: latest.pctFloat,
+    daysToCover: latest.daysToCover,
+    changePct: latest.shares !== null && prior?.shares ? latest.shares / prior.shares - 1 : null,
+  };
+}
+
+export interface InsiderTradeRow {
+  date: string;
+  code: string;
+  insider: string | null;
+  shares: number | null;
+  price: number | null;
+  plan: boolean;
+}
+
+/** Form 4 rows on or after `since`: open-market purchases outside trading plans, and open-market sales. */
+export function insiderSummary(rows: InsiderTradeRow[], since: string): DeskInsiderSummary | null {
+  const recent = rows.filter((row) => row.date >= since);
+  if (!recent.length) return null;
+  const usd = (row: InsiderTradeRow) => (row.shares !== null && row.price !== null ? row.shares * row.price : 0);
+  const buys = recent.filter((row) => row.code === "P" && !row.plan);
+  const sells = recent.filter((row) => row.code === "S");
+  return {
+    buys: buys.length,
+    buyers: new Set(buys.map((row) => (row.insider ?? "").trim().toUpperCase())).size,
+    buyUsd: buys.reduce((sum, row) => sum + usd(row), 0),
+    lastBuy: buys.map((row) => row.date).sort().at(-1) ?? null,
+    sells: sells.length,
+    sellUsd: sells.reduce((sum, row) => sum + usd(row), 0),
+  };
+}
+
 /**
  * Projected next report: the report of the same quarter a year earlier plus 52 weeks (same weekday) when the
  * history has one within three weeks of the expected spot, otherwise the last report plus 13 weeks. A projection
@@ -359,6 +424,9 @@ export interface DeskBuildInput {
   options: Map<string, DeskOptions>;
   /** Stored earnings event dates per cik, any order. */
   events: Map<number, string[]>;
+  shortInterest?: Map<number, DeskShortInterest>;
+  /** Form 4 rows per cik (any period); the snapshot keeps the 90 days up to the session. */
+  insiderRows?: Map<number, InsiderTradeRow[]>;
   inputs: Omit<DeskSnapshotInputs, "companiesWithoutPrices" | "priceSeries" | "latestPriceDate">;
 }
 
@@ -380,6 +448,7 @@ export function buildDeskSnapshot(input: DeskBuildInput): DeskSnapshot {
     const lastEarnings = candidates.length ? candidates.sort().at(-1)! : null;
     const reaction = lastEarnings ? earningsReaction(series, lastEarnings) : null;
     const next = projectNextEarnings(history, lastEarnings, session);
+    const drift = lastEarnings && metrics.lastDate === session ? earningsDrift(series, lastEarnings) : null;
     companies.push({
       ticker: company.ticker,
       registryTicker: company.registryTicker,
@@ -406,6 +475,11 @@ export function buildDeskSnapshot(input: DeskBuildInput): DeskSnapshot {
       lastEarningsReactionSessions: reaction?.sessions ?? null,
       nextEarnings: next?.date ?? null,
       nextEarningsBasis: next?.basis ?? null,
+      lastEarningsDrift: drift?.drift ?? null,
+      lastEarningsDriftSessions: drift?.sessions ?? null,
+      momentum12m1: metrics.lastDate === session ? momentum12m1(series, session) : null,
+      shortInterest: input.shortInterest?.get(company.cik) ?? null,
+      insiders: insiderSummary(input.insiderRows?.get(company.cik) ?? [], addDays(session, -90)),
       options: input.options.get(normalizeTicker(company.ticker)) ?? null,
       spark: metrics.spark,
     });

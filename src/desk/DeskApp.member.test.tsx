@@ -15,7 +15,9 @@ describe("desk view for a member", () => {
   it("hides the owner's pages and finds companies from Ctrl+K", async () => {
     desk = await mountDesk("user");
     const host = desk.host;
-    expect([...host.querySelectorAll(".desk-nav a")].map((link) => link.textContent)).toEqual(["Today", "Markets", "Screener", "Research"]);
+    // a member has no research section and never sees build notes
+    expect([...host.querySelectorAll(".desk-nav a")].map((link) => link.textContent)).toEqual(["Today", "Markets", "Screener", "Watchlist"]);
+    expect(host.querySelector(".desk-devnotes")).toBeNull();
     act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }));
     });

@@ -1,5 +1,6 @@
 import { spawn, execFile, type ChildProcess } from "node:child_process";
-import { appendFileSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { renameWithRetry } from "./json-file";
 import path from "node:path";
 import { Cron } from "croner";
 import { OPERATION_JOBS, OPERATION_JOB_MAP, type OperationJob } from "../../contracts/operations";
@@ -44,7 +45,8 @@ const emptyState = (): OperationsState => ({ schemaVersion: 1, schedulerStartedA
 const atomicText = (file: string, text: string) => {
   mkdirSync(path.dirname(file), { recursive: true });
   const tmp = `${file}.${process.pid}.${Date.now()}.tmp`;
-  try { writeFileSync(tmp, text); renameSync(tmp, file); }
+  // a reader holding the state file for a moment must not end the scheduler (it did on 2026-11-11, 13:42)
+  try { writeFileSync(tmp, text); renameWithRetry(tmp, file); }
   finally { rmSync(tmp, { force: true }); }
 };
 const atomicJson = (file: string, value: unknown) => atomicText(file, `${JSON.stringify(value, null, 2)}\n`);

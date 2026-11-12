@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
-import { ArrowUpRight, Download, Search } from "lucide-react";
+import { ArrowUpRight, Check, Download, Plus, Search } from "lucide-react";
 import { trpc } from "@/providers/trpc";
 import { DESK_PERIODS, type DeskCompany } from "@contracts/desk-snapshot";
 import { PriceChart, type ImpliedCone } from "../charts/PriceChart";
 import { Card, CompanyLink, Delta, Notice, RangeBar, Segmented, Shimmer, TickerMark } from "../components";
 import { useDesk, useDocumentTitle } from "../context";
-import { findCompany, impliedMoveFor, peersOf, periodLabel, searchCompanies, useDeskSnapshot } from "../data";
+import { findCompany, impliedMoveFor, peersOf, periodLabel, searchCompanies, useDeskSnapshot, useWatchlist } from "../data";
+import { DevNotes } from "../DevNotes";
 import { daysBetween, entityName, fmtCap, fmtCompact, fmtDate, fmtNum, fmtPct, fmtPrice, localToday, personName, relativeDay } from "../format";
 import { rememberTicker } from "../preferences";
 
@@ -73,6 +74,7 @@ export default function CompanyPage() {
   const company = findCompany(snapshot.data, ticker);
   useDocumentTitle(company ? `${company.ticker} · ${company.name}` : ticker.toUpperCase() || "Company");
   const [range, setRange] = useState<Range>("1Y");
+  const watch = useWatchlist();
   const cik = company?.cik ?? 0;
   const history = trpc.prices.history.useQuery({ cik, range }, { enabled: cik > 0, staleTime: 5 * 60_000, placeholderData: (previous) => previous });
   const events = trpc.events.byCompany.useQuery({ cik }, { enabled: cik > 0 && !!company?.research, staleTime: 10 * 60_000 });
@@ -145,6 +147,17 @@ export default function CompanyPage() {
           </div>
         </div>
         <div className="desk-price">
+          <button
+            type="button"
+            className="desk-button desk-follow"
+            style={{ height: 30, marginBottom: 8 }}
+            aria-pressed={watch.ciks.has(company.cik)}
+            disabled={watch.busy || watch.isLoading}
+            onClick={() => (watch.ciks.has(company.cik) ? watch.unfollow(company.cik) : watch.follow(company))}
+            title={watch.error ?? undefined}
+          >
+            {watch.ciks.has(company.cik) ? <><Check size={14} aria-hidden="true" /> Following</> : <><Plus size={14} aria-hidden="true" /> Follow</>}
+          </button>
           <strong>{fmtPrice(company.close)}</strong>
           <span className="delta"><Delta value={company.returns.d1} digits={2} /> <span className="desk-muted" style={{ fontWeight: 400 }}>on {fmtDate(company.lastDate, "short")}</span></span>
         </div>
@@ -321,6 +334,7 @@ export default function CompanyPage() {
         </Link>
         <span className="desk-muted" style={{ fontSize: 12.5 }}>Financial statements, filings, valuation and sentiment are in the classic company page.</span>
       </div>
+      <DevNotes page="company" />
     </div>
   );
 }

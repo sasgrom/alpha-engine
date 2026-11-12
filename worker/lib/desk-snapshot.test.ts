@@ -5,12 +5,16 @@ import {
   buildDeskSnapshot,
   closeOnOrBefore,
   computeSectors,
+  earningsDrift,
   earningsReaction,
+  insiderSummary,
+  momentum12m1,
   normalizeTicker,
   projectNextEarnings,
   resolveSession,
   schwabFundamentals,
   seriesMetrics,
+  shortInterestSummary,
   spliceCloses,
   type Close,
 } from "./desk-snapshot";
@@ -136,6 +140,49 @@ describe("earnings", () => {
     expect(projectNextEarnings([], "2026-10-29", "2026-11-10")).toEqual({ date: "2027-01-28", basis: "cadence" });
     expect(projectNextEarnings([], "2026-08-05", "2026-11-10")).toBeNull();
     expect(projectNextEarnings([], null, "2026-11-10")).toBeNull();
+  });
+});
+
+describe("after the report, momentum, short interest and insiders", () => {
+  const series = weekdays("2025-06-02", "2026-11-10", (index) => 100 + index);
+
+  it("measures the drift from the close that ends the reaction window", () => {
+    const start = closeOnOrBefore(series, "2026-10-30")!.close;
+    const last = series.at(-1)!.close;
+    expect(earningsDrift(series, "2026-10-29")).toEqual({ drift: last / start - 1, sessions: 7 });
+    // the report day is the last or the second-to-last stored session: no drift yet
+    expect(earningsDrift(series, "2026-11-10")).toBeNull();
+    expect(earningsDrift(series, "2026-11-09")).toBeNull();
+  });
+
+  it("reads momentum from a year ago to a month ago", () => {
+    const value = momentum12m1(series, "2026-11-10")!;
+    expect(value).toBeCloseTo(closeOnOrBefore(series, "2026-10-10")!.close / closeOnOrBefore(series, "2025-11-10")!.close - 1, 12);
+    expect(momentum12m1(series.filter((point) => point.date >= "2026-01-01"), "2026-11-10")).toBeNull();
+  });
+
+  it("summarises short interest with the change from the reading before", () => {
+    expect(
+      shortInterestSummary([
+        { date: "2026-10-15", shares: 110, pctFloat: 0.011, daysToCover: 2.2 },
+        { date: "2026-09-30", shares: 100, pctFloat: 0.01, daysToCover: 2 },
+        { date: "2026-10-15", shares: 110, pctFloat: 0.011, daysToCover: 2.2 },
+      ]),
+    ).toEqual({ date: "2026-10-15", shares: 110, pctFloat: 0.011, daysToCover: 2.2, changePct: 110 / 100 - 1 });
+    expect(shortInterestSummary([])).toBeNull();
+  });
+
+  it("counts open-market purchases outside trading plans and all open-market sales", () => {
+    const rows = [
+      { date: "2026-11-02", code: "P", insider: "Tan Lip Bu", shares: 100, price: 60, plan: false },
+      { date: "2026-10-20", code: "P", insider: "TAN LIP BU", shares: 50, price: 62, plan: false },
+      { date: "2026-10-21", code: "P", insider: "Other Person", shares: 10, price: 61, plan: true },
+      { date: "2026-10-22", code: "S", insider: "Seller", shares: 5, price: 61, plan: true },
+      { date: "2026-10-23", code: "A", insider: "Grant", shares: 500, price: 0, plan: false },
+      { date: "2026-07-01", code: "P", insider: "Too Old", shares: 900, price: 60, plan: false },
+    ];
+    expect(insiderSummary(rows, "2026-08-12")).toEqual({ buys: 2, buyers: 1, buyUsd: 100 * 60 + 50 * 62, lastBuy: "2026-11-02", sells: 1, sellUsd: 305 });
+    expect(insiderSummary(rows, "2027-01-01")).toBeNull();
   });
 });
 

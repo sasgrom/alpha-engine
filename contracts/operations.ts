@@ -141,6 +141,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local MySQL only; the operational pricesDaily push is unchanged.", requirements: ["mysql", "driveD"], notes: "The app lets Schwab win on its dates, so raw Schwab bars never enter dates of the dividend-adjusted Stooq history (they are kept as schwab-hist). A stored close is never changed: a different close is a conflict and marks the job error; other field differences are listed.",
   }),
   job({
+    id: "desk-snapshot", name: "Desk market snapshot", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-daily-bars"],
+    ...npx("scripts/build-desk-snapshot.mts"), purpose: "Rebuild the one precomputed file behind the desk view (market map, screener, earnings, research tools) once the day's closes are stored.",
+    input: "Local companies, daily closes (Stooq history, Schwab bars after it), earnings events, short interest, Form 4 rows, the Schwab fundamentals and latest quotes of both archives on D:, and the option features report.", output: "public/reports/desk-snapshot.json and its dist copy: one row per index company with returns, range, fundamentals, earnings dates, option features, plus breadth, sectors and the registry check.",
+    destination: "Local static UI artifact read by desk.snapshot; no production write and no push lane.", requirements: ["mysql", "driveD"], notes: "Stops without writing when a Schwab archive root is missing, so the previous snapshot stays in place. Option-derived fields reach only the owner and NDA reviewers. Reports registry rows that disagree with the GICS snapshot.",
+  }),
+  job({
     id: "analytics-snapshot", name: "Analytics and weekly evidence snapshot", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-factors"],
     ...npx("scripts/build-analytics-snapshot.mts"), purpose: "Refresh Analytics metrics and weekly evidence from the current DB and option manifests.",
     input: "Local fundamentals, factors, tone, prices, 13F and option feature manifests.", output: "Generated analytics JSON/TypeScript and the English project-strength review.",

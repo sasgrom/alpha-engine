@@ -6,6 +6,7 @@ import { Sparkline } from "../charts/Sparkline";
 import { Card, CompanyLink, Delta, Notice, RangeBar, Shimmer } from "../components";
 import { useDocumentTitle } from "../context";
 import { useDeskSnapshot } from "../data";
+import { DevNotes } from "../DevNotes";
 import { fmtCap, fmtDate, fmtNum, fmtPct, fmtPrice } from "../format";
 
 interface Column {
@@ -33,6 +34,7 @@ const COLUMNS: Column[] = [
   ret("m1", "1M"),
   ret("ytd", "YTD"),
   ret("y1", "1Y"),
+  { key: "momentum12m1", label: "12−1M", numeric: true, value: (c) => c.momentum12m1 ?? null, render: (c) => <Delta value={c.momentum12m1 ?? null} digits={0} />, csv: (c) => String(c.momentum12m1 ?? "") },
   { key: "marketCap", label: "Market value", numeric: true, value: (c) => c.marketCap, render: (c) => fmtCap(c.marketCap), csv: (c) => String(c.marketCap ?? "") },
   { key: "pe", label: "P/E", numeric: true, value: (c) => c.pe, render: (c) => fmtNum(c.pe, 1), csv: (c) => String(c.pe ?? "") },
   { key: "dividendYield", label: "Yield", numeric: true, value: (c) => c.dividendYield, render: (c) => (c.dividendYield ? fmtPct(c.dividendYield, 2, false) : "—"), csv: (c) => String(c.dividendYield ?? "") },
@@ -179,6 +181,7 @@ export default function Screener() {
         Schwab fundamentals; volatility is the annualized spread of the last 20 daily returns; report dates are projected
         from each company's own calendar.
       </p>
+      <DevNotes page="screener" />
     </div>
   );
 }

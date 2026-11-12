@@ -16,7 +16,8 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getDb } from "../api/queries/connection";
-import { buildDeskSnapshot, deskOptions, normalizeTicker, schwabFundamentals, spliceCloses, type DeskFundamentals, type StoredCloseRow } from "../worker/lib/desk-snapshot";
+import { registryCorrections } from "../api/services/canonical-ticker";
+import { buildDeskSnapshot, deskOptions, normalizeTicker, schwabFundamentals, shortInterestSummary, spliceCloses, type DeskFundamentals, type InsiderTradeRow, type ShortInterestRow, type StoredCloseRow } from "../worker/lib/desk-snapshot";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 import type { DeskOptions } from "../contracts/desk-snapshot";
 
@@ -111,6 +112,23 @@ const priceRows = await select<{ cik: number; ticker: string; date: string; clos
   [since],
 );
 const eventRows = await select<{ cik: number; date: string }>("SELECT cik, DATE_FORMAT(eventDate, '%Y-%m-%d') AS date FROM events");
+const shortRows = await select<ShortInterestRow & { cik: number }>(
+  "SELECT cik, DATE_FORMAT(settlementDate, '%Y-%m-%d') AS date, sharesShort AS shares, shortRatio AS daysToCover, shortPercentOfFloat AS pctFloat FROM short_interest WHERE settlementDate >= DATE_SUB(CURDATE(), INTERVAL 150 DAY)",
+);
+const insiderTradeRows = await select<{ cik: number; date: string; code: string; insider: string | null; shares: number | null; price: number | null; plan: number }>(
+  "SELECT cik, DATE_FORMAT(COALESCE(tradeDate, filingDate), '%Y-%m-%d') AS date, code, insiderName AS insider, shares, price, is10b5 AS plan FROM insider_trades WHERE filingDate >= DATE_SUB(CURDATE(), INTERVAL 150 DAY)",
+);
+const group = <T extends { cik: number }>(rows: T[]) => {
+  const map = new Map<number, T[]>();
+  for (const row of rows) map.set(Number(row.cik), [...(map.get(Number(row.cik)) ?? []), row]);
+  return map;
+};
+const shortInterest = new Map([...group(shortRows)].map(([cik, rows]) => [cik, shortInterestSummary(rows.map((row) => ({ date: row.date, shares: row.shares === null ? null : Number(row.shares), pctFloat: row.pctFloat === null ? null : Number(row.pctFloat), daysToCover: row.daysToCover === null ? null : Number(row.daysToCover) })))!] as const));
+const insiderRows = new Map<number, InsiderTradeRow[]>([...group(insiderTradeRows)].map(([cik, rows]) => [cik, rows.map((row) => ({ date: row.date, code: row.code, insider: row.insider, shares: row.shares === null ? null : Number(row.shares), price: row.price === null ? null : Number(row.price), plan: Boolean(row.plan) }))]));
+// the registry check that keeps the ticker fix honest: index members whose row disagrees with the GICS snapshot
+const registryIssues = registryCorrections(companyRows.map((row) => ({ cik: Number(row.cik), ticker: row.ticker, sector: row.sector, industry: row.industry }))).map((issue) =>
+  issue.field === "ticker" ? `${issue.after} stored as ${issue.before}` : `CIK ${issue.cik} has no ${issue.field}`,
+);
 const registryName = (name: string | null, ticker: string) => (name ?? ticker).replace(/\s*\/[A-Z]{2,3}\/?\s*$/, "").replace(/\s*\/NEW\/?\s*$/i, "").trim() || ticker;
 
 const rowsByCik = new Map<number, StoredCloseRow[]>();
@@ -151,7 +169,10 @@ const snapshot = buildDeskSnapshot({
   fundamentals,
   options,
   events,
+  shortInterest,
+  insiderRows,
   inputs: {
+    registryIssues,
     priceRows: priceRows.length,
     schwabQuoteDates: quoteDates,
     fundamentals: instrumentFiles,
@@ -163,6 +184,7 @@ const snapshot = buildDeskSnapshot({
 });
 
 const covered = snapshot.companies.filter((company) => company.marketCap !== null).length;
+if (registryIssues.length) console.warn(`[desk-snapshot] registry: ${registryIssues.length} rows disagree with the GICS snapshot, e.g. ${registryIssues.slice(0, 3).join("; ")} — run scripts/remediate-registry-tickers.mts`);
 const summary = `[desk-snapshot] session ${snapshot.session} (previous ${snapshot.previousSession}) · ${snapshot.companies.length} companies, ${covered} with market cap, ${snapshot.companies.filter((company) => company.options).length} with option features · breadth ${snapshot.breadth.advancers} up / ${snapshot.breadth.decliners} down · ${snapshot.inputs.companiesWithoutPrices.length} without prices · code ${codeVersion}`;
 if (dryRun) {
   console.log(`${summary} · dry run, nothing written`);

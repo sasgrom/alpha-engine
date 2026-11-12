@@ -2,7 +2,8 @@
  * Desk snapshot: one precomputed file that feeds the new desk view (market map, screener, today page).
  * Built locally by scripts/build-desk-snapshot.mts from stored daily closes, the Schwab fundamentals and quotes
  * captured for the S&P 500 and the research companies, the Schwab option features and the stored earnings events.
- * Served through the report whitelist as desk-snapshot.json; never part of an automatic production push.
+ * Served by the desk.snapshot procedure; never part of an automatic production push.
+ * Optional fields were added after the first release: a reader treats an absent one as null (no version bump).
  */
 export const DESK_SNAPSHOT_SCHEMA_VERSION = 1;
 
@@ -35,6 +36,26 @@ export interface DeskOptions {
   rv20: number | null;
   ivRvSpread: number | null;
   buckets: DeskOptionBucket[];
+}
+
+/** Latest stored short-interest reading and the change in shares short from the reading before it. */
+export interface DeskShortInterest {
+  date: string;
+  shares: number | null;
+  pctFloat: number | null;
+  daysToCover: number | null;
+  changePct: number | null;
+}
+
+export interface DeskInsiderSummary {
+  /** Open-market purchases (code P) outside 10b5-1 plans. */
+  buys: number;
+  buyers: number;
+  buyUsd: number;
+  lastBuy: string | null;
+  /** Open-market sales (code S), plans included. */
+  sells: number;
+  sellUsd: number;
 }
 
 export interface DeskCompany {
@@ -74,6 +95,14 @@ export interface DeskCompany {
   /** Projected next report date: same quarter last year + 52 weeks when the history allows, else + 13 weeks. */
   nextEarnings: string | null;
   nextEarningsBasis: "history" | "cadence" | null;
+  /** Return from the close that ends the reaction window to the latest close, and the sessions it spans. */
+  lastEarningsDrift?: number | null;
+  lastEarningsDriftSessions?: number | null;
+  /** Return from the close a year ago to the close a month ago (the classic 12-minus-1 momentum reading). */
+  momentum12m1?: number | null;
+  shortInterest?: DeskShortInterest | null;
+  /** Form 4 activity of the last 90 days (companies whose Form 4 filings are collected). */
+  insiders?: DeskInsiderSummary | null;
   options: DeskOptions | null;
   /** Up to 63 latest closes (about three months), oldest first. */
   spark: number[];
@@ -123,6 +152,8 @@ export interface DeskSnapshotInputs {
   optionsGeneratedAt: string | null;
   earningsEvents: number;
   companiesWithoutPrices: string[];
+  /** Registry rows of index members that disagree with the GICS snapshot ("BAC stored as MER-PK"); empty when clean. */
+  registryIssues?: string[];
 }
 
 export interface DeskSnapshot {

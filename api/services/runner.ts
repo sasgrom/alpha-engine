@@ -10,6 +10,7 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import { getDb } from "../queries/connection";
 import { companies, filings, facts, jobs, jobLogs } from "@db/schema";
 import * as edgar from "./edgar";
+import { canonicalTicker } from "./canonical-ticker";
 import { harvestCompanyDocuments, DOCUMENT_FORM_SCOPE } from "./documents";
 import { resolveScope, enrichClassification } from "./scope";
 
@@ -348,12 +349,14 @@ async function ingestOneCompany(
 ) {
   const db = getDb();
   // company row
+  // the registry keeps the index's common share: a requested preferred share or warrant never replaces it
+  const companyTicker = canonicalTicker(cik, ticker);
   const payload = await edgar.submissions(cik);
   await db
     .insert(companies)
     .values({
       cik,
-      ticker,
+      ticker: companyTicker,
       name: payload?.name ?? name,
       sic: payload?.sic ?? null,
       sicDescription: payload?.sicDescription ?? null,
@@ -366,7 +369,7 @@ async function ingestOneCompany(
     })
     .onDuplicateKeyUpdate({
       set: {
-        ticker,
+        ticker: companyTicker,
         name: payload?.name ?? name,
         sic: payload?.sic ?? null,
         sicDescription: payload?.sicDescription ?? null,

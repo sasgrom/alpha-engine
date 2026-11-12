@@ -8,7 +8,8 @@ import { SectorBars } from "../charts/SectorBars";
 import { Sparkline } from "../charts/Sparkline";
 import { Card, CompanyLink, Delta, Kpi, Notice, Segmented, Shimmer, TickerMark } from "../components";
 import { useDesk, useDocumentTitle } from "../context";
-import { earningsRadar, impliedMoveFor, marketBrief, movers, periodBreadth, periodLabel, useDeskSnapshot } from "../data";
+import { earningsRadar, impliedMoveFor, marketBrief, movers, periodBreadth, periodLabel, useDeskSnapshot, useWatchlist } from "../data";
+import { DevNotes } from "../DevNotes";
 import { daysBetween, fmtDate, fmtNum, fmtPct, fmtPrice, localToday, relativeDay } from "../format";
 
 const PERIOD_OPTIONS = DESK_PERIODS.map((period) => ({ value: period, label: periodLabel(period) }));
@@ -76,7 +77,7 @@ export default function Today() {
   const snapshot = useDeskSnapshot();
   const [period, setPeriod] = useState<DeskPeriod>("d1");
   const [moverSide, setMoverSide] = useState<"gainers" | "losers">("gainers");
-  const watch = trpc.screener.table.useQuery(undefined, { staleTime: 60_000 });
+  const watch = useWatchlist();
   const filings = trpc.dashboard.latestFilings.useQuery({ limit: 8 }, { staleTime: 60_000 });
   const macro = trpc.dashboard.macro.useQuery(undefined, { staleTime: 10 * 60_000 });
 
@@ -115,7 +116,7 @@ export default function Today() {
   // projections already behind the viewer's today are not "coming up" any more
   const radar = { reported: derived.radar.reported, upcoming: derived.radar.upcoming.filter((company) => company.nextEarnings! >= today) };
   const benchmark = data.benchmark;
-  const watchRows = (watch.data?.rows ?? []).map((row) => ({ row, company: byCik.get(row.cik) ?? null }));
+  const watchRows = watch.rows.map((row) => ({ row, company: byCik.get(row.cik) ?? null }));
   const ma200Share = data.breadth.withMa200 ? data.breadth.aboveMa200 / data.breadth.withMa200 : null;
   const upShare = breadth.measured ? breadth.up / breadth.measured : 0;
   const downShare = breadth.measured ? breadth.down / breadth.measured : 0;
@@ -229,7 +230,7 @@ export default function Today() {
           )}
         </Card>
 
-        <Card className="desk-span-12" title="Your watchlist" subtitle="Companies you follow" action={<Link className="desk-link" to="/universe">Manage</Link>}>
+        <Card className="desk-span-12" title="Your watchlist" subtitle="Companies you follow" action={<Link className="desk-link" to="/desk/watchlist">Manage</Link>}>
           {watch.isLoading ? (
             <Shimmer height={90} />
           ) : watchRows.length ? (
@@ -242,19 +243,19 @@ export default function Today() {
                       <span className="desk-muted" style={{ fontSize: 12, display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{company?.name ?? row.name}</span>
                     </span>
                     <span style={{ textAlign: "right" }}>
-                      <span className="desk-num" style={{ display: "block", fontWeight: 560 }}>{fmtPrice(company?.close ?? row.price)}</span>
-                      <Delta value={company ? company.returns[period] : period === "d1" ? row.changePct : null} digits={2} />
+                      <span className="desk-num" style={{ display: "block", fontWeight: 560 }}>{fmtPrice(company?.close ?? null)}</span>
+                      <Delta value={company ? company.returns[period] : null} digits={2} />
                     </span>
                   </span>
                   {company && <Sparkline values={company.spark} width={200} height={34} />}
                   <span className="desk-muted" style={{ fontSize: 12 }}>
-                    {company?.nextEarnings ? `Next report ~${fmtDate(company.nextEarnings, "short")}` : company?.lastEarnings ? `Reported ${fmtDate(company.lastEarnings, "short")}` : " "}
+                    {company?.nextEarnings ? `Next report ~${fmtDate(company.nextEarnings, "short")}` : company?.lastEarnings ? `Reported ${fmtDate(company.lastEarnings, "short")}` : company ? " " : "Outside the index"}
                   </span>
                 </CompanyLink>
               ))}
             </div>
           ) : (
-            <div className="desk-empty">Your watchlist is empty. Add companies in the watchlist manager, or open any company with Ctrl K.</div>
+            <div className="desk-empty">Your watchlist is empty. Follow companies from the Watchlist page or from any company page.</div>
           )}
         </Card>
 
@@ -302,6 +303,7 @@ export default function Today() {
           )}
         </Card>
       </div>
+      <DevNotes page="today" />
     </div>
   );
 }
