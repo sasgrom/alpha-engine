@@ -1822,26 +1822,39 @@ button.desk-lib-label {
   position: absolute;
   top: 18px;
   left: max(18px, calc((100% - var(--d-max)) / 2 + var(--d-gutter)));
-  max-width: min(520px, calc(100% - 36px));
-  padding: 14px 16px;
+  max-width: min(440px, calc(100% - 36px));
+  padding: 9px 10px 10px 14px;
   border: 1px solid var(--d-border);
   border-radius: var(--d-radius);
   background: var(--d-glass);
   backdrop-filter: blur(10px);
 }
 
+.desk-lib-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .desk-lib-head h1 {
-  margin: 0 0 4px;
-  font-size: 21px;
+  margin: 0;
+  font-size: 17px;
   font-weight: 650;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.012em;
+}
+
+.desk-lib-fold.desk-icon-button {
+  width: 26px;
+  height: 26px;
+  flex: none;
 }
 
 .desk-lib-head p {
-  margin: 0;
+  margin: 2px 0 0;
   color: var(--d-ink-2);
-  font-size: 13.5px;
-  line-height: 1.5;
+  font-size: 12.5px;
+  line-height: 1.45;
 }
 
 .desk-lib-head p strong {
@@ -2006,15 +2019,27 @@ button.desk-lib-label {
   width: 270px;
 }
 
-.desk-lib-who {
-  display: grid;
-  gap: 6px;
-  margin-top: 10px;
+.desk-lib-switches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  margin-top: 8px;
 }
 
-.desk-lib-who p {
-  margin: 0;
-  font-size: 12px;
+.desk-lib-switches .desk-seg {
+  padding: 2px;
+}
+
+.desk-lib-switches .desk-seg button {
+  height: 24px;
+  padding: 0 9px;
+  font-size: 12.5px;
+}
+
+.desk-lib-head p.desk-lib-note {
+  margin-top: 6px;
+  color: var(--d-muted);
+  font-size: 11.5px;
   line-height: 1.4;
 }
 

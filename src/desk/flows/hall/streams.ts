@@ -2,9 +2,17 @@
  * Streams of money in the hall. A stream is a ribbon as wide as the dollars it carries, red where the money left and
  * blue where it arrived, with bands that flow along it and bubbles marked "$" riding on it: more money, more bubbles.
  * Rotation streams arc under the dome from bookcase to bookcase; threads run between a person and the books it
- * traded.
+ * traded. The reader can show every stream whole, or only the blue half of each (where the money arrived) or only the
+ * red half (where it left).
  */
 import * as THREE from "three";
+
+/** Which part of every stream shows: all of it, the half where the money arrived (blue), or where it left (red). */
+export type StreamPart = "all" | "arriving" | "leaving";
+const PART_CODE: Record<StreamPart, number> = { all: 0, arriving: 1, leaving: 2 };
+/** The halves meet in the middle of a stream, with a soft edge this wide either side. */
+const HALF = { middle: 0.5, edge: 0.12 } as const;
+const shows = (part: number, t: number) => part === 0 || (part === 1 ? t >= HALF.middle : t < HALF.middle);
 
 export interface StreamSpec {
   from: THREE.Vector3;
@@ -73,6 +81,25 @@ function fadeNear(material: THREE.Material): void {
   material.customProgramCacheKey = () => "hall-stream-near";
 }
 
+/** As `fadeNear`, for a ribbon: and only the part of it the reader chose (its position along the stream is `along`). */
+function ribbonShader(material: THREE.Material, part: { value: number }): void {
+  material.onBeforeCompile = (shader) => {
+    shader.uniforms.streamPart = part;
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nattribute float along;\nvarying float vAlong;\nvarying float vEyeDistance;")
+      .replace("#include <project_vertex>", "#include <project_vertex>\nvEyeDistance = -mvPosition.z;\nvAlong = along;");
+    shader.fragmentShader = shader.fragmentShader
+      .replace("#include <common>", "#include <common>\nuniform float streamPart;\nvarying float vAlong;\nvarying float vEyeDistance;")
+      .replace(
+        "#include <opaque_fragment>",
+        `float arriving = smoothstep(${(HALF.middle - HALF.edge).toFixed(2)}, ${(HALF.middle + HALF.edge).toFixed(2)}, vAlong);
+diffuseColor.a *= smoothstep(3.0, 12.0, vEyeDistance) * (streamPart < 0.5 ? 1.0 : streamPart < 1.5 ? arriving : 1.0 - arriving);
+#include <opaque_fragment>`,
+      );
+  };
+  material.customProgramCacheKey = () => "hall-stream-part";
+}
+
 function bandTexture(): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
   canvas.width = 256;
@@ -93,6 +120,7 @@ function ribbon(curve: THREE.QuadraticBezierCurve3, width: number, start: THREE.
   const positions: number[] = [];
   const colors: number[] = [];
   const uvs: number[] = [];
+  const along: number[] = [];
   const indices: number[] = [];
   const up = new THREE.Vector3(0, 1, 0);
   let side = new THREE.Vector3(1, 0, 0);
@@ -109,6 +137,7 @@ function ribbon(curve: THREE.QuadraticBezierCurve3, width: number, start: THREE.
     color.copy(start).lerp(end, THREE.MathUtils.smoothstep(t, 0.15, 0.85));
     colors.push(color.r, color.g, color.b, color.r, color.g, color.b);
     uvs.push(t * repeats, 0, t * repeats, 1);
+    along.push(t, t);
   }
   for (let index = 0; index < SEGMENTS; index++) {
     const a = index * 2;
@@ -118,6 +147,7 @@ function ribbon(curve: THREE.QuadraticBezierCurve3, width: number, start: THREE.
   geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
   geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
   geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+  geometry.setAttribute("along", new THREE.Float32BufferAttribute(along, 1));
   geometry.setIndex(indices);
   return geometry;
 }
@@ -131,6 +161,9 @@ export class MoneyStreams {
   private riders: { stream: number; phase: number; speed: number }[] = [];
   private readonly dark: boolean;
   private fade = 1;
+  /** Shared by every ribbon's shader: which part of the streams shows (see `StreamPart`). */
+  private readonly part = { value: 0 };
+  private seconds = 0;
 
   constructor(dark: boolean) {
     this.dark = dark;
@@ -176,10 +209,12 @@ export class MoneyStreams {
         side: THREE.DoubleSide,
         depthWrite: false,
       });
-      fadeNear(material);
+      ribbonShader(material, this.part);
       material.userData.opacity = material.opacity;
       material.opacity *= this.fade;
-      const mesh = new THREE.Mesh(ribbon(curve, width, spec.start, spec.end, Math.max(1, Math.round(length / 6))), material);
+      const repeats = Math.max(1, Math.round(length / 6));
+      const mesh = new THREE.Mesh(ribbon(curve, width, spec.start, spec.end, repeats), material);
+      mesh.userData.repeats = repeats;
       if (spec.label && spec.lit) mesh.userData.stream = { from: spec.label.from, to: spec.label.to, usd: spec.usd };
       mesh.renderOrder = spec.kind === "thread" ? 3 : 2;
       mesh.frustumCulled = false;
@@ -206,7 +241,20 @@ export class MoneyStreams {
     return this.built.filter((item) => item.mesh.userData.stream).map((item) => item.mesh);
   }
 
+  /** Shows every stream whole, or only the half of each where the money arrived (blue) or where it left (red). */
+  setPart(part: StreamPart): void {
+    this.part.value = PART_CODE[part];
+    this.update(this.seconds, this.fade);
+  }
+
+  /** Whether the point of a stream at these texture coordinates is showing (a hidden half cannot be pointed at). */
+  showsAt(mesh: THREE.Object3D, uv: THREE.Vector2 | undefined): boolean {
+    if (!uv || this.part.value === 0) return true;
+    return shows(this.part.value, uv.x / ((mesh.userData.repeats as number | undefined) ?? 1));
+  }
+
   update(seconds: number, fade = 1): void {
+    this.seconds = seconds;
     this.bandTexture.offset.x = -seconds * 0.35;
     if (fade !== this.fade) {
       this.fade = fade;
@@ -220,16 +268,20 @@ export class MoneyStreams {
     const colors = this.bubbles.geometry.getAttribute("color") as THREE.BufferAttribute;
     const point = new THREE.Vector3();
     const color = new THREE.Color();
-    for (let index = 0; index < this.riders.length; index++) {
-      const rider = this.riders[index];
+    // only the bubbles on the part of the streams that shows are drawn
+    let shown = 0;
+    for (const rider of this.riders) {
       const item = this.built[rider.stream];
       const t = (rider.phase + seconds * rider.speed) % 1;
+      if (!shows(this.part.value, t)) continue;
       item.curve.getPoint(t, point);
       // the bubbles ride a little above the ribbon so they read against it
-      positions.setXYZ(index, point.x, point.y + 0.22, point.z);
+      positions.setXYZ(shown, point.x, point.y + 0.22, point.z);
       color.copy(item.spec.start).lerp(item.spec.end, THREE.MathUtils.smoothstep(t, 0.15, 0.85));
-      colors.setXYZ(index, color.r, color.g, color.b);
+      colors.setXYZ(shown, color.r, color.g, color.b);
+      shown++;
     }
+    this.bubbles.geometry.setDrawRange(0, shown);
     positions.needsUpdate = true;
     colors.needsUpdate = true;
   }

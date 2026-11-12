@@ -13,6 +13,7 @@ import { FAMOUS_BY_CIK, NOT_COLLECTED } from "./hall/famous";
 import { bodyFor, decodePlaces, FIGURE_SIZE, figureScale, leaderAt, lookFor, outfitFor } from "./hall/figures";
 import { topLists } from "./hall/lists";
 import { HallStage, type StageData, type StageFigure, type StageSelection, type StageTarget } from "./hall/stage";
+import type { StreamPart } from "./hall/streams";
 
 export interface LibraryProps {
   overview: FundFlowsOverview;
@@ -36,10 +37,12 @@ export interface LibraryProps {
   who: Who;
   /** The funds as themselves, or as the famous faces behind them (and placeholders for those not collected). */
   audience: "funds" | "people";
+  /** Every stream of money whole, or only the half of each where the money arrived (blue) or where it left (red). */
+  streams: StreamPart;
   onPick: (target: StageTarget) => void;
 }
 
-export default function Library3D({ overview, row, mode, real, focus, selection, dark, palette, homeSignal, aboveSignal, inset, insetBottom, game, who, audience, onPick }: LibraryProps) {
+export default function Library3D({ overview, row, mode, real, focus, selection, dark, palette, homeSignal, aboveSignal, inset, insetBottom, game, who, audience, streams, onPick }: LibraryProps) {
   const host = useRef<HTMLDivElement>(null);
   const stage = useRef<HallStage | null>(null);
   const pick = useRef(onPick);
@@ -154,6 +157,10 @@ export default function Library3D({ overview, row, mode, real, focus, selection,
   useEffect(() => {
     stage.current?.setGame(game);
   }, [game, ready]);
+
+  useEffect(() => {
+    stage.current?.setStreamPart(streams);
+  }, [streams, ready]);
 
   const tip = hover && tooltip(hover.target, { overview, row, company, fund, data, real });
   return (

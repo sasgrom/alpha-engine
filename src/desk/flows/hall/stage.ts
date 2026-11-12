@@ -15,16 +15,16 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { FLOW_OUTSIDE, type FlowLink } from "@contracts/fund-flows";
 import { mixOklab, type ChartPalette } from "../../charts/color";
-import { buildHall, loadHallTextures, type HallBuilding } from "./building";
+import { buildHall, DOORWAY, loadHallTextures, WALL_RADIUS, type HallBuilding } from "./building";
 import type { Look } from "./figures";
 import type { Carry } from "./character";
 import { angleOf, crowdSlots, crowdWedges, hallLayout, polar, ROTUNDA, staffSlots, type HallCompany, type HallLayout, type Slot } from "./layout";
 import { Crowd, loadPrototypes, type BodyKind } from "./people";
-import { MoneyStreams, type StreamSpec } from "./streams";
+import { MoneyStreams, type StreamPart, type StreamSpec } from "./streams";
 import { MapTable, type StateFlow, type UsaTopology } from "./usa-map";
 import { MainStreet } from "./mainstreet";
 import { Providence } from "./providence";
-import { Scoreboards, TopBoards, type SectorScore, type TopList } from "./boards";
+import { SCOREBOARD_CROWN, Scoreboards, TopBoards, type SectorScore, type TopList } from "./boards";
 import { bikeGeometry, BRONZE, caneGeometry, emblemFor, laptopGeometry, scooterGeometry } from "./props";
 import { nextVisits, stayFor } from "./visits";
 import { atlasCell, SPINE_ATLAS, spineAtlas, spineMaterial, type LogoAtlas } from "./spines";
@@ -145,6 +145,9 @@ export class HallStage {
   private visitRound = 0;
   private readonly carried = new Map<Carry, THREE.InstancedMesh>();
   private hovered: StageTarget | null = null;
+  /** The top-ten board under the pointer, and the one the reader was brought to stand in front of. */
+  private hoveredBoard: number | null = null;
+  private focusedBoard: number | null = null;
   private readonly pointer = new THREE.Vector2(2, 2);
   private pointerClient: [number, number] = [0, 0];
   private pointerDirty = false;
@@ -303,24 +306,22 @@ export class HallStage {
       });
       this.scene.add(this.building.group);
       for (const sign of this.building.signs) sign.paint();
-      // Main Street through the entrance, the eye under the dome, the boards
-      this.mainStreet = new MainStreet(this.dark);
-      const doorMaterial = this.building.door.material as THREE.MeshBasicMaterial;
-      doorMaterial.map = this.mainStreet.texture;
-      doorMaterial.needsUpdate = true;
+      // Main Street beyond the doorway, the eye under the dome, the boards
+      this.mainStreet = new MainStreet(this.dark, { wallRadius: WALL_RADIUS, ...DOORWAY });
+      this.scene.add(this.mainStreet.group);
       this.providence = new Providence(ROTUNDA.wallTop + ROTUNDA.domeHeight - 7.4);
       this.scene.add(this.providence.group);
       this.scoreboards = new Scoreboards(this.layout, { pos: this.palette.pos, neg: this.palette.neg }, this.calm);
       this.scene.add(this.scoreboards.group);
       this.topBoards = new TopBoards(this.layout, { pos: this.palette.pos, neg: this.palette.neg });
       this.scene.add(this.topBoards.group);
-      // a bronze emblem crowns each scoreboard
+      // a bronze emblem crowns each scoreboard, standing on the plaque of the net
       const bronze = BRONZE();
       for (const alcove of this.layout.alcoves) {
         const geometry = emblemFor(alcove.sector);
         if (!geometry) continue;
         const emblem = new THREE.Mesh(geometry, bronze);
-        emblem.position.set(...polar(alcove.mid, ROTUNDA.radius - 1.98, ROTUNDA.galleryHeight + 1.78));
+        emblem.position.set(...polar(alcove.mid, ROTUNDA.radius - 1.98, ROTUNDA.galleryHeight + SCOREBOARD_CROWN));
         emblem.rotation.y = -alcove.mid;
         emblem.scale.setScalar(0.62);
         this.scene.add(emblem);
@@ -812,6 +813,7 @@ export class HallStage {
   }
 
   private fly(to: Pose): void {
+    this.focusedBoard = null;
     const from = { ...this.pose };
     const turn = ((to.yaw - from.yaw + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
     this.flight = { from, to: { ...to, yaw: from.yaw + turn }, started: performance.now(), duration: this.calm ? 1 : 1300 };
@@ -830,6 +832,17 @@ export class HallStage {
 
   flyHome(): void {
     this.fly({ ...HOME });
+  }
+
+  /** Square in front of a top-ten board, near enough to read it whole, centred in the part of the view left open. */
+  private flyToBoard(index: number): void {
+    const frame = this.topBoards?.frameOf(index);
+    if (!frame) return;
+    const half = Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
+    // about two thirds of the view's height, so the title panel above and the timeline below leave it whole
+    const distance = Math.max(frame.height / 2 / (half * 0.66), (frame.width / 2 + 0.3) / (half * this.openAspect() * 0.85));
+    this.fly(this.aim(frame.centre.clone().addScaledVector(frame.normal, distance), frame.centre));
+    this.focusedBoard = index;
   }
 
   /** High over the entrance under the dome, looking down over the whole floor: every crowd at once. */
@@ -875,6 +888,7 @@ export class HallStage {
       const dy = event.clientY - this.dragging.y;
       this.dragging = { x: event.clientX, y: event.clientY, moved: this.dragging.moved + Math.abs(dx) + Math.abs(dy) };
       this.flight = null;
+      if (this.dragging.moved >= 5) this.focusedBoard = null;
       this.pose.yaw += dx * 0.0042;
       this.pose.pitch = clamp(this.pose.pitch + dy * 0.0032, -1.2, 1.1);
     } else this.pointerDirty = true;
@@ -894,6 +908,11 @@ export class HallStage {
     this.renderer.domElement.style.cursor = "grab";
     if (drag && drag.moved < 5) {
       this.pick();
+      // a top-ten board first comes to the reader, centred and near enough to read; then its rows can be picked
+      if (this.hoveredBoard !== null && this.hoveredBoard !== this.focusedBoard) {
+        this.flyToBoard(this.hoveredBoard);
+        return;
+      }
       if (this.hovered) this.events.onPick(this.hovered);
     }
   };
@@ -910,6 +929,7 @@ export class HallStage {
   private readonly onWheel = (event: WheelEvent): void => {
     event.preventDefault();
     this.flight = null;
+    this.focusedBoard = null;
     const stride = clamp(event.deltaY, -240, 240) * -0.035;
     this.move(stride, 0, Math.sin(this.pose.pitch) * stride);
     this.pointerDirty = true;
@@ -930,6 +950,7 @@ export class HallStage {
       this.keys.add(key);
       if (key !== "shift") event.preventDefault();
       this.flight = null;
+      if (key !== "shift") this.focusedBoard = null;
     } else if (key === "home") {
       event.preventDefault();
       this.flyHome();
@@ -971,6 +992,12 @@ export class HallStage {
   }
 
   /** The full-screen game view: the keys work wherever the focus is, and the hall takes the focus at once. */
+  /** Every stream whole, or only the half of each where the money arrived (blue) or where it left (red). */
+  setStreamPart(part: StreamPart): void {
+    this.streams.setPart(part);
+    this.settling = true;
+  }
+
   setGame(on: boolean): void {
     this.game = on;
     this.keys.clear();
@@ -983,17 +1010,22 @@ export class HallStage {
     if (this.books) targets.push(this.books);
     if (this.crowd) targets.push(...this.crowd.pickers);
     if (this.building) targets.push(this.building.door, ...this.building.panes);
+    if (this.mainStreet) targets.push(this.mainStreet.plaque);
     if (this.map) targets.push(...this.map.tiles);
     if (this.scoreboards) targets.push(...this.scoreboards.faces);
     if (this.topBoards) targets.push(...this.topBoards.faces);
     targets.push(...this.streams.pickable);
-    const hits = this.raycaster.intersectObjects(targets, false);
+    // a stream's hidden half (when only the blue or only the red part shows) cannot be pointed at
+    const hits = this.raycaster.intersectObjects(targets, false).filter((item) => !item.object.userData.stream || this.streams.showsAt(item.object, item.uv));
     let next: StageTarget | null = null;
-    const hit = hits[0];
+    // the streams overhead are thin: a top-ten board behind one is what the reader is pointing at
+    const behind = hits[0]?.object.userData.stream ? hits.find((item) => typeof item.object.userData.board === "number") : undefined;
+    const hit = behind ?? hits[0];
+    this.hoveredBoard = typeof hit?.object.userData.board === "number" ? hit.object.userData.board : null;
     if (hit) {
       if (hit.object === this.books && hit.instanceId !== undefined) next = { kind: "company", id: this.layout.books[hit.instanceId].cik };
       else if (typeof hit.object.userData.cik === "number") next = { kind: "fund", id: hit.object.userData.cik };
-      else if (hit.object === this.building?.door) next = { kind: "outside" };
+      else if (hit.object === this.building?.door || hit.object.userData.outside === true) next = { kind: "outside" };
       else if (typeof hit.object.userData.sector === "string") next = { kind: "sector", name: hit.object.userData.sector };
       else if (typeof hit.object.userData.state === "string") next = { kind: "state", code: hit.object.userData.state, name: this.map?.nameOf(hit.object.userData.state) ?? hit.object.userData.state };
       else if (typeof hit.object.userData.board === "number" && hit.uv) {
@@ -1080,6 +1112,7 @@ export class HallStage {
     if (this.map) this.map.group.rotation.y = Math.atan2(this.camera.position.x, this.camera.position.z);
     this.providence?.watch(this.camera.position);
     this.scoreboards?.update(this.clock);
+    this.mainStreet?.update(this.calm ? 0 : this.clock);
     this.composer.render();
     this.placeLabels();
   };

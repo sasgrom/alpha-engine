@@ -1719,3 +1719,28 @@ sitting) if the owner wants them; K11 when the owner names it.
 - **Gates:** `npm run check`; **231 files / 1,294 tests passed**; `npm run build`; `git diff --check`.
 - **Server:** notice to Kimi at 10:29. At 10:41 I stopped pid 20520 (`node dist\boot.js`) and started one server with `wscript worker\home-server-hidden.vbs` (`NODE_ENV=production`, log `worker\.runs\home-server.log`): pid **18832**, the only listener on port 3000. App routes answer 200 to a browser `Accept` header.
 - No production write, schema change or scheduler entry. The four generated files that show as modified are not mine and stay uncommitted.
+
+## 137. Claude: hall round from the owner's annotated screenshot; K11 and K12 on hold — 2026-11-12
+
+- **Owner's decision:** K11 and K12 are on hold. The next work is the engine, step by step with the owner.
+- **Title panel** (`FlowsPage.tsx`, `desk.css`):
+  - folds to its title and the quarter's line; the choice is remembered in `localStorage` key `alpha.desk.flows.head`;
+  - more compact: the switches sit in one row, and the explanations moved to "How to read the hall".
+- **Scoreboards** (`hall/boards.ts`): the large net figure no longer covers the in/out bars. It stands on its own plaque above each board (or what is held, in that view), with the sector's emblem on the plaque.
+- **Top-ten boards** (`hall/stage.ts`):
+  - the first click brings the reader square in front of the board, centred in the open part of the view and filling about two thirds of its height;
+  - a click on a row then selects it;
+  - a board behind a thin money stream takes the click.
+- **Entrance** (`hall/building.ts`, `hall/mainstreet.ts`):
+  - the arched opening with its white marble surround is gone. In its place is a square-headed doorway (`DOORWAY`, 9 × 6.6 m) in the panelled wall, with a dark wood architrave, a cornice and a brass bead;
+  - beyond it is a real Main Street in 3D: steps down to a square, painted shopfronts and offices of several heights on both sides (two 4096 × 1024 canvases), gables, cornices, awnings, lamps, trees, parked and moving cars, and a sky fading into the hall's haze;
+  - afternoon in the light theme, night in the dark one, with lit windows, lamps and car lights glowing;
+  - a plaque over the doorway shows what came in from outside and what went out, and the outside streams end just over it.
+- **Streams switch** (owner's request): All flows · Blue only · Red only shows every stream whole, or only the half of each where the money arrived or where it left. It lives in the address as `?streams=blue|red`.
+  - The cut is in the ribbon shader (`along` attribute, shared uniform), the bubbles are filtered the same way, and a hidden half cannot be pointed at.
+  - In the holdings view the switch is hidden and the hall shows all.
+- **Measured** in headless Edge on the GPU:
+  - 60 fps standing (entrance, above, a company) and walking (median 16.7 ms, 95th percentile 16.9 ms) in both themes;
+  - no zero normals and no blank frames while moving.
+- **Gates:** `npm run check`; **231 files / 1,294 tests**; `npm run build`; `git diff --check`.
+- **Server:** several restarts announced to Kimi at 11:41. The only listener on port 3000 is pid **18724** (`node dist\boot.js`, started by `worker\home-server-hidden.vbs`).

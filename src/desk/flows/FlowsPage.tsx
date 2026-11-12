@@ -5,7 +5,7 @@
  */
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Navigate, useSearchParams } from "react-router";
-import { BookOpen, DoorOpen, Eye, Gamepad2, Info, Library, Minimize2, PanelRightClose, PanelRightOpen, Pause, Play, X } from "lucide-react";
+import { BookOpen, ChevronDown, ChevronUp, DoorOpen, Eye, Gamepad2, Info, Library, Minimize2, PanelRightClose, PanelRightOpen, Pause, Play, X } from "lucide-react";
 import type { FlowQuarter, FundFlowsOverview } from "@contracts/fund-flows";
 import { Card, Notice, Segmented, Shimmer } from "../components";
 import { useDesk, useDocumentTitle } from "../context";
@@ -14,10 +14,12 @@ import { fmtCap, fmtDate, fmtPct } from "../format";
 import { FlowTape, FlowTimeline, RotationDiagram } from "./charts";
 import { deflatorSince, quarterLabel, quarterSentence, standingOf, useFlowsCompany, useFlowsFund, useFlowsOverview, type Who } from "./data";
 import type { StageSelection, StageTarget } from "./hall/stage";
+import type { StreamPart } from "./hall/streams";
 import { webglAvailable } from "./hall/webgl";
 import { CatalogPanel, CompanyPanel, FundPanel, QuarterPanel, Sentence, type FlowNav } from "./panels";
 
 const Library3D = lazy(() => import("./Library3D"));
+const HEAD_KEY = "alpha.desk.flows.head";
 
 type View = "library" | "reading";
 type Mode = "flow" | "outcome" | "held";
@@ -63,12 +65,32 @@ export default function FlowsPage() {
   const audience = params.get("audience") === "people" ? "people" : "funds";
   const whoParam = params.get("who");
   const who: Who = whoParam === "winners" || whoParam === "losers" ? whoParam : "all";
+  // the streams of money whole, or only their blue halves (where the money arrived) or red halves (where it left)
+  const streamsParam = params.get("streams");
+  const streams: StreamPart = streamsParam === "blue" ? "arriving" : streamsParam === "red" ? "leaving" : "all";
   // the panel follows the selection until the reader picks a tab; a new selection takes it back
   const selectionKey = fund ? `fund ${fund}` : company ? `company ${company}` : "";
   const [chosenTab, setChosenTab] = useState<{ tab: Tab; key: string } | null>(null);
   const tab: Tab = chosenTab && chosenTab.key === selectionKey ? chosenTab.tab : selectionKey ? "selected" : "quarter";
   const setTab = (next: Tab) => setChosenTab({ tab: next, key: selectionKey });
   const [panelOpen, setPanelOpen] = useState(true);
+  // the title panel over the hall folds to its title and the quarter's line; the choice is remembered on this browser
+  const [headOpen, setHeadOpen] = useState(() => {
+    try {
+      return window.localStorage.getItem(HEAD_KEY) !== "folded";
+    } catch {
+      return true;
+    }
+  });
+  const toggleHead = () => {
+    const next = !headOpen;
+    setHeadOpen(next);
+    try {
+      window.localStorage.setItem(HEAD_KEY, next ? "open" : "folded");
+    } catch {
+      // storage may be unavailable; the panel still folds for this visit
+    }
+  };
   const [helpOpen, setHelpOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [homeSignal, setHomeSignal] = useState(0);
@@ -242,7 +264,7 @@ export default function FlowsPage() {
       <>
         <div className="desk-lib" ref={hall} data-game={game ? "on" : undefined}>
           <Suspense fallback={<div className="desk-lib-stage"><Shimmer height={520} /></div>}>
-            <Library3D overview={data} row={row} mode={mode} real={real} focus={sector} selection={selection} dark={theme.resolved === "dark"} palette={palette} homeSignal={homeSignal} aboveSignal={aboveSignal} inset={panelOpen ? 418 : 0} insetBottom={150} game={game} who={who} audience={audience} onPick={onPick} />
+            <Library3D overview={data} row={row} mode={mode} real={real} focus={sector} selection={selection} dark={theme.resolved === "dark"} palette={palette} homeSignal={homeSignal} aboveSignal={aboveSignal} inset={panelOpen ? 418 : 0} insetBottom={150} game={game} who={who} audience={audience} streams={mode === "held" ? "all" : streams} onPick={onPick} />
           </Suspense>
           {game && (
             <div className="desk-lib-keys" aria-hidden="true">
@@ -253,37 +275,50 @@ export default function FlowsPage() {
               <span><kbd>Esc</kbd> leave</span>
             </div>
           )}
-          <div className="desk-lib-head">
-            <h1>The library of capital</h1>
+          <div className="desk-lib-head" data-open={headOpen ? "true" : "false"}>
+            <div className="desk-lib-head-top">
+              <h1>The library of capital</h1>
+              <button type="button" className="desk-icon-button desk-lib-fold" aria-expanded={headOpen} onClick={toggleHead} aria-label={headOpen ? "Fold the title panel" : "Open the title panel"} title={headOpen ? "Fold" : "Open"}>
+                {headOpen ? <ChevronUp size={15} aria-hidden="true" /> : <ChevronDown size={15} aria-hidden="true" />}
+              </button>
+            </div>
             <p>
               <strong>{quarterLabel(row.quarter)}</strong> · {row.funds} funds · bought <strong>{fmtCap(row.bought)}</strong> · sold <strong>{fmtCap(row.sold)}</strong>
             </p>
-            <div className="desk-lib-who">
-              <Segmented<"funds" | "people">
-                label="Who stands in the hall"
-                value={audience}
-                onChange={(next) => set({ audience: next === "people" ? "people" : null })}
-                options={[{ value: "funds", label: "Funds" }, { value: "people", label: "People" }]}
-              />
-              {audience === "people" && <p className="desk-muted">The best-known faces behind the tracked funds, each standing for its firm's money; those whose trades are not collected wait by the entrance.</p>}
-            </div>
-            {standing.bar !== null && standing.winners + standing.losers > 0 && (
-              <div className="desk-lib-who">
-                <Segmented<Who>
-                  label="Who is in the hall"
-                  value={who}
-                  onChange={(next) => set({ who: next === "all" ? null : next })}
-                  options={[{ value: "all", label: "All" }, { value: "winners", label: `Winners · ${standing.winners}` }, { value: "losers", label: `Losers · ${standing.losers}` }]}
+            {headOpen && (
+              <div className="desk-lib-switches">
+                <Segmented<"funds" | "people">
+                  label="Who stands in the hall"
+                  value={audience}
+                  onChange={(next) => set({ audience: next === "people" ? "people" : null })}
+                  options={[{ value: "funds", label: "Funds" }, { value: "people", label: "People" }]}
                 />
-                <p className="desk-muted">
-                  {who === "all"
-                    ? `A winner's book did better this quarter than all tracked funds together (${fmtPct(standing.bar, 1)}), a loser's worse.`
-                    : `${who === "winners" ? "Funds whose book did better" : "Funds whose book did worse"} this quarter than all tracked funds together (${fmtPct(standing.bar, 1)}); the others wait outside.`}
-                </p>
+                {standing.bar !== null && standing.winners + standing.losers > 0 && (
+                  <Segmented<Who>
+                    label="Who is in the hall"
+                    value={who}
+                    onChange={(next) => set({ who: next === "all" ? null : next })}
+                    options={[{ value: "all", label: "All" }, { value: "winners", label: `Winners · ${standing.winners}` }, { value: "losers", label: `Losers · ${standing.losers}` }]}
+                  />
+                )}
+                {mode !== "held" && (
+                  <Segmented<StreamPart>
+                    label="Which part of the streams of money shows"
+                    value={streams}
+                    onChange={(next) => set({ streams: next === "arriving" ? "blue" : next === "leaving" ? "red" : null })}
+                    options={[{ value: "all", label: "All flows" }, { value: "arriving", label: "Blue only" }, { value: "leaving", label: "Red only" }]}
+                  />
+                )}
               </div>
             )}
+            {headOpen && standing.bar !== null && who !== "all" && (
+              <p className="desk-lib-note">{who === "winners" ? "Books that did better" : "Books that did worse"} than all tracked funds together ({fmtPct(standing.bar, 1)}); the others wait outside.</p>
+            )}
+            {headOpen && mode !== "held" && streams !== "all" && (
+              <p className="desk-lib-note">{streams === "arriving" ? "Blue: each stream where its money arrived." : "Red: each stream where its money left."}</p>
+            )}
             {sector && (
-              <button type="button" className="desk-badge accent" onClick={() => nav.sector(null)} style={{ cursor: "pointer", marginTop: 8 }}>
+              <button type="button" className="desk-badge accent" onClick={() => nav.sector(null)} style={{ cursor: "pointer", marginTop: 6 }}>
                 {sector} <X size={12} aria-hidden="true" />
               </button>
             )}
@@ -316,7 +351,8 @@ export default function FlowsPage() {
                 <li>A book pulled out toward you was bought this quarter, a book pushed back was sold. The further, the more dollars.</li>
                 <li>The people are the funds. Each stands at the bookcase where it bought most this quarter (or where it leans most), the largest funds tallest. A blue jacket bought more than it sold, a red jacket sold more. The index giants keep the library at the map table in the middle.</li>
                 <li>A figure is a man or a woman when a public source names the firm's leader; a wooden mannequin otherwise. Clothes follow the holdings: suits for banks and industry, tech wear for technology, casual in between.</li>
-                <li>The streams overhead are the estimated rotation, as wide as the dollars: red where money left, blue where it arrived. The entrance is everything outside these stocks.</li>
+                <li>The streams overhead are the estimated rotation, as wide as the dollars: red where money left, blue where it arrived. All flows, Blue only, Red only: every stream whole, or only the half of each where the money arrived, or where it left. The doorway opens onto Main Street, everything outside these stocks; the plaque over it shows what came in from outside and what went out.</li>
+                <li>Over each bookcase its scoreboard shows what came in and went out, with the net on the plaque above. Click a top-ten board on the walls to stand in front of it, then a row to select it.</li>
                 <li>Select a person to see its money run to the books, or a book to see who traded it. Change the quarter and the people walk to their new places.</li>
                 <li>All, Winners, Losers: a winner's book did better in the quarter than all tracked funds together, a loser's worse. The others walk out and wait outside until you switch back.</li>
                 <li>People: the famous faces behind the tracked funds (Buffett, Griffin, Dalio, Cathie Wood and others) stand for their firms' money; the public figures and investors whose trades are not collected wait by the entrance.</li>

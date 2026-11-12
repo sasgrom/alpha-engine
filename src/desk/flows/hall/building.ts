@@ -1,12 +1,21 @@
 /**
  * The building of the fund-flow hall: a rotunda in an old library's manner. Marble floor, oak-panelled walls with a
  * bookcase for every sector, marble columns on the piers, a gallery, tall arched windows, a coffered dome with an
- * oculus, and an entrance at the south whose light stands for everything outside the covered stocks.
- * Geometry is built here from the layout; materials come from Poly Haven textures (CC0) when they have loaded.
+ * oculus, and at the south a square-headed doorway onto Main Street, which stands for everything outside the
+ * covered stocks. Geometry is built here from the layout; materials come from Poly Haven textures (CC0) when they
+ * have loaded.
  */
 import * as THREE from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { polar, ROTUNDA, TWO_PI, type HallLayout } from "./layout";
+
+/** The hall's outer wall, behind the bookcases, in metres from the middle of the floor. */
+export const WALL_RADIUS = ROTUNDA.radius + ROTUNDA.bookDepth + 0.45;
+/**
+ * The doorway in the south wall (towards +z): its width and height, how deep the wall is there, and how far over its
+ * head the middle of the Main Street plaque hangs (the streams of money from and to outside end just over it).
+ */
+export const DOORWAY = { width: 9, height: 6.6, depth: 0.7, plaqueAbove: 1.76 } as const;
 
 export interface HallTextures {
   marbleTiles: THREE.Texture[];
@@ -188,7 +197,7 @@ export interface HallBuilding {
   group: THREE.Group;
   /** Invisible panes over the bookcases for pointing (userData.sector). */
   panes: THREE.Mesh[];
-  /** The entrance light (pointing at it names "outside the covered stocks"). */
+  /** An invisible pane across the doorway (pointing at it names "outside the covered stocks"). */
   door: THREE.Mesh;
   signs: SignPainter[];
   /** Where streams of money start and end: over the middle of each bookcase, and in the entrance. */
@@ -198,7 +207,7 @@ export interface HallBuilding {
 export function buildHall(layout: HallLayout, textures: HallTextures | null, dark: boolean): HallBuilding {
   const group = new THREE.Group();
   const { radius, galleryHeight, wallTop, domeHeight, floorRadius, entranceHalf, rows, rowHeight, shelfBase, bookDepth } = ROTUNDA;
-  const wallRadius = radius + bookDepth + 0.45;
+  const wallRadius = WALL_RADIUS;
   const wallStart = -Math.PI + entranceHalf;
   const wallEnd = Math.PI - entranceHalf;
 
@@ -414,51 +423,58 @@ export function buildHall(layout: HallLayout, textures: HallTextures | null, dar
     group.add(ring);
   }
 
-  // the entrance: an arched opening filled with light
+  // the entrance: a tall square-headed doorway in the panelled wall, framed in dark wood with a brass bead, open
+  // onto Main Street (the stage builds the street beyond it)
   const doorAngle = Math.PI;
-  const doorWidth = 2 * wallRadius * Math.sin(entranceHalf) * 0.8;
-  const doorHeight = galleryHeight + 2.6;
-  const doorShape = new THREE.Shape();
-  doorShape.moveTo(-doorWidth / 2, 0);
-  doorShape.lineTo(doorWidth / 2, 0);
-  doorShape.lineTo(doorWidth / 2, doorHeight - doorWidth / 2);
-  doorShape.absarc(0, doorHeight - doorWidth / 2, doorWidth / 2, 0, Math.PI, false);
-  doorShape.lineTo(-doorWidth / 2, 0);
-  // the opening shows the view outside (the stage puts Main Street in it); its texture spans the opening
-  const doorGeometry = new THREE.ShapeGeometry(doorShape, 24);
-  {
-    const position = doorGeometry.getAttribute("position") as THREE.BufferAttribute;
-    const uv = doorGeometry.getAttribute("uv") as THREE.BufferAttribute;
-    for (let index = 0; index < uv.count; index++) uv.setXY(index, (position.getX(index) + doorWidth / 2) / doorWidth, position.getY(index) / doorHeight);
-  }
-  const door = new THREE.Mesh(doorGeometry, new THREE.MeshBasicMaterial({ color: dark ? 0x9a9384 : 0xd8d2c4, fog: false }));
-  door.position.set(...polar(doorAngle, wallRadius + 0.3));
-  door.rotation.y = -doorAngle;
-  group.add(door);
-  const arch = new THREE.Mesh(new THREE.ShapeGeometry((() => {
-    const outer = new THREE.Shape();
-    const w = doorWidth + 1.6;
-    const h = doorHeight + 0.8;
-    outer.moveTo(-w / 2, 0);
-    outer.lineTo(w / 2, 0);
-    outer.lineTo(w / 2, h - w / 2);
-    outer.absarc(0, h - w / 2, w / 2, 0, Math.PI, false);
-    outer.lineTo(-w / 2, 0);
-    outer.holes.push(doorShape);
-    return outer;
-  })(), 24), marble);
-  arch.position.set(...polar(doorAngle, wallRadius + 0.05));
-  arch.rotation.y = -doorAngle;
-  group.add(arch);
-  // the side walls of the opening, so the hall reads as closed
+  const { width: doorWidth, height: doorHeight, depth: doorDepth } = DOORWAY;
+  const edge = Math.asin(doorWidth / 2 / wallRadius);
+  const panelled = (a0: number, a1: number, y0: number, y1: number) => {
+    const geometry = arcWall(wallRadius, a0, a1, y0, y1, "in");
+    const uv = geometry.getAttribute("uv") as THREE.BufferAttribute;
+    for (let index = 0; index < uv.count; index++) uv.setXY(index, (uv.getX(index) * (a1 - a0) * wallRadius) / 3.2, (y0 + uv.getY(index) * (y1 - y0)) / 3.2);
+    geometry.setAttribute("uv1", uv.clone());
+    const mesh = new THREE.Mesh(geometry, wood);
+    mesh.receiveShadow = true;
+    group.add(mesh);
+  };
+  // the wall either side of the doorway and over it, up to the gallery
+  panelled(wallEnd, doorAngle - edge, 0, galleryHeight);
+  panelled(doorAngle + edge, wallStart + TWO_PI, 0, galleryHeight);
+  panelled(doorAngle - edge, doorAngle + edge, doorHeight, galleryHeight);
+  // the reveal: jambs and the soffit of the lintel, as deep as the wall is thick
+  const wallZ = wallRadius * Math.cos(edge);
   for (const side of [-1, 1]) {
-    const angle = side < 0 ? wallStart : wallEnd;
-    const reveal = new THREE.Mesh(new THREE.BoxGeometry(0.6, galleryHeight, 2.4), wood);
-    reveal.position.set(...polar(angle, wallRadius - 0.6, galleryHeight / 2));
-    reveal.rotation.y = -angle;
-    group.add(reveal);
+    const jamb = new THREE.Mesh(new THREE.BoxGeometry(0.5, doorHeight, doorDepth + 0.1), woodPlain);
+    jamb.position.set(side * (doorWidth / 2 + 0.25), doorHeight / 2, wallZ + doorDepth / 2 - 0.05);
+    group.add(jamb);
   }
-  anchors.set("Outside", new THREE.Vector3(...polar(doorAngle, wallRadius - 0.5, doorHeight * 0.62)));
+  group.add(new THREE.Mesh(arcRing(wallRadius - 0.05, wallRadius + doorDepth, doorAngle - edge, doorAngle + edge, doorHeight, "down"), woodPlain));
+  // the architrave round the opening and a cornice over it, standing a little out from the wall, a brass bead inside
+  const trim = 0.42;
+  const out = 0.14;
+  for (const side of [-1, 1]) {
+    const x = side * (doorWidth / 2 + trim / 2);
+    const post = new THREE.Mesh(new THREE.BoxGeometry(trim, doorHeight + trim, 0.22), woodPlain);
+    post.position.set(x, (doorHeight + trim) / 2, Math.sqrt(wallRadius ** 2 - x * x) - out + 0.11);
+    group.add(post);
+    const bead = new THREE.Mesh(new THREE.BoxGeometry(0.05, doorHeight, 0.05), brass);
+    bead.position.set(side * (doorWidth / 2 + 0.04), doorHeight / 2, Math.sqrt(wallRadius ** 2 - (doorWidth / 2) ** 2) - out - 0.01);
+    group.add(bead);
+  }
+  const head = edge + trim / wallRadius;
+  group.add(new THREE.Mesh(arcWall(wallRadius - out, doorAngle - head, doorAngle + head, doorHeight, doorHeight + trim, "in"), woodPlain));
+  group.add(new THREE.Mesh(arcRing(wallRadius - out, wallRadius, doorAngle - head, doorAngle + head, doorHeight, "down"), woodPlain));
+  group.add(new THREE.Mesh(arcWall(wallRadius - out - 0.01, doorAngle - edge, doorAngle + edge, doorHeight - 0.05, doorHeight, "in"), brass));
+  const corniceTop = doorHeight + trim + 0.22;
+  const ledge = edge + (trim + 0.25) / wallRadius;
+  group.add(new THREE.Mesh(arcWall(wallRadius - out - 0.2, doorAngle - ledge, doorAngle + ledge, doorHeight + trim, corniceTop, "in"), woodPlain));
+  group.add(new THREE.Mesh(arcRing(wallRadius - out - 0.2, wallRadius, doorAngle - ledge, doorAngle + ledge, corniceTop, "up"), woodPlain));
+  group.add(new THREE.Mesh(arcRing(wallRadius - out - 0.2, wallRadius, doorAngle - ledge, doorAngle + ledge, doorHeight + trim, "down"), woodPlain));
+  // a pane across the far end of the opening for pointing ("outside the covered stocks")
+  const door = new THREE.Mesh(arcWall(wallRadius + doorDepth, doorAngle - edge, doorAngle + edge, 0, doorHeight, "in"), new THREE.MeshBasicMaterial({ visible: false }));
+  group.add(door);
+  // the streams from and to outside meet just over the Main Street plaque, leaving its figures and the street clear
+  anchors.set("Outside", new THREE.Vector3(...polar(doorAngle, wallRadius - 0.5, doorHeight + DOORWAY.plaqueAbove + 1.25)));
 
   mergeStatic(group, new Set<THREE.Object3D>([door, ...panes]));
   return { group, panes, door, signs, anchors };
