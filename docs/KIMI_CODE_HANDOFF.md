@@ -1317,3 +1317,55 @@ Follow-up, 14:55 (Scenario Lab):
 - Verification: targeted **17/17**, full suite **192 files / 1,073 tests**, forced TypeScript, production build and diff checks pass on the delivered source. A D: `EPERM` rename interruption at company 270 was recovered only after root/free-space/process checks and TDY/FANG checkpoint plus **95/94 exhibit hash validations**. No cache was recreated, no valid file redownloaded and no completed company reprocessed. Final generated summary was not hand-edited. Scheduler-generated `public/reports/company-exposures.json`, `.md` and `src/data/analytics-snapshot.ts` remain untouched and excluded from the evidence commit.
 - Full delivery report is appended to `docs/engine/tasks/K06-releases-other-companies.md`. The summary, task report and this handoff are the intended evidence/documentation commit; the source commit precedes it. No production write, database write, deployment, schema change, model call or new service occurred.
 - Next approved task is **K07**. Claude's mailbox `20261111-161624-claude-k07-finding-and-desk-files.md` reports warm `dashboard.stats` **22–26 s**, `company.institutional` **13–14 s**, `dashboard.sectorFlows` **15–17 s**, with `httpBatchLink` causing head-of-line delays. K07 timing must measure these and avoid Claude's new `src/desk/**`, desk snapshot files and listed shared-file hunks. Existing partial timing files contain readiness-marker mistakes and must not be treated as final evidence. K08 follows K07 with the already-collected 20-year `schwab-hist` prerequisite to verify; K09 follows K08 and is not started.
+
+## 123. Claude: new desk view at /desk (standalone, switchable with the classic view); GPU guidance run on the complete K06 quarters — 2026-11-11 (local evening)
+
+Owner requests of 11 November: redesign the terminal and the legacy part of the site so that development artifacts do
+not show, with a better flow and new functionality; then "you dont have to stick to old pallete, design or layouts flows
+or render limitations, if you can make it faster that is great ... make it as a stand alone view, switchable back and
+forth for now". Times are Pacific.
+
+- **What exists**: `src/desk/**` mounted at `/desk/*` (`src/App.tsx`). Pages: Today (a brief written from the data, KPI
+  tiles, market map, sector bars, biggest moves, earnings just reported and coming up, watchlist, latest filings, macro),
+  Markets (S&P 500 treemap by sector, period / size / sector filters, table view, sectors across periods), Screener (all
+  index companies, sortable, sector and research filters in the URL, CSV export), Company (price chart with earnings
+  markers and the options-implied cone, returns, key statistics, earnings with the projected next date, options term
+  structure, 13F ownership loaded after the chart, short interest, insiders, peers, link to the classic page), Research
+  (tool hub by audience, opens the classic pages), Operations (owner only, read-only view of the daily operations
+  report). Command palette on Ctrl+K or "/"; light, dark or system theme. Classic pages are unchanged.
+- **Switching**: "/" opens the view used last (the desk by default, remembered per browser in `alpha.view`). The classic
+  header and the Terminal header have "New view"; the desk's account menu, palette and footer have "Classic view".
+- **Data**: one snapshot, `public/reports/desk-snapshot.json` (git-ignored, about 600 KB), built by
+  `npx tsx scripts/build-desk-snapshot.mts` in about 7 s from stored closes (Stooq history, Schwab bars only after a
+  series' last Stooq date), the Schwab instruments and latest quotes on D: (`schwab-sp500` and the research root; the
+  token file is never read), `public/reports/schwab-features.json`, stored 8-K earnings events and the cached S&P 500
+  constituents. It stops without writing when a D: root is missing. Served by the new read-only tRPC procedure
+  `desk.snapshot` (`api/routers/desk.ts`, `api/services/desk-snapshot.ts`, registered in `api/router.ts`) to every
+  signed-in user; option-derived fields are removed for users outside the owner and NDA reviewers (the audience of the
+  Market data page). Not yet a scheduler job: it goes into `contracts/operations.ts` (dependsOn `schwab-daily-bars`)
+  after K07's job is committed; until then rebuild it by hand after a close. The page picks up a new file without a
+  restart.
+- **Speed (headless Edge, admin, warm server, full page loads)**: first content 0.9–1.2 s on every desk page; the desk
+  never requests `dashboard.stats` or `dashboard.sectorFlows`; on company pages the chart shows at about 1 s and the 13F
+  summary (13 s) arrives after it. No console errors and no failed requests on any desk page.
+- **Findings for the owner**: (1) the companies registry holds a preferred share, warrant or second class as the
+  ticker of 66 S&P 500 companies (Bank of America as MER-PK, Oracle as ORCL-PD, Comcast as CCZ, Block as BSQKZ,
+  Berkshire as BRK-A); their price rows carry the traded ticker. The desk shows the traded ticker and links classic pages
+  through the registry ticker; classic `/company/BAC` does not resolve today. Correcting the registry is a data change
+  for the owner to decide. (2) META, IBM and LMT have no sector in the registry; the desk takes it from the constituents
+  table. (3) The reviewer evidence hints attach to classic panels only.
+- **GPU**: the guidance second pass over the K06 companies was stopped with its STOP file at 16:27 (after the current
+  release), its queue rebuilt from the complete `quarters-rest.jsonl` (34,833 releases of 444 companies: batch 2
+  27,069, batch 4 7,764; the earlier queue kept as `queue.partial-k06.jsonl`) and the run resumed at 16:27:27 as
+  process 16848 with 154 releases already done (`D:\research\alpha-engine\engine\lab\data\engine\guidance-pass2-rest\`).
+- **Web server**: restarted at 16:57 with the launcher (one listener, pid 7300) to load the desk API. It interrupted
+  a K07 timing probe; Kimi reran it. Agreed with Kimi: a mailbox note before any further restart, build or full test run.
+- **Gates at 17:15** on the tree with Kimi's untracked K07 files present: `npm run check`; `npm test -- --run` 197/198
+  files and 1,109/1,110 tests, the one failure `api/services/worker-expectations.test.ts` timing out at 5 s under the
+  full-suite load with the GPU run active, 10/10 when run alone (the same timeout as before); `npm run build`;
+  `git diff --check`; ESLint on the desk files clean. New tests: `worker/lib/desk-snapshot.test.ts` (12),
+  `api/services/desk-snapshot.test.ts` (3), `src/desk/desk-logic.test.tsx` (15), `src/desk/DeskApp.test.tsx` and
+  `src/desk/DeskApp.member.test.tsx` (rendered shell for the owner and for a member: navigation by role, no development
+  leftovers, no `dashboard.stats`, Ctrl+K search).
+- **Next**: the desk-snapshot scheduler job after K07's job; the registry ticker correction if the owner wants it;
+  moving research tools into the desk one by one.

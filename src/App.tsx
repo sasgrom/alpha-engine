@@ -7,7 +7,9 @@ import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 import ReviewerGate from "./components/ReviewerGate";
 import PresentationOnly from "./components/PresentationOnly";
+import { preferredView } from "./desk/preferences";
 
+const Desk = lazy(() => import("./desk/DeskApp"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Terminal = lazy(() => import("./pages/Terminal"));
 const Universe = lazy(() => import("./pages/Universe"));
@@ -64,7 +66,9 @@ export default function App() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="radar" /></div>}>
       <ReviewerGate><Routes>
-      <Route path="/" element={<Navigate to="/terminal" replace />} />
+      {/* "/" opens the view the viewer used last: the new desk by default, the classic terminal after a switch back */}
+      <Route path="/" element={<Navigate to={preferredView() === "classic" ? "/terminal" : "/desk"} replace />} />
+      <Route path="/desk/*" element={<Desk />} />
       <Route path="/terminal" element={<Terminal />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/universe" element={<Universe />} />

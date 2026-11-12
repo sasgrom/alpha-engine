@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router";
-import { Activity, ArrowDownRight, ArrowUpRight, BookOpen, ChevronDown, Command, Download, Gauge, Layers, LogOut, Moon, ShieldCheck, Sparkles, Sun, TrendingDown, TrendingUp } from "lucide-react";
+import { Activity, ArrowDownRight, ArrowUpRight, BookOpen, ChevronDown, Command, Download, Gauge, Layers, LayoutGrid, LogOut, Moon, ShieldCheck, Sparkles, Sun, TrendingDown, TrendingUp } from "lucide-react";
+import { rememberView } from "@/desk/preferences";
 import { useAuth } from "@/hooks/useAuth";
 import { trpc } from "@/providers/trpc";
 import { calculatePriceAnalytics, formatTerminalMoney, formatTerminalPct, terminalChangePct, type PriceAnalytics, type TerminalPriceBar } from "@/terminal/terminal-data";
@@ -139,6 +140,7 @@ export default function Terminal() {
         <nav className="terminal-mode-nav" aria-label="Experience">
           <span className="active"><Sparkles size={14} /> Terminal</span>
           <Link to="/universe"><Layers size={14} /> Legacy</Link>
+          <Link to="/desk" onClick={() => rememberView("desk")}><LayoutGrid size={14} /> New view</Link>
         </nav>
         <div className="terminal-header-actions">
           <button type="button" className="terminal-theme-toggle" role="switch" aria-checked={theme === "night"} aria-label={`Switch to ${theme === "night" ? "day" : "night"} theme`} onClick={() => setTheme(theme === "night" ? "day" : "night")}>

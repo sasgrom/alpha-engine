@@ -19,7 +19,9 @@ import {
   BookOpen,
   Sparkles,
   Users,
+  LayoutGrid,
 } from "lucide-react";
+import { rememberView } from "@/desk/preferences";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { jobToast } from "@/lib/job-toast";
@@ -408,6 +410,9 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
             <h1 className="t-mono text-[13px] font-medium uppercase tracking-[0.18em] truncate">{title}</h1>
           </div>
           <div className="flex items-center gap-3 md:gap-5">
+            <Link to="/desk" onClick={() => rememberView("desk")} title="Switch to the new desk view" className="inline-flex min-h-9 items-center gap-2 rounded-md bg-[hsl(var(--live))] px-2.5 text-[hsl(var(--primary-foreground))] hover:opacity-90">
+              <LayoutGrid size={14} /><span className="hidden sm:inline t-mono text-[10px] uppercase tracking-[0.1em]">New view</span>
+            </Link>
             <Link to="/terminal" title="Open the new terminal experience" className="inline-flex min-h-9 items-center gap-2 rounded-md border border-[hsl(var(--border))] px-2.5 text-[hsl(var(--live))] hover:bg-[hsl(var(--accent)/0.35)]">
               <Sparkles size={14} /><span className="hidden sm:inline t-mono text-[10px] uppercase tracking-[0.1em]">Terminal</span>
             </Link>
