@@ -307,7 +307,9 @@ planted factor, resampling by quarter and by company.
   reverses, ten equal parts): 21.4% a year with 60% of the money in use; the index of the 50 held
   all the time made 24.6% a year, being a list of today's large companies. Per position the picks
   made about one point more than the index over the same days in 2016–2022 and no more than the
-  index in 2023–2025, while still beating their own sector funds.
+  index in 2023–2025, while still beating their own sector funds. The release rule behind it does
+  not repeat on the other S&P 500 companies (test of 2026-11-12 below), so this illustration is no
+  evidence of an edge.
 - Guards: a price in the outermost 2% above its own one-year average was followed by a sharp fall
   about twice as often as usual (8.3% against 4.4%); acceleration and a price above 100 times
   earnings gave no warning on this list. Passing over signals with the price or the sector in the
@@ -364,3 +366,35 @@ full K06 list.
 **The test on the other companies is fixed in advance** (last section of the engine README): the
 runs, their order, the three groups (Financials, Energy, all other sectors) and what counts as the
 effect repeating.
+
+**The test on the other companies (2026-11-12): the release effect does not repeat.** 440 of the
+446 K06 companies have decisions. With the 50 that is 28,794 release decisions and 35,713 filing
+decisions from 2005 to 2026. The results:
+
+- **Version 1 trained on the 50 and applied to the others.** For "all other sectors" (353
+  companies, 13,455 release decisions since 2013), the gain at 10 sessions is -1.2 [-2.5, +0.2]
+  per 1000, and the decisions leaned on went the engine's way in 52% of cases. The criterion fixed
+  in advance, an interval above zero, is not met. Financials (-3.7) and Energy (-3.7) show no gain
+  either. The 50 inside the same run reproduce their baseline (+4.1 [+1.1, +7.3]), so the pipeline
+  is not the cause.
+- **Without any model.** Over about 20,000 release decisions of the other non-financial
+  companies, the first-session reaction has a rank correlation of -0.01, +0.02 and +0.01 with the
+  move against the sector over the next 10 sessions (2005–2012, 2013–2022, 2023 to mid-2026). The
+  share beating the sector is 49–50% after the weakest third of reactions and 49–51% after the
+  strongest. The release days are the right ones: the first-session move is as large as in the 50.
+- **Version 1 trained on all companies.** It leans on no release decision at all (10 sessions:
+  -0.2 [-0.5, +0.1]). At the filing it gives -0.6 [-1.3, +0.1].
+- **Variants.** Slower fading of old forecasts, clean outcomes, a release decision for every
+  quarter and the 12:30 limit each add nothing.
+
+Reading: the continuation after a release belongs to the 50, a hand-picked list tilted to winners,
+not to large US companies in general. Version 1 has no evidence of an edge at the release or at the
+filing, and the account illustration above is no evidence of an edge. From now on every family is
+designed and tested on the full list; the 50 alone are no longer a design set. Still open, all to
+be tested on the full list:
+
+- guidance: the second pass over the other companies' releases is running on the local GPU;
+- expectations against the figures printed in the release: needs task K03's reader over the other
+  companies' releases;
+- macro pass-through: needs exposures for the other companies; the rate part can come from the
+  filed figures already local.
