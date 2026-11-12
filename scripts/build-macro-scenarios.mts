@@ -7,6 +7,7 @@ import { inArray } from "drizzle-orm";
 import { getDb } from "../api/queries/connection";
 import { macroPoints } from "@db/schema";
 import { buildMacroScenarioReport, type MacroScenarioDefinition, type MacroScenarioReport, type ScenarioChannel } from "../api/services/macro-scenarios";
+import { INTEREST_MARGIN_SIC_BY_TICKER } from "../api/services/scenario-rate-atlas";
 import type { PilotEvidenceReport } from "../api/services/pilot-exposure-evidence";
 import type { CompanyExposureReport } from "../api/services/company-exposure";
 import { endOfUtcDay, fredSeriesUrl, sha256Text, type NormalizedMacroPoint } from "../worker/lib/fred";
@@ -174,12 +175,12 @@ const maturityTickers = ["AAPL", "AMD", "INTC", "AMZN", "TSLA", "BA", "RCL", "DA
 const maturityChecks = maturityTickers.map(ticker => {
   const filing = exposureLatest.companies.find(company => company.ticker === ticker);
   if (!filing) throw new Error(`No latest annual exposure filing for ${ticker}`);
-  const detail = (kind: "debtMaturingNext12" | "debtMaturingYearTwo") => {
+  const detail = (kind: "debtMaturingNext12" | "debtMaturingYearTwo" | "cashShortTerm") => {
     const measure = filing.measures.find(item => item.kind === kind);
     return measure ? { value: measure.value, unit: measure.unit, periodEnd: measure.periodEnd, facts: measure.facts.map(fact => ({ id: fact.id, concept: fact.concept, contextRef: fact.contextRef, rawValue: fact.rawValue, value: fact.value, unitRef: fact.unitRef, format: fact.format ?? null, scale: fact.scale, sign: fact.sign, excerpt: fact.excerpt })) } : null;
   };
   const impact = report.scenarios.find(scenario => scenario.channel === "rates")?.impacts.find(item => item.ticker === ticker);
-  return { ticker, form: filing.form, filingDate: filing.filingDate, accessionNo: filing.accessionNo, sourceUrl: filing.sourceUrl ?? null, sourceHash: filing.sourceHash ?? null, next12: detail("debtMaturingNext12"), yearTwo: detail("debtMaturingYearTwo"), scenarioStatus: impact?.status ?? null, metrics: impact?.metrics ?? [], missing: filing.missing };
+  return { ticker, form: filing.form, filingDate: filing.filingDate, accessionNo: filing.accessionNo, sourceUrl: filing.sourceUrl ?? null, sourceHash: filing.sourceHash ?? null, next12: detail("debtMaturingNext12"), yearTwo: detail("debtMaturingYearTwo"), cashShortTerm: detail("cashShortTerm"), scenarioStatus: impact?.status ?? null, metrics: impact?.metrics ?? [], missing: filing.missing };
 });
 if (maturityChecks.some(check => !check.next12)) throw new Error("A named latest-10-K maturity acceptance check has no exact fact");
 const atlasComparison = Object.fromEntries(report.scenarios.map(scenario => [scenario.channel, {
@@ -196,7 +197,29 @@ if (publish) {
     afterCoverage,
     staleEvidenceAudit,
     maturityChecks,
-    financialInterestMargin: report.scenarios.find(scenario => scenario.channel === "rates")?.impacts.filter(impact => impact.status === "not_applicable").map(impact => ({ ticker: impact.ticker, reasons: impact.reasons })) ?? [],
+    financialInterestMargin: report.scenarios.find(scenario => scenario.channel === "rates")?.impacts.filter(impact => impact.status === "not_applicable").map(impact => ({ ticker: impact.ticker, sic: INTEREST_MARGIN_SIC_BY_TICKER[impact.ticker] ?? null, reasons: impact.reasons })) ?? [],
+    paymentNetworkCorrection: {
+      before: previousSummary?.paymentNetworkCorrection?.before ?? previousSummary?.afterCoverage?.rates ?? null,
+      after: afterCoverage.rates,
+      classificationBasis: "local companies.sic is null; explicit reviewed SIC mapping, not the Financials sector label",
+      evidence: ["V", "MA"].map(ticker => {
+        const impact = report.scenarios.find(scenario => scenario.channel === "rates")?.impacts.find(item => item.ticker === ticker);
+        return {
+          ticker,
+          sic: "7389",
+          status: impact?.status ?? "missing",
+          metrics: impact?.metrics ?? [],
+          evidence: (impact?.exposureEvidence ?? []).map(filing => ({
+            form: filing.form,
+            filingDate: filing.filingDate,
+            accessionNo: filing.accessionNo,
+            sourceUrl: filing.sourceUrl ?? null,
+            sourceHash: filing.sourceHash ?? null,
+            measures: filing.measures.map(measure => ({ kind: measure.kind, value: measure.value, note: measure.note ?? null, facts: measure.facts.map(fact => ({ id: fact.id, concept: fact.concept, contextRef: fact.contextRef, rawValue: fact.rawValue, value: fact.value, excerpt: fact.excerpt })) })),
+          })),
+        };
+      }),
+    },
     atlasComparison,
     atlasAsOf: atlas.asOf,
     scenarioAsOf: report.asOf,

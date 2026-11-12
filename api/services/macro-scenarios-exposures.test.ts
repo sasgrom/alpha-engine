@@ -30,7 +30,7 @@ describe("inline-XBRL scenario integration", () => {
   });
 
   it("applies the interest-margin status to financial companies", () => {
-    const report = buildMacroScenarioReport({ asOf: AS_OF, definitions: [{ channel: "rates", shock: 0.01 }], macroSeries, pilot: [pilot], exposures: [{ ...company, sector: "Financials" }], exposureHistory: [filing(["debtMaturingNext12", "cashShortTerm"])] });
+    const report = buildMacroScenarioReport({ asOf: AS_OF, definitions: [{ channel: "rates", shock: 0.01 }], macroSeries, pilot: [{ ...pilot, ticker: "JPM" }], exposures: [{ ...company, ticker: "JPM", sector: "Financials" }], exposureHistory: [{ ...filing(["debtMaturingNext12", "cashShortTerm"]), ticker: "JPM" }] });
     expect(report.scenarios[0].impacts[0].status).toBe("not_applicable");
     expect(report.scenarios[0].impacts[0].reasons).toContain("rate_exposure_works_through_interest_margin");
   });

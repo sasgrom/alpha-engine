@@ -2,6 +2,19 @@ import type { CompanyExposureRow } from "./company-exposure";
 import type { CompanyScenarioImpact, ScenarioChannel, ScenarioMetric } from "./macro-scenarios";
 import type { ExposureFiling, ExposureMeasure, ExposureMeasureKind } from "../../worker/lib/exposure-aggregation";
 
+export const INTEREST_MARGIN_SIC_BY_TICKER: Readonly<Record<string, string>> = {
+  JPM: "6021",
+  COF: "6021",
+  GS: "6211",
+  AIG: "6331",
+  V: "7389",
+  MA: "7389",
+};
+function hasInterestMargin(ticker: string): boolean {
+  const sic = INTEREST_MARGIN_SIC_BY_TICKER[ticker];
+  return sic?.startsWith("60") || sic?.startsWith("62") || sic?.startsWith("63") || false;
+}
+
 export interface AtlasRecord {
   ticker: string;
   channel: ScenarioChannel;
@@ -81,7 +94,7 @@ function metric(name: ScenarioMetric["name"], value: number, unit: ScenarioMetri
 
 export function maturityRateImpact(exposure: CompanyExposureRow | undefined, history: ExposureFiling | undefined, shock: number, asOf: string): CompanyScenarioImpact {
   if (!exposure) return missing("UNKNOWN", ["pilot_or_exposure_evidence_missing"]);
-  if (exposure.sector === "Financials") return { ticker: exposure.ticker, status: "not_applicable", reasons: ["rate_exposure_works_through_interest_margin"], metrics: [] };
+  if (hasInterestMargin(exposure.ticker)) return { ticker: exposure.ticker, status: "not_applicable", reasons: ["rate_exposure_works_through_interest_margin"], metrics: [] };
   if (!history) return missing(exposure.ticker, ["latest_10k_unavailable_asof"]);
   const next = measureOf(history, "debtMaturingNext12");
   const second = measureOf(history, "debtMaturingYearTwo");
@@ -98,7 +111,7 @@ export function maturityRateImpact(exposure: CompanyExposureRow | undefined, his
   const normalizedShare = rawShare !== null && rawShare >= 0 && rawShare <= 100 ? rawShare <= 1 ? rawShare : rawShare / 100 : null;
   const sharedDebt = normalizedShare !== null && exposure.debt.value !== null && exposure.debt.unit === "USD" && exposure.debt.value >= 0 && exposure.debt.quality === "available" ? exposure.debt.value * normalizedShare : 0;
   const exposedDebt = next.value + secondValue + floatingValue + sharedDebt;
-  const evidence = [next, ...optional];
+  const evidence = [next, ...optional, cash];
   const net = (exposedDebt - cash.value) * shock;
   const nextLabel = next.note?.startsWith("Current-debt aggregate") ? "currentDebtAggregate" : "nextTwelveMonthMaturities";
   const components = [`${nextLabel} ${next.value}`, ...(secondValue || second ? [`yearTwoMaturities ${secondValue}`] : []), ...(floatingValue || sharedDebt ? [`floatingRateDebt ${floatingValue + sharedDebt}`] : []), `cashAndShortTermInvestments ${cash.value}`];

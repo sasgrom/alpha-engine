@@ -11,13 +11,13 @@ function measure(kind: ExposureMeasureKind, value: number, availableAt = "2026-1
     facts: [{ id: `fact-${kind}`, concept: `us-gaap:${kind}`, contextRef: "c-1", value, rawValue: String(value), unitRef: "usd", scale: null, sign: null, decimals: "-3", context: { id: "c-1", startDate: null, endDate: null, instant: "2026-09-26", dimensions: {} }, excerpt: `<ix:nonFraction name="us-gaap:${kind}" contextRef="c-1">${value}</ix:nonFraction>` }],
   };
 }
-function filing(measures: ExposureMeasure[], filingDate = "2026-10-30"): ExposureFiling {
-  return { cik: 1, ticker: "AAA", accessionNo: "0000000001-26-000010", form: "10-K", filingDate, sourceUrl: "https://www.sec.gov/Archives/edgar/data/1/000000000126000010/a.htm", sourceHash: "abc", measures, missing: [] };
+function filing(measures: ExposureMeasure[], filingDate = "2026-10-30", ticker = "AAA"): ExposureFiling {
+  return { cik: 1, ticker, accessionNo: "0000000001-26-000010", form: "10-K", filingDate, sourceUrl: "https://www.sec.gov/Archives/edgar/data/1/000000000126000010/a.htm", sourceHash: "abc", measures, missing: [] };
 }
-function exposure(sector = "Industrials", debt = 200): CompanyExposureRow {
+function exposure(sector = "Industrials", debt = 200, ticker = "AAA"): CompanyExposureRow {
   const metric: ExposureMetric = { value: debt, unit: "USD", concepts: ["LongTermDebt"], periodEnd: "2026-09-26", sourceFiled: "2026-10-30", quality: "available", note: null };
   const missing: ExposureMetric = { value: null, unit: null, concepts: [], periodEnd: null, sourceFiled: null, quality: "missing", note: null };
-  return { cik: 1, ticker: "AAA", name: "Example", sector, debt: metric, debtToOperatingIncome: missing, interestCoverage: missing, cashToDebt: missing, fuelCostToOperatingIncome: missing, oilRevenue: missing, oilCost: missing, foreignRevenueShare: missing, foreignDerivativeNotional: missing, missing: [] };
+  return { cik: 1, ticker, name: "Example", sector, debt: metric, debtToOperatingIncome: missing, interestCoverage: missing, cashToDebt: missing, fuelCostToOperatingIncome: missing, oilRevenue: missing, oilCost: missing, foreignRevenueShare: missing, foreignDerivativeNotional: missing, missing: [] };
 }
 
 describe("maturity-based rate impact", () => {
@@ -46,10 +46,24 @@ describe("maturity-based rate impact", () => {
   });
 
   it("marks banks and insurers not applicable rather than treating debt as an industrial liability", () => {
-    const result = maturityRateImpact(exposure("Financials"), undefined, 0.01, AS_OF);
-    expect(result.status).toBe("not_applicable");
-    expect(result.reasons).toEqual(["rate_exposure_works_through_interest_margin"]);
-    expect(result.metrics).toEqual([]);
+    for (const ticker of ["JPM", "AIG"]) {
+      const result = maturityRateImpact(exposure("Financials", 200, ticker), undefined, 0.01, AS_OF);
+      expect(result.status).toBe("not_applicable");
+      expect(result.reasons).toEqual(["rate_exposure_works_through_interest_margin"]);
+      expect(result.metrics).toEqual([]);
+    }
+  });
+
+  it("computes V and MA from debt and cash instead of applying a sector-wide exemption", () => {
+    for (const ticker of ["V", "MA"]) {
+      const history = filing([measure("debtMaturingNext12", 100), measure("cashShortTerm", 50), measure("operatingIncome", 500)], "2026-10-30", ticker);
+      const result = maturityRateImpact(exposure("Financials", 200, ticker), history, 0.01, AS_OF);
+      expect(result.status).toBe("computable");
+      expect(result.metrics.map(metric => metric.value)).toEqual([0.5, 0.001]);
+      expect(result.metrics[0].formula).toContain("nextTwelveMonthMaturities 100");
+      expect(result.metrics[0].formula).toContain("cashAndShortTermInvestments 50");
+      expect(result.exposureEvidence?.[0].measures.some(measure => measure.kind === "cashShortTerm")).toBe(true);
+    }
   });
 
   it("does not use a latest 10-K or measure that was unavailable at the as-of date", () => {

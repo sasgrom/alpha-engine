@@ -91,3 +91,17 @@ The builder streams rows and checkpoints complete companies on D:. A D: disconne
 - `npm run build`: passed; `git diff --check`: passed.
 - Real browser against the rebuilt local server: 50 companies, AAPL maturity/cash evidence and exact shock doubling, USD atlas coverage, AIG split maturity evidence with `USD/year`, current COP oil revenue, and JPM's interest-margin status. All required report URLs returned 200 and no page errors occurred. Screenshots are in `worker/.runs/k10-scenario-{rates,usd,credit}.png` (uncommitted).
 - One local production-mode listener was restarted after verifying its process: pid **16900**. No additional collector or scheduler entry was added. Source and evidence are committed separately; unrelated generated exposure/analytics files are not included.
+
+## Correction — payment networks and interest-margin classification (2026-11-12)
+
+Claude's review correctly identified that the original `Financials`-wide exemption included Visa and Mastercard, which are payment networks rather than banks or insurers. The rule now uses the explicit reviewed SIC mapping in `INTEREST_MARGIN_SIC_BY_TICKER`; the sector label alone cannot trigger `not_applicable`. Local `companies.sic` fields are null, so the mapping is explicit rather than falsely attributed to database metadata.
+
+- **Before correction:** rates **38 / 2 / 6 / 4**. **After:** **40 / 2 / 4 / 4** (computable / historical-only / not-applicable / not-computable).
+- V and MA (SIC 7389) now compute from their latest annual maturity and cash evidence:
+  - V: `(2.750B next-12-month debt + 1.416B year-two debt − 12.938B cash) × 1% = −87.72M USD/year`, plus the operating-income ratio. Accession `0001403161-26-000134`.
+  - MA: `(0.750B + 1.941B − 10.566B) × 1% = −78.75M USD/year`, plus the operating-income ratio. Accession `0001141391-26-000013`.
+- JPM and COF (6021), GS (6211) and AIG (6331) remain `not_applicable` with `rate_exposure_works_through_interest_margin`.
+- All 11 original maturity checks now include exact cash facts too; the offset is never present only in the formula without its source evidence. `paymentNetworkCorrection` in `research/engine/exposure-history.summary.json` preserves before/after counts, statuses, formulas, accessions, cash values and exact fact excerpts. Original stale-rate cases now comprise 14 computable, two historical-only and one not-applicable.
+- Regression tests explicitly cover V/MA computable and JPM/AIG not applicable, including attached cash evidence. `npm run check` and `npm run build` pass; the full suite is **230 files / 1,292 tests passed**; `git diff --check` passes.
+- The browser was rebuilt and the verified listener restarted after a mailbox notice, now pid **20520** with one listener. Live checks confirm V/MA computable with cash facts and JPM interest-margin status, with no page errors. Scenario hash: `7f29052f0bbccc21b847b37f3d3482dab1032c85a06b0be7868fa98d03409379`.
+- No history rewrite, production write, schema change, new collector/scheduler entry, LLM or GDELT request. K11/K12 were not started. Source and evidence are committed separately.
