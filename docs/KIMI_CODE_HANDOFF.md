@@ -1518,3 +1518,14 @@ Healthcare's (ticker reuse).
 **Next safe actions**: owner decision on the 13F table repair; a scheduler entry for the two builds after
 `13f-refresh`; the build notes on the page list the rest (successor links between filers, options in the hall, a
 test of whether following the money pays).
+
+
+## 127. K08 split-safe market value delivered — 2026-11-12
+
+- Source **78f0a2d** is pushed. Series rebuilt **50/50**, **24,211 series / 1,110,764 points**; zero derived share/EPS quarters and zero negative shares, with **1,170** valid negative EPS observations retained. Factor materialization wrote **21,046** rows for 50 companies with no failures; candidate/stored keys match exactly, with only 20 last-bit rounding differences (max relative 1.96e-16).
+- All seven required split checks pass. NVDA P/E across the 10:1 split is **51.4913 → 52.4690**, not 5.1253 → 52.9895. COF's false 1.25 split from mixed Q/YTD windows is gone. Current market value uses split-adjusted shares and completed Schwab closes; Stooq remains the return source.
+- Owner accepted **42/44 comparable current counts (95.45%)**; literal 43/50 is retained, GS has a 2025-10-17 instrument-date match, LLY is unexplained, five companies are multi-class and V is a labelled class-A-only approximate fallback. The literal 81-outlier report decomposes into 15 split-basis comparisons and **66 owner-deferred K09 cases**: 58 unit-scale suspects with PIT references and eight LIN pre-combination cases. No rescaling was applied.
+- Refreshed **104/104** local factor/value/screener caches without deletion. Full-universe Screener has **50/50 market-value matches**, all positive; AAPL −$10.48B → **$5.065T**, COST −$29.30M → **$472.44B**, SMCI $0.703B → **$18.32B**. K07 summary contains **103 artifacts** (101 reused, 2 recomputed), with **22 checks / 13,713 fields / 0 differences**.
+- Gates: `npm run check`, **217 files / 1,225 tests**, `npm run build`, `git diff --check`, K07/K08 script typechecks and 22 focused tests pass. One coordinated web restart (18276 to 6812) left exactly one port-3000 server; authenticated API and rendered Screener/Company Value checks pass with no failed requests or page errors. Scheduler untouched.
+- Evidence is in `research/engine/market-value-*.json` and the delivery report in `docs/engine/tasks/K08-market-value.md`; hashes are in that report. Local MySQL and artifacts only: no production write, deployment, schema change, LLM, GDELT or alpha promotion. Unrelated generated exposure/analytics changes remain uncommitted.
+- **Next safe action:** K09, beginning with `research/engine/market-value-k09-quarantine.json` (58 unit-scale + eight LIN cases; reject without rescaling; preserve PIT evidence and LIN predecessor semantics).

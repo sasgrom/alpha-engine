@@ -1,0 +1,107 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-12T06:15:19.595Z",
+ "status": "pass",
+ "finalAuth": 200,
+ "api": [
+  {
+   "name": "screener.table",
+   "cik": null,
+   "status": 200,
+   "fresh": true
+  },
+  {
+   "name": "company.factors",
+   "cik": 320193,
+   "status": 200,
+   "fresh": true
+  },
+  {
+   "name": "company.value",
+   "cik": 320193,
+   "status": 200,
+   "fresh": true
+  }
+ ],
+ "screener": {
+  "expectedRows": 8,
+  "actualRows": 8,
+  "comparisons": [
+   {
+    "ticker": "BA",
+    "marketCap": 137394970597.2,
+    "peTtm": -21.19559902200489,
+    "expectedMarketCap": 137394970597.2,
+    "pass": true
+   },
+   {
+    "ticker": "JPM",
+    "marketCap": 908404344743.63,
+    "peTtm": 14.088550247116968,
+    "expectedMarketCap": 908404344743.63,
+    "pass": true
+   },
+   {
+    "ticker": "AAPL",
+    "marketCap": 5064610748820,
+    "peTtm": 41.29265402843602,
+    "expectedMarketCap": 5064610748820,
+    "pass": true
+   },
+   {
+    "ticker": "GS",
+    "marketCap": 262530273100.77002,
+    "peTtm": 13.426611594630476,
+    "expectedMarketCap": 262530273100.77002,
+    "pass": true
+   },
+   {
+    "ticker": "PLD",
+    "marketCap": 121297173800,
+    "peTtm": 32.77078085642317,
+    "expectedMarketCap": 121297173800,
+    "pass": true
+   },
+   {
+    "ticker": "NVDA",
+    "marketCap": 4070248999999.9995,
+    "peTtm": 23.35961272475795,
+    "expectedMarketCap": 4070248999999.9995,
+    "pass": true
+   },
+   {
+    "ticker": "META",
+    "marketCap": 1636827280000,
+    "peTtm": 29.832093023255812,
+    "expectedMarketCap": 1636827280000,
+    "pass": true
+   },
+   {
+    "ticker": "SMCI",
+    "marketCap": 18319928528.93,
+    "peTtm": 8.345345345345345,
+    "expectedMarketCap": 18319928528.93,
+    "pass": true
+   }
+  ]
+ },
+ "companyValue": {
+  "ticker": "AAPL",
+  "marketCap": 5064610748820,
+  "expectedMarketCap": 5064610748820
+ },
+ "companyFactors": {
+  "ticker": "AAPL",
+  "peRatio": 38.317463581010024
+ },
+ "rendered": {
+  "aaplRow": "AAPL\tApple Inc.\tInformation Technology\t348.51\t-0.62%\t$5.06T\t41.3\t8.44\t28.4%\t1.09\t\n94%\t42.8M\t1.7%\t+0.28",
+  "valueMarker": "vs market cap $5.06T",
+  "screenerScreenshot": "worker/.runs/k08-screener-after.png",
+  "valueScreenshot": "worker/.runs/k08-value-after.png"
+ },
+ "pageErrors": [],
+ "failedRequests": [],
+ "productionWrite": false,
+ "databaseWrite": false
+}

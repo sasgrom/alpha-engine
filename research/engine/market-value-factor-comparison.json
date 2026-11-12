@@ -1,0 +1,8330 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-12T05:48:42.981Z",
+ "mode": "stored_factor_points",
+ "baselineSha256": "2c612562172d446f492871b49c1ff541a95024db4db8e226f17e502c82f27c42",
+ "counts": {
+  "before": 21701,
+  "after": 21046,
+  "added": 5044,
+  "removed": 5699,
+  "changed": 9272
+ },
+ "factors": [
+  {
+   "factor": "accruals",
+   "before": 2436,
+   "after": 2436,
+   "added": 0,
+   "removed": 0,
+   "changed": 0
+  },
+  {
+   "factor": "assetGrowth",
+   "before": 2630,
+   "after": 2630,
+   "added": 0,
+   "removed": 0,
+   "changed": 0
+  },
+  {
+   "factor": "bookToMarket",
+   "before": 860,
+   "after": 798,
+   "added": 0,
+   "removed": 62,
+   "changed": 798
+  },
+  {
+   "factor": "buybackYield",
+   "before": 1464,
+   "after": 1448,
+   "added": 0,
+   "removed": 16,
+   "changed": 1448
+  },
+  {
+   "factor": "earningsYield",
+   "before": 951,
+   "after": 880,
+   "added": 0,
+   "removed": 71,
+   "changed": 879
+  },
+  {
+   "factor": "evEbit",
+   "before": 570,
+   "after": 529,
+   "added": 0,
+   "removed": 41,
+   "changed": 529
+  },
+  {
+   "factor": "evEbitda",
+   "before": 374,
+   "after": 345,
+   "added": 0,
+   "removed": 29,
+   "changed": 345
+  },
+  {
+   "factor": "fcfYield",
+   "before": 755,
+   "after": 706,
+   "added": 0,
+   "removed": 49,
+   "changed": 706
+  },
+  {
+   "factor": "grossProfitability",
+   "before": 1206,
+   "after": 1206,
+   "added": 0,
+   "removed": 0,
+   "changed": 0
+  },
+  {
+   "factor": "high52",
+   "before": 2400,
+   "after": 2400,
+   "added": 2400,
+   "removed": 2400,
+   "changed": 0
+  },
+  {
+   "factor": "momentum122",
+   "before": 2400,
+   "after": 2400,
+   "added": 2400,
+   "removed": 2400,
+   "changed": 0
+  },
+  {
+   "factor": "netDebtToEbitda",
+   "before": 374,
+   "after": 345,
+   "added": 0,
+   "removed": 29,
+   "changed": 0
+  },
+  {
+   "factor": "ocfYield",
+   "before": 964,
+   "after": 891,
+   "added": 0,
+   "removed": 73,
+   "changed": 891
+  },
+  {
+   "factor": "peRatio",
+   "before": 870,
+   "after": 801,
+   "added": 0,
+   "removed": 69,
+   "changed": 801
+  },
+  {
+   "factor": "salesYield",
+   "before": 944,
+   "after": 871,
+   "added": 0,
+   "removed": 73,
+   "changed": 871
+  },
+  {
+   "factor": "sue",
+   "before": 2503,
+   "after": 2360,
+   "added": 244,
+   "removed": 387,
+   "changed": 2004
+  }
+ ],
+ "companies": [
+  {
+   "cik": 1045810,
+   "ticker": "NVDA",
+   "name": "NVDA",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-07-26",
+     "filedAt": "2026-08-26 00:00:00",
+     "before": 0.038398327537919046,
+     "after": 0.03853319769662661,
+     "change": 0.0001348701587075632
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-07-26",
+     "filedAt": "2026-08-26 00:00:00",
+     "before": 0.04558610648615378,
+     "after": 0.04574622297587787,
+     "change": 0.00016011648972408948
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-07-26",
+     "filedAt": "2026-08-26 00:00:00",
+     "before": 0.026631313265842865,
+     "after": 0.026724853002520414,
+     "change": 0.00009353973667754895
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-07-26",
+     "filedAt": "2026-08-26 00:00:00",
+     "before": 0.06031503116376482,
+     "after": 0.06052688147983589,
+     "change": 0.00021185031607107163
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-07-26",
+     "filedAt": "2026-08-26 00:00:00",
+     "before": 0.02674837223334216,
+     "after": 0.02684232312755018,
+     "change": 0.00009395089420801903
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-07-26",
+     "filedAt": "2026-08-26 00:00:00",
+     "before": 25.016805620422723,
+     "after": 24.929451571552075,
+     "change": -0.08735404887064746
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-07-26",
+     "filedAt": "2026-08-26 00:00:00",
+     "before": 25.483641480116813,
+     "after": 25.394657326942642,
+     "change": -0.08898415317417019
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-07-26",
+     "filedAt": "2026-08-26 00:00:00",
+     "before": 0.05924001073206602,
+     "after": 0.05924001073206602,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-07-26",
+     "filedAt": "2026-08-26 00:00:00",
+     "before": 26.042800927006052,
+     "after": 25.95164844280611,
+     "change": -0.0911524841999416
+    }
+   ]
+  },
+  {
+   "cik": 2488,
+   "ticker": "AMD",
+   "name": "AMD",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.0073668105026990045,
+     "after": 0.007400768105847935,
+     "change": 0.000033957603148930364
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.06612531873855916,
+     "after": 0.06643012599958452,
+     "change": 0.00030480726102535827
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.006822445846836091,
+     "after": 0.0068538941796643955,
+     "change": 0.00003144833282830474
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.043932064837988186,
+     "after": 0.044134571421092894,
+     "change": 0.00020250658310470848
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.008821027984791051,
+     "after": 0.008861688860697036,
+     "change": 0.00004066087590598455
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 124.3574933846524,
+     "after": 123.78671346361077,
+     "change": -0.570779921041634
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 128.43580124223604,
+     "after": 127.84630257595776,
+     "change": -0.5894986662782742
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": -0.03909069040173202,
+     "after": -0.03909069040173202,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 135.74395589972437,
+     "after": 135.12110982234677,
+     "change": -0.6228460773776021
+    }
+   ]
+  },
+  {
+   "cik": 50863,
+   "ticker": "INTC",
+   "name": "INTC",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": -0.018422059926813956,
+     "after": -0.019393564276641972,
+     "change": -0.0009715043498280153
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.1759435334466339,
+     "after": 0.1852220782318846,
+     "change": 0.009278544785250697
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.005769142437187084,
+     "after": 0.006073383493549448,
+     "change": 0.0003042410563623638
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.0916999678471361,
+     "after": 0.09653585037039902,
+     "change": 0.004835882523262919
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.02675118276606495,
+     "after": 0.02816193110384712,
+     "change": 0.0014107483377821702
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 386.72985244040865,
+     "after": 368.161180476731,
+     "change": -18.568671963677673
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2025-09-27",
+     "filedAt": "2025-11-06 00:00:00",
+     "before": 854.510101010101,
+     "after": 784.7651515151515,
+     "change": -69.74494949494954
+    }
+   ]
+  },
+  {
+   "cik": 1321655,
+   "ticker": "PLTR",
+   "name": "PLTR",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.008142130254936973,
+     "after": 0.008163328486436236,
+     "change": 0.000021198231499262518
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.024916071849117833,
+     "after": 0.024980941440069123,
+     "change": 0.00006486959095129002
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.008996155138591911,
+     "after": 0.009019576844369158,
+     "change": 0.000023421705777246574
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.016173416201457014,
+     "after": 0.016215524078638733,
+     "change": 0.00004210787718171918
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.009092111469728176,
+     "after": 0.009115783000116128,
+     "change": 0.000023671530387951722
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 122.8179811289129,
+     "after": 122.49905190775407,
+     "change": -0.3189292211588395
+    }
+   ]
+  },
+  {
+   "cik": 1326801,
+   "ticker": "META",
+   "name": "META",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.040328784125290604,
+     "after": 0.04080454642326886,
+     "change": 0.00047576229797825775
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.14598195581006268,
+     "after": 0.1477041180885927,
+     "change": 0.0017221622785300317
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.01535408226561749,
+     "after": 0.015535215756757296,
+     "change": 0.0001811334911398059
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.12948579007528288,
+     "after": 0.1310133456011415,
+     "change": 0.0015275555258586204
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.07132635507292523,
+     "after": 0.07216779850673874,
+     "change": 0.0008414434338135102
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 18.58422953020134,
+     "after": 18.37564467881112,
+     "change": -0.20858485139022065
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 24.41843209876543,
+     "after": 24.144365583270343,
+     "change": -0.2740665154950861
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.6946021093000959,
+     "after": 0.6946021093000959,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 24.796185198474394,
+     "after": 24.50707305080466,
+     "change": -0.2891121476697336
+    }
+   ]
+  },
+  {
+   "cik": 1065280,
+   "ticker": "NFLX",
+   "name": "NFLX",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.05168258534787164,
+     "after": 0.05096748643386772,
+     "change": -0.0007150989140039185
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.10250049690961531,
+     "after": 0.10108226302035524,
+     "change": -0.0014182338892600732
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.03981218115810785,
+     "after": 0.0392613254430026,
+     "change": -0.0005508557151052487
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.1740688573617578,
+     "after": 0.17166037779318644,
+     "change": -0.0024084795685713756
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.043077199426390836,
+     "after": 0.04248116773949283,
+     "change": -0.0005960316868980076
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 18.18514912527986,
+     "after": 18.436371269445786,
+     "change": 0.2512221441659257
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 18.643360293451856,
+     "after": 18.900912481509966,
+     "change": 0.25755218805811
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.2797083898548216,
+     "after": 0.2797083898548216,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 19.348877252735605,
+     "after": 19.62035152150457,
+     "change": 0.27147426876896574
+    }
+   ]
+  },
+  {
+   "cik": 1018724,
+   "ticker": "AMZN",
+   "name": "AMZN",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.050037484769463056,
+     "after": 0.05015200459653993,
+     "change": 0.0001145198270768727
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.22780292695469842,
+     "after": 0.22832429512343538,
+     "change": 0.0005213681687369631
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.059728003525742035,
+     "after": 0.05986470185634216,
+     "change": 0.0001366983306001282
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.2960597898547412,
+     "after": 0.2967373761901613,
+     "change": 0.0006775863354200884
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.06248235026747959,
+     "after": 0.06262535241838617,
+     "change": 0.00014300215090657514
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 15.379419929348625,
+     "after": 15.345941500137712,
+     "change": -0.03347842921091271
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 27.072913113466072,
+     "after": 27.013979902111803,
+     "change": -0.05893321135426888
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.7181129877693652,
+     "after": 0.7181129877693652,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 19.985017324657402,
+     "after": 19.939382444325897,
+     "change": -0.0456348803315052
+    }
+   ]
+  },
+  {
+   "cik": 1318605,
+   "ticker": "TSLA",
+   "name": "TSLA",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.0022943695693072616,
+     "after": 0.002296375255871054,
+     "change": 0.000002005686563792599
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.06366126925850717,
+     "after": 0.06371692051630533,
+     "change": 0.0000556512577981616
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.002354972867439989,
+     "after": 0.0023570315320516136,
+     "change": 0.0000020586646116245097
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.07384333632478343,
+     "after": 0.07390788851788846,
+     "change": 0.00006455219310502747
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.01333985538898038,
+     "after": 0.01335151679221486,
+     "change": 0.000011661403234480144
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 309.9037215713301,
+     "after": 309.631380108299,
+     "change": -0.27234146303106854
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 402.1863618003462,
+     "after": 401.83292292704556,
+     "change": -0.3534388733006608
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": -1.9088059402858986,
+     "after": -1.9088059402858986,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 435.8495742697327,
+     "after": 435.4688970991734,
+     "change": -0.3806771705593519
+    }
+   ]
+  },
+  {
+   "cik": 320187,
+   "ticker": "NKE",
+   "name": "NKE",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-08-31",
+     "filedAt": "2026-10-02 00:00:00",
+     "before": 0.053352558883941054,
+     "after": 0.05348589523508633,
+     "change": 0.0001333363511452773
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-08-31",
+     "filedAt": "2026-10-02 00:00:00",
+     "before": 0.2625366783749056,
+     "after": 0.26319279840866927,
+     "change": 0.0006561200337636963
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-08-31",
+     "filedAt": "2026-10-02 00:00:00",
+     "before": 0.0363100990787895,
+     "after": 0.03640084366953014,
+     "change": 0.00009074459074064067
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-08-31",
+     "filedAt": "2026-10-02 00:00:00",
+     "before": 0.7915946588240993,
+     "after": 0.7935729771203838,
+     "change": 0.001978318296284476
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-08-31",
+     "filedAt": "2026-10-02 00:00:00",
+     "before": 0.04797072947178793,
+     "after": 0.048090615793331744,
+     "change": 0.00011988632154381201
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-08-31",
+     "filedAt": "2026-10-02 00:00:00",
+     "before": 18.743243452958293,
+     "after": 18.696517943743938,
+     "change": -0.04672550921435459
+    }
+   ]
+  },
+  {
+   "cik": 1397187,
+   "ticker": "LULU",
+   "name": "LULU",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-09-03 00:00:00",
+     "before": 0.11193818456569667,
+     "after": 0.11000580337776034,
+     "change": -0.00193238118793633
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-09-03 00:00:00",
+     "before": 0.37822568313757354,
+     "after": 0.37169639916066166,
+     "change": -0.0065292839769118816
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-09-03 00:00:00",
+     "before": 0.10691422578220053,
+     "after": 0.10506857284950491,
+     "change": -0.0018456529326956184
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-09-03 00:00:00",
+     "before": 0.8757809064276313,
+     "after": 0.8606623608222991,
+     "change": -0.015118545605332212
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-09-03 00:00:00",
+     "before": 0.15646599047043883,
+     "after": 0.15376492882905185,
+     "change": -0.002701061641386976
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-09-03 00:00:00",
+     "before": 8.933502038467479,
+     "after": 9.09042949821471,
+     "change": 0.15692745974723188
+    }
+   ]
+  },
+  {
+   "cik": 884887,
+   "ticker": "RCL",
+   "name": "RCL",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.0638732539065,
+     "after": 0.06400410791692317,
+     "change": 0.00013085401042316203
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.16439187497403526,
+     "after": 0.16472865656579236,
+     "change": 0.000336781591757096
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.02119283968332564,
+     "after": 0.021236256417172923,
+     "change": 0.000043416733847282535
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.2685455592720217,
+     "after": 0.2690957154213157,
+     "change": 0.0005501561492939899
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.09679934787807745,
+     "after": 0.0969976559663852,
+     "change": 0.00019830808830774427
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 17.59045704532524,
+     "after": 17.56283160482458,
+     "change": -0.027625440500660403
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 15.65600527356625,
+     "after": 15.623997154963746,
+     "change": -0.03200811860250319
+    }
+   ]
+  },
+  {
+   "cik": 886982,
+   "ticker": "GS",
+   "name": "GS",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-02 00:00:00",
+     "before": 0.08531525241349613,
+     "after": 0.08456315625919238,
+     "change": -0.000752096154303758
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-02 00:00:00",
+     "before": 0.48077717392600744,
+     "after": 0.4765388853040121,
+     "change": -0.004238288621995323
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-02 00:00:00",
+     "before": -0.15386301171654063,
+     "after": -0.15250663315434934,
+     "change": 0.001356378562191285
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-02 00:00:00",
+     "before": -0.1456928515436031,
+     "after": -0.1444084969850018,
+     "change": 0.0012843545586012917
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-02 00:00:00",
+     "before": 11.721233562708287,
+     "after": 11.825481027871351,
+     "change": 0.10424746516306449
+    }
+   ]
+  },
+  {
+   "cik": 927628,
+   "ticker": "COF",
+   "name": "COF",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.0935697140698506,
+     "after": 0.0917468237629686,
+     "change": -0.0018228903068819996
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.9441870402174968,
+     "after": 0.9257927400894529,
+     "change": -0.018394300128043883
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.22605864297320857,
+     "after": 0.22165465271675508,
+     "change": -0.004403990256453494
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.09001359997112525,
+     "after": 0.08825998855416156,
+     "change": -0.001753611416963688
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.241178585727111,
+     "after": 0.2364800343793826,
+     "change": -0.004698551347728425
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 10.687218721791663,
+     "after": 10.899559886493051,
+     "change": 0.21234116470138886
+    }
+   ]
+  },
+  {
+   "cik": 731766,
+   "ticker": "UNH",
+   "name": "UNH",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.04829377403135167,
+     "after": 0.04820796562805033,
+     "change": -0.00008580840330133649
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.0694002572424851,
+     "after": 0.06927694682862483,
+     "change": -0.00012331041386026698
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 1.36715405555815,
+     "after": 1.364724895507452,
+     "change": -0.0024291600506980426
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.07964337765998848,
+     "after": 0.07950186726434012,
+     "change": -0.00014151039564835877
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 15.774522655074403,
+     "after": 15.798993330411303,
+     "change": 0.02447067533690017
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 20.7066028708134,
+     "after": 20.743459861291868,
+     "change": 0.03685699047846924
+    }
+   ]
+  },
+  {
+   "cik": 78003,
+   "ticker": "PFE",
+   "name": "PFE",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.02446003991844551,
+     "after": 0.024680306227090526,
+     "change": 0.000220266308645016
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.5397887460405576,
+     "after": 0.5446496242294282,
+     "change": 0.004860878188870599
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.07148178291068652,
+     "after": 0.07212548703012371,
+     "change": 0.0006437041194371912
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.38588396722318263,
+     "after": 0.38935890991783656,
+     "change": 0.0034749426946539264
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.08595887571637198,
+     "after": 0.08673294821635359,
+     "change": 0.0007740724999816123
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 40.88300768658567,
+     "after": 40.518135828571786,
+     "change": -0.3648718580138848
+    }
+   ]
+  },
+  {
+   "cik": 831259,
+   "ticker": "FCX",
+   "name": "FCX",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 0.035704378838914204,
+     "after": 0.03585312397731395,
+     "change": 0.00014874513839974873
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 0.2078561521696057,
+     "after": 0.2087220849522819,
+     "change": 0.0008659327826761876
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 0.2562215177333069,
+     "after": 0.2572889415719397,
+     "change": 0.0010674238386327861
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 0.06159104418466416,
+     "after": 0.06184763367562731,
+     "change": 0.0002565894909631536
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 11.521827519794565,
+     "after": 11.477019752835437,
+     "change": -0.044807766959127804
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 14.743017524644031,
+     "after": 14.685682723165389,
+     "change": -0.05733480147864256
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 0.7214851273271988,
+     "after": 0.7214851273271988,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 28.007769145394008,
+     "after": 27.891572311320754,
+     "change": -0.11619683407325354
+    }
+   ]
+  },
+  {
+   "cik": 12927,
+   "ticker": "BA",
+   "name": "BA",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.05191147777622919,
+     "after": 0.0520645107885252,
+     "change": 0.0001530330122960083
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.044391907654254506,
+     "after": 0.04452277326704212,
+     "change": 0.00013086561278761316
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.00010848793683642463,
+     "after": 0.00010880775504393981,
+     "change": 3.1981820751517684e-7
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.6435572218097232,
+     "after": 0.6454544034053412,
+     "change": 0.001897181595618025
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.02720335016173348,
+     "after": 0.027283544577267907,
+     "change": 0.00008019441553442849
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 15.648605705256154,
+     "after": 15.61255341159348,
+     "change": -0.03605229366267437
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 19.32807755521315,
+     "after": 19.283548250744737,
+     "change": -0.04452930446841208
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 3.382984031936128,
+     "after": 3.382984031936128,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 19.263562565308256,
+     "after": 19.20694125143678,
+     "change": -0.0566213138714744
+    }
+   ]
+  },
+  {
+   "cik": 1045609,
+   "ticker": "PLD",
+   "name": "PLD",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-30 00:00:00",
+     "before": 0.030165374742896076,
+     "after": 0.03025377201601123,
+     "change": 0.0000883972731151525
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-30 00:00:00",
+     "before": 0.4341780629422796,
+     "after": 0.43545038782263124,
+     "change": 0.0012723248803516163
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-30 00:00:00",
+     "before": 0.07261418073496229,
+     "after": 0.07282697091645915,
+     "change": 0.00021279018149686357
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-30 00:00:00",
+     "before": 0.04167695950180867,
+     "after": 0.041799090574374184,
+     "change": 0.00012213107256551364
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-30 00:00:00",
+     "before": 29.446575412898675,
+     "after": 29.37905984042279,
+     "change": -0.0675155724758838
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-30 00:00:00",
+     "before": 33.47988787137251,
+     "after": 33.40312465648695,
+     "change": -0.0767632148855597
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-30 00:00:00",
+     "before": 6.33951944574193,
+     "after": 6.33951944574193,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-30 00:00:00",
+     "before": 33.150590984635436,
+     "after": 33.05372961331133,
+     "change": -0.09686137132410266
+    }
+   ]
+  },
+  {
+   "cik": 753308,
+   "ticker": "NEE",
+   "name": "NEE",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-23 00:00:00",
+     "before": 0.04225560120379149,
+     "after": 0.04228557703359313,
+     "change": 0.000029975829801645593
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-23 00:00:00",
+     "before": 0.28515688740996864,
+     "after": 0.28535917572394964,
+     "change": 0.00020228831398100278
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-23 00:00:00",
+     "before": 0.07684291843011379,
+     "after": 0.07689743026236093,
+     "change": 0.0000545118322471394
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-23 00:00:00",
+     "before": 0.0636699942371684,
+     "after": 0.06371516128854984,
+     "change": 0.000045167051381439505
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-23 00:00:00",
+     "before": 35.160568513119536,
+     "after": 35.14389213026239,
+     "change": -0.016676382857149008
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-03-31",
+     "filedAt": "2026-04-23 00:00:00",
+     "before": 23.6655016497617,
+     "after": 23.648725408324573,
+     "change": -0.016776241437128192
+    }
+   ]
+  },
+  {
+   "cik": 789019,
+   "ticker": "MSFT",
+   "name": "MSFT",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-28 00:00:00",
+     "before": 0.03744275568349246,
+     "after": 0.03745008993593121,
+     "change": 0.000007334252438755129
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-28 00:00:00",
+     "before": 0.12351559993188264,
+     "after": 0.12353979405364234,
+     "change": 0.000024194121759690823
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-28 00:00:00",
+     "before": 0.015739602909011066,
+     "after": 0.015742685967907594,
+     "change": 0.0000030830588965274908
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-28 00:00:00",
+     "before": 0.09094695748306851,
+     "after": 0.09096477208919301,
+     "change": 0.000017814606124502697
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-28 00:00:00",
+     "before": 0.0514208839436808,
+     "after": 0.051430956218986995,
+     "change": 0.000010072275306194367
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-28 00:00:00",
+     "before": 23.46268666776967,
+     "after": 23.45811522898873,
+     "change": -0.004571438780939019
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-28 00:00:00",
+     "before": 26.707435971142317,
+     "after": 26.70220556775105,
+     "change": -0.005230403391266236
+    }
+   ]
+  },
+  {
+   "cik": 1730168,
+   "ticker": "AVGO",
+   "name": "AVGO",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-09-10 00:00:00",
+     "before": 0.0016099674028952897,
+     "after": 0.001615523871705444,
+     "change": 0.0000055564688101542026
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-09-10 00:00:00",
+     "before": 0.021202388227367346,
+     "after": 0.02127556387593904,
+     "change": 0.00007317564857169459
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-09-10 00:00:00",
+     "before": 0.047946034581411064,
+     "after": 0.04811151038250063,
+     "change": 0.00016547580108956794
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-09-10 00:00:00",
+     "before": 0.02187500161427213,
+     "after": 0.021950498648543253,
+     "change": 0.00007549703427112142
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-09-10 00:00:00",
+     "before": 44.28735273508665,
+     "after": 44.13805809962722,
+     "change": -0.14929463545942667
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-09-10 00:00:00",
+     "before": 621.130588235294,
+     "after": 618.9942578467379,
+     "change": -2.1363303885560754
+    }
+   ]
+  },
+  {
+   "cik": 1596532,
+   "ticker": "ANET",
+   "name": "ANET",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.018474773260841723,
+     "after": 0.018506638428578692,
+     "change": 0.000031865167736969124
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.06394129911386481,
+     "after": 0.06405158464716018,
+     "change": 0.00011028553329536783
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.01953341820169341,
+     "after": 0.019567109313280286,
+     "change": 0.000033691111586877515
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.04622619982086157,
+     "after": 0.0463059304670967,
+     "change": 0.00007973064623512799
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.020369292833654892,
+     "after": 0.020404425656324145,
+     "change": 0.000035132822669252384
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 54.12786321548822,
+     "after": 54.034664580454546,
+     "change": -0.09319863503367287
+    }
+   ]
+  },
+  {
+   "cik": 723125,
+   "ticker": "MU",
+   "name": "MU",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-03",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 0.07840790781801282,
+     "after": 0.07851946300865473,
+     "change": 0.00011155519064190433
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-03",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 0.12769279935083358,
+     "after": 0.12787447483448816,
+     "change": 0.00018167548365458086
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-03",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 0.054410025640804174,
+     "after": 0.05448743774057961,
+     "change": 0.00007741209977543684
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-03",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 0.12290355807959952,
+     "after": 0.12307841964948046,
+     "change": 0.00017486156988094637
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-03",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 0.08275052235027244,
+     "after": 0.08286825601455958,
+     "change": 0.00011773366428713405
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-03",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 9.634041325579044,
+     "after": 9.6198960113389,
+     "change": -0.014145314240144202
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-03",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 10.555646869337629,
+     "after": 10.540148395028789,
+     "change": -0.015498474308840215
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-03",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": -0.32230827889712704,
+     "after": -0.32230827889712704,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-03",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 12.753815626875683,
+     "after": 12.735695860398026,
+     "change": -0.018119766477656896
+    }
+   ]
+  },
+  {
+   "cik": 1375365,
+   "ticker": "SMCI",
+   "name": "SMCI",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 0.13505517408060114,
+     "after": 0.13551373131896388,
+     "change": 0.00045855723836274453
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 0.5935258497962647,
+     "after": 0.5955410674762409,
+     "change": 0.0020152176799762556
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": -0.2400050923903814,
+     "after": -0.24081998951008635,
+     "change": -0.0008148971197049493
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 1.994265710876757,
+     "after": 2.0010369063023794,
+     "change": 0.006771195425622434
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": -0.23367716926602666,
+     "after": -0.23447058098191623,
+     "change": -0.0007934117158895637
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2024-03-31",
+     "filedAt": "2025-05-12 00:00:00",
+     "before": 3.2858440329252923,
+     "after": 46.0755380814165,
+     "change": 42.78969404849121
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2024-03-31",
+     "filedAt": "2024-05-06 00:00:00",
+     "before": 3.380289211108723,
+     "after": 47.39988956018182,
+     "change": 44.019600349073094
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2024-03-31",
+     "filedAt": "2025-05-12 00:00:00",
+     "before": -1.7171825695601783,
+     "after": -1.7171825695601783,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 7.404381259789414,
+     "after": 7.379325993513244,
+     "change": -0.025055266276170052
+    }
+   ]
+  },
+  {
+   "cik": 1274494,
+   "ticker": "FSLR",
+   "name": "FSLR",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.09885770942080206,
+     "after": 0.09886812873301483,
+     "change": 0.000010419312212767151
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.5779510455449913,
+     "after": 0.5780119598876613,
+     "change": 0.00006091434266997098
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.012365088261279689,
+     "after": 0.012366391505264276,
+     "change": 0.0000013032439845871158
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.26633626732412824,
+     "after": 0.2663643383844339,
+     "change": 0.00002807106030566775
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.04457460544702276,
+     "after": 0.04457930347951446,
+     "change": 0.0000046980324916942595
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 8.289560147299431,
+     "after": 8.288612645133684,
+     "change": -0.0009475021657472382
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 9.185542319026943,
+     "after": 9.184492405510882,
+     "change": -0.0010499135160610962
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": -0.7012219873675122,
+     "after": -0.7012219873675122,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 10.115548962836638,
+     "after": 10.114482926044014,
+     "change": -0.0010660367926238479
+    }
+   ]
+  },
+  {
+   "cik": 1682852,
+   "ticker": "MRNA",
+   "name": "MRNA",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": -0.03584912160011764,
+     "after": -0.03627691178447017,
+     "change": -0.0004277901843525306
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 0.08788112025098756,
+     "after": 0.08892981207257891,
+     "change": 0.0010486918215913549
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": -0.025321896576633827,
+     "after": -0.025624064616495607,
+     "change": -0.00030216803986177904
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": 0.032455730383756556,
+     "after": 0.03284302698307178,
+     "change": 0.0003872965993152247
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-06 00:00:00",
+     "before": -0.022943951974259587,
+     "after": -0.02321774382763688,
+     "change": -0.00027379185337729484
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2023-06-30",
+     "filedAt": "2023-08-03 00:00:00",
+     "before": 38.352526926263465,
+     "after": 38.37359977754764,
+     "change": 0.02107285128417402
+    }
+   ]
+  },
+  {
+   "cik": 59478,
+   "ticker": "LLY",
+   "name": "LLY",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.026679654595359502,
+     "after": 0.025320470097597,
+     "change": -0.0013591844977625007
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.038956782351139516,
+     "after": 0.03697214441420062,
+     "change": -0.001984637936938899
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.08364036938849854,
+     "after": 0.07937934370491455,
+     "change": -0.004261025683583997
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.02964453359583149,
+     "after": 0.028134304504864847,
+     "change": -0.0015102290909666423
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 37.48174461651141,
+     "after": 39.49373752325805,
+     "change": 2.0119929067466344
+    }
+   ]
+  },
+  {
+   "cik": 27904,
+   "ticker": "DAL",
+   "name": "DAL",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 0.059818029554106596,
+     "after": 0.0599432800827493,
+     "change": 0.00012525052864270636
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 0.409326230805958,
+     "after": 0.41018330228052735,
+     "change": 0.0008570714745693708
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 1.3054512224877974,
+     "after": 1.3081846534776291,
+     "change": 0.0027334309898316977
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 0.14545417520755405,
+     "after": 0.14575873576352413,
+     "change": 0.0003045605559700848
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 8.424287166454892,
+     "after": 8.40968463580686,
+     "change": -0.014602530648032186
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 12.5424025728339,
+     "after": 12.520661763866816,
+     "change": -0.021740808967084746
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 1.435705209656926,
+     "after": 1.435705209656924,
+     "change": -1.9984014443252818e-15
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-09 00:00:00",
+     "before": 16.717367781155012,
+     "after": 16.682437107537993,
+     "change": -0.03493067361701918
+    }
+   ]
+  },
+  {
+   "cik": 1792789,
+   "ticker": "DASH",
+   "name": "DASH",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.013152744428328875,
+     "after": 0.013331041054762502,
+     "change": 0.00017829662643362686
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.13260391537008517,
+     "after": 0.1344014741146658,
+     "change": 0.001797558744580624
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.033296364305393227,
+     "after": 0.033747724815019656,
+     "change": 0.0004513605096264292
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.21109969209004603,
+     "after": 0.21396132778485707,
+     "change": 0.0028616356948110433
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 0.03653815079666525,
+     "after": 0.037033456476682665,
+     "change": 0.0004953056800174119
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-30 00:00:00",
+     "before": 76.02975983066793,
+     "after": 75.0128962841016,
+     "change": -1.0168635465663272
+    }
+   ]
+  },
+  {
+   "cik": 354950,
+   "ticker": "HD",
+   "name": "HD",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-08-25 00:00:00",
+     "before": 0.04294346012183422,
+     "after": 0.04298150254153561,
+     "change": 0.000038042419701393715
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-08-25 00:00:00",
+     "before": 0.0501575509133703,
+     "after": 0.05020198409592305,
+     "change": 0.000044433182552754136
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-08-25 00:00:00",
+     "before": 0.5106489639116768,
+     "after": 0.5111013336590166,
+     "change": 0.00045236974733975366
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-08-25 00:00:00",
+     "before": 0.056683435554082014,
+     "after": 0.056733649836753865,
+     "change": 0.00005021428267185102
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-08-25 00:00:00",
+     "before": 15.135351044412898,
+     "after": 15.123457868859054,
+     "change": -0.01189317555384406
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-08-25 00:00:00",
+     "before": 17.75102654362097,
+     "after": 17.737078001937018,
+     "change": -0.013948541683951987
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-08-25 00:00:00",
+     "before": 1.6980734131007909,
+     "after": 1.6980734131007909,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-08-02",
+     "filedAt": "2026-08-25 00:00:00",
+     "before": 23.28643283896816,
+     "after": 23.265822292592954,
+     "change": -0.020610546375205985
+    }
+   ]
+  },
+  {
+   "cik": 18230,
+   "ticker": "CAT",
+   "name": "CAT",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.011721818925287147,
+     "after": 0.011668908762626358,
+     "change": -0.000052910162660789115
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.030386706498893377,
+     "after": 0.030249546422131426,
+     "change": -0.00013716007676195172
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.2096208377273758,
+     "after": 0.20867464732024368,
+     "change": -0.0009461904071321192
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.03823000221574452,
+     "after": 0.03805743892598121,
+     "change": -0.00017256328976331115
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2025-12-31",
+     "filedAt": "2026-03-26 00:00:00",
+     "before": 21.417461492581822,
+     "after": 21.531907191569374,
+     "change": 0.11444569898755219
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2025-12-31",
+     "filedAt": "2026-02-13 00:00:00",
+     "before": 25.762031297641467,
+     "after": 25.899692508341854,
+     "change": 0.1376612107003865
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2025-12-31",
+     "filedAt": "2026-03-26 00:00:00",
+     "before": 1.5444717811078803,
+     "after": 1.5444717811078827,
+     "change": 2.4424906541753444e-15
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 85.31099195217291,
+     "after": 85.69781633762014,
+     "change": 0.38682438544722686
+    }
+   ]
+  },
+  {
+   "cik": 1053507,
+   "ticker": "AMT",
+   "name": "AMT",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.041755552255367416,
+     "after": 0.04159532192656656,
+     "change": -0.00016023032880085886
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.04628304074299472,
+     "after": 0.04610543689307318,
+     "change": -0.00017760384992154127
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.0521279757353066,
+     "after": 0.051927942871635935,
+     "change": -0.00020003286367066553
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.011180527529765687,
+     "after": 0.011137624023393522,
+     "change": -0.00004290350637216507
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 0.0751207733745069,
+     "after": 0.07483250928584251,
+     "change": -0.0002882640886643917
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 22.619258901917895,
+     "after": 22.678534592445875,
+     "change": 0.05927569052797921
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-27 00:00:00",
+     "before": 23.948910886969678,
+     "after": 24.041165056143225,
+     "change": 0.09225416917354679
+    }
+   ]
+  },
+  {
+   "cik": 19617,
+   "ticker": "JPM",
+   "name": "JPM",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.07433274506527247,
+     "after": 0.07502663108598608,
+     "change": 0.0006938860207136022
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.4195143244739293,
+     "after": 0.42343043338375036,
+     "change": 0.003916108909821081
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.10613250047551484,
+     "after": 0.1071232328688722,
+     "change": 0.0009907323933573547
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": -0.09481455450898417,
+     "after": -0.09569963542286944,
+     "change": -0.0008850809138852694
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 13.453021264341684,
+     "after": 13.328600598551812,
+     "change": -0.12442066578987188
+    }
+   ]
+  },
+  {
+   "cik": 1506307,
+   "ticker": "KMI",
+   "name": "KMI",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-23 00:00:00",
+     "before": 0.05364358265392811,
+     "after": 0.05366551798766031,
+     "change": 0.0000219353337322023
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-23 00:00:00",
+     "before": 0.4704049386485869,
+     "after": 0.4705972913738905,
+     "change": 0.0001923527253036017
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-23 00:00:00",
+     "before": 0.04588662829292435,
+     "after": 0.04590539173965281,
+     "change": 0.00001876344672845781
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-23 00:00:00",
+     "before": 0.24930940647794234,
+     "after": 0.24941135129152703,
+     "change": 0.00010194481358469232
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-23 00:00:00",
+     "before": 0.1002448631720505,
+     "after": 0.1002858541801046,
+     "change": 0.00004099100805410316
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-23 00:00:00",
+     "before": 12.712215069397159,
+     "after": 12.708701264987841,
+     "change": -0.0035138044093177
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-23 00:00:00",
+     "before": 18.690353093187806,
+     "after": 18.685186861751976,
+     "change": -0.005166231435829616
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-23 00:00:00",
+     "before": 4.115576603097402,
+     "after": 4.115576603097403,
+     "change": 8.881784197001252e-16
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-23 00:00:00",
+     "before": 18.641558794671106,
+     "after": 18.63393921269775,
+     "change": -0.007619581973354883
+    }
+   ]
+  },
+  {
+   "cik": 320193,
+   "ticker": "AAPL",
+   "name": "AAPL",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.02666690835716435,
+     "after": 0.026553764512674015,
+     "change": -0.00011314384449033488
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.022615273376051626,
+     "after": 0.022519320034190795,
+     "change": -0.00009595334186083063
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.027449917786588635,
+     "after": 0.027333451746066773,
+     "change": -0.00011646604052186274
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.09660694077014893,
+     "after": 0.09619705145951768,
+     "change": -0.00040988931063125345
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.029273980721766416,
+     "after": 0.029149775445397857,
+     "change": -0.00012420527636855874
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 29.20490638961781,
+     "after": 29.32806160619526,
+     "change": 0.1231552165774481
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 31.685040630191757,
+     "after": 31.81865441374642,
+     "change": 0.13361378355466158
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 0.3015698074478383,
+     "after": 0.3015698074478383,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-26",
+     "filedAt": "2026-11-03 00:00:00",
+     "before": 37.499660125818046,
+     "after": 37.659443711745794,
+     "change": 0.1597835859277481
+    }
+   ]
+  },
+  {
+   "cik": 51143,
+   "ticker": "IBM",
+   "name": "IBM",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.05326920098669987,
+     "after": 0.05391315168374429,
+     "change": 0.0006439506970444195
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.16945909904792347,
+     "after": 0.17150762432953368,
+     "change": 0.002048525281610203
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.06988751317349147,
+     "after": 0.0707323561970241,
+     "change": 0.0008448430235326321
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.3331673560593274,
+     "after": 0.33719488692506006,
+     "change": 0.004027530865732654
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.07549053091222323,
+     "after": 0.07640310664267799,
+     "change": 0.0009125757304547649
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 18.772573672536925,
+     "after": 18.548349869546147,
+     "change": -0.22422380299077815
+    }
+   ]
+  },
+  {
+   "cik": 936468,
+   "ticker": "LMT",
+   "name": "LMT",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.05414949050592236,
+     "after": 0.05431589822890792,
+     "change": 0.00016640772298556067
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.08366441316767953,
+     "after": 0.08392152370297873,
+     "change": 0.0002571105352991987
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.07643117859986862,
+     "after": 0.07666606055862898,
+     "change": 0.000234881958760369
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.6577753862838253,
+     "after": 0.6597968070441086,
+     "change": 0.0020214207602833323
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.084071802241039,
+     "after": 0.084330164730649,
+     "change": 0.0002583624896100034
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 14.471462000858738,
+     "after": 14.431906787106053,
+     "change": -0.03955521375268489
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 18.467394441885457,
+     "after": 18.410815849636112,
+     "change": -0.056578592249344695
+    }
+   ]
+  },
+  {
+   "cik": 732717,
+   "ticker": "T",
+   "name": "T",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.07865570896130152,
+     "after": 0.0785594535431828,
+     "change": -0.00009625541811870975
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.771598432514779,
+     "after": 0.770654184084217,
+     "change": -0.0009442484305619558
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.24123080165946478,
+     "after": 0.24093559395002484,
+     "change": -0.000295207709439943
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 7.2415250934268744,
+     "after": 7.246216151042025,
+     "change": 0.004691057615150207
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 13.39554688493999,
+     "after": 13.404224515882778,
+     "change": 0.008677630942788284
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 3.4128894697021805,
+     "after": 3.4128894697021805,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 12.713635325466312,
+     "after": 12.729212779596498,
+     "change": 0.015577454130186297
+    }
+   ]
+  },
+  {
+   "cik": 1652044,
+   "ticker": "GOOGL",
+   "name": "GOOGL",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.055718047418196824,
+     "after": 0.05600962182823482,
+     "change": 0.00029157441003799245
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.160172542831603,
+     "after": 0.1610107311178845,
+     "change": 0.0008381882862814882
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.004668189611815034,
+     "after": 0.004692618404550616,
+     "change": 0.00002442879273558199
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.11136753885384307,
+     "after": 0.11195032891816407,
+     "change": 0.0005827900643210066
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.04244584559634381,
+     "after": 0.04266796612930914,
+     "change": 0.00022212053296533085
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 27.392107838140863,
+     "after": 27.251824482723475,
+     "change": -0.14028335541738812
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 17.947506173258546,
+     "after": 17.854075199198963,
+     "change": -0.0934309740595829
+    }
+   ]
+  },
+  {
+   "cik": 200406,
+   "ticker": "JNJ",
+   "name": "JNJ",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.024235468760765353,
+     "after": 0.024624674615556053,
+     "change": 0.00038920585479070013
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.12276443197244104,
+     "after": 0.12473594884943583,
+     "change": 0.001971516876994789
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.03100393300926739,
+     "after": 0.03150183599467531,
+     "change": 0.0004979029854079234
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.14957628389876523,
+     "after": 0.1519783816673663,
+     "change": 0.0024020977686010636
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.03938960095140484,
+     "after": 0.0400221723062026,
+     "change": 0.0006325713547977591
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 22.874884185143014,
+     "after": 22.523333695436403,
+     "change": -0.35155048970661085
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 31.37769522671935,
+     "after": 30.89547009134654,
+     "change": -0.4822251353728113
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 0.6326277714515373,
+     "after": 0.6326277714515373,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-27",
+     "filedAt": "2026-10-21 00:00:00",
+     "before": 41.261838583411006,
+     "after": 40.60967365506928,
+     "change": -0.6521649283417261
+    }
+   ]
+  },
+  {
+   "cik": 80424,
+   "ticker": "PG",
+   "name": "PG",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.04582549158691327,
+     "after": 0.04745721666341195,
+     "change": 0.001631725076498676
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.04386391120324782,
+     "after": 0.045425789567998205,
+     "change": 0.0015618783647503853
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.2514111254708708,
+     "after": 0.2603632135715193,
+     "change": 0.008952088100648514
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 0.05694587950538985,
+     "after": 0.05897357231073561,
+     "change": 0.00202769280534576
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-22 00:00:00",
+     "before": 21.82191538749532,
+     "after": 21.071610817222012,
+     "change": -0.7503045702733075
+    }
+   ]
+  },
+  {
+   "cik": 104169,
+   "ticker": "WMT",
+   "name": "WMT",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-07-31",
+     "filedAt": "2026-08-28 00:00:00",
+     "before": 0.024884078698435085,
+     "after": 0.024946369091011524,
+     "change": 0.00006229039257643967
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-07-31",
+     "filedAt": "2026-08-28 00:00:00",
+     "before": 0.11073392476793195,
+     "after": 0.11101111645057031,
+     "change": 0.0002771916826383586
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-07-31",
+     "filedAt": "2026-08-28 00:00:00",
+     "before": 0.015227351836254736,
+     "after": 0.015265469290200883,
+     "change": 0.000038117453946147004
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-07-31",
+     "filedAt": "2026-08-28 00:00:00",
+     "before": 0.8211272546264818,
+     "after": 0.8231827190728755,
+     "change": 0.0020554644463937066
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-07-31",
+     "filedAt": "2026-08-28 00:00:00",
+     "before": 0.048382827956737144,
+     "after": 0.04850394095368217,
+     "change": 0.00012111299694502614
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-07-31",
+     "filedAt": "2026-08-28 00:00:00",
+     "before": 28.362967781908303,
+     "after": 28.29434330966543,
+     "change": -0.06862447224287394
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-07-31",
+     "filedAt": "2026-08-28 00:00:00",
+     "before": 40.18633810472912,
+     "after": 40.085993931690524,
+     "change": -0.100344173038593
+    }
+   ]
+  },
+  {
+   "cik": 93410,
+   "ticker": "CVX",
+   "name": "CVX",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-05 00:00:00",
+     "before": 0.06729786185999981,
+     "after": 0.0668596164306329,
+     "change": -0.0004382454293669069
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-05 00:00:00",
+     "before": 0.4847935795398941,
+     "after": 0.48163659112231616,
+     "change": -0.003156988417577944
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-05 00:00:00",
+     "before": 0.5632578570910771,
+     "after": 0.5595899072542951,
+     "change": -0.0036679498367819807
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-05 00:00:00",
+     "before": 0.12960127237644536,
+     "after": 0.12875730551495326,
+     "change": -0.0008439668614921014
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-05 00:00:00",
+     "before": 14.85931309497331,
+     "after": 14.95671159043372,
+     "change": 0.09739849546041057
+    }
+   ]
+  },
+  {
+   "cik": 1141391,
+   "ticker": "MA",
+   "name": "MA",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.006665456120474352,
+     "after": 0.006620112881559561,
+     "change": -0.00004534323891479137
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.013978827696137671,
+     "after": 0.01388373363017755,
+     "change": -0.00009509406596012147
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.033290020288654826,
+     "after": 0.033063557565602746,
+     "change": -0.0002264627230520802
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.07511679245334574,
+     "after": 0.07460579386522774,
+     "change": -0.0005109985881179974
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.03490256386562672,
+     "after": 0.03466513145837756,
+     "change": -0.0002374324072491607
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 23.3649355779178,
+     "after": 23.520527602746167,
+     "change": 0.15559202482836554
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 150.02724223602485,
+     "after": 151.05482608695652,
+     "change": 1.027583850931677
+    }
+   ]
+  },
+  {
+   "cik": 1403161,
+   "ticker": "V",
+   "name": "V",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    }
+   ]
+  },
+  {
+   "cik": 909832,
+   "ticker": "COST",
+   "name": "COST",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-08-30",
+     "filedAt": "2026-10-07 00:00:00",
+     "before": 0.02201411730926001,
+     "after": 0.022003553800524923,
+     "change": -0.000010563508735086935
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-08-30",
+     "filedAt": "2026-10-07 00:00:00",
+     "before": 0.08542937806453893,
+     "after": 0.08538838464342009,
+     "change": -0.0000409934211188373
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-08-30",
+     "filedAt": "2026-10-07 00:00:00",
+     "before": 0.02238634821108578,
+     "after": 0.022375606086768352,
+     "change": -0.000010742124317428964
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-08-30",
+     "filedAt": "2026-10-07 00:00:00",
+     "before": 0.7233544026416008,
+     "after": 0.7230072998964159,
+     "change": -0.0003471027451849018
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-08-30",
+     "filedAt": "2026-10-07 00:00:00",
+     "before": 0.037740872911398826,
+     "after": 0.037722762894309855,
+     "change": -0.000018110017088970864
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-08-30",
+     "filedAt": "2026-10-07 00:00:00",
+     "before": 28.208768369663627,
+     "after": 28.22278047342294,
+     "change": 0.014012103759313277
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-08-30",
+     "filedAt": "2026-10-07 00:00:00",
+     "before": 34.66407402824134,
+     "after": 34.68129266734103,
+     "change": 0.017218639099695565
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-08-30",
+     "filedAt": "2026-10-07 00:00:00",
+     "before": -0.978132181906818,
+     "after": -0.978132181906818,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-08-30",
+     "filedAt": "2026-10-07 00:00:00",
+     "before": 45.42539616518535,
+     "after": 45.44720407737698,
+     "change": 0.02180791219163325
+    }
+   ]
+  },
+  {
+   "cik": 5272,
+   "ticker": "AIG",
+   "name": "AIG",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.08020381717322268,
+     "after": 0.07956064916149364,
+     "change": -0.0006431680117290478
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 1.0072884441687395,
+     "after": 0.9992108273082548,
+     "change": -0.008077616860484693
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.7183111894635396,
+     "after": 0.7125509302163745,
+     "change": -0.005760259247165056
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 0.13465744239871172,
+     "after": 0.13357760153147413,
+     "change": -0.0010798408672375859
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-04 00:00:00",
+     "before": 12.468234496124031,
+     "after": 12.569027660523258,
+     "change": 0.10079316439922614
+    }
+   ]
+  },
+  {
+   "cik": 1163165,
+   "ticker": "COP",
+   "name": "COP",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-05 00:00:00",
+     "before": 0.07722047471708114,
+     "after": 0.07686864631405337,
+     "change": -0.0003518284030277763
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-05 00:00:00",
+     "before": 0.4409324519386434,
+     "after": 0.4389234956226266,
+     "change": -0.0020089563160167745
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-05 00:00:00",
+     "before": 0.4020783323159189,
+     "after": 0.4002464013666588,
+     "change": -0.0018319309492600966
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-05 00:00:00",
+     "before": 0.15529620778527298,
+     "after": 0.15458865429014695,
+     "change": -0.0007075534951260232
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-11-05 00:00:00",
+     "before": 12.949933339101843,
+     "after": 13.009205286566583,
+     "change": 0.05927194746474029
+    }
+   ]
+  },
+  {
+   "cik": 1707925,
+   "ticker": "LIN",
+   "name": "LIN",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.031917996823713365,
+     "after": 0.03202406032150524,
+     "change": 0.00010606349779187368
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.1795734652182715,
+     "after": 0.1801701878113857,
+     "change": 0.0005967225931141906
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.023140206060291695,
+     "after": 0.023217100960931443,
+     "change": 0.00007689490063974777
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.1650698400025296,
+     "after": 0.16561836705162078,
+     "change": 0.0005485270490911687
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 0.04878574939089056,
+     "after": 0.04894786442747554,
+     "change": 0.00016211503658498244
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 17.290138173403715,
+     "after": 17.237561238553038,
+     "change": -0.05257693485067705
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 26.100351577338717,
+     "after": 26.02098399388167,
+     "change": -0.07936758345704575
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 1.4154313399378118,
+     "after": 1.4154313399378118,
+     "change": 0
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-09-30",
+     "filedAt": "2026-10-29 00:00:00",
+     "before": 31.330286970172683,
+     "after": 31.226521245604392,
+     "change": -0.1037657245682908
+    }
+   ]
+  },
+  {
+   "cik": 858877,
+   "ticker": "CSCO",
+   "name": "CISCO SYSTEMS, INC.",
+   "factors": [
+    {
+     "factor": "earningsYield",
+     "periodEnd": "2026-07-25",
+     "filedAt": "2026-09-02 00:00:00",
+     "before": 0.029448531793027363,
+     "after": 0.02948264181242897,
+     "change": 0.00003411001940160918
+    },
+    {
+     "factor": "bookToMarket",
+     "periodEnd": "2026-07-25",
+     "filedAt": "2026-09-02 00:00:00",
+     "before": 0.11161674992178948,
+     "after": 0.11174603478842171,
+     "change": 0.0001292848666322316
+    },
+    {
+     "factor": "fcfYield",
+     "periodEnd": "2026-07-25",
+     "filedAt": "2026-09-02 00:00:00",
+     "before": 0.02833869038980782,
+     "after": 0.02837151488801392,
+     "change": 0.000032824498206098646
+    },
+    {
+     "factor": "salesYield",
+     "periodEnd": "2026-07-25",
+     "filedAt": "2026-09-02 00:00:00",
+     "before": 0.14056141371775516,
+     "after": 0.14072422497716625,
+     "change": 0.00016281125941108865
+    },
+    {
+     "factor": "ocfYield",
+     "periodEnd": "2026-07-25",
+     "filedAt": "2026-09-02 00:00:00",
+     "before": 0.03146844314688693,
+     "after": 0.03150489281486436,
+     "change": 0.00003644966797743121
+    },
+    {
+     "factor": "evEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "evEbit",
+     "periodEnd": "2026-07-25",
+     "filedAt": "2026-09-02 00:00:00",
+     "before": 30.994912805830296,
+     "after": 30.960996597023033,
+     "change": -0.03391620880726265
+    },
+    {
+     "factor": "netDebtToEbitda",
+     "periodEnd": null,
+     "filedAt": null,
+     "before": null,
+     "after": null,
+     "change": null
+    },
+    {
+     "factor": "peRatio",
+     "periodEnd": "2026-07-25",
+     "filedAt": "2026-09-02 00:00:00",
+     "before": 33.95755031280621,
+     "after": 33.918263036334515,
+     "change": -0.03928727647169694
+    }
+   ]
+  }
+ ],
+ "nvdaSplitPe": {
+  "periods": [
+   {
+    "periodEnd": "2024-01-28",
+    "before": 5.051841688228771,
+    "after": 50.655791525252866
+   },
+   {
+    "periodEnd": "2024-04-28",
+    "before": 5.1252645186280725,
+    "after": 51.49130220438059
+   },
+   {
+    "periodEnd": "2024-07-28",
+    "before": 52.98950377301539,
+    "after": 52.46898581346212
+   },
+   {
+    "periodEnd": "2024-10-27",
+    "before": 55.589691790595175,
+    "after": 55.04607603767004
+   }
+  ],
+  "afterRatio": 1.0189873545089398,
+  "pass": true
+ },
+ "added": [
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2022-11-15",
+   "filedAt": "2022-11-15 00:00:00",
+   "value": 0.4716817985300476
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2022-12-15",
+   "filedAt": "2022-12-15 00:00:00",
+   "value": 0.4310054418243068
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-01-18",
+   "filedAt": "2023-01-18 00:00:00",
+   "value": 0.5308995107263832
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-02-16",
+   "filedAt": "2023-02-16 00:00:00",
+   "value": 0.6492622020431328
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-03-20",
+   "filedAt": "2023-03-20 00:00:00",
+   "value": 0.7856041548324272
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-04-19",
+   "filedAt": "2023-04-19 00:00:00",
+   "value": 0.8282530619762408
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-05-18",
+   "filedAt": "2023-05-18 00:00:00",
+   "value": 0.9939220922736901
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-06-20",
+   "filedAt": "2023-06-20 00:00:00",
+   "value": 0.9205820883969348
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-07-20",
+   "filedAt": "2023-07-20 00:00:00",
+   "value": 0.8533942255592538
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-08-18",
+   "filedAt": "2023-08-18 00:00:00",
+   "value": 0.816239647031504
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-09-19",
+   "filedAt": "2023-09-19 00:00:00",
+   "value": 0.7865159842093041
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-10-18",
+   "filedAt": "2023-10-18 00:00:00",
+   "value": 0.7908506850375416
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-11-16",
+   "filedAt": "2023-11-16 00:00:00",
+   "value": 0.9275485718708878
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-12-18",
+   "filedAt": "2023-12-18 00:00:00",
+   "value": 0.998203377650018
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-01-19",
+   "filedAt": "2024-01-19 00:00:00",
+   "value": 1
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-02-20",
+   "filedAt": "2024-02-20 00:00:00",
+   "value": 0.9188155049076692
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-03-20",
+   "filedAt": "2024-03-20 00:00:00",
+   "value": 0.8502696565427192
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-04-19",
+   "filedAt": "2024-04-19 00:00:00",
+   "value": 0.6937269372693726
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-05-20",
+   "filedAt": "2024-05-20 00:00:00",
+   "value": 0.7868767149209954
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-06-20",
+   "filedAt": "2024-06-20 00:00:00",
+   "value": 0.7653514996688429
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-07-22",
+   "filedAt": "2024-07-22 00:00:00",
+   "value": 0.7373923739237392
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-08-20",
+   "filedAt": "2024-08-20 00:00:00",
+   "value": 0.7398997066893747
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-09-19",
+   "filedAt": "2024-09-19 00:00:00",
+   "value": 0.7415081843126125
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-10-18",
+   "filedAt": "2024-10-18 00:00:00",
+   "value": 0.7378654555776327
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-11-18",
+   "filedAt": "2024-11-18 00:00:00",
+   "value": 0.6572523417541868
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-12-18",
+   "filedAt": "2024-12-18 00:00:00",
+   "value": 0.5743684359920522
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-01-22",
+   "filedAt": "2025-01-22 00:00:00",
+   "value": 0.5854385466931592
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-02-21",
+   "filedAt": "2025-02-21 00:00:00",
+   "value": 0.5243637051755133
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-03-24",
+   "filedAt": "2025-03-24 00:00:00",
+   "value": 0.6188845401174168
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-04-23",
+   "filedAt": "2025-04-23 00:00:00",
+   "value": 0.49135681669928244
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-05-22",
+   "filedAt": "2025-05-22 00:00:00",
+   "value": 0.6018156120895847
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-06-24",
+   "filedAt": "2025-06-24 00:00:00",
+   "value": 0.752500543596434
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-07-24",
+   "filedAt": "2025-07-24 00:00:00",
+   "value": 0.9381944444444444
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-08-22",
+   "filedAt": "2025-08-22 00:00:00",
+   "value": 0.9096627263854246
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-09-23",
+   "filedAt": "2025-09-23 00:00:00",
+   "value": 0.8724650254853054
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-10-22",
+   "filedAt": "2025-10-22 00:00:00",
+   "value": 0.9570585300964416
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-11-20",
+   "filedAt": "2025-11-20 00:00:00",
+   "value": 0.779404532213521
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-12-22",
+   "filedAt": "2025-12-22 00:00:00",
+   "value": 0.8131880603790717
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-01-23",
+   "filedAt": "2026-01-23 00:00:00",
+   "value": 0.9824083531948702
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-02-24",
+   "filedAt": "2026-02-24 00:00:00",
+   "value": 0.8089887640449439
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-03-25",
+   "filedAt": "2026-03-25 00:00:00",
+   "value": 0.8333144175840806
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-04-24",
+   "filedAt": "2026-04-24 00:00:00",
+   "value": 1
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-05-26",
+   "filedAt": "2026-05-26 00:00:00",
+   "value": 1
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-06-25",
+   "filedAt": "2026-06-25 00:00:00",
+   "value": 0.965447854540181
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-07-27",
+   "filedAt": "2026-07-27 00:00:00",
+   "value": 0.852025270695977
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-08-25",
+   "filedAt": "2026-08-25 00:00:00",
+   "value": 0.8248782083283125
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-09-24",
+   "filedAt": "2026-09-24 00:00:00",
+   "value": 1
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-10-23",
+   "filedAt": "2026-10-23 00:00:00",
+   "value": 0.795771611591882
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2022-11-15",
+   "filedAt": "2022-11-15 00:00:00",
+   "value": -0.6181309304389379
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2022-12-15",
+   "filedAt": "2022-12-15 00:00:00",
+   "value": -0.4980544747081712
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-01-18",
+   "filedAt": "2023-01-18 00:00:00",
+   "value": -0.5294559355587412
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-02-16",
+   "filedAt": "2023-02-16 00:00:00",
+   "value": -0.5112976995016725
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-03-20",
+   "filedAt": "2023-03-20 00:00:00",
+   "value": -0.4185268619018363
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-04-19",
+   "filedAt": "2023-04-19 00:00:00",
+   "value": -0.3321045805174415
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-05-18",
+   "filedAt": "2023-05-18 00:00:00",
+   "value": -0.38712540105126636
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-06-20",
+   "filedAt": "2023-06-20 00:00:00",
+   "value": -0.2917605297289918
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-07-20",
+   "filedAt": "2023-07-20 00:00:00",
+   "value": -0.18028534370946825
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-08-18",
+   "filedAt": "2023-08-18 00:00:00",
+   "value": -0.20520172025394223
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-09-19",
+   "filedAt": "2023-09-19 00:00:00",
+   "value": -0.2870503106014063
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-10-18",
+   "filedAt": "2023-10-18 00:00:00",
+   "value": -0.3011809679841627
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-11-16",
+   "filedAt": "2023-11-16 00:00:00",
+   "value": -0.28227182742849344
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-12-18",
+   "filedAt": "2023-12-18 00:00:00",
+   "value": -0.19448426513755213
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-01-19",
+   "filedAt": "2024-01-19 00:00:00",
+   "value": -0.05010580927025743
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-02-20",
+   "filedAt": "2024-02-20 00:00:00",
+   "value": 0.11045122533961349
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-03-20",
+   "filedAt": "2024-03-20 00:00:00",
+   "value": 0.18690695610621888
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-04-19",
+   "filedAt": "2024-04-19 00:00:00",
+   "value": 0.23844631032834984
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-05-20",
+   "filedAt": "2024-05-20 00:00:00",
+   "value": 0.05863881493617318
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-06-20",
+   "filedAt": "2024-06-20 00:00:00",
+   "value": 0.12273875349853225
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-07-22",
+   "filedAt": "2024-07-22 00:00:00",
+   "value": 0.05556693289644343
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-08-20",
+   "filedAt": "2024-08-20 00:00:00",
+   "value": 0.034746399071609035
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-09-19",
+   "filedAt": "2024-09-19 00:00:00",
+   "value": 0.060004095842719485
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-10-18",
+   "filedAt": "2024-10-18 00:00:00",
+   "value": 0.012287528158918537
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-11-18",
+   "filedAt": "2024-11-18 00:00:00",
+   "value": 0.06662570823947012
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-12-18",
+   "filedAt": "2024-12-18 00:00:00",
+   "value": -0.079118028534371
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-01-22",
+   "filedAt": "2025-01-22 00:00:00",
+   "value": -0.14656290531776917
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-02-21",
+   "filedAt": "2025-02-21 00:00:00",
+   "value": -0.16526725373745654
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-03-24",
+   "filedAt": "2025-03-24 00:00:00",
+   "value": -0.22062939449791796
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-04-23",
+   "filedAt": "2025-04-23 00:00:00",
+   "value": -0.2733975015359411
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-05-22",
+   "filedAt": "2025-05-22 00:00:00",
+   "value": -0.41115434500648507
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-06-24",
+   "filedAt": "2025-06-24 00:00:00",
+   "value": -0.23503310806198374
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-07-24",
+   "filedAt": "2025-07-24 00:00:00",
+   "value": -0.11543450064850835
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-08-22",
+   "filedAt": "2025-08-22 00:00:00",
+   "value": 0.08300907911802846
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-09-23",
+   "filedAt": "2025-09-23 00:00:00",
+   "value": 0.11755068605365548
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-10-22",
+   "filedAt": "2025-10-22 00:00:00",
+   "value": 0.09079118028534361
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-11-20",
+   "filedAt": "2025-11-20 00:00:00",
+   "value": 0.624889070926343
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-12-22",
+   "filedAt": "2025-12-22 00:00:00",
+   "value": 0.5260427332923749
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-01-23",
+   "filedAt": "2026-01-23 00:00:00",
+   "value": 0.4569595194211209
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-02-24",
+   "filedAt": "2026-02-24 00:00:00",
+   "value": 0.7320636220902448
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-03-25",
+   "filedAt": "2026-03-25 00:00:00",
+   "value": 0.3420711311352309
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-04-24",
+   "filedAt": "2026-04-24 00:00:00",
+   "value": 0.40193869888729594
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-05-26",
+   "filedAt": "2026-05-26 00:00:00",
+   "value": 1.0843060959792474
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-06-25",
+   "filedAt": "2026-06-25 00:00:00",
+   "value": 2.191412383097822
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-07-27",
+   "filedAt": "2026-07-27 00:00:00",
+   "value": 2.5479554918424463
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-08-25",
+   "filedAt": "2026-08-25 00:00:00",
+   "value": 2.563041845859786
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-09-24",
+   "filedAt": "2026-09-24 00:00:00",
+   "value": 2.1179261383029555
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-10-23",
+   "filedAt": "2026-10-23 00:00:00",
+   "value": 3.1955764898627894
+  },
+  {
+   "cik": 2488,
+   "factor": "sue",
+   "periodEnd": "2011-12-31",
+   "filedAt": "2012-02-24 00:00:00",
+   "value": -1.006267342457779
+  },
+  {
+   "cik": 2488,
+   "factor": "sue",
+   "periodEnd": "2012-03-31",
+   "filedAt": "2012-05-09 00:00:00",
+   "value": -1.6551041311175623
+  },
+  {
+   "cik": 2488,
+   "factor": "sue",
+   "periodEnd": "2012-06-30",
+   "filedAt": "2012-08-02 00:00:00",
+   "value": -0.03791423460332406
+  },
+  {
+   "cik": 2488,
+   "factor": "sue",
+   "periodEnd": "2012-09-29",
+   "filedAt": "2012-11-01 00:00:00",
+   "value": -0.493885639579771
+  },
+  {
+   "cik": 2488,
+   "factor": "sue",
+   "periodEnd": "2012-12-29",
+   "filedAt": "2013-02-21 00:00:00",
+   "value": -0.6327412522479892
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2022-11-15",
+   "filedAt": "2022-11-15 00:00:00",
+   "value": 0.9503184078233422
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2022-12-15",
+   "filedAt": "2022-12-15 00:00:00",
+   "value": 0.9814732035403099
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-01-18",
+   "filedAt": "2023-01-18 00:00:00",
+   "value": 0.9637456676283842
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-02-16",
+   "filedAt": "2023-02-16 00:00:00",
+   "value": 0.9629741551769837
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-03-20",
+   "filedAt": "2023-03-20 00:00:00",
+   "value": 0.7618626370194297
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-04-19",
+   "filedAt": "2023-04-19 00:00:00",
+   "value": 0.8292306991050793
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-05-18",
+   "filedAt": "2023-05-18 00:00:00",
+   "value": 0.8470143143415217
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-06-20",
+   "filedAt": "2023-06-20 00:00:00",
+   "value": 0.8802923306260056
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-07-20",
+   "filedAt": "2023-07-20 00:00:00",
+   "value": 0.9455923341712488
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-08-18",
+   "filedAt": "2023-08-18 00:00:00",
+   "value": 0.909646944422404
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-09-19",
+   "filedAt": "2023-09-19 00:00:00",
+   "value": 0.9847166253336328
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-10-18",
+   "filedAt": "2023-10-18 00:00:00",
+   "value": 0.9885049709374468
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-11-16",
+   "filedAt": "2023-11-16 00:00:00",
+   "value": 0.9962740616216719
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-12-18",
+   "filedAt": "2023-12-18 00:00:00",
+   "value": 0.9885471069622075
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-01-19",
+   "filedAt": "2024-01-19 00:00:00",
+   "value": 0.9973897581134763
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-02-20",
+   "filedAt": "2024-02-20 00:00:00",
+   "value": 0.9680281749725018
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-03-20",
+   "filedAt": "2024-03-20 00:00:00",
+   "value": 1
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-04-19",
+   "filedAt": "2024-04-19 00:00:00",
+   "value": 0.9475394909440675
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-05-20",
+   "filedAt": "2024-05-20 00:00:00",
+   "value": 0.9782699820372895
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-06-20",
+   "filedAt": "2024-06-20 00:00:00",
+   "value": 0.9347678973379184
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-07-22",
+   "filedAt": "2024-07-22 00:00:00",
+   "value": 0.9497490870816969
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-08-20",
+   "filedAt": "2024-08-20 00:00:00",
+   "value": 0.9222872956199633
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-09-19",
+   "filedAt": "2024-09-19 00:00:00",
+   "value": 0.9274829472511271
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-10-18",
+   "filedAt": "2024-10-18 00:00:00",
+   "value": 0.9859780479119499
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-11-18",
+   "filedAt": "2024-11-18 00:00:00",
+   "value": 0.9578605583814377
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-12-18",
+   "filedAt": "2024-12-18 00:00:00",
+   "value": 0.8835064998206358
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-01-22",
+   "filedAt": "2025-01-22 00:00:00",
+   "value": 0.943458853303654
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-02-21",
+   "filedAt": "2025-02-21 00:00:00",
+   "value": 0.9674384806726753
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-03-24",
+   "filedAt": "2025-03-24 00:00:00",
+   "value": 1
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-04-23",
+   "filedAt": "2025-04-23 00:00:00",
+   "value": 0.9308034290600795
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-05-22",
+   "filedAt": "2025-05-22 00:00:00",
+   "value": 0.9350188862877755
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-06-24",
+   "filedAt": "2025-06-24 00:00:00",
+   "value": 0.9793727248460397
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-07-24",
+   "filedAt": "2025-07-24 00:00:00",
+   "value": 0.9079768876248162
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-08-22",
+   "filedAt": "2025-08-22 00:00:00",
+   "value": 0.9555363162407902
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-09-23",
+   "filedAt": "2025-09-23 00:00:00",
+   "value": 0.8841487469379175
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-10-22",
+   "filedAt": "2025-10-22 00:00:00",
+   "value": 0.9099694559473499
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-11-20",
+   "filedAt": "2025-11-20 00:00:00",
+   "value": 0.8725063367688504
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-12-22",
+   "filedAt": "2025-12-22 00:00:00",
+   "value": 1
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-01-23",
+   "filedAt": "2026-01-23 00:00:00",
+   "value": 0.8352006799197658
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-02-24",
+   "filedAt": "2026-02-24 00:00:00",
+   "value": 0.9220458333725716
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-03-25",
+   "filedAt": "2026-03-25 00:00:00",
+   "value": 0.8767198109032008
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-04-24",
+   "filedAt": "2026-04-24 00:00:00",
+   "value": 0.8728870221962727
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-05-26",
+   "filedAt": "2026-05-26 00:00:00",
+   "value": 0.8967006940455226
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-06-25",
+   "filedAt": "2026-06-25 00:00:00",
+   "value": 0.8752954637485991
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-07-27",
+   "filedAt": "2026-07-27 00:00:00",
+   "value": 0.9256973415325505
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-08-25",
+   "filedAt": "2026-08-25 00:00:00",
+   "value": 0.8931880891617775
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-09-24",
+   "filedAt": "2026-09-24 00:00:00",
+   "value": 0.8807409430355309
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-10-23",
+   "filedAt": "2026-10-23 00:00:00",
+   "value": 0.9565491717597868
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2022-11-15",
+   "filedAt": "2022-11-15 00:00:00",
+   "value": -0.1063334922513014
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2022-12-15",
+   "filedAt": "2022-12-15 00:00:00",
+   "value": 0.06161320395995262
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-01-18",
+   "filedAt": "2023-01-18 00:00:00",
+   "value": 0.1098502761119271
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-02-16",
+   "filedAt": "2023-02-16 00:00:00",
+   "value": 0.12968864302713645
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-03-20",
+   "filedAt": "2023-03-20 00:00:00",
+   "value": 0.09515004236740165
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-04-19",
+   "filedAt": "2023-04-19 00:00:00",
+   "value": -0.1576530582701361
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-05-18",
+   "filedAt": "2023-05-18 00:00:00",
+   "value": -0.0645760268063087
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-06-20",
+   "filedAt": "2023-06-20 00:00:00",
+   "value": -0.04174974473399262
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-07-20",
+   "filedAt": "2023-07-20 00:00:00",
+   "value": 0.02836010168176384
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-08-18",
+   "filedAt": "2023-08-18 00:00:00",
+   "value": 0.061020639390681586
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-09-19",
+   "filedAt": "2023-09-19 00:00:00",
+   "value": 0.04200066784150147
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-10-18",
+   "filedAt": "2023-10-18 00:00:00",
+   "value": 0.11357744934731029
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-11-16",
+   "filedAt": "2023-11-16 00:00:00",
+   "value": 0.14065977335852864
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-12-18",
+   "filedAt": "2023-12-18 00:00:00",
+   "value": 0.14607392194747226
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-01-19",
+   "filedAt": "2024-01-19 00:00:00",
+   "value": 0.19819258155483532
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-02-20",
+   "filedAt": "2024-02-20 00:00:00",
+   "value": 0.2205170174121336
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-03-20",
+   "filedAt": "2024-03-20 00:00:00",
+   "value": 0.2713463182824505
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-04-19",
+   "filedAt": "2024-04-19 00:00:00",
+   "value": 0.3768035098352207
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-05-20",
+   "filedAt": "2024-05-20 00:00:00",
+   "value": 0.3312030604898404
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-06-20",
+   "filedAt": "2024-06-20 00:00:00",
+   "value": 0.4689058015352632
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-07-22",
+   "filedAt": "2024-07-22 00:00:00",
+   "value": 0.35933540119709617
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-08-20",
+   "filedAt": "2024-08-20 00:00:00",
+   "value": 0.36465304089853645
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-09-19",
+   "filedAt": "2024-09-19 00:00:00",
+   "value": 0.3648402681402929
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-10-18",
+   "filedAt": "2024-10-18 00:00:00",
+   "value": 0.3515085304205665
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-11-18",
+   "filedAt": "2024-11-18 00:00:00",
+   "value": 0.46010805135044874
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-12-18",
+   "filedAt": "2024-12-18 00:00:00",
+   "value": 0.39705107443344456
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-01-22",
+   "filedAt": "2025-01-22 00:00:00",
+   "value": 0.32040564615595457
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-02-21",
+   "filedAt": "2025-02-21 00:00:00",
+   "value": 0.39363658999357254
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-03-24",
+   "filedAt": "2025-03-24 00:00:00",
+   "value": 0.4136602539727885
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-04-23",
+   "filedAt": "2025-04-23 00:00:00",
+   "value": 0.5495988125546483
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-05-22",
+   "filedAt": "2025-05-22 00:00:00",
+   "value": 0.5209086504776226
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-06-24",
+   "filedAt": "2025-06-24 00:00:00",
+   "value": 0.5393514988795318
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-07-24",
+   "filedAt": "2025-07-24 00:00:00",
+   "value": 0.6072088278609575
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-08-22",
+   "filedAt": "2025-08-22 00:00:00",
+   "value": 0.48903755546848293
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-09-23",
+   "filedAt": "2025-09-23 00:00:00",
+   "value": 0.5467209175292953
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-10-22",
+   "filedAt": "2025-10-22 00:00:00",
+   "value": 0.441651691704289
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-11-20",
+   "filedAt": "2025-11-20 00:00:00",
+   "value": 0.47650298115953493
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-12-22",
+   "filedAt": "2025-12-22 00:00:00",
+   "value": 0.42695917867076383
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-01-23",
+   "filedAt": "2026-01-23 00:00:00",
+   "value": 0.6291047642577403
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-02-24",
+   "filedAt": "2026-02-24 00:00:00",
+   "value": 0.3692970485652025
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-03-25",
+   "filedAt": "2026-03-25 00:00:00",
+   "value": 0.5145390639023948
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-04-24",
+   "filedAt": "2026-04-24 00:00:00",
+   "value": 0.41604016313862346
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-05-26",
+   "filedAt": "2026-05-26 00:00:00",
+   "value": 0.4539469239722287
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-06-25",
+   "filedAt": "2026-06-25 00:00:00",
+   "value": 0.46766276706421883
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-07-27",
+   "filedAt": "2026-07-27 00:00:00",
+   "value": 0.4599652181969438
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-08-25",
+   "filedAt": "2026-08-25 00:00:00",
+   "value": 0.5159558143709453
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-09-24",
+   "filedAt": "2026-09-24 00:00:00",
+   "value": 0.4837430779000438
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-10-23",
+   "filedAt": "2026-10-23 00:00:00",
+   "value": 0.45882834350215296
+  },
+  {
+   "cik": 5272,
+   "factor": "sue",
+   "periodEnd": "2012-06-30",
+   "filedAt": "2013-08-05 00:00:00",
+   "value": 1.8484828549833983
+  },
+  {
+   "cik": 5272,
+   "factor": "sue",
+   "periodEnd": "2012-09-30",
+   "filedAt": "2013-10-31 00:00:00",
+   "value": -0.012211427927123581
+  },
+  {
+   "cik": 12927,
+   "factor": "high52",
+   "periodEnd": "2022-11-15",
+   "filedAt": "2022-11-15 00:00:00",
+   "value": 0.7716171617161716
+  }
+ ],
+ "removed": [
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2022-11-14",
+   "filedAt": "2022-11-14 00:00:00",
+   "value": 0.45414118954974986
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2022-12-14",
+   "filedAt": "2022-12-14 00:00:00",
+   "value": 0.4465535112723504
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-01-17",
+   "filedAt": "2023-01-17 00:00:00",
+   "value": 0.5230128579777908
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-02-15",
+   "filedAt": "2023-02-15 00:00:00",
+   "value": 0.6906113183071185
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-03-17",
+   "filedAt": "2023-03-17 00:00:00",
+   "value": 0.7939625091292705
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-04-18",
+   "filedAt": "2023-04-18 00:00:00",
+   "value": 0.8267796298001657
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-05-17",
+   "filedAt": "2023-05-17 00:00:00",
+   "value": 0.9554286766737269
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-06-16",
+   "filedAt": "2023-06-16 00:00:00",
+   "value": 0.9294837061692082
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-07-19",
+   "filedAt": "2023-07-19 00:00:00",
+   "value": 0.9012307454137318
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-08-17",
+   "filedAt": "2023-08-17 00:00:00",
+   "value": 0.8084217044662899
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-09-18",
+   "filedAt": "2023-09-18 00:00:00",
+   "value": 0.7923987924761979
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-10-17",
+   "filedAt": "2023-10-17 00:00:00",
+   "value": 0.8138400805015868
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-11-15",
+   "filedAt": "2023-11-15 00:00:00",
+   "value": 0.9133833888071833
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2023-12-15",
+   "filedAt": "2023-12-15 00:00:00",
+   "value": 1
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-01-18",
+   "filedAt": "2024-01-18 00:00:00",
+   "value": 1
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-02-16",
+   "filedAt": "2024-02-16 00:00:00",
+   "value": 0.9641767870016081
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-03-19",
+   "filedAt": "2024-03-19 00:00:00",
+   "value": 0.8582647364935188
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-04-18",
+   "filedAt": "2024-04-18 00:00:00",
+   "value": 0.733655028857981
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-05-17",
+   "filedAt": "2024-05-17 00:00:00",
+   "value": 0.778077396158577
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-06-18",
+   "filedAt": "2024-06-18 00:00:00",
+   "value": 0.7315261614154603
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-07-19",
+   "filedAt": "2024-07-19 00:00:00",
+   "value": 0.7170971709717098
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-08-19",
+   "filedAt": "2024-08-19 00:00:00",
+   "value": 0.7346011921657678
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-09-18",
+   "filedAt": "2024-09-18 00:00:00",
+   "value": 0.7015327845586148
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-10-17",
+   "filedAt": "2024-10-17 00:00:00",
+   "value": 0.7391900842085344
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-11-15",
+   "filedAt": "2024-11-15 00:00:00",
+   "value": 0.6381871511022803
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2024-12-17",
+   "filedAt": "2024-12-17 00:00:00",
+   "value": 0.5914466836976062
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-01-21",
+   "filedAt": "2025-01-21 00:00:00",
+   "value": 0.5784842463809253
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-02-20",
+   "filedAt": "2025-02-20 00:00:00",
+   "value": 0.5401173242501656
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-03-21",
+   "filedAt": "2025-03-21 00:00:00",
+   "value": 0.5786040443574689
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-04-22",
+   "filedAt": "2025-04-22 00:00:00",
+   "value": 0.4689062839747771
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-05-21",
+   "filedAt": "2025-05-21 00:00:00",
+   "value": 0.6091541639486845
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-06-23",
+   "filedAt": "2025-06-23 00:00:00",
+   "value": 0.7043922591867797
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-07-23",
+   "filedAt": "2025-07-23 00:00:00",
+   "value": 0.9181134259259259
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-08-21",
+   "filedAt": "2025-08-21 00:00:00",
+   "value": 0.8877019846003689
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-09-22",
+   "filedAt": "2025-09-22 00:00:00",
+   "value": 0.8664461555145863
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-10-21",
+   "filedAt": "2025-10-21 00:00:00",
+   "value": 0.9894828732956434
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-11-19",
+   "filedAt": "2025-11-19 00:00:00",
+   "value": 0.8457231490939358
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2025-12-19",
+   "filedAt": "2025-12-19 00:00:00",
+   "value": 0.807437672606212
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-01-22",
+   "filedAt": "2026-01-22 00:00:00",
+   "value": 0.9598986115840049
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-02-23",
+   "filedAt": "2026-02-23 00:00:00",
+   "value": 0.7437672606211932
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-03-24",
+   "filedAt": "2026-03-24 00:00:00",
+   "value": 0.7769454848106534
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-04-23",
+   "filedAt": "2026-04-23 00:00:00",
+   "value": 1
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-05-22",
+   "filedAt": "2026-05-22 00:00:00",
+   "value": 1
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-06-24",
+   "filedAt": "2026-06-24 00:00:00",
+   "value": 0.942189511085329
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-07-24",
+   "filedAt": "2026-07-24 00:00:00",
+   "value": 0.8985040711986367
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-08-24",
+   "filedAt": "2026-08-24 00:00:00",
+   "value": 0.7862577679847137
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-09-23",
+   "filedAt": "2026-09-23 00:00:00",
+   "value": 0.9853151001170304
+  },
+  {
+   "cik": 2488,
+   "factor": "high52",
+   "periodEnd": "2026-10-22",
+   "filedAt": "2026-10-22 00:00:00",
+   "value": 0.7821286686581874
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2022-11-14",
+   "filedAt": "2022-11-14 00:00:00",
+   "value": -0.601460544999662
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2022-12-14",
+   "filedAt": "2022-12-14 00:00:00",
+   "value": -0.5106498072892014
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-01-17",
+   "filedAt": "2023-01-17 00:00:00",
+   "value": -0.5155182906214077
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-02-15",
+   "filedAt": "2023-02-15 00:00:00",
+   "value": -0.5199134491852051
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-03-17",
+   "filedAt": "2023-03-17 00:00:00",
+   "value": -0.41882480221786456
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-04-18",
+   "filedAt": "2023-04-18 00:00:00",
+   "value": -0.34681181959564544
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-05-17",
+   "filedAt": "2023-05-17 00:00:00",
+   "value": -0.3923186151869632
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-06-16",
+   "filedAt": "2023-06-16 00:00:00",
+   "value": -0.31381432145513544
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-07-19",
+   "filedAt": "2023-07-19 00:00:00",
+   "value": -0.1599161538981675
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-08-17",
+   "filedAt": "2023-08-17 00:00:00",
+   "value": -0.20258300087903158
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-09-18",
+   "filedAt": "2023-09-18 00:00:00",
+   "value": -0.2752045439177767
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-10-17",
+   "filedAt": "2023-10-17 00:00:00",
+   "value": -0.31374670363107715
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-11-15",
+   "filedAt": "2023-11-15 00:00:00",
+   "value": -0.28014064507404146
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2023-12-15",
+   "filedAt": "2023-12-15 00:00:00",
+   "value": -0.18939752518763942
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-01-18",
+   "filedAt": "2024-01-18 00:00:00",
+   "value": -0.06687402799377906
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-02-16",
+   "filedAt": "2024-02-16 00:00:00",
+   "value": 0.08303468794374202
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-03-19",
+   "filedAt": "2024-03-19 00:00:00",
+   "value": 0.19521265805666377
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-04-18",
+   "filedAt": "2024-04-18 00:00:00",
+   "value": 0.2891338156738117
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-05-17",
+   "filedAt": "2024-05-17 00:00:00",
+   "value": 0.04144972614781284
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-06-18",
+   "filedAt": "2024-06-18 00:00:00",
+   "value": 0.09960105483805548
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-07-19",
+   "filedAt": "2024-07-19 00:00:00",
+   "value": 0.07106633308540156
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-08-19",
+   "filedAt": "2024-08-19 00:00:00",
+   "value": 0.05328284535803651
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-09-18",
+   "filedAt": "2024-09-18 00:00:00",
+   "value": 0.004530394211914368
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-10-17",
+   "filedAt": "2024-10-17 00:00:00",
+   "value": 0.019812022449117617
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-11-15",
+   "filedAt": "2024-11-15 00:00:00",
+   "value": 0.05571708702413969
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2024-12-17",
+   "filedAt": "2024-12-17 00:00:00",
+   "value": -0.06119413077287161
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-01-21",
+   "filedAt": "2025-01-21 00:00:00",
+   "value": -0.14334978700385415
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-02-20",
+   "filedAt": "2025-02-20 00:00:00",
+   "value": -0.17871390898640882
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-03-21",
+   "filedAt": "2025-03-21 00:00:00",
+   "value": -0.22449117587396028
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-04-22",
+   "filedAt": "2025-04-22 00:00:00",
+   "value": -0.2755426330380688
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-05-21",
+   "filedAt": "2025-05-21 00:00:00",
+   "value": -0.42146189735614303
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-06-23",
+   "filedAt": "2025-06-23 00:00:00",
+   "value": -0.232470079112854
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-07-23",
+   "filedAt": "2025-07-23 00:00:00",
+   "value": -0.13286902427479874
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-08-21",
+   "filedAt": "2025-08-21 00:00:00",
+   "value": 0.046182973831902174
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-09-22",
+   "filedAt": "2025-09-22 00:00:00",
+   "value": 0.1170464534451281
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-10-21",
+   "filedAt": "2025-10-21 00:00:00",
+   "value": 0.0642369328555008
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-11-19",
+   "filedAt": "2025-11-19 00:00:00",
+   "value": 0.6266143755493949
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2025-12-19",
+   "filedAt": "2025-12-19 00:00:00",
+   "value": 0.5571708702413958
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-01-22",
+   "filedAt": "2026-01-22 00:00:00",
+   "value": 0.35952397051862883
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-02-23",
+   "filedAt": "2026-02-23 00:00:00",
+   "value": 0.6890932449793767
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-03-24",
+   "filedAt": "2026-03-24 00:00:00",
+   "value": 0.3533707485293125
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-04-23",
+   "filedAt": "2026-04-23 00:00:00",
+   "value": 0.3704780580160931
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-05-22",
+   "filedAt": "2026-05-22 00:00:00",
+   "value": 1.051930488876868
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-06-24",
+   "filedAt": "2026-06-24 00:00:00",
+   "value": 2.0400297518425856
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-07-24",
+   "filedAt": "2026-07-24 00:00:00",
+   "value": 2.5151125836770576
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-08-24",
+   "filedAt": "2026-08-24 00:00:00",
+   "value": 2.6492663466089668
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-09-23",
+   "filedAt": "2026-09-23 00:00:00",
+   "value": 2.200013523564812
+  },
+  {
+   "cik": 2488,
+   "factor": "momentum122",
+   "periodEnd": "2026-10-22",
+   "filedAt": "2026-10-22 00:00:00",
+   "value": 3.217797011292177
+  },
+  {
+   "cik": 2488,
+   "factor": "sue",
+   "periodEnd": "2021-12-25",
+   "filedAt": "2022-02-03 00:00:00",
+   "value": -1.8249879706781666
+  },
+  {
+   "cik": 2488,
+   "factor": "sue",
+   "periodEnd": "2022-12-31",
+   "filedAt": "2023-02-27 00:00:00",
+   "value": -2.0026667174523127
+  },
+  {
+   "cik": 2488,
+   "factor": "sue",
+   "periodEnd": "2023-12-30",
+   "filedAt": "2024-01-31 00:00:00",
+   "value": 1.0572795060740643
+  },
+  {
+   "cik": 2488,
+   "factor": "sue",
+   "periodEnd": "2024-12-28",
+   "filedAt": "2025-02-05 00:00:00",
+   "value": -0.33901300838462783
+  },
+  {
+   "cik": 2488,
+   "factor": "sue",
+   "periodEnd": "2025-12-27",
+   "filedAt": "2026-02-04 00:00:00",
+   "value": 1.6443479880190137
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2022-11-14",
+   "filedAt": "2022-11-14 00:00:00",
+   "value": 0.945607981787288
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2022-12-14",
+   "filedAt": "2022-12-14 00:00:00",
+   "value": 0.9885728800349612
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-01-17",
+   "filedAt": "2023-01-17 00:00:00",
+   "value": 0.9880712625871418
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-02-15",
+   "filedAt": "2023-02-15 00:00:00",
+   "value": 0.9578621223857475
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-03-17",
+   "filedAt": "2023-03-17 00:00:00",
+   "value": 0.7318357862122387
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-04-18",
+   "filedAt": "2023-04-18 00:00:00",
+   "value": 0.8127033307513556
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-05-17",
+   "filedAt": "2023-05-17 00:00:00",
+   "value": 0.8325329202168862
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-06-16",
+   "filedAt": "2023-06-16 00:00:00",
+   "value": 0.8876839659178931
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-07-19",
+   "filedAt": "2023-07-19 00:00:00",
+   "value": 0.9158791634391944
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-08-17",
+   "filedAt": "2023-08-17 00:00:00",
+   "value": 0.8994577846630519
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-09-18",
+   "filedAt": "2023-09-18 00:00:00",
+   "value": 0.9555383423702557
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-10-17",
+   "filedAt": "2023-10-17 00:00:00",
+   "value": 0.9787761425251743
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-11-15",
+   "filedAt": "2023-11-15 00:00:00",
+   "value": 0.983423702556158
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2023-12-15",
+   "filedAt": "2023-12-15 00:00:00",
+   "value": 0.9818533392830582
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-01-18",
+   "filedAt": "2024-01-18 00:00:00",
+   "value": 0.9743515432546006
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-02-16",
+   "filedAt": "2024-02-16 00:00:00",
+   "value": 0.9951690821256041
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-03-19",
+   "filedAt": "2024-03-19 00:00:00",
+   "value": 0.9897731742493772
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-04-18",
+   "filedAt": "2024-04-18 00:00:00",
+   "value": 0.9317079397498084
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-05-17",
+   "filedAt": "2024-05-17 00:00:00",
+   "value": 1
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-06-18",
+   "filedAt": "2024-06-18 00:00:00",
+   "value": 0.9204122175316611
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-07-19",
+   "filedAt": "2024-07-19 00:00:00",
+   "value": 0.9240129128383412
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-08-19",
+   "filedAt": "2024-08-19 00:00:00",
+   "value": 0.9241370747454681
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-09-18",
+   "filedAt": "2024-09-18 00:00:00",
+   "value": 0.9101067792401291
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-10-17",
+   "filedAt": "2024-10-17 00:00:00",
+   "value": 0.9832381425378692
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-11-15",
+   "filedAt": "2024-11-15 00:00:00",
+   "value": 0.9407747703004717
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2024-12-17",
+   "filedAt": "2024-12-17 00:00:00",
+   "value": 0.8842811025577352
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-01-21",
+   "filedAt": "2025-01-21 00:00:00",
+   "value": 0.9333250558728582
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-02-20",
+   "filedAt": "2025-02-20 00:00:00",
+   "value": 0.9467345418425627
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-03-21",
+   "filedAt": "2025-03-21 00:00:00",
+   "value": 0.989766777724893
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-04-22",
+   "filedAt": "2025-04-22 00:00:00",
+   "value": 0.9306885544915641
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-05-21",
+   "filedAt": "2025-05-21 00:00:00",
+   "value": 0.9419744642042863
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-06-23",
+   "filedAt": "2025-06-23 00:00:00",
+   "value": 0.9783401732786137
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-07-23",
+   "filedAt": "2025-07-23 00:00:00",
+   "value": 0.9064067487460101
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-08-21",
+   "filedAt": "2025-08-21 00:00:00",
+   "value": 0.9415184678522572
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-09-22",
+   "filedAt": "2025-09-22 00:00:00",
+   "value": 0.8724350205198359
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-10-21",
+   "filedAt": "2025-10-21 00:00:00",
+   "value": 0.8935248518011856
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-11-19",
+   "filedAt": "2025-11-19 00:00:00",
+   "value": 0.8635430916552668
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2025-12-19",
+   "filedAt": "2025-12-19 00:00:00",
+   "value": 0.980734154126767
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-01-22",
+   "filedAt": "2026-01-22 00:00:00",
+   "value": 0.824327405380757
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-02-23",
+   "filedAt": "2026-02-23 00:00:00",
+   "value": 0.911764705882353
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-03-24",
+   "filedAt": "2026-03-24 00:00:00",
+   "value": 0.847469220246238
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-04-23",
+   "filedAt": "2026-04-23 00:00:00",
+   "value": 0.8739409205404167
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-05-22",
+   "filedAt": "2026-05-22 00:00:00",
+   "value": 0.8821845660636592
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-06-24",
+   "filedAt": "2026-06-24 00:00:00",
+   "value": 0.8793163182815568
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-07-24",
+   "filedAt": "2026-07-24 00:00:00",
+   "value": 0.9130384570966624
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-08-24",
+   "filedAt": "2026-08-24 00:00:00",
+   "value": 0.8936366786003002
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-09-23",
+   "filedAt": "2026-09-23 00:00:00",
+   "value": 0.8728490587827693
+  },
+  {
+   "cik": 5272,
+   "factor": "high52",
+   "periodEnd": "2026-10-22",
+   "filedAt": "2026-10-22 00:00:00",
+   "value": 0.9588867074719944
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2022-11-14",
+   "filedAt": "2022-11-14 00:00:00",
+   "value": -0.10413610251878036
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2022-12-14",
+   "filedAt": "2022-12-14 00:00:00",
+   "value": 0.062059213433495186
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-01-17",
+   "filedAt": "2023-01-17 00:00:00",
+   "value": 0.11780821917808226
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-02-15",
+   "filedAt": "2023-02-15 00:00:00",
+   "value": 0.13848873177198406
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-03-17",
+   "filedAt": "2023-03-17 00:00:00",
+   "value": 0.08740609809986744
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-04-18",
+   "filedAt": "2023-04-18 00:00:00",
+   "value": -0.1128590366769775
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-05-17",
+   "filedAt": "2023-05-17 00:00:00",
+   "value": -0.08228015908086617
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-06-16",
+   "filedAt": "2023-06-16 00:00:00",
+   "value": -0.07538665488289886
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-07-19",
+   "filedAt": "2023-07-19 00:00:00",
+   "value": 0.0007954043305344882
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-08-17",
+   "filedAt": "2023-08-17 00:00:00",
+   "value": 0.049403446752098956
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-09-18",
+   "filedAt": "2023-09-18 00:00:00",
+   "value": 0.03596995139195758
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-10-17",
+   "filedAt": "2023-10-17 00:00:00",
+   "value": 0.08139637649138298
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-11-15",
+   "filedAt": "2023-11-15 00:00:00",
+   "value": 0.10667255855059654
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2023-12-15",
+   "filedAt": "2023-12-15 00:00:00",
+   "value": 0.134953601414052
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-01-18",
+   "filedAt": "2024-01-18 00:00:00",
+   "value": 0.17525408749447613
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-02-16",
+   "filedAt": "2024-02-16 00:00:00",
+   "value": 0.1798497569597879
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-03-19",
+   "filedAt": "2024-03-19 00:00:00",
+   "value": 0.24259832081307997
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-04-18",
+   "filedAt": "2024-04-18 00:00:00",
+   "value": 0.3316836058329651
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-05-17",
+   "filedAt": "2024-05-17 00:00:00",
+   "value": 0.2828988068935041
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-06-18",
+   "filedAt": "2024-06-18 00:00:00",
+   "value": 0.39178082191780805
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-07-19",
+   "filedAt": "2024-07-19 00:00:00",
+   "value": 0.30764471939902793
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-08-19",
+   "filedAt": "2024-08-19 00:00:00",
+   "value": 0.3797613787008396
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-09-18",
+   "filedAt": "2024-09-18 00:00:00",
+   "value": 0.3002209456473708
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-10-17",
+   "filedAt": "2024-10-17 00:00:00",
+   "value": 0.300927971718957
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-11-15",
+   "filedAt": "2024-11-15 00:00:00",
+   "value": 0.3634997790543526
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2024-12-17",
+   "filedAt": "2024-12-17 00:00:00",
+   "value": 0.3389306230667255
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-01-21",
+   "filedAt": "2025-01-21 00:00:00",
+   "value": 0.274237737516571
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-02-20",
+   "filedAt": "2025-02-20 00:00:00",
+   "value": 0.32726469288555005
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-03-21",
+   "filedAt": "2025-03-21 00:00:00",
+   "value": 0.3306230667255854
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-04-22",
+   "filedAt": "2025-04-22 00:00:00",
+   "value": 0.47962881131241697
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-05-21",
+   "filedAt": "2025-05-21 00:00:00",
+   "value": 0.4030932390631903
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-06-23",
+   "filedAt": "2025-06-23 00:00:00",
+   "value": 0.48616880247459116
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-07-23",
+   "filedAt": "2025-07-23 00:00:00",
+   "value": 0.5047282368537338
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-08-21",
+   "filedAt": "2025-08-21 00:00:00",
+   "value": 0.43915156871409633
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-09-22",
+   "filedAt": "2025-09-22 00:00:00",
+   "value": 0.45877154220061866
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-10-21",
+   "filedAt": "2025-10-21 00:00:00",
+   "value": 0.360671674768007
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-11-19",
+   "filedAt": "2025-11-19 00:00:00",
+   "value": 0.3732213875386654
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2025-12-19",
+   "filedAt": "2025-12-19 00:00:00",
+   "value": 0.3622624834290762
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-01-22",
+   "filedAt": "2026-01-22 00:00:00",
+   "value": 0.5234644277507732
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-02-23",
+   "filedAt": "2026-02-23 00:00:00",
+   "value": 0.2707026071586389
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-03-24",
+   "filedAt": "2026-03-24 00:00:00",
+   "value": 0.42182942996022965
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-04-23",
+   "filedAt": "2026-04-23 00:00:00",
+   "value": 0.32726469288555005
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-05-22",
+   "filedAt": "2026-05-22 00:00:00",
+   "value": 0.34387980556783027
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-06-24",
+   "filedAt": "2026-06-24 00:00:00",
+   "value": 0.3896597437030491
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-07-24",
+   "filedAt": "2026-07-24 00:00:00",
+   "value": 0.3527176314626601
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-08-24",
+   "filedAt": "2026-08-24 00:00:00",
+   "value": 0.3815289438798055
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-09-23",
+   "filedAt": "2026-09-23 00:00:00",
+   "value": 0.3454706142288997
+  },
+  {
+   "cik": 5272,
+   "factor": "momentum122",
+   "periodEnd": "2026-10-22",
+   "filedAt": "2026-10-22 00:00:00",
+   "value": 0.3288555015466197
+  },
+  {
+   "cik": 5272,
+   "factor": "sue",
+   "periodEnd": "2013-12-31",
+   "filedAt": "2014-02-20 00:00:00",
+   "value": 0.2762367700861956
+  },
+  {
+   "cik": 5272,
+   "factor": "sue",
+   "periodEnd": "2014-12-31",
+   "filedAt": "2015-02-20 00:00:00",
+   "value": -1.380744189979706
+  },
+  {
+   "cik": 5272,
+   "factor": "sue",
+   "periodEnd": "2015-12-31",
+   "filedAt": "2016-02-19 00:00:00",
+   "value": -2.1156209905592878
+  }
+ ],
+ "changed": [
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2021-12-25",
+   "filedAt": "2022-02-03 00:00:00",
+   "value": 0.042480688169897834
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2022-03-26",
+   "filedAt": "2022-05-04 00:00:00",
+   "value": 0.3855403641113161
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2022-06-25",
+   "filedAt": "2022-08-03 00:00:00",
+   "value": 0.39095388929855834
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2022-09-24",
+   "filedAt": "2022-11-02 00:00:00",
+   "value": 0.4971504300078445
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2022-12-31",
+   "filedAt": "2023-02-27 00:00:00",
+   "value": 0.5242630439496087
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2023-04-01",
+   "filedAt": "2023-05-03 00:00:00",
+   "value": 0.34631325434287746
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2023-07-01",
+   "filedAt": "2023-08-02 00:00:00",
+   "value": 0.3005729716783433
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2023-09-30",
+   "filedAt": "2023-11-01 00:00:00",
+   "value": 0.3308987339262415
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2023-12-30",
+   "filedAt": "2024-01-31 00:00:00",
+   "value": 0.2347015944344136
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2024-03-30",
+   "filedAt": "2024-05-01 00:00:00",
+   "value": 0.1927008578997283
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2024-06-29",
+   "filedAt": "2024-07-31 00:00:00",
+   "value": 0.2156438700063629
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2024-09-28",
+   "filedAt": "2024-10-30 00:00:00",
+   "value": 0.21423134382736442
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2024-12-28",
+   "filedAt": "2025-02-05 00:00:00",
+   "value": 0.2833639104970937
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2025-03-29",
+   "filedAt": "2025-05-07 00:00:00",
+   "value": 0.34604218202709924
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2025-06-28",
+   "filedAt": "2025-08-06 00:00:00",
+   "value": 0.2558817229699804
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2025-09-27",
+   "filedAt": "2025-11-05 00:00:00",
+   "value": 0.23491118339224243
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2025-12-27",
+   "filedAt": "2026-02-04 00:00:00",
+   "value": 0.17999063712919633
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2026-03-28",
+   "filedAt": "2026-05-06 00:00:00",
+   "value": 0.1957387685407391
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2026-06-27",
+   "filedAt": "2026-08-05 00:00:00",
+   "value": 0.079041616283554
+  },
+  {
+   "cik": 2488,
+   "factor": "bookToMarket",
+   "periodEnd": "2026-09-26",
+   "filedAt": "2026-11-04 00:00:00",
+   "value": 0.06643012599958452
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2012-12-29",
+   "filedAt": "2013-05-06 00:00:00",
+   "value": -0.021559158797945344
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2013-03-30",
+   "filedAt": "2013-05-06 00:00:00",
+   "value": -0.022322859384811267
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2013-06-29",
+   "filedAt": "2013-08-01 00:00:00",
+   "value": -0.01873080259790383
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2013-09-28",
+   "filedAt": "2013-10-30 00:00:00",
+   "value": 0.9999989823895554
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2013-12-28",
+   "filedAt": "2014-05-01 00:00:00",
+   "value": -0.016488600547090337
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2014-03-29",
+   "filedAt": "2014-05-01 00:00:00",
+   "value": -0.01685869271506024
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2014-06-28",
+   "filedAt": "2014-07-31 00:00:00",
+   "value": -0.06656012521903354
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2014-09-27",
+   "filedAt": "2014-10-30 00:00:00",
+   "value": -0.06318515108118516
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2014-12-27",
+   "filedAt": "2015-04-29 00:00:00",
+   "value": -0.0713755962644782
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2015-03-28",
+   "filedAt": "2015-04-29 00:00:00",
+   "value": -0.07049096667124233
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2015-06-27",
+   "filedAt": "2015-07-30 00:00:00",
+   "value": -0.02101974492129055
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2015-09-26",
+   "filedAt": "2015-11-03 00:00:00",
+   "value": -0.01785464909400658
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2015-12-26",
+   "filedAt": "2016-02-18 00:00:00",
+   "value": -0.019151625308877707
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2016-03-26",
+   "filedAt": "2016-04-28 00:00:00",
+   "value": -0.020517080543668076
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2016-06-25",
+   "filedAt": "2016-07-26 00:00:00",
+   "value": -0.019869971204231618
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2016-09-24",
+   "filedAt": "2016-10-26 00:00:00",
+   "value": -0.021022357083492427
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2016-12-31",
+   "filedAt": "2017-02-21 00:00:00",
+   "value": -0.17297026690959139
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2017-04-01",
+   "filedAt": "2017-05-08 00:00:00",
+   "value": -0.18595684157816983
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2017-07-01",
+   "filedAt": "2017-08-03 00:00:00",
+   "value": -0.19091688993508282
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2017-09-30",
+   "filedAt": "2017-11-02 00:00:00",
+   "value": -0.19008201026889293
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2017-12-30",
+   "filedAt": "2018-02-27 00:00:00",
+   "value": -0.04092261001503039
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2018-03-31",
+   "filedAt": "2018-05-03 00:00:00",
+   "value": -0.0301374736582396
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2018-06-30",
+   "filedAt": "2018-08-02 00:00:00",
+   "value": -0.025743277913463425
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2018-09-29",
+   "filedAt": "2018-10-31 00:00:00",
+   "value": -0.029672572841993317
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2018-12-29",
+   "filedAt": "2019-02-08 00:00:00",
+   "value": -0.03587133407157306
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2019-03-30",
+   "filedAt": "2019-05-01 00:00:00",
+   "value": -0.03734218392921629
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2019-06-29",
+   "filedAt": "2019-07-31 00:00:00",
+   "value": -0.11580691311823554
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2019-09-28",
+   "filedAt": "2019-10-30 00:00:00",
+   "value": -0.11352659997170966
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2019-12-28",
+   "filedAt": "2020-02-04 00:00:00",
+   "value": -0.11428806013343817
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2020-03-28",
+   "filedAt": "2020-04-29 00:00:00",
+   "value": -0.16349630636513535
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2020-06-27",
+   "filedAt": "2020-07-29 00:00:00",
+   "value": -0.08283063435045435
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2020-09-26",
+   "filedAt": "2020-10-28 00:00:00",
+   "value": -0.08153530548574195
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2020-12-26",
+   "filedAt": "2021-01-29 00:00:00",
+   "value": -0.07999452937373874
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2021-03-27",
+   "filedAt": "2021-04-28 00:00:00",
+   "value": -0.035581637695231594
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2021-06-26",
+   "filedAt": "2021-07-28 00:00:00",
+   "value": -0.03742395695206513
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2021-09-25",
+   "filedAt": "2021-10-27 00:00:00",
+   "value": -0.03314028067739527
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2021-12-25",
+   "filedAt": "2022-02-03 00:00:00",
+   "value": -0.004073143424591974
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2022-03-26",
+   "filedAt": "2022-05-04 00:00:00",
+   "value": 0.009887546158619087
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2022-06-25",
+   "filedAt": "2022-08-03 00:00:00",
+   "value": -0.33372833556743475
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2022-09-24",
+   "filedAt": "2022-11-02 00:00:00",
+   "value": -0.33088796848185464
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2022-12-31",
+   "filedAt": "2023-02-27 00:00:00",
+   "value": -0.3351624733987584
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2023-04-01",
+   "filedAt": "2023-05-03 00:00:00",
+   "value": -0.3436034513374382
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2023-07-01",
+   "filedAt": "2023-08-02 00:00:00",
+   "value": 0.006261020989133059
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2023-09-30",
+   "filedAt": "2023-11-01 00:00:00",
+   "value": -0.000836562296876675
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2023-12-30",
+   "filedAt": "2024-01-31 00:00:00",
+   "value": -0.001949153092888345
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2024-03-30",
+   "filedAt": "2024-05-01 00:00:00",
+   "value": -0.0027297109123642915
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2024-06-29",
+   "filedAt": "2024-07-31 00:00:00",
+   "value": -0.0036960642889538597
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2024-09-28",
+   "filedAt": "2024-10-30 00:00:00",
+   "value": -0.0017395028684608072
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2024-12-28",
+   "filedAt": "2025-02-05 00:00:00",
+   "value": -0.004523961632357354
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2025-03-29",
+   "filedAt": "2025-05-07 00:00:00",
+   "value": -0.002903304372188442
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2025-06-28",
+   "filedAt": "2025-08-06 00:00:00",
+   "value": -0.003149341282860263
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2025-09-27",
+   "filedAt": "2025-11-05 00:00:00",
+   "value": -0.002695021889479454
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2025-12-27",
+   "filedAt": "2026-02-04 00:00:00",
+   "value": -0.003225394568801665
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2026-03-28",
+   "filedAt": "2026-05-06 00:00:00",
+   "value": -0.006129599558232002
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2026-06-27",
+   "filedAt": "2026-08-05 00:00:00",
+   "value": -0.005671900953728493
+  },
+  {
+   "cik": 2488,
+   "factor": "buybackYield",
+   "periodEnd": "2026-09-26",
+   "filedAt": "2026-11-04 00:00:00",
+   "value": -0.005934861789390844
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2021-12-25",
+   "filedAt": "2022-02-03 00:00:00",
+   "value": 0.01791702494240589
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2022-03-26",
+   "filedAt": "2022-05-04 00:00:00",
+   "value": 0.023641198840288716
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2022-06-25",
+   "filedAt": "2022-08-03 00:00:00",
+   "value": 0.022180675261550646
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2022-09-24",
+   "filedAt": "2022-11-02 00:00:00",
+   "value": 0.020718399167757518
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2022-12-31",
+   "filedAt": "2023-02-27 00:00:00",
+   "value": 0.012639766539059058
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2023-04-01",
+   "filedAt": "2023-05-03 00:00:00",
+   "value": 0.0025010738922996417
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2023-07-01",
+   "filedAt": "2023-08-02 00:00:00",
+   "value": -0.00013628707726274272
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2023-09-30",
+   "filedAt": "2023-11-01 00:00:00",
+   "value": 0.0012520818020130657
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2023-12-30",
+   "filedAt": "2024-01-31 00:00:00",
+   "value": 0.0035861153948148075
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2024-03-30",
+   "filedAt": "2024-05-01 00:00:00",
+   "value": 0.0038267226131908035
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2024-06-29",
+   "filedAt": "2024-07-31 00:00:00",
+   "value": 0.005164346103304245
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2024-09-28",
+   "filedAt": "2024-10-30 00:00:00",
+   "value": 0.0068647263986797834
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2024-12-28",
+   "filedAt": "2025-02-05 00:00:00",
+   "value": 0.008077407190205162
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2025-03-29",
+   "filedAt": "2025-05-07 00:00:00",
+   "value": 0.01331414349051243
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2025-06-28",
+   "filedAt": "2025-08-06 00:00:00",
+   "value": 0.012154006585048597
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2025-09-27",
+   "filedAt": "2025-11-05 00:00:00",
+   "value": 0.012775396813534354
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2025-12-27",
+   "filedAt": "2026-02-04 00:00:00",
+   "value": 0.012385266622566487
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2026-03-28",
+   "filedAt": "2026-05-06 00:00:00",
+   "value": 0.015209821160072015
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2026-06-27",
+   "filedAt": "2026-08-05 00:00:00",
+   "value": 0.007565062465315756
+  },
+  {
+   "cik": 2488,
+   "factor": "earningsYield",
+   "periodEnd": "2026-09-26",
+   "filedAt": "2026-11-04 00:00:00",
+   "value": 0.007400768105847935
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2021-12-25",
+   "filedAt": "2022-02-03 00:00:00",
+   "value": 47.68261839191337
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2022-03-26",
+   "filedAt": "2022-05-04 00:00:00",
+   "value": 35.625003939735834
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2022-06-25",
+   "filedAt": "2022-08-03 00:00:00",
+   "value": 38.16487562784141
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2022-09-24",
+   "filedAt": "2022-11-02 00:00:00",
+   "value": 41.518033726717555
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2022-12-31",
+   "filedAt": "2023-08-02 00:00:00",
+   "value": 80.7470795986867
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2023-04-01",
+   "filedAt": "2023-05-03 00:00:00",
+   "value": 931.989042548631
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2023-12-30",
+   "filedAt": "2024-05-01 00:00:00",
+   "value": 590.2136945693516
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2024-03-30",
+   "filedAt": "2024-05-01 00:00:00",
+   "value": 498.1294964468901
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2024-06-29",
+   "filedAt": "2024-07-31 00:00:00",
+   "value": 298.26437774386915
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2024-09-28",
+   "filedAt": "2024-10-30 00:00:00",
+   "value": 192.42924232366886
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2024-12-28",
+   "filedAt": "2025-02-05 00:00:00",
+   "value": 105.83855349775789
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2025-03-29",
+   "filedAt": "2025-05-07 00:00:00",
+   "value": 61.58566862832958
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2025-06-28",
+   "filedAt": "2025-08-06 00:00:00",
+   "value": 102.31589646358624
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2025-09-27",
+   "filedAt": "2025-11-05 00:00:00",
+   "value": 91.42931199713472
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2025-12-27",
+   "filedAt": "2026-02-04 00:00:00",
+   "value": 94.12443169588524
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2026-03-28",
+   "filedAt": "2026-05-06 00:00:00",
+   "value": 74.9233927996265
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2026-06-27",
+   "filedAt": "2026-08-05 00:00:00",
+   "value": 130.79973509396117
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbit",
+   "periodEnd": "2026-09-26",
+   "filedAt": "2026-11-04 00:00:00",
+   "value": 127.84630257595776
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2021-12-25",
+   "filedAt": "2022-02-03 00:00:00",
+   "value": 44.464772978962166
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2022-03-26",
+   "filedAt": "2022-05-04 00:00:00",
+   "value": 33.38625101422042
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2022-06-25",
+   "filedAt": "2022-08-03 00:00:00",
+   "value": 35.57875469207392
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2022-09-24",
+   "filedAt": "2022-11-02 00:00:00",
+   "value": 37.71749249791955
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2022-12-31",
+   "filedAt": "2023-08-02 00:00:00",
+   "value": 66.79601349001308
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2023-04-01",
+   "filedAt": "2023-05-03 00:00:00",
+   "value": 362.44018321335653
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2023-09-30",
+   "filedAt": "2023-11-01 00:00:00",
+   "value": 948.4329384574712
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2023-12-30",
+   "filedAt": "2024-05-01 00:00:00",
+   "value": 355.9032955222707
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2024-03-30",
+   "filedAt": "2024-05-01 00:00:00",
+   "value": 342.6848308889953
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2024-06-29",
+   "filedAt": "2024-07-31 00:00:00",
+   "value": 228.88834626864318
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2024-09-28",
+   "filedAt": "2024-10-30 00:00:00",
+   "value": 161.3580986090214
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2024-12-28",
+   "filedAt": "2025-02-05 00:00:00",
+   "value": 92.92664124109982
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2025-03-29",
+   "filedAt": "2025-05-07 00:00:00",
+   "value": 56.044217872406264
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2025-06-28",
+   "filedAt": "2025-08-06 00:00:00",
+   "value": 91.64367336347294
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2025-09-27",
+   "filedAt": "2025-11-05 00:00:00",
+   "value": 83.58487313875203
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2025-12-27",
+   "filedAt": "2026-02-04 00:00:00",
+   "value": 87.84629880864074
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2026-03-28",
+   "filedAt": "2026-05-06 00:00:00",
+   "value": 70.64945682315687
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2026-06-27",
+   "filedAt": "2026-08-05 00:00:00",
+   "value": 125.68552744218307
+  },
+  {
+   "cik": 2488,
+   "factor": "evEbitda",
+   "periodEnd": "2026-09-26",
+   "filedAt": "2026-11-04 00:00:00",
+   "value": 123.78671346361077
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2021-12-25",
+   "filedAt": "2022-02-03 00:00:00",
+   "value": 0.01824567372376564
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2022-03-26",
+   "filedAt": "2022-05-04 00:00:00",
+   "value": 0.023076820088133283
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2022-06-25",
+   "filedAt": "2022-08-03 00:00:00",
+   "value": 0.0235979708054197
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2022-09-24",
+   "filedAt": "2022-11-02 00:00:00",
+   "value": 0.031063926248885886
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2022-12-31",
+   "filedAt": "2023-02-27 00:00:00",
+   "value": 0.029827933916037094
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2023-04-01",
+   "filedAt": "2023-05-03 00:00:00",
+   "value": 0.015949886416969105
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2023-07-01",
+   "filedAt": "2023-08-02 00:00:00",
+   "value": 0.010177918929981626
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2023-09-30",
+   "filedAt": "2023-11-01 00:00:00",
+   "value": 0.007957942991640736
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2023-12-30",
+   "filedAt": "2024-01-31 00:00:00",
+   "value": 0.004707301355488758
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2024-03-30",
+   "filedAt": "2024-05-01 00:00:00",
+   "value": 0.004018744536433353
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2024-06-29",
+   "filedAt": "2024-07-31 00:00:00",
+   "value": 0.00517578852450802
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2024-09-28",
+   "filedAt": "2024-10-30 00:00:00",
+   "value": 0.005849679231295588
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2024-12-28",
+   "filedAt": "2025-02-05 00:00:00",
+   "value": 0.01183800383451762
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2025-03-29",
+   "filedAt": "2025-05-07 00:00:00",
+   "value": 0.016458840156884022
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2025-06-28",
+   "filedAt": "2025-08-06 00:00:00",
+   "value": 0.01733897269701887
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2025-09-27",
+   "filedAt": "2025-11-05 00:00:00",
+   "value": 0.021052741028474035
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2025-12-27",
+   "filedAt": "2026-02-04 00:00:00",
+   "value": 0.01924216163852025
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2026-03-28",
+   "filedAt": "2026-05-06 00:00:00",
+   "value": 0.0260349384361065
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2026-06-27",
+   "filedAt": "2026-08-05 00:00:00",
+   "value": 0.00988020203544425
+  },
+  {
+   "cik": 2488,
+   "factor": "fcfYield",
+   "periodEnd": "2026-09-26",
+   "filedAt": "2026-11-04 00:00:00",
+   "value": 0.0068538941796643955
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2021-12-25",
+   "filedAt": "2022-02-03 00:00:00",
+   "value": 0.01995124757185678
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2022-03-26",
+   "filedAt": "2022-05-04 00:00:00",
+   "value": 0.025208917596276033
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2022-06-25",
+   "filedAt": "2022-08-03 00:00:00",
+   "value": 0.026248313472454824
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2022-09-24",
+   "filedAt": "2022-11-02 00:00:00",
+   "value": 0.03481930700432632
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2022-12-31",
+   "filedAt": "2023-02-27 00:00:00",
+   "value": 0.03413694523617086
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2023-04-01",
+   "filedAt": "2023-05-03 00:00:00",
+   "value": 0.019350080543968872
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2023-07-01",
+   "filedAt": "2023-08-02 00:00:00",
+   "value": 0.013067204967951771
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2023-09-30",
+   "filedAt": "2023-11-01 00:00:00",
+   "value": 0.011154363361202936
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2023-12-30",
+   "filedAt": "2024-01-31 00:00:00",
+   "value": 0.0070000636570916675
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2024-03-30",
+   "filedAt": "2024-05-01 00:00:00",
+   "value": 0.00583609488140748
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2024-06-29",
+   "filedAt": "2024-07-31 00:00:00",
+   "value": 0.007307893008811619
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2024-09-28",
+   "filedAt": "2024-10-30 00:00:00",
+   "value": 0.0079812782828024
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2024-12-28",
+   "filedAt": "2025-02-05 00:00:00",
+   "value": 0.014968552873500242
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2025-03-29",
+   "filedAt": "2025-05-07 00:00:00",
+   "value": 0.020679668762318137
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2025-06-28",
+   "filedAt": "2025-08-06 00:00:00",
+   "value": 0.02091569869981722
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2025-09-27",
+   "filedAt": "2025-11-05 00:00:00",
+   "value": 0.024762475130407788
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2025-12-27",
+   "filedAt": "2026-02-04 00:00:00",
+   "value": 0.022024918199161487
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2026-03-28",
+   "filedAt": "2026-05-06 00:00:00",
+   "value": 0.029529948249490984
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2026-06-27",
+   "filedAt": "2026-08-05 00:00:00",
+   "value": 0.011852009581968111
+  },
+  {
+   "cik": 2488,
+   "factor": "ocfYield",
+   "periodEnd": "2026-09-26",
+   "filedAt": "2026-11-04 00:00:00",
+   "value": 0.008861688860697036
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2021-12-25",
+   "filedAt": "2022-02-03 00:00:00",
+   "value": 55.812837411037314
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2022-03-26",
+   "filedAt": "2022-05-04 00:00:00",
+   "value": 42.299039348877095
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2022-06-25",
+   "filedAt": "2022-08-03 00:00:00",
+   "value": 45.084290185405756
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2022-09-24",
+   "filedAt": "2022-11-02 00:00:00",
+   "value": 48.26627732688077
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2022-12-31",
+   "filedAt": "2023-02-27 00:00:00",
+   "value": 79.11538531268181
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2023-04-01",
+   "filedAt": "2023-05-03 00:00:00",
+   "value": 399.82825100802535
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2023-09-30",
+   "filedAt": "2023-11-01 00:00:00",
+   "value": 798.669861978846
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2023-12-30",
+   "filedAt": "2024-01-31 00:00:00",
+   "value": 278.85326876148713
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2024-03-30",
+   "filedAt": "2024-05-01 00:00:00",
+   "value": 261.32022126531365
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2024-06-29",
+   "filedAt": "2024-07-31 00:00:00",
+   "value": 193.635356731839
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2024-09-28",
+   "filedAt": "2024-10-30 00:00:00",
+   "value": 145.67222958693867
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2024-12-28",
+   "filedAt": "2025-02-05 00:00:00",
+   "value": 123.80210337948812
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2025-03-29",
+   "filedAt": "2025-05-07 00:00:00",
+   "value": 75.10809844528065
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2025-06-28",
+   "filedAt": "2025-08-06 00:00:00",
+   "value": 82.27739494811222
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2025-09-27",
+   "filedAt": "2025-11-05 00:00:00",
+   "value": 78.27545512641863
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2025-12-27",
+   "filedAt": "2026-02-04 00:00:00",
+   "value": 80.74109589033449
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2026-03-28",
+   "filedAt": "2026-05-06 00:00:00",
+   "value": 65.74699264874626
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2026-06-27",
+   "filedAt": "2026-08-05 00:00:00",
+   "value": 132.1866150590022
+  },
+  {
+   "cik": 2488,
+   "factor": "peRatio",
+   "periodEnd": "2026-09-26",
+   "filedAt": "2026-11-04 00:00:00",
+   "value": 135.12110982234677
+  },
+  {
+   "cik": 2488,
+   "factor": "salesYield",
+   "periodEnd": "2021-12-25",
+   "filedAt": "2022-02-03 00:00:00",
+   "value": 0.09312093229079645
+  },
+  {
+   "cik": 2488,
+   "factor": "salesYield",
+   "periodEnd": "2022-03-26",
+   "filedAt": "2022-05-04 00:00:00",
+   "value": 0.1315211521689625
+  },
+  {
+   "cik": 2488,
+   "factor": "salesYield",
+   "periodEnd": "2022-06-25",
+   "filedAt": "2022-08-03 00:00:00",
+   "value": 0.1528978432725932
+  },
+  {
+   "cik": 2488,
+   "factor": "salesYield",
+   "periodEnd": "2022-09-24",
+   "filedAt": "2022-11-02 00:00:00",
+   "value": 0.2080772618572673
+  },
+  {
+   "cik": 2488,
+   "factor": "salesYield",
+   "periodEnd": "2022-12-31",
+   "filedAt": "2023-02-27 00:00:00",
+   "value": 0.22599328036994912
+  },
+  {
+   "cik": 2488,
+   "factor": "salesYield",
+   "periodEnd": "2023-04-01",
+   "filedAt": "2023-05-03 00:00:00",
+   "value": 0.14605638347766034
+  },
+  {
+   "cik": 2488,
+   "factor": "salesYield",
+   "periodEnd": "2023-07-01",
+   "filedAt": "2023-08-02 00:00:00",
+   "value": 0.11925664408799039
+  },
+  {
+   "cik": 2488,
+   "factor": "salesYield",
+   "periodEnd": "2023-09-30",
+   "filedAt": "2023-11-01 00:00:00",
+   "value": 0.13309990732841775
+  }
+ ],
+ "truncated": true,
+ "productionWrite": false,
+ "databaseWrite": false
+}

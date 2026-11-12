@@ -1,8 +1,8 @@
 {
  "schemaVersion": 1,
- "generatedAt": "2026-11-12T02:40:23.812Z",
+ "generatedAt": "2026-11-12T06:07:52.669Z",
  "status": "complete",
- "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+ "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
  "groups": [
   "stats",
   "institutional",
@@ -23,9 +23,9 @@
   {
    "key": "dashboard-stats",
    "bytes": 1095,
-   "sha256": "7bdfc755008576fc55969a883216a4a876cd2c02d33a65f4ede295e037bb6e75",
-   "generatedAt": "2026-11-12T02:12:01.179Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "sha256": "a44ac8686a5f2f742b90309c020ce5a26bb14c0f2409b3701079b9f50edc3a45",
+   "generatedAt": "2026-11-12T06:07:44.457Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "27b30f7cecd53ebd47c721732728dd20e24f8aeb557c42139aee8ef1fe1493ef",
    "versionHash": "a947ca57110086a454731be573f86c85cce5d085b14c5d4ca523637c7fc80495",
    "inputs": {
@@ -36,19 +36,19 @@
     "factMaxId": 24807489,
     "filingMaxId": 2309529
    },
-   "reused": true
+   "reused": false
   },
   {
    "key": "institutional-1045810",
    "bytes": 2650,
-   "sha256": "62e6f031160244598ea58197380c5174cd6ea2d2c2ef498f827571cc4148f6b1",
-   "generatedAt": "2026-11-12T02:23:28.738Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "93a40aad29dbc008c9904529afb9876cad51c59635622e076f68a643f518d715",
+   "sha256": "14e91f5449c651cba98ef17e42f2ed534270881cb1d533e630efed0af6662295",
+   "generatedAt": "2026-11-12T05:52:14.929Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "bff18fdf86471f7ef00cbe5e3feae114a3bc8dc345eedde5d4ac4c67c0c7ebd6",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 512,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "factorPoints": 511,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 12027,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5678,
@@ -67,9 +67,9 @@
   {
    "key": "institutional-2488",
    "bytes": 2638,
-   "sha256": "f52526a83a3ee0b160a6c0b437458eb3035114a6d888c7fbd48afcea3a08611e",
-   "generatedAt": "2026-11-12T02:23:40.864Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "sha256": "13caba0637d9e67d9d87bc39ba784aac163d611acfb37218ea87ed00daccb131",
+   "generatedAt": "2026-11-12T05:52:29.241Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "9af1dfe871a8e5649882ac9cd405896589f01e5608eb7121368d91073cdd9795",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
@@ -93,13 +93,13 @@
   {
    "key": "institutional-50863",
    "bytes": 2646,
-   "sha256": "9e1e12874eea4854f1d3f084ec7ca5f6565b5066d8325e3429b08aebc358dc75",
-   "generatedAt": "2026-11-12T02:23:52.975Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "8097eec2e6aa87676120e5b614e28e1d4b06358406008ba4c1cd17f5bfca2c1e",
+   "sha256": "566cd143da130bbd83427d1179b33acac8e47b5c43e3b1c3dd7556a501327fc2",
+   "generatedAt": "2026-11-12T05:52:42.946Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "715f12f55a97f368d9d9ed582c62556f0d4b7f8c7470f8c9a80d4bc0ec2a6ac5",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 471,
+    "factorPoints": 467,
     "latestFactorFiledAt": "2026-10-30 00:00:00",
     "priceBars": 18850,
     "latestPriceDate": "2026-11-10",
@@ -119,13 +119,13 @@
   {
    "key": "institutional-1321655",
    "bytes": 2516,
-   "sha256": "a2f5f9c26de8117d63a6bbf3e286f34fede65c1bd8af301bd8d720178ed9d9d8",
-   "generatedAt": "2026-11-12T02:24:05.260Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "5e170cc302459eb7c25f272e3b1b3a66074fb279c9fef62a5550d3923dc55cf7",
+   "sha256": "930849361a2f076811c4ace46d16348b8abca18bb40113fec4c385f5c6a6561a",
+   "generatedAt": "2026-11-12T05:52:57.827Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "3ad97ccb88c32b92a2837a537c92beeae069386a88f01cd09317a0a4730a5a54",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 329,
+    "factorPoints": 320,
     "latestFactorFiledAt": "2026-11-03 00:00:00",
     "priceBars": 3076,
     "latestPriceDate": "2026-11-10",
@@ -140,14 +140,14 @@
   {
    "key": "institutional-1326801",
    "bytes": 2533,
-   "sha256": "35b88e6ba66e6b31f7e974e0a6af1a341f9f6be817af8ee99342620f107e6eb0",
-   "generatedAt": "2026-11-12T02:24:17.967Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "f05195cfc6bee695f88d1246da74a0778303a56ffef4268cd0b1bf2b8c273e05",
+   "sha256": "f7f33f93569491f8325f8b6542e31593dcb3ab894dc5c9c3cb632f5f6c485183",
+   "generatedAt": "2026-11-12T05:53:13.590Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "e9b7e05bdb96ce81fa0ddb4c50b9d368d508dc0b5ee25d8b85e00a489ba4424e",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 439,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "factorPoints": 381,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 7286,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5921,
@@ -161,14 +161,14 @@
   {
    "key": "institutional-1065280",
    "bytes": 2653,
-   "sha256": "532a407bcf2dbe28762e75066ee76501e7ba79efae503c1c2c3e81b78f21077e",
-   "generatedAt": "2026-11-12T02:24:30.575Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "7cff68f778b5e28f7394bad79a33a68bb065b392c94cfee1b9c03508979d581b",
+   "sha256": "b9064635c663655478581c0b2739f684a08ca546fb8a48652ec7707f9b64eff4",
+   "generatedAt": "2026-11-12T05:53:30.780Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "bdc32451f6d51afe58b87f06689356cdc17af9e1b47d8d6715ab27be59ce8bae",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
     "factorPoints": 540,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 10495,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5444,
@@ -187,9 +187,9 @@
   {
    "key": "institutional-1018724",
    "bytes": 2645,
-   "sha256": "15c50952d150abb63c3fe7fa80469b0f0e01d6c2e2602970fe1a940386e3207c",
-   "generatedAt": "2026-11-12T02:24:42.458Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "sha256": "4d21d11edf268d22fc6579c4a7dfced6a68af65acf8f95e016a26e9beee98dae",
+   "generatedAt": "2026-11-12T05:53:47.425Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "f08b294374f2985b465de1cb7a6ff6c1df1e8f689fab390f7f29303564110f35",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
@@ -213,14 +213,14 @@
   {
    "key": "institutional-1318605",
    "bytes": 2659,
-   "sha256": "0fdbdb20728723c1f8b25cf708c57f53a0f09dfc2a4e45649a55e3d9d8e3b4d0",
-   "generatedAt": "2026-11-12T02:24:53.674Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "8a926f0f2e5c05f3a50ed8053a7968a03bfd589b1d0bbc1a4360aacbb6c368fe",
+   "sha256": "988baa5ddf84ddb34bf29a47aa10c911635ab47cb989f0242bbc882b95e702fb",
+   "generatedAt": "2026-11-12T05:54:04.320Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "c570517889591a618a6844959fceee5e7a07fb4884f3748935a4a21a3002deb6",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 536,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "factorPoints": 525,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 8240,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5344,
@@ -239,14 +239,14 @@
   {
    "key": "institutional-320187",
    "bytes": 2649,
-   "sha256": "6147a1dffc611c1d3ccde9e72129fdf34b4a278852c8945f44da79354cccb3d7",
-   "generatedAt": "2026-11-12T02:25:05.983Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "8810f54ceb3f6bb8b2aa9a327e692f7b5048252e44bfd84f02bb5294a72ae977",
+   "sha256": "78d4420269ddcfac1d5795232610e91d283ce5bb93df13d2ca50fe4632e6e7b6",
+   "generatedAt": "2026-11-12T05:54:20.596Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "190c30367655808566d0d26636dc65eee9db8b59bbe73f8d941a706423d73343",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 447,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "factorPoints": 412,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 14915,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5211,
@@ -265,14 +265,14 @@
   {
    "key": "institutional-1397187",
    "bytes": 2627,
-   "sha256": "d29e1c6388044d24a0583aeadf673ee7cffecaaef2f426f0b473cefce3d42df3",
-   "generatedAt": "2026-11-12T02:25:17.623Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "655977153d58d2b326f1feaad177ef610d40b2a873d9f925e7841979d62e4294",
+   "sha256": "62336a032ec5ca1ca1c221b3af5499a866597b983656740721f3554a3057a0ad",
+   "generatedAt": "2026-11-12T05:54:36.004Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "28200ebd8705bb391d139e7246bd1ec036f906059371d0ee7b6090d5f36ea6b2",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
     "factorPoints": 497,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 9711,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 4640,
@@ -291,13 +291,13 @@
   {
    "key": "institutional-884887",
    "bytes": 1835,
-   "sha256": "accd31c96ad131c7a82d08d5e7027bffa5548241f9011e380bdf520c167a6d60",
-   "generatedAt": "2026-11-12T02:25:30.349Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "522542b00214f4702bdffcc9dc06b8783dbee0a4c210c7836af2f8a48f193fdf",
+   "sha256": "078dd5cd3aa9ecc7eeb9bcdcc1ca6867e491749405b4d546b2e652c1f558b2f1",
+   "generatedAt": "2026-11-12T05:54:49.626Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "65ff67ca259810d5e99a0f3ecd0d81caede9f5e48ab2487ccf36adf1ae6e7adc",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 395,
+    "factorPoints": 364,
     "latestFactorFiledAt": "2026-10-27 00:00:00",
     "priceBars": 10496,
     "latestPriceDate": "2026-11-10",
@@ -317,13 +317,13 @@
   {
    "key": "institutional-886982",
    "bytes": 1846,
-   "sha256": "488df4b05b85c0d25184461cfc61f7a6d558b790347930044c641fdc585d98e0",
-   "generatedAt": "2026-11-12T02:25:43.519Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "549d95bc7b55a2179e49f837a86e5b9420dd51a8435e71839c334e10c59e5699",
+   "sha256": "e4a255a7da6da6251dd96e62db7c2a6b5a889e28765281837dd86dd3e5cbc518",
+   "generatedAt": "2026-11-12T05:55:03.971Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "00006ac1eba67e89ffdbdf2d3d6ce6594f86161bb94c769f3b51d23e2dea14d4",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 400,
+    "factorPoints": 396,
     "latestFactorFiledAt": "2026-11-02 00:00:00",
     "priceBars": 11956,
     "latestPriceDate": "2026-11-10",
@@ -343,9 +343,9 @@
   {
    "key": "institutional-927628",
    "bytes": 1846,
-   "sha256": "ed60ae96a344104bb6b412cc5c017d54d8c62bd3520fe5da211a66706a5c81dd",
-   "generatedAt": "2026-11-12T02:25:56.850Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "sha256": "069fa7fdbc19d27a51199090736bd1a04e7a908b2050aa93f54caca2d134eb2a",
+   "generatedAt": "2026-11-12T05:55:17.959Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "a743c1b86e67939c16a637da42c422a30eb0fc3608be651bc95475bf17c3bf1c",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
@@ -369,9 +369,9 @@
   {
    "key": "institutional-731766",
    "bytes": 2658,
-   "sha256": "8df0784e8ff303a0e1ae8cb1de34c95d29cea16cff70b9d76e02bb71df8fb4f5",
-   "generatedAt": "2026-11-12T02:26:09.520Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "sha256": "649ad0373f846a9929cea3c71f6c023edb23d1a043cd83c69c7c12e192283681",
+   "generatedAt": "2026-11-12T05:55:32.225Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "8d4edc8ce5cf1b357d394d5e1ea0285e7a57d2b56cadf8d3c63692befbf82e48",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
@@ -395,13 +395,13 @@
   {
    "key": "institutional-78003",
    "bytes": 2629,
-   "sha256": "f98e2165a1e612a60975c67dff79dad07e3e3e969ffb39291cb27b8740baff99",
-   "generatedAt": "2026-11-12T02:26:22.352Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "2b690be72c2ca14df3b9174991452d97fc8014bb8a5c953b3f90abfc9815ff7c",
+   "sha256": "dbe02444a44f835de344ec0fb35fd173cdce0b9c0ce557805f61c6e641e96bfb",
+   "generatedAt": "2026-11-12T05:55:46.183Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "7ddeaf5bc49504672e1db40264d62776f3bbd8d5894700998c7b13834e93ef93",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 385,
+    "factorPoints": 351,
     "latestFactorFiledAt": "2026-11-03 00:00:00",
     "priceBars": 16337,
     "latestPriceDate": "2026-11-10",
@@ -421,13 +421,13 @@
   {
    "key": "institutional-831259",
    "bytes": 2653,
-   "sha256": "c819406b3adb10623ce0491f16db6e4eafab86290802227db4c3e2207498575e",
-   "generatedAt": "2026-11-12T02:26:36.231Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "6575b039351cec1aa4aa45eef5c087aa31f7469eaf2c4eedc77846df67ea8224",
+   "sha256": "7f9efcb7fb41e4d21745c37240ed4ec8475eb96e59c14908c1e5fb5bd3ab742c",
+   "generatedAt": "2026-11-12T05:56:00.259Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "3fcb110725cb71553d6e97b19d2da90afab7184037bdfe6c38feb687d03adf46",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 331,
+    "factorPoints": 309,
     "latestFactorFiledAt": "2026-11-06 00:00:00",
     "priceBars": 12921,
     "latestPriceDate": "2026-11-10",
@@ -447,13 +447,13 @@
   {
    "key": "institutional-12927",
    "bytes": 1845,
-   "sha256": "0de2f8c820c9723290034d110cdb289661ad543b7b402900632f5cb364a288b9",
-   "generatedAt": "2026-11-12T02:15:37.673Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "55fde222116714226b825b2bdffe81fd5b545539994f2ca6430d8f1235a05474",
+   "sha256": "3dae327d803cb6611bcfd275da44476496b92c192162a0e398e73dd521c0c35f",
+   "generatedAt": "2026-11-12T05:56:13.616Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "5c5d923d9ea948a091e746cb35a7024f84aac87e080669c93ae0a9ec86703348",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 465,
+    "factorPoints": 464,
     "latestFactorFiledAt": "2026-10-27 00:00:00",
     "priceBars": 19370,
     "latestPriceDate": "2026-11-10",
@@ -473,14 +473,14 @@
   {
    "key": "institutional-1045609",
    "bytes": 2626,
-   "sha256": "13b3d14f014f6a891c19bf423160654250d953c59313c98005a73b2093215bd2",
-   "generatedAt": "2026-11-12T02:15:50.500Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "cd016959f1081e020a89965b3726316d35db4b21fe184da0803e7d0062736a4d",
+   "sha256": "83d8f708ecb7d3c3efc684baa37d85d9b0a79c2867896d17d2faed469cb123b8",
+   "generatedAt": "2026-11-12T05:56:31.320Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "29fcb32a85a288bc10cbb91a682db3d20eb83bd1ca1486cb84221c4ac60acd68",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
     "factorPoints": 458,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 12867,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 4934,
@@ -499,14 +499,14 @@
   {
    "key": "institutional-753308",
    "bytes": 1847,
-   "sha256": "d377f05dce1c54aea9653a95b3b1d3a4717e44fa0bf0c66b37f2ee3c7d3b7bf3",
-   "generatedAt": "2026-11-12T02:16:02.572Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "159856669b99b407416c61786ef02c01c2b45bc9c0b8e8798c69b2e1885295b6",
+   "sha256": "b39a929eaea9d0659763e0f2228b734260d603da619187ff0b1668a92d28f973",
+   "generatedAt": "2026-11-12T05:56:53.130Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "8b8915df416a562caf9fa71ac4ebc1303c0dc663933b32cedb4cd1f2b90a0006",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
     "factorPoints": 430,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 10496,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 1385,
@@ -525,9 +525,9 @@
   {
    "key": "institutional-789019",
    "bytes": 2643,
-   "sha256": "a8cab55eb6ab2e90d9c3596baeae3e1bf6ce0b6f78f32ff1cd4080259855a5b1",
-   "generatedAt": "2026-11-12T02:16:15.342Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "sha256": "cbbe28b5809b8d875e78b115da91b1ad7f834736b84d6af754fde64b7f259328",
+   "generatedAt": "2026-11-12T05:57:08.310Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "2827dcdd7b94b56a64c78f3aac06d7f586f8532aacd7ecc4c2a9d8a8a9980083",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
@@ -551,14 +551,14 @@
   {
    "key": "institutional-1730168",
    "bytes": 2661,
-   "sha256": "73ba41b1a9fa4cf3cea351926e031a6e6e11d5be8059f7250cd25cdd4e78f78a",
-   "generatedAt": "2026-11-12T02:16:27.819Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "4282041abc805aef8aedafe81523855027bc8be8f4bb597d95049d6ca756893a",
+   "sha256": "cdbceb3e86900af6ee0a85b224c767c1936fa649d2469dab12a38dc4db3c4b5f",
+   "generatedAt": "2026-11-12T05:57:22.115Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "e2031697d18dbbdd3ad24157a377fbbb2c454d3461e29f522a830750e5eec339",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 350,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "factorPoints": 341,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 8690,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5361,
@@ -577,13 +577,13 @@
   {
    "key": "institutional-1596532",
    "bytes": 2654,
-   "sha256": "db7a18b4c37620519a832b2d6ee27ef905cd28b2c2c09733ab73900a055ffcb4",
-   "generatedAt": "2026-11-12T02:16:40.272Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "cd865d52b9db16b734cd7cf76f452dbba291c9e5b001a0362c0e676a9311a62f",
+   "sha256": "02171d0c3c7cbc98ba8985e09689c0ac77038bf40f128ff8494f29ddc7f622dd",
+   "generatedAt": "2026-11-12T05:57:36.027Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "d2c090d665724f68ec99ebd032513b958274d92e97bf3dde4f3d249c84839410",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 461,
+    "factorPoints": 453,
     "latestFactorFiledAt": "2026-11-04 00:00:00",
     "priceBars": 6258,
     "latestPriceDate": "2026-11-10",
@@ -603,14 +603,14 @@
   {
    "key": "institutional-723125",
    "bytes": 2657,
-   "sha256": "d2e7ab6bd33b9d49b8f85d5386d3c9cf340081bf69f6492ac928c1d27b7338dc",
-   "generatedAt": "2026-11-12T02:16:53.402Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "adf32c1e6abd4eb356e21ccb1c8b4ff7a9df2655d9b015b771fd9c856ce352f2",
+   "sha256": "ad5477057b569739a5f0dfc5dbcaa8fbc96630d471bc360b3f9c2a9b57c878c1",
+   "generatedAt": "2026-11-12T05:57:49.330Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "481cc6944356e4edf80efb823ce171acf51eeb44b3b05837cf6f0a1dd35d6b9a",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
     "factorPoints": 540,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 14474,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5247,
@@ -629,13 +629,13 @@
   {
    "key": "institutional-1375365",
    "bytes": 1844,
-   "sha256": "c7e6b22fe2de664293255a84a834e87a3b31e1cda0620a6561a0a64aefaf4df6",
-   "generatedAt": "2026-11-12T02:17:05.730Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "e5e04b723749e1edfe4a75b85b09644b2969591c9fb5e9bc4c4fe543f7678549",
+   "sha256": "69d45755a616d5f3e693fa02186e856a6a7f6fb559b715e02122ce33678ad585",
+   "generatedAt": "2026-11-12T05:58:03.006Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "1b218404a952cca761ab578e92ce5f1c37c78a942c700c3f2eb44960b203d128",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 494,
+    "factorPoints": 493,
     "latestFactorFiledAt": "2026-11-06 00:00:00",
     "priceBars": 6656,
     "latestPriceDate": "2026-11-10",
@@ -655,13 +655,13 @@
   {
    "key": "institutional-1274494",
    "bytes": 2642,
-   "sha256": "4207f669a912b15e363ebd09e28f146a46f25cd9e90d2da014fd72d1b404ccc9",
-   "generatedAt": "2026-11-12T02:17:19.966Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "6d633ae504b26d087801832ce77cb131741dcac94d4cc900fc9be17114fe717b",
+   "sha256": "f1d9ee227ca73390b51f71ac4a63023beaa30b8582e21852184ac9e6b8862c91",
+   "generatedAt": "2026-11-12T05:58:16.481Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "99c429c355120264c4419c8315e6fb2575a14749770a27b5c3e1544446d41081",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 555,
+    "factorPoints": 551,
     "latestFactorFiledAt": "2026-10-29 00:00:00",
     "priceBars": 10054,
     "latestPriceDate": "2026-11-10",
@@ -681,13 +681,13 @@
   {
    "key": "institutional-1682852",
    "bytes": 2629,
-   "sha256": "5f3eeedd694b9a9e2d61e8f405d7db4ebc5488c756235aa949bdc0ca2336430c",
-   "generatedAt": "2026-11-12T02:17:31.833Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "9b2345f0829d4ec74683953ba53ad1c021f5982c741a6a7bb98c7ec5f2cd2f27",
+   "sha256": "046b0ff5436906458190ef0c362ab8b77e9b998f6881e8b60c758d4b7de55e00",
+   "generatedAt": "2026-11-12T05:58:29.902Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "e96510c6e7bddbabd02c7d12e798f0a63cd50dfc4eabf5682b0b1f068b730509",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 316,
+    "factorPoints": 308,
     "latestFactorFiledAt": "2026-11-06 00:00:00",
     "priceBars": 3988,
     "latestPriceDate": "2026-11-10",
@@ -707,13 +707,13 @@
   {
    "key": "institutional-59478",
    "bytes": 2652,
-   "sha256": "cc312342faa08c0d2bbd1933b25e50c11f808e5e1466f55bbac9cf251ded08ec",
-   "generatedAt": "2026-11-12T02:17:44.395Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "13a1c8af4b59f526ee372dfd33771255627ef9eb2b4240d7325fa42cbd572c6a",
+   "sha256": "155166191e51612e9f14c1e121bc83a650bec3dc8c201a93ecbe9074905e28a5",
+   "generatedAt": "2026-11-12T05:58:43.393Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "942875f7e83bac5c7d7c082a9b76a4c6e11161054b6f086e45eadc4a291fa496",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 366,
+    "factorPoints": 335,
     "latestFactorFiledAt": "2026-10-29 00:00:00",
     "priceBars": 16339,
     "latestPriceDate": "2026-11-10",
@@ -733,14 +733,14 @@
   {
    "key": "institutional-27904",
    "bytes": 2645,
-   "sha256": "0c8d8b6fb9ad3b15c1c5cf331c22a59cefdf794663a339d80c02b6d3049d39b4",
-   "generatedAt": "2026-11-12T02:17:57.834Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "5bf758bd8b39432f3c0905dbd7be875a753e056104a23d054600a91b413f9ef4",
+   "sha256": "7bd8661ae5fb3f48d53f3fdf904a2460d10a5c5e4ba5e5455fb1f867622dd0f3",
+   "generatedAt": "2026-11-12T05:58:56.558Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "e3ef36d3f2c8123608cddb0c5bcfdf9e8de70b51f15bb3a083afb3d833b69f99",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 415,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "factorPoints": 387,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 16725,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 4623,
@@ -759,13 +759,13 @@
   {
    "key": "institutional-1792789",
    "bytes": 2526,
-   "sha256": "7d5c96ea1c4ce10c5550c4ea9961704ee7ceb0e47a9670413895e56cce761183",
-   "generatedAt": "2026-11-12T02:18:10.972Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "239bff1b50b832fc27d8e490b01c1ef756867e50a5a1b7d37deca648e09ec558",
+   "sha256": "627134f267f3783e8cd9e6bca3e70d89de8c7f642286c7f43e5480732cf29b85",
+   "generatedAt": "2026-11-12T05:59:10.265Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "153cfdb6bc62668b919bc6b8965b2db3e275da01317267c9733bd248e280239e",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 270,
+    "factorPoints": 237,
     "latestFactorFiledAt": "2026-10-30 00:00:00",
     "priceBars": 2978,
     "latestPriceDate": "2026-11-10",
@@ -780,14 +780,14 @@
   {
    "key": "institutional-354950",
    "bytes": 2690,
-   "sha256": "ced0fd2aa915574cee5ae8a8c4fa91489337b8e1c282ab670ab6b9a88c0d2a67",
-   "generatedAt": "2026-11-12T02:18:25.138Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "b1e459355da86fa2fbd36626b89095934b3f1dc38865a3f2448734238d5f9d52",
+   "sha256": "f7e2e87ef428192d3be56b63ee273c2a05272e70bf732223b43712e23163c895",
+   "generatedAt": "2026-11-12T05:59:23.544Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "be4db6882f1d451d3c4d880ef0a148977cb871391d2ec6099711f2853d19c3b5",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
     "factorPoints": 535,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 16409,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5224,
@@ -806,9 +806,9 @@
   {
    "key": "institutional-18230",
    "bytes": 2643,
-   "sha256": "635b6fc4ae21074ff42c5f9996673b00987f6bd697090d9410349f8eabd0a201",
-   "generatedAt": "2026-11-12T02:18:37.325Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "sha256": "e1b5158aefbfcb839249e40b46a86cc43796a83f4be91fcd5608610a3a0e3f1d",
+   "generatedAt": "2026-11-12T05:59:37.052Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "db3f5c9f213ed8cac966732253e96d11a2e0621e1272722074ccd5c9eabc0ccf",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
@@ -832,9 +832,9 @@
   {
    "key": "institutional-1053507",
    "bytes": 2617,
-   "sha256": "142894bab92edd25c320bfe62995edad5afb193f671eade7ca1de66abc83fb21",
-   "generatedAt": "2026-11-12T02:18:58.555Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "sha256": "57a4b7b441d0112885aff7b72ef240188556b35a2e69fe8e36fafab913746a7f",
+   "generatedAt": "2026-11-12T05:59:49.903Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "c8f6187edb639fad6bf8629cc6ad61c67e8e6a0e4d78a759fcc5d484a88d2bc2",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
@@ -858,13 +858,13 @@
   {
    "key": "institutional-19617",
    "bytes": 2040,
-   "sha256": "3a10e6fbc399d0fd1347d52b4e1e1b9908000148441a01eff1fae5c541382044",
-   "generatedAt": "2026-11-12T02:19:13.059Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "0d03cbb0e8adf41a5269e489b43d174fa6ebce935e7381a61c6c0971cd047821",
+   "sha256": "5de8436d3cb81c2e590882bdbaf9a9a68ef97344ca9940a2121c65170a20240e",
+   "generatedAt": "2026-11-12T06:00:02.474Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "0002ec77aefec6bb24391a914c2aa086b2b924d5c80cead237faf41413ab484f",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 381,
+    "factorPoints": 376,
     "latestFactorFiledAt": "2026-11-03 00:00:00",
     "priceBars": 19369,
     "latestPriceDate": "2026-11-10",
@@ -884,13 +884,13 @@
   {
    "key": "institutional-1506307",
    "bytes": 1847,
-   "sha256": "3e87538de2456f6f628f94bed6c8d9915a6048215a0f80656e738f447c8c9687",
-   "generatedAt": "2026-11-12T02:19:27.311Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "a1db61c576f3cd7c3e0d6a72ab9e954de00dce5c6a31497a56871eac060b2628",
+   "sha256": "7c8250ccebf6bb3fa780b9dcb0f55bea096de1182d2ffd6991f70ee27502663d",
+   "generatedAt": "2026-11-12T06:00:15.692Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "c83f5e7c0109659b37922560a8431939df6587ded7f3f989c8f544a44499a2c8",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 475,
+    "factorPoints": 464,
     "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 7921,
     "latestPriceDate": "2026-11-10",
@@ -910,9 +910,9 @@
   {
    "key": "institutional-320193",
    "bytes": 2639,
-   "sha256": "5db9d9b3ab96dc0ebf2374bd3bab6c74ed975865f801c3dbf0aef518936cd457",
-   "generatedAt": "2026-11-12T02:19:41.437Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "sha256": "fd59a23fec645e714feb9965bd7c688a9c03dcd321c4d9cc3df4695cceed8bd1",
+   "generatedAt": "2026-11-12T06:00:28.617Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "33094671b2b2a35a1c3bc09d7775684a60ed5768e4506a6bdb9e175b6d71cb71",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
@@ -936,14 +936,14 @@
   {
    "key": "institutional-51143",
    "bytes": 2619,
-   "sha256": "967af22bf677a1c00cc6f324f9f11a0189c34eaa1f26c5787b0daad56e706177",
-   "generatedAt": "2026-11-12T02:19:55.236Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "336a029abd70a9ffb0bb0bc132da4950a9ff5f951515d0dfebe95c10f117ace3",
+   "sha256": "9ec9694892db4ec2f22494bfa3880375a56b3f4d2a5749c4a15aa74e60d73df0",
+   "generatedAt": "2026-11-12T06:00:42.348Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "bd0f4bada0da03ba4f1d9b603101310f3cc2e1bf025a0d05d5303110818b8199",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 442,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "factorPoints": 438,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 21353,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 4927,
@@ -962,14 +962,14 @@
   {
    "key": "institutional-936468",
    "bytes": 2628,
-   "sha256": "5f80e3745104211ef5ea96d78611d2caa99140485dc20f6994385699e0af663e",
-   "generatedAt": "2026-11-12T02:20:07.246Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "fa8aaf67e3c05fd711852ac77d49a5aecf8604eefeab4d98d115c683d1f5e6cc",
+   "sha256": "21eb0039ed129d945c17dddbf309d9803f7b956cc1da2802b192ff990d19082b",
+   "generatedAt": "2026-11-12T06:00:56.012Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "1f7f817c562305ce2360a4e46b4b7fb697bd6194dd5ed4f1dbc8cf8f5b6c35be",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
     "factorPoints": 477,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 17599,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 4696,
@@ -988,14 +988,14 @@
   {
    "key": "institutional-732717",
    "bytes": 2628,
-   "sha256": "d5f379d8bd3750fe429159cce06318ac80531e7ca2b2850027191a6d16b5a596",
-   "generatedAt": "2026-11-12T02:20:19.829Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "16a64dd2691af16f2081b24dc8679b5f81b98de6f0b036a78e025f2f2374c1a4",
+   "sha256": "d5cf44d4f7ccf50509f4d33750b7a0bf3460f4fc4b87cbff848e891d4cf65a25",
+   "generatedAt": "2026-11-12T06:01:09.414Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "993687b5edd10d5230e993a39ceb2846c1727de8172cd9e9cf3687eb857c2811",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 389,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "factorPoints": 356,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 15696,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 7599,
@@ -1014,13 +1014,13 @@
   {
    "key": "institutional-1652044",
    "bytes": 2511,
-   "sha256": "aa3c0661c30a9e719122985b9776115c93a9995374d24510db6d432e6187e54d",
-   "generatedAt": "2026-11-12T02:20:33.282Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "16c10e1104c0aff004d09d1661af2c7370b10e0936ede3c74abe99f43a657b7c",
+   "sha256": "1d801d712d2ca31aa105509e26c8b44fef3feddb9da94ee3b3c0db214eedab0d",
+   "generatedAt": "2026-11-12T06:01:22.095Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "906cac5de7b3616e3a53555b5154d58d83f99fab0c5d0e17138b07035563f20b",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 406,
+    "factorPoints": 393,
     "latestFactorFiledAt": "2026-10-29 00:00:00",
     "priceBars": 10627,
     "latestPriceDate": "2026-11-10",
@@ -1035,14 +1035,14 @@
   {
    "key": "institutional-200406",
    "bytes": 2625,
-   "sha256": "3b5edd806952884c49665f8d774997f53a269447443700232dbd5f88d9d77741",
-   "generatedAt": "2026-11-12T02:20:44.934Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "9c71e1db4a6e0bf3d47fe1609e860288b511b9e89cfe0ba34d11036d1c283958",
+   "sha256": "24e064c14061618912060add870e5c4a5c42ca6aa301d6d0870067cee7d346bf",
+   "generatedAt": "2026-11-12T06:01:35.239Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "e903483d114a311d68cb6bca440ce18b7e2bb39870c416bf597475e22f188656",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 502,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "factorPoints": 458,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 19369,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5287,
@@ -1061,14 +1061,14 @@
   {
    "key": "institutional-80424",
    "bytes": 2622,
-   "sha256": "70dd7936cfdf518671eda359c9d5f9647d25c64f48a0588f6bbf571c0d0189d3",
-   "generatedAt": "2026-11-12T02:20:57.236Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "d9fe73cfbf2ce4ad14293f85c2488ccb0d5558ed972db6f38668bbd96697200c",
+   "sha256": "8ba800ea6bd5dfbbb163ae182bc2276534fb51e4e08339ea06dfae326795297a",
+   "generatedAt": "2026-11-12T06:01:47.910Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "f6540ff159e09973a7f4da826f2229b705c28442abfae964978352b6479edd04",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 367,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "factorPoints": 342,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 19370,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5356,
@@ -1087,14 +1087,14 @@
   {
    "key": "institutional-104169",
    "bytes": 2632,
-   "sha256": "79bbe3a2e58483dd5c098f3f2803e573594dff95d4c4743dfe1355cf7443f5d3",
-   "generatedAt": "2026-11-12T02:21:09.252Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "a810f579d776a2a6f291ae5e6d462e86c1441f4048a36395f02e48121c8694fe",
+   "sha256": "444468939d06ac467bdbd23ea70dfb70a6898a7297d9cb043147bf5dac9eb02e",
+   "generatedAt": "2026-11-12T06:02:00.374Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "44f97038e70c6d87983132c7364313d365f21d1b1de273c402e417905e377384",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 400,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "factorPoints": 365,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 18739,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5241,
@@ -1113,13 +1113,13 @@
   {
    "key": "institutional-93410",
    "bytes": 1835,
-   "sha256": "5f8160cdf2225b64fc6ebe3c57c5aaf3f43619205233fbbb7195b8fd08701270",
-   "generatedAt": "2026-11-12T02:21:21.980Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "f5e7e698fe38ed393cc427bb628e40e1b9f226b41468f113786d029aee7db6a3",
+   "sha256": "ea4eec886e129d49b41d71fbbaf690ca8d1f74aeeceb6e039994f7d54ecb524d",
+   "generatedAt": "2026-11-12T06:02:13.444Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "38c65420376261681e841a080a196ffdb49826a763401de8c58a818a55ab30ed",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 367,
+    "factorPoints": 339,
     "latestFactorFiledAt": "2026-11-05 00:00:00",
     "priceBars": 19368,
     "latestPriceDate": "2026-11-10",
@@ -1139,13 +1139,13 @@
   {
    "key": "institutional-1141391",
    "bytes": 2634,
-   "sha256": "94d5f1dde3315160046f8d874bf7a03009ea4a6fb57e721c91b8422ae36a20c3",
-   "generatedAt": "2026-11-12T02:21:35.317Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "8337ede6d440a9b319a98e281b046e00f231ed98cb191be8e951eb7902385de6",
+   "sha256": "b800f68d90171b13abff068cb80b68049b3f1a9ec543dbb59a21f7a8093ab059",
+   "generatedAt": "2026-11-12T06:02:25.871Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "95d235a4ff42ce880a2ac295b6651b931d28e67e32c9e0df8079f2746d90e788",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 357,
+    "factorPoints": 322,
     "latestFactorFiledAt": "2026-10-29 00:00:00",
     "priceBars": 10183,
     "latestPriceDate": "2026-11-10",
@@ -1165,9 +1165,9 @@
   {
    "key": "institutional-1403161",
    "bytes": 2638,
-   "sha256": "61c4db837aa584f3874e5d20171555cc0afccded95049e6e5aa37c79aa975cf6",
-   "generatedAt": "2026-11-12T02:21:49.091Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "sha256": "2615f2464e03582ba9b0200472119ab4365bb17d74324d14fa5ce7f3f18a857e",
+   "generatedAt": "2026-11-12T06:02:39.121Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "37471b44075979731e456ed582854e54e02b5b097b478fb262b3f8bfe9e2931a",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
@@ -1191,14 +1191,14 @@
   {
    "key": "institutional-909832",
    "bytes": 2626,
-   "sha256": "e4a746f79e029669c83c7a337775ab366a0cee80fa866e20eb2adf475242d9d3",
-   "generatedAt": "2026-11-12T02:22:03.649Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "d17e720f24c022060b1b60f9c593473d79ecadc6d8d11e63d814e34b01e74e58",
+   "sha256": "a5086d78bd4f093a122bc37039f26eea890255af6039f293f796a90ce7ecf2bc",
+   "generatedAt": "2026-11-12T06:02:51.500Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "6e5ca12a3812b76c864773b2c89618173c2bdaa3a58e4fed00360dbc64c99f50",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 494,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "factorPoints": 488,
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 15197,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5264,
@@ -1217,13 +1217,13 @@
   {
    "key": "institutional-5272",
    "bytes": 2648,
-   "sha256": "7d47142914e81d57b4928023834aff8dc8d1fbd47e0efeed6120685b7fc23521",
-   "generatedAt": "2026-11-12T02:22:18.547Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "e0a5007ff8cf8142e787c0c3da3f5840644f8dab5a3142ae404905d9251843ef",
+   "sha256": "09cefb150e4b2a3e12be30f2c44eb6d9f304eb84814a469095b2b72b55b98da7",
+   "generatedAt": "2026-11-12T06:03:04.216Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "25ba54f54578a1838ea0db2c51132f79a86f272c77bd6dd92046b3b79e5f79fe",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 402,
+    "factorPoints": 391,
     "latestFactorFiledAt": "2026-11-04 00:00:00",
     "priceBars": 15661,
     "latestPriceDate": "2026-11-10",
@@ -1243,13 +1243,13 @@
   {
    "key": "institutional-1163165",
    "bytes": 2652,
-   "sha256": "b1732150e52c93bd369cf486db361079a86a6e4b422cd59600a2741222df33fa",
-   "generatedAt": "2026-11-12T02:22:36.725Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "cc91ceb9dff6811e02bbf14cd0adb75895e33644069f535ddc873d315e1b9f13",
+   "sha256": "eaba381d09cdb628ddd27410c95848610e5a5dd29c5f4931804bfda364581ba8",
+   "generatedAt": "2026-11-12T06:03:17.267Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "e2e1ee680a1a95984d9deb85517e300437175ff8ff944253b776f2acaab60f2b",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 367,
+    "factorPoints": 338,
     "latestFactorFiledAt": "2026-11-05 00:00:00",
     "priceBars": 16336,
     "latestPriceDate": "2026-11-10",
@@ -1269,13 +1269,13 @@
   {
    "key": "institutional-1707925",
    "bytes": 1834,
-   "sha256": "cd646252d7326d6cb6db5892bd6397e4adb50cfd560174f92b01e282a87ed3df",
-   "generatedAt": "2026-11-12T02:22:50.188Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "a75bec23381995e4fcd3bce47c3d25b19a8ebc249210f6e9a44034bf85c8d43c",
+   "sha256": "e27d7cac903bac3f1caf8211ab462ea96962bd9438237b927b2237e1ea9e784b",
+   "generatedAt": "2026-11-12T06:03:29.820Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "6c495fccf88349f547b79e9f7e02afc6c2d8897e7e8a5185aec7534b5066b902",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
-    "factorPoints": 368,
+    "factorPoints": 324,
     "latestFactorFiledAt": "2026-10-29 00:00:00",
     "priceBars": 7051,
     "latestPriceDate": "2026-11-10",
@@ -1295,14 +1295,14 @@
   {
    "key": "institutional-858877",
    "bytes": 2638,
-   "sha256": "b672dd8a5a5cafb46a71d547fda17b4e21c12bfb074e6fb2347a9f1ada0b9077",
-   "generatedAt": "2026-11-12T02:23:02.038Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
-   "inputsHash": "c1c45e3d27830ab2b75fcc4ccf0bdee48023ea277046ec43cf7c6c30dc70a097",
+   "sha256": "611827f7143a2c15c8c1663d5dfa924e5790b76ce32b60b31d3f1d247801e7af",
+   "generatedAt": "2026-11-12T06:03:42.941Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "5d84d594968c44a46f470d9411f751e8f2d95ae00692d8d4bdd915ad63ec079c",
    "versionHash": "271f473eeaddfa93efc02a4a63c02333c5c97ca4b95c2e2c34d988fe7346ffb3",
    "inputs": {
     "factorPoints": 504,
-    "latestFactorFiledAt": "2026-10-22 00:00:00",
+    "latestFactorFiledAt": "2026-10-23 00:00:00",
     "priceBars": 14257,
     "latestPriceDate": "2026-11-10",
     "companyHoldings": 5183,
@@ -1321,9 +1321,9 @@
   {
    "key": "sector-flows",
    "bytes": 3773,
-   "sha256": "dd50d5ee9834ccdfb05b82b22114cd4b46b7c2a59ef6749f09efdce2dbba2a22",
-   "generatedAt": "2026-11-12T02:23:17.157Z",
-   "codeVersion": "32692c277887603b7a5c44c51b8128bd6c5a4057",
+   "sha256": "e096c95a7a4db67d882c17500af5c602077c6772b803b3a4e5b381cae2582269",
+   "generatedAt": "2026-11-12T05:52:01.407Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "2aba4641262bc7125ec81d37d2fa100c9c471d859232df8a1a5e4ac9141a62f6",
    "versionHash": "4de676fa69e4989745ea7e82dbbf0b46419e0a061298455bbc2a7c3fe1bff69d",
    "inputs": {
@@ -1355,16 +1355,16 @@
   },
   {
    "key": "probability-1045810",
-   "bytes": 26233,
-   "sha256": "88bb96fbe9d23dee1658001a160a58fdb426077079caa3acc8d4227bec62a263",
-   "generatedAt": "2026-11-12T02:36:48.828Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "8729ea9058a7f04f0b0f1e19bc75c54c7c6862536c1bfa8cbf3dcd07e6b7f956",
+   "bytes": 25783,
+   "sha256": "8e1193d01419ac0cd613a149c92f0616cd11c4332acc52a56d8dd480966330f5",
+   "generatedAt": "2026-11-12T06:03:48.169Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "fc43abb41be7f49c91d75f31aefd00bb25b9f83fd0b014e98dbde18e959b7a5c",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 512,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "factorPoints": 511,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 12027,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5678,
@@ -1381,14 +1381,14 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-2488",
-   "bytes": 48855,
-   "sha256": "05f6ea786976aae13e84dc44811bb4ed71a0cc3da816a8384385b145cabc4110",
-   "generatedAt": "2026-11-12T02:36:54.743Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "bytes": 48698,
+   "sha256": "cd2fe07f21da30754b9e056cecdbf498e71dc2ed5d4ecfd84990cea754201e11",
+   "generatedAt": "2026-11-12T06:03:53.639Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "ce5c7263165d9f2d6ef993af142b88ac48db831396870a065f63526999c4dc28",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
@@ -1411,19 +1411,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-50863",
-   "bytes": 53320,
-   "sha256": "269dafc36552269c71072bf04b0e8ffc75c70dd74b91142227242950fe9eccdb",
-   "generatedAt": "2026-11-12T02:37:01.558Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "41bc7e390c09d56321a169bf2d7f5137f8e944c6a1084a1efeec6d40fcc2b898",
+   "bytes": 53715,
+   "sha256": "27f6d5dec15eb641f2a003f7f2538c218e00016b1175f42dfff774fdac9ca862",
+   "generatedAt": "2026-11-12T06:03:59.590Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "037465f06a1fb25d53306e63dab187965c84134cb9f3f211b21a8a9a0197d610",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 471,
+     "factorPoints": 467,
      "latestFactorFiledAt": "2026-10-30 00:00:00",
      "priceBars": 18850,
      "latestPriceDate": "2026-11-10",
@@ -1441,19 +1441,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1321655",
-   "bytes": 15199,
-   "sha256": "5cdc6c9471e7f428abdda1e54c81c17ac03524858cb037cc0a895bf3a83e1591",
-   "generatedAt": "2026-11-12T02:37:03.409Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "c4ab087b05a65c94121d96c82eec8438077e5fc2b93f32020b2d7f8e44b6bb33",
+   "bytes": 15275,
+   "sha256": "9b1b36d77426f584cf9292f89a2b4b270f52208622f5dd24f3e5837f64f65675",
+   "generatedAt": "2026-11-12T06:04:01.183Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "4186f797df6b8c11ba371afefefd0eb52ff5a991fa31267b6f3b3f995491f2be",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 329,
+     "factorPoints": 320,
      "latestFactorFiledAt": "2026-11-03 00:00:00",
      "priceBars": 3076,
      "latestPriceDate": "2026-11-10",
@@ -1471,20 +1471,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1326801",
-   "bytes": 23465,
-   "sha256": "f6af3183e7c11cb06de419ab7b98194ef0f7446b8fb2ae16a89f67564dba310e",
-   "generatedAt": "2026-11-12T02:37:06.111Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "dbff7662406a7bfcb093653f285b8342153b1bd40a53658c128dac5b46f6af1a",
+   "bytes": 22973,
+   "sha256": "e5aea68a302c91c4c14d71071cc5fc7296872c795f51ee88bb671dfdf348210d",
+   "generatedAt": "2026-11-12T06:04:03.516Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "586b4d2ee2b0f03e247490731b9e73039d6c966782472e95c4269ed126ae8bb7",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 439,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "factorPoints": 381,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 7286,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5921,
@@ -1501,20 +1501,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1065280",
-   "bytes": 36106,
-   "sha256": "ab383b4fa3cfcda6ab9e82c842391522e01e1a52e5fdad7adde6c0cd810581b3",
-   "generatedAt": "2026-11-12T02:37:11.049Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "0ed787978cc132a30d3cfb8f512d5a4cb5011563ed89071bce381b651d9c074b",
+   "bytes": 36225,
+   "sha256": "6227196772f18a45f4df43745fa6b68fc03fca42fee216867e79f2ce07d50a0b",
+   "generatedAt": "2026-11-12T06:04:07.659Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "1372c268f87bfeeeda6ded5e50d8c20e43ac150e11442c21069b9105ce247684",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
      "factorPoints": 540,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 10495,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5444,
@@ -1531,14 +1531,14 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1018724",
-   "bytes": 38897,
-   "sha256": "753a1c1f43b55822ea009d009192dae4222a23d76587ad4d5fd321ac6cdf2bee",
-   "generatedAt": "2026-11-12T02:37:17.808Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "bytes": 38909,
+   "sha256": "1cbc3afea021338185928679a683f7a8817db0551ef650e40ac8e048eeb7ccba",
+   "generatedAt": "2026-11-12T06:04:11.780Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "4c8e86f82c655503785cbb6d6f14ee29d740af95cd46b971e419e3bc37479e55",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
@@ -1561,20 +1561,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1318605",
-   "bytes": 33059,
-   "sha256": "2ff556c8ac856aea7cd666bc80d8dae78e14579f5b10b3876898f99e59a18eb1",
-   "generatedAt": "2026-11-12T02:37:21.030Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "986841b55d38c7cb09d7f72f345a511b709dacf9310560586ba5d6d66cf54812",
+   "bytes": 33056,
+   "sha256": "c8832c4ff0d8f1f7b8012b6cde0b9638bc3819dfebb4167ff4800e854240fbe5",
+   "generatedAt": "2026-11-12T06:04:14.662Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "caaf723c674d67eafbd5bbc8074d65012086a39370673104626e64aa44d4a73a",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 536,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "factorPoints": 525,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 8240,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5344,
@@ -1591,20 +1591,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-320187",
-   "bytes": 39795,
-   "sha256": "e228e15d2aa3cc388e7e93e617682a9ac7f5af3557ea3a2a1296e253fb88b338",
-   "generatedAt": "2026-11-12T02:37:25.832Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "3e83b4aaffc2c173058d18604d2afce22da9797f6742f5df6ab5d198b53438e5",
+   "bytes": 41327,
+   "sha256": "66258647bf9e80e069cde5765451a4eab6a1905915dadff98234530987839f52",
+   "generatedAt": "2026-11-12T06:04:19.131Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "d1ebe1af15db99f6691dac7bd0fe1de05e603e28041417740c0ed9238fef3d94",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 447,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "factorPoints": 412,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 14915,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5211,
@@ -1621,20 +1621,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1397187",
-   "bytes": 26689,
-   "sha256": "a5145a79894b9357f77bc4e2ac76d842162065822940dd8a1127e29cb6d062b3",
-   "generatedAt": "2026-11-12T02:37:28.859Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "0f542f8949a7b3310081cc7ead6405e09127ebd2ba9d9cad8da530a4ba28c40a",
+   "bytes": 27146,
+   "sha256": "715db45ccda8a6c02dc6e3d19753ae6a2557c938d944a437f5acfe584baf05de",
+   "generatedAt": "2026-11-12T06:04:21.957Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "3d708fdb550a92ae4d9f3319b40532a086045ba48d6bd9f19f6c166928c8b5ea",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
      "factorPoints": 497,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 9711,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 4640,
@@ -1651,19 +1651,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-884887",
-   "bytes": 33056,
-   "sha256": "8a1f1e489e20037d6fadeccfe0b0e13716b6a03fa9268322a0c57d9797ec0264",
-   "generatedAt": "2026-11-12T02:37:30.600Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "9d68ef1fbefae85746e8a6a71deff6a5b375e3144f1105c56dcb5f9c00164534",
+   "bytes": 33210,
+   "sha256": "8cfd13b20f3981aa0ecfa88e41bda7b0b9f5183953675122241dd868259eeadb",
+   "generatedAt": "2026-11-12T06:04:23.571Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "328254a9ae525ea21fcddca238e0a530e3818f4e5f1499d9877dd0757d336de7",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 395,
+     "factorPoints": 364,
      "latestFactorFiledAt": "2026-10-27 00:00:00",
      "priceBars": 10496,
      "latestPriceDate": "2026-11-10",
@@ -1681,19 +1681,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-886982",
-   "bytes": 49547,
-   "sha256": "4b842b1011e672665847336a2f49d1887491dccd01278f05b34ecc210df54c8a",
-   "generatedAt": "2026-11-12T02:37:34.756Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "fcf0d1fe44761ae668a8f714e73495411ade38cc903147a7d226cad6eb59c5b6",
+   "bytes": 52147,
+   "sha256": "656d6e6b2ba5e0bcd0e50d5dcf5d1f09f8054980812d0d8d6ba5f2ec7d2aebc3",
+   "generatedAt": "2026-11-12T06:04:27.585Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "bdd561d771a01be8e75d56e6e36d37dc671f34283b4aeaf283b2cc9b35bd0987",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 400,
+     "factorPoints": 396,
      "latestFactorFiledAt": "2026-11-02 00:00:00",
      "priceBars": 11956,
      "latestPriceDate": "2026-11-10",
@@ -1711,14 +1711,14 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-927628",
-   "bytes": 60603,
-   "sha256": "09532ab26f3758b29f3aa9fc8f9353f20ef70df2a54fa0dae89dcde96d713520",
-   "generatedAt": "2026-11-12T02:37:40.060Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "bytes": 61968,
+   "sha256": "2d065d87fcad17f83a5a6e45f5906d9ffec1c04f1cebbf18bc5c95a289ab4433",
+   "generatedAt": "2026-11-12T06:04:32.290Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "a108a5dc038b2a751eb89972294a2263dd0d467d6697d622cfc9bca78a5e55ed",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
@@ -1741,14 +1741,14 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-731766",
-   "bytes": 42331,
-   "sha256": "2e59ccbd64cd372a3fc989472b891c93d9229f097201d9ed808619f3af38a17e",
-   "generatedAt": "2026-11-12T02:37:45.770Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "bytes": 42556,
+   "sha256": "efc62bfa5cac4f3ff117b81aed58f27c4d0cf61573b80e95291c06c062c721bd",
+   "generatedAt": "2026-11-12T06:04:36.722Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "e72ca0c83c589d998f0b9c2f8c51337c063cd2ac93d589eb3eee0baef683a73d",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
@@ -1771,19 +1771,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-78003",
-   "bytes": 43716,
-   "sha256": "0c05ec2a0c88ed47657fd6a57e5322dce3d874b374eb195e6a9ec7a45cfec76c",
-   "generatedAt": "2026-11-12T02:37:51.559Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "dfa22f57439b70614ebce962c3236372f0d7383a573ba4102154d87c14f5583a",
+   "bytes": 44269,
+   "sha256": "278f813b35ca52f74765a88c8b922c2c683654e0cc99829bbcfe7ad8fb49abd3",
+   "generatedAt": "2026-11-12T06:04:40.993Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "fe6c97a83612f4d8f42108bac0d3f5f89e72b06d27f54eb4727d0cf07089a50f",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 385,
+     "factorPoints": 351,
      "latestFactorFiledAt": "2026-11-03 00:00:00",
      "priceBars": 16337,
      "latestPriceDate": "2026-11-10",
@@ -1801,19 +1801,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-831259",
-   "bytes": 44537,
-   "sha256": "1a8f112d8c9f2ed02005a222814bea9cdf9194ce1983f5a7a7417a7a733ca19a",
-   "generatedAt": "2026-11-12T02:37:56.678Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "07e4e06c71506ef6fb87c521851951675d949c951804552978753913dec8677f",
+   "bytes": 46255,
+   "sha256": "572c7c0639787968ece4fbc245cb3fc9895fe8898d13da15d85af822e93a079e",
+   "generatedAt": "2026-11-12T06:04:45.473Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "4a8f5d6939dfb7a7d642de764a61759366f921d61d3038c6ed866912a3eb2799",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 331,
+     "factorPoints": 309,
      "latestFactorFiledAt": "2026-11-06 00:00:00",
      "priceBars": 12921,
      "latestPriceDate": "2026-11-10",
@@ -1831,19 +1831,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-12927",
-   "bytes": 38214,
-   "sha256": "805b375fa2c7a5c27c7c77c4722fa01fc522e1a9b85913670beab2cc2b1f8db0",
-   "generatedAt": "2026-11-12T02:37:59.753Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "b2b703bca400a7557bdeab3ca454f443fb48db88c9bcc1883e4e38b091777262",
+   "bytes": 38462,
+   "sha256": "191914d18bd1335f842524ef687e51a13f4f087d276a162690dea31bea342a74",
+   "generatedAt": "2026-11-12T06:04:48.035Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "9d7f0dfaac4f77c3ab7d292aeb8c6146d17db242e2738cdad4baa28a6ae67f2f",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 465,
+     "factorPoints": 464,
      "latestFactorFiledAt": "2026-10-27 00:00:00",
      "priceBars": 19370,
      "latestPriceDate": "2026-11-10",
@@ -1861,20 +1861,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1045609",
-   "bytes": 35779,
-   "sha256": "6cadd16bc59ae887b8d558565510592278edf3041416f810c8768a2072085df9",
-   "generatedAt": "2026-11-12T02:38:03.602Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "7bb626a4c1e085bd0918187cf67d8e42d3ef9474a1dbb66087d663e1a1c3d72d",
+   "bytes": 36049,
+   "sha256": "db1bdb6f2bd1cecd926acef63bd21710ba2355d912936ea0bb1e50e1eb7268b7",
+   "generatedAt": "2026-11-12T06:04:51.373Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "c1da4ebf1c88e6332af20cf2f582bd0551dcc4f331ac485102c6b8e641e05bde",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
      "factorPoints": 458,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 12867,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 4934,
@@ -1891,20 +1891,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-753308",
-   "bytes": 54353,
-   "sha256": "9fc68e53afb54a2a43437de2038c4324459e1151acee879da4b96165a565b5b3",
-   "generatedAt": "2026-11-12T02:38:09.182Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "8a56e9f77984dc35a2a0aec1c52a76b34827770d5e80ba8c66eafa89a8c16fa3",
+   "bytes": 54199,
+   "sha256": "077ef14d811447723e21aa192d01710292e0f49ceae31dabc7a2284427359a1a",
+   "generatedAt": "2026-11-12T06:04:55.810Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "227deecd239b5487ce95fdf3395185166ded05f6eaee8b2c8636ef250b1246bd",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
      "factorPoints": 430,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 10496,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 1385,
@@ -1921,14 +1921,14 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-789019",
-   "bytes": 33429,
-   "sha256": "94c3d1a9562ba62e367476a8d7da7ae1d53e6e35edc625cb13f10ae0617c40e3",
-   "generatedAt": "2026-11-12T02:38:13.299Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "bytes": 33511,
+   "sha256": "5d7d4688af140231e2c11f1ca731a132a42eb9a15ab25a16fd10cab2060da156",
+   "generatedAt": "2026-11-12T06:04:59.436Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "6fb6d017d42853190341e994d799acb42215fc81c7560a34260146bb754d2788",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
@@ -1951,20 +1951,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1730168",
-   "bytes": 23842,
-   "sha256": "8dc04e082247ba9036a49b487fa3c91e63e1c78639f5f605de0167cdc84d3673",
-   "generatedAt": "2026-11-12T02:38:15.496Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "141d616c2820677fbb40e740e1a566122e7a41ab328e41707bc2ed2873bb363f",
+   "bytes": 23675,
+   "sha256": "4070629bfb0e8eb6c39191606a74b048872e25acadb314b784073a7658d9692e",
+   "generatedAt": "2026-11-12T06:05:01.474Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "aeebd2857771fdf426cebcc0e2dea7b8d76572d24e56a5ebf9c8611bd5ad114b",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 350,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "factorPoints": 341,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 8690,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5361,
@@ -1981,19 +1981,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1596532",
-   "bytes": 24234,
-   "sha256": "6846aab2aaea1adf8b306b0c6d6a550a5a67fc1b04cacb143912b58a93d66335",
-   "generatedAt": "2026-11-12T02:38:16.364Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "97a1b147c63335a9f24747742a49643e9ce7d07acccaf9c7964c8e69a88777a8",
+   "bytes": 24125,
+   "sha256": "53064b3e2240a62fb9b6b1b2b6e3dfcf142974af1b9c7a0d834d18bd04519bf1",
+   "generatedAt": "2026-11-12T06:05:02.145Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "bcfaec0e9d332663ba41d5a53eac702923fbd93f597388bd58dd4b44f87e3c3b",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 461,
+     "factorPoints": 453,
      "latestFactorFiledAt": "2026-11-04 00:00:00",
      "priceBars": 6258,
      "latestPriceDate": "2026-11-10",
@@ -2011,20 +2011,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-723125",
-   "bytes": 50152,
-   "sha256": "b7a178390394bf8374cbc11f92d3497a2138c518f2d03a107319cbff1100dad6",
-   "generatedAt": "2026-11-12T02:38:22.990Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "fea555c43bd64927570cd76b7ea0760857fb05e2e9418b9f1dc8a69b49c72699",
+   "bytes": 50772,
+   "sha256": "6616c34a7572dae046420c218dac600c51b2bdf6eecf22d1ac2bca453e227cc8",
+   "generatedAt": "2026-11-12T06:05:07.137Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "971a5a92d093b43efe34facf93741aba2dc6863c3e1e25f62b73b8fc12e60b2f",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
      "factorPoints": 540,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 14474,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5247,
@@ -2041,19 +2041,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1375365",
-   "bytes": 19661,
-   "sha256": "2f56b9bfef4c61f2c3e50c8352487c765c86be6e6b72d33f37a6bd147e71352f",
-   "generatedAt": "2026-11-12T02:38:23.794Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "72da5fcdaa6e52eaa5b485b562145b0e5e2ae219be31700b9559de258fcac10c",
+   "bytes": 19580,
+   "sha256": "6126a942ab62fc6576fef4d1d528b5d1f8b7c7edb20d0393b037432062288aae",
+   "generatedAt": "2026-11-12T06:05:07.637Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "49b6fe8c751772320df86f1b4cefd6311e57d6011499d25602005f905bccef39",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 494,
+     "factorPoints": 493,
      "latestFactorFiledAt": "2026-11-06 00:00:00",
      "priceBars": 6656,
      "latestPriceDate": "2026-11-10",
@@ -2071,19 +2071,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1274494",
-   "bytes": 37836,
-   "sha256": "7c4a4d17e9ba7f8564205ccae47c8163cafe8bdaa3ef69b51dd5832f4d677def",
-   "generatedAt": "2026-11-12T02:38:27.904Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "9ea1f95e88055669e1db1505c66457ee1e127f5a59f76ec79ddce6cd5f1f88c8",
+   "bytes": 39973,
+   "sha256": "01d25269b7981c16042dcc8fc5a3e9bc8a0cf4b3034bbb922bd3560a5bd8dfcc",
+   "generatedAt": "2026-11-12T06:05:11.717Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "14c61ebb83ddbb4457a4fa8ef5c0702400b3dfd1c168d677b1e937b2166194d1",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 555,
+     "factorPoints": 551,
      "latestFactorFiledAt": "2026-10-29 00:00:00",
      "priceBars": 10054,
      "latestPriceDate": "2026-11-10",
@@ -2101,19 +2101,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1682852",
-   "bytes": 18338,
-   "sha256": "1d06a1ed1143b481543b5b59d420893934b651970b1137a0dc77f67322bf3054",
-   "generatedAt": "2026-11-12T02:38:29.324Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "f89d85b13dd1ea8927f748144250a0888f89d2b0955250ee1499db0768dc0eb6",
+   "bytes": 18115,
+   "sha256": "c72d202da7bea3f7bc59b482f8cf4008a8286b2bff4a93f2cbe100febadc2a52",
+   "generatedAt": "2026-11-12T06:05:13.198Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "ec3073ecb454047698f0bece306d12a58ddbc824d21c6cbbf2d49c5adefa1cd3",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 316,
+     "factorPoints": 308,
      "latestFactorFiledAt": "2026-11-06 00:00:00",
      "priceBars": 3988,
      "latestPriceDate": "2026-11-10",
@@ -2131,19 +2131,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-59478",
-   "bytes": 40252,
-   "sha256": "597d64bbba506663d1b19b59870901ebc57c9d87f8846ed754cb6c71f22ed464",
-   "generatedAt": "2026-11-12T02:38:34.144Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "2992e89441d8d8c67f02d2c76b3afc15c9e092f4a561c060f47bfb56b12c28ca",
+   "bytes": 40158,
+   "sha256": "fcd50155874dcffd7d56273a91a9b02386418436e11c5b5eed534638908190bd",
+   "generatedAt": "2026-11-12T06:05:17.116Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "56a9747a2b9443ce8b818d4a08be9950dfd3cfcc45707e02572683b6f4cbf2d4",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 366,
+     "factorPoints": 335,
      "latestFactorFiledAt": "2026-10-29 00:00:00",
      "priceBars": 16339,
      "latestPriceDate": "2026-11-10",
@@ -2161,20 +2161,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-27904",
-   "bytes": 55810,
-   "sha256": "cc22eb161b46c8503cdb6299279ea07d0b3df0622085724b9b3f2a42109ca545",
-   "generatedAt": "2026-11-12T02:38:40.371Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "755a74c342baa95380738e5a26515a8d0c97398626bbcc84db5e45f0dc82bc58",
+   "bytes": 55739,
+   "sha256": "ab50ce43ee6f54b006831e8518a12b9851c99e9473bf9f42b3eb2b7d1b4d5f0b",
+   "generatedAt": "2026-11-12T06:05:23.032Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "463c95480eba2290714beb4890443f2a72c2da1b9eeabcf7159566765866fb2c",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 415,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "factorPoints": 387,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 16725,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 4623,
@@ -2191,19 +2191,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1792789",
-   "bytes": 14977,
-   "sha256": "40ae254ac0b154edee3c518dfeb8e6bef26a380cb049ec6ae2f8eea7bf505958",
-   "generatedAt": "2026-11-12T02:38:42.070Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "26a91b205e701e989cccb96a9198e44a3eb7878a35d085b9cb29b93d342a5078",
+   "bytes": 14616,
+   "sha256": "67bf14e8ec138beaeef206ee4e861f630b4aaed956fab312cf51a64186b3ea4d",
+   "generatedAt": "2026-11-12T06:05:24.431Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "5cc0925c2813abe0f41a46970f0d1c91a32deb8fd34bc5280a827c100cd053bc",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 270,
+     "factorPoints": 237,
      "latestFactorFiledAt": "2026-10-30 00:00:00",
      "priceBars": 2978,
      "latestPriceDate": "2026-11-10",
@@ -2221,20 +2221,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-354950",
-   "bytes": 39535,
-   "sha256": "c7c51f32c531dd3fd84ae876144c5bac27c2bb7a532a18a77089ba92c0b75d9a",
-   "generatedAt": "2026-11-12T02:38:46.697Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "c51250bffa9bc8d95dd39c3609b5bcbd469650072ec126dedcf6842d5740964c",
+   "bytes": 39301,
+   "sha256": "6990a37ecec97b670f56bd7984ea6371ee5cfbfe30c6ff18b6ff47313103326a",
+   "generatedAt": "2026-11-12T06:05:28.492Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "7ac17c3c21c256b921b6675ed6f581465ff0fb61d1bca67fd29d6ac8d0160e9c",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
      "factorPoints": 535,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 16409,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5224,
@@ -2251,14 +2251,14 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-18230",
-   "bytes": 57765,
-   "sha256": "89ee2ea37595041ae3632f8b30cfba35e3a8b8c9067ed56d48066e6456d9d2ab",
-   "generatedAt": "2026-11-12T02:38:54.641Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "bytes": 59254,
+   "sha256": "c608b34fbce6441f25864e5314b12d53335ffaa3e66e7c2c5d786d30c6b1e0d7",
+   "generatedAt": "2026-11-12T06:05:34.519Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "91fab7e99c77285b54e5647fd498672329e8597dcc84234f9ae2a60f7b1d0133",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
@@ -2281,14 +2281,14 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1053507",
-   "bytes": 46756,
-   "sha256": "299fa33055616241dc3db9dc3233f5d903df8788f9d7a1259fa62382f18e0b74",
-   "generatedAt": "2026-11-12T02:38:59.901Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "bytes": 46314,
+   "sha256": "a91f6066380ea82879b9babe1550ec8a4bc74592d731f9314741cd4ded8b1f70",
+   "generatedAt": "2026-11-12T06:05:39.634Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "0c2e6ddcf677072270194af54daa6015e2f0e945608315c3765bd7ca427669be",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
@@ -2311,19 +2311,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-19617",
-   "bytes": 99180,
-   "sha256": "a39bc99b13698fb7eaa64bfb0a4cb0290e88677ac4ade4e44f72b3228562aa6e",
-   "generatedAt": "2026-11-12T02:39:08.016Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "cabc1c7b546f157bdaf55ad92fc04f7d2b311b86b8ba4234fcf1bc9396b95d70",
+   "bytes": 100998,
+   "sha256": "7272c9fec185f3a2c1b834f4265606439e9ff6323300561ea8e363ea31f66ab9",
+   "generatedAt": "2026-11-12T06:05:46.803Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "af4101e3d85ff254a0c724afc0d07be8479254041b4975b49e20ac8fb91f896b",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 381,
+     "factorPoints": 376,
      "latestFactorFiledAt": "2026-11-03 00:00:00",
      "priceBars": 19369,
      "latestPriceDate": "2026-11-10",
@@ -2341,19 +2341,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1506307",
-   "bytes": 33230,
-   "sha256": "15200c3c1b7943c203787ca56503b8bfcffb8f8e193a2349ae7627319fcf98f5",
-   "generatedAt": "2026-11-12T02:39:09.988Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "40644475cdea3a0913a906763e6b35c41cad6b37d7b52bedfb6f2a8fb9f83447",
+   "bytes": 32093,
+   "sha256": "48626de9a5183b90b8191326bb4ebf96a937da08a3fc565271a6d475d2bffa74",
+   "generatedAt": "2026-11-12T06:05:48.128Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "063e32dc8e90d3fbc629d84a57bc745a22de255b58aee8160d68b94a0349cb25",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 475,
+     "factorPoints": 464,
      "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 7921,
      "latestPriceDate": "2026-11-10",
@@ -2371,14 +2371,14 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-320193",
-   "bytes": 30074,
-   "sha256": "585999e78fa766a0bf68f4127742fce21ac31b08f6cf9b95b8f7de315d47b8db",
-   "generatedAt": "2026-11-12T02:39:13.550Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "bytes": 30843,
+   "sha256": "1f32132810a9032731914507ae3aa10387de8e374462bb63c92106e3457c11e6",
+   "generatedAt": "2026-11-12T06:05:51.403Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "9429b977a4fe9a7ca64ac68af1288621b645423f84a3360e460167c10d46bb5b",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
@@ -2401,20 +2401,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-51143",
-   "bytes": 29536,
-   "sha256": "35e1247b30c9a0eda55c9255012a0b10c3245fb0666af5c09234d6fdaeb034da",
-   "generatedAt": "2026-11-12T02:39:16.132Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "175e25883a9f9b2385c9c8847bae37298bdebe773e4942d06e0eb172c02d1dcb",
+   "bytes": 32194,
+   "sha256": "a8cba909670001a13c27fbd12e0736b6bab8c5ef70ec8fb8022ae64bfd3d5dd2",
+   "generatedAt": "2026-11-12T06:05:54.370Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "f480b6a30d4be1594786b8da933bea7f2c06e9292cdf3e4d7f72c04ba7fdc34f",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 442,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "factorPoints": 438,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 21353,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 4927,
@@ -2431,20 +2431,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-936468",
-   "bytes": 30090,
-   "sha256": "dd9116b8d66e39cb75a29bac3503ebbc58f6fa236142a9a7401f69925b2881c5",
-   "generatedAt": "2026-11-12T02:39:19.593Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "007e934fd28a4438881b9841d2e474b5f9e437bce546e7627ab9ed040eb64ac6",
+   "bytes": 30859,
+   "sha256": "2ba8034ce8ec28e5e803795913cf2d568ed5e5fe757367d691965abd7a45a800",
+   "generatedAt": "2026-11-12T06:05:57.256Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "38ffc1b294ce1b7a10db29aaee1908ec1e431c22141fb4f0a8d52ed5447f5fe0",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
      "factorPoints": 477,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 17599,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 4696,
@@ -2461,20 +2461,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-732717",
-   "bytes": 63067,
-   "sha256": "74539b1c7f7eb09c50f8fb37c3d65d6461f12b1724901509581afadce38511ce",
-   "generatedAt": "2026-11-12T02:39:26.723Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "5ffe460644a960e013d18d204acfa4bac8740f6e5b0011a883c2b3195c48498f",
+   "bytes": 63107,
+   "sha256": "22eb34345f31cc63421ade6f95ae3003d199e2e359f4fe16fd09594b3067334a",
+   "generatedAt": "2026-11-12T06:06:03.855Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "58e25d644577e115b0d2ce049f041b731d7b03f545194da8390d7f7bb65fcd8e",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 389,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "factorPoints": 356,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 15696,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 7599,
@@ -2491,19 +2491,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1652044",
-   "bytes": 24382,
-   "sha256": "c0e4039a339f0a6ca7b90fc4838ebc01e8129937a83ca262f5b826d8ef4f5d31",
-   "generatedAt": "2026-11-12T02:39:29.136Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "d3dae9ffc4a3e2871d4f9e8914ade95e70d47ba956d85e73544d5434b87643bd",
+   "bytes": 25050,
+   "sha256": "70a71e3e5ffcd3f504b6c66b5c6f12a8ab0c917fdde6b78dd5ccf8190981e93a",
+   "generatedAt": "2026-11-12T06:06:05.934Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "d4312d1066d139d7882c70f55a0e8960573c6ed423905b84d09d4953eb18bdc4",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 406,
+     "factorPoints": 393,
      "latestFactorFiledAt": "2026-10-29 00:00:00",
      "priceBars": 10627,
      "latestPriceDate": "2026-11-10",
@@ -2521,20 +2521,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-200406",
-   "bytes": 39136,
-   "sha256": "419d272c40b03689fb774aa3c7de78f074571f998bab0cb15f285f44c11a4e16",
-   "generatedAt": "2026-11-12T02:39:33.662Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "8bafb813dd4f4e266d59d24fb15b934d36217c13af2a90d0ea8bc9c59857423d",
+   "bytes": 38745,
+   "sha256": "f730fe3cd2ae4e0ee9f2d548e991feba6a30a8e25849519982f96c8483d5a056",
+   "generatedAt": "2026-11-12T06:06:10.357Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "aa993811e79b33b25b39689afc47c805f068f2f6157fda4a4f666de4f2ecc6bc",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 502,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "factorPoints": 458,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 19369,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5287,
@@ -2551,20 +2551,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-80424",
-   "bytes": 42540,
-   "sha256": "5642afc0a41953f717d186ea8c5372993bd825bb7d507fa9a6522767a7f143eb",
-   "generatedAt": "2026-11-12T02:39:39.400Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "2ef57fd51e49f17504bb797c4f9a351144318572b12b6dc8223f9dcc1b96d253",
+   "bytes": 41627,
+   "sha256": "c0ba3896e7af02d0c1df6cb4308011009edfd636c24cc85fa4938a6a4b4233b6",
+   "generatedAt": "2026-11-12T06:06:15.096Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "17617bb5667518aa4257b1776af6c3aee10bb1407acfe74814320036890164ea",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 367,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "factorPoints": 342,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 19370,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5356,
@@ -2581,20 +2581,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-104169",
-   "bytes": 40310,
-   "sha256": "208b074f1e9f864fc661550b908c13277c0345e03e2eb2d9d569df13a311db27",
-   "generatedAt": "2026-11-12T02:39:44.455Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "fed2cd217540d22b36a1e5f39531706b2febb2df80be823c982c51ee36df2b3e",
+   "bytes": 40432,
+   "sha256": "e6c8006dd2c76c494f7188af2e2391bc14b0950ef3c34b62ab44b74751176351",
+   "generatedAt": "2026-11-12T06:06:19.007Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "b57706efb76f338a09cfb16af8de4417f4609a543211ebc32bbde16399e5c3ae",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 400,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "factorPoints": 365,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 18739,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5241,
@@ -2611,19 +2611,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-93410",
-   "bytes": 37973,
-   "sha256": "b5cf7288f0873d94f5f3f3e5636dd502fe2e5af942bb8c7784f03b27e0877ad2",
-   "generatedAt": "2026-11-12T02:39:47.388Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "5239ba5f7015586384c18099dd4c311f5c97c0438a50ad836a8c90d70510311b",
+   "bytes": 38622,
+   "sha256": "78fef3bf123b0b139116d5862f56c9d269201457461737431299d8a3f03e91fd",
+   "generatedAt": "2026-11-12T06:06:22.006Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "210fa6d807fad225dde2dc18251e83609e5e9ac22a5bf72ab007745f685cf8cc",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 367,
+     "factorPoints": 339,
      "latestFactorFiledAt": "2026-11-05 00:00:00",
      "priceBars": 19368,
      "latestPriceDate": "2026-11-10",
@@ -2641,19 +2641,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1141391",
-   "bytes": 34445,
-   "sha256": "aaf8ad65b72f4ff4c043220ae651dcb2abd78b5a4dcb70d4e6b9eb154fb36ced",
-   "generatedAt": "2026-11-12T02:39:51.853Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "99e1c9a9f2f42d2a67ac32a5e145638db9f52b0afb11d15fc9f823470aa4c35e",
+   "bytes": 33940,
+   "sha256": "90821dd0bc0e0eb89a9b8b9bca759b544ae86d455d3f7a16e380cd5506818e38",
+   "generatedAt": "2026-11-12T06:06:25.404Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "6e65fe5db6083f9cfd88fc70f8af1d299a65afefb925e866805127d1d1be5d48",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 357,
+     "factorPoints": 322,
      "latestFactorFiledAt": "2026-10-29 00:00:00",
      "priceBars": 10183,
      "latestPriceDate": "2026-11-10",
@@ -2671,14 +2671,14 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1403161",
-   "bytes": 41028,
-   "sha256": "6f60a4456249f9ca9b5856659092ad6fff1a43d9c438ea1f50a58e901cc543af",
-   "generatedAt": "2026-11-12T02:39:56.333Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "bytes": 41060,
+   "sha256": "f034cbe46d7db440d57381247e9b81bce697ccf0c5c24bdec0ecbdb1690874a1",
+   "generatedAt": "2026-11-12T06:06:29.573Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "dc8c17f549733f0e01deab76fda9a3a2a48fc317f839dc15009672ab1b2b72fc",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
@@ -2701,20 +2701,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-909832",
-   "bytes": 40216,
-   "sha256": "19b6cbd1e896a7786b64af6d843ac15494f9b2e505e92744baf0a92f997da730",
-   "generatedAt": "2026-11-12T02:40:01.245Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "3e6847b92e08ed1fa3e8b520814f407e860f0af9f56780e8278c63f9fe350c5d",
+   "bytes": 41047,
+   "sha256": "9e2d46af3422a23c731cc74fdb8aff8198a7e27ec62d4f776388d9c778c7f730",
+   "generatedAt": "2026-11-12T06:06:34.124Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "40dee15c77e4c08bcc9fbe01df6fed3e26d8b07b7aa55c53cfe519f5ee6c00d1",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 494,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "factorPoints": 488,
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 15197,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5264,
@@ -2731,19 +2731,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-5272",
-   "bytes": 58866,
-   "sha256": "f206abd9ed7761947fa329f606cb2b9f793038d59f20bffebfecf4a0c0ecf4ce",
-   "generatedAt": "2026-11-12T02:40:08.765Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "9471389920dc65b3e5e00f133a72207e23f7f612b807c666648c5c1b04b15244",
+   "bytes": 59479,
+   "sha256": "77a0f737e8e5f74a7fa66b7f3b75044532133d939e64e9f90fc12d33c29c3332",
+   "generatedAt": "2026-11-12T06:06:40.114Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "a8a2ca9dfb33a0871fb2827c9824a638961813f511b6415d2852bcfd6b2cbaa9",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 402,
+     "factorPoints": 391,
      "latestFactorFiledAt": "2026-11-04 00:00:00",
      "priceBars": 15661,
      "latestPriceDate": "2026-11-10",
@@ -2761,19 +2761,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1163165",
-   "bytes": 37027,
-   "sha256": "73191110b612e83c41393434970483d19dc768169f09029a0be3ea3f55586381",
-   "generatedAt": "2026-11-12T02:40:12.906Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "6909b4f2e6cdce9af2e2bd31758953ca015aff41a67eb0f8ec7afad748c47230",
+   "bytes": 37564,
+   "sha256": "76a8716aa7dfb49881b2e03f09a7c38006b69f14daf85a881b9e40ce1637ce6e",
+   "generatedAt": "2026-11-12T06:06:44.161Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "703edcbba90daab7f4793870f4d7ee99180b815b24b90fe9614ba93414a82fdd",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 367,
+     "factorPoints": 338,
      "latestFactorFiledAt": "2026-11-05 00:00:00",
      "priceBars": 16336,
      "latestPriceDate": "2026-11-10",
@@ -2791,19 +2791,19 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-1707925",
-   "bytes": 15419,
-   "sha256": "b58577132bb7dc32d5bf091396a35a0afb4b72b0a1ae97b422848c8ff86d3c8e",
-   "generatedAt": "2026-11-12T02:40:13.354Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "41e1b836575ef5af1811d3f9cf3448432849b6cc37d155bcd903751b8a061317",
+   "bytes": 15366,
+   "sha256": "1a75ca7c8ee4a75b6d6f82deb02441998a53d4dcd565d86d93f71b83d5ed4486",
+   "generatedAt": "2026-11-12T06:06:44.559Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "acb1f9acbb291dc3d926a4eecd7cb311844e792ae0edee21217bb969e0d2b698",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
-     "factorPoints": 368,
+     "factorPoints": 324,
      "latestFactorFiledAt": "2026-10-29 00:00:00",
      "priceBars": 7051,
      "latestPriceDate": "2026-11-10",
@@ -2821,20 +2821,20 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "probability-858877",
-   "bytes": 41641,
-   "sha256": "3b57df2050a67964438acb497aaad95e0b79cab1a11e97eeedbf020d0e1c9372",
-   "generatedAt": "2026-11-12T02:40:17.557Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
-   "inputsHash": "117f8be7e3132da46f0e0324d6700db735a0f08f8c9c942c0c334109339f0a05",
+   "bytes": 42797,
+   "sha256": "dbf0aef00fb51f760c0de86eed8d1ff0c61e01ae97b9ebfc700cf1a3e90adb1e",
+   "generatedAt": "2026-11-12T06:06:49.120Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
+   "inputsHash": "dd26fd4055fd5d212b51ce68a7327fc066bd0ea12b10fbf35e5c222d2c3af36f",
    "versionHash": "466885a1a657a3e151c8c7c36d38e30d8436ed0665614f6c7b4110bbe7b7289b",
    "inputs": {
     "company": {
      "factorPoints": 504,
-     "latestFactorFiledAt": "2026-10-22 00:00:00",
+     "latestFactorFiledAt": "2026-10-23 00:00:00",
      "priceBars": 14257,
      "latestPriceDate": "2026-11-10",
      "companyHoldings": 5183,
@@ -2851,14 +2851,14 @@
      "latestFundQuarter": "2026-09-30"
     }
    },
-   "reused": false
+   "reused": true
   },
   {
    "key": "market-report-gzip",
    "bytes": 1224,
-   "sha256": "3062ab05597c1fa2e8e15599d0ddfe34e3e4c442939c573b5768fc20d361eb4d",
-   "generatedAt": "2026-11-12T02:40:23.805Z",
-   "codeVersion": "6a3c3b4aa69fd7a3f45c69105747147c52d1ebbb",
+   "sha256": "ca106cc615a513cbe66f0be80abd600a9c6c2ca8bb427c34b9b672c00382ebf8",
+   "generatedAt": "2026-11-12T06:07:52.665Z",
+   "codeVersion": "3b019eec9de49e14e85661928c52465695c8d7cc",
    "inputsHash": "0febd23e17bfe6a9c2c6b190fa3006064f3b9019c5fb2169b60371e4e736cbf8",
    "versionHash": "4cda97aab1959899ba5ba9971f563f3e1829057d4d8b11ec12f1629fc30204a9",
    "inputs": {

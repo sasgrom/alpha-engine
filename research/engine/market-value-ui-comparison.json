@@ -1,0 +1,1357 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-12T05:59:39.315Z",
+ "status": "pass",
+ "baseline": {
+  "cacheRows": 8,
+  "generatedAt": "2026-11-12T05:06:23.785Z"
+ },
+ "refreshed": {
+  "status": "pass",
+  "counts": {
+   "companies": 50,
+   "cacheKeys": 104,
+   "screeners": 4,
+   "equal": 104
+  },
+  "generatedAt": "2026-11-12T05:57:08.909Z"
+ },
+ "comparisonUserKey": "screener:u3",
+ "screenerUsers": [
+  {
+   "key": "screener:u1",
+   "rows": 8,
+   "fetchedAt": "2026-11-11 21:56:48",
+   "source": "live"
+  },
+  {
+   "key": "screener:u3",
+   "rows": 50,
+   "fetchedAt": "2026-11-11 21:56:59",
+   "source": "live"
+  },
+  {
+   "key": "screener:u4",
+   "rows": 50,
+   "fetchedAt": "2026-11-11 21:57:08",
+   "source": "live"
+  },
+  {
+   "key": "screener:u7681230",
+   "rows": 1,
+   "fetchedAt": "2026-11-11 21:57:08",
+   "source": "live"
+  }
+ ],
+ "counts": {
+  "companies": 50,
+  "marketCapMatches": 50,
+  "negativeBefore": 2,
+  "negativeAfter": 0,
+  "positiveAfter": 50
+ },
+ "companies": [
+  {
+   "cik": 1045810,
+   "ticker": "NVDA",
+   "name": "NVDA",
+   "before": {
+    "marketCap": 4860157050000,
+    "peTtm": 25.300884955752213,
+    "price": 200.13,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 4070248999999.9995,
+    "peTtm": 23.35961272475795,
+    "price": 168.89,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 4070248999999.9995,
+    "close": 168.89,
+    "priceDate": "2026-11-10",
+    "shares": 24100000000,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 2488,
+   "ticker": "AMD",
+   "name": "AMD",
+   "before": {
+    "marketCap": 811863580000,
+    "peTtm": 106.25652173913043,
+    "price": 488.78,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 844989352587.7101,
+    "peTtm": 116.30022573363432,
+    "price": 515.21,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 844989352587.7101,
+    "close": 515.21,
+    "priceDate": "2026-11-10",
+    "shares": 1640087251,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 50863,
+   "ticker": "INTC",
+   "name": "INTC",
+   "before": {
+    "marketCap": 309238890000,
+    "peTtm": -24.078512396694215,
+    "price": 58.27,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 308960950000,
+    "peTtm": -41.82014388489208,
+    "price": 58.13,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 308960950000,
+    "close": 58.13,
+    "priceDate": "2026-11-10",
+    "shares": 5315000000,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1321655,
+   "ticker": "PLTR",
+   "name": "PLTR",
+   "before": {
+    "marketCap": 441943094200,
+    "peTtm": 120.91549295774648,
+    "price": 171.7,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 406713209460,
+    "peTtm": 123.22627737226279,
+    "price": 168.82,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 406713209460,
+    "close": 168.82,
+    "priceDate": "2026-11-10",
+    "shares": 2409153000,
+    "shareSource": "common_stock",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1326801,
+   "ticker": "META",
+   "name": "META",
+   "before": {
+    "marketCap": 1620990000000,
+    "peTtm": 21.487039563437925,
+    "price": 630,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 1636827280000,
+    "peTtm": 29.832093023255812,
+    "price": 641.39,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 1636827280000,
+    "close": 641.39,
+    "priceDate": "2026-11-10",
+    "shares": 2552000000,
+    "shareSource": "weighted_basic",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1065280,
+   "ticker": "NFLX",
+   "name": "NFLX",
+   "before": {
+    "marketCap": 278514481530,
+    "peTtm": 19.1878612716763,
+    "price": 66.39,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 259766176623.78,
+    "peTtm": 18.126074498567334,
+    "price": 63.26,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 259766176623.78,
+    "close": 63.26,
+    "priceDate": "2026-11-10",
+    "shares": 4106325903,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1018724,
+   "ticker": "AMZN",
+   "name": "AMZN",
+   "before": {
+    "marketCap": 2907441869999.9995,
+    "peTtm": 21.50606305578011,
+    "price": 266.03,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 2928954772946.22,
+    "peTtm": 21.897332255456753,
+    "price": 270.87,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 2928954772946.22,
+    "close": 270.87,
+    "priceDate": "2026-11-10",
+    "shares": 10813138306,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1318605,
+   "ticker": "TSLA",
+   "name": "TSLA",
+   "before": {
+    "marketCap": 1363957790000,
+    "peTtm": 423.2857142857142,
+    "price": 385.19,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 1501178412731.88,
+    "peTtm": 358.2830188679245,
+    "price": 379.78,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 1501178412731.88,
+    "close": 379.78,
+    "priceDate": "2026-11-10",
+    "shares": 3952757946,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 320187,
+   "ticker": "NKE",
+   "name": "NKE",
+   "before": {
+    "marketCap": 60095258000,
+    "peTtm": 19.466346153846153,
+    "price": 40.49,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 57370812000,
+    "peTtm": 20.902702702702705,
+    "price": 38.67,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 57370812000,
+    "close": 38.67,
+    "priceDate": "2026-11-10",
+    "shares": 1483600000,
+    "shareSource": "weighted_basic",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1397187,
+   "ticker": "LULU",
+   "name": "LULU",
+   "before": {
+    "marketCap": 12653703140,
+    "peTtm": 9.207888249794577,
+    "price": 112.06,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 11654416843.68,
+    "peTtm": 10.715533980582526,
+    "price": 110.37,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 11654416843.68,
+    "close": 110.37,
+    "priceDate": "2026-11-10",
+    "shares": 105594064,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 884887,
+   "ticker": "RCL",
+   "name": "RCL",
+   "before": {
+    "marketCap": 89284200000,
+    "peTtm": 19.70136014192785,
+    "price": 333.15,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 90899993861.25,
+    "peTtm": 17.10367388022144,
+    "price": 339.85,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 90899993861.25,
+    "close": 339.85,
+    "priceDate": "2026-11-10",
+    "shares": 267470925,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 886982,
+   "ticker": "GS",
+   "name": "GS",
+   "before": {
+    "marketCap": 279420800000,
+    "peTtm": 13.346756795627787,
+    "price": 928,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 262530273100.77002,
+    "peTtm": 13.426611594630476,
+    "price": 910.19,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 262530273100.77002,
+    "close": 910.19,
+    "priceDate": "2026-11-10",
+    "shares": 288434583,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 927628,
+   "ticker": "COF",
+   "name": "COF",
+   "before": {
+    "marketCap": 125745945000,
+    "peTtm": 11.802631578947368,
+    "price": 206.31,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 117804252683.52,
+    "peTtm": 10.580226904376014,
+    "price": 195.84,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 117804252683.52,
+    "close": 195.84,
+    "priceDate": "2026-11-10",
+    "shares": 601533153,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 731766,
+   "ticker": "UNH",
+   "name": "UNH",
+   "before": {
+    "marketCap": 369260760000,
+    "peTtm": 23.366438356164384,
+    "price": 409.38,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 362996680168.32,
+    "peTtm": 20.165256346441016,
+    "price": 405.12,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 362996680168.32,
+    "close": 405.12,
+    "priceDate": "2026-11-10",
+    "shares": 896022611,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 78003,
+   "ticker": "PFE",
+   "name": "PFE",
+   "before": {
+    "marketCap": 177073290000,
+    "peTtm": 43.98571428571427,
+    "price": 30.79,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 167347705600.88,
+    "peTtm": 18.236024844720497,
+    "price": 29.36,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 167347705600.88,
+    "close": 29.36,
+    "priceDate": "2026-11-10",
+    "shares": 5699853733,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 831259,
+   "ticker": "FCX",
+   "name": "FCX",
+   "before": {
+    "marketCap": 90331800000,
+    "peTtm": 27.45614035087719,
+    "price": 62.6,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 86540992210.54001,
+    "peTtm": 23.55859375,
+    "price": 60.31,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 86540992210.54001,
+    "close": 60.31,
+    "priceDate": "2026-11-10",
+    "shares": 1434936034,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 12927,
+   "ticker": "BA",
+   "name": "BA",
+   "before": {
+    "marketCap": 140307900000,
+    "peTtm": 18.266253869969038,
+    "price": 177,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 137394970597.2,
+    "peTtm": -21.19559902200489,
+    "price": 173.38,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 137394970597.2,
+    "close": 173.38,
+    "priceDate": "2026-11-10",
+    "shares": 792449940,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1045609,
+   "ticker": "PLD",
+   "name": "PLD",
+   "before": {
+    "marketCap": 125785212960.00002,
+    "peTtm": 33.08816120906801,
+    "price": 131.36,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 121297173800,
+    "peTtm": 32.77078085642317,
+    "price": 130.1,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 121297173800,
+    "close": 130.1,
+    "priceDate": "2026-11-10",
+    "shares": 932338000,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 753308,
+   "ticker": "NEE",
+   "name": "NEE",
+   "before": {
+    "marketCap": 185072780000,
+    "peTtm": 22.506361323155215,
+    "price": 88.45,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 179902407409.12,
+    "peTtm": 23.96388888888889,
+    "price": 86.27,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 179902407409.12,
+    "close": 86.27,
+    "priceDate": "2026-11-10",
+    "shares": 2085341456,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 789019,
+   "ticker": "MSFT",
+   "name": "MSFT",
+   "before": {
+    "marketCap": 4138486799999.9995,
+    "peTtm": 29.00835073068894,
+    "price": 555.8,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 3959349887344.32,
+    "peTtm": 29.50525733259546,
+    "price": 533.16,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 3959349887344.32,
+    "close": 533.16,
+    "priceDate": "2026-11-10",
+    "shares": 7426194552,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1730168,
+   "ticker": "AVGO",
+   "name": "AVGO",
+   "before": {
+    "marketCap": 1590620760000,
+    "peTtm": 41.51530612244898,
+    "price": 325.48,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 1584749642582.7002,
+    "peTtm": 47.83573487031701,
+    "price": 331.98,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 1584749642582.7002,
+    "close": 331.98,
+    "priceDate": "2026-11-10",
+    "shares": 4773629865,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1596532,
+   "ticker": "ANET",
+   "name": "ANET",
+   "before": {
+    "marketCap": 228133136000,
+    "peTtm": 47.97849462365591,
+    "price": 178.48,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 233754700021.7,
+    "peTtm": 50.829670329670336,
+    "price": 185.02,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 233754700021.7,
+    "close": 185.02,
+    "priceDate": "2026-11-10",
+    "shares": 1263402335,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 723125,
+   "ticker": "MU",
+   "name": "MU",
+   "before": {
+    "marketCap": 795230000,
+    "peTtm": 10.707284233203179,
+    "price": 795.23,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 820406285253.3201,
+    "peTtm": 16.85518363551836,
+    "price": 725.11,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 820406285253.3201,
+    "close": 725.11,
+    "priceDate": "2026-11-10",
+    "shares": 1131423212,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1375365,
+   "ticker": "SMCI",
+   "name": "SMCI",
+   "before": {
+    "marketCap": 703000000,
+    "peTtm": 9.107692307692307,
+    "price": 29.6,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 18319928528.93,
+    "peTtm": 8.345345345345345,
+    "price": 27.79,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 18319928528.93,
+    "close": 27.79,
+    "priceDate": "2026-11-10",
+    "shares": 659227367,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1274494,
+   "ticker": "FSLR",
+   "name": "FSLR",
+   "before": {
+    "marketCap": 20949116020,
+    "peTtm": 11.256365740740739,
+    "price": 194.51,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 19451938707.98,
+    "peTtm": 10.850119904076738,
+    "price": 180.98,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 19451938707.98,
+    "close": 180.98,
+    "priceDate": "2026-11-10",
+    "shares": 107481151,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1682852,
+   "ticker": "MRNA",
+   "name": "MRNA",
+   "before": {
+    "marketCap": 102835240000,
+    "peTtm": -32.33792240300376,
+    "price": 258.38,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 101491079159.25,
+    "peTtm": -45.60545454545455,
+    "price": 250.83,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 101491079159.25,
+    "close": 250.83,
+    "priceDate": "2026-11-10",
+    "shares": 404620975,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 59478,
+   "ticker": "LLY",
+   "name": "LLY",
+   "before": {
+    "marketCap": 1266832266000,
+    "peTtm": 46.023693605972085,
+    "price": 1417.99,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 1347419700450.99,
+    "peTtm": 48.33918326020924,
+    "price": 1432.29,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 1347419700450.99,
+    "close": 1432.29,
+    "priceDate": "2026-11-10",
+    "shares": 940745031,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 27904,
+   "ticker": "DAL",
+   "name": "DAL",
+   "before": {
+    "marketCap": 58809160000,
+    "peTtm": 17.812375249501,
+    "price": 89.24,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 60659521436,
+    "peTtm": 17.330827067669173,
+    "price": 92.2,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 60659521436,
+    "close": 92.2,
+    "priceDate": "2026-11-10",
+    "shares": 657912380,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1792789,
+   "ticker": "DASH",
+   "name": "DASH",
+   "before": {
+    "marketCap": 87441957260,
+    "peTtm": 82.06198347107438,
+    "price": 198.59,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 77433404250,
+    "peTtm": 71.5863453815261,
+    "price": 178.25,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 77433404250,
+    "close": 178.25,
+    "priceDate": "2026-11-10",
+    "shares": 434409000,
+    "shareSource": "weighted_basic",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 354950,
+   "ticker": "HD",
+   "name": "HD",
+   "before": {
+    "marketCap": 354018240000,
+    "peTtm": 24.87333799860042,
+    "price": 355.44,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 350189058726,
+    "peTtm": 21.54696132596685,
+    "price": 351,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 350189058726,
+    "close": 351,
+    "priceDate": "2026-11-10",
+    "shares": 997689626,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 18230,
+   "ticker": "CAT",
+   "name": "CAT",
+   "before": {
+    "marketCap": 272530169999.99997,
+    "peTtm": 23.19733228717144,
+    "price": 591.3,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 267495826295.18002,
+    "peTtm": 23.151287128712877,
+    "price": 584.57,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 267495826295.18002,
+    "close": 584.57,
+    "priceDate": "2026-11-10",
+    "shares": 457594174,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1053507,
+   "ticker": "AMT",
+   "name": "AMT",
+   "before": {
+    "marketCap": 90757603880,
+    "peTtm": 27.445070422535213,
+    "price": 194.86,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 88286667965.35,
+    "peTtm": 26.587988826815643,
+    "price": 190.37,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 88286667965.35,
+    "close": 190.37,
+    "priceDate": "2026-11-10",
+    "shares": 463763555,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 19617,
+   "ticker": "JPM",
+   "name": "JPM",
+   "before": {
+    "marketCap": 944711130000,
+    "peTtm": 14.763522012578616,
+    "price": 352.11,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 908404344743.63,
+    "peTtm": 14.088550247116968,
+    "price": 342.07,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 908404344743.63,
+    "close": 342.07,
+    "priceDate": "2026-11-10",
+    "shares": 2655609509,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1506307,
+   "ticker": "KMI",
+   "name": "KMI",
+   "before": {
+    "marketCap": 70195040000,
+    "peTtm": 19.456790123456788,
+    "price": 31.52,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 69482437992.51001,
+    "peTtm": 21.51034482758621,
+    "price": 31.19,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 69482437992.51001,
+    "close": 31.19,
+    "priceDate": "2026-11-10",
+    "shares": 2227715229,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 320193,
+   "ticker": "AAPL",
+   "name": "AAPL",
+   "before": {
+    "marketCap": -10483901960,
+    "peTtm": 38.96432552954292,
+    "price": 349.51,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 5064610748820,
+    "peTtm": 41.29265402843602,
+    "price": 348.51,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 5064610748820,
+    "close": 348.51,
+    "priceDate": "2026-11-10",
+    "shares": 14532182000,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 51143,
+   "ticker": "IBM",
+   "name": "IBM",
+   "before": {
+    "marketCap": 242500093213.84,
+    "peTtm": 21.644255319148936,
+    "price": 254.32,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 231110390446.65,
+    "peTtm": 31.798439531859557,
+    "price": 244.53,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 231110390446.65,
+    "close": 244.53,
+    "priceDate": "2026-11-10",
+    "shares": 945120805,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 936468,
+   "ticker": "LMT",
+   "name": "LMT",
+   "before": {
+    "marketCap": 137751760000,
+    "peTtm": 21.138188277087032,
+    "price": 595.04,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 139323518476.8,
+    "peTtm": 20.584300341296927,
+    "price": 603.12,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 139323518476.8,
+    "close": 603.12,
+    "priceDate": "2026-11-10",
+    "shares": 231004640,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 732717,
+   "ticker": "T",
+   "name": "T",
+   "before": {
+    "marketCap": 149404520000,
+    "peTtm": 11.799999999999997,
+    "price": 21.83,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 147798227120.02002,
+    "peTtm": 8.406130268199233,
+    "price": 21.94,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 147798227120.02002,
+    "close": 21.94,
+    "priceDate": "2026-11-10",
+    "shares": 6736473433,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1652044,
+   "ticker": "GOOGL",
+   "name": "GOOGL",
+   "before": {
+    "marketCap": 3573486240000,
+    "peTtm": 15.079853862212945,
+    "price": 288.93,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 3533049720000,
+    "peTtm": 14.95991671004685,
+    "price": 287.38,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 3533049720000,
+    "close": 287.38,
+    "priceDate": "2026-11-10",
+    "shares": 12294000000,
+    "shareSource": "common_stock",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 200406,
+   "ticker": "JNJ",
+   "name": "JNJ",
+   "before": {
+    "marketCap": 676597152000,
+    "peTtm": 41.93019726858877,
+    "price": 276.32,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 675924576487.48,
+    "peTtm": 42.413897280966765,
+    "price": 280.78,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 675924576487.48,
+    "close": 280.78,
+    "priceDate": "2026-11-10",
+    "shares": 2407310266,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 80424,
+   "ticker": "PG",
+   "name": "PG",
+   "before": {
+    "marketCap": 402772704000,
+    "peTtm": 25.198795180722893,
+    "price": 167.32,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 390917304898.38,
+    "peTtm": 23.009549795361526,
+    "price": 168.66,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 390917304898.38,
+    "close": 168.66,
+    "priceDate": "2026-11-10",
+    "shares": 2317783143,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 104169,
+   "ticker": "WMT",
+   "name": "WMT",
+   "before": {
+    "marketCap": 1030518259999.9999,
+    "peTtm": 46.63176895306859,
+    "price": 129.17,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 996081840557.5499,
+    "peTtm": 40.24038461538461,
+    "price": 125.55,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 996081840557.5499,
+    "close": 125.55,
+    "priceDate": "2026-11-10",
+    "shares": 7933746241,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 93410,
+   "ticker": "CVX",
+   "name": "CVX",
+   "before": {
+    "marketCap": 428514875520,
+    "peTtm": 20.86153846153846,
+    "price": 216.96,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 415136368516.92,
+    "peTtm": 14.980141843971632,
+    "price": 211.22,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 415136368516.92,
+    "close": 211.22,
+    "priceDate": "2026-11-10",
+    "shares": 1965421686,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1141391,
+   "ticker": "MA",
+   "name": "MA",
+   "before": {
+    "marketCap": 589267680000,
+    "peTtm": 35.18200836820084,
+    "price": 672.68,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 576485000000,
+    "peTtm": 34.7856388595565,
+    "price": 658.84,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 576485000000,
+    "close": 658.84,
+    "priceDate": "2026-11-10",
+    "shares": 875000000,
+    "shareSource": "weighted_basic",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1403161,
+   "ticker": "V",
+   "name": "V",
+   "before": {
+    "marketCap": null,
+    "peTtm": null,
+    "price": 436.57,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 729452169945,
+    "peTtm": null,
+    "price": 423,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 729452169945,
+    "close": 423,
+    "priceDate": "2026-11-10",
+    "shares": 1724473215,
+    "shareSource": "schwab_instrument",
+    "approximate": true
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 909832,
+   "ticker": "COST",
+   "name": "COST",
+   "before": {
+    "marketCap": -29301160,
+    "peTtm": 50.40799614643545,
+    "price": 1046.47,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 472437924142.86005,
+    "peTtm": 58.290869327501376,
+    "price": 1066.14,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 472437924142.86005,
+    "close": 1066.14,
+    "priceDate": "2026-11-10",
+    "shares": 443129349,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 5272,
+   "ticker": "AIG",
+   "name": "AIG",
+   "before": {
+    "marketCap": 43079526233.21,
+    "peTtm": 13.307817589576548,
+    "price": 81.71,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 42677888436.96,
+    "peTtm": 14.391608391608392,
+    "price": 82.32,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 42677888436.96,
+    "close": 82.32,
+    "priceDate": "2026-11-10",
+    "shares": 518438878,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1163165,
+   "ticker": "COP",
+   "name": "COP",
+   "before": {
+    "marketCap": 166280079700,
+    "peTtm": 18.113756613756614,
+    "price": 136.94,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 160312810378.63,
+    "peTtm": 13.93525179856115,
+    "price": 135.59,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 160312810378.63,
+    "close": 135.59,
+    "priceDate": "2026-11-10",
+    "shares": 1182335057,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 1707925,
+   "ticker": "LIN",
+   "name": "LIN",
+   "before": {
+    "marketCap": 242698546880,
+    "peTtm": 34.843293492695885,
+    "price": 524.74,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 239540734206.62,
+    "peTtm": 32.85768261964735,
+    "price": 521.78,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 239540734206.62,
+    "close": 521.78,
+    "priceDate": "2026-11-10",
+    "shares": 459083779,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  },
+  {
+   "cik": 858877,
+   "ticker": "CSCO",
+   "name": "CISCO SYSTEMS, INC.",
+   "before": {
+    "marketCap": 0,
+    "peTtm": 31.020958083832337,
+    "price": 103.61,
+    "priceAsOf": "2026-11-04"
+   },
+   "after": {
+    "marketCap": 386964901584.95,
+    "peTtm": 32.82608695652174,
+    "price": 98.15,
+    "priceAsOf": "2026-11-10"
+   },
+   "currentEvidence": {
+    "marketCap": 386964901584.95,
+    "close": 98.15,
+    "priceDate": "2026-11-10",
+    "shares": 3942586873,
+    "shareSource": "cover_page",
+    "approximate": false
+   },
+   "marketCapMatches": true
+  }
+ ],
+ "productionWrite": false,
+ "databaseWrite": false
+}

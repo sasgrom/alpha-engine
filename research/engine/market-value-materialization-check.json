@@ -1,0 +1,341 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-12T05:50:58.448Z",
+ "status": "pass",
+ "tolerance": 1e-12,
+ "companies": 50,
+ "candidateRows": 21046,
+ "storedRows": 21046,
+ "roundingDifferenceCount": 20,
+ "maxRelativeDifference": 1.9568992858744667e-16,
+ "missing": [],
+ "unexpected": [],
+ "different": [],
+ "roundingDifferences": [
+  {
+   "expected": {
+    "cik": 2488,
+    "factor": "evEbit",
+    "periodEnd": "2025-09-27",
+    "filedAt": "2025-11-05 00:00:00",
+    "value": 91.42931199713473
+   },
+   "actual": {
+    "cik": 2488,
+    "factor": "evEbit",
+    "periodEnd": "2025-09-27",
+    "filedAt": "2025-11-05 00:00:00",
+    "value": 91.42931199713472
+   }
+  },
+  {
+   "expected": {
+    "cik": 2488,
+    "factor": "evEbitda",
+    "periodEnd": "2023-09-30",
+    "filedAt": "2023-11-01 00:00:00",
+    "value": 948.4329384574711
+   },
+   "actual": {
+    "cik": 2488,
+    "factor": "evEbitda",
+    "periodEnd": "2023-09-30",
+    "filedAt": "2023-11-01 00:00:00",
+    "value": 948.4329384574712
+   }
+  },
+  {
+   "expected": {
+    "cik": 5272,
+    "factor": "peRatio",
+    "periodEnd": "2023-06-30",
+    "filedAt": "2023-08-02 00:00:00",
+    "value": 9.248216642345103
+   },
+   "actual": {
+    "cik": 5272,
+    "factor": "peRatio",
+    "periodEnd": "2023-06-30",
+    "filedAt": "2023-08-02 00:00:00",
+    "value": 9.248216642345104
+   }
+  },
+  {
+   "expected": {
+    "cik": 27904,
+    "factor": "evEbit",
+    "periodEnd": "2023-03-31",
+    "filedAt": "2023-04-13 00:00:00",
+    "value": 9.915320017418427
+   },
+   "actual": {
+    "cik": 27904,
+    "factor": "evEbit",
+    "periodEnd": "2023-03-31",
+    "filedAt": "2023-04-13 00:00:00",
+    "value": 9.915320017418429
+   }
+  },
+  {
+   "expected": {
+    "cik": 78003,
+    "factor": "peRatio",
+    "periodEnd": "2023-07-02",
+    "filedAt": "2023-08-09 00:00:00",
+    "value": 9.643715606073025
+   },
+   "actual": {
+    "cik": 78003,
+    "factor": "peRatio",
+    "periodEnd": "2023-07-02",
+    "filedAt": "2023-08-09 00:00:00",
+    "value": 9.643715606073023
+   }
+  },
+  {
+   "expected": {
+    "cik": 93410,
+    "factor": "peRatio",
+    "periodEnd": "2023-06-30",
+    "filedAt": "2023-08-03 00:00:00",
+    "value": 9.879832000477325
+   },
+   "actual": {
+    "cik": 93410,
+    "factor": "peRatio",
+    "periodEnd": "2023-06-30",
+    "filedAt": "2023-08-03 00:00:00",
+    "value": 9.879832000477323
+   }
+  },
+  {
+   "expected": {
+    "cik": 200406,
+    "factor": "peRatio",
+    "periodEnd": "2024-03-31",
+    "filedAt": "2024-05-01 00:00:00",
+    "value": 9.903391407561077
+   },
+   "actual": {
+    "cik": 200406,
+    "factor": "peRatio",
+    "periodEnd": "2024-03-31",
+    "filedAt": "2024-05-01 00:00:00",
+    "value": 9.903391407561076
+   }
+  },
+  {
+   "expected": {
+    "cik": 732717,
+    "factor": "peRatio",
+    "periodEnd": "2024-03-31",
+    "filedAt": "2024-05-02 00:00:00",
+    "value": 9.244998432312551
+   },
+   "actual": {
+    "cik": 732717,
+    "factor": "peRatio",
+    "periodEnd": "2024-03-31",
+    "filedAt": "2024-05-02 00:00:00",
+    "value": 9.244998432312553
+   }
+  },
+  {
+   "expected": {
+    "cik": 732717,
+    "factor": "peRatio",
+    "periodEnd": "2025-09-30",
+    "filedAt": "2025-10-31 00:00:00",
+    "value": 9.077405527318497
+   },
+   "actual": {
+    "cik": 732717,
+    "factor": "peRatio",
+    "periodEnd": "2025-09-30",
+    "filedAt": "2025-10-31 00:00:00",
+    "value": 9.077405527318495
+   }
+  },
+  {
+   "expected": {
+    "cik": 831259,
+    "factor": "evEbit",
+    "periodEnd": "2023-09-30",
+    "filedAt": "2023-11-03 00:00:00",
+    "value": 9.438128159585613
+   },
+   "actual": {
+    "cik": 831259,
+    "factor": "evEbit",
+    "periodEnd": "2023-09-30",
+    "filedAt": "2023-11-03 00:00:00",
+    "value": 9.438128159585611
+   }
+  },
+  {
+   "expected": {
+    "cik": 831259,
+    "factor": "evEbit",
+    "periodEnd": "2025-06-30",
+    "filedAt": "2025-08-08 00:00:00",
+    "value": 9.690613211039619
+   },
+   "actual": {
+    "cik": 831259,
+    "factor": "evEbit",
+    "periodEnd": "2025-06-30",
+    "filedAt": "2025-08-08 00:00:00",
+    "value": 9.69061321103962
+   }
+  },
+  {
+   "expected": {
+    "cik": 927628,
+    "factor": "peRatio",
+    "periodEnd": "2025-09-30",
+    "filedAt": "2025-11-03 00:00:00",
+    "value": 96.07674127878445
+   },
+   "actual": {
+    "cik": 927628,
+    "factor": "peRatio",
+    "periodEnd": "2025-09-30",
+    "filedAt": "2025-11-03 00:00:00",
+    "value": 96.07674127878444
+   }
+  },
+  {
+   "expected": {
+    "cik": 1018724,
+    "factor": "evEbit",
+    "periodEnd": "2022-09-30",
+    "filedAt": "2022-10-28 00:00:00",
+    "value": 91.28322368622311
+   },
+   "actual": {
+    "cik": 1018724,
+    "factor": "evEbit",
+    "periodEnd": "2022-09-30",
+    "filedAt": "2022-10-28 00:00:00",
+    "value": 91.28322368622312
+   }
+  },
+  {
+   "expected": {
+    "cik": 1018724,
+    "factor": "peRatio",
+    "periodEnd": "2022-06-30",
+    "filedAt": "2022-07-29 00:00:00",
+    "value": 93.10106364609287
+   },
+   "actual": {
+    "cik": 1018724,
+    "factor": "peRatio",
+    "periodEnd": "2022-06-30",
+    "filedAt": "2022-07-29 00:00:00",
+    "value": 93.10106364609288
+   }
+  },
+  {
+   "expected": {
+    "cik": 1045810,
+    "factor": "evEbitda",
+    "periodEnd": "2023-07-30",
+    "filedAt": "2023-08-28 00:00:00",
+    "value": 93.70625302956859
+   },
+   "actual": {
+    "cik": 1045810,
+    "factor": "evEbitda",
+    "periodEnd": "2023-07-30",
+    "filedAt": "2023-08-28 00:00:00",
+    "value": 93.7062530295686
+   }
+  },
+  {
+   "expected": {
+    "cik": 1141391,
+    "factor": "peRatio",
+    "periodEnd": "2022-06-30",
+    "filedAt": "2022-07-28 00:00:00",
+    "value": 95.72172670807453
+   },
+   "actual": {
+    "cik": 1141391,
+    "factor": "peRatio",
+    "periodEnd": "2022-06-30",
+    "filedAt": "2022-07-28 00:00:00",
+    "value": 95.72172670807451
+   }
+  },
+  {
+   "expected": {
+    "cik": 1274494,
+    "factor": "evEbitda",
+    "periodEnd": "2026-03-31",
+    "filedAt": "2026-04-30 00:00:00",
+    "value": 9.989208080121589
+   },
+   "actual": {
+    "cik": 1274494,
+    "factor": "evEbitda",
+    "periodEnd": "2026-03-31",
+    "filedAt": "2026-04-30 00:00:00",
+    "value": 9.989208080121587
+   }
+  },
+  {
+   "expected": {
+    "cik": 1318605,
+    "factor": "evEbitda",
+    "periodEnd": "2024-09-30",
+    "filedAt": "2024-10-24 00:00:00",
+    "value": 96.06277395494871
+   },
+   "actual": {
+    "cik": 1318605,
+    "factor": "evEbitda",
+    "periodEnd": "2024-09-30",
+    "filedAt": "2024-10-24 00:00:00",
+    "value": 96.06277395494872
+   }
+  },
+  {
+   "expected": {
+    "cik": 1321655,
+    "factor": "peRatio",
+    "periodEnd": "2026-06-30",
+    "filedAt": "2026-08-04 00:00:00",
+    "value": 92.70867132276017
+   },
+   "actual": {
+    "cik": 1321655,
+    "factor": "peRatio",
+    "periodEnd": "2026-06-30",
+    "filedAt": "2026-08-04 00:00:00",
+    "value": 92.70867132276015
+   }
+  },
+  {
+   "expected": {
+    "cik": 1707925,
+    "factor": "assetGrowth",
+    "periodEnd": "2019-06-30",
+    "filedAt": "2019-08-09 00:00:00",
+    "value": 9461.230086221341
+   },
+   "actual": {
+    "cik": 1707925,
+    "factor": "assetGrowth",
+    "periodEnd": "2019-06-30",
+    "filedAt": "2019-08-09 00:00:00",
+    "value": 9461.23008622134
+   }
+  }
+ ],
+ "candidateSha256": "5c99861778f235afd36ec52f4e935313cb4b6b504cdeb95308ed38e7d33b1b8b",
+ "candidateNormalizedSha256": "32f989d33ad60ebbcbd67ee8e76e6320c4647758d987b6979b0255bd156b30ea",
+ "storedNormalizedSha256": "b80fc3fe488ca3cfe1b9ee728fc90d6a0b4ad5d616a07bccc6b8f374bbd010df",
+ "productionWrite": false,
+ "databaseWrite": false
+}
