@@ -91,6 +91,20 @@ export interface FlowQuarter {
    * purchases. They are left out of this quarter's flows and counted from the next.
    */
   listed: string[];
+  /**
+   * Where every fund that reported this quarter stands in the hall: `[fund CIK, home sector, sector, stake, …]`.
+   * Sectors are indexes into `FundFlowsOverview.sectorNames` (−1: no home); a stake is per mille of the fund's book.
+   * Home is the sector of its biggest sizable net purchase of the quarter (1.5% of its book or more), else where it
+   * leans most against all funds (3 points or more), else its largest holding; it visits up to three other sectors
+   * where it bought 1.5% of its book or leans 5 points or more (worker/lib/fund-flows.ts `fundPlace`).
+   */
+  places: number[][];
+  /**
+   * How each fund's book did in the quarter: `[fund CIK, return]`, the return of its book as reported at the previous
+   * quarter end, held through this quarter (its trades inside the quarter are not seen), for every fund with both
+   * reports. Against `allFundsReturn` it tells the quarter's winners from its losers in the hall.
+   */
+  fundReturns: [cik: number, paperReturn: number][];
   /** What followed, from the quarter end: over the next quarter, the next four, and to the latest close. */
   next1: FlowOutcome;
   next4: FlowOutcome;
@@ -156,6 +170,8 @@ export interface FundFlowsOverview {
   codeVersion: string;
   /** The fund books the flows were built from (contracts/fund-books.ts) and the number of filings behind them. */
   books: { generatedAt: string; codeVersion: string; filings: number };
+  /** Sectors with a bookcase, largest holding first; `FlowQuarter.places` points into this list. */
+  sectorNames: string[];
   /** First quarter end of the history (the base of every growth index) and the latest complete one. */
   firstQuarter: string;
   latestQuarter: string;

@@ -183,6 +183,51 @@ export function reportingChange(previous: Holding[], current: Holding[], factors
   return held >= 20 && Math.max(grew, shrank) / held >= 0.6;
 }
 
+export interface FundPlaceInput {
+  /** Dollars held per sector at the quarter end. */
+  held: Map<string, number>;
+  /** Net dollars bought per sector in the quarter (bought − sold); empty when the fund's trades are not counted. */
+  net: Map<string, number>;
+  /** Each sector's share of what all funds held at the quarter end. */
+  market: Map<string, number>;
+}
+
+export interface FundPlace {
+  /** The bookcase the fund stands at; null when it holds nothing in a covered sector. */
+  home: string | null;
+  /** Up to three other bookcases it walks over to, with the size of its stake there (share of its book). */
+  stakes: { sector: string; weight: number }[];
+}
+
+/** Sectors that have no bookcase of their own. */
+const UNSHELVED = new Set(["Other", ""]);
+
+/**
+ * Where a fund stands in the hall in a quarter, and where it walks over to (the owner's rule of 2026-11-11):
+ * at the bookcase of its biggest sizable investment of the quarter (net purchases of at least 1.5% of its book);
+ * without one, where it leans most against all funds (3 points or more); failing that, where it holds the most.
+ * It visits the other sectors where it bought at least 1.5% of its book or leans 5 points or more.
+ */
+export function fundPlace({ held, net, market }: FundPlaceInput): FundPlace {
+  let book = 0;
+  for (const value of held.values()) book += Math.max(0, value);
+  if (book <= 0) return { home: null, stakes: [] };
+  const sectors = [...new Set([...held.keys(), ...market.keys()])].filter((sector) => !UNSHELVED.has(sector));
+  const byWeight = (a: { weight: number }, b: { weight: number }) => b.weight - a.weight || 0;
+  const bought = [...net]
+    .filter(([sector]) => !UNSHELVED.has(sector))
+    .map(([sector, usd]) => ({ sector, weight: usd / book }))
+    .filter((entry) => entry.weight >= 0.015)
+    .sort(byWeight);
+  const leans = sectors.map((sector) => ({ sector, weight: (held.get(sector) ?? 0) / book - (market.get(sector) ?? 0) })).sort(byWeight);
+  const largest = sectors.map((sector) => ({ sector, weight: held.get(sector) ?? 0 })).filter((entry) => entry.weight > 0).sort(byWeight);
+  const home = bought[0]?.sector ?? (leans[0] && leans[0].weight >= 0.03 ? leans[0].sector : largest[0]?.sector ?? null);
+  const stakes = new Map<string, number>();
+  for (const entry of bought) if (entry.sector !== home) stakes.set(entry.sector, Math.max(stakes.get(entry.sector) ?? 0, entry.weight));
+  for (const entry of leans) if (entry.sector !== home && entry.weight >= 0.05) stakes.set(entry.sector, Math.max(stakes.get(entry.sector) ?? 0, entry.weight));
+  return { home, stakes: [...stakes].map(([sector, weight]) => ({ sector, weight })).sort(byWeight).slice(0, 3) };
+}
+
 /**
  * One fund's estimated rotation: its sales paired with its own purchases in proportion. What it bought beyond its
  * sales came from outside the covered stocks; what it sold beyond its purchases left them.

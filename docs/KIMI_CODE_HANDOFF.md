@@ -1529,3 +1529,61 @@ test of whether following the money pays).
 - Gates: `npm run check`, **217 files / 1,225 tests**, `npm run build`, `git diff --check`, K07/K08 script typechecks and 22 focused tests pass. One coordinated web restart (18276 to 6812) left exactly one port-3000 server; authenticated API and rendered Screener/Company Value checks pass with no failed requests or page errors. Scheduler untouched.
 - Evidence is in `research/engine/market-value-*.json` and the delivery report in `docs/engine/tasks/K08-market-value.md`; hashes are in that report. Local MySQL and artifacts only: no production write, deployment, schema change, LLM, GDELT or alpha promotion. Unrelated generated exposure/analytics changes remain uncommitted.
 - **Next safe action:** K09, beginning with `research/engine/market-value-k09-quarantine.json` (58 unit-scale + eight LIN cases; reject without rescaling; preserve PIT evidence and LIN predecessor semantics).
+
+
+## 128. Claude: the fund-flow hall rebuilt as a rotunda with the funds as people; flow files open to every signed-in user — 2026-11-11/12 (local night)
+
+The owner's redesign of `/desk/flows` (plan approved 2026-11-11; follow-ups the same night: smaller people with
+capped sizes, less light, every person a little different, an All / Winners / Losers switch).
+
+**What the hall is now** (`src/desk/flows/hall/`, three.js; the old two-wall library `library-stage.ts` and
+`library-layout.ts` are removed)
+
+- A rotunda: a bookcase per sector round the wall (the largest sector faces the entrance, the others alternate right
+  and left), a book per company (thickness by the cube root of the value held; pulled out = bought, pushed back =
+  sold), carved Cinzel signs, marble columns, a gallery, arched windows, a coffered dome with an oculus, the entrance
+  as "Outside the covered stocks", a round map table in the middle (`layout.ts`, `building.ts`).
+- The funds are people (306 in Q2 2026), each at its home bookcase: biggest net purchase of at least 1.5% of its
+  book, else its largest lean against all funds (3 points or more), else its largest holding
+  (`worker/lib/fund-flows.ts` `fundPlace`, written by the build into `FlowQuarter.places`). Index funds are the
+  library's staff round the map table. Each crowd clusters in its own wedge of floor in front of its bookcase.
+- Jacket = the quarter's net flow (blue bought, red sold); height = money on a log scale, $5 bn → 0.45 of a person,
+  $1.5 tn → 1.2, capped at both ends (`figures.ts` `FIGURE_SIZE`); build and trouser, shirt, hair and wood colours
+  per fund, the same every visit (`lookFor`).
+- Figure by leader: `research/engine/fund-leaders.json` (92 filers, sources and quotes) → `hall/leaders-data.ts`
+  through `scripts/build-fund-leaders.mts`; a man or a woman only where a public source says so, otherwise a dressed
+  wooden mannequin. Clothes by the home sector (suit, casual, tech). Figures: Quaternius CC0; textures and light:
+  Poly Haven CC0; lettering: Cinzel OFL (`public/desk-assets/library/`, 8.9 MB, sources in its `LICENSES.md`).
+- Motion: people walk to their new places when the quarter changes; new funds come in through the entrance; the
+  All / Winners / Losers switch (`?who=`) sends the others out through the entrance and brings them back. A winner's
+  book (as reported at the start of the quarter, held through it) did better than all tracked funds together
+  (`FlowQuarter.fundReturns` against `allFundsReturn`); Q2 2026: 127 winners, 174 losers against +15.8%.
+- Money streams are ribbons as wide as the dollars with "$" bubbles; a selected fund or company gets threads between
+  people and books; the streams thin out when seen from high up.
+- Controls: drag to look, W A S D or arrows, R and F, Shift, the wheel, Home; buttons for the entrance, the view from
+  above, the full-screen game view (Esc leaves) and the help.
+- Speed: shared animation rigs (a few dozen skeletons for all people), the static building merged by material, blob
+  shadows under people. Headless Edge on the RTX 4070 Ti SUPER: 60 fps (16.7 ms median frame, 7.5 ms of script);
+  software WebGL manages about 1 fps and serves only for screenshots.
+- Contract additions, all optional for older files: `FlowQuarter.places`, `FlowQuarter.fundReturns`,
+  `FundFlowsOverview.sectorNames` (without them the hall orders the bookcases itself and hides the switch).
+- Audience: the three flow procedures are `authedQuery` (every signed-in user; reviewers only after the NDA, through
+  the middleware); the desk shows Flows to members. **Not live until the next web restart** (agreed as one joint
+  restart with Kimi after K09's commit).
+
+**Commands and results**
+
+- `npx tsx scripts/build-fund-flows.mts` (2026-11-12 00:05 local): 23 flow quarters 2020-12-31..2026-06-30, 310 funds,
+  493 companies, overview 1.49 MB, code `f105e051a3c7`, output `worker/.runs/desk-flows/`.
+- `npm run check` clean; eslint on the changed files clean; `git diff --check` clean; vitest `src/desk` (10 files,
+  63 tests), `api/routers/desk-flows.test.ts`, `worker/lib/fund-flows.test.ts` and `src/desk/flows/hall` pass;
+  `npm run build` and `npx vite build` pass (hall chunk 134 KB, page chunk 72 KB). The client in `dist/public` is
+  current; the server was not restarted.
+- **Not run:** the full test suite, held at Kimi's request while the K09 data build runs; it runs after Kimi's
+  completion note.
+
+**Next safe actions**: the joint web restart after K09's commit, then the full suite; the hall's next round (the map
+table as a map of the United States with flags where the money went, a few props per alcove, laptops for the
+technology holders, people visiting the other bookcases where they hold sizable stakes, covers and logos on the
+books, the switch from funds to famous traders with politicians as placeholders until the owner decides the
+legal question); a scheduler entry for the two flow builds after `13f-refresh`.

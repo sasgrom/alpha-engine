@@ -1,13 +1,15 @@
 /**
- * React frame of the library scene: builds the stage once per data set and theme, hands it the selected quarter
- * and the selection, and shows what the pointer rests on. All drawing is in library-stage.ts.
+ * React frame of the hall: builds the stage once per data set and theme, hands it the selected quarter, where every
+ * fund stands and how it is drawn, and the selection, and shows what the pointer rests on. All drawing is in
+ * hall/stage.ts.
  */
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FLOW_OUTSIDE, type FlowQuarter, type FundFlowsOverview } from "@contracts/fund-flows";
+import { FLOW_OUTSIDE, FUND_CATEGORY_LABEL, type FlowQuarter, type FundFlowsOverview } from "@contracts/fund-flows";
 import type { ChartPalette } from "../charts/color";
 import { fmtCap, fmtPct } from "../format";
-import { deflatorSince, quarterLabel, signedCap } from "./data";
-import { LibraryStage, type StageData, type StageSelection, type StageTarget } from "./library-stage";
+import { deflatorSince, hallSectorOrder, quarterLabel, signedCap, standingOf, type Who } from "./data";
+import { bodyFor, decodePlaces, figureScale, leaderAt, lookFor, outfitFor } from "./hall/figures";
+import { HallStage, type StageData, type StageFigure, type StageSelection, type StageTarget } from "./hall/stage";
 
 export interface LibraryProps {
   overview: FundFlowsOverview;
@@ -19,24 +21,46 @@ export interface LibraryProps {
   selection: StageSelection;
   dark: boolean;
   palette: ChartPalette;
-  /** Changes when the reader asks to be taken back to the entrance. */
+  /** Changes when the reader asks to be taken back to the entrance, or up to look over the whole hall. */
   homeSignal: number;
+  aboveSignal: number;
   /** Pixels of the hall covered by the panel on the right (0 when it is closed) and by the strip at the bottom. */
   inset: number;
   insetBottom: number;
+  /** Full-screen game view: the keys walk the hall wherever the focus is (except in a text field). */
+  game: boolean;
+  /** Who is in the hall: every fund, or only the quarter's winners or losers. */
+  who: Who;
   onPick: (target: StageTarget) => void;
 }
 
-export default function Library3D({ overview, row, mode, real, focus, selection, dark, palette, homeSignal, inset, insetBottom, onPick }: LibraryProps) {
+export default function Library3D({ overview, row, mode, real, focus, selection, dark, palette, homeSignal, aboveSignal, inset, insetBottom, game, who, onPick }: LibraryProps) {
   const host = useRef<HTMLDivElement>(null);
-  const stage = useRef<LibraryStage | null>(null);
+  const stage = useRef<HallStage | null>(null);
   const pick = useRef(onPick);
   pick.current = onPick;
   const [hover, setHover] = useState<{ target: StageTarget; x: number; y: number } | null>(null);
   const [ready, setReady] = useState(0);
+  const [loading, setLoading] = useState<"loading" | "ready" | string>("loading");
 
   const company = useMemo(() => new Map(overview.companies.map((entry) => [entry.cik, entry])), [overview]);
   const fund = useMemo(() => new Map(overview.funds.map((entry) => [entry.cik, entry])), [overview]);
+  const sectorOrder = useMemo(() => hallSectorOrder(overview), [overview]);
+  const places = useMemo(() => decodePlaces(row, overview.sectorNames ?? []), [row, overview]);
+  const figures = useMemo(() => {
+    const result = new Map<number, StageFigure>();
+    for (const [cik, place] of places) {
+      const entry = fund.get(cik);
+      const staff = entry?.category === "index";
+      const leader = leaderAt(cik, row.quarter);
+      // the library's staff wear suits; everyone else dresses for where the money stands
+      const body = bodyFor(leader?.gender, staff ? "suit" : outfitFor(place.home), cik);
+      result.set(cik, { body, scale: figureScale(entry?.tracked ?? 0), staff, leader: leader?.name ?? null, look: lookFor(cik) });
+    }
+    return result;
+  }, [places, fund, row.quarter]);
+
+  const keep = useMemo(() => standingOf(row, who).keep, [row, who]);
   const data = useMemo<StageData>(
     () => ({
       company: new Map(row.companyFlows.map(([cik, net, held, since]) => [cik, { net, held, since }])),
@@ -46,21 +70,27 @@ export default function Library3D({ overview, row, mode, real, focus, selection,
       mode,
       deflator: real ? deflatorSince(overview, row) : 1,
       focus,
+      places,
+      figures,
+      keep,
     }),
-    [overview, row, mode, real, focus],
+    [overview, row, mode, real, focus, places, figures, keep],
   );
 
   useEffect(() => {
     if (!host.current) return;
-    const built = new LibraryStage(
+    setLoading("loading");
+    const built = new HallStage(
       host.current,
       overview.companies.map((entry) => ({ cik: entry.cik, ticker: entry.ticker, name: entry.name, sector: entry.sector, held: entry.held })),
       overview.funds.map((entry) => ({ cik: entry.cik, name: entry.name, category: entry.category, tracked: entry.tracked })),
+      sectorOrder,
       dark,
       palette,
       {
         onHover: (target, x, y) => setHover(target ? { target, x, y } : null),
         onPick: (target) => target && pick.current(target),
+        onReady: (error) => setLoading(error ?? "ready"),
       },
     );
     stage.current = built;
@@ -69,7 +99,7 @@ export default function Library3D({ overview, row, mode, real, focus, selection,
       stage.current = null;
       built.dispose();
     };
-  }, [overview, dark, palette]);
+  }, [overview, sectorOrder, dark, palette]);
 
   useEffect(() => {
     stage.current?.setData(data);
@@ -90,14 +120,27 @@ export default function Library3D({ overview, row, mode, real, focus, selection,
   }, [homeSignal]);
 
   useEffect(() => {
+    if (aboveSignal > 0) stage.current?.flyAbove();
+  }, [aboveSignal]);
+
+  useEffect(() => {
     stage.current?.setInset(inset, insetBottom);
   }, [inset, insetBottom, ready]);
+
+  useEffect(() => {
+    stage.current?.setGame(game);
+  }, [game, ready]);
 
   const tip = hover && tooltip(hover.target, { overview, row, company, fund, data, real });
   return (
     <div className="desk-lib-stage">
       {/* the stage puts its canvas and labels in here; nothing React renders shares this element */}
       <div ref={host} style={{ position: "absolute", inset: 0 }} />
+      {loading !== "ready" && (
+        <div className="desk-lib-loading" role="status">
+          {loading === "loading" ? "Opening the hall…" : `The hall could not be opened: ${loading}. The reading view has the same figures.`}
+        </div>
+      )}
       {tip && hover && (
         <div className="desk-tooltip desk-lib-tip" style={{ left: Math.min(hover.x + 16, (host.current?.clientWidth ?? 600) - 290), top: Math.max(8, hover.y - 12) }}>
           <strong>{tip.title}</strong>
@@ -134,11 +177,14 @@ function tooltip(
   if (target.kind === "fund") {
     const entry = context.fund.get(target.id);
     const flow = data.fund.get(target.id);
-    return {
-      title: entry?.name ?? `Fund ${target.id}`,
-      lines: flow ? [[`Bought, ${quarter}`, fmtCap(flow.bought)], ["Sold", fmtCap(flow.sold)], ["Net", signedCap(flow.bought - flow.sold)]] : [[quarter, "no counted report"]],
-      hint: "Select to follow its money to the shelves",
-    };
+    const figure = data.figures.get(target.id);
+    const home = data.places.get(target.id)?.home;
+    const lines: [string, string][] = flow ? [[`Bought, ${quarter}`, fmtCap(flow.bought)], ["Sold", fmtCap(flow.sold)], ["Net", signedCap(flow.bought - flow.sold)]] : [[quarter, "no counted report"]];
+    if (entry) lines.push(["Kind", FUND_CATEGORY_LABEL[entry.category]]);
+    if (figure?.staff) lines.push(["Stands", "with the library's staff at the map"]);
+    else if (home) lines.push(["Stands at", home]);
+    lines.push(["Led by", figure?.leader ?? "not on record here"]);
+    return { title: entry?.name ?? `Fund ${target.id}`, lines, hint: "Select to follow its money to the shelves" };
   }
   if (target.kind === "sector") {
     const sector = data.sectors.get(target.name);

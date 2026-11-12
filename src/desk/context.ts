@@ -10,6 +10,8 @@ export interface DeskContextValue {
   isPresentation: boolean;
   /** False while a non-owner's reviewer status is still loading (the audience is not known yet). */
   audienceReady: boolean;
+  /** Every signed-in user except a reviewer who has not accepted the NDA: the audience of the fund-flow page. */
+  flowsOpen: boolean;
   userName: string;
   openSearch: () => void;
 }

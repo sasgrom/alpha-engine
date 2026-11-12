@@ -19,15 +19,15 @@ function caller(user: unknown, reviewerAccess?: unknown) {
   });
 }
 
-describe("desk fund flows: the research audience only", () => {
-  it("serves the owner and a reviewer who accepted the NDA", async () => {
+describe("desk fund flows: every signed-in user", () => {
+  it("serves the owner, members and reviewers who accepted the NDA", async () => {
     await expect(caller({ id: 1, role: "admin" }).desk.flowsOverview()).resolves.toEqual(overview);
+    await expect(caller({ id: 7, role: "user" }).desk.flowsOverview()).resolves.toEqual(overview);
     await expect(caller({ id: 7, role: "user" }, { acceptedAt: new Date("2026-11-01T00:00:00Z") }).desk.flowsFund({ cik: 1067983 })).resolves.toEqual({ file: "fund/1067983.json" });
     await expect(caller({ id: 1, role: "admin" }).desk.flowsCompany({ cik: 320193 })).resolves.toEqual({ file: "company/320193.json" });
   });
 
-  it("refuses members, reviewers without the NDA and anonymous readers", async () => {
-    await expect(caller({ id: 7, role: "user" }).desk.flowsOverview()).rejects.toMatchObject({ code: "FORBIDDEN" });
+  it("refuses reviewers without the NDA and anonymous readers", async () => {
     await expect(caller({ id: 7, role: "user" }, { acceptedAt: null }).desk.flowsFund({ cik: 1067983 })).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(caller(null).desk.flowsCompany({ cik: 320193 })).rejects.toMatchObject({ code: "UNAUTHORIZED" });
   });

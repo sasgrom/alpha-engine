@@ -3,17 +3,18 @@
  * earned. Two views of the same figures: the library (a hall to walk through) and the reading view (charts and
  * tables). Everything selected lives in the address, so a view can be linked.
  */
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Navigate, useSearchParams } from "react-router";
-import { BookOpen, DoorOpen, Info, Library, PanelRightClose, PanelRightOpen, Pause, Play, X } from "lucide-react";
+import { BookOpen, DoorOpen, Eye, Gamepad2, Info, Library, Minimize2, PanelRightClose, PanelRightOpen, Pause, Play, X } from "lucide-react";
 import type { FlowQuarter, FundFlowsOverview } from "@contracts/fund-flows";
 import { Card, Notice, Segmented, Shimmer } from "../components";
 import { useDesk, useDocumentTitle } from "../context";
 import { DevNotes } from "../DevNotes";
-import { fmtCap, fmtDate } from "../format";
+import { fmtCap, fmtDate, fmtPct } from "../format";
 import { FlowTape, FlowTimeline, RotationDiagram } from "./charts";
-import { deflatorSince, quarterLabel, quarterSentence, useFlowsCompany, useFlowsFund, useFlowsOverview } from "./data";
-import { webglAvailable, type StageSelection, type StageTarget } from "./library-stage";
+import { deflatorSince, quarterLabel, quarterSentence, standingOf, useFlowsCompany, useFlowsFund, useFlowsOverview, type Who } from "./data";
+import type { StageSelection, StageTarget } from "./hall/stage";
+import { webglAvailable } from "./hall/webgl";
 import { CatalogPanel, CompanyPanel, FundPanel, QuarterPanel, Sentence, type FlowNav } from "./panels";
 
 const Library3D = lazy(() => import("./Library3D"));
@@ -50,14 +51,16 @@ function useFlowState(overview: FundFlowsOverview | null | undefined) {
 
 export default function FlowsPage() {
   useDocumentTitle("Fund flows");
-  const { palette, theme, isPresentation, audienceReady } = useDesk();
-  const overview = useFlowsOverview(isPresentation);
+  const { palette, theme, flowsOpen, audienceReady } = useDesk();
+  const overview = useFlowsOverview(flowsOpen);
   const state = useFlowState(overview.data);
   const { row, fund, company, sector, set, params } = state;
   const canWalk = useMemo(() => webglAvailable(), []);
   const view: View = params.get("view") === "reading" || !canWalk ? "reading" : "library";
   const mode: Mode = params.get("show") === "outcome" ? "outcome" : "flow";
   const real = params.get("real") === "1";
+  const whoParam = params.get("who");
+  const who: Who = whoParam === "winners" || whoParam === "losers" ? whoParam : "all";
   // the panel follows the selection until the reader picks a tab; a new selection takes it back
   const selectionKey = fund ? `fund ${fund}` : company ? `company ${company}` : "";
   const [chosenTab, setChosenTab] = useState<{ tab: Tab; key: string } | null>(null);
@@ -67,9 +70,37 @@ export default function FlowsPage() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [homeSignal, setHomeSignal] = useState(0);
+  const [aboveSignal, setAboveSignal] = useState(0);
+  // the game view: the hall fills the screen, the site's header out of sight; Esc goes back to the page
+  const [game, setGame] = useState(false);
+  const hall = useRef<HTMLDivElement>(null);
+  const enterGame = () => {
+    setGame(true);
+    hall.current?.requestFullscreen?.().catch(() => undefined);
+  };
+  const leaveGame = useCallback(() => {
+    setGame(false);
+    if (document.fullscreenElement) void document.exitFullscreen?.().catch(() => undefined);
+  }, []);
+  useEffect(() => {
+    if (!game) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") leaveGame();
+    };
+    // the browser leaves full screen on Esc by itself; the game view follows
+    const onScreen = () => {
+      if (!document.fullscreenElement) setGame(false);
+    };
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("fullscreenchange", onScreen);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("fullscreenchange", onScreen);
+    };
+  }, [game, leaveGame]);
 
-  const fundFile = useFlowsFund(isPresentation ? fund : null);
-  const companyFile = useFlowsCompany(isPresentation ? company : null);
+  const fundFile = useFlowsFund(flowsOpen ? fund : null);
+  const companyFile = useFlowsCompany(flowsOpen ? company : null);
 
   // the hall runs edge to edge: the stylesheet needs the width of the window without its scrollbar
   useEffect(() => {
@@ -128,7 +159,7 @@ export default function FlowsPage() {
   );
 
   if (!audienceReady) return <Shimmer height={420} />;
-  if (!isPresentation) return <Navigate to="/desk" replace />;
+  if (!flowsOpen) return <Navigate to="/desk" replace />;
   if (overview.isLoading) return <Shimmer height={520} />;
   if (overview.error || !overview.data || !row) {
     return (
@@ -139,6 +170,7 @@ export default function FlowsPage() {
   }
   const data = overview.data;
   const deflator = real ? deflatorSince(data, row) : 1;
+  const standing = standingOf(row, who);
   const selectedName = fund ? data.funds.find((entry) => entry.cik === fund)?.name : company ? data.companies.find((entry) => entry.cik === company)?.ticker : null;
 
   const viewSwitch = (
@@ -206,15 +238,39 @@ export default function FlowsPage() {
   if (view === "library") {
     return (
       <>
-        <div className="desk-lib">
+        <div className="desk-lib" ref={hall} data-game={game ? "on" : undefined}>
           <Suspense fallback={<div className="desk-lib-stage"><Shimmer height={520} /></div>}>
-            <Library3D overview={data} row={row} mode={mode} real={real} focus={sector} selection={selection} dark={theme.resolved === "dark"} palette={palette} homeSignal={homeSignal} inset={panelOpen ? 418 : 0} insetBottom={150} onPick={onPick} />
+            <Library3D overview={data} row={row} mode={mode} real={real} focus={sector} selection={selection} dark={theme.resolved === "dark"} palette={palette} homeSignal={homeSignal} aboveSignal={aboveSignal} inset={panelOpen ? 418 : 0} insetBottom={150} game={game} who={who} onPick={onPick} />
           </Suspense>
+          {game && (
+            <div className="desk-lib-keys" aria-hidden="true">
+              <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> walk</span>
+              <span>drag to look</span>
+              <span><kbd>R</kbd><kbd>F</kbd> up, down</span>
+              <span><kbd>Shift</kbd> faster</span>
+              <span><kbd>Esc</kbd> leave</span>
+            </div>
+          )}
           <div className="desk-lib-head">
             <h1>The library of capital</h1>
             <p>
               <strong>{quarterLabel(row.quarter)}</strong> · {row.funds} funds · bought <strong>{fmtCap(row.bought)}</strong> · sold <strong>{fmtCap(row.sold)}</strong>
             </p>
+            {standing.bar !== null && standing.winners + standing.losers > 0 && (
+              <div className="desk-lib-who">
+                <Segmented<Who>
+                  label="Who is in the hall"
+                  value={who}
+                  onChange={(next) => set({ who: next === "all" ? null : next })}
+                  options={[{ value: "all", label: "All" }, { value: "winners", label: `Winners · ${standing.winners}` }, { value: "losers", label: `Losers · ${standing.losers}` }]}
+                />
+                <p className="desk-muted">
+                  {who === "all"
+                    ? `A winner's book did better this quarter than all tracked funds together (${fmtPct(standing.bar, 1)}), a loser's worse.`
+                    : `${who === "winners" ? "Funds whose book did better" : "Funds whose book did worse"} this quarter than all tracked funds together (${fmtPct(standing.bar, 1)}); the others wait outside.`}
+                </p>
+              </div>
+            )}
             {sector && (
               <button type="button" className="desk-badge accent" onClick={() => nav.sector(null)} style={{ cursor: "pointer", marginTop: 8 }}>
                 {sector} <X size={12} aria-hidden="true" />
@@ -227,6 +283,12 @@ export default function FlowsPage() {
             {mode === "outcome" && inflation}
             <button type="button" className="desk-icon-button" onClick={() => { set({ sector: null, fund: null, company: null }); setHomeSignal((count) => count + 1); }} aria-label="Back to the entrance" title="Back to the entrance">
               <DoorOpen size={16} aria-hidden="true" />
+            </button>
+            <button type="button" className="desk-icon-button" onClick={() => setAboveSignal((count) => count + 1)} aria-label="View from above" title="View from above: the whole floor at once">
+              <Eye size={16} aria-hidden="true" />
+            </button>
+            <button type="button" className="desk-icon-button" aria-pressed={game} onClick={() => (game ? leaveGame() : enterGame())} aria-label={game ? "Leave the game view" : "Game view: the hall on the whole screen"} title={game ? "Leave the game view (Esc)" : "Game view: the hall on the whole screen"}>
+              {game ? <Minimize2 size={16} aria-hidden="true" /> : <Gamepad2 size={16} aria-hidden="true" />}
             </button>
             <button type="button" className="desk-icon-button" aria-pressed={helpOpen} onClick={() => setHelpOpen((open) => !open)} aria-label="How to read the hall" title="How to read the hall">
               <Info size={16} aria-hidden="true" />
@@ -241,10 +303,12 @@ export default function FlowsPage() {
               <ul>
                 <li>Each bookcase is a sector; each book a company. A thicker book: more of it is held by the funds.</li>
                 <li>A book pulled out toward you was bought this quarter, a book pushed back was sold. The further, the more dollars.</li>
-                <li>The streams of light overhead are the estimated rotation: red where money left, blue where it arrived. The door at the far end is everything outside these stocks.</li>
-                <li>The desks in the middle are the funds, shelved by kind. A blue lamp bought more than it sold, a red lamp sold more.</li>
-                <li>Select a desk to string its trades to the shelves, or a book to see which desks traded it.</li>
-                <li>Scroll to walk, drag to look around, arrow keys work too. The reading view has the same figures as charts and tables.</li>
+                <li>The people are the funds. Each stands at the bookcase where it bought most this quarter (or where it leans most), the largest funds tallest. A blue jacket bought more than it sold, a red jacket sold more. The index giants keep the library at the map table in the middle.</li>
+                <li>A figure is a man or a woman when a public source names the firm's leader; a wooden mannequin otherwise. Clothes follow the holdings: suits for banks and industry, tech wear for technology, casual in between.</li>
+                <li>The streams overhead are the estimated rotation, as wide as the dollars: red where money left, blue where it arrived. The entrance is everything outside these stocks.</li>
+                <li>Select a person to see its money run to the books, or a book to see who traded it. Change the quarter and the people walk to their new places.</li>
+                <li>All, Winners, Losers: a winner's book did better in the quarter than all tracked funds together, a loser's worse. The others walk out and wait outside until you switch back.</li>
+                <li>Drag to look around, scroll or W A S D to walk, R and F to rise and fall. The game view fills the screen. The reading view has the same figures as charts and tables.</li>
               </ul>
             </div>
           )}
@@ -307,7 +371,8 @@ function Legend({ mode, real }: { mode: Mode; real: boolean }) {
       <span><span className="desk-flow-dot" data-way="out" aria-hidden="true" />{mode === "flow" ? "sold" : "lost since"}</span>
       <span>{mode === "flow" ? "colour: net flow against the value held" : `colour: the stock's return since that quarter${real ? ", after inflation" : ""}`}</span>
       <span>pulled out = bought · pushed back = sold</span>
-      <span>streams: estimated rotation</span>
+      <span>jacket: the fund's net flow</span>
+      <span>streams: estimated rotation, width = dollars</span>
     </div>
   );
 }

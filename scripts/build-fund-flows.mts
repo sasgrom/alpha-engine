@@ -38,6 +38,7 @@ import {
   bookShape,
   flowOutcome,
   fundCategory,
+  fundPlace,
   fundStory,
   impliedPrices,
   linksFromTotals,
@@ -49,6 +50,7 @@ import {
   shareBasisChange,
   styleTags,
   type Holding,
+  type FundPlaceInput,
   type PositionFlow,
 } from "../worker/lib/fund-flows";
 import { writeJsonAtomic } from "../worker/lib/json-file";
@@ -164,6 +166,8 @@ interface FundQuarterState { tracked: number; positions: number; bought: number 
 const fundQuarter = new Map<number, Map<string, FundQuarterState>>();
 const heldSince = new Map<number, Map<number, string>>();
 const flowQuarters: FlowQuarter[] = [];
+/** Per flow quarter and reporting fund: what decides where it stands in the hall. */
+const placeInputs = new Map<string, Map<number, FundPlaceInput>>();
 const flowsByQuarter = new Map<string, PositionFlow[]>();
 const flowsByCompany = new Map<string, Map<number, PositionFlow[]>>();
 const companyQuarter = new Map<number, Map<string, { holders: number; held: number }>>();
@@ -365,6 +369,26 @@ for (let index = 0; index < quarters.length; index++) {
       companies.set(flow.company, company);
       funds.set(flow.fund, fund);
     }
+    // where every reporting fund stands in the hall this quarter: its holdings and net purchases by sector
+    {
+      const market = new Map<string, number>();
+      let total = 0;
+      for (const row of current) {
+        market.set(sectorOf(row.company), (market.get(sectorOf(row.company)) ?? 0) + row.value);
+        total += row.value;
+      }
+      for (const [sector, value] of market) market.set(sector, total > 0 ? value / total : 0);
+      const inputs = new Map<number, FundPlaceInput>();
+      for (const [fund, rows] of byFund) {
+        const held = new Map<string, number>();
+        for (const row of rows) held.set(sectorOf(row.company), (held.get(sectorOf(row.company)) ?? 0) + row.value);
+        const entry = funds.get(fund);
+        const net = new Map<string, number>();
+        if (entry) for (const sector of new Set([...entry.buys.keys(), ...entry.sells.keys()])) net.set(sector, (entry.buys.get(sector) ?? 0) - (entry.sells.get(sector) ?? 0));
+        inputs.set(fund, { held, net, market });
+      }
+      placeInputs.set(quarter, inputs);
+    }
     const rotation = new Map<string, number>();
     for (const [fund, entry] of funds) {
       addLinks(rotation, rotationLinks(entry.sells, entry.buys));
@@ -404,6 +428,8 @@ for (let index = 0; index < quarters.length; index++) {
       fundFlows: [...stable].map((fund) => [fund, Math.round(funds.get(fund)?.bought ?? 0), Math.round(funds.get(fund)?.sold ?? 0)] as [number, number, number]),
       splits,
       listed,
+      places: [],
+      fundReturns: [],
       next1: none, next4: none, toDate: none, followed: none,
       allFundsReturn: allFundsReturn.get(quarter) ?? null,
       benchmarkReturn: ret(0, before, quarter),
@@ -584,6 +610,29 @@ for (const [company, perQuarter] of companyQuarter) {
   });
 }
 
+// --- where everyone stands in the hall --------------------------------------------------------------------------------------------------
+// sectors in the order of the value held at the latest quarter; a place is [fund, home sector, then sector and stake per mille]
+const sectorNames = [...allFundsBook].filter(([sector]) => sector !== "Other").sort((a, b) => b[1] - a[1]).map(([sector]) => sector);
+const sectorIndex = new Map(sectorNames.map((sector, index) => [sector, index]));
+for (const row of flowQuarters) {
+  for (const [fund, input] of placeInputs.get(row.quarter) ?? []) {
+    const place = fundPlace(input);
+    const home = place.home === null ? -1 : sectorIndex.get(place.home) ?? -1;
+    const stakes = place.stakes.flatMap((stake) => (sectorIndex.has(stake.sector) ? [sectorIndex.get(stake.sector)!, Math.round(stake.weight * 1000)] : []));
+    row.places.push([fund, home, ...stakes]);
+  }
+  row.places.sort((a, b) => a[0] - b[0]);
+}
+// how each fund's book did in each quarter: the hall's winners and losers against all tracked funds
+const flowRows = new Map(flowQuarters.map((row) => [row.quarter, row]));
+for (const file of fundFiles) {
+  for (const point of file.series) {
+    const row = flowRows.get(point.quarter);
+    if (row && point.paperReturn !== null) row.fundReturns.push([file.cik, Math.round(point.paperReturn * 1e4) / 1e4]);
+  }
+}
+for (const row of flowQuarters) row.fundReturns.sort((a, b) => a[0] - b[0]);
+
 // --- overview --------------------------------------------------------------------------------------------------------------------------
 const lastFlows = flowQuarters.at(-1)!;
 const lastCompanyNet = new Map<number, number>();
@@ -597,6 +646,7 @@ const overview: FundFlowsOverview = {
   latestQuarter: latest,
   openQuarter: open ? { quarter: open.q, funds: Number(open.funds) } : null,
   latestPriceDate,
+  sectorNames,
   quarters: flowQuarters,
   funds: fundFiles
     .map((file) => {

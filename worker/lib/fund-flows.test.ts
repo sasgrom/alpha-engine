@@ -7,6 +7,7 @@ import {
   commonRatio,
   flowOutcome,
   fundCategory,
+  fundPlace,
   fundStory,
   impliedPrices,
   linksFromTotals,
@@ -128,6 +129,37 @@ describe("what is not trading", () => {
     const previous = book(300, () => 1_000);
     const current = book(300, () => 500);
     expect(reportingChange(previous, current, new Map(previous.map((row) => [row.company, 0.5])))).toBe(false);
+  });
+});
+
+describe("where a fund stands in the hall", () => {
+  const market = new Map([["Information Technology", 0.35], ["Financials", 0.13], ["Energy", 0.04], ["Health Care", 0.1], ["Other", 0.01]]);
+  const held = (entries: [string, number][]) => new Map(entries);
+
+  it("stands at the bookcase of its biggest sizable purchase and visits its other big stakes", () => {
+    // $100bn book: bought $4bn of energy and $2bn of banks, holds the market otherwise but leans 9 points into health care
+    const place = fundPlace({
+      held: held([["Information Technology", 35e9], ["Financials", 13e9], ["Energy", 4e9], ["Health Care", 19e9], ["Other", 29e9]]),
+      net: new Map([["Energy", 4e9], ["Financials", 2e9], ["Information Technology", -3e9]]),
+      market,
+    });
+    expect(place.home).toBe("Energy");
+    expect(place.stakes.map((stake) => stake.sector)).toEqual(["Health Care", "Financials"]);
+    expect(place.stakes[0].weight).toBeCloseTo(0.09, 12);
+  });
+
+  it("without a sizable purchase stands where it leans most, or where it holds the most", () => {
+    const banker = fundPlace({ held: held([["Financials", 60e9], ["Information Technology", 40e9]]), net: new Map([["Financials", 1e9]]), market });
+    expect(banker.home).toBe("Financials");
+    // a book like the market: no lean of 3 points, so the largest holding (technology)
+    const tracker = fundPlace({ held: held([["Information Technology", 35e9], ["Financials", 13e9], ["Energy", 4e9], ["Health Care", 10e9], ["Other", 38e9]]), net: new Map(), market });
+    expect(tracker.home).toBe("Information Technology");
+    expect(tracker.stakes).toEqual([]);
+  });
+
+  it("never sends anyone to a sector without a bookcase, and keeps an empty book at home", () => {
+    expect(fundPlace({ held: held([["Other", 9e9], ["Energy", 1e9]]), net: new Map([["Other", 5e9]]), market }).home).toBe("Energy");
+    expect(fundPlace({ held: new Map(), net: new Map(), market })).toEqual({ home: null, stakes: [] });
   });
 });
 

@@ -2,10 +2,9 @@
 import { act } from "react";
 import { afterEach, describe, expect, it } from "vitest";
 import { mountDesk, waitUntil, type MountedDesk } from "../desk-test-harness";
-import { deflatorSince, moneySince, quarterSentence, spreadRecord } from "./data";
+import { deflatorSince, hallSectorOrder, moneySince, quarterSentence, spreadRecord, standingOf } from "./data";
 import { FLOWS_OVERVIEW } from "./flows-fixtures";
-import { HALL, libraryLayout } from "./library-layout";
-import { webglAvailable } from "./library-stage";
+import { webglAvailable } from "./hall/webgl";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -84,62 +83,32 @@ describe("figures of the flow view", () => {
     expect(deflatorSince(FLOWS_OVERVIEW, FLOWS_OVERVIEW.quarters[1])).toBe(1);
   });
 
+  it("tells a quarter's winners from its losers against all tracked funds", () => {
+    // all funds made 4%: Citadel's book 9% (a winner), Berkshire's 1% (a loser), BlackRock exactly 4% (neither)
+    const all = standingOf(row, "all");
+    expect(all).toEqual({ keep: null, winners: 1, losers: 1, bar: 0.04 });
+    expect([...standingOf(row, "winners").keep!]).toEqual([1423053]);
+    expect([...standingOf(row, "losers").keep!]).toEqual([1067983]);
+    // a falling quarter still has winners: the bar moves with the market
+    const falling = { allFundsReturn: -0.2, fundReturns: [[1, -0.1], [2, -0.3]] as [number, number][] };
+    expect([...standingOf(falling, "winners").keep!]).toEqual([1]);
+    // without the bar (or a file built before the returns) the hall keeps everybody
+    expect(standingOf({ allFundsReturn: null, fundReturns: [[1, 0.1]] }, "winners").keep).toBeNull();
+    expect(standingOf({ allFundsReturn: 0.02, fundReturns: undefined as unknown as [number, number][] }, "losers").keep).toBeNull();
+  });
+
+  it("orders the hall's bookcases as the build does, and by the value held for a file without that order", () => {
+    expect(hallSectorOrder(FLOWS_OVERVIEW)).toEqual(["Information Technology", "Energy"]);
+    const older = { ...FLOWS_OVERVIEW, sectorNames: [], companies: [...FLOWS_OVERVIEW.companies, { ...FLOWS_OVERVIEW.companies[0], cik: 1, sector: "Other", held: 9e12 }] };
+    expect(hallSectorOrder(older)).toEqual(["Information Technology", "Energy"]);
+    const energyFirst = { ...older, companies: older.companies.map((company) => (company.sector === "Energy" ? { ...company, held: company.held * 10 } : company)) };
+    expect(hallSectorOrder(energyFirst)).toEqual(["Energy", "Information Technology"]);
+  });
+
   it("counts how often the money went the right way, and writes the sentence of a quarter", () => {
     expect(spreadRecord(FLOWS_OVERVIEW.quarters, (quarter) => quarter.next1.spread)).toEqual({ measured: 2, positive: 2, mean: 0.06 - 0.04 });
     expect(spreadRecord(FLOWS_OVERVIEW.quarters, (quarter) => quarter.followed.spread).positive).toBe(0);
     const sentence = quarterSentence(row).map((part) => (typeof part === "string" ? part : part.strong)).join("");
     expect(sentence).toBe("In Q1 2026, 3 funds bought $72.00B and sold $56.00B of the covered stocks. Net, money went into Information Technology (+$32.00B) and came out of Energy (−$16.00B).");
-  });
-});
-
-describe("the layout of the hall", () => {
-  const companies = [
-    ...Array.from({ length: 60 }, (_, index) => ({ cik: 1000 + index, ticker: `T${index}`, sector: "Information Technology", held: 2e12 / (index + 1) })),
-    ...Array.from({ length: 25 }, (_, index) => ({ cik: 2000 + index, ticker: `E${index}`, sector: "Energy", held: 3e11 / (index + 1) })),
-    ...Array.from({ length: 30 }, (_, index) => ({ cik: 3000 + index, ticker: `F${index}`, sector: "Financials", held: 5e11 / (index + 1) })),
-    { cik: 9, ticker: "NONE", sector: "Energy", held: 0 },
-  ];
-  const funds = [
-    ...Array.from({ length: 14 }, (_, index) => ({ cik: 10 + index, category: "index" as const, tracked: 5e12 / (index + 1) })),
-    ...Array.from({ length: 9 }, (_, index) => ({ cik: 100 + index, category: "hedge" as const, tracked: 2e11 / (index + 1) })),
-  ];
-  const layout = libraryLayout(companies, funds);
-
-  it("gives every held company one book inside its sector's bookcase, on a shelf, without overlap", () => {
-    expect(layout.books).toHaveLength(115);
-    expect(layout.bays.map((bay) => bay.sector)).toEqual(["Information Technology", "Financials", "Energy"]);
-    for (const book of layout.books) {
-      const bay = layout.bays.find((item) => item.sector === book.sector)!;
-      expect(book.side).toBe(bay.side);
-      expect(-book.z - book.thickness / 2).toBeGreaterThanOrEqual(bay.from - 1e-9);
-      expect(-book.z + book.thickness / 2).toBeLessThanOrEqual(bay.to + 1e-9);
-      expect(book.y - book.height / 2).toBeGreaterThanOrEqual(HALL.shelfBase - 1e-9);
-      expect(book.y + book.height / 2).toBeLessThanOrEqual(layout.top);
-    }
-    // on one shelf of one bookcase the books stand side by side
-    const shelves = new Map<string, { from: number; to: number }[]>();
-    for (const book of layout.books) {
-      const shelf = `${book.sector}|${Math.round((book.y - book.height / 2 - HALL.shelfBase) / HALL.shelfHeight)}`;
-      (shelves.get(shelf) ?? shelves.set(shelf, []).get(shelf)!).push({ from: -book.z - book.thickness / 2, to: -book.z + book.thickness / 2 });
-    }
-    for (const spans of shelves.values()) {
-      spans.sort((a, b) => a.from - b.from);
-      for (let index = 1; index < spans.length; index++) expect(spans[index].from).toBeGreaterThanOrEqual(spans[index - 1].to - 1e-9);
-    }
-    // a larger holding is never a thinner book, and the smallest is far thinner than the largest
-    const technology = layout.books.filter((book) => book.sector === "Information Technology");
-    for (let index = 1; index < technology.length; index++) expect(technology[index].thickness).toBeLessThanOrEqual(technology[index - 1].thickness + 1e-12);
-    expect(technology.at(-1)!.thickness).toBeLessThan(technology[0].thickness / 3);
-  });
-
-  it("keeps the two walls about equally long and seats every fund at a desk under its shelf mark", () => {
-    const reach = (side: number) => Math.max(...layout.bays.filter((bay) => bay.side === side).map((bay) => bay.to));
-    expect(Math.abs(reach(-1) - reach(1))).toBeLessThan(Math.max(reach(-1), reach(1)) * 0.6);
-    expect(layout.desks).toHaveLength(23);
-    expect(layout.marks.map((mark) => mark.label)).toEqual(["Index giants", "Hedge funds and activists"]);
-    const places = new Set(layout.desks.map((desk) => `${desk.x}|${desk.z.toFixed(3)}`));
-    expect(places.size).toBe(23);
-    for (const desk of layout.desks) expect(Math.abs(desk.x)).toBeLessThan(HALL.aisle - 1);
-    expect(layout.length).toBeGreaterThan(reach(1) - 0.01);
   });
 });

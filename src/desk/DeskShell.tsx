@@ -45,6 +45,7 @@ export default function DeskShell({ children }: { children: ReactNode }) {
   const isReviewer = Boolean(reviewer.status.data?.isReviewer);
   const isPresentation = isAdmin || Boolean(reviewer.status.data?.isReviewer && reviewer.status.data.ndaAccepted);
   const audienceReady = isAdmin || (!!user && !reviewer.status.isLoading);
+  const flowsOpen = !isReviewer || Boolean(reviewer.status.data?.ndaAccepted);
   const snapshot = trpc.desk.snapshot.useQuery(undefined, { enabled: !!user, staleTime: 5 * 60_000, refetchOnWindowFocus: false, retry: 1 });
   const unread = trpc.messages.unreadCount.useQuery(undefined, { enabled: !!user && !isReviewer, refetchInterval: 30_000 });
   const [searchOpen, setSearchOpen] = useState(false);
@@ -164,18 +165,18 @@ export default function DeskShell({ children }: { children: ReactNode }) {
             { label: "Macro", path: "/desk/research/macro", group: "Desk" as const, keywords: "rates credit oil dollar exposure scenario" },
             { label: "Ownership", path: "/desk/research/ownership", group: "Desk" as const, keywords: "insiders 13f institutions short interest" },
             { label: "Library", path: "/desk/research/library", group: "Desk" as const, keywords: "methods handbook glossary classic tools" },
-            { label: "Fund flows", path: "/desk/flows", group: "Desk" as const, keywords: "13f institutions funds money rotation sectors bought sold hall library of capital" },
           ]
         : []),
+      ...(flowsOpen ? [{ label: "Fund flows", path: "/desk/flows", group: "Desk" as const, keywords: "13f institutions funds money rotation sectors bought sold hall library of capital" }] : []),
       ...(isAdmin ? [{ label: "Operations", path: "/desk/operations", group: "Desk" as const, keywords: "health scheduler jobs checks" }] : []),
       ...classicDestinations(isAdmin, isPresentation),
     ],
-    [isAdmin, isPresentation],
+    [isAdmin, isPresentation, flowsOpen],
   );
 
   const context = useMemo<DeskContextValue>(
-    () => ({ palette: CHART_PALETTE[theme.resolved], theme, isAdmin, isPresentation, audienceReady, userName: user?.name ?? user?.username ?? "", openSearch: () => setSearchOpen(true) }),
-    [theme, isAdmin, isPresentation, audienceReady, user?.name, user?.username],
+    () => ({ palette: CHART_PALETTE[theme.resolved], theme, isAdmin, isPresentation, audienceReady, flowsOpen, userName: user?.name ?? user?.username ?? "", openSearch: () => setSearchOpen(true) }),
+    [theme, isAdmin, isPresentation, audienceReady, flowsOpen, user?.name, user?.username],
   );
 
   if (isLoading || !user) {
@@ -188,7 +189,8 @@ export default function DeskShell({ children }: { children: ReactNode }) {
 
   const navItems = [
     ...NAV,
-    ...(isPresentation ? [{ label: "Research", path: "/desk/research" }, { label: "Flows", path: "/desk/flows" }] : []),
+    ...(isPresentation ? [{ label: "Research", path: "/desk/research" }] : []),
+    ...(flowsOpen ? [{ label: "Flows", path: "/desk/flows" }] : []),
     { label: "Watchlist", path: "/desk/watchlist" },
     ...(isAdmin ? [{ label: "Operations", path: "/desk/operations" }] : []),
   ];

@@ -15,8 +15,8 @@ describe("desk view for a member", () => {
   it("hides the owner's pages and finds companies from Ctrl+K", async () => {
     desk = await mountDesk("user");
     const host = desk.host;
-    // a member has no research section and never sees build notes
-    expect([...host.querySelectorAll(".desk-nav a")].map((link) => link.textContent)).toEqual(["Today", "Markets", "Screener", "Watchlist"]);
+    // a member has no research section and never sees build notes, but the fund flows are open to everyone
+    expect([...host.querySelectorAll(".desk-nav a")].map((link) => link.textContent)).toEqual(["Today", "Markets", "Screener", "Flows", "Watchlist"]);
     expect(host.querySelector(".desk-devnotes")).toBeNull();
     act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }));
@@ -38,9 +38,10 @@ describe("desk view for a member", () => {
     expect(host.textContent).not.toContain("Database browser");
   });
 
-  it("sends a member who opens the fund-flow address back to Today without asking for the flow files", async () => {
-    desk = await mountDesk("user", "/desk/flows?fund=1067983&company=320193");
-    expect(desk.host.textContent).toContain("S&P 500 companies closed higher");
-    expect(desk.calls.filter((call) => call.startsWith("desk.flows"))).toEqual([]);
+  it("opens the fund-flow page for a member, without the owner's build notes", async () => {
+    desk = await mountDesk("user", "/desk/flows?view=reading", "Most bought");
+    expect(desk.calls).toContain("desk.flowsOverview");
+    expect(desk.host.textContent).toContain("In Q2 2026, 3 funds bought");
+    expect(desk.host.querySelector(".desk-devnotes")).toBeNull();
   });
 });

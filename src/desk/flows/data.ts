@@ -83,6 +83,44 @@ export function deflatorSince(overview: FundFlowsOverview, row: FlowQuarter): nu
   return latest && row.cpi ? latest / row.cpi : 1;
 }
 
+export type Who = "all" | "winners" | "losers";
+
+export interface Standing {
+  /** The funds the hall keeps for the switch (null: everybody). */
+  keep: Set<number> | null;
+  winners: number;
+  losers: number;
+  /** All tracked funds' return in the quarter: the bar a fund's own book is measured against (null: not known). */
+  bar: number | null;
+}
+
+/**
+ * Winners and losers of a quarter: a fund whose book (as reported at the start of the quarter, held through it) did
+ * better than all tracked funds together is a winner, worse a loser. Relative, so a falling quarter has winners too.
+ * A fund without both reports, or exactly at the bar, is neither.
+ */
+export function standingOf(row: Pick<FlowQuarter, "fundReturns" | "allFundsReturn">, who: Who): Standing {
+  const bar = row.allFundsReturn;
+  const winners = new Set<number>();
+  const losers = new Set<number>();
+  if (bar !== null) {
+    for (const [cik, value] of row.fundReturns ?? []) {
+      if (value > bar) winners.add(cik);
+      else if (value < bar) losers.add(cik);
+    }
+  }
+  const split = bar !== null && winners.size + losers.size > 0;
+  return { keep: !split || who === "all" ? null : who === "winners" ? winners : losers, winners: winners.size, losers: losers.size, bar };
+}
+
+/** The sectors in the order of the hall's bookcases: the build's order (largest holdings first), else worked out here. */
+export function hallSectorOrder(overview: FundFlowsOverview): string[] {
+  if (overview.sectorNames?.length) return overview.sectorNames;
+  const held = new Map<string, number>();
+  for (const company of overview.companies) if (company.sector && company.sector !== "Other") held.set(company.sector, (held.get(company.sector) ?? 0) + company.held);
+  return [...held].sort((a, b) => b[1] - a[1]).map(([sector]) => sector);
+}
+
 export function sectorNames(overview: FundFlowsOverview): string[] {
   const latest = overview.quarters.at(-1);
   return (latest?.sectors ?? []).map((sector) => sector.sector).filter((name) => name !== "Other" && name !== FLOW_OUTSIDE).sort();

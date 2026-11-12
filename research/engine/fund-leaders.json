@@ -1,0 +1,2065 @@
+{
+ "generatedAt": "2026-11-12T06:44:20.436Z",
+ "method": "Leaders from public sources (company pages, major news outlets, Wikipedia); gender only where a fetched page refers to the person with gendered words, quoted here. Dates are month precision.",
+ "entities": [
+  {
+   "cik": 2012383,
+   "entity": "BlackRock",
+   "firm": "BlackRock",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Larry Fink",
+     "title": "Chairman & CEO (co-founder)",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He is a co-chairman of the World Economic Forum.",
+     "source": "https://en.wikipedia.org/wiki/Larry_Fink"
+    }
+   ],
+   "note": null
+  },
+  {
+   "cik": 2100119,
+   "entity": "VANGUARD CAPITAL MANAGEMENT LLC",
+   "firm": "Vanguard Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Tim Buckley",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2024-07",
+     "gender": "male",
+     "quote": "He lives in Wayne, Pennsylvania.",
+     "source": "https://en.wikipedia.org/wiki/Mortimer_J._Buckley"
+    },
+    {
+     "name": "Salim Ramji",
+     "title": "CEO",
+     "from": "2024-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He started his career as a lawyer with Clifford Chance in London and Hong Kong.",
+     "source": "https://401kspecialistmag.com/ramji-takes-reins-as-vanguard-ceo/?amp=1"
+    }
+   ],
+   "note": "Vanguard subsidiary entity; group CEO used. Ramji effective 2024-07-08."
+  },
+  {
+   "cik": 93751,
+   "entity": "State Street",
+   "firm": "State Street Corporation",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Ronald O'Hanley",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He joined State Street in 2015.",
+     "source": "https://www.statestreet.com/gb/en/about/our-people/leadership/ronaldohanley"
+    }
+   ],
+   "note": "CEO since 2019; no change found in window."
+  },
+  {
+   "cik": 2100121,
+   "entity": "VANGUARD PORTFOLIO MANAGEMENT LLC",
+   "firm": "Vanguard Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Tim Buckley",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2024-07",
+     "gender": "male",
+     "quote": "He lives in Wayne, Pennsylvania.",
+     "source": "https://en.wikipedia.org/wiki/Mortimer_J._Buckley"
+    },
+    {
+     "name": "Salim Ramji",
+     "title": "CEO",
+     "from": "2024-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He started his career as a lawyer with Clifford Chance in London and Hong Kong.",
+     "source": "https://401kspecialistmag.com/ramji-takes-reins-as-vanguard-ceo/?amp=1"
+    }
+   ],
+   "note": "Vanguard subsidiary entity; group CEO used. Ramji effective 2024-07-08."
+  },
+  {
+   "cik": 315066,
+   "entity": "Fidelity (FMR)",
+   "firm": "Fidelity Investments (FMR LLC)",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Abigail P. Johnson",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "female",
+     "quote": "She also owns an office building in London.",
+     "source": "https://en.wikipedia.org/wiki/Abigail_Johnson"
+    }
+   ],
+   "note": null
+  },
+  {
+   "cik": 1214717,
+   "entity": "Geode Capital Management",
+   "firm": "Geode Capital Management",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Vince Gubitosi",
+     "title": "President & CEO",
+     "from": "2020-07",
+     "to": "2020-12",
+     "gender": "male",
+     "quote": "He holds the title of Co-President at Accuidity LLC.",
+     "source": "https://ca.marketscreener.com/insider/VINCE-GUBITOSI-A19XAV/"
+    },
+    {
+     "name": "Bob Minicus",
+     "title": "President & CEO",
+     "from": "2021-01",
+     "to": null,
+     "gender": "male",
+     "quote": "during which he led a strategic refocus by shuttering the underperforming hedge fund unit",
+     "source": "https://grokipedia.com/page/Geode_Capital_Management"
+    }
+   ],
+   "note": "Handover year disputed between sources (2020 vs 2021); no primary announcement found. Low confidence on dates and current CEO."
+  },
+  {
+   "cik": 19617,
+   "entity": "JPMORGAN CHASE & CO",
+   "firm": "JPMorgan Chase & Co.",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Jamie Dimon",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He has said he uses the OODA loop method in scenario evaluation.",
+     "source": "https://en.wikipedia.org/wiki/Jamie_Dimon"
+    }
+   ],
+   "note": "Group CEO chosen over J.P. Morgan Asset & Wealth Management head."
+  },
+  {
+   "cik": 895421,
+   "entity": "MORGAN STANLEY",
+   "firm": "Morgan Stanley",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "James Gorman",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2023-12",
+     "gender": "male",
+     "quote": "He lives in Manhattan and has two adult children.",
+     "source": "https://en.wikipedia.org/wiki/James_P._Gorman"
+    },
+    {
+     "name": "Ted Pick",
+     "title": "CEO",
+     "from": "2024-01",
+     "to": null,
+     "gender": "male",
+     "quote": "He enjoys math problems.",
+     "source": "https://en.wikipedia.org/wiki/Ted_Pick"
+    }
+   ],
+   "note": "Group CEO used."
+  },
+  {
+   "cik": 914208,
+   "entity": "Invesco Ltd.",
+   "firm": "Invesco Ltd.",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Marty Flanagan",
+     "title": "President & CEO",
+     "from": "2020-07",
+     "to": "2023-06",
+     "gender": "male",
+     "quote": "He�s ranked as one of the highest-paid chief executives in Georgia, sometimes even topping the list.",
+     "source": "https://www.ajc.com/news/marty-flanagan-to-retire-as-invesco-ceo-prompting-leadership-shakeup/75UDF6XLWJHQNDYHL2XMPHFR24"
+    },
+    {
+     "name": "Andrew Schlossberg",
+     "title": "President & CEO",
+     "from": "2023-06",
+     "to": null,
+     "gender": "male",
+     "quote": "Since joining the fund company in 2021, he has served in positions including head of EMEA",
+     "source": "https://www.investmentnews.com/invesco-schlossberg-to-succeed-flanagan-as-pres-ceo-233777"
+    }
+   ],
+   "note": "Handover 2023-06-30 per Invesco 8-K."
+  },
+  {
+   "cik": 1374170,
+   "entity": "Norges Bank",
+   "firm": "Norges Bank (NBIM)",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Yngve Slyngstad",
+     "title": "CEO, Norges Bank Investment Management",
+     "from": "2020-07",
+     "to": "2020-08",
+     "gender": "male",
+     "quote": "In 2021 he was appointed as the CEO and senior partner of Aker Asset Management (AAM).",
+     "source": "https://en.wikipedia.org/wiki/Yngve_Slyngstad"
+    },
+    {
+     "name": "Nicolai Tangen",
+     "title": "CEO, Norges Bank Investment Management",
+     "from": "2020-09",
+     "to": null,
+     "gender": "male",
+     "quote": "He has education as a cook.",
+     "source": "https://en.wikipedia.org/wiki/Nicolai_Tangen"
+    }
+   ],
+   "note": "Fund run by NBIM CEO; Tangen started 2020-09-01."
+  },
+  {
+   "cik": 70858,
+   "entity": "BANK OF AMERICA CORP",
+   "firm": "Bank of America",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Brian Moynihan",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He became the Chancellor of Brown University in July 2024.",
+     "source": "https://en.wikipedia.org/wiki/Brian_Moynihan"
+    }
+   ],
+   "note": "Group CEO used."
+  },
+  {
+   "cik": 73124,
+   "entity": "NORTHERN TRUST CORP",
+   "firm": "Northern Trust",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Michael O'Grady",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He also serves on the Finance Council of the Archdiocese of Chicago, and the Civic Committee of the Commercial Club of Chicago.",
+     "source": "https://www.chicagofed.org/people/o/o-grady-michael"
+    }
+   ],
+   "note": "Still CEO per latest source found (Oct 2024); no later succession found, not fully verified for 2025-26."
+  },
+  {
+   "cik": 1422849,
+   "entity": "Capital World Investors",
+   "firm": "Capital Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Tim Armour",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2023-10",
+     "gender": "male",
+     "quote": "He has held several leadership roles at the company.",
+     "source": "https://www.capitalgroup.com/about-us/news-room/CG-announces-long-planned-leadership-transition.html"
+    },
+    {
+     "name": "Mike Gitlin",
+     "title": "President & CEO",
+     "from": "2023-10",
+     "to": null,
+     "gender": "male",
+     "quote": "He has lived and worked in London, Hong Kong, Singapore, Baltimore, Connecticut and New York.",
+     "source": "https://www.capitalgroup.com/about-us/news-room/CG-announces-long-planned-leadership-transition.html"
+    }
+   ],
+   "note": "Capital Group division entity; group CEO used. Transition effective 2023-10-24."
+  },
+  {
+   "cik": 1422848,
+   "entity": "Capital Research Global Investors",
+   "firm": "Capital Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Tim Armour",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2023-10",
+     "gender": "male",
+     "quote": "He has held several leadership roles at the company.",
+     "source": "https://www.capitalgroup.com/about-us/news-room/CG-announces-long-planned-leadership-transition.html"
+    },
+    {
+     "name": "Mike Gitlin",
+     "title": "President & CEO",
+     "from": "2023-10",
+     "to": null,
+     "gender": "male",
+     "quote": "He has lived and worked in London, Hong Kong, Singapore, Baltimore, Connecticut and New York.",
+     "source": "https://www.capitalgroup.com/about-us/news-room/CG-announces-long-planned-leadership-transition.html"
+    }
+   ],
+   "note": "Capital Group division entity; group CEO used. Transition effective 2023-10-24."
+  },
+  {
+   "cik": 886982,
+   "entity": "GOLDMAN SACHS GROUP INC",
+   "firm": "Goldman Sachs",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "David Solomon",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He listed the apartment for $24 million in May 2016.",
+     "source": "https://en.wikipedia.org/wiki/David_M._Solomon"
+    }
+   ],
+   "note": "Group CEO used."
+  },
+  {
+   "cik": 884546,
+   "entity": "Charles Schwab Investment Management",
+   "firm": "Charles Schwab Corporation",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Walt Bettinger",
+     "title": "President & CEO",
+     "from": "2020-07",
+     "to": "2024-12",
+     "gender": "male",
+     "quote": "He has led Schwab to record results over the last 16 years.",
+     "source": "https://planadviser.com/charles-schwab-ceo-walt-bettinger-retire"
+    },
+    {
+     "name": "Rick Wurster",
+     "title": "President & CEO",
+     "from": "2025-01",
+     "to": null,
+     "gender": "male",
+     "quote": "He holds an MBA from The Tuck School of Business at Dartmouth College.",
+     "source": "https://www.analyticsinsight.net/biography/rick-wurster"
+    }
+   ],
+   "note": "Group CEO used for Schwab Investment Management."
+  },
+  {
+   "cik": 861177,
+   "entity": "UBS AM, a distinct business unit of UBS ASSET MANAGEMENT AMERICAS LLC",
+   "firm": "UBS Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Sergio Ermotti",
+     "title": "Group CEO",
+     "from": "2020-07",
+     "to": "2020-10",
+     "gender": "male",
+     "quote": "His salary in fiscal year 2017 was estimated to be US$14.9 million.",
+     "source": "https://en.wikipedia.org/wiki/Sergio_Ermotti"
+    },
+    {
+     "name": "Ralph Hamers",
+     "title": "Group CEO",
+     "from": "2020-11",
+     "to": "2023-04",
+     "gender": "male",
+     "quote": "He was the CEO of Dutch bank ING Group from October 2013 until June 2020.",
+     "source": "https://en.wikipedia.org/wiki/Ralph_Hamers"
+    },
+    {
+     "name": "Sergio Ermotti",
+     "title": "Group CEO",
+     "from": "2023-04",
+     "to": null,
+     "gender": "male",
+     "quote": "His salary in fiscal year 2017 was estimated to be US$14.9 million.",
+     "source": "https://en.wikipedia.org/wiki/Sergio_Ermotti"
+    }
+   ],
+   "note": "UBS Asset Management and UBS Group AG both mapped to the group CEO. Hamers-to-Ermotti: 2023-04-05."
+  },
+  {
+   "cik": 1390777,
+   "entity": "Bank of New York Mellon Corp",
+   "firm": "BNY (Bank of New York Mellon)",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Todd Gibbons",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": "2022-08",
+     "gender": "male",
+     "quote": "He thanked Gibbons for his \"outstanding leadership\" throughout the pandemic",
+     "source": "https://www.americanbanker.com/news/bny-mellon-picks-next-ceo-as-todd-gibbons-retires"
+    },
+    {
+     "name": "Robin Vince",
+     "title": "CEO",
+     "from": "2022-09",
+     "to": null,
+     "gender": "male",
+     "quote": "He is someone I deeply respect and trust",
+     "source": "https://www.bny.com/corporate/global/en/about-us/newsroom/press-release/bny-mellon-announces-leadership-succession-plan-naming-robin-vince-ceo-elect-130260.html"
+    }
+   ],
+   "note": "Gibbons retired as CEO 2022-08-31 (sources vary on exact take-over date)."
+  },
+  {
+   "cik": 902219,
+   "entity": "Wellington Management",
+   "firm": "Wellington Management",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Brendan Swords",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": "2021-06",
+     "gender": "male",
+     "quote": "Since 2014, she has served as one the firm’s three Managing Partners alongside Mr. Swords.",
+     "source": "https://www.wellington.com/en-au/professional/wellington-news/ceo-succession-plan-press-release"
+    },
+    {
+     "name": "Jean Hynes",
+     "title": "CEO",
+     "from": "2021-07",
+     "to": null,
+     "gender": "female",
+     "quote": "Since 2014, she has served as one the firm's three Managing Partners alongside Mr. Swords.",
+     "source": "https://www.wellington.com/en-au/professional/wellington-news/ceo-succession-plan-press-release"
+    }
+   ],
+   "note": "Pronoun for Hynes not individually verified in fetched text; widely reported as female."
+  },
+  {
+   "cik": 764068,
+   "entity": "Legal & General",
+   "firm": "Legal & General",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Nigel Wilson",
+     "title": "Group CEO",
+     "from": "2020-07",
+     "to": "2023-12",
+     "gender": "male",
+     "quote": "He attended Ferryhill Grammar School.",
+     "source": "https://en.wikipedia.org/wiki/Nigel_Wilson_(businessman)"
+    },
+    {
+     "name": "Antonio Simoes",
+     "title": "Group CEO",
+     "from": "2024-01",
+     "to": null,
+     "gender": "male",
+     "quote": "In April 2015, he joined the Banking Standards Board as practitioner member.",
+     "source": "https://en.wikipedia.org/wiki/Ant%C3%B3nio_Sim%C3%B5es_(executive)"
+    }
+   ],
+   "note": "Not verified against a fresh source; from memory plus Wikipedia link."
+  },
+  {
+   "cik": 38777,
+   "entity": "FRANKLIN RESOURCES INC",
+   "firm": "Franklin Resources (Franklin Templeton)",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Jenny Johnson",
+     "title": "President & CEO",
+     "from": "2020-02",
+     "to": null,
+     "gender": "female",
+     "quote": "She had six siblings.",
+     "source": "https://en.wikipedia.org/wiki/Jenny_Johnson_(businesswoman)"
+    }
+   ],
+   "note": "ClearBridge also mapped here (ClearBridge has its own CEO, Terrence Murphy, but is a Franklin affiliate)."
+  },
+  {
+   "cik": 1562230,
+   "entity": "Capital International Investors",
+   "firm": "Capital Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Tim Armour",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2023-10",
+     "gender": "male",
+     "quote": "He has held several leadership roles at the company.",
+     "source": "https://www.capitalgroup.com/about-us/news-room/CG-announces-long-planned-leadership-transition.html"
+    },
+    {
+     "name": "Mike Gitlin",
+     "title": "President & CEO",
+     "from": "2023-10",
+     "to": null,
+     "gender": "male",
+     "quote": "He has lived and worked in London, Hong Kong, Singapore, Baltimore, Connecticut and New York.",
+     "source": "https://www.capitalgroup.com/about-us/news-room/CG-announces-long-planned-leadership-transition.html"
+    }
+   ],
+   "note": "Capital Group division entity; group CEO used. Transition effective 2023-10-24."
+  },
+  {
+   "cik": 933478,
+   "entity": "VANGUARD FIDUCIARY TRUST CO",
+   "firm": "Vanguard Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Tim Buckley",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2024-07",
+     "gender": "male",
+     "quote": "He lives in Wayne, Pennsylvania.",
+     "source": "https://en.wikipedia.org/wiki/Mortimer_J._Buckley"
+    },
+    {
+     "name": "Salim Ramji",
+     "title": "CEO",
+     "from": "2024-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He started his career as a lawyer with Clifford Chance in London and Hong Kong.",
+     "source": "https://401kspecialistmag.com/ramji-takes-reins-as-vanguard-ceo/?amp=1"
+    }
+   ],
+   "note": "Vanguard subsidiary entity; group CEO used. Ramji effective 2024-07-08."
+  },
+  {
+   "cik": 1871926,
+   "entity": "Nuveen, LLC",
+   "firm": "Nuveen",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Jose Minaya",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": "2024-07",
+     "gender": "male",
+     "quote": "He started his career at J.P. Morgan Chase and also spent time at Merrill, which is now owned by Bank of America.",
+     "source": "https://www.planadviser.com/nuveen-ceo-minaya-stepping-president-takes-role/"
+    },
+    {
+     "name": "William Huffman",
+     "title": "CEO",
+     "from": "2024-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He will chair Nuveen's executive leadership team and will be a member of TIAA's executive committee",
+     "source": "https://www.fundssociety.com/en/news/appointments/nuveen-appoints-william-huffman-as-ceo-replacing-jose-minaya/"
+    }
+   ],
+   "note": "Nuveen treated as separate firm with its own CEO (parent TIAA CEO Thasunda Brown Duckett, female, since 2021-05). Minaya left 2024-07-11."
+  },
+  {
+   "cik": 354204,
+   "entity": "DIMENSIONAL FUND ADVISORS LP",
+   "firm": "Dimensional Fund Advisors",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Dave Butler",
+     "title": "Co-CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He received the CFA� designation in 1998.",
+     "source": "https://dimensional.com/us-en/bios/dave-butler"
+    },
+    {
+     "name": "Gerard O'Reilly",
+     "title": "Co-CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "It is a pleasure to work with him and see the impact he's had.",
+     "source": "https://www.dimensional.com/us-en/newsroom/gerard-oreilly-to-become-co-ceo"
+    }
+   ],
+   "note": "Co-CEO structure since 2017; founder David Booth is chairman. No later change found; not verified for 2025-26."
+  },
+  {
+   "cik": 1610520,
+   "entity": "UBS Group AG",
+   "firm": "UBS Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Sergio Ermotti",
+     "title": "Group CEO",
+     "from": "2020-07",
+     "to": "2020-10",
+     "gender": "male",
+     "quote": "His salary in fiscal year 2017 was estimated to be US$14.9 million.",
+     "source": "https://en.wikipedia.org/wiki/Sergio_Ermotti"
+    },
+    {
+     "name": "Ralph Hamers",
+     "title": "Group CEO",
+     "from": "2020-11",
+     "to": "2023-04",
+     "gender": "male",
+     "quote": "He was the CEO of Dutch bank ING Group from October 2013 until June 2020.",
+     "source": "https://en.wikipedia.org/wiki/Ralph_Hamers"
+    },
+    {
+     "name": "Sergio Ermotti",
+     "title": "Group CEO",
+     "from": "2023-04",
+     "to": null,
+     "gender": "male",
+     "quote": "His salary in fiscal year 2017 was estimated to be US$14.9 million.",
+     "source": "https://en.wikipedia.org/wiki/Sergio_Ermotti"
+    }
+   ],
+   "note": "UBS Asset Management and UBS Group AG both mapped to the group CEO. Hamers-to-Ermotti: 2023-04-05."
+  },
+  {
+   "cik": 820027,
+   "entity": "AMERIPRISE FINANCIAL INC",
+   "firm": "Ameriprise Financial",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Jim Cracchiolo",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He is also a member of the Board of Advisors of the March of Dimes Foundation.",
+     "source": "https://en.wikipedia.org/wiki/James_M._Cracchiolo"
+    }
+   ],
+   "note": "Still CEO per FY2025-era secondary sources."
+  },
+  {
+   "cik": 1000275,
+   "entity": "ROYAL BANK OF CANADA",
+   "firm": "Royal Bank of Canada",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Dave McKay",
+     "title": "President & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He became Group Head of Canadian Banking in 2008.",
+     "source": "https://www.rbc.com/newsroom/news/executive-biographies/dave-mckay.html"
+    }
+   ],
+   "note": "Group CEO used. From memory plus Wikipedia link, not freshly verified."
+  },
+  {
+   "cik": 1067983,
+   "entity": "Berkshire Hathaway",
+   "firm": "Berkshire Hathaway",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Warren Buffett",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2025-12",
+     "gender": "male",
+     "quote": "He remains a director of the company.",
+     "source": "https://en.wikipedia.org/wiki/Warren_Buffett"
+    },
+    {
+     "name": "Greg Abel",
+     "title": "CEO",
+     "from": "2026-01",
+     "to": null,
+     "gender": "male",
+     "quote": "He received a Horatio Alger award in 2018.",
+     "source": "https://en.wikipedia.org/wiki/Greg_Abel"
+    }
+   ],
+   "note": "Abel CEO from 2026-01-01; Buffett remained chairman until a Sept 2026 report of him stepping down."
+  },
+  {
+   "cik": 72971,
+   "entity": "WELLS FARGO & COMPANY",
+   "firm": "Wells Fargo",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Charles Scharf",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He is an emeritus trustee of Johns Hopkins University.",
+     "source": "https://en.wikipedia.org/wiki/Charles_Scharf"
+    }
+   ],
+   "note": "Group CEO used."
+  },
+  {
+   "cik": 948046,
+   "entity": "DEUTSCHE BANK AG",
+   "firm": "Deutsche Bank",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Christian Sewing",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He is married and has four children.",
+     "source": "https://en.wikipedia.org/wiki/Christian_Sewing"
+    }
+   ],
+   "note": "Group CEO used."
+  },
+  {
+   "cik": 912938,
+   "entity": "MASSACHUSETTS FINANCIAL SERVICES CO",
+   "firm": "MFS Investment Management",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Michael Roberge",
+     "title": "CEO (Chair & CEO from 2022-03)",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He was named president and CIO in January 2010.",
+     "source": "https://www.investmentnews.com/ria-news/mfs-names-438-billion-investment-chief-roberge-as-co-ceo/59162"
+    }
+   ],
+   "note": null
+  },
+  {
+   "cik": 850529,
+   "entity": "Fisher Investments",
+   "firm": "Fisher Investments",
+   "face": "founder",
+   "leaders": [
+    {
+     "name": "Ken Fisher",
+     "title": "Founder & Executive Chairman / CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He lives in Dallas, Texas.",
+     "source": "https://en.wikipedia.org/wiki/Kenneth_Fisher"
+    }
+   ],
+   "note": "Founder is public face."
+  },
+  {
+   "cik": 1109448,
+   "entity": "AllianceBernstein",
+   "firm": "AllianceBernstein",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Seth Bernstein",
+     "title": "President & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He joined the firm in May 2017.",
+     "source": "https://www.marketscreener.com/insider/SETH-BERNSTEIN-A054PE/"
+    }
+   ],
+   "note": "In office since 2017-05; a later announcement says he retires 2027-03-31 (outside window)."
+  },
+  {
+   "cik": 312069,
+   "entity": "BARCLAYS PLC",
+   "firm": "Barclays",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Jes Staley",
+     "title": "Group CEO",
+     "from": "2020-07",
+     "to": "2021-10",
+     "gender": "male",
+     "quote": "He spent 34 years at J.P. Morgan's investment bank.",
+     "source": "https://en.wikipedia.org/wiki/Jes_Staley"
+    },
+    {
+     "name": "C. S. Venkatakrishnan",
+     "title": "Group CEO",
+     "from": "2021-11",
+     "to": null,
+     "gender": "male",
+     "quote": "He is in remission after completing the treatment in March 2023.",
+     "source": "https://en.wikipedia.org/wiki/C._S._Venkatakrishnan"
+    }
+   ],
+   "note": "Group CEO used."
+  },
+  {
+   "cik": 873630,
+   "entity": "HSBC HOLDINGS PLC",
+   "firm": "HSBC Holdings",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Noel Quinn",
+     "title": "Group CEO",
+     "from": "2020-07",
+     "to": "2024-09",
+     "gender": "male",
+     "quote": "On 30 April 2024, Quinn announced his intention to retire.",
+     "source": "https://en.wikipedia.org/wiki/Noel_Quinn"
+    },
+    {
+     "name": "Georges Elhedery",
+     "title": "Group CEO",
+     "from": "2024-09",
+     "to": null,
+     "gender": "male",
+     "quote": "His father was a banker, and his mother a teacher.",
+     "source": "https://en.wikipedia.org/wiki/Georges_Elhedery"
+    }
+   ],
+   "note": "Group CEO used."
+  },
+  {
+   "cik": 1167557,
+   "entity": "AQR Capital Management",
+   "firm": "AQR Capital Management",
+   "face": "founder",
+   "leaders": [
+    {
+     "name": "Cliff Asness",
+     "title": "Founder, Managing & Founding Principal",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He has frequently spoken out against high hedge fund fees.",
+     "source": "https://en.wikipedia.org/wiki/Cliff_Asness"
+    }
+   ],
+   "note": null
+  },
+  {
+   "cik": 1466546,
+   "entity": "Mitsubishi UFJ Asset Management Co., Ltd.",
+   "firm": "Mitsubishi UFJ Financial Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Hironori Kamezawa",
+     "title": "President & Group CEO",
+     "from": "2020-07",
+     "to": "2026-03",
+     "gender": "male",
+     "quote": "His specialist field was number theory.",
+     "source": "https://en.wikipedia.org/wiki/Hironori_Kamezawa"
+    },
+    {
+     "name": "Junichi Hanzawa",
+     "title": "President & Group CEO",
+     "from": "2026-04",
+     "to": null,
+     "gender": "male",
+     "quote": "He became the bank's president and CEO in 2021.",
+     "source": "https://www.itiger.com/hant/news/2591988746"
+    }
+   ],
+   "note": "MUFG Asset Management mapped to group CEO; its own CEO not identified. Hanzawa effective 2026-04-01 per Bloomberg Dec 2025 report."
+  },
+  {
+   "cik": 720005,
+   "entity": "RAYMOND JAMES FINANCIAL INC",
+   "firm": "Raymond James Financial",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Paul Reilly",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2025-01",
+     "gender": "male",
+     "quote": "He replaced James as executive chairman in 2017.",
+     "source": "https://www.wealthmanagement.com/ria-news/raymond-james-names-paul-shoukry-to-succeed-reilly-as-ceo"
+    },
+    {
+     "name": "Paul Shoukry",
+     "title": "CEO",
+     "from": "2025-02",
+     "to": null,
+     "gender": "male",
+     "quote": "He earned an MBA with honors from Columbia University.",
+     "source": "https://businessroundtable.org/members/paul-shoukry"
+    }
+   ],
+   "note": "Effective Feb 2025 per one secondary source; exact date unverified."
+  },
+  {
+   "cik": 2146052,
+   "entity": "Jupiter Topco LLC",
+   "firm": "Janus Henderson Group (probable)",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Dick Weil",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": "2022-03",
+     "gender": "male",
+     "quote": "Dick will remain in his role until March 2022",
+     "source": "https://www.professionaladviser.com/news/4040699/janus-henderson-ceo-retire"
+    },
+    {
+     "name": "Roger Thompson",
+     "title": "Interim CEO",
+     "from": "2022-04",
+     "to": "2022-06",
+     "gender": "male",
+     "quote": "He is also a member of the Executive Committee.",
+     "source": "https://www.janushenderson.com/en-us/advisor/press-releases/janus-henderson-announces-ali-dibadj-as-next-chief-executive-officer"
+    },
+    {
+     "name": "Ali Dibadj",
+     "title": "CEO",
+     "from": "2022-06",
+     "to": null,
+     "gender": "male",
+     "quote": "under the leadership of Ali and his talented team",
+     "source": "https://janushenderson.com/corporate/press-releases/janus-henderson-completes-take-private-transaction-with-trian-general-catalyst-and-qia"
+    }
+   ],
+   "note": "Jupiter Topco LLC (CIK 2146052) appears to be the take-private vehicle (Trian/General Catalyst/QIA) that closed 2026-06-30; mapping to Janus Henderson is an inference (aggregator lists Nelson Peltz and Peter May as directors), not confirmed from an SEC filing."
+  },
+  {
+   "cik": 1582202,
+   "entity": "Swiss National Bank",
+   "firm": "Swiss National Bank",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Thomas Jordan",
+     "title": "Chairman of the Governing Board",
+     "from": "2020-07",
+     "to": "2024-09",
+     "gender": "male",
+     "quote": "His successor Martin Schlegel assumed the position on 1 October 2024.",
+     "source": "https://en.wikipedia.org/wiki/Thomas_Jordan_(economist)"
+    },
+    {
+     "name": "Martin Schlegel",
+     "title": "Chairman of the Governing Board",
+     "from": "2024-10",
+     "to": null,
+     "gender": "male",
+     "quote": "Schlegel has spent his entire career at the SNB and was clearly favoured by Thomas Jordan as his successor",
+     "source": "https://uk.finance.yahoo.com/news/swiss-national-banks-schlegel-chairman-130305030.html"
+    }
+   ],
+   "note": null
+  },
+  {
+   "cik": 1164508,
+   "entity": "Arrowstreet Capital",
+   "firm": "Arrowstreet Capital",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Anthony (Tony) Ryan",
+     "title": "President & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He chaired the firm's Operating Committee and now serves as a Non-Executive Director on Arrowstreet Capital's Board of Directors.",
+     "source": "https://boardoftrustees.washu.edu/people/anthony-w-ryan/"
+    }
+   ],
+   "note": "Low confidence: one bio uses past tense for the CEO role; dates not confirmed. Co-founder Peter Rathjens is CIO."
+  },
+  {
+   "cik": 1475365,
+   "entity": "Sumitomo Mitsui Trust Group, Inc.",
+   "firm": "Sumitomo Mitsui Trust Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Tetsuo Okubo",
+     "title": "President",
+     "from": "2020-07",
+     "to": "2021-04",
+     "gender": "male",
+     "quote": "In April 2017 he succeeded Kunitaro Kitamura as Director and President of the holding company",
+     "source": "https://the-shashi.com/en/tse/8309/okubo-tetsuo/"
+    },
+    {
+     "name": "Toru Takakura",
+     "title": "President & CEO",
+     "from": "2021-04",
+     "to": "2026-03",
+     "gender": "male",
+     "quote": "He joined Sumitomo Trust and Banking in April 1984.",
+     "source": "https://the-shashi.com/en/tse/8309/takakura-toru/"
+    },
+    {
+     "name": "Kazuya Oyama",
+     "title": "President & CEO",
+     "from": "2026-04",
+     "to": null,
+     "gender": null,
+     "quote": null,
+     "source": "https://english.adnkronos.com/2025/12/22/subsidiary-chief-oyama-to-head-sumitomo-mitsui-trust-group/"
+    }
+   ],
+   "note": "Group president used; Takakura start/end from a single secondary profile plus a Dec 2025 report of Oyama succeeding (April 2026)."
+  },
+  {
+   "cik": 200217,
+   "entity": "Dodge & Cox",
+   "firm": "Dodge & Cox",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Dana Emery",
+     "title": "Chair & CEO",
+     "from": "2020-07",
+     "to": "2025-12",
+     "gender": "female",
+     "quote": "she played key role in expanding the firm's global research, investment strategies, and client service capabilities",
+     "source": "https://www.investmentnews.com/mutual-funds/dodge-cox-reveals-ceo-dana-emery-to-step-down/258866"
+    },
+    {
+     "name": "Roger Kuo",
+     "title": "CEO & President",
+     "from": "2026-01",
+     "to": null,
+     "gender": "male",
+     "quote": "He currently serves as Chair of the Dodge & Cox Funds, and he is a Director and shareholder of the firm.",
+     "source": "https://www.dodgeandcox.com/individual-investor/us/en/our-approach/roger-kuo.html"
+    }
+   ],
+   "note": "Emery retired 2025-12-31; female status not verified from fetched text."
+  },
+  {
+   "cik": 831001,
+   "entity": "CITIGROUP INC",
+   "firm": "Citigroup",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Michael Corbat",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": "2021-02",
+     "gender": "male",
+     "quote": "Corbat's annual salary was cut 21% as he was on his way out.",
+     "source": "https://en.wikipedia.org/wiki/Michael_Corbat"
+    },
+    {
+     "name": "Jane Fraser",
+     "title": "CEO",
+     "from": "2021-03",
+     "to": null,
+     "gender": "female",
+     "quote": "She is the first woman to head a major U.S. bank.",
+     "source": "https://en.wikipedia.org/wiki/Jane_Fraser_(executive)"
+    }
+   ],
+   "note": "Group CEO used."
+  },
+  {
+   "cik": 1608046,
+   "entity": "National Pension Service",
+   "firm": "National Pension Service (Korea)",
+   "face": "cio",
+   "leaders": [
+    {
+     "name": "Seo Won-joo",
+     "title": "Chief Investment Officer (Fund Management Director)",
+     "from": "2022-12",
+     "to": "2025-08",
+     "gender": "male",
+     "quote": "The pension fund will strengthen its responsible investment and stewardship code for sustainable growth, he added.",
+     "source": "https://www.kedglobal.com/newsView/ked202212270023"
+    },
+    {
+     "name": "Lee Kyu-hong",
+     "title": "Chief Investment Officer",
+     "from": "2025-09",
+     "to": null,
+     "gender": "male",
+     "quote": "Lee will assume his duties as CIO on Tuesday.",
+     "source": "https://www.koreaherald.com/article/10872872"
+    }
+   ],
+   "note": "INCOMPLETE: CIO(s) for 2020-07 to 2022-11 not resolved (turnover incl. an acting CIO; Kang Myoun-wook named at some point). Seo end date and Lee start approximate (year not confirmed)."
+  },
+  {
+   "cik": 1283718,
+   "entity": "CPP Investments",
+   "firm": "CPP Investments",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Mark Machin",
+     "title": "President & CEO",
+     "from": "2020-07",
+     "to": "2021-02",
+     "gender": "male",
+     "quote": "He is also the chairman of Society For Project Green Leaf.",
+     "source": "https://en.wikipedia.org/wiki/Mark_Machin"
+    },
+    {
+     "name": "John Graham",
+     "title": "President & CEO",
+     "from": "2021-02",
+     "to": null,
+     "gender": "male",
+     "quote": "The new CEO has been at CPP Investments since 2008; before that, he worked in research and strategy roles at Xerox Innovation Group.",
+     "source": "https://thelogic.co/news/rage-against-the-machin-cpp-investment-ceo-resigns-in-wake-of-uae-vaccine-trip/"
+    }
+   ],
+   "note": null
+  },
+  {
+   "cik": 763212,
+   "entity": "Primecap Management",
+   "firm": "PRIMECAP Management",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Joel Fried",
+     "title": "President (co-founder)",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He is proud to receive the 2019 Distinguished Alumni Award.",
+     "source": "https://www.anderson.ucla.edu/alumni/alumni-awards/joel-fried-86"
+    }
+   ],
+   "note": "No single CEO; President Joel Fried per firm-linked bio, Wikipedia lists Alfred Mordecai as president (conflict). Low confidence."
+  },
+  {
+   "cik": 1811242,
+   "entity": "Vanguard Global Advisers, LLC",
+   "firm": "Vanguard Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Tim Buckley",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2024-07",
+     "gender": "male",
+     "quote": "He lives in Wayne, Pennsylvania.",
+     "source": "https://en.wikipedia.org/wiki/Mortimer_J._Buckley"
+    },
+    {
+     "name": "Salim Ramji",
+     "title": "CEO",
+     "from": "2024-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He started his career as a lawyer with Clifford Chance in London and Hong Kong.",
+     "source": "https://401kspecialistmag.com/ramji-takes-reins-as-vanguard-ceo/?amp=1"
+    }
+   ],
+   "note": "Vanguard subsidiary entity; group CEO used. Ramji effective 2024-07-08."
+  },
+  {
+   "cik": 53417,
+   "entity": "JENNISON ASSOCIATES LLC",
+   "firm": "Jennison Associates (PGIM / Prudential)",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Jeff Becker",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "Formerly, Mr. Becker was Chief Executive Officer at Jennison Associates LLC from 2016 to 2025.",
+     "source": "https://www.marketscreener.com/insider/JEFF-BECKER-A03QK5/"
+    }
+   ],
+   "note": "Jennison treated as separate firm with its own CEO; one aggregator names Mehdi Mahmud, unverified."
+  },
+  {
+   "cik": 927971,
+   "entity": "BANK OF MONTREAL",
+   "firm": "Bank of Montreal",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Darryl White",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He was named CFO of Bank of Montreal in November 2016, and CEO in November 2017.",
+     "source": "https://en.wikipedia.org/wiki/W._Darryl_White"
+    }
+   ],
+   "note": "Group CEO used. From memory plus Wikipedia link."
+  },
+  {
+   "cik": 1166588,
+   "entity": "BNP PARIBAS FINANCIAL MARKETS",
+   "firm": "BNP Paribas",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Jean-Laurent Bonnafe",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He was widely credited with implementing the acquisitions of Paribas, BNL and Fortis.",
+     "source": "https://en.wikipedia.org/wiki/Jean-Laurent_Bonnaf%C3%A9"
+    }
+   ],
+   "note": "Group CEO used."
+  },
+  {
+   "cik": 1126328,
+   "entity": "PRINCIPAL FINANCIAL GROUP INC",
+   "firm": "Principal Financial Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Dan Houston",
+     "title": "Chairman, President & CEO",
+     "from": "2020-07",
+     "to": "2025-01",
+     "gender": "male",
+     "quote": "He set the company's growth agenda and led it through a significant transformation.",
+     "source": "https://www.fundssociety.com/en/news/appointments/principal-names-deanna-strable-as-the-new-president-and-ceo-succeeding-dan-houston/"
+    },
+    {
+     "name": "Deanna Strable",
+     "title": "President & CEO",
+     "from": "2025-01",
+     "to": null,
+     "gender": "female",
+     "quote": "She became president and COO in August 2024, having previously served as CFO from 2017 to 2024.",
+     "source": "https://corridorbusiness.com/principal-financial-group-names-deanna-strable-as-next-ceo/"
+    }
+   ],
+   "note": "Strable effective 2025-01-07."
+  },
+  {
+   "cik": 748054,
+   "entity": "AMERICAN CENTURY COMPANIES INC",
+   "firm": "American Century Investments",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Jonathan Thomas",
+     "title": "President & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "As the company's highest-ranking executive, he also leads the firm's management committee and reports to, and is a member of, the firm's board of directors.",
+     "source": "https://www.americancentury.com/newsroom/lgbt-great-names-ceo-and-cio-in-top-100-executive-allies/"
+    }
+   ],
+   "note": "Per company newsroom, CEO since 2007; not freshly verified for 2026."
+  },
+  {
+   "cik": 315032,
+   "entity": "STATE FARM MUTUAL AUTOMOBILE INSURANCE CO",
+   "firm": "State Farm",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Michael Tipsord",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2024-06",
+     "gender": "male",
+     "quote": "Tipsord began his State Farm career in 1988.",
+     "source": "https://www.insurancejournal.com/news/national/2024/03/15/765011.htm"
+    },
+    {
+     "name": "Jon Farney",
+     "title": "CEO",
+     "from": "2024-06",
+     "to": null,
+     "gender": "male",
+     "quote": "He was named senior vice president, treasurer and chief financial officer in January 2016.",
+     "source": "https://www.wglt.org/local-news/2024-03-14/jon-farney-named-new-state-farm-ceo"
+    }
+   ],
+   "note": "Handover scheduled 2024-06-01."
+  },
+  {
+   "cik": 919079,
+   "entity": "CalPERS",
+   "firm": "CalPERS",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Marcie Frost",
+     "title": "Chief Executive Officer",
+     "from": "2020-07",
+     "to": null,
+     "gender": "female",
+     "quote": "She is the ninth CEO and second woman to head America's largest public pension fund.",
+     "source": "https://www.calpers.ca.gov/about/organization/executive-officers/marcie-frost"
+    }
+   ],
+   "note": "CEO since 2016-10; still listed Sept 2026."
+  },
+  {
+   "cik": 1040188,
+   "entity": "VICTORY CAPITAL MANAGEMENT INC",
+   "firm": "Victory Capital",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "David Brown",
+     "title": "Chairman & CEO (founder)",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He is a Certified Public Accountant (inactive).",
+     "source": "https://institutional.vcm.com/about-victory/leadership-team/david-c-brown"
+    }
+   ],
+   "note": "From memory; not freshly verified."
+  },
+  {
+   "cik": 713676,
+   "entity": "PNC FINANCIAL SERVICES GROUP, INC.",
+   "firm": "PNC Financial Services",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Bill Demchak",
+     "title": "Chairman, President & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He says there is \"nowhere else I'd want to raise my family.\"",
+     "source": "https://en.wikipedia.org/wiki/William_S._Demchak"
+    }
+   ],
+   "note": "Group CEO used."
+  },
+  {
+   "cik": 1680208,
+   "entity": "VANGUARD ASSET MANAGEMENT, Ltd",
+   "firm": "Vanguard Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Tim Buckley",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2024-07",
+     "gender": "male",
+     "quote": "He lives in Wayne, Pennsylvania.",
+     "source": "https://en.wikipedia.org/wiki/Mortimer_J._Buckley"
+    },
+    {
+     "name": "Salim Ramji",
+     "title": "CEO",
+     "from": "2024-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He started his career as a lawyer with Clifford Chance in London and Hong Kong.",
+     "source": "https://401kspecialistmag.com/ramji-takes-reins-as-vanguard-ceo/?amp=1"
+    }
+   ],
+   "note": "Vanguard subsidiary entity; group CEO used. Ramji effective 2024-07-08."
+  },
+  {
+   "cik": 1218210,
+   "entity": "NORDEA INVESTMENT MANAGEMENT AB",
+   "firm": "Nordea",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Frank Vang-Jensen",
+     "title": "President & Group CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "Han gik p� Viborg Handelsskole.",
+     "source": "https://lex.dk/Frank_Vang-Jensen"
+    }
+   ],
+   "note": "Group CEO since 2019-09; no change found in window."
+  },
+  {
+   "cik": 1115418,
+   "entity": "RHUMBLINE ADVISERS",
+   "firm": "RhumbLine Advisers",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Denise D'Entremont",
+     "title": "President, then CEO from 2022",
+     "from": "2020-07",
+     "to": null,
+     "gender": "female",
+     "quote": "She joined the RhumbLine team in May 1994.",
+     "source": "https://zonebourse.com/insider/DENISE-ANDREA-DENTREMONT-A0I83D"
+    }
+   ],
+   "note": "CEO before 2022 not identified; D'Entremont was President 2019-22 per firm page."
+  },
+  {
+   "cik": 1407543,
+   "entity": "ENVESTNET ASSET MANAGEMENT INC",
+   "firm": "Envestnet",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Bill Crager",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": "2024-03",
+     "gender": "male",
+     "quote": "commend Bill for his ongoing dedication, vision and commitment to Envestnet",
+     "source": "https://wealthmanagement.com/people/envestnet-officially-names-bill-crager-ceo"
+    },
+    {
+     "name": "Jim Fox",
+     "title": "Interim CEO",
+     "from": "2024-04",
+     "to": "2025-01",
+     "gender": "male",
+     "quote": "Mr. Fox will serve as Interim CEO of Envestnet, Inc. commencing on April 1, 2024.",
+     "source": "https://www.marketscreener.com/quote/stock/ENVESTNET-INC-6443304/news/Envestnet-Inc-Appoints-James-Fox-as-Interim-CEO-Effective-April-1-2024-46209259/"
+    },
+    {
+     "name": "Chris Todd",
+     "title": "CEO",
+     "from": "2025-01",
+     "to": null,
+     "gender": "male",
+     "quote": "Todd expressed enthusiasm for his new role.",
+     "source": "https://www.investmentnews.com/fintech/envestnet-taps-tech-veteran-chris-todd-as-new-ceo/258988"
+    }
+   ],
+   "note": "Crager start date uncertain; taken private by Bain 2024-11."
+  },
+  {
+   "cik": 1125816,
+   "entity": "FIRST TRUST ADVISORS LP",
+   "firm": "First Trust Advisors",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "James Bowen",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "His perspective unveils the progress being brought about by entrepreneurs and risk takers around the globe.",
+     "source": "https://cmtassociation.org/?p=34577"
+    }
+   ],
+   "note": null
+  },
+  {
+   "cik": 1086619,
+   "entity": "SCHRODER INVESTMENT MANAGEMENT GROUP",
+   "firm": "Schroders",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Peter Harrison",
+     "title": "Group CEO",
+     "from": "2020-07",
+     "to": "2024-11",
+     "gender": "male",
+     "quote": "Harrison is expected to step down from his role sometime next year",
+     "source": "https://www.professionaladviser.com/news/4201026/schroders-begins-hunt-peter-harrisons-successor"
+    },
+    {
+     "name": "Richard Oldfield",
+     "title": "Group CEO",
+     "from": "2024-11",
+     "to": null,
+     "gender": "male",
+     "quote": "where he spent three decades, most recently working as network vice chair and global markets leader",
+     "source": "https://www.professionaladviser.com/news/4357010/schroders-cfo-richard-oldfield-succeed-peter-harrison-group-ceo"
+    }
+   ],
+   "note": "Oldfield effective 2024-11-08."
+  },
+  {
+   "cik": 1694217,
+   "entity": "DZ BANK AG Deutsche Zentral Genossenschafts Bank, Frankfurt am Main",
+   "firm": "DZ Bank",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Uwe Froehlich",
+     "title": "Co-CEO",
+     "from": "2020-07",
+     "to": "2024-06",
+     "gender": "male",
+     "quote": "Er ist Mitglied der Deutschen Gruppe der Trilateralen Kommission in Europa (Stand Dezember 2019).",
+     "source": "https://de.wikipedia.org/wiki/Uwe_Fröhlich"
+    },
+    {
+     "name": "Cornelius Riese",
+     "title": "Co-CEO, sole CEO from 2024-07",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "Er war in den Aufsichtsr�ten folgender Unternehmen aktiv:",
+     "source": "https://de.wikipedia.org/wiki/Cornelius_Riese"
+    }
+   ],
+   "note": "Co-CEOs since 2019; Riese sole CEO from 2024-07-01."
+  },
+  {
+   "cik": 869178,
+   "entity": "VAN ECK ASSOCIATES CORP",
+   "firm": "Van Eck Associates",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Jan van Eck",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "Jan van Eck is currently the firm's chief executive officer and the firm is currently owned by him and his family.",
+     "source": "https://en.wikipedia.org/wiki/Van_Eck_Global"
+    }
+   ],
+   "note": "From memory; not freshly verified."
+  },
+  {
+   "cik": 1465109,
+   "entity": "Neuberger Berman Group LLC",
+   "firm": "Neuberger Berman",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "George Walker",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "Before NB, he spent 14 years at Goldman Sachs, where he became a partner.",
+     "source": "https://www.investmentnews.com/companies/neuberger-berman/263526?page=1"
+    }
+   ],
+   "note": null
+  },
+  {
+   "cik": 1403438,
+   "entity": "LPL Financial LLC",
+   "firm": "LPL Financial",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Dan Arnold",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": "2024-10",
+     "gender": "male",
+     "quote": "He has also resigned from the board.",
+     "source": "https://www.investmentnews.com/ria-news/lpl-board-ends-dan-arnolds-run-as-ceo-after-investigation/257473"
+    }
+   ],
+   "note": "From memory; not freshly verified."
+  },
+  {
+   "cik": 1081019,
+   "entity": "CALIFORNIA STATE TEACHERS RETIREMENT SYSTEM",
+   "firm": "CalSTRS",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Jack Ehnes",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": "2021-06",
+     "gender": "male",
+     "quote": "His last day will be June 30.",
+     "source": "https://www.ai-cio.com/news/calstrs-appoints-first-female-ceo-cassandra-lichnock/"
+    },
+    {
+     "name": "Cassandra Lichnock",
+     "title": "CEO",
+     "from": "2021-07",
+     "to": null,
+     "gender": "female",
+     "quote": "She will start July 1.",
+     "source": "https://www.ai-cio.com/news/calstrs-appoints-first-female-ceo-cassandra-lichnock/"
+    }
+   ],
+   "note": "Reuters described Lichnock as first woman to lead CalSTRS."
+  },
+  {
+   "cik": 1423053,
+   "entity": "Citadel",
+   "firm": "Citadel",
+   "face": "founder",
+   "leaders": [
+    {
+     "name": "Ken Griffin",
+     "title": "Founder, CEO & CIO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He made $5,000.",
+     "source": "https://en.wikipedia.org/wiki/Ken_Griffin"
+    }
+   ],
+   "note": null
+  },
+  {
+   "cik": 1348883,
+   "entity": "Clearbridge Investments, LLC",
+   "firm": "Franklin Resources (Franklin Templeton)",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Jenny Johnson",
+     "title": "President & CEO",
+     "from": "2020-02",
+     "to": null,
+     "gender": "female",
+     "quote": "She had six siblings.",
+     "source": "https://en.wikipedia.org/wiki/Jenny_Johnson_(businesswoman)"
+    }
+   ],
+   "note": "ClearBridge also mapped here (ClearBridge has its own CEO, Terrence Murphy, but is a Franklin affiliate)."
+  },
+  {
+   "cik": 2113507,
+   "entity": "PeakShares LLC",
+   "firm": "PeakShares LLC",
+   "face": "ceo",
+   "leaders": [],
+   "note": "Small Tampa-based adviser (CRD 329193); no named CEO found in public sources. Needs Form ADV check."
+  },
+  {
+   "cik": 1692234,
+   "entity": "Russell Investments Group, Ltd.",
+   "firm": "Russell Investments",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Michelle Seitz",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2022-12",
+     "gender": "female",
+     "quote": "Michelle has made a substantial impact and we are grateful for her leadership.",
+     "source": "https://russellinvestments.com/middle-east/about-us/newsroom/2022/russell-investments-announces-ceo-transition-process"
+    },
+    {
+     "name": "Zach Buchwald",
+     "title": "Chairman & CEO",
+     "from": "2023-05",
+     "to": null,
+     "gender": "male",
+     "quote": "He will succeed Michelle Seitz, who departed the firm late last year.",
+     "source": "https://financialinvestigator.nl/en/nieuws-detailpagina/2023/02/09/Zach-Buchwald-CEO-and-Chairman-Russell-Investments"
+    }
+   ],
+   "note": "Gap 2023-01..2023-04 (transition; no named CEO found). Seitz gender not source-verified."
+  },
+  {
+   "cik": 1009207,
+   "entity": "D. E. Shaw",
+   "firm": "D. E. Shaw & Co.",
+   "face": "founder",
+   "leaders": [
+    {
+     "name": "David E. Shaw",
+     "title": "Founder",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "They divorced when he was 12 years of age.",
+     "source": "https://en.wikipedia.org/wiki/David_E._Shaw"
+    }
+   ],
+   "note": "No CEO; firm run by an Executive Committee. Founder used as public face."
+  },
+  {
+   "cik": 1508097,
+   "entity": "Sanders Capital, LLC",
+   "firm": "Sanders Capital",
+   "face": "founder",
+   "leaders": [
+    {
+     "name": "Lewis Sanders",
+     "title": "Founder, CEO & Co-CIO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He left this position in December, 2008.",
+     "source": "https://en.wikipedia.org/wiki/Lewis_A._Sanders"
+    }
+   ],
+   "note": null
+  },
+  {
+   "cik": 1386060,
+   "entity": "Boston Partners",
+   "firm": "Boston Partners (ORIX)",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Joseph Feeney",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He has led the firm to expand its reach and capabilities over the years.",
+     "source": "https://www.cgaa.org/article/boston-partners"
+    }
+   ],
+   "note": "Low confidence; aggregator source only."
+  },
+  {
+   "cik": 1993888,
+   "entity": "Pictet Asset Management Holding SA",
+   "firm": "Pictet Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Renaud de Planta",
+     "title": "Senior Partner",
+     "from": "2020-07",
+     "to": "2024-06",
+     "gender": "male",
+     "quote": "Pictet would not be what it is today without him.",
+     "source": "https://www.pictet.com/us/en/corporate-news/change-in-board-of-partners"
+    },
+    {
+     "name": "Marc Pictet",
+     "title": "Senior Partner",
+     "from": "2024-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He represents the ninth generation of the Pictet family Partners.",
+     "source": "https://www.pictet.com/ca/en/corporate-news/partners-media/marc-pictet-interview-wir-magazin-july-2026"
+    }
+   ],
+   "note": "Pictet Asset Management own CEO not identified; group Senior Partner used. Low confidence on the 2020-24 holder (from memory)."
+  },
+  {
+   "cik": 926171,
+   "entity": "NATIONAL BANK OF CANADA",
+   "firm": "National Bank of Canada",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Louis Vachon",
+     "title": "President & CEO",
+     "from": "2020-07",
+     "to": "2021-10",
+     "gender": "male",
+     "quote": "Louis has also set himself apart by his contribution to our society as a whole.",
+     "source": "https://www.newswire.ca/news-releases/national-bank-president-and-ceo-louis-vachon-to-retire-coo-laurent-ferreira-to-succeed-him-836724296.html"
+    },
+    {
+     "name": "Laurent Ferreira",
+     "title": "President & CEO",
+     "from": "2021-11",
+     "to": null,
+     "gender": "male",
+     "quote": "I look forward to working with him and the executive team to ensure a smooth transition.",
+     "source": "https://www.newswire.ca/news-releases/national-bank-president-and-ceo-louis-vachon-to-retire-coo-laurent-ferreira-to-succeed-him-836724296.html"
+    }
+   ],
+   "note": null
+  },
+  {
+   "cik": 1068837,
+   "entity": "VOYA INVESTMENT MANAGEMENT LLC",
+   "firm": "Voya Financial",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Rod Martin",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": "2022-12",
+     "gender": "male",
+     "quote": "We are grateful that Rod has agreed to serve as executive chairman upon his retirement as CEO.",
+     "source": "https://www.voya.com/news/2022/07/voya-financial-announces-leadership-succession-plan"
+    },
+    {
+     "name": "Heather Lavallee",
+     "title": "CEO",
+     "from": "2023-01",
+     "to": null,
+     "gender": "female",
+     "quote": "She also serves on Voya’s Executive Committee.",
+     "source": "https://www.voya.com/personal-profile/heather-lavallee"
+    }
+   ],
+   "note": "Group CEO used for Voya Investment Management."
+  },
+  {
+   "cik": 928047,
+   "entity": "MANUFACTURERS LIFE INSURANCE COMPANY, THE",
+   "firm": "Manulife Financial",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Roy Gori",
+     "title": "President & CEO",
+     "from": "2020-07",
+     "to": "2025-05",
+     "gender": "male",
+     "quote": "Gori himself said the business has been de-risked and has become a digital leader under his tenure.",
+     "source": "https://www.advisor.ca/industry-news/manulife-ceo-roy-gori-to-retire-phil-witherington-named-next-ceo/"
+    },
+    {
+     "name": "Phil Witherington",
+     "title": "President & CEO",
+     "from": "2025-05",
+     "to": null,
+     "gender": "male",
+     "quote": "He has played a key role in our transformation journey.",
+     "source": "https://www.insurancebusinessmag.com/us/news/life-insurance/manulife-names-phil-witherington-as-next-ceo-succeeding-roy-gori-514351.aspx"
+    }
+   ],
+   "note": "Effective 2025-05-08."
+  },
+  {
+   "cik": 1535323,
+   "entity": "Allianz Asset Management GmbH",
+   "firm": "Allianz SE",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Oliver Baete",
+     "title": "Chairman of the Board of Management (CEO)",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He is a member of The Trilateral Commission.",
+     "source": "https://en.wikipedia.org/wiki/Oliver_B%C3%A4te"
+    }
+   ],
+   "note": "Group CEO used for Allianz Asset Management GmbH; mandate extended to 2028 AGM."
+  },
+  {
+   "cik": 720672,
+   "entity": "STIFEL FINANCIAL CORP",
+   "firm": "Stifel Financial",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Ron Kruszewski",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "His tenure began in 1997 when he succeeded George Herbert Walker III.",
+     "source": "https://en.wikipedia.org/wiki/Ronald_Kruszewski"
+    }
+   ],
+   "note": "From memory; not freshly verified."
+  },
+  {
+   "cik": 1418773,
+   "entity": "Robeco Institutional Asset Management B.V.",
+   "firm": "Robeco (ORIX)",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Gilbert Van Hassel",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "Before joining ING in 2007 he made his career at JP Morgan in various executive roles in Europe, Asia and the US.",
+     "source": "https://www.next-finance.net/Gilbert-Van-Hassel-appointed-as"
+    }
+   ],
+   "note": "Appointed 2016-09; end of tenure not checked. Low confidence."
+  },
+  {
+   "cik": 318989,
+   "entity": "FIL Ltd",
+   "firm": "FIL Ltd (Fidelity International)",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Anne Richards",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": "2023-11",
+     "gender": "female",
+     "quote": "She was chief investment officer at Aberdeen Asset Management before that.",
+     "source": "https://www.investing.com/news/stock-market-news/anne-richards-steps-down-as-fidelity-international-ceo-3239348"
+    },
+    {
+     "name": "Keith Metters",
+     "title": "President",
+     "from": "2024-03",
+     "to": null,
+     "gender": "male",
+     "quote": "He brings over 25 years of industry experience.",
+     "source": "https://financialinvestigator.nl/en/nieuws-detailpagina/2024/02/29/Keith-Metters-appointed-President-of-Fidelity-International"
+    }
+   ],
+   "note": "Gap 2023-12..2024-02 (board-led). Chair Abigail Johnson is FMR CEO. Metters title is President."
+  },
+  {
+   "cik": 810265,
+   "entity": "NEW YORK STATE COMMON RETIREMENT FUND",
+   "firm": "New York State Common Retirement Fund",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Thomas DiNapoli",
+     "title": "State Comptroller (sole trustee)",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He served 20 years in the Assembly.",
+     "source": "https://en.wikipedia.org/wiki/Thomas_DiNapoli"
+    }
+   ],
+   "note": "Comptroller is sole trustee; used as face."
+  },
+  {
+   "cik": 1056053,
+   "entity": "TD ASSET MANAGEMENT INC",
+   "firm": "TD Bank Group",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Bharat Masrani",
+     "title": "President & CEO",
+     "from": "2020-07",
+     "to": "2025-01",
+     "gender": "male",
+     "quote": "Following his retirement as CEO, Bharat Masrani will continue to serve as an advisor to the Bank until October 31, 2025.",
+     "source": "https://td.mediaroom.com/2024-09-19-TD-Bank-Group-President-and-CEO-Bharat-Masrani-to-Retire-April-10,-2025-Board-Names-Raymond-Chun-as-Successor"
+    },
+    {
+     "name": "Raymond Chun",
+     "title": "President & CEO",
+     "from": "2025-04",
+     "to": null,
+     "gender": "male",
+     "quote": "\"Ray has delivered in every single role in his over 30 years at the bank,\" Masrani said.",
+     "source": "https://www.bankingdive.com/news/td-ceo-bharat-masrani-raymond-chun-succession-2025-aml-doj/727472"
+    }
+   ],
+   "note": "Handover accelerated to 2025-02-01 per one report; originally 2025-04-10."
+  },
+  {
+   "cik": 1546007,
+   "entity": "Assenagon Asset Management S.A.",
+   "firm": "Assenagon Asset Management",
+   "face": "ceo",
+   "leaders": [],
+   "note": "No single CEO in official sources (Luxembourg managing directors incl. Thomas Romig, Matthias Kunze; Hans-Gunther Bonk is founder/board chairman). Left empty."
+  },
+  {
+   "cik": 312348,
+   "entity": "LOOMIS SAYLES & CO L P",
+   "firm": "Loomis Sayles (Natixis IM)",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Kevin Charleston",
+     "title": "Chairman & CEO",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "He will retain this position in addition to his new role.",
+     "source": "https://www.investmentnews.com/loomis-sayles-promotes-president-kevin-charleston-to-ceo-61325"
+    }
+   ],
+   "note": "Latest confirmation 2020; no change found. Low confidence for later years."
+  },
+  {
+   "cik": 1716774,
+   "entity": "Aberdeen Group plc",
+   "firm": "Aberdeen Group (abrdn)",
+   "face": "ceo",
+   "leaders": [
+    {
+     "name": "Stephen Bird",
+     "title": "CEO",
+     "from": "2020-07",
+     "to": "2024-06",
+     "gender": "male",
+     "quote": "meaning he will be paid his salary as normal and will still be entitled to unvested bonuses.",
+     "source": "https://www.swissinfo.ch/eng/abrdn-ceo-bird-exits-abruptly-after-four-rocky-years/78485160"
+    },
+    {
+     "name": "Jason Windsor",
+     "title": "Interim CEO, permanent from 2024-09",
+     "from": "2024-05",
+     "to": null,
+     "gender": "male",
+     "quote": "Before that, he was the group CFO at Aviva between 2019 and 2022.",
+     "source": "https://www.professionaladviser.com/news/4357042/abrdn-cfo-jason-windsor-named-ceo"
+    }
+   ],
+   "note": "Bird start date approximate (about four years to May 2024)."
+  },
+  {
+   "cik": 1595888,
+   "entity": "JANE STREET GROUP, LLC",
+   "firm": "Jane Street Group",
+   "face": "founder",
+   "leaders": [
+    {
+     "name": "Robert Granieri",
+     "title": "Co-founder, managing director",
+     "from": "2020-07",
+     "to": null,
+     "gender": "male",
+     "quote": "Granieri claims he was 'duped' into funding $7 million into an alleged coup plot of South Sudan in 2024.",
+     "source": "https://en.wikipedia.org/wiki/Robert_Granieri"
+    }
+   ],
+   "note": "Firm has no formal CEO; co-founder used as nominal face. Low confidence."
+  }
+ ]
+}
