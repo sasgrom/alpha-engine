@@ -718,10 +718,12 @@ export class HallStage {
     if (!data || !this.building) return;
     const specs: StreamSpec[] = [];
     const quiet = this.selection.kind !== null && this.selection.threads.length > 0;
-    // the quarter's largest streams, and with a sector in focus its own largest, in and out: a smaller sector's money
-    // rarely ranks among the hall's largest streams, and would otherwise show none
-    const links = data.mode === "held" ? [] : data.links.filter((item) => item.from !== item.to);
+    // the quarter's largest streams; Main Street's to and from every sector (the money from and to outside the covered
+    // stocks); and with a sector in focus its own largest, in and out. A smaller sector's money rarely ranks among the
+    // hall's largest streams, and would otherwise show none
+    const links = data.mode === "held" ? [] : data.links.filter((item) => item.from !== item.to && item.usd > 0);
     const shown = links.slice(0, 16);
+    for (const link of links) if ((link.from === FLOW_OUTSIDE || link.to === FLOW_OUTSIDE) && !shown.includes(link)) shown.push(link);
     if (data.focus !== null) for (const link of links.filter((item) => item.from === data.focus || item.to === data.focus).slice(0, 12)) if (!shown.includes(link)) shown.push(link);
     for (const link of shown) {
       const from = this.anchorOf(link.from);

@@ -1745,6 +1745,7 @@ sitting) if the owner wants them; K11 when the owner names it.
 - **Fixes from the owner's checks the same afternoon:**
   - A sector in focus showed no streams when none of its money ranked among the hall's 16 largest streams. Energy's first ranked 25th, Materials' 42nd, Real Estate's 41st, Utilities' 30th, Consumer Staples' 22nd. Now its own 12 largest streams, in and out, are added and lit; widths follow the lit streams, the dimmed ones capped at the widest. All 11 sectors light 12.
   - The sector view stands a little further back and higher, so the streams rising over the bookcase are in view.
+  - With nothing selected, the same smaller sectors had no stream from or to Main Street. Main Street's streams to and from every sector are now always drawn, both ways: 30 lit streams in Q2 2026, and all 11 sectors have both.
   - A selected company's view now comes in close to the book instead of pulling back over the floor. Threads are a little wider.
   - The doorway left the gallery's two ends open and a plaster band over the entrance. The gallery, its rail and its panelled wall now run all the way round, over the doorway (6.2 m high now, under the gallery). The Main Street plaque hangs on the gallery wall above the rail.
   - The panelling of the gallery's wall and fascia was one texture stretched round the whole hall. It now repeats every 3.2 m.
