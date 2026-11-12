@@ -22,6 +22,8 @@ import { getDb } from "../queries/connection";
 import { companies, companyDataHealth, userUniverse } from "@db/schema";
 import { avgVolume, beta5y, changePct, fundamentalsFromSeries, getBars, week52 } from "./prices";
 import { cachedExternal } from "./ext-cache";
+import { createSplitShareProvider } from "./split-shares";
+import { getCurrentMarketValue } from "./market-value";
 
 export interface ScreenerRow {
   cik: number;
@@ -136,7 +138,8 @@ export async function buildScreenerRows(userId: number): Promise<ScreenerRow[]> 
     const prevClose = prev ? (prev.adjClose ?? prev.close) : null;
     const w52 = week52(bars);
 
-    const { epsTtm, sharesDiluted } = await fundamentalsFromSeries(c.cik);
+    const shareProvider = await createSplitShareProvider(c.cik);
+    const [{ epsTtm }, currentMarket] = await Promise.all([fundamentalsFromSeries(c.cik, shareProvider), getCurrentMarketValue(c.cik, shareProvider)]);
 
     // TTM flows for the FCF margin (revenue/CFO/capex, latest vintage)
     const flows: any = await db.execute(sql`
@@ -161,8 +164,8 @@ export async function buildScreenerRows(userId: number): Promise<ScreenerRow[]> 
       sector: c.sector,
       price: lastClose,
       changePct: lastClose !== null && prevClose !== null ? changePct(lastClose, prevClose) : null,
-      marketCap: lastClose !== null && sharesDiluted !== null ? lastClose * sharesDiluted : null,
-      peTtm: lastClose !== null && epsTtm !== null && epsTtm !== 0 ? lastClose / epsTtm : null,
+      marketCap: currentMarket.marketCap,
+      peTtm: currentMarket.price !== null && epsTtm !== null && epsTtm !== 0 ? currentMarket.price / epsTtm : null,
       epsTtm,
       fcfMarginTtm: fcfMargin(cfoTtm, capexTtm, revTtm),
       beta: spy.length > 0 ? beta5y(bars, spy) : null,

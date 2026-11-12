@@ -5,6 +5,8 @@
  */
 import { getDb } from "../queries/connection";
 import { sql } from "drizzle-orm";
+import { createSplitShareProvider } from "./split-shares";
+import { getCurrentMarketValue } from "./market-value";
 
 /** DCF present value: 10y explicit FCF with linear growth fade to terminal g_inf, Gordon terminal. */
 export function dcfValue(fcf0: number, g: number, gInf: number, wacc: number, years = 10): number {
@@ -125,10 +127,12 @@ export async function computeCompanyValue(cik: number): Promise<{
   const fcfTtm = cfoTtm !== null && capexTtm !== null ? cfoTtm - capexTtm : null;
   const ebitTtm = ttmOf(ebtPts);
 
-  const { sharesDiluted, epsTtm } = await fundamentalsFromSeries(cik);
+  const shareProvider = await createSplitShareProvider(cik);
+  const { sharesDiluted, epsTtm } = await fundamentalsFromSeries(cik, shareProvider);
+  const currentMarket = await getCurrentMarketValue(cik, shareProvider);
   const closes = bars.filter((b) => (b.adjClose ?? b.close) !== null);
   const price = closes.length ? (closes[closes.length - 1].adjClose ?? closes[closes.length - 1].close) : null;
-  const marketCap = price !== null && sharesDiluted !== null ? price * sharesDiluted : null;
+  const marketCap = currentMarket.marketCap;
 
   // WACC-lite: rf 4% + beta5y × ERP 5% (constants until FRED feeds Stage 4)
   const beta = closes.length ? beta5y(bars, await getBars(0, new Date(Date.now() - 5 * 365 * 86400_000).toISOString().slice(0, 10))) : null;
@@ -163,8 +167,8 @@ export async function computeCompanyValue(cik: number): Promise<{
 
   // P/E z-score vs own history (monthly P/E from bars × trailing EPS series)
   let peZ: number | null = null;
-  if (epsTtm !== null && epsTtm > 0 && price !== null) {
-    const peNow = price / epsTtm;
+  if (epsTtm !== null && epsTtm > 0 && currentMarket.price !== null) {
+    const peNow = currentMarket.price / epsTtm;
     const monthly: number[] = [];
     const epsTtmByQuarter = new Map<string, number>();
     {

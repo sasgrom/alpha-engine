@@ -26,6 +26,8 @@
 import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { getDb } from "../queries/connection";
 import { companies, prices, seriesPoints } from "@db/schema";
+import { createSplitShareProvider } from "./split-shares";
+import type { ShareProvider } from "./market-value";
 
 // ---------------------------------------------------------------------------
 // types
@@ -457,11 +459,12 @@ export function beta5y(asset: StoredBar[], bench: StoredBar[]): number | null {
 /**
  * Trailing-twelve-month EPS and P/E from our canonical series (Stage 1.6):
  * the last 4 quarterly diluted-EPS points in the latest vintage.
- * Shares outstanding for market cap: latest diluted-shares point.
- * Both are null when the series build has not run for the company — the UI
- * shows "—" rather than a fabricated number (billing/data honesty rule).
+ * Shares outstanding come from the split-safe current-share provider: cover
+ * count, actual common shares, then a reported quarterly weighted average.
+ * EPS is null when the series build has not run; shares are null only when
+ * no eligible count exists. The UI shows "—" rather than a fabricated number.
  */
-export async function fundamentalsFromSeries(cik: number): Promise<{
+export async function fundamentalsFromSeries(cik: number, shareProvider?: ShareProvider): Promise<{
   epsTtm: number | null;
   sharesDiluted: number | null;
 }> {
@@ -483,7 +486,7 @@ export async function fundamentalsFromSeries(cik: number): Promise<{
   const eps = (await grab("EarningsPerShareDiluted")).filter((p) => p.val !== null).slice(0, 4);
   const epsTtm = eps.length === 4 ? eps.reduce((s, p) => s + (p.val as number), 0) : null;
 
-  const sharesRows = await grab("WeightedAverageNumberOfDilutedSharesOutstanding");
-  const sharesDiluted = sharesRows.find((p) => p.val !== null)?.val ?? null;
+  const provider = shareProvider ?? await createSplitShareProvider(cik);
+  const sharesDiluted = provider.at(new Date().toISOString().slice(0, 10))?.shares ?? null;
   return { epsTtm, sharesDiluted };
 }

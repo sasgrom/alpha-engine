@@ -14,6 +14,8 @@
 import { sql } from "drizzle-orm";
 import { getDb } from "../queries/connection";
 import { getBars, week52 } from "./prices";
+import { createSplitShareProvider } from "./split-shares";
+import { getCurrentMarketValue, getSchwabLevelBars } from "./market-value";
 
 // ---------------------------------------------------------------------------
 // robust reference stats (4j): median + IQR band — gaps and extremes don't
@@ -278,12 +280,13 @@ export async function computeCompanyFactors(cik: number, vintage: "first" | "lat
 
   // price factors from our daily bars
   const from5y = new Date(Date.now() - 5 * 365 * 86400_000).toISOString().slice(0, 10);
-  const bars = await getBars(cik, from5y);
+  const [bars, levelBars, shareProvider] = await Promise.all([getBars(cik, from5y), getSchwabLevelBars(cik, from5y), createSplitShareProvider(cik)]);
   const closes = bars.filter((b) => (b.adjClose ?? b.close) !== null).map((b) => ({ date: b.date, close: (b.adjClose ?? b.close) as number }));
+  const levelCloses = levelBars.filter((b) => b.close !== null).map((b) => ({ date: b.date, close: b.close as number }));
   const w52 = week52(bars);
   const priceNow = closes.length ? closes[closes.length - 1].close : null;
-  const sharesNow = latest(shares) ?? latest(sharesWeighted);
-  const marketCap = priceNow !== null && sharesNow !== null ? priceNow * sharesNow : null;
+  const currentMarket = await getCurrentMarketValue(cik, shareProvider, levelBars);
+  const marketCap = currentMarket.marketCap;
   const capexTtm = ttm(capex);
   const fcfTtm = cfoTtm !== null && capexTtm !== null ? cfoTtm - capexTtm : null;
   const opIncTtm = ttm(opInc);
@@ -302,6 +305,10 @@ export async function computeCompanyFactors(cik: number, vintage: "first" | "lat
   const roaPrevPts = ni.filter((p) => p.val !== null);
   const roaPrevTtm = roaPrevPts.length >= 8 ? roaPrevPts.slice(4, 8).reduce((s, p) => s + (p.val as number), 0) : null;
   const roaPrev = roaPrevTtm !== null && assetsPrev !== null ? roaPrevTtm / (avgAssets ?? assetsPrev) : null;
+  const currentSharePeriod = shares.find((point) => point.val !== null)?.periodEnd ?? sharesWeighted.find((point) => point.val !== null)?.periodEnd ?? ni[0]?.periodEnd ?? new Date().toISOString().slice(0, 10);
+  const previousSharePeriod = shares.filter((point) => point.val !== null)[4]?.periodEnd ?? currentSharePeriod;
+  const sharesNow = shareProvider.at(currentSharePeriod)?.shares ?? null;
+  const sharesPrev = shareProvider.at(previousSharePeriod)?.shares ?? null;
   const f = piotroskiF({
     roaNow,
     roaPrev,
@@ -313,7 +320,7 @@ export async function computeCompanyFactors(cik: number, vintage: "first" | "lat
     currentNow: latest(ca) !== null && latest(cl) ? (latest(ca) ?? 0) / (latest(cl) as number) : null,
     currentPrev: yearAgo(ca) !== null && yearAgo(cl) ? (yearAgo(ca) ?? 0) / (yearAgo(cl) as number) : null,
     sharesNow,
-    sharesPrev: yearAgo(shares),
+    sharesPrev,
     gmNow: gpTtm !== null && revTtm ? gpTtm / revTtm : null,
     gmPrev: null, // honest null when the prior-year TTM isn't assemblable
     turnoverNow: revTtm !== null && avgAssets ? revTtm / avgAssets : null,
@@ -327,7 +334,6 @@ export async function computeCompanyFactors(cik: number, vintage: "first" | "lat
   const assetsM = byEndOf(assets);
   const gpM = byEndOf(gp);
   const sharesM = byEndOf(shares);
-  const sharesWeightedM = byEndOf(sharesWeighted);
   const epsM = byEndOf(eps);
   const daM = byEndOf(da);
   const revM = byEndOf(rev);
@@ -344,15 +350,15 @@ export async function computeCompanyFactors(cik: number, vintage: "first" | "lat
 
   const closeAt = (date: string): number | null => {
     let found: number | null = null;
-    for (const b of closes) {
+    for (const b of levelCloses) {
       if (b.date > date) break;
       found = b.close;
     }
     return found;
   };
   const marketCapAt = (e: string): number | null => {
-    const sh = sharesM.get(e) ?? sharesWeightedM.get(e), px = closeAt(e);
-    return sh !== undefined && px !== null ? sh * px : null;
+    const sh = shareProvider.at(e), px = closeAt(e);
+    return sh !== null && px !== null ? sh.shares * px : null;
   };
   const debtAt = (e: string): number | null => {
     const long = longTermDebtM.get(e) ?? longTermDebtNoncurrentM.get(e) ?? longTermDebtLeaseM.get(e);
@@ -431,9 +437,9 @@ export async function computeCompanyFactors(cik: number, vintage: "first" | "lat
   const buybackHist = mkHist((e) => {
     const i = shareEnds.indexOf(e);
     if (i < 4) return null;
-    const prev = sharesM.get(shareEnds[i - 4]);
-    const now = sharesM.get(e);
-    return prev !== undefined && prev !== 0 && now !== undefined ? { t: e, v: -(now / prev - 1) } : null;
+    const prev = shareProvider.at(shareEnds[i - 4]);
+    const now = shareProvider.at(e);
+    return prev !== null && prev.shares !== 0 && now !== null ? { t: e, v: -(now.shares / prev.shares - 1) } : null;
   }, shareEnds);
   const epsEndsDesc = [...epsM.keys()].sort().reverse();
   const epsValsDesc = epsEndsDesc.map((e) => epsM.get(e) as number);
@@ -467,7 +473,7 @@ export async function computeCompanyFactors(cik: number, vintage: "first" | "lat
     },
     growth: {
       assetGrowthYoY: assetGrowth(assetsNow, assetsPrev),
-      buybackYield: buybackYield(sharesNow, yearAgo(shares), ttm(div), marketCap),
+      buybackYield: buybackYield(sharesNow, sharesPrev, ttm(div), marketCap),
     },
     priceFactors: {
       momentum122: momentum122(closes),
@@ -479,7 +485,7 @@ export async function computeCompanyFactors(cik: number, vintage: "first" | "lat
       accruals: detail(accruals(niTtm, cfoTtm, avgAssets), accrualsHist),
       grossProfitability: detail(grossProfitability(gpTtm, assetsNow), gpHist),
       assetGrowth: detail(assetGrowth(assetsNow, assetsPrev), assetGrowthHist),
-      buybackYield: detail(buybackYield(sharesNow, yearAgo(shares), ttm(div), marketCap), buybackHist),
+      buybackYield: detail(buybackYield(sharesNow, sharesPrev, ttm(div), marketCap), buybackHist),
       momentum122: detail(momentum122(closes), momentumHist),
       high52: detail(high52Proximity(priceNow, w52.high), high52Hist),
       sue: detail(sue(eps.filter((p) => p.val !== null).map((p) => p.val)), sueHist),

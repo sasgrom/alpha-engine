@@ -17,7 +17,9 @@
  *  DURATION HOMOGENIZATION:
  *    flow concepts (income statement, cash flow) are normalized to 3-month
  *    points; a Q4 point is DERIVED as FY(12M) - 9M YTD because no 10-Q exists
- *    for Q4 (derivation='derived_q4'). stock concepts (balance sheet) are
+ *    for Q4 (derivation='derived_q4'). Average-share and per-share concepts
+ *    are the exception: they keep reported quarters only and never derive a
+ *    standalone quarter by subtraction. Stock concepts (balance sheet) are
  *    instant values taken as-is at period end.
  *
  *  CONCEPT ALIASES (two layers):
@@ -60,6 +62,10 @@ function canonicalConcept(name: string): { canonical: string; aliased: boolean }
   return target ? { canonical: target, aliased: true } : { canonical: name, aliased: false };
 }
 
+export function isNonAdditiveQuarterlyConcept(concept: string): boolean {
+  return (concept.startsWith("WeightedAverageNumber") && concept.includes("SharesOutstanding")) || concept.includes("PerShare");
+}
+
 // ---------------------------------------------------------------------------
 // Financial-statement form gate.
 // Registration, proxy and offering documents also publish XBRL facts. Their
@@ -93,6 +99,10 @@ function classifyDuration(startDate: string | null, endDate: string | null): Dur
   if (days >= 240 && days <= 315) return "9M";
   if (days >= 330 && days <= 385) return "FY";
   return "OTHER";
+}
+
+export function isReportedQuarterDuration(startDate: string | null, endDate: string | null): boolean {
+  return classifyDuration(startDate, endDate) === "Q";
 }
 
 /**
@@ -398,7 +408,7 @@ export async function buildCompanySeries(cik: number, options: { write?: boolean
       // matches — so the derivation never fired; prod carried 0 derived rows.)
       const allEnds = [...byEnd.keys()].sort();
       for (const end of allEnds) {
-        if (buckets.has(end)) continue;
+        if (buckets.has(end) || isNonAdditiveQuarterlyConcept(concept)) continue;
         // previous quarter boundary = the largest observed end within the
         // last 60–120 days. NOT calendar-quarter arithmetic: fiscal quarters
         // cross month boundaries (AAPL FY25 Q3 ends 2025-06-28, FY23 Q3 ends

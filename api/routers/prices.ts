@@ -15,6 +15,8 @@ import { metricHistory } from "@db/schema";
 import { createJob } from "../services/runner";
 import { avgVolume, beta5y, changePct, fundamentalsFromSeries, getBars, week52 } from "../services/prices";
 import { dailyPrice } from "../services/daily-price";
+import { createSplitShareProvider } from "../services/split-shares";
+import { getCurrentMarketValue } from "../services/market-value";
 
 export const PRICE_RANGES = ["1M", "3M", "6M", "YTD", "1Y", "5Y", "ALL"] as const;
 export type PriceRange = (typeof PRICE_RANGES)[number];
@@ -67,7 +69,8 @@ export const pricesRouter = createRouter({
     const previousClose = previousDaily?.status === "ready" && previousDaily.source === daily.source ? previousDaily.price : null;
     const lastBar = daily.bar!;
     const w52 = week52(bars);
-    const { epsTtm, sharesDiluted } = await fundamentalsFromSeries(input.cik);
+    const shareProvider = await createSplitShareProvider(input.cik);
+    const [{ epsTtm }, currentMarket] = await Promise.all([fundamentalsFromSeries(input.cik, shareProvider), getCurrentMarketValue(input.cik, shareProvider)]);
     const bench = await getBars(0, rangeStart("5Y")); // SPY pseudo-cik
     const beta = bench.length > 0 ? beta5y(bars, bench) : null;
 
@@ -90,9 +93,9 @@ export const pricesRouter = createRouter({
       week52High: w52.high,
       week52Low: w52.low,
       avgVolume3m: avgVolume(bars, 92),
-      marketCap: lastClose !== null && sharesDiluted !== null ? lastClose * sharesDiluted : null,
+      marketCap: currentMarket.marketCap,
       epsTtm,
-      peTtm: lastClose !== null && epsTtm !== null && epsTtm !== 0 ? lastClose / epsTtm : null,
+      peTtm: currentMarket.price !== null && epsTtm !== null && epsTtm !== 0 ? currentMarket.price / epsTtm : null,
       beta,
     };
   }),
