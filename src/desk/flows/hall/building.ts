@@ -203,24 +203,38 @@ export function buildHall(layout: HallLayout, textures: HallTextures | null, dar
   const wallEnd = Math.PI - entranceHalf;
 
   // materials
-  // a soft normal and a fairly rough finish: a polished floor under many lamps sparkles at a distance
-  const floor = material(textures?.marbleTiles ?? null, { color: dark ? 0x9c968c : 0xcfc8bb, roughness: 0.8, normalScale: new THREE.Vector2(0.35, 0.35) }, [1, 1]);
+  // light veined marble in large squares; a soft normal and a fairly rough finish, so it does not sparkle at a distance
+  const floor = material(textures?.marble ?? null, { color: dark ? 0xbdb7ab : 0xf3eee4, roughness: 0.62, normalScale: new THREE.Vector2(0.25, 0.25) }, [1, 1]);
   const wood = material(textures?.darkWood ?? null, { color: dark ? 0x8a7a68 : 0xa08a72, roughness: 0.62 }, [1, 1]);
   const woodPlain = new THREE.MeshStandardMaterial({ color: dark ? 0x2b2018 : 0x4a3727, roughness: 0.55, metalness: 0.05 });
   const marble = material(textures?.marble ?? null, { color: dark ? 0xc9c4ba : 0xe2ddd2, roughness: 0.38 }, [1, 2]);
   const plaster = material(textures?.plaster ?? null, { color: dark ? 0x86817a : 0xd6cfc1, roughness: 0.9 }, [8, 2]);
   const brass = new THREE.MeshStandardMaterial({ color: 0xb08d4a, metalness: 0.85, roughness: 0.32 });
 
-  // floor: marble tiles, a dark ring under the map table
+  // floor: marble squares of 2.5 m (one repeat of the texture each, its seams under the grout), a dark ring under the map table
   {
+    const square = 2.5;
+    const across = 2 * (floorRadius + 1.5);
     const geometry = new THREE.CircleGeometry(floorRadius + 1.5, 128);
     geometry.rotateX(-Math.PI / 2);
     const uv = geometry.getAttribute("uv") as THREE.BufferAttribute;
-    for (let index = 0; index < uv.count; index++) uv.setXY(index, (uv.getX(index) - 0.5) * 9, (uv.getY(index) - 0.5) * 9);
+    for (let index = 0; index < uv.count; index++) uv.setXY(index, (uv.getX(index) - 0.5) * (across / square), (uv.getY(index) - 0.5) * (across / square));
     geometry.setAttribute("uv1", uv.clone());
     const mesh = new THREE.Mesh(geometry, floor);
     mesh.receiveShadow = true;
     group.add(mesh);
+    // thin grout strips between the squares, as far as the floor reaches
+    const strips: THREE.BufferGeometry[] = [];
+    const reach = floorRadius + 1.5;
+    for (let offset = -Math.floor(reach / square) * square; offset <= reach; offset += square) {
+      const half = Math.sqrt(Math.max(0, reach * reach - offset * offset));
+      if (half < 0.5) continue;
+      strips.push(new THREE.PlaneGeometry(2 * half, 0.035).rotateX(-Math.PI / 2).translate(0, 0.004, offset));
+      strips.push(new THREE.PlaneGeometry(0.035, 2 * half).rotateX(-Math.PI / 2).translate(offset, 0.004, 0));
+    }
+    const grout = new THREE.Mesh(mergeGeometries(strips, false)!, new THREE.MeshStandardMaterial({ color: dark ? 0x4a453f : 0x9c958a, roughness: 0.9 }));
+    grout.receiveShadow = true;
+    group.add(grout);
     const inlay = new THREE.Mesh(arcRing(ROTUNDA.mapRadius + 0.4, ROTUNDA.mapRadius + 1.1, 0, TWO_PI, 0.012), new THREE.MeshStandardMaterial({ color: dark ? 0x3a2f27 : 0x5b4636, roughness: 0.4 }));
     inlay.receiveShadow = true;
     group.add(inlay);
@@ -410,7 +424,14 @@ export function buildHall(layout: HallLayout, textures: HallTextures | null, dar
   doorShape.lineTo(doorWidth / 2, doorHeight - doorWidth / 2);
   doorShape.absarc(0, doorHeight - doorWidth / 2, doorWidth / 2, 0, Math.PI, false);
   doorShape.lineTo(-doorWidth / 2, 0);
-  const door = new THREE.Mesh(new THREE.ShapeGeometry(doorShape, 24), new THREE.MeshBasicMaterial({ color: dark ? 0xf3e4bd : 0xffffff, fog: false }));
+  // the opening shows the view outside (the stage puts Main Street in it); its texture spans the opening
+  const doorGeometry = new THREE.ShapeGeometry(doorShape, 24);
+  {
+    const position = doorGeometry.getAttribute("position") as THREE.BufferAttribute;
+    const uv = doorGeometry.getAttribute("uv") as THREE.BufferAttribute;
+    for (let index = 0; index < uv.count; index++) uv.setXY(index, (position.getX(index) + doorWidth / 2) / doorWidth, position.getY(index) / doorHeight);
+  }
+  const door = new THREE.Mesh(doorGeometry, new THREE.MeshBasicMaterial({ color: dark ? 0x9a9384 : 0xd8d2c4, fog: false }));
   door.position.set(...polar(doorAngle, wallRadius + 0.3));
   door.rotation.y = -doorAngle;
   group.add(door);

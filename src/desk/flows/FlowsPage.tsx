@@ -20,7 +20,7 @@ import { CatalogPanel, CompanyPanel, FundPanel, QuarterPanel, Sentence, type Flo
 const Library3D = lazy(() => import("./Library3D"));
 
 type View = "library" | "reading";
-type Mode = "flow" | "outcome";
+type Mode = "flow" | "outcome" | "held";
 type Tab = "quarter" | "find" | "selected";
 
 function useFlowState(overview: FundFlowsOverview | null | undefined) {
@@ -57,7 +57,8 @@ export default function FlowsPage() {
   const { row, fund, company, sector, set, params } = state;
   const canWalk = useMemo(() => webglAvailable(), []);
   const view: View = params.get("view") === "reading" || !canWalk ? "reading" : "library";
-  const mode: Mode = params.get("show") === "outcome" ? "outcome" : "flow";
+  const show = params.get("show");
+  const mode: Mode = show === "outcome" ? "outcome" : show === "held" ? "held" : "flow";
   const real = params.get("real") === "1";
   const whoParam = params.get("who");
   const who: Who = whoParam === "winners" || whoParam === "losers" ? whoParam : "all";
@@ -185,8 +186,8 @@ export default function FlowsPage() {
     <Segmented<Mode>
       label="What the colour shows"
       value={mode}
-      onChange={(next) => set({ show: next === "outcome" ? "outcome" : null })}
-      options={[{ value: "flow", label: "Where it went" }, { value: "outcome", label: "What it earned" }]}
+      onChange={(next) => set({ show: next === "flow" ? null : next })}
+      options={[{ value: "flow", label: "Where it went" }, { value: "outcome", label: "What it earned" }, { value: "held", label: "What is held" }]}
     />
   );
   const inflation = (
@@ -367,12 +368,18 @@ export default function FlowsPage() {
 function Legend({ mode, real }: { mode: Mode; real: boolean }) {
   return (
     <div className="desk-lib-legend">
-      <span><span className="desk-flow-dot" data-way="in" aria-hidden="true" />{mode === "flow" ? "bought" : "gained since"}</span>
-      <span><span className="desk-flow-dot" data-way="out" aria-hidden="true" />{mode === "flow" ? "sold" : "lost since"}</span>
-      <span>{mode === "flow" ? "colour: net flow against the value held" : `colour: the stock's return since that quarter${real ? ", after inflation" : ""}`}</span>
-      <span>pulled out = bought · pushed back = sold</span>
+      {mode === "held" ? (
+        <span>gold: the value the tracked funds hold, brighter for more (log scale)</span>
+      ) : (
+        <>
+          <span><span className="desk-flow-dot" data-way="in" aria-hidden="true" />{mode === "flow" ? "bought" : "gained since"}</span>
+          <span><span className="desk-flow-dot" data-way="out" aria-hidden="true" />{mode === "flow" ? "sold" : "lost since"}</span>
+          <span>{mode === "flow" ? "colour: net flow against the value held" : `colour: the stock's return since that quarter${real ? ", after inflation" : ""}`}</span>
+        </>
+      )}
+      {mode !== "held" && <span>pulled out = bought · pushed back = sold</span>}
       <span>jacket: the fund's net flow</span>
-      <span>streams: estimated rotation, width = dollars</span>
+      {mode !== "held" && <span>streams: estimated rotation, width = dollars</span>}
     </div>
   );
 }

@@ -1,0 +1,2965 @@
+{
+ "schemaVersion": 1,
+ "generatedAt": "2026-11-12T09:24:06.726Z",
+ "note": "Company logos for the book covers of the fund-flow hall (owner decision 2026-11-12: logos are public, use them). Trademarks of their owners, shown to identify the companies. First choice the nvstly/icons collection (light versions for dark backgrounds), else Financial Modeling Prep public logo images, else companiesmarketcap.com; three photographs in the collection were replaced. Raw files on D:/research/alpha-engine/desk-library-assets/logos/raw.",
+ "companies": [
+  {
+   "cik": 1045810,
+   "ticker": "NVDA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NVDA.png"
+  },
+  {
+   "cik": 1652044,
+   "ticker": "GOOGL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GOOGL.png"
+  },
+  {
+   "cik": 320193,
+   "ticker": "AAPL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AAPL.png"
+  },
+  {
+   "cik": 789019,
+   "ticker": "MSFT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MSFT.png"
+  },
+  {
+   "cik": 1018724,
+   "ticker": "AMZN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AMZN.png"
+  },
+  {
+   "cik": 1730168,
+   "ticker": "AVGO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AVGO.png"
+  },
+  {
+   "cik": 723125,
+   "ticker": "MU",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MU.png"
+  },
+  {
+   "cik": 1326801,
+   "ticker": "META",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/META.png"
+  },
+  {
+   "cik": 59478,
+   "ticker": "LLY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LLY.png"
+  },
+  {
+   "cik": 1318605,
+   "ticker": "TSLA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TSLA.png"
+  },
+  {
+   "cik": 2488,
+   "ticker": "AMD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AMD.png"
+  },
+  {
+   "cik": 19617,
+   "ticker": "JPM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/JPM.png"
+  },
+  {
+   "cik": 50863,
+   "ticker": "INTC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/INTC.png"
+  },
+  {
+   "cik": 1067983,
+   "ticker": "BRK-B",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/BRK-B.png"
+  },
+  {
+   "cik": 1403161,
+   "ticker": "V",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/V.png"
+  },
+  {
+   "cik": 6951,
+   "ticker": "AMAT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AMAT.png"
+  },
+  {
+   "cik": 707549,
+   "ticker": "LRCX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LRCX.png"
+  },
+  {
+   "cik": 200406,
+   "ticker": "JNJ",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/JNJ.png"
+  },
+  {
+   "cik": 2115436,
+   "ticker": "XOM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/XOM.png"
+  },
+  {
+   "cik": 858877,
+   "ticker": "CSCO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CSCO.png"
+  },
+  {
+   "cik": 319201,
+   "ticker": "KLAC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/KLAC.png"
+  },
+  {
+   "cik": 18230,
+   "ticker": "CAT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CAT.png"
+  },
+  {
+   "cik": 1141391,
+   "ticker": "MA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MA.png"
+  },
+  {
+   "cik": 104169,
+   "ticker": "WMT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/WMT.png"
+  },
+  {
+   "cik": 1551152,
+   "ticker": "ABBV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ABBV.png"
+  },
+  {
+   "cik": 731766,
+   "ticker": "UNH",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/UNH.png"
+  },
+  {
+   "cik": 40545,
+   "ticker": "GE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GE.png"
+  },
+  {
+   "cik": 70858,
+   "ticker": "BAC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BAC.png"
+  },
+  {
+   "cik": 909832,
+   "ticker": "COST",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/COST.png"
+  },
+  {
+   "cik": 21344,
+   "ticker": "KO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/KO.png"
+  },
+  {
+   "cik": 354950,
+   "ticker": "HD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HD.png"
+  },
+  {
+   "cik": 310158,
+   "ticker": "MRK",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MRK.png"
+  },
+  {
+   "cik": 1996810,
+   "ticker": "GEV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GEV.png"
+  },
+  {
+   "cik": 1413329,
+   "ticker": "PM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PM.png"
+  },
+  {
+   "cik": 93410,
+   "ticker": "CVX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CVX.png"
+  },
+  {
+   "cik": 2023554,
+   "ticker": "SNDK",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/SNDK.png"
+  },
+  {
+   "cik": 97476,
+   "ticker": "TXN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TXN.png"
+  },
+  {
+   "cik": 1065280,
+   "ticker": "NFLX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NFLX.png"
+  },
+  {
+   "cik": 80424,
+   "ticker": "PG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PG.png"
+  },
+  {
+   "cik": 1327567,
+   "ticker": "PANW",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PANW.png"
+  },
+  {
+   "cik": 886982,
+   "ticker": "GS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GS.png"
+  },
+  {
+   "cik": 106040,
+   "ticker": "WDC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/WDC.png"
+  },
+  {
+   "cik": 101829,
+   "ticker": "RTX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/RTX.png"
+  },
+  {
+   "cik": 1835632,
+   "ticker": "MRVL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MRVL.png"
+  },
+  {
+   "cik": 895421,
+   "ticker": "MS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MS.png"
+  },
+  {
+   "cik": 72971,
+   "ticker": "WFC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/WFC.png"
+  },
+  {
+   "cik": 4962,
+   "ticker": "AXP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AXP.png"
+  },
+  {
+   "cik": 1707925,
+   "ticker": "LIN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LIN.png"
+  },
+  {
+   "cik": 820313,
+   "ticker": "APH",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/APH.png"
+  },
+  {
+   "cik": 1341439,
+   "ticker": "ORCL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ORCL.png"
+  },
+  {
+   "cik": 831001,
+   "ticker": "C",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/C.png"
+  },
+  {
+   "cik": 1137789,
+   "ticker": "STX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/STX.png"
+  },
+  {
+   "cik": 1321655,
+   "ticker": "PLTR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PLTR.png"
+  },
+  {
+   "cik": 51143,
+   "ticker": "IBM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/IBM.png"
+  },
+  {
+   "cik": 6281,
+   "ticker": "ADI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ADI.png"
+  },
+  {
+   "cik": 318154,
+   "ticker": "AMGN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AMGN.png"
+  },
+  {
+   "cik": 24741,
+   "ticker": "GLW",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GLW.png"
+  },
+  {
+   "cik": 97745,
+   "ticker": "TMO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TMO.png"
+  },
+  {
+   "cik": 753308,
+   "ticker": "NEE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NEE.png"
+  },
+  {
+   "cik": 1596532,
+   "ticker": "ANET",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ANET.png"
+  },
+  {
+   "cik": 804328,
+   "ticker": "QCOM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/QCOM.png"
+  },
+  {
+   "cik": 1535527,
+   "ticker": "CRWD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CRWD.png"
+  },
+  {
+   "cik": 109198,
+   "ticker": "TJX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TJX.png"
+  },
+  {
+   "cik": 100885,
+   "ticker": "UNP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/UNP.png"
+  },
+  {
+   "cik": 77476,
+   "ticker": "PEP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PEP.png"
+  },
+  {
+   "cik": 882095,
+   "ticker": "GILD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GILD.png"
+  },
+  {
+   "cik": 1551182,
+   "ticker": "ETN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ETN.png"
+  },
+  {
+   "cik": 63908,
+   "ticker": "MCD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MCD.png"
+  },
+  {
+   "cik": 12927,
+   "ticker": "BA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BA.png"
+  },
+  {
+   "cik": 316709,
+   "ticker": "SCHW",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SCHW.png"
+  },
+  {
+   "cik": 1744489,
+   "ticker": "DIS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DIS.png"
+  },
+  {
+   "cik": 315189,
+   "ticker": "DE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DE.png"
+  },
+  {
+   "cik": 875320,
+   "ticker": "VRTX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/VRTX.png"
+  },
+  {
+   "cik": 1800,
+   "ticker": "ABT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ABT.png"
+  },
+  {
+   "cik": 732712,
+   "ticker": "VZ",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/VZ.png"
+  },
+  {
+   "cik": 1075531,
+   "ticker": "BKNG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BKNG.png"
+  },
+  {
+   "cik": 64803,
+   "ticker": "CVS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CVS.png"
+  },
+  {
+   "cik": 1543151,
+   "ticker": "UBER",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/UBER.png"
+  },
+  {
+   "cik": 1035267,
+   "ticker": "ISRG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ISRG.png"
+  },
+  {
+   "cik": 1751008,
+   "ticker": "APP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/APP.png"
+  },
+  {
+   "cik": 2012383,
+   "ticker": "BLK",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BLK.png"
+  },
+  {
+   "cik": 896159,
+   "ticker": "CB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CB.png"
+  },
+  {
+   "cik": 1045609,
+   "ticker": "PLD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PLD.png"
+  },
+  {
+   "cik": 80661,
+   "ticker": "PGR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PGR.png"
+  },
+  {
+   "cik": 1108524,
+   "ticker": "CRM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CRM.png"
+  },
+  {
+   "cik": 927628,
+   "ticker": "COF",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/COF.png"
+  },
+  {
+   "cik": 1163165,
+   "ticker": "COP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/COP.png"
+  },
+  {
+   "cik": 313616,
+   "ticker": "DHR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DHR.png"
+  },
+  {
+   "cik": 829224,
+   "ticker": "SBUX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SBUX.png"
+  },
+  {
+   "cik": 1674101,
+   "ticker": "VRT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/VRT.png"
+  },
+  {
+   "cik": 1571996,
+   "ticker": "DELL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DELL.png"
+  },
+  {
+   "cik": 4281,
+   "ticker": "HWM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HWM.png"
+  },
+  {
+   "cik": 64040,
+   "ticker": "SPGI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SPGI.png"
+  },
+  {
+   "cik": 732717,
+   "ticker": "T",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/T.png"
+  },
+  {
+   "cik": 60667,
+   "ticker": "LOW",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LOW.png"
+  },
+  {
+   "cik": 1466258,
+   "ticker": "TT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TT.png"
+  },
+  {
+   "cik": 1101239,
+   "ticker": "EQIX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EQIX.png"
+  },
+  {
+   "cik": 14272,
+   "ticker": "BMY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BMY.png"
+  },
+  {
+   "cik": 813672,
+   "ticker": "CDNS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CDNS.png"
+  },
+  {
+   "cik": 78003,
+   "ticker": "PFE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PFE.png"
+  },
+  {
+   "cik": 936468,
+   "ticker": "LMT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LMT.png"
+  },
+  {
+   "cik": 1050915,
+   "ticker": "PWR",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/PWR.png"
+  },
+  {
+   "cik": 1613103,
+   "ticker": "MDT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MDT.png"
+  },
+  {
+   "cik": 1390777,
+   "ticker": "BNY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BNY.png"
+  },
+  {
+   "cik": 713676,
+   "ticker": "PNC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PNC.png"
+  },
+  {
+   "cik": 310764,
+   "ticker": "SYK",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SYK.png"
+  },
+  {
+   "cik": 26172,
+   "ticker": "CMI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CMI.png"
+  },
+  {
+   "cik": 833444,
+   "ticker": "JCI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/JCI.png"
+  },
+  {
+   "cik": 764180,
+   "ticker": "MO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MO.png"
+  },
+  {
+   "cik": 927653,
+   "ticker": "MCK",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MCK.png"
+  },
+  {
+   "cik": 1164727,
+   "ticker": "NEM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NEM.png"
+  },
+  {
+   "cik": 1262039,
+   "ticker": "FTNT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FTNT.png"
+  },
+  {
+   "cik": 92122,
+   "ticker": "SO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SO.png"
+  },
+  {
+   "cik": 1561550,
+   "ticker": "DDOG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DDOG.png"
+  },
+  {
+   "cik": 8670,
+   "ticker": "ADP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ADP.png"
+  },
+  {
+   "cik": 884887,
+   "ticker": "RCL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/RCL.png"
+  },
+  {
+   "cik": 1373715,
+   "ticker": "NOW",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NOW.png"
+  },
+  {
+   "cik": 1166691,
+   "ticker": "CMCSA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CMCSA.png"
+  },
+  {
+   "cik": 831259,
+   "ticker": "FCX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FCX.png"
+  },
+  {
+   "cik": 883241,
+   "ticker": "SNPS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SNPS.png"
+  },
+  {
+   "cik": 107263,
+   "ticker": "WMB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/WMB.png"
+  },
+  {
+   "cik": 1156039,
+   "ticker": "ELV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ELV.png"
+  },
+  {
+   "cik": 40533,
+   "ticker": "GD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GD.png"
+  },
+  {
+   "cik": 1283699,
+   "ticker": "TMUS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TMUS.png"
+  },
+  {
+   "cik": 36104,
+   "ticker": "USB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/USB.png"
+  },
+  {
+   "cik": 97210,
+   "ticker": "TER",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TER.png"
+  },
+  {
+   "cik": 62709,
+   "ticker": "MRSH",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/MRSH.png"
+  },
+  {
+   "cik": 1585689,
+   "ticker": "HLT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HLT.png"
+  },
+  {
+   "cik": 1868275,
+   "ticker": "CEG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CEG.png"
+  },
+  {
+   "cik": 823768,
+   "ticker": "WM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/WM.png"
+  },
+  {
+   "cik": 1326160,
+   "ticker": "DUK",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DUK.png"
+  },
+  {
+   "cik": 1260221,
+   "ticker": "TDG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TDG.png"
+  },
+  {
+   "cik": 1413447,
+   "ticker": "NXPI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NXPI.png"
+  },
+  {
+   "cik": 1156375,
+   "ticker": "CME",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CME.png"
+  },
+  {
+   "cik": 1633978,
+   "ticker": "LITE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LITE.png"
+  },
+  {
+   "cik": 1053507,
+   "ticker": "AMT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AMT.png"
+  },
+  {
+   "cik": 4904,
+   "ticker": "AEP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AEP.png"
+  },
+  {
+   "cik": 796343,
+   "ticker": "ADBE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ADBE.png"
+  },
+  {
+   "cik": 1059556,
+   "ticker": "MCO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MCO.png"
+  },
+  {
+   "cik": 1792789,
+   "ticker": "DASH",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DASH.png"
+  },
+  {
+   "cik": 89800,
+   "ticker": "SHW",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SHW.png"
+  },
+  {
+   "cik": 277948,
+   "ticker": "CSX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CSX.png"
+  },
+  {
+   "cik": 1739940,
+   "ticker": "CI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CI.png"
+  },
+  {
+   "cik": 1063761,
+   "ticker": "SPG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SPG.png"
+  },
+  {
+   "cik": 1280452,
+   "ticker": "MPWR",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/MPWR.png"
+  },
+  {
+   "cik": 821189,
+   "ticker": "EOG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EOG.png"
+  },
+  {
+   "cik": 820318,
+   "ticker": "COHR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/COHR.png"
+  },
+  {
+   "cik": 1664703,
+   "ticker": "BE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BE.png"
+  },
+  {
+   "cik": 66740,
+   "ticker": "MMM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MMM.png"
+  },
+  {
+   "cik": 1035983,
+   "ticker": "FIX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FIX.png"
+  },
+  {
+   "cik": 936395,
+   "ticker": "CIEN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CIEN.png"
+  },
+  {
+   "cik": 1067701,
+   "ticker": "URI",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/URI.png"
+  },
+  {
+   "cik": 865752,
+   "ticker": "MNST",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MNST.png"
+  },
+  {
+   "cik": 1103982,
+   "ticker": "MDLZ",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MDLZ.png"
+  },
+  {
+   "cik": 1035002,
+   "ticker": "VLO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/VLO.png"
+  },
+  {
+   "cik": 745732,
+   "ticker": "ROST",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ROST.png"
+  },
+  {
+   "cik": 898173,
+   "ticker": "ORLY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ORLY.png"
+  },
+  {
+   "cik": 32604,
+   "ticker": "EMR",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/EMR.png"
+  },
+  {
+   "cik": 1393818,
+   "ticker": "BX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BX.png"
+  },
+  {
+   "cik": 86312,
+   "ticker": "TRV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TRV.png"
+  },
+  {
+   "cik": 896878,
+   "ticker": "INTU",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/INTU.png"
+  },
+  {
+   "cik": 1133421,
+   "ticker": "NOC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NOC.png"
+  },
+  {
+   "cik": 315293,
+   "ticker": "AON",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AON.png"
+  },
+  {
+   "cik": 2969,
+   "ticker": "APD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/APD.png"
+  },
+  {
+   "cik": 31462,
+   "ticker": "ECL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ECL.png"
+  },
+  {
+   "cik": 49826,
+   "ticker": "ITW",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ITW.png"
+  },
+  {
+   "cik": 68505,
+   "ticker": "MSI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MSI.png"
+  },
+  {
+   "cik": 1048286,
+   "ticker": "MAR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MAR.png"
+  },
+  {
+   "cik": 1467858,
+   "ticker": "GM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GM.png"
+  },
+  {
+   "cik": 1048911,
+   "ticker": "FDX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FDX.png"
+  },
+  {
+   "cik": 1297996,
+   "ticker": "DLR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DLR.png"
+  },
+  {
+   "cik": 773840,
+   "ticker": "HON",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HON.png"
+  },
+  {
+   "cik": 1571949,
+   "ticker": "ICE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ICE.png"
+  },
+  {
+   "cik": 87347,
+   "ticker": "SLB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SLB.png"
+  },
+  {
+   "cik": 1467373,
+   "ticker": "ACN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ACN.png"
+  },
+  {
+   "cik": 872589,
+   "ticker": "REGN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/REGN.png"
+  },
+  {
+   "cik": 849395,
+   "ticker": "CRH",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CRH.png"
+  },
+  {
+   "cik": 866374,
+   "ticker": "FLEX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FLEX.png"
+  },
+  {
+   "cik": 1032208,
+   "ticker": "SRE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SRE.png"
+  },
+  {
+   "cik": 21665,
+   "ticker": "CL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CL.png"
+  },
+  {
+   "cik": 1090727,
+   "ticker": "UPS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/UPS.png"
+  },
+  {
+   "cik": 1783879,
+   "ticker": "HOOD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HOOD.png"
+  },
+  {
+   "cik": 885725,
+   "ticker": "BSX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BSX.png"
+  },
+  {
+   "cik": 1510295,
+   "ticker": "MPC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MPC.png"
+  },
+  {
+   "cik": 1701605,
+   "ticker": "BKR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BKR.png"
+  },
+  {
+   "cik": 1783180,
+   "ticker": "CARR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CARR.png"
+  },
+  {
+   "cik": 27904,
+   "ticker": "DAL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DAL.png"
+  },
+  {
+   "cik": 1534701,
+   "ticker": "PSX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PSX.png"
+  },
+  {
+   "cik": 1385157,
+   "ticker": "TEL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TEL.png"
+  },
+  {
+   "cik": 1645590,
+   "ticker": "HPE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HPE.png"
+  },
+  {
+   "cik": 2089271,
+   "ticker": "HONA",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/HONA.png"
+  },
+  {
+   "cik": 354190,
+   "ticker": "AJG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AJG.png"
+  },
+  {
+   "cik": 65984,
+   "ticker": "ETR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ETR.png"
+  },
+  {
+   "cik": 1389170,
+   "ticker": "TRGP",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/TRGP.png"
+  },
+  {
+   "cik": 827054,
+   "ticker": "MCHP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MCHP.png"
+  },
+  {
+   "cik": 715957,
+   "ticker": "D",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/D.png"
+  },
+  {
+   "cik": 1559720,
+   "ticker": "ABNB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ABNB.png"
+  },
+  {
+   "cik": 899051,
+   "ticker": "ALL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ALL.png"
+  },
+  {
+   "cik": 1404912,
+   "ticker": "KKR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/KKR.png"
+  },
+  {
+   "cik": 72903,
+   "ticker": "XEL",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/XEL.png"
+  },
+  {
+   "cik": 1418135,
+   "ticker": "KDP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/KDP.png"
+  },
+  {
+   "cik": 721371,
+   "ticker": "CAH",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CAH.png"
+  },
+  {
+   "cik": 1601046,
+   "ticker": "KEYS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/KEYS.png"
+  },
+  {
+   "cik": 702165,
+   "ticker": "NSC",
+   "source": "companiesmarketcap",
+   "url": "https://companiesmarketcap.com/img/company-logos/128/NSC.png"
+  },
+  {
+   "cik": 75362,
+   "ticker": "PCAR",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/PCAR.png"
+  },
+  {
+   "cik": 860730,
+   "ticker": "HCA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HCA.png"
+  },
+  {
+   "cik": 277135,
+   "ticker": "GWW",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/GWW.png"
+  },
+  {
+   "cik": 1099800,
+   "ticker": "EW",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EW.png"
+  },
+  {
+   "cik": 1024478,
+   "ticker": "ROK",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ROK.png"
+  },
+  {
+   "cik": 866787,
+   "ticker": "AZO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AZO.png"
+  },
+  {
+   "cik": 92230,
+   "ticker": "TFC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TFC.png"
+  },
+  {
+   "cik": 1140859,
+   "ticker": "COR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/COR.png"
+  },
+  {
+   "cik": 202058,
+   "ticker": "LHX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LHX.png"
+  },
+  {
+   "cik": 726728,
+   "ticker": "O",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/O.png"
+  },
+  {
+   "cik": 49071,
+   "ticker": "HUM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HUM.png"
+  },
+  {
+   "cik": 1393311,
+   "ticker": "PSA",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/PSA.png"
+  },
+  {
+   "cik": 35527,
+   "ticker": "FITB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FITB.png"
+  },
+  {
+   "cik": 815556,
+   "ticker": "FAST",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FAST.png"
+  },
+  {
+   "cik": 740260,
+   "ticker": "VTR",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/VTR.png"
+  },
+  {
+   "cik": 1506307,
+   "ticker": "KMI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/KMI.png"
+  },
+  {
+   "cik": 1109357,
+   "ticker": "EXC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EXC.png"
+  },
+  {
+   "cik": 1037868,
+   "ticker": "AME",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AME.png"
+  },
+  {
+   "cik": 1858681,
+   "ticker": "APO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/APO.png"
+  },
+  {
+   "cik": 1039684,
+   "ticker": "OKE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/OKE.png"
+  },
+  {
+   "cik": 723254,
+   "ticker": "CTAS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CTAS.png"
+  },
+  {
+   "cik": 1692819,
+   "ticker": "VST",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/VST.png"
+  },
+  {
+   "cik": 797468,
+   "ticker": "OXY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/OXY.png"
+  },
+  {
+   "cik": 1065088,
+   "ticker": "EBAY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EBAY.png"
+  },
+  {
+   "cik": 1090012,
+   "ticker": "DVN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DVN.png"
+  },
+  {
+   "cik": 2011641,
+   "ticker": "FERG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FERG.png"
+  },
+  {
+   "cik": 946581,
+   "ticker": "TTWO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TTWO.png"
+  },
+  {
+   "cik": 73309,
+   "ticker": "NUE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NUE.png"
+  },
+  {
+   "cik": 93751,
+   "ticker": "STT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/STT.png"
+  },
+  {
+   "cik": 1099219,
+   "ticker": "MET",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MET.png"
+  },
+  {
+   "cik": 769397,
+   "ticker": "ADSK",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ADSK.png"
+  },
+  {
+   "cik": 882184,
+   "ticker": "DHI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DHI.png"
+  },
+  {
+   "cik": 943452,
+   "ticker": "WAB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/WAB.png"
+  },
+  {
+   "cik": 320187,
+   "ticker": "NKE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NKE.png"
+  },
+  {
+   "cik": 1058090,
+   "ticker": "CMG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CMG.png"
+  },
+  {
+   "cik": 1069183,
+   "ticker": "AXON",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AXON.png"
+  },
+  {
+   "cik": 1097864,
+   "ticker": "ON",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ON.png"
+  },
+  {
+   "cik": 100517,
+   "ticker": "UAL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/UAL.png"
+  },
+  {
+   "cik": 1138118,
+   "ticker": "CBRE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CBRE.png"
+  },
+  {
+   "cik": 1041061,
+   "ticker": "YUM",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/YUM.png"
+  },
+  {
+   "cik": 10795,
+   "ticker": "BDX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BDX.png"
+  },
+  {
+   "cik": 37996,
+   "ticker": "F",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/F.png"
+  },
+  {
+   "cik": 5272,
+   "ticker": "AIG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AIG.png"
+  },
+  {
+   "cik": 898293,
+   "ticker": "JBL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/JBL.png"
+  },
+  {
+   "cik": 1396009,
+   "ticker": "VMC",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/VMC.png"
+  },
+  {
+   "cik": 874716,
+   "ticker": "IDXX",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/IDXX.png"
+  },
+  {
+   "cik": 1690820,
+   "ticker": "CVNA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CVNA.png"
+  },
+  {
+   "cik": 1539838,
+   "ticker": "FANG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FANG.png"
+  },
+  {
+   "cik": 1060391,
+   "ticker": "RSG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/RSG.png"
+  },
+  {
+   "cik": 820027,
+   "ticker": "AMP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AMP.png"
+  },
+  {
+   "cik": 1004980,
+   "ticker": "PCG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PCG.png"
+  },
+  {
+   "cik": 1408198,
+   "ticker": "MSCI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MSCI.png"
+  },
+  {
+   "cik": 878927,
+   "ticker": "ODFL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ODFL.png"
+  },
+  {
+   "cik": 4977,
+   "ticker": "AFL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AFL.png"
+  },
+  {
+   "cik": 1000697,
+   "ticker": "WAT",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/WAT.png"
+  },
+  {
+   "cik": 55785,
+   "ticker": "KMB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/KMB.png"
+  },
+  {
+   "cik": 96021,
+   "ticker": "SYY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SYY.png"
+  },
+  {
+   "cik": 874766,
+   "ticker": "HIG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HIG.png"
+  },
+  {
+   "cik": 7084,
+   "ticker": "ADM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ADM.png"
+  },
+  {
+   "cik": 1120193,
+   "ticker": "NDAQ",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NDAQ.png"
+  },
+  {
+   "cik": 1090872,
+   "ticker": "A",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/A.png"
+  },
+  {
+   "cik": 1335258,
+   "ticker": "LYV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LYV.png"
+  },
+  {
+   "cik": 105634,
+   "ticker": "EME",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EME.png"
+  },
+  {
+   "cik": 783325,
+   "ticker": "WEC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/WEC.png"
+  },
+  {
+   "cik": 36270,
+   "ticker": "MTB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MTB.png"
+  },
+  {
+   "cik": 875045,
+   "ticker": "BIIB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BIIB.png"
+  },
+  {
+   "cik": 788784,
+   "ticker": "PEG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PEG.png"
+  },
+  {
+   "cik": 1944048,
+   "ticker": "KVUE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/KVUE.png"
+  },
+  {
+   "cik": 1047862,
+   "ticker": "ED",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ED.png"
+  },
+  {
+   "cik": 916076,
+   "ticker": "MLM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MLM.png"
+  },
+  {
+   "cik": 1381197,
+   "ticker": "IBKR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/IBKR.png"
+  },
+  {
+   "cik": 1020569,
+   "ticker": "IRM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/IRM.png"
+  },
+  {
+   "cik": 1699150,
+   "ticker": "IR",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/IR.png"
+  },
+  {
+   "cik": 1512673,
+   "ticker": "XYZ",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/XYZ.png"
+  },
+  {
+   "cik": 882835,
+   "ticker": "ROP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ROP.png"
+  },
+  {
+   "cik": 33213,
+   "ticker": "EQT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EQT.png"
+  },
+  {
+   "cik": 49196,
+   "ticker": "HBAN",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/HBAN.png"
+  },
+  {
+   "cik": 1071739,
+   "ticker": "CNC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CNC.png"
+  },
+  {
+   "cik": 1478242,
+   "ticker": "IQV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/IQV.png"
+  },
+  {
+   "cik": 947484,
+   "ticker": "ACGL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ACGL.png"
+  },
+  {
+   "cik": 1051470,
+   "ticker": "CCI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CCI.png"
+  },
+  {
+   "cik": 56873,
+   "ticker": "KR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/KR.png"
+  },
+  {
+   "cik": 1002047,
+   "ticker": "NTAP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NTAP.png"
+  },
+  {
+   "cik": 1289490,
+   "ticker": "EXR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EXR.png"
+  },
+  {
+   "cik": 1130310,
+   "ticker": "CNP",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/CNP.png"
+  },
+  {
+   "cik": 1013871,
+   "ticker": "NRG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NRG.png"
+  },
+  {
+   "cik": 723531,
+   "ticker": "PAYX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PAYX.png"
+  },
+  {
+   "cik": 1094285,
+   "ticker": "TDY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TDY.png"
+  },
+  {
+   "cik": 759944,
+   "ticker": "CFG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CFG.png"
+  },
+  {
+   "cik": 1324424,
+   "ticker": "EXPE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EXPE.png"
+  },
+  {
+   "cik": 1447669,
+   "ticker": "TWLO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TWLO.png"
+  },
+  {
+   "cik": 29905,
+   "ticker": "DOV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DOV.png"
+  },
+  {
+   "cik": 73124,
+   "ticker": "NTRS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NTRS.png"
+  },
+  {
+   "cik": 731802,
+   "ticker": "ATO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ATO.png"
+  },
+  {
+   "cik": 1022671,
+   "ticker": "STLD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/STLD.png"
+  },
+  {
+   "cik": 827052,
+   "ticker": "EIX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EIX.png"
+  },
+  {
+   "cik": 1705696,
+   "ticker": "VICI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/VICI.png"
+  },
+  {
+   "cik": 936340,
+   "ticker": "DTE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DTE.png"
+  },
+  {
+   "cik": 1633917,
+   "ticker": "PYPL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PYPL.png"
+  },
+  {
+   "cik": 1555280,
+   "ticker": "ZTS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ZTS.png"
+  },
+  {
+   "cik": 1121788,
+   "ticker": "GRMN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GRMN.png"
+  },
+  {
+   "cik": 1110803,
+   "ticker": "ILMN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ILMN.png"
+  },
+  {
+   "cik": 1601712,
+   "ticker": "SYF",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SYF.png"
+  },
+  {
+   "cik": 726958,
+   "ticker": "CASY",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/CASY.png"
+  },
+  {
+   "cik": 1932393,
+   "ticker": "GEHC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GEHC.png"
+  },
+  {
+   "cik": 1637459,
+   "ticker": "KHC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/KHC.png"
+  },
+  {
+   "cik": 1410636,
+   "ticker": "AWK",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AWK.png"
+  },
+  {
+   "cik": 1140536,
+   "ticker": "WTW",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/WTW.png"
+  },
+  {
+   "cik": 1327811,
+   "ticker": "WDAY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/WDAY.png"
+  },
+  {
+   "cik": 1093557,
+   "ticker": "DXCM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DXCM.png"
+  },
+  {
+   "cik": 2058873,
+   "ticker": "Q",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/Q.png"
+  },
+  {
+   "cik": 79879,
+   "ticker": "PPG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PPG.png"
+  },
+  {
+   "cik": 719955,
+   "ticker": "WSM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/WSM.png"
+  },
+  {
+   "cik": 811156,
+   "ticker": "CMS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CMS.png"
+  },
+  {
+   "cik": 48898,
+   "ticker": "HUBB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HUBB.png"
+  },
+  {
+   "cik": 1781335,
+   "ticker": "OTIS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/OTIS.png"
+  },
+  {
+   "cik": 1031296,
+   "ticker": "FE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FE.png"
+  },
+  {
+   "cik": 45012,
+   "ticker": "HAL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HAL.png"
+  },
+  {
+   "cik": 1002910,
+   "ticker": "AEE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AEE.png"
+  },
+  {
+   "cik": 922224,
+   "ticker": "PPL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PPL.png"
+  },
+  {
+   "cik": 1137774,
+   "ticker": "PRU",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PRU.png"
+  },
+  {
+   "cik": 1037646,
+   "ticker": "MTD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MTD.png"
+  },
+  {
+   "cik": 720005,
+   "ticker": "RJF",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/RJF.png"
+  },
+  {
+   "cik": 29534,
+   "ticker": "DG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DG.png"
+  },
+  {
+   "cik": 940944,
+   "ticker": "DRI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DRI.png"
+  },
+  {
+   "cik": 105770,
+   "ticker": "WST",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/WST.png"
+  },
+  {
+   "cik": 72741,
+   "ticker": "ES",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ES.png"
+  },
+  {
+   "cik": 906107,
+   "ticker": "VMRK",
+   "source": "missing",
+   "url": null
+  },
+  {
+   "cik": 92380,
+   "ticker": "LUV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LUV.png"
+  },
+  {
+   "cik": 822416,
+   "ticker": "PHM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PHM.png"
+  },
+  {
+   "cik": 814547,
+   "ticker": "FICO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FICO.png"
+  },
+  {
+   "cik": 2005951,
+   "ticker": "SW",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/SW.png"
+  },
+  {
+   "cik": 1524472,
+   "ticker": "XYL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/XYL.png"
+  },
+  {
+   "cik": 798354,
+   "ticker": "FISV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FISV.png"
+  },
+  {
+   "cik": 1043277,
+   "ticker": "CHRW",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/CHRW.png"
+  },
+  {
+   "cik": 1682852,
+   "ticker": "MRNA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MRNA.png"
+  },
+  {
+   "cik": 1176948,
+   "ticker": "ARES",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ARES.png"
+  },
+  {
+   "cik": 91576,
+   "ticker": "KEY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/KEY.png"
+  },
+  {
+   "cik": 47111,
+   "ticker": "HSY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HSY.png"
+  },
+  {
+   "cik": 1374310,
+   "ticker": "CBOE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CBOE.png"
+  },
+  {
+   "cik": 1442145,
+   "ticker": "VRSK",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/VRSK.png"
+  },
+  {
+   "cik": 1281761,
+   "ticker": "RF",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/RF.png"
+  },
+  {
+   "cik": 1014473,
+   "ticker": "VRSN",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/VRSN.png"
+  },
+  {
+   "cik": 935703,
+   "ticker": "DLTR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DLTR.png"
+  },
+  {
+   "cik": 1393052,
+   "ticker": "VEEV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/VEEV.png"
+  },
+  {
+   "cik": 1048695,
+   "ticker": "FFIV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FFIV.png"
+  },
+  {
+   "cik": 1274494,
+   "ticker": "FSLR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FSLR.png"
+  },
+  {
+   "cik": 900075,
+   "ticker": "CPRT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CPRT.png"
+  },
+  {
+   "cik": 1679788,
+   "ticker": "COIN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/COIN.png"
+  },
+  {
+   "cik": 29989,
+   "ticker": "OMC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/OMC.png"
+  },
+  {
+   "cik": 16918,
+   "ticker": "STZ",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/STZ.png"
+  },
+  {
+   "cik": 728535,
+   "ticker": "JBHT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/JBHT.png"
+  },
+  {
+   "cik": 1136893,
+   "ticker": "FIS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FIS.png"
+  },
+  {
+   "cik": 746515,
+   "ticker": "EXPD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EXPD.png"
+  },
+  {
+   "cik": 1713445,
+   "ticker": "RDDT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/RDDT.png"
+  },
+  {
+   "cik": 20286,
+   "ticker": "CINF",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CINF.png"
+  },
+  {
+   "cik": 1022079,
+   "ticker": "DGX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DGX.png"
+  },
+  {
+   "cik": 1175454,
+   "ticker": "CPAY",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/CPAY.png"
+  },
+  {
+   "cik": 920148,
+   "ticker": "LH",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LH.png"
+  },
+  {
+   "cik": 313927,
+   "ticker": "CHD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CHD.png"
+  },
+  {
+   "cik": 1111711,
+   "ticker": "NI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NI.png"
+  },
+  {
+   "cik": 75677,
+   "ticker": "PKG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PKG.png"
+  },
+  {
+   "cik": 1058290,
+   "ticker": "CTSH",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CTSH.png"
+  },
+  {
+   "cik": 943819,
+   "ticker": "RMD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/RMD.png"
+  },
+  {
+   "cik": 879169,
+   "ticker": "INCY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/INCY.png"
+  },
+  {
+   "cik": 51253,
+   "ticker": "IFF",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/IFF.png"
+  },
+  {
+   "cik": 51434,
+   "ticker": "IP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/IP.png"
+  },
+  {
+   "cik": 1659166,
+   "ticker": "FTV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FTV.png"
+  },
+  {
+   "cik": 1967680,
+   "ticker": "VLTO",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/VLTO.png"
+  },
+  {
+   "cik": 1086222,
+   "ticker": "AKAM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AKAM.png"
+  },
+  {
+   "cik": 91440,
+   "ticker": "SNA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SNA.png"
+  },
+  {
+   "cik": 1757898,
+   "ticker": "STE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/STE.png"
+  },
+  {
+   "cik": 1402057,
+   "ticker": "CDW",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CDW.png"
+  },
+  {
+   "cik": 1034054,
+   "ticker": "SBAC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SBAC.png"
+  },
+  {
+   "cik": 33185,
+   "ticker": "EFX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EFX.png"
+  },
+  {
+   "cik": 47217,
+   "ticker": "HPQ",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HPQ.png"
+  },
+  {
+   "cik": 895126,
+   "ticker": "EXE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EXE.png"
+  },
+  {
+   "cik": 920760,
+   "ticker": "LEN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LEN.png"
+  },
+  {
+   "cik": 1001250,
+   "ticker": "EL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/EL.png"
+  },
+  {
+   "cik": 1711269,
+   "ticker": "EVRG",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/EVRG.png"
+  },
+  {
+   "cik": 352541,
+   "ticker": "LNT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LNT.png"
+  },
+  {
+   "cik": 1754301,
+   "ticker": "FOXA",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/FOXA.png"
+  },
+  {
+   "cik": 79282,
+   "ticker": "BRO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BRO.png"
+  },
+  {
+   "cik": 1126328,
+   "ticker": "PFG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PFG.png"
+  },
+  {
+   "cik": 1403568,
+   "ticker": "ULTA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ULTA.png"
+  },
+  {
+   "cik": 920522,
+   "ticker": "ESS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ESS.png"
+  },
+  {
+   "cik": 1136869,
+   "ticker": "ZBH",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ZBH.png"
+  },
+  {
+   "cik": 1996862,
+   "ticker": "BG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BG.png"
+  },
+  {
+   "cik": 1687229,
+   "ticker": "INVH",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/INVH.png"
+  },
+  {
+   "cik": 62996,
+   "ticker": "MAS",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/MAS.png"
+  },
+  {
+   "cik": 40704,
+   "ticker": "GIS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GIS.png"
+  },
+  {
+   "cik": 1751788,
+   "ticker": "DOW",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DOW.png"
+  },
+  {
+   "cik": 1811074,
+   "ticker": "TPL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TPL.png"
+  },
+  {
+   "cik": 1123360,
+   "ticker": "GPN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GPN.png"
+  },
+  {
+   "cik": 832101,
+   "ticker": "IEX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/IEX.png"
+  },
+  {
+   "cik": 1324404,
+   "ticker": "CF",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CF.png"
+  },
+  {
+   "cik": 906163,
+   "ticker": "NVR",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/NVR.png"
+  },
+  {
+   "cik": 915913,
+   "ticker": "ALB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ALB.png"
+  },
+  {
+   "cik": 1069202,
+   "ticker": "LII",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LII.png"
+  },
+  {
+   "cik": 1070750,
+   "ticker": "HST",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HST.png"
+  },
+  {
+   "cik": 879101,
+   "ticker": "KIM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/KIM.png"
+  },
+  {
+   "cik": 1037038,
+   "ticker": "RL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/RL.png"
+  },
+  {
+   "cik": 11544,
+   "ticker": "WRB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/WRB.png"
+  },
+  {
+   "cik": 106535,
+   "ticker": "WY",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/WY.png"
+  },
+  {
+   "cik": 912595,
+   "ticker": "MAA",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/MAA.png"
+  },
+  {
+   "cik": 764478,
+   "ticker": "BBY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BBY.png"
+  },
+  {
+   "cik": 100493,
+   "ticker": "TSN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TSN.png"
+  },
+  {
+   "cik": 916365,
+   "ticker": "TSCO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TSCO.png"
+  },
+  {
+   "cik": 1792044,
+   "ticker": "VTRS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/VTRS.png"
+  },
+  {
+   "cik": 1383312,
+   "ticker": "BR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BR.png"
+  },
+  {
+   "cik": 910606,
+   "ticker": "REG",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/REG.png"
+  },
+  {
+   "cik": 1666700,
+   "ticker": "DD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DD.png"
+  },
+  {
+   "cik": 765880,
+   "ticker": "DOC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DOC.png"
+  },
+  {
+   "cik": 40987,
+   "ticker": "GPC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GPC.png"
+  },
+  {
+   "cik": 2082247,
+   "ticker": "FDXF",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/FDXF.png"
+  },
+  {
+   "cik": 1091667,
+   "ticker": "CHTR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CHTR.png"
+  },
+  {
+   "cik": 764622,
+   "ticker": "PNW",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PNW.png"
+  },
+  {
+   "cik": 60086,
+   "ticker": "L",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/L.png"
+  },
+  {
+   "cik": 1375365,
+   "ticker": "SMCI",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SMCI.png"
+  },
+  {
+   "cik": 927066,
+   "ticker": "DVA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DVA.png"
+  },
+  {
+   "cik": 849399,
+   "ticker": "GEN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GEN.png"
+  },
+  {
+   "cik": 217346,
+   "ticker": "TXT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TXT.png"
+  },
+  {
+   "cik": 1095073,
+   "ticker": "EG",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/EG.png"
+  },
+  {
+   "cik": 9389,
+   "ticker": "BALL",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/BALL.png"
+  },
+  {
+   "cik": 52988,
+   "ticker": "J",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/J.png"
+  },
+  {
+   "cik": 1415404,
+   "ticker": "ECHO",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ECHO.png"
+  },
+  {
+   "cik": 74208,
+   "ticker": "UDR",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/UDR.png"
+  },
+  {
+   "cik": 1489393,
+   "ticker": "LYB",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LYB.png"
+  },
+  {
+   "cik": 1474735,
+   "ticker": "GNRC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GNRC.png"
+  },
+  {
+   "cik": 93556,
+   "ticker": "SWK",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SWK.png"
+  },
+  {
+   "cik": 72331,
+   "ticker": "NDSN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NDSN.png"
+  },
+  {
+   "cik": 910521,
+   "ticker": "DECK",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DECK.png"
+  },
+  {
+   "cik": 1973266,
+   "ticker": "TKO",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/TKO.png"
+  },
+  {
+   "cik": 1267238,
+   "ticker": "AIZ",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AIZ.png"
+  },
+  {
+   "cik": 877212,
+   "ticker": "ZBRA",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/ZBRA.png"
+  },
+  {
+   "cik": 1100682,
+   "ticker": "CRL",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/CRL.png"
+  },
+  {
+   "cik": 4127,
+   "ticker": "SWKS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SWKS.png"
+  },
+  {
+   "cik": 1521332,
+   "ticker": "APTV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/APTV.png"
+  },
+  {
+   "cik": 63754,
+   "ticker": "MKC",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MKC.png"
+  },
+  {
+   "cik": 1300514,
+   "ticker": "LVS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LVS.png"
+  },
+  {
+   "cik": 711404,
+   "ticker": "COO",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/COO.png"
+  },
+  {
+   "cik": 10456,
+   "ticker": "BAX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BAX.png"
+  },
+  {
+   "cik": 1097149,
+   "ticker": "ALGN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ALGN.png"
+  },
+  {
+   "cik": 860731,
+   "ticker": "TYL",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/TYL.png"
+  },
+  {
+   "cik": 906345,
+   "ticker": "CPT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CPT.png"
+  },
+  {
+   "cik": 320335,
+   "ticker": "GL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GL.png"
+  },
+  {
+   "cik": 1841666,
+   "ticker": "APA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/APA.png"
+  },
+  {
+   "cik": 1579241,
+   "ticker": "ALLE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ALLE.png"
+  },
+  {
+   "cik": 864749,
+   "ticker": "TRMB",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/TRMB.png"
+  },
+  {
+   "cik": 8818,
+   "ticker": "AVY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AVY.png"
+  },
+  {
+   "cik": 1609711,
+   "ticker": "GDDY",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/GDDY.png"
+  },
+  {
+   "cik": 1057352,
+   "ticker": "CSGP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CSGP.png"
+  },
+  {
+   "cik": 77360,
+   "ticker": "PNR",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/PNR.png"
+  },
+  {
+   "cik": 1286681,
+   "ticker": "DPZ",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/DPZ.png"
+  },
+  {
+   "cik": 857005,
+   "ticker": "PTC",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/PTC.png"
+  },
+  {
+   "cik": 84839,
+   "ticker": "ROL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ROL.png"
+  },
+  {
+   "cik": 1336920,
+   "ticker": "LDOS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LDOS.png"
+  },
+  {
+   "cik": 1037540,
+   "ticker": "BXP",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BXP.png"
+  },
+  {
+   "cik": 34903,
+   "ticker": "FRT",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FRT.png"
+  },
+  {
+   "cik": 842023,
+   "ticker": "TECH",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/TECH.png"
+  },
+  {
+   "cik": 1145197,
+   "ticker": "PODD",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/PODD.png"
+  },
+  {
+   "cik": 91419,
+   "ticker": "SJM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SJM.png"
+  },
+  {
+   "cik": 1501585,
+   "ticker": "HII",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HII.png"
+  },
+  {
+   "cik": 1874178,
+   "ticker": "RIVN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/RIVN.png"
+  },
+  {
+   "cik": 1397187,
+   "ticker": "LULU",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/LULU.png"
+  },
+  {
+   "cik": 31791,
+   "ticker": "RVTY",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/RVTY.png"
+  },
+  {
+   "cik": 21076,
+   "ticker": "CLX",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CLX.png"
+  },
+  {
+   "cik": 779152,
+   "ticker": "JKHY",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/JKHY.png"
+  },
+  {
+   "cik": 749251,
+   "ticker": "IT",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/IT.png"
+  },
+  {
+   "cik": 914208,
+   "ticker": "IVZ",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/IVZ.png"
+  },
+  {
+   "cik": 1513761,
+   "ticker": "NCLH",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NCLH.png"
+  },
+  {
+   "cik": 1013237,
+   "ticker": "FDS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/FDS.png"
+  },
+  {
+   "cik": 874761,
+   "ticker": "AES",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AES.png"
+  },
+  {
+   "cik": 1035443,
+   "ticker": "ARE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ARE.png"
+  },
+  {
+   "cik": 1564708,
+   "ticker": "NWSA",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/NWSA.png"
+  },
+  {
+   "cik": 1000228,
+   "ticker": "HSIC",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/HSIC.png"
+  },
+  {
+   "cik": 352915,
+   "ticker": "UHS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/UHS.png"
+  },
+  {
+   "cik": 38777,
+   "ticker": "BEN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/BEN.png"
+  },
+  {
+   "cik": 1964738,
+   "ticker": "SOLV",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/SOLV.png"
+  },
+  {
+   "cik": 1174922,
+   "ticker": "WYNN",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/WYNN.png"
+  },
+  {
+   "cik": 91142,
+   "ticker": "AOS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AOS.png"
+  },
+  {
+   "cik": 789570,
+   "ticker": "MGM",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MGM.png"
+  },
+  {
+   "cik": 1285785,
+   "ticker": "MOS",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/MOS.png"
+  },
+  {
+   "cik": 48465,
+   "ticker": "HRL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/HRL.png"
+  },
+  {
+   "cik": 922621,
+   "ticker": "ERIE",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/ERIE.png"
+  },
+  {
+   "cik": 14693,
+   "ticker": "BF-B",
+   "source": "fmp",
+   "url": "https://financialmodelingprep.com/image-stock/BF-B.png"
+  },
+  {
+   "cik": 2041610,
+   "ticker": "SKYD",
+   "source": "missing",
+   "url": null
+  },
+  {
+   "cik": 815097,
+   "ticker": "CCL",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/CCL.png"
+  },
+  {
+   "cik": 1748790,
+   "ticker": "AMCR",
+   "source": "nvstly",
+   "url": "https://raw.githubusercontent.com/nvstly/icons/main/ticker_icons/AMCR.png"
+  }
+ ]
+}

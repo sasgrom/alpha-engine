@@ -38,6 +38,14 @@ usa/states-albers-10m.json from us-atlas 3.0.1 by Michael Bostock (https://githu
 Bureau's 2017 cartographic boundary files as TopoJSON, projected to Albers USA. The ISC licence text is in
 usa/us-atlas-LICENSE.txt.
 
+## Company logos on the book covers
+
+logos/atlas.webp (index in logos/atlas.json): one logo per covered company, the trademarks of their owners, shown to
+identify the companies (owner's decision of 2026-11-12). Collected on 2026-11-12 from the nvstly/icons collection on
+GitHub (438; light versions for dark backgrounds, no licence stated), Financial Modeling Prep's public logo images
+(52) and companiesmarketcap.com (1); two recent listings have none. Sources per company in
+research/engine/company-logos.json.
+
 ## Lettering: Cinzel (SIL Open Font License 1.1)
 
 fonts/Cinzel-wght.ttf, Cinzel by Natanael Gama (https://github.com/NDISCOVER/Cinzel), the carved signs over the

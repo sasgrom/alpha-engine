@@ -9,12 +9,13 @@ import type { ChartPalette } from "../charts/color";
 import { fmtCap, fmtPct } from "../format";
 import { deflatorSince, hallSectorOrder, quarterLabel, signedCap, standingOf, type Who } from "./data";
 import { bodyFor, decodePlaces, figureScale, leaderAt, lookFor, outfitFor } from "./hall/figures";
+import { topLists } from "./hall/lists";
 import { HallStage, type StageData, type StageFigure, type StageSelection, type StageTarget } from "./hall/stage";
 
 export interface LibraryProps {
   overview: FundFlowsOverview;
   row: FlowQuarter;
-  mode: "flow" | "outcome";
+  mode: "flow" | "outcome" | "held";
   /** Restate "what it earned" after inflation. */
   real: boolean;
   focus: string | null;
@@ -61,6 +62,7 @@ export default function Library3D({ overview, row, mode, real, focus, selection,
   }, [places, fund, row.quarter]);
 
   const keep = useMemo(() => standingOf(row, who).keep, [row, who]);
+  const lists = useMemo(() => topLists(overview, row, mode, who), [overview, row, mode, who]);
   const data = useMemo<StageData>(
     () => ({
       company: new Map(row.companyFlows.map(([cik, net, held, since]) => [cik, { net, held, since }])),
@@ -73,8 +75,10 @@ export default function Library3D({ overview, row, mode, real, focus, selection,
       places,
       figures,
       keep,
+      quarter: quarterLabel(row.quarter),
+      lists,
     }),
-    [overview, row, mode, real, focus, places, figures, keep],
+    [overview, row, mode, real, focus, places, figures, keep, lists],
   );
 
   useEffect(() => {
@@ -185,6 +189,14 @@ function tooltip(
     else if (home) lines.push(["Stands at", home]);
     lines.push(["Led by", figure?.leader ?? "not on record here"]);
     return { title: entry?.name ?? `Fund ${target.id}`, lines, hint: "Select to follow its money to the shelves" };
+  }
+  if (target.kind === "stream") {
+    const name = (sector: string) => (sector === FLOW_OUTSIDE ? "Main Street and everything outside" : sector);
+    return {
+      title: `${name(target.from)} → ${name(target.to)}`,
+      lines: [[`Moved, ${quarter}`, fmtCap(target.usd)]],
+      hint: "An estimate: each fund's sales paired with its own purchases of the quarter",
+    };
   }
   if (target.kind === "state") {
     let net = 0;

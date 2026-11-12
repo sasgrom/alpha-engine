@@ -15,6 +15,8 @@ export interface StreamSpec {
   kind: "rotation" | "thread";
   /** Dimmed when another sector is in focus. */
   lit: boolean;
+  /** What the stream joins, for its tooltip (rotation streams). */
+  label?: { from: string; to: string };
 }
 
 interface Built {
@@ -53,6 +55,22 @@ function bubbleTexture(): THREE.CanvasTexture {
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   return texture;
+}
+
+/**
+ * Streams and bubbles close to the eye fade away (fully gone within three metres, whole again from twelve), so the
+ * reader sees past the money passing overhead to the dome and the hall beyond.
+ */
+function fadeNear(material: THREE.Material): void {
+  material.onBeforeCompile = (shader) => {
+    shader.vertexShader = shader.vertexShader
+      .replace("#include <common>", "#include <common>\nvarying float vEyeDistance;")
+      .replace("#include <project_vertex>", "#include <project_vertex>\nvEyeDistance = -mvPosition.z;");
+    shader.fragmentShader = shader.fragmentShader
+      .replace("#include <common>", "#include <common>\nvarying float vEyeDistance;")
+      .replace("#include <opaque_fragment>", "diffuseColor.a *= smoothstep(3.0, 12.0, vEyeDistance);\n#include <opaque_fragment>");
+  };
+  material.customProgramCacheKey = () => "hall-stream-near";
 }
 
 function bandTexture(): THREE.CanvasTexture {
@@ -124,6 +142,7 @@ export class MoneyStreams {
       geometry,
       new THREE.PointsMaterial({ size: 0.5, map: this.bubbleTexture, vertexColors: true, transparent: true, alphaTest: 0.04, depthWrite: false, sizeAttenuation: true }),
     );
+    fadeNear(this.bubbles.material as THREE.Material);
     this.bubbles.frustumCulled = false;
     this.group.add(this.bubbles);
   }
@@ -157,9 +176,11 @@ export class MoneyStreams {
         side: THREE.DoubleSide,
         depthWrite: false,
       });
+      fadeNear(material);
       material.userData.opacity = material.opacity;
       material.opacity *= this.fade;
       const mesh = new THREE.Mesh(ribbon(curve, width, spec.start, spec.end, Math.max(1, Math.round(length / 6))), material);
+      if (spec.label && spec.lit) mesh.userData.stream = { from: spec.label.from, to: spec.label.to, usd: spec.usd };
       mesh.renderOrder = spec.kind === "thread" ? 3 : 2;
       mesh.frustumCulled = false;
       this.group.add(mesh);
@@ -180,6 +201,11 @@ export class MoneyStreams {
    * Moves the bands and the bubbles to the time `seconds`. `fade` (0–1) thins the streams out, so that from high up
    * under the dome the people below show through them.
    */
+  /** The streams that can be pointed at (lit rotation streams). */
+  get pickable(): THREE.Mesh[] {
+    return this.built.filter((item) => item.mesh.userData.stream).map((item) => item.mesh);
+  }
+
   update(seconds: number, fade = 1): void {
     this.bandTexture.offset.x = -seconds * 0.35;
     if (fade !== this.fade) {

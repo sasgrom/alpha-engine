@@ -21,6 +21,11 @@ import { angleOf, crowdSlots, crowdWedges, hallLayout, polar, ROTUNDA, staffSlot
 import { Crowd, loadPrototypes, type BodyKind } from "./people";
 import { MoneyStreams, type StreamSpec } from "./streams";
 import { MapTable, type StateFlow, type UsaTopology } from "./usa-map";
+import { MainStreet } from "./mainstreet";
+import { Providence } from "./providence";
+import { Scoreboards, TopBoards, type SectorScore, type TopList } from "./boards";
+import { BRONZE, emblemFor } from "./props";
+import { atlasCell, SPINE_ATLAS, spineAtlas, spineMaterial, type LogoAtlas } from "./spines";
 
 export interface StageCompany extends HallCompany { name: string; /** US state of the headquarters (null: abroad or not stated). */ hq?: string | null }
 export interface StageFund { cik: number; name: string; category: string; tracked: number }
@@ -32,10 +37,10 @@ export interface StageData {
   company: Map<number, { net: number; held: number; since: number | null }>;
   /** Per fund counted in the quarter: dollars bought and sold. */
   fund: Map<number, { bought: number; sold: number }>;
-  sectors: Map<string, { net: number; bought: number; sold: number }>;
+  sectors: Map<string, { net: number; bought: number; sold: number; held: number }>;
   links: FlowLink[];
-  /** "flow": books coloured by the net flow against the value held. "outcome": by the return since. */
-  mode: "flow" | "outcome";
+  /** "flow": books coloured by the net flow against the value held. "outcome": by the return since. "held": by the value held. */
+  mode: "flow" | "outcome" | "held";
   /** Price level now over the price level then, to restate returns after inflation (1 = leave as is). */
   deflator: number;
   focus: string | null;
@@ -44,6 +49,9 @@ export interface StageData {
   figures: Map<number, StageFigure>;
   /** The funds kept in the hall by the switch between all, the winners and the losers (null: everybody). */
   keep: Set<number> | null;
+  /** The quarter's name ("Q2 2026"), and the lists on the top-ten boards. */
+  quarter: string;
+  lists: TopList[];
 }
 
 export interface StageSelection {
@@ -58,7 +66,8 @@ export type StageTarget =
   | { kind: "fund"; id: number }
   | { kind: "sector"; name: string }
   | { kind: "outside" }
-  | { kind: "state"; code: string; name: string };
+  | { kind: "state"; code: string; name: string }
+  | { kind: "stream"; from: string; to: string; usd: number };
 
 export interface StageEvents {
   onHover: (target: StageTarget | null, x: number, y: number) => void;
@@ -96,8 +105,10 @@ export class HallStage {
   private crowd: Crowd | null = null;
   private readonly labelLayer: HTMLDivElement;
   private labels: PlacedLabel[] = [];
-  private fixedLabels: PlacedLabel[] = [];
-  private readonly sectorChips = new Map<string, HTMLElement>();
+  private mainStreet: MainStreet | null = null;
+  private providence: Providence | null = null;
+  private scoreboards: Scoreboards | null = null;
+  private topBoards: TopBoards | null = null;
   private data: StageData | null = null;
   private selection: StageSelection = { kind: null, id: null, threads: [] };
   private placed = false;
@@ -225,7 +236,7 @@ export class HallStage {
   private async load(): Promise<void> {
     try {
       const font = new FontFace("Cinzel", "url(/desk-assets/library/fonts/Cinzel-wght.ttf)", { weight: "400 900" });
-      const [textures, environment, prototypes, , usa] = await Promise.all([
+      const [textures, environment, prototypes, , usa, logos] = await Promise.all([
         loadHallTextures(this.renderer).catch(() => null),
         new HDRLoader().loadAsync("/desk-assets/library/env/vestibule_1k.hdr").catch(() => null),
         loadPrototypes().catch((error: unknown) => {
@@ -234,6 +245,16 @@ export class HallStage {
         }),
         font.load().then((face) => document.fonts.add(face)).catch(() => null),
         fetch("/desk-assets/library/usa/states-albers-10m.json").then((response) => (response.ok ? (response.json() as Promise<UsaTopology>) : null)).catch(() => null),
+        Promise.all([
+          new THREE.TextureLoader().loadAsync("/desk-assets/library/logos/atlas.webp"),
+          fetch("/desk-assets/library/logos/atlas.json").then((response) => response.json() as Promise<LogoAtlas>),
+        ])
+          .then(([texture, index]) => {
+            texture.colorSpace = THREE.SRGBColorSpace;
+            texture.anisotropy = 8;
+            return { texture, index };
+          })
+          .catch(() => null),
       ]);
       if (this.disposed) return;
       if (environment) {
@@ -250,7 +271,29 @@ export class HallStage {
       });
       this.scene.add(this.building.group);
       for (const sign of this.building.signs) sign.paint();
-      this.buildBooks(textures?.leather ?? null);
+      // Main Street through the entrance, the eye under the dome, the boards
+      this.mainStreet = new MainStreet(this.dark);
+      const doorMaterial = this.building.door.material as THREE.MeshBasicMaterial;
+      doorMaterial.map = this.mainStreet.texture;
+      doorMaterial.needsUpdate = true;
+      this.providence = new Providence(ROTUNDA.wallTop + ROTUNDA.domeHeight - 7.4);
+      this.scene.add(this.providence.group);
+      this.scoreboards = new Scoreboards(this.layout, { pos: this.palette.pos, neg: this.palette.neg }, this.calm);
+      this.scene.add(this.scoreboards.group);
+      this.topBoards = new TopBoards(this.layout, { pos: this.palette.pos, neg: this.palette.neg });
+      this.scene.add(this.topBoards.group);
+      // a bronze emblem crowns each scoreboard
+      const bronze = BRONZE();
+      for (const alcove of this.layout.alcoves) {
+        const geometry = emblemFor(alcove.sector);
+        if (!geometry) continue;
+        const emblem = new THREE.Mesh(geometry, bronze);
+        emblem.position.set(...polar(alcove.mid, ROTUNDA.radius - 1.98, ROTUNDA.galleryHeight + 1.78));
+        emblem.rotation.y = -alcove.mid;
+        emblem.scale.setScalar(0.62);
+        this.scene.add(emblem);
+      }
+      this.buildBooks(textures?.leather ?? null, logos);
       if (usa) {
         this.map = new MapTable(usa, this.dark, new THREE.MeshStandardMaterial({ color: this.dark ? 0x2b2018 : 0x4a3727, roughness: 0.55, metalness: 0.05 }));
         this.scene.add(this.map.group);
@@ -259,7 +302,6 @@ export class HallStage {
         this.crowd = new Crowd(prototypes, this.calm);
         this.scene.add(this.crowd.group);
       }
-      this.buildFixedLabels();
       if (this.data) this.setData(this.data);
       this.setSelection(this.selection);
       // a selection made before the hall had loaded (a linked address) still gets its vantage point
@@ -270,9 +312,27 @@ export class HallStage {
     }
   }
 
-  private buildBooks(leather: THREE.Texture[] | null): void {
-    const material = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.55, metalness: 0.02, ...(leather ? { normalMap: leather[1], normalScale: new THREE.Vector2(0.6, 0.6) } : {}) });
-    const books = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), material, Math.max(1, this.layout.books.length));
+  /** One instanced draw for all books: leather covers in the quarter's colour, the spine (the face towards the hall) with logo and gilt ticker. */
+  private buildBooks(leather: THREE.Texture[] | null, logos: { texture: THREE.Texture; index: LogoAtlas } | null): void {
+    const base: THREE.MeshStandardMaterialParameters = { color: 0xffffff, roughness: 0.55, metalness: 0.02, ...(leather ? { normalMap: leather[1], normalScale: new THREE.Vector2(0.6, 0.6) } : {}) };
+    const cover = new THREE.MeshStandardMaterial(base);
+    const spine = spineMaterial(spineAtlas(this.layout.books.map((book) => book.ticker)), logos?.texture ?? null, logos?.index ?? null, base);
+    const count = Math.max(1, this.layout.books.length);
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const spineCells = new Float32Array(count * 2);
+    const logoCells = new Float32Array(count * 3);
+    const shapes = new Float32Array(count);
+    this.layout.books.forEach((book, index) => {
+      spineCells.set(atlasCell(index, SPINE_ATLAS.columns, SPINE_ATLAS.rows), index * 2);
+      const logo = logos?.index.tickers[book.ticker];
+      if (logos && logo !== undefined) logoCells.set([...atlasCell(logo, logos.index.columns, logos.index.rows), 1], index * 3);
+      shapes[index] = book.thickness / book.height;
+    });
+    geometry.setAttribute("spine", new THREE.InstancedBufferAttribute(spineCells, 2));
+    geometry.setAttribute("logo", new THREE.InstancedBufferAttribute(logoCells, 3));
+    geometry.setAttribute("shape", new THREE.InstancedBufferAttribute(shapes, 1));
+    // the box's faces: +x, -x, +y, -y, +z (the spine, towards the hall), -z
+    const books = new THREE.InstancedMesh(geometry, [cover, cover, cover, cover, spine, cover], count);
     books.castShadow = true;
     books.receiveShadow = true;
     books.frustumCulled = false;
@@ -302,33 +362,15 @@ export class HallStage {
     return { element, at, reach, rank, shown: false, follow };
   }
 
-  private buildFixedLabels(): void {
-    for (const alcove of this.layout.alcoves) {
-      const chip = this.label("", "sector", new THREE.Vector3(...polar(alcove.mid, ROTUNDA.radius - 0.4, ROTUNDA.shelfBase + ROTUNDA.rows * ROTUNDA.rowHeight + 2.35)), 70, { kind: "sector", name: alcove.sector });
-      this.sectorChips.set(alcove.sector, chip.element);
-      this.fixedLabels.push(chip);
-    }
-    this.fixedLabels.push(this.label("Outside the covered stocks", "door", new THREE.Vector3(...polar(Math.PI, ROTUNDA.radius + 1, ROTUNDA.galleryHeight + 3.4)), 120, { kind: "outside" }));
-  }
-
   private refreshLabels(): void {
     for (const label of this.labels) label.element.remove();
     this.labels = [];
     const data = this.data;
     if (!data) return;
-    const money = (value: number) => `${value < 0 ? "−" : "+"}$${Math.abs(value) >= 1e9 ? `${(Math.abs(value) / 1e9).toFixed(Math.abs(value) >= 1e10 ? 0 : 1)}bn` : `${(Math.abs(value) / 1e6).toFixed(0)}m`}`;
-    for (const [sector, element] of this.sectorChips) {
-      const entry = data.sectors.get(sector);
-      element.textContent = entry ? `${money(entry.net)} net` : "no counted trades";
-      element.classList.toggle("in", (entry?.net ?? 0) > 0);
-      element.classList.toggle("out", (entry?.net ?? 0) < 0);
-      element.classList.toggle("dim", data.focus !== null && sector !== data.focus);
-      element.classList.toggle("on", data.focus !== null && sector === data.focus);
-    }
-    // books that moved most carry their ticker; a selection names what it is tied to
+    // the books carry their tickers on their spines; floating names only for a sector in focus and a selection
     const named = new Set<number>();
-    if (this.selection.kind !== "fund") {
-      const movers = [...this.layout.books].filter((book) => data.focus === null || book.sector === data.focus).sort((a, b) => Math.abs(data.company.get(b.cik)?.net ?? 0) - Math.abs(data.company.get(a.cik)?.net ?? 0)).slice(0, data.focus === null ? 14 : 200);
+    if (this.selection.kind === null && data.focus !== null) {
+      const movers = [...this.layout.books].filter((book) => book.sector === data.focus).sort((a, b) => Math.abs(data.company.get(b.cik)?.net ?? 0) - Math.abs(data.company.get(a.cik)?.net ?? 0)).slice(0, 12);
       for (const book of movers) named.add(book.cik);
     }
     if (this.selection.kind === "company" && this.selection.id !== null) named.add(this.selection.id);
@@ -341,7 +383,7 @@ export class HallStage {
     }
     // the people with the largest net trades, and whoever the selection involves
     const people = new Set<number>();
-    if (this.selection.kind === null) for (const [cik] of [...data.fund].filter(([cik]) => !data.keep || data.keep.has(cik)).sort((a, b) => Math.abs(b[1].bought - b[1].sold) - Math.abs(a[1].bought - a[1].sold)).slice(0, 10)) people.add(cik);
+    if (this.selection.kind === null) for (const [cik] of [...data.fund].filter(([cik]) => !data.keep || data.keep.has(cik)).sort((a, b) => Math.abs(b[1].bought - b[1].sold) - Math.abs(a[1].bought - a[1].sold)).slice(0, 6)) people.add(cik);
     if (this.selection.kind === "fund" && this.selection.id !== null) people.add(this.selection.id);
     if (this.selection.kind === "company") for (const thread of this.selection.threads.slice(0, 16)) people.add(thread.id);
     for (const cik of people) {
@@ -357,7 +399,7 @@ export class HallStage {
     const width = this.host.clientWidth;
     const height = this.host.clientHeight;
     const projected = new THREE.Vector3();
-    const ordered = [...this.fixedLabels, ...this.labels].sort((a, b) => a.rank - b.rank || Number(b.shown) - Number(a.shown));
+    const ordered = [...this.labels].sort((a, b) => a.rank - b.rank || Number(b.shown) - Number(a.shown));
     const taken: [number, number, number, number][] = [];
     for (const label of ordered) {
       if (label.follow !== undefined) {
@@ -402,6 +444,8 @@ export class HallStage {
       const entry = data.company.get(cik);
       if (!entry) return null;
       if (data.mode === "flow") return entry.held > 0 ? entry.net / entry.held : null;
+      // what is held: on a log scale from a billion to the largest holding
+      if (data.mode === "held") return entry.held > 0 ? Math.max(0, Math.log10(entry.held / 1e9)) : null;
       return entry.since === null ? null : (1 + entry.since) / data.deflator - 1;
     };
     for (const book of this.layout.books) {
@@ -409,25 +453,46 @@ export class HallStage {
       if (value !== null) values.push(Math.abs(value));
     }
     values.sort((a, b) => a - b);
-    const limit = Math.max(data.mode === "flow" ? 0.004 : 0.08, values[Math.floor(values.length * 0.9)] ?? 0);
+    const limit = data.mode === "held" ? Math.max(0.5, ...values) : Math.max(data.mode === "flow" ? 0.004 : 0.08, values[Math.floor(values.length * 0.9)] ?? 0);
+    const gold = this.dark ? "#d8ad55" : "#b8892e";
     const most = Math.max(1, ...this.layout.books.map((book) => Math.abs(data.company.get(book.cik)?.net ?? 0)));
     const color = new THREE.Color();
     this.layout.books.forEach((book, index) => {
       const value = reading(book.cik);
       const dimmed = data.focus !== null && book.sector !== data.focus;
-      const shade = value === null ? this.tone.book : mixOklab(this.tone.book, value >= 0 ? this.palette.pos : this.palette.neg, Math.min(1, Math.abs(value) / limit));
+      const shade = value === null ? this.tone.book : mixOklab(this.tone.book, data.mode === "held" ? gold : value >= 0 ? this.palette.pos : this.palette.neg, Math.min(1, Math.abs(value) / limit));
       color.set(dimmed ? mixOklab(shade, this.tone.sky, 0.55) : shade);
       color.toArray(this.tintTarget, index * 3);
       const net = data.company.get(book.cik)?.net ?? 0;
       const strength = Math.sqrt(Math.abs(net) / most);
       // bought: out of the shelf towards the reader; sold: pushed back towards the wall
-      this.pullTarget[index] = dimmed ? 0 : net > 0 ? 0.7 * strength : -0.3 * strength;
+      this.pullTarget[index] = dimmed || data.mode === "held" ? 0 : net > 0 ? 0.7 * strength : -0.3 * strength;
     });
     this.settling = true;
     this.updatePeople(moved);
     this.updateStreams();
     this.updateMap();
+    this.updateBoards();
     this.refreshLabels();
+  }
+
+  /** The scoreboards over the bookcases, the top-ten boards, and Main Street's panel of the money from outside. */
+  private updateBoards(): void {
+    const data = this.data;
+    if (!data) return;
+    const companies = new Map<string, number>();
+    for (const book of this.layout.books) companies.set(book.sector, (companies.get(book.sector) ?? 0) + 1);
+    const scores = new Map<string, SectorScore>();
+    for (const [sector, entry] of data.sectors) scores.set(sector, { sector, inflow: entry.bought, outflow: entry.sold, net: entry.net, held: entry.held, companies: companies.get(sector) ?? 0 });
+    this.scoreboards?.set(scores, data.mode === "held" ? "held" : data.mode);
+    this.topBoards?.set(data.lists);
+    let arrived = 0;
+    let left = 0;
+    for (const link of data.links) {
+      if (link.from === FLOW_OUTSIDE && link.to !== FLOW_OUTSIDE) arrived += link.usd;
+      if (link.to === FLOW_OUTSIDE && link.from !== FLOW_OUTSIDE) left += link.usd;
+    }
+    this.mainStreet?.paint({ arrived, left, quarter: data.quarter });
   }
 
   /** The map table: each state tinted by the quarter's net flow into the companies headquartered there, flags where it was large. */
@@ -440,10 +505,11 @@ export class HallStage {
       if (!this.headquarters.has(cik)) continue;
       const state = this.headquarters.get(cik);
       const flow = state ? flows.get(state) ?? flows.set(state, { net: 0, companies: 0 }).get(state)! : abroad;
-      flow.net += entry.net;
+      flow.net += data.mode === "held" ? entry.held : entry.net;
       flow.companies++;
     }
-    this.map.update(flows, abroad, this.palette.pos, this.palette.neg, mixOklab);
+    const gold = this.dark ? "#d8ad55" : "#b8892e";
+    this.map.update(flows, abroad, data.mode === "held" ? gold : this.palette.pos, data.mode === "held" ? gold : this.palette.neg, mixOklab);
   }
 
   /**
@@ -518,11 +584,11 @@ export class HallStage {
     if (!data || !this.building) return;
     const specs: StreamSpec[] = [];
     const quiet = this.selection.kind !== null && this.selection.threads.length > 0;
-    for (const link of data.links.filter((item) => item.from !== item.to).slice(0, 16)) {
+    for (const link of data.mode === "held" ? [] : data.links.filter((item) => item.from !== item.to).slice(0, 16)) {
       const from = this.anchorOf(link.from);
       const to = this.anchorOf(link.to);
       if (!from || !to) continue;
-      specs.push({ from, to, usd: link.usd, start: this.negative, end: this.positive, kind: "rotation", lit: !quiet && (data.focus === null || link.from === data.focus || link.to === data.focus) });
+      specs.push({ from, to, usd: link.usd, start: this.negative, end: this.positive, kind: "rotation", lit: !quiet && (data.focus === null || link.from === data.focus || link.to === data.focus), label: { from: link.from, to: link.to } });
     }
     // a selected fund's money runs between the person and the books; a selected book's to and from its traders
     const head = new THREE.Vector3();
@@ -785,6 +851,9 @@ export class HallStage {
     if (this.crowd) targets.push(...this.crowd.pickers);
     if (this.building) targets.push(this.building.door, ...this.building.panes);
     if (this.map) targets.push(...this.map.tiles);
+    if (this.scoreboards) targets.push(...this.scoreboards.faces);
+    if (this.topBoards) targets.push(...this.topBoards.faces);
+    targets.push(...this.streams.pickable);
     const hits = this.raycaster.intersectObjects(targets, false);
     let next: StageTarget | null = null;
     const hit = hits[0];
@@ -794,6 +863,10 @@ export class HallStage {
       else if (hit.object === this.building?.door) next = { kind: "outside" };
       else if (typeof hit.object.userData.sector === "string") next = { kind: "sector", name: hit.object.userData.sector };
       else if (typeof hit.object.userData.state === "string") next = { kind: "state", code: hit.object.userData.state, name: this.map?.nameOf(hit.object.userData.state) ?? hit.object.userData.state };
+      else if (typeof hit.object.userData.board === "number" && hit.uv) {
+        const row = this.topBoards?.rowAt(hit.object.userData.board, hit.uv);
+        next = row?.target ?? null;
+      } else if (hit.object.userData.stream) next = { kind: "stream", ...(hit.object.userData.stream as { from: string; to: string; usd: number }) };
     }
     const same = JSON.stringify(next) === JSON.stringify(this.hovered);
     this.hovered = next;
@@ -868,6 +941,10 @@ export class HallStage {
     // from high under the dome the streams thin out so the crowds below show through
     this.streams.update(this.calm ? 0 : this.clock, clamp(1 - (this.camera.position.y - 11) / 9, 0.22, 1));
     if (!this.calm) this.map?.flutter(this.clock);
+    // the map keeps north away from the reader, wherever they stand
+    if (this.map) this.map.group.rotation.y = Math.atan2(this.camera.position.x, this.camera.position.z);
+    this.providence?.watch(this.camera.position);
+    this.scoreboards?.update(this.clock);
     this.composer.render();
     this.placeLabels();
   };
@@ -887,6 +964,10 @@ export class HallStage {
     window.removeEventListener("blur", this.onBlur);
     this.crowd?.dispose();
     this.map?.dispose();
+    this.mainStreet?.dispose();
+    this.providence?.dispose();
+    this.scoreboards?.dispose();
+    this.topBoards?.dispose();
     this.streams.dispose();
     this.scene.traverse((object) => {
       const mesh = object as THREE.Mesh;

@@ -1606,3 +1606,33 @@ next to Kimi's option pass and a facts fetch; usually about two). Gates as above
 - Gates: `npm run check`, **224 files / 1,262 tests**, `npm run build`, `git diff --check`, K09 typecheck, 31 focused tests and the 13/13 report verifier. Joint web restart 6812 → **2620**, one listener, final auth 200, no page errors or failed requests.
 - No production write, deployment, schema change, LLM, GDELT or alpha promotion. Unrelated generated exposure/analytics files remain uncommitted. Full evidence hashes are in `docs/engine/tasks/K09-data-health.md`.
 - **Next safe action:** inspect the scheduled data-health lastRun after its normal parents complete. Option schema 4 for retained strikes remains a separate owner decision.
+
+
+## 130. Claude: the hall's room round — Main Street, the eye, scoreboards, top-ten boards, logos, holdings — 2026-11-12 (local night)
+
+Owner's requests of 2026-11-12 (after the joint restart 6812 → 2620 the flow files are open to every signed-in user):
+
+- **Room**: a light marble floor in 2.5 m squares with grout strips; the entrance shows Main Street at dusk with a
+  panel of the money that came in from and went out to everything outside the covered stocks
+  (`hall/mainstreet.ts`); the Great Seal's unfinished pyramid with the eye under the dome turns to the reader and
+  the eye looks at them (`hall/providence.ts`); the map table turns so that north is always away from the reader;
+  streams and bubbles fade within a few metres of the eye.
+- **Boards** (`hall/boards.ts`, `hall/lists.ts`): a scoreboard over the gallery railing above every bookcase (in,
+  out, net tally counting up on a quarter change; held in the holdings view) crowned by a bronze sector emblem
+  (`hall/props.ts`); top-ten boards between the columns (most bought/sold, top buyers/sellers, winners/losers, most
+  traded, largest holdings and funds, technology, best/worst since; order by view, rows clickable). The floating
+  sector chips and the door label are gone; at most six name plates without a selection.
+- **Books**: each spine carries the company's logo on a badge and its ticker in gilt (`hall/spines.ts`, logo atlas
+  `public/desk-assets/library/logos/`, 491 of 493 logos; sources in `research/engine/company-logos.json`, owner's
+  decision that the logos are public).
+- **Holdings layer**: a third colour mode, "What is held" (`?show=held`): books in gold by the value held, streams
+  set aside, the map in gold by headquarters, scoreboards and lists on holdings.
+- Stream tooltips (from → to, dollars, an estimate).
+
+Gates: `npm run check` clean, eslint clean, 76 focused tests (src/desk, desk-flows router, fund-flows), `npx vite
+build`, `git diff --check`. Headless Edge screenshots in light and dark: entrance, dome, holdings, spines, boards.
+
+**Next (Claude)**: the people round (smoother figures, age by the firm's first SEC filing with grey hair and canes,
+build by size, scooters and bikes for the youngest firms, laptops, visits to other bookcases, the "People"
+audience with famous faces). **Proposed for Kimi**: K11 (`docs/engine/tasks/K11-hall-filers-and-schedule.md`,
+not approved yet) after K10.
