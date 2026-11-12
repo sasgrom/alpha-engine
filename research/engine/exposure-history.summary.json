@@ -1084,9 +1084,9 @@
  },
  "afterCoverage": {
   "rates": {
-   "computable": 38,
+   "computable": 40,
    "historical_only": 2,
-   "not_applicable": 6,
+   "not_applicable": 4,
    "not_computable": 4
   },
   "oil": {
@@ -1127,7 +1127,9 @@
     "accessionNo": "0000002488-26-000018",
     "concepts": [
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
-     "us-gaap:OperatingIncomeLoss"
+     "us-gaap:OperatingIncomeLoss",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+     "us-gaap:ShortTermInvestments"
     ],
     "evidence": [
      {
@@ -1176,7 +1178,9 @@
     "accessionNo": "0001065280-26-000034",
     "concepts": [
      "us-gaap:ShortTermBorrowings",
-     "us-gaap:OperatingIncomeLoss"
+     "us-gaap:OperatingIncomeLoss",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+     "us-gaap:ShortTermInvestments"
     ],
     "evidence": [
      {
@@ -1226,7 +1230,9 @@
     "concepts": [
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-     "us-gaap:OperatingIncomeLoss"
+     "us-gaap:OperatingIncomeLoss",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+     "us-gaap:ShortTermInvestments"
     ],
     "evidence": [
      {
@@ -1274,7 +1280,9 @@
     "availableAt": "2026-02-26",
     "accessionNo": "0000078003-26-000026",
     "concepts": [
-     "us-gaap:LongTermDebtCurrent"
+     "us-gaap:LongTermDebtCurrent",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+     "us-gaap:AvailableForSaleSecuritiesDebtSecuritiesCurrent"
     ],
     "evidence": [
      {
@@ -1324,7 +1332,8 @@
     "concepts": [
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-     "us-gaap:OperatingIncomeLoss"
+     "us-gaap:OperatingIncomeLoss",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue"
     ],
     "evidence": [
      {
@@ -1399,7 +1408,9 @@
     "concepts": [
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-     "us-gaap:OperatingIncomeLoss"
+     "us-gaap:OperatingIncomeLoss",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+     "us-gaap:MarketableSecuritiesCurrent"
     ],
     "evidence": [
      {
@@ -1449,7 +1460,9 @@
     "concepts": [
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-     "us-gaap:OperatingIncomeLoss"
+     "us-gaap:OperatingIncomeLoss",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+     "us-gaap:AvailableForSaleSecuritiesDebtSecuritiesCurrent"
     ],
     "evidence": [
      {
@@ -1498,7 +1511,8 @@
     "availableAt": "2026-02-12",
     "accessionNo": "0000059478-26-000013",
     "concepts": [
-     "us-gaap:DebtCurrent"
+     "us-gaap:DebtCurrent",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue"
     ],
     "evidence": [
      {
@@ -1569,7 +1583,8 @@
     "concepts": [
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-     "us-gaap:OperatingIncomeLoss"
+     "us-gaap:OperatingIncomeLoss",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue"
     ],
     "evidence": [
      {
@@ -1619,7 +1634,9 @@
     "concepts": [
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-     "us-gaap:OperatingIncomeLoss"
+     "us-gaap:OperatingIncomeLoss",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+     "us-gaap:MarketableSecuritiesCurrent"
     ],
     "evidence": [
      {
@@ -1685,14 +1702,44 @@
     ]
    },
    "after": {
-    "status": "not_applicable",
-    "periodEnd": null,
-    "availableAt": null,
-    "accessionNo": null,
-    "concepts": [],
-    "evidence": []
+    "status": "computable",
+    "periodEnd": "2025-12-31",
+    "availableAt": "2026-02-11",
+    "accessionNo": "0001141391-26-000013",
+    "concepts": [
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+     "us-gaap:OperatingIncomeLoss",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-02-11",
+      "accessionNo": "0001141391-26-000013",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1141391/000114139126000013/ma-20251231.htm",
+      "sourceHash": "ff528adc68fb6e4a7538679d0b4f20fdca31379c813907ac966a935d22b02126",
+      "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+      "value": 750000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-1022",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+        "contextRef": "c-11",
+        "rawValue": "750",
+        "value": 750000000,
+        "unitRef": "usd",
+        "format": null,
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-11\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" scale=\"6\" id=\"f-1022\">750</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
    },
-   "cause": "rate_exposure_works_through_interest_margin"
+   "cause": "current_inline_xbrl_maturity_total_recovered"
   },
   {
    "ticker": "V",
@@ -1706,14 +1753,44 @@
     ]
    },
    "after": {
-    "status": "not_applicable",
-    "periodEnd": null,
-    "availableAt": null,
-    "accessionNo": null,
-    "concepts": [],
-    "evidence": []
+    "status": "computable",
+    "periodEnd": "2026-09-30",
+    "availableAt": "2026-11-05",
+    "accessionNo": "0001403161-26-000134",
+    "concepts": [
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+     "us-gaap:OperatingIncomeLoss",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-11-05",
+      "accessionNo": "0001403161-26-000134",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1403161/000140316126000134/v-20260930.htm",
+      "sourceHash": "90bea1ecf1dd3a73d0579ac3ee33920880ff55323fa654516be7a457894057d8",
+      "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+      "value": 2750000000,
+      "unit": "USD",
+      "facts": [
+       {
+        "id": "f-1149",
+        "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+        "contextRef": "c-19",
+        "rawValue": "2,750",
+        "value": 2750000000,
+        "unitRef": "usd",
+        "format": "ixt:num-dot-decimal",
+        "scale": "6",
+        "sign": null,
+        "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-19\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1149\">2,750</ix:nonFraction>"
+       }
+      ]
+     }
+    ]
    },
-   "cause": "rate_exposure_works_through_interest_margin"
+   "cause": "current_inline_xbrl_maturity_total_recovered"
   },
   {
    "ticker": "COST",
@@ -1734,7 +1811,9 @@
     "concepts": [
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-     "us-gaap:OperatingIncomeLoss"
+     "us-gaap:OperatingIncomeLoss",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+     "us-gaap:ShortTermInvestments"
     ],
     "evidence": [
      {
@@ -1784,7 +1863,9 @@
     "accessionNo": "0001163165-26-000009",
     "concepts": [
      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
-     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo"
+     "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+     "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+     "us-gaap:ShortTermInvestments"
     ],
     "evidence": [
      {
@@ -2137,6 +2218,37 @@
      }
     ]
    },
+   "cashShortTerm": {
+    "value": 56722000000,
+    "unit": "USD",
+    "periodEnd": "2026-09-26",
+    "facts": [
+     {
+      "id": "f-157",
+      "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "contextRef": "c-19",
+      "rawValue": "36,305",
+      "value": 36305000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-19\" decimals=\"-6\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-157\">36,305</ix:nonFraction>"
+     },
+     {
+      "id": "f-159",
+      "concept": "us-gaap:MarketableSecuritiesCurrent",
+      "contextRef": "c-19",
+      "rawValue": "20,417",
+      "value": 20417000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-19\" decimals=\"-6\" name=\"us-gaap:MarketableSecuritiesCurrent\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-159\">20,417</ix:nonFraction>"
+     }
+    ]
+   },
    "scenarioStatus": "computable",
    "metrics": [
     {
@@ -2148,7 +2260,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:MarketableSecuritiesCurrent"
      ],
      "periodStart": "2025-09-28",
      "periodEnd": "2026-09-26",
@@ -2164,7 +2278,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:MarketableSecuritiesCurrent"
      ],
      "periodStart": "2025-09-28",
      "periodEnd": "2026-09-26",
@@ -2204,6 +2320,37 @@
     ]
    },
    "yearTwo": null,
+   "cashShortTerm": {
+    "value": 10552000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-27",
+    "facts": [
+     {
+      "id": "f-136",
+      "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "contextRef": "c-6",
+      "rawValue": "5,539",
+      "value": 5539000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-6\" decimals=\"-6\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-136\">5,539</ix:nonFraction>"
+     },
+     {
+      "id": "f-138",
+      "concept": "us-gaap:ShortTermInvestments",
+      "contextRef": "c-6",
+      "rawValue": "5,013",
+      "value": 5013000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-6\" decimals=\"-6\" name=\"us-gaap:ShortTermInvestments\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-138\">5,013</ix:nonFraction>"
+     }
+    ]
+   },
    "scenarioStatus": "computable",
    "metrics": [
     {
@@ -2214,7 +2361,9 @@
      "formula": "(nextTwelveMonthMaturities 875000000 − cashAndShortTermInvestments 10552000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:ShortTermInvestments"
      ],
      "periodStart": "2024-12-29",
      "periodEnd": "2025-12-27",
@@ -2229,7 +2378,9 @@
      "formula": "(nextTwelveMonthMaturities 875000000 − cashAndShortTermInvestments 10552000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock; divided by operatingIncome 3694000000",
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:ShortTermInvestments"
      ],
      "periodStart": "2024-12-29",
      "periodEnd": "2025-12-27",
@@ -2288,6 +2439,37 @@
      }
     ]
    },
+   "cashShortTerm": {
+    "value": 37416000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-27",
+    "facts": [
+     {
+      "id": "f-140",
+      "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "contextRef": "c-8",
+      "rawValue": "14,265",
+      "value": 14265000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-8\" decimals=\"-6\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-140\">14,265</ix:nonFraction>"
+     },
+     {
+      "id": "f-142",
+      "concept": "us-gaap:AvailableForSaleSecuritiesDebtSecuritiesCurrent",
+      "contextRef": "c-8",
+      "rawValue": "23,151",
+      "value": 23151000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-8\" decimals=\"-6\" name=\"us-gaap:AvailableForSaleSecuritiesDebtSecuritiesCurrent\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-142\">23,151</ix:nonFraction>"
+     }
+    ]
+   },
    "scenarioStatus": "computable",
    "metrics": [
     {
@@ -2299,7 +2481,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:AvailableForSaleSecuritiesDebtSecuritiesCurrent"
      ],
      "periodStart": "2024-12-29",
      "periodEnd": "2025-12-27",
@@ -2357,6 +2541,37 @@
      }
     ]
    },
+   "cashShortTerm": {
+    "value": 123029000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-250",
+      "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "contextRef": "c-9",
+      "rawValue": "86,810",
+      "value": 86810000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-9\" decimals=\"-6\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-250\">86,810</ix:nonFraction>"
+     },
+     {
+      "id": "f-252",
+      "concept": "us-gaap:MarketableSecuritiesCurrent",
+      "contextRef": "c-9",
+      "rawValue": "36,219",
+      "value": 36219000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-9\" decimals=\"-6\" name=\"us-gaap:MarketableSecuritiesCurrent\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-252\">36,219</ix:nonFraction>"
+     }
+    ]
+   },
    "scenarioStatus": "computable",
    "metrics": [
     {
@@ -2368,7 +2583,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:MarketableSecuritiesCurrent"
      ],
      "periodStart": "2025-01-01",
      "periodEnd": "2025-12-31",
@@ -2384,7 +2601,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:MarketableSecuritiesCurrent"
      ],
      "periodStart": "2025-01-01",
      "periodEnd": "2025-12-31",
@@ -2442,6 +2661,37 @@
      }
     ]
    },
+   "cashShortTerm": {
+    "value": 44059000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-54",
+      "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "contextRef": "c-4",
+      "rawValue": "16,513",
+      "value": 16513000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-4\" decimals=\"-6\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-54\">16,513</ix:nonFraction>"
+     },
+     {
+      "id": "f-56",
+      "concept": "us-gaap:ShortTermInvestments",
+      "contextRef": "c-4",
+      "rawValue": "27,546",
+      "value": 27546000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-4\" decimals=\"-6\" name=\"us-gaap:ShortTermInvestments\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-56\">27,546</ix:nonFraction>"
+     }
+    ]
+   },
    "scenarioStatus": "computable",
    "metrics": [
     {
@@ -2453,7 +2703,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:ShortTermInvestments"
      ],
      "periodStart": "2025-01-01",
      "periodEnd": "2025-12-31",
@@ -2469,7 +2721,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:ShortTermInvestments"
      ],
      "periodStart": "2025-01-01",
      "periodEnd": "2025-12-31",
@@ -2527,6 +2781,37 @@
      }
     ]
    },
+   "cashShortTerm": {
+    "value": 29400000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-202",
+      "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "contextRef": "c-14",
+      "rawValue": "10,921",
+      "value": 10921000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-14\" decimals=\"-6\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-202\">10,921</ix:nonFraction>"
+     },
+     {
+      "id": "f-204",
+      "concept": "us-gaap:ShortTermInvestments",
+      "contextRef": "c-14",
+      "rawValue": "18,479",
+      "value": 18479000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-14\" decimals=\"-6\" name=\"us-gaap:ShortTermInvestments\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-204\">18,479</ix:nonFraction>"
+     }
+    ]
+   },
    "scenarioStatus": "computable",
    "metrics": [
     {
@@ -2538,7 +2823,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:ShortTermInvestments"
      ],
      "periodStart": "2025-01-01",
      "periodEnd": "2025-12-31",
@@ -2554,7 +2841,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:ShortTermInvestments"
      ],
      "periodStart": "2025-01-01",
      "periodEnd": "2025-12-31",
@@ -2612,6 +2901,25 @@
      }
     ]
    },
+   "cashShortTerm": {
+    "value": 825000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-155",
+      "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "contextRef": "c-28",
+      "rawValue": "825",
+      "value": 825000000,
+      "unitRef": "usd",
+      "format": null,
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-28\" decimals=\"-6\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" scale=\"6\" id=\"f-155\">825</ix:nonFraction>"
+     }
+    ]
+   },
    "scenarioStatus": "computable",
    "metrics": [
     {
@@ -2623,7 +2931,8 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue"
      ],
      "periodStart": "2025-01-01",
      "periodEnd": "2025-12-31",
@@ -2639,7 +2948,8 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue"
      ],
      "periodStart": "2025-01-01",
      "periodEnd": "2025-12-31",
@@ -2696,6 +3006,25 @@
      }
     ]
    },
+   "cashShortTerm": {
+    "value": 4310000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-54",
+      "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "contextRef": "c-4",
+      "rawValue": "4,310",
+      "value": 4310000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-4\" decimals=\"-6\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-54\">4,310</ix:nonFraction>"
+     }
+    ]
+   },
    "scenarioStatus": "computable",
    "metrics": [
     {
@@ -2707,7 +3036,8 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue"
      ],
      "periodStart": "2025-01-01",
      "periodEnd": "2025-12-31",
@@ -2723,7 +3053,8 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue"
      ],
      "periodStart": "2025-01-01",
      "periodEnd": "2025-12-31",
@@ -2781,6 +3112,37 @@
      }
     ]
    },
+   "cashShortTerm": {
+    "value": 76843000000,
+    "unit": "USD",
+    "periodEnd": "2026-06-30",
+    "facts": [
+     {
+      "id": "F_94c65b37-f8c4-4ace-9b34-b361903ee64f",
+      "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "contextRef": "C_ca004a37-7abb-4b0e-8638-a7c6b14ebb45",
+      "rawValue": "20,935",
+      "value": 20935000000,
+      "unitRef": "U_USD",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction id=\"F_94c65b37-f8c4-4ace-9b34-b361903ee64f\" contextRef=\"C_ca004a37-7abb-4b0e-8638-a7c6b14ebb45\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" unitRef=\"U_USD\" scale=\"6\" decimals=\"-6\" format=\"ixt:num-dot-decimal\">20,935</ix:nonFraction>"
+     },
+     {
+      "id": "F_d73da821-7d7c-4efd-b6e5-efbdfd723068",
+      "concept": "us-gaap:ShortTermInvestments",
+      "contextRef": "C_ca004a37-7abb-4b0e-8638-a7c6b14ebb45",
+      "rawValue": "55,908",
+      "value": 55908000000,
+      "unitRef": "U_USD",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction id=\"F_d73da821-7d7c-4efd-b6e5-efbdfd723068\" contextRef=\"C_ca004a37-7abb-4b0e-8638-a7c6b14ebb45\" name=\"us-gaap:ShortTermInvestments\" unitRef=\"U_USD\" scale=\"6\" decimals=\"-6\" format=\"ixt:num-dot-decimal\">55,908</ix:nonFraction>"
+     }
+    ]
+   },
    "scenarioStatus": "computable",
    "metrics": [
     {
@@ -2792,7 +3154,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:ShortTermInvestments"
      ],
      "periodStart": "2025-07-01",
      "periodEnd": "2026-06-30",
@@ -2808,7 +3172,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:ShortTermInvestments"
      ],
      "periodStart": "2025-07-01",
      "periodEnd": "2026-06-30",
@@ -2866,6 +3232,37 @@
      }
     ]
    },
+   "cashShortTerm": {
+    "value": 6981000000,
+    "unit": "USD",
+    "periodEnd": "2025-12-31",
+    "facts": [
+     {
+      "id": "f-150",
+      "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "contextRef": "c-8",
+      "rawValue": "6,497",
+      "value": 6497000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-8\" decimals=\"-6\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-150\">6,497</ix:nonFraction>"
+     },
+     {
+      "id": "f-152",
+      "concept": "us-gaap:ShortTermInvestments",
+      "contextRef": "c-8",
+      "rawValue": "484",
+      "value": 484000000,
+      "unitRef": "usd",
+      "format": null,
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-8\" decimals=\"-6\" name=\"us-gaap:ShortTermInvestments\" scale=\"6\" id=\"f-152\">484</ix:nonFraction>"
+     }
+    ]
+   },
    "scenarioStatus": "computable",
    "metrics": [
     {
@@ -2876,7 +3273,9 @@
      "formula": "(nextTwelveMonthMaturities 713000000 + yearTwoMaturities 786000000 − cashAndShortTermInvestments 6981000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
-      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo"
+      "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:ShortTermInvestments"
      ],
      "periodStart": null,
      "periodEnd": "2025-12-31",
@@ -2934,6 +3333,37 @@
      }
     ]
    },
+   "cashShortTerm": {
+    "value": 43434000000,
+    "unit": "USD",
+    "periodEnd": "2026-09-03",
+    "facts": [
+     {
+      "id": "f-112",
+      "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "contextRef": "c-6",
+      "rawValue": "38,364",
+      "value": 38364000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-6\" decimals=\"-6\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-112\">38,364</ix:nonFraction>"
+     },
+     {
+      "id": "f-114",
+      "concept": "us-gaap:AvailableForSaleSecuritiesDebtSecuritiesCurrent",
+      "contextRef": "c-6",
+      "rawValue": "5,070",
+      "value": 5070000000,
+      "unitRef": "usd",
+      "format": "ixt:num-dot-decimal",
+      "scale": "6",
+      "sign": null,
+      "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-6\" decimals=\"-6\" name=\"us-gaap:AvailableForSaleSecuritiesDebtSecuritiesCurrent\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-114\">5,070</ix:nonFraction>"
+     }
+    ]
+   },
    "scenarioStatus": "computable",
    "metrics": [
     {
@@ -2945,7 +3375,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:AvailableForSaleSecuritiesDebtSecuritiesCurrent"
      ],
      "periodStart": "2025-08-29",
      "periodEnd": "2026-09-03",
@@ -2961,7 +3393,9 @@
      "concepts": [
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
-      "us-gaap:OperatingIncomeLoss"
+      "us-gaap:OperatingIncomeLoss",
+      "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+      "us-gaap:AvailableForSaleSecuritiesDebtSecuritiesCurrent"
      ],
      "periodStart": "2025-08-29",
      "periodEnd": "2026-09-03",
@@ -2978,36 +3412,28 @@
  "financialInterestMargin": [
   {
    "ticker": "GS",
+   "sic": "6211",
    "reasons": [
     "rate_exposure_works_through_interest_margin"
    ]
   },
   {
    "ticker": "COF",
+   "sic": "6021",
    "reasons": [
     "rate_exposure_works_through_interest_margin"
    ]
   },
   {
    "ticker": "JPM",
-   "reasons": [
-    "rate_exposure_works_through_interest_margin"
-   ]
-  },
-  {
-   "ticker": "MA",
-   "reasons": [
-    "rate_exposure_works_through_interest_margin"
-   ]
-  },
-  {
-   "ticker": "V",
+   "sic": "6021",
    "reasons": [
     "rate_exposure_works_through_interest_margin"
    ]
   },
   {
    "ticker": "AIG",
+   "sic": "6331",
    "reasons": [
     "rate_exposure_works_through_interest_margin"
    ]
@@ -3044,16 +3470,257 @@
   }
  },
  "atlasAsOf": "2026-11-11T13:56:04.034Z",
- "scenarioAsOf": "2026-11-12T13:35:05.138Z",
+ "scenarioAsOf": "2026-11-12T18:11:15.067Z",
  "hashes": {
   "history": "98a5d49fd3e92469ca84b3a72cc84479dc28d277f2808a0a837de4a65990c39d",
   "exposureLatest": "80a3ab359360bf9105de6bed27782c83ed5656483e03ac9e61c215e8ea51df30",
-  "scenarios": "ddc4986b112524fe3143c3e0ff5805c31f78f5d8f432deefce860a6f51f177c3",
+  "scenarios": "7f29052f0bbccc21b847b37f3d3482dab1032c85a06b0be7868fa98d03409379",
   "atlas": "69c7fe5848a98188ae5e44b5e293ecf785fe2fb287544b61ac82c10255d00b13"
  },
  "errors": [],
  "productionWrite": false,
  "databaseWrite": false,
  "status": "complete",
- "published": true
+ "published": true,
+ "paymentNetworkCorrection": {
+  "before": {
+   "computable": 38,
+   "historical_only": 2,
+   "not_applicable": 6,
+   "not_computable": 4
+  },
+  "after": {
+   "computable": 40,
+   "historical_only": 2,
+   "not_applicable": 4,
+   "not_computable": 4
+  },
+  "classificationBasis": "local companies.sic is null; explicit reviewed SIC mapping, not the Financials sector label",
+  "evidence": [
+   {
+    "ticker": "V",
+    "sic": "7389",
+    "status": "computable",
+    "metrics": [
+     {
+      "name": "interest_upper_bound",
+      "value": -87720000,
+      "unit": "USD/year",
+      "impactType": "upper_bound",
+      "formula": "(nextTwelveMonthMaturities 2750000000 + yearTwoMaturities 1416000000 − cashAndShortTermInvestments 12938000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+      "concepts": [
+       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+       "us-gaap:OperatingIncomeLoss",
+       "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "availableAt": "2026-11-05",
+      "stale": false
+     },
+     {
+      "name": "interest_upper_bound",
+      "value": -0.0031205976520811097,
+      "unit": "ratio",
+      "impactType": "upper_bound",
+      "formula": "(nextTwelveMonthMaturities 2750000000 + yearTwoMaturities 1416000000 − cashAndShortTermInvestments 12938000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock; divided by operatingIncome 28110000000",
+      "concepts": [
+       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+       "us-gaap:OperatingIncomeLoss",
+       "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+      ],
+      "periodStart": "2025-10-01",
+      "periodEnd": "2026-09-30",
+      "availableAt": "2026-11-05",
+      "stale": false
+     }
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-11-05",
+      "accessionNo": "0001403161-26-000134",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1403161/000140316126000134/v-20260930.htm",
+      "sourceHash": "90bea1ecf1dd3a73d0579ac3ee33920880ff55323fa654516be7a457894057d8",
+      "measures": [
+       {
+        "kind": "debtMaturingNext12",
+        "value": 2750000000,
+        "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+        "facts": [
+         {
+          "id": "f-1149",
+          "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+          "contextRef": "c-19",
+          "rawValue": "2,750",
+          "value": 2750000000,
+          "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-19\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1149\">2,750</ix:nonFraction>"
+         }
+        ]
+       },
+       {
+        "kind": "debtMaturingYearTwo",
+        "value": 1416000000,
+        "note": "Undimensioned year-two maturity total; instrument rows excluded",
+        "facts": [
+         {
+          "id": "f-1150",
+          "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+          "contextRef": "c-19",
+          "rawValue": "1,416",
+          "value": 1416000000,
+          "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-19\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1150\">1,416</ix:nonFraction>"
+         }
+        ]
+       },
+       {
+        "kind": "operatingIncome",
+        "value": 28110000000,
+        "note": null,
+        "facts": [
+         {
+          "id": "f-215",
+          "concept": "us-gaap:OperatingIncomeLoss",
+          "contextRef": "c-1",
+          "rawValue": "28,110",
+          "value": 28110000000,
+          "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-1\" decimals=\"-6\" name=\"us-gaap:OperatingIncomeLoss\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-215\">28,110</ix:nonFraction>"
+         }
+        ]
+       },
+       {
+        "kind": "cashShortTerm",
+        "value": 12938000000,
+        "note": "Cash plus one short-term-investment aggregate; duplicate investment concepts excluded",
+        "facts": [
+         {
+          "id": "f-80",
+          "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+          "contextRef": "c-19",
+          "rawValue": "12,938",
+          "value": 12938000000,
+          "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-19\" decimals=\"-6\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-80\">12,938</ix:nonFraction>"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "ticker": "MA",
+    "sic": "7389",
+    "status": "computable",
+    "metrics": [
+     {
+      "name": "interest_upper_bound",
+      "value": -78750000,
+      "unit": "USD/year",
+      "impactType": "upper_bound",
+      "formula": "(nextTwelveMonthMaturities 750000000 + yearTwoMaturities 1941000000 − cashAndShortTermInvestments 10566000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock",
+      "concepts": [
+       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+       "us-gaap:OperatingIncomeLoss",
+       "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+      ],
+      "periodStart": "2025-01-01",
+      "periodEnd": "2025-12-31",
+      "availableAt": "2026-02-11",
+      "stale": false
+     },
+     {
+      "name": "interest_upper_bound",
+      "value": -0.004167328147324972,
+      "unit": "ratio",
+      "impactType": "upper_bound",
+      "formula": "(nextTwelveMonthMaturities 750000000 + yearTwoMaturities 1941000000 − cashAndShortTermInvestments 10566000000) × rateShock 0.01; scheduled repricing plus directly tagged floating debt; assumes cash earns the same shock; divided by operatingIncome 18897000000",
+      "concepts": [
+       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+       "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+       "us-gaap:OperatingIncomeLoss",
+       "us-gaap:CashAndCashEquivalentsAtCarryingValue"
+      ],
+      "periodStart": "2025-01-01",
+      "periodEnd": "2025-12-31",
+      "availableAt": "2026-02-11",
+      "stale": false
+     }
+    ],
+    "evidence": [
+     {
+      "form": "10-K",
+      "filingDate": "2026-02-11",
+      "accessionNo": "0001141391-26-000013",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1141391/000114139126000013/ma-20251231.htm",
+      "sourceHash": "ff528adc68fb6e4a7538679d0b4f20fdca31379c813907ac966a935d22b02126",
+      "measures": [
+       {
+        "kind": "debtMaturingNext12",
+        "value": 750000000,
+        "note": "Undimensioned next-twelve-month maturity total; instrument rows excluded",
+        "facts": [
+         {
+          "id": "f-1022",
+          "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths",
+          "contextRef": "c-11",
+          "rawValue": "750",
+          "value": 750000000,
+          "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-11\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths\" scale=\"6\" id=\"f-1022\">750</ix:nonFraction>"
+         }
+        ]
+       },
+       {
+        "kind": "debtMaturingYearTwo",
+        "value": 1941000000,
+        "note": "Undimensioned year-two maturity total; instrument rows excluded",
+        "facts": [
+         {
+          "id": "f-1023",
+          "concept": "us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo",
+          "contextRef": "c-11",
+          "rawValue": "1,941",
+          "value": 1941000000,
+          "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-11\" decimals=\"-6\" name=\"us-gaap:LongTermDebtMaturitiesRepaymentsOfPrincipalInYearTwo\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-1023\">1,941</ix:nonFraction>"
+         }
+        ]
+       },
+       {
+        "kind": "operatingIncome",
+        "value": 18897000000,
+        "note": null,
+        "facts": [
+         {
+          "id": "f-81",
+          "concept": "us-gaap:OperatingIncomeLoss",
+          "contextRef": "c-1",
+          "rawValue": "18,897",
+          "value": 18897000000,
+          "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-1\" decimals=\"-6\" name=\"us-gaap:OperatingIncomeLoss\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-81\">18,897</ix:nonFraction>"
+         }
+        ]
+       },
+       {
+        "kind": "cashShortTerm",
+        "value": 10566000000,
+        "note": "Cash plus one short-term-investment aggregate; duplicate investment concepts excluded",
+        "facts": [
+         {
+          "id": "f-186",
+          "concept": "us-gaap:CashAndCashEquivalentsAtCarryingValue",
+          "contextRef": "c-11",
+          "rawValue": "10,566",
+          "value": 10566000000,
+          "excerpt": "<ix:nonFraction unitRef=\"usd\" contextRef=\"c-11\" decimals=\"-6\" name=\"us-gaap:CashAndCashEquivalentsAtCarryingValue\" format=\"ixt:num-dot-decimal\" scale=\"6\" id=\"f-186\">10,566</ix:nonFraction>"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
 }
