@@ -2207,3 +2207,52 @@ All read only, except one probe download (below). No change to the dataset or fi
 - **No prohibited actions:** no production writes, schema/scheduler changes, web restarts, network requests, LLM or GDELT. No step-2 normalization or MySQL loading was started. Existing generated main-repo reports and other agents' untracked files were left untouched.
 - **Delivery:** the task file contains the full override table and gate evidence, `docs/engine/STANDARD_FUNDAMENTALS.md` section 9 is filled, and `v3\delivery-report.md`, `mapping-report.md`, `remaining-stops.md` and the validated workbook are on D:. Main-repo commit is local only; no push was made because K14 forbids network requests.
 - **Next safe action:** Claude and the owner can review the mappings and workbook. MySQL loading, step-2 normalization, production sync and any new task remain separate reviewed decisions.
+
+## 151. Claude: K14 Stage B accepted and v3 loaded; standard prices built, gated and loaded; K15 approved — 2026-11-13 morning
+
+- **Scheduler restart** (to load the `split-calendar` cron).
+  - It waited for the nightly `page-data-dashboard` and two queued jobs to finish (all exit 0, last at 09:16:40Z), then restarted at 09:16:50Z.
+  - State: one process tree, lock pid 2768, heartbeat fresh; next `split-calendar` 14:15Z.
+- **K14 Stage B accepted** (Kimi §150).
+  - My reruns: `compare.py v3-base v3` gives 0 removed, 0 broken; `checks.py` matches Kimi's numbers exactly. Six sampled entries' evidence checks out against the cited filings.
+  - Loaded `v3` into `alpha_research` as **provisional** (`load-mysql.mts … v3 provisional --replace`, replacing v3-mech): 1,664,768 values, 32,727 quarters, 500 companies, 64 fields; 2,000 values read back, 0 different; 875 s.
+  - It becomes final after the owner's review of `v3\Standard fundamentals v3 - review.xls`.
+- **Standard prices, build p1.** Process: `docs/engine/STANDARD_PRICES.md`; lab `0dec6e7`; build `D:\research\alpha-engine\prices\std\`.
+  - Read-only export of the app's prices: `D:\research\alpha-engine\prices\app-db\2026-11-13\`, 517 companies, 5,985,380 rows.
+  - Tiingo tickers tied to companies: 410. Five were found by prices: BK, EQR, MMC, NLOK, VIAC.
+  - As-traded bars from Tiingo where trusted, from Schwab's line `a × Schwab + b` elsewhere; corporate actions; split and total-return indexes.
+  - Gates:
+    - total return against Stooq: 7,880 of 2,736,974 sessions differ (0.29%);
+    - option spot: 486 of 490 companies below 1% median;
+    - splits: 435 of 435 move correctly, 142 confirmed by SEC;
+    - 5,432 empty sessions;
+    - known cases (AAPL, NVDA, GE, TSLA, CMG, NFLX) right.
+  - Loaded into `alpha_research` as build `p1`, provisional (`src/prices/load-mysql.mts`; tables `std_prices`, `std_price_companies`, `std_price_builds`).
+    - 2,891,701 bars for 514 companies: 494 `ok`, 20 `review`.
+    - 1,988 random bars read back, 0 different; 2,164 s.
+  - Overrides (`std-prices-overrides.json`): DD from 2017-09-01, EVRG from 2018-06-05, TPL for review.
+  - Gate 6, market value tie-out (`marketcap-tieout.py`): our close × the company's own filed shares against the old database's monthly market caps.
+    - 395 companies and 62,256 months: 97.0% steady; only 7 months jump by a split's ratio.
+    - The old database's market caps understate companies before each spin-off by its factor (GE 1.605 = 1.2815 × 1.253).
+    - Share counts that cover one class only, and Boeing's and Tyler's issued-for-outstanding 10-K counts, are recorded as step-2 items in `STANDARD_FUNDAMENTALS.md` §6.
+  - Schwab, Tiingo and Yahoo quirks: process doc §4.
+- **Yahoo US pull** (corporate actions only, polite): healthy at 2.75 s per ticker with no throttling; 2,852 of about 8,560 done at 11:08Z; ends about 15:30Z. Owner: "no rush".
+- **StockTitan:** its terms forbid scripts and scraping. Its RSS is the latest 100 general news items, so it is not usable as a split calendar.
+- **Owner's side:** Cloudflare 403s ("Attention Required") ended his sessions three or four times. Suspected cause: antivirus HTTPS scanning, which he switched off to test.
+- **K15 approved by the owner** ("K15 now, K16 after"): `docs/engine/tasks/K15-split-aware-shares.md`.
+  - What: share counts follow a split from its first session (split-watch log) until a filing on the new basis exists.
+  - Due before SNDK's 8-for-1 on 2026-11-20.
+  - K16 (standard 13F series from the fund books) follows after K15 is accepted.
+- **Commits:**
+  - Lab: `0dec6e7` (build, gates, loader), `62b4bff` (gate 6).
+  - Main: this commit, pushed together with Kimi's `54b8632`. It holds `STANDARD_PRICES.md`, the K15 spec, `STANDARD_FUNDAMENTALS.md` §6 (share-count items) and this section.
+  - Gate for this docs-only commit: `git diff --check`.
+- **Next safe actions:**
+  - Kimi: K15.
+  - Claude:
+    - review K15 and restart the web server after it;
+    - summarize the Yahoo US pull;
+    - append new bars to `std_prices` daily;
+    - watch SNDK's re-base on 2026-11-20;
+    - write K16.
+  - Owner: the v3 workbook review.

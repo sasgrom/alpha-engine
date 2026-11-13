@@ -169,6 +169,9 @@ Every new build is accepted only when all of these hold.
   - It must ignore scaling slips, which also look like restatements: GRMN's 2018 10-K gave weighted shares in thousands (188,6xx). The test refused the right Q4 values of 2018 and 2019 until a slip of a thousand times was excluded, and share counts were held to split-sized changes.
   - Read the refused pairs before trusting a rule like this: `SHOW_REFUSED=1` prints each refused pair and each implausible figure.
   - What it cannot see is a first XBRL year with nothing earlier to compare: A. O. Smith's Q4 2010 revenue stays at −166m until the 2011 comparatives give 370m.
+- **Share counts are not one thing** (found by the market value tie-out against the old database, `docs/engine/STANDARD_PRICES.md` gate 6, 2026-11-13). They are step-2 items:
+  - Some filers tag the year-end count of shares *issued* as `CommonStockSharesOutstanding`. Boeing's 10-Ks give about 1.36 times the outstanding count; Tyler Technologies is similar.
+  - The filed count covers one class or one listed company where market value needs all of them (Visa, UPS, Comcast, Mastercard, Berkshire; Carnival's two companies).
 - **Built server:** code bundled into the server (`dist/boot.js`) must not take the repository root from `import.meta.dirname`.
 - **WebFetch cannot read SEC's PDF documentation.** Save it and read it with the PDF reader.
 - **Windows:** Git's CRLF conversion changes a script's hash. Do not let it touch `fsds-extract.py` without expecting a full re-extraction.
