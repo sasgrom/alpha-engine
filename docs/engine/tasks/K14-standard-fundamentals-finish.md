@@ -18,7 +18,8 @@ None.
 - **Builds:**
   - `D:\research\alpha-engine\fundamentals\standard\v2\` is the evaluated build.
   - `...\standard\v3-mech\` was the baseline for Stage A: v2 plus the zero rule, with no overrides.
-  - `...\standard\v3-base\` is the baseline for Stage B (2026-11-13, lab `8f6afc0`): v3-mech plus the restated-basis rule (process document, section 4), with no overrides. QA, checks and `compare.py` against v3-mech have been run on it.
+  - `...\standard\v3-base\` is the baseline for Stage B (rebuilt 2026-11-13 with lab `cd2f158`, checks `35ec948`): v3-mech plus the restated-basis rule and quarter numbers for 10-Qs labelled "FY" (BXP and 9 others), with no overrides. QA and checks have been run on it; the first restated-basis baseline is kept as `v3-base-8f6afc0`.
+  - Freshness counts original 10-Q/10-K filings. An amendment of a quarter we hold (TECH's 10-Q/A of 2026-11-12) is listed under `freshness.amendedSince` for information.
 - **Code:** lab `C:\dev\alpha-engine-lab\src\fundamentals\` (commit `935307e`). The file you edit is `overrides.json`, which is empty now.
 - **Your K13 candidates:** `D:\research\alpha-engine\fundamentals\standard\v1\gaps\gaps.json`.
 - **SEC data sets, per company and quarter:** `D:\research\alpha-engine\fundamentals\fsds\extract\<quarter>\<cik>.json`. Each holds `filings[]` with:
@@ -147,7 +148,7 @@ I review before stage B.
    - Freshness stays at 0.
    - The revenue "largest printed line" share is at least 96.10%.
    - Every remaining "stops early" item is listed with its reason. Target: each field's count at least halved.
-3. **qa.mts on v3:** no check worse than the baseline. The baseline's (v3-base) off counts: grossProfit 516, cashChange 623, signs 244, revenueJumps 58, assetJumps 48, negativeQ4Revenue 1 (A. O. Smith Q4 2010, which the rule cannot see; leave it).
+3. **qa.mts on v3:** no check worse than the baseline. The baseline's (v3-base) off counts: grossProfit 516, cashChange 622, signs 244, revenueJumps 59, assetJumps 48, negativeQ4Revenue 1 (A. O. Smith Q4 2010, which the rule cannot see; leave it).
 4. **Overrides:** every entry has evidence. The report has a table: company, field, tags, use, period, evidence filing, and the quarters it added or changed.
 5. **Documentation:** fill section 9 of `docs/engine/STANDARD_FUNDAMENTALS.md` with:
    - the method;

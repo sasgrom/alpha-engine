@@ -2125,3 +2125,45 @@ All read only, except one probe download (below). No change to the dataset or fi
   - Health check: no alerts.
 - **K14 question answered:** GE's, SLB's, TMO's and OXY's "missing" concepts are the companies' own extension tags with standard-looking names (`version` = the filing's accession). Kimi writes them as `custom:Name`; no build change (my draft supplement was dropped).
 - **Gates:** `npm run check` 0; 239 files, 1,346 tests passed; `npm run build` 0.
+
+## 148. Claude: splits and corporate actions from every source, reconciled; BXP calendar fix; baseline rebuilt — 2026-11-13 night
+
+- **Owner:**
+  - Prices are cleaned first: "go with your recommendation".
+  - Then "not sure what is our situation with splits", "go with the plan, lets get it from whoever we can, then recocile".
+  - Then the rest of the US universe from Yahoo overnight ("polite rules").
+  - Plan in `C:\Users\sas\.claude\plans\` (top section; the parked audit stays below it).
+- **Situation found** (read-only code trace):
+  - No stored list of splits, dividends or spin-offs, and no as-traded prices: Stooq is split- and dividend-adjusted, Schwab split-adjusted (and inconsistently spin-off-adjusted).
+  - **A split after today stops the daily chain.** `worker/lib/schwab-daily-bars.ts` reports the re-based older candles as close conflicts and `schwab-daily-bars.mts` exits 1. Desk, analytics, page data and data health then do not run, for up to a month, and the stored series shows a fake drop.
+  - The split watch is the next priority.
+- **Sources, all outputs on `D:\research\alpha-engine\prices\`; scripts in lab `src/prices/` (`cd2f158`):**
+  - **Old Tiingo daily table** (owner's dump `F:\work\snp500.sql`): 493 tickers, 2000-01-03 → 2024-04-22, as-traded OHLCV with `split_factor` / `div_cash` (`tiingo-2021\`, including `daily\<T>.csv`).
+    - Its weekend rows are the owner's own calendar-day fill ("for the ease of calculation"), not the vendor's.
+    - The first day of a repeated event is the real one.
+  - **Option history:** the as-traded parity spot ÷ Schwab's adjusted close gives Schwab's adjustment steps, 2019 on (`options\`).
+  - **Yahoo chart events** (the endpoint `api/services/prices.ts` already uses), owner's go: 514 universe tickers (`yahoo\2026-11-13\`).
+    - The rest of the US market (~8,560 common stocks from the Stooq list, preferreds excluded) is running overnight at one request per 2.5 s into `yahoo\us-2026-11-13\` (resumable, `manifest.jsonl`).
+  - **SEC:** the app's own `split-shares.ts` inference for all 496 companies (`sec\split-events.json`, 102 with events).
+  - **Not used:** stocksplithistory.com and TipRanks forbid automated access in their terms. The owner may spot-check by hand.
+- **Reconciliation** (`reconcile-events.py` → `events\events.json`, `reconciliation.json`), universe only:
+  - Splits 2000 → 2024-04: 387 confirmed by two or more sources. After 2024-04: 32 confirmed. Before 2000: 857 from Yahoo alone.
+  - Distributions (spin-offs): 189.
+  - Dividends Yahoo vs Tiingo: 24,604 agree, 305 differ (vendor adjustments).
+  - Manual review: 2 conflicts (MSI 2011 1:7 plus the spin-off; SO 2001 Mirant spin-off), 3 SEC-only (CPRT, HON, TSN), and a few reused tickers (old Chubb, Howmet's Alcoa lineage).
+  - Rules learned:
+    - Yahoo writes splits as whole-number fractions and spin-offs as thousandths (Trane 1252:1000).
+    - Tiingo writes stock dividends as 10/9 where Yahoo writes 11/10.
+    - Yahoo's dividends are adjusted by all of its own "split" records.
+    - A rename match needs two shared splits and no contradiction (Cerner and Coherent share only 2011-06-27).
+- **BXP (Kimi's question) fixed in the build** (lab `cd2f158`): "FY" on a 10-Q is ignored, and the quarter number comes from the spacing to the year end.
+  - BXP Q2 2026 ncfo = 446.058m. Nine more calendars fixed: ARES, TMUS, IBKR, TWLO, DELL, DIS, APO, ES, PHM.
+  - Against the old baseline: 604 versions added, 12 dropped, 0 quarters removed.
+- **Baseline `standard\v3-base` rebuilt** with `cd2f158` (the first one kept as `v3-base-8f6afc0`).
+  - QA off counts: gross profit 516, cash change 622, signs 244, revenue jumps 59, asset jumps 48, negative Q4 revenue 1.
+  - `checks.py` (`35ec948`) lists amendments (TECH's 10-Q/A) apart from "behind"; freshness 0. K14 updated.
+- **Next:**
+  1. The split watch in the main repo: detect the constant ratio, record the event, re-base the history, keep the chain running.
+  2. As-traded prices and total-return series with their gates, among them our market cap against the dump's daily Tiingo market cap (owner: the split mess was why his old model used market cap).
+  3. The overnight Yahoo pull's results.
+  4. K14 Stage B (Kimi).
