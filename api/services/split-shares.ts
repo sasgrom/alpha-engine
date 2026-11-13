@@ -1,4 +1,6 @@
 import { sql } from "drizzle-orm";
+import { readFileSync, statSync } from "node:fs";
+import path from "node:path";
 import { getDb } from "../queries/connection";
 import {
   isFinancialStatementFactForm,
@@ -18,7 +20,7 @@ const shareConcepts = [
   "WeightedAverageNumberOfSharesOutstandingBasic",
 ] as const;
 const splitTagConcept = "StockholdersEquityNoteStockSplitConversionRatio1";
-const splitRatios = [1, 2, 3, 4, 5, 10, 20, 1.5, 1.25];
+const splitRatios = [1, 2, 3, 4, 5, 8, 10, 20, 1.5, 1.25];
 const splitCandidates = [
   ...splitRatios,
   ...splitRatios.filter(value => value !== 1).map(value => 1 / value),
@@ -52,6 +54,10 @@ export interface SeriesFact {
 export interface SplitEvent {
   ratio: number;
   firstNewBasisFiled: string;
+  source?: "price";
+  exDate?: string;
+  priceKey?: number;
+  ticker?: string;
   evidence: {
     concept: string;
     periodEnd: string;
@@ -551,7 +557,219 @@ export function hasShareCandidate(
   });
 }
 
-export async function createSplitShareProvider(cik: number) {
+export const defaultPriceAdjustmentLogPath = path.resolve(
+  process.cwd(),
+  "worker/.runs/price-adjustments.jsonl"
+);
+
+export interface PriceAdjustmentDiagnostic {
+  priceKey: number;
+  ticker: string;
+  ratio: number;
+  splitRatio: number;
+  firstNewBasisDate: string;
+}
+
+export interface PriceSplitDiagnostics {
+  path: string;
+  exists: boolean;
+  readError: string | null;
+  lines: number;
+  malformedLines: number;
+  dryRunLines: number;
+  duplicateEvents: number;
+  nonSplitAdjustments: PriceAdjustmentDiagnostic[];
+  events: SplitEvent[];
+}
+
+const priceSplitLogCache = new Map<
+  string,
+  { mtimeMs: number | null; diagnostics: PriceSplitDiagnostics }
+>();
+
+function emptyPriceSplitDiagnostics(
+  logPath: string,
+  exists = false,
+  readError: string | null = null
+): PriceSplitDiagnostics {
+  return {
+    path: logPath,
+    exists,
+    readError,
+    lines: 0,
+    malformedLines: 0,
+    dryRunLines: 0,
+    duplicateEvents: 0,
+    nonSplitAdjustments: [],
+    events: [],
+  };
+}
+
+function isCalendarDate(value: string): boolean {
+  const date = new Date(`${value}T00:00:00.000Z`);
+  return (
+    !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value
+  );
+}
+
+function readError(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+export function parsePriceAdjustmentLog(
+  contents: string,
+  logPath = defaultPriceAdjustmentLogPath
+): PriceSplitDiagnostics {
+  const diagnostics = emptyPriceSplitDiagnostics(logPath, true);
+  const events = new Map<string, SplitEvent>();
+  for (const line of contents.split(/\r?\n/)) {
+    if (!line.trim()) continue;
+    diagnostics.lines += 1;
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(line);
+    } catch {
+      diagnostics.malformedLines += 1;
+      continue;
+    }
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      diagnostics.malformedLines += 1;
+      continue;
+    }
+    const row = parsed as Record<string, unknown>;
+    if (row.dryRun === true) {
+      diagnostics.dryRunLines += 1;
+      continue;
+    }
+    const priceKey = Number(row.priceKey);
+    const ratio = Number(row.ratio);
+    const firstNewBasisDate = row.firstNewBasisDate;
+    if (
+      !Number.isInteger(priceKey) ||
+      priceKey <= 0 ||
+      !Number.isFinite(ratio) ||
+      ratio <= 0 ||
+      typeof firstNewBasisDate !== "string" ||
+      !isCalendarDate(firstNewBasisDate)
+    ) {
+      diagnostics.malformedLines += 1;
+      continue;
+    }
+    const splitRatio = 1 / ratio;
+    const match = nearestSplitRatio(splitRatio);
+    if (!match || match.ratio === 1) {
+      diagnostics.nonSplitAdjustments.push({
+        priceKey,
+        ticker: typeof row.ticker === "string" ? row.ticker : "",
+        ratio,
+        splitRatio,
+        firstNewBasisDate,
+      });
+      continue;
+    }
+    const key = `${priceKey}|${firstNewBasisDate}|${match.ratio}`;
+    if (events.has(key)) {
+      diagnostics.duplicateEvents += 1;
+      continue;
+    }
+    events.set(key, {
+      ratio: match.ratio,
+      firstNewBasisFiled: firstNewBasisDate,
+      source: "price",
+      exDate: firstNewBasisDate,
+      priceKey,
+      ticker: typeof row.ticker === "string" ? row.ticker : "",
+      evidence: [],
+      tagValues: [],
+    });
+  }
+  diagnostics.events = [...events.values()].sort(
+    (a, b) =>
+      a.firstNewBasisFiled.localeCompare(b.firstNewBasisFiled) ||
+      a.ratio - b.ratio
+  );
+  return diagnostics;
+}
+
+export function readPriceSplitEvents(
+  logPath = defaultPriceAdjustmentLogPath
+): PriceSplitDiagnostics {
+  const resolved = path.resolve(logPath);
+  let mtimeMs: number | null;
+  try {
+    mtimeMs = statSync(resolved).mtimeMs;
+  } catch (error) {
+    const cached = priceSplitLogCache.get(resolved);
+    if (cached?.mtimeMs === null) return cached.diagnostics;
+    const missing = (error as NodeJS.ErrnoException).code === "ENOENT";
+    const diagnostics = emptyPriceSplitDiagnostics(
+      resolved,
+      !missing,
+      missing ? null : readError(error)
+    );
+    priceSplitLogCache.set(resolved, { mtimeMs: null, diagnostics });
+    return diagnostics;
+  }
+  const cached = priceSplitLogCache.get(resolved);
+  if (cached?.mtimeMs === mtimeMs) return cached.diagnostics;
+  let diagnostics: PriceSplitDiagnostics;
+  try {
+    diagnostics = parsePriceAdjustmentLog(
+      readFileSync(resolved, "utf8"),
+      resolved
+    );
+  } catch (error) {
+    diagnostics = emptyPriceSplitDiagnostics(resolved, true, readError(error));
+  }
+  priceSplitLogCache.set(resolved, { mtimeMs, diagnostics });
+  return diagnostics;
+}
+
+export function mergeSplitEvents(
+  secEvents: SplitEvent[],
+  priceEvents: SplitEvent[]
+): SplitEvent[] {
+  const remainingSec = new Set(secEvents.map((_, index) => index));
+  const merged = priceEvents.map(priceEvent => {
+    const exDate = Date.parse(priceEvent.firstNewBasisFiled);
+    const match = secEvents
+      .map((event, index) => ({
+        event,
+        index,
+        distance: Math.abs(Date.parse(event.firstNewBasisFiled) - exDate),
+        days: (Date.parse(event.firstNewBasisFiled) - exDate) / 86400_000,
+      }))
+      .filter(
+        candidate =>
+          remainingSec.has(candidate.index) &&
+          candidate.event.ratio === priceEvent.ratio &&
+          candidate.days >= -30 &&
+          candidate.days <= 200
+      )
+      .sort(
+        (a, b) =>
+          a.distance - b.distance ||
+          a.event.firstNewBasisFiled.localeCompare(
+            b.event.firstNewBasisFiled
+          ) ||
+          a.index - b.index
+      )[0];
+    if (!match) return priceEvent;
+    remainingSec.delete(match.index);
+    return match.event;
+  });
+  for (const index of remainingSec) merged.push(secEvents[index]);
+  return merged.sort(
+    (a, b) =>
+      a.firstNewBasisFiled.localeCompare(b.firstNewBasisFiled) ||
+      a.ratio - b.ratio
+  );
+}
+
+export async function createSplitShareProvider(
+  cik: number,
+  priceAdjustmentLog = defaultPriceAdjustmentLogPath
+) {
   const db = getDb();
   const conceptList = [
     ...ratioConcepts,
@@ -572,7 +790,7 @@ export async function createSplitShareProvider(cik: number) {
       )}) AND derivation='reported'`
     ),
   ]);
-  const profile = buildSplitProfile(
+  const secProfile = buildSplitProfile(
     (facts[0] ?? []).map((row: any) => ({
       ...row,
       startDate: row.startDate ? String(row.startDate).slice(0, 10) : null,
@@ -589,5 +807,19 @@ export async function createSplitShareProvider(cik: number) {
       val: Number(row.val),
     }))
   );
-  return { profile, at: (date: string) => selectShareCount(profile, date) };
+  const diagnostics = readPriceSplitEvents(priceAdjustmentLog);
+  const priceEvents = diagnostics.events.filter(
+    event => event.priceKey === cik
+  );
+  const profile = priceEvents.length
+    ? {
+        ...secProfile,
+        events: mergeSplitEvents(secProfile.events, priceEvents),
+      }
+    : secProfile;
+  return {
+    profile,
+    at: (date: string) => selectShareCount(profile, date),
+    diagnostics,
+  };
 }
