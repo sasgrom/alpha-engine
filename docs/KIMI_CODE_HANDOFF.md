@@ -1863,3 +1863,41 @@ All read only, except one probe download (below). No change to the dataset or fi
   - 6.9% of the statement lines in our companies' filings use company extension tags. NextEra's capex is on two of them.
 - **Kimi:** has started K13. Sector map answered: desk snapshot first (493 of 502), then `companies.sector`. The 21 companies' empty recent quarters are to be counted as "no filing data", not tag gaps.
 - **Next:** owner decisions on the SEC data-set download and on applying the step 1 fixes. Step 2 still waits for his instructions.
+
+## 141. Claude: standard fundamentals v2 (SEC data sets); the stale desk of 2026-11-12 — 2026-11-12
+
+- **Owner's answers to §140:**
+  - SEC data sets: yes.
+  - Bank revenue: "fix now".
+  - Schwab fundamentals: "low quality, drop it". Nothing is built on them; the desk's existing Schwab fields stay as they are.
+- **SEC financial statement data sets:** `D:\research\alpha-engine\fundamentals\fsds\`.
+  - Raw files: all 71 quarters (2009q1–2026q3), 5.71 GB, with a SHA-256 manifest.
+  - Per-company extracts: CRC-checked, resumable.
+  - Code: lab `src/fundamentals/fsds-fetch.mts`, `fsds-extract.py`.
+- **The newest filings:** neither SEC source holds them yet, so they are read from the filing's own XBRL.
+  - 31 Q3-2026 10-Qs, in `D:\research\alpha-engine\fundamentals\edgar-filings\`.
+  - Code: `edgar-filings-fetch.mts`, `edgar-filings-parse.py`.
+- **Standard fundamentals v2:** lab `b17fb11`, written to `D:\...\fundamentals\standard\v2\`. v1 is unchanged; K13 reads v1.
+  - Sources: companyfacts, then the data sets for the filings it lacks, then the filing XBRL.
+  - Every quarter carries its 10-Q/10-K acceptance time.
+  - Bank revenue = net interest income + non-interest income, which may replace only a fee or lease tag. 13 financials change.
+  - Revenue is taken among the tags printed on the income statement. Republic Services, Hasbro, ES and AEP no longer take a bigger figure from the notes.
+  - Workbook: `Standard fundamentals v2 - review.xls`.
+- **Checks** (`checks.py`, every quarter since 2009):
+  - Our first-reported values equal the filings' own numbers 99.98–100%. The 23 differences are filer mislabels that the data sets copy, one fiscal-year change and one rounded duplicate.
+  - Revenue: 96.1% is the largest printed revenue line, 2.2% the bank identity.
+  - Freshness: 0 companies behind EDGAR (32 before).
+  - Unchanged: 51 series stop early; 35 companies have a zero share count.
+- **companyfacts collector gap:** it saw each new 10-Q in EDGAR's list and re-downloaded SEC's companyfacts. It then recorded success although the new 10-Q was not in the download, and it will not retry until the company's next filing. 13 of 13 companies checked show this; most are combined-registrant filers. Proposed fix: compare the payload's accessions with the latest EDGAR accession, mark the company "lagging" and retry daily.
+- **Stale desk (owner, 19:25 PST): the Today page showed the Nov 11 close.**
+  - The scheduler was alive: one instance since 01:25, heartbeat current.
+  - Cause 1: the 18:00 evening chain (`schwab-fetch-evening` and its four followers) was removed in `595c0fb` on 2026-11-06. The running scheduler kept it until its restart, so its last run was Nov 9. Since then a day's close arrives only at 04:00–05:00 the next morning.
+  - Cause 2: production pushes are failing. Nov 11: `schwab-snapshot` HTTP 413. Nov 12: `schwab-fetch-daily`, `daily-operations-report` and `schwab-context-hourly` got an HTML page from the ingest.
+  - A failed push marks the run `error`, and dependents are queued only after `done` (`worker/lib/operations-scheduler.ts` ~292–310). So the local options snapshot is from Nov 11 and Feature Lab from Nov 9. No alert surfaced any of it.
+  - Remedy at 19:27 PST: queued `desk-snapshot` and `schwab-feature-lab` through `worker/.runs/operations-commands.jsonl`, as manual runs. Manual runs never push, so the local chain cannot be blocked.
+- **Owner decisions pending:**
+  - Restore a post-close evening run.
+  - Let local dependents run after a failed production push, while still reporting the push error.
+  - Alert on stale data and failed jobs.
+  - The production ingest returning HTML is for the owner or a production-side look.
+  - The collector "lagging" fix.
