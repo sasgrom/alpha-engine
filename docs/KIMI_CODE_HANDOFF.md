@@ -1756,3 +1756,43 @@ sitting) if the owner wants them; K11 when the owner names it.
   - no zero normals and no blank frames while moving.
 - **Gates:** `npm run check`; **231 files / 1,294 tests**; `npm run build`; `git diff --check`.
 - **Server:** several restarts announced to Kimi at 11:41. The only listener on port 3000 is pid **18724** (`node dist\boot.js`, started by `worker\home-server-hidden.vbs`).
+
+## 138. Claude: the owner's Engine page (`/desk/engine`); field lists; GPU pass resumed — 2026-11-12
+
+- **Owner's request:** a simple, fully interactive view of what happens behind the scenes in each step of the test, for one chosen company. The steps:
+  1. raw fundamentals;
+  2. processed data;
+  3. the algorithm and its outputs;
+  4. e+/e−;
+  5. probabilities;
+  6. the decision tree;
+  7. test results against benchmarks.
+
+  Each step carries notes: hypothesis, process, why it was chosen, expected results, formulas with a worked example, what could be better, and other ideas.
+- **The page** (owner only; "Engine" in the desk's navigation):
+  - Code: `src/desk/engine/` (`EnginePage`, `steps`, `model`, `notes`, fixtures), served by tRPC `desk.engineIndex` and `desk.engineCompany` (`adminQuery`).
+  - Files are read through `api/services/engine-flow-files.ts`: an unreachable folder is an error, never an empty result. Schema: `contracts/engine-flow.ts`, version 1.
+  - Controls: choose a company, the release or 10-Q/10-K decision, the horizon, the lean threshold and the cost.
+  - Run replays the decisions; each step has Data/Notes tabs and a zoom.
+  - Every worked example is recomputed from the engine's own numbers and marked ✓ or ≠.
+- **Data:** built on the home machine; nothing reaches production.
+  - Folder: `D:\research\alpha-engine\engine\flow` (490 company files, 1.3 GB, plus `index.json`), reached through the ignored junction `worker\.runs\engine-flow`.
+  - Lab changes (`C:\dev\alpha-engine-lab`): step 3 `TRACE=1` writes every decision's working at 5/10/20/45 sessions, to six significant digits; step 2 `INPUTS=1` records what each filed-figure reading was computed from; `tools/flow/build-flow.mts` builds the files.
+  - The traced predictions are byte-identical to the untraced run's (MD5 `1533acb4…`).
+  - Decisions from 2026-07-01 (the sealed line) keep their forecasts, but their outcomes are withheld.
+- **Verified on all of it:** 490 companies, 64,507 decisions, 258,028 traced forecasts, 6.1 million factor votes.
+  - Recomputed with the page's own code, 0 mismatches for: evidence; variance; kept evidence (within 0.1%); side; probability (largest difference 1.2e-6); usual rate; the 18 filed-figure formulas with their `.trend`/`.peer`; and "rose = r > s".
+  - 12 votes at z = 0.4299996 read as "just under 0.43".
+  - Headless Edge: AAPL opens in 1.3 s, every worked example is ✓, and the phone view has no overflow.
+- **Owner's side request:** the field names of AAPL's fundamentals, old database against ours, as two .xls files in `D:\research\alpha-engine\field-lists\`.
+  - Old: 76 Tiingo codes in tables `concept` and `concept_copy apr22 24` of `F:\work\snp500.sql`.
+  - Ours: 517 SEC XBRL fields.
+  - The owner judged 514 raw series unusable and asked for step 1: one merged, smooth series per standard field for every company, on the old naming. Work is in progress in the lab (`src/fundamentals/`); the owner evaluates before step 2 (normalization).
+- **GPU guidance pass:** paused at the owner's request at 14:25, resumed at the owner's word at 15:11 (pid **7824**). It picked up 5,866 files already done.
+- **Gates:**
+  - `npm run check`.
+  - `npm test -- --run --maxWorkers=4`: **235 files / 1,310 tests passed**. With the default worker count, `api/services/worker-expectations.test.ts` › "returns package-specific post-check hashes…" hits its 5 s timeout while the machine is busy; alone it passes in 3.4 s. Not touched.
+  - `npm run build`.
+  - `git diff --check`.
+- **Server:** restarts announced to Kimi (14:58, 15:59). The only listener on port 3000 is pid **23440**.
+- Not committed: the four generated files that show as modified (not mine). No production write, schema change or scheduler entry.

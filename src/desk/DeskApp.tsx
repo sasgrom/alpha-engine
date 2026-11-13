@@ -15,6 +15,7 @@ const Macro = lazy(() => import("./pages/research/Macro"));
 const Ownership = lazy(() => import("./pages/research/Ownership"));
 const Library = lazy(() => import("./pages/research/Library"));
 const Flows = lazy(() => import("./flows/FlowsPage"));
+const Engine = lazy(() => import("./engine/EnginePage"));
 const Watchlist = lazy(() => import("./pages/Watchlist"));
 const Operations = lazy(() => import("./pages/Operations"));
 
@@ -42,6 +43,7 @@ export default function DeskApp() {
           <Route path="research/ownership" element={<Ownership />} />
           <Route path="research/library" element={<Library />} />
           <Route path="flows" element={<Flows />} />
+          <Route path="engine" element={<Engine />} />
           <Route path="watchlist" element={<Watchlist />} />
           <Route path="operations" element={<Operations />} />
           <Route path="*" element={<DeskNotFound />} />

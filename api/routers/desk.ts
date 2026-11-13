@@ -3,12 +3,15 @@
  * - the precomputed market snapshot, for every signed-in user; option-derived fields only for the owner and
  *   NDA-accepted reviewers (see services/desk-snapshot.ts);
  * - the fund-flow files (overview, one fund, one company), for every signed-in user (owner's decision of
- *   2026-11-11); reviewers reach them, like everything else, only after accepting the NDA (middleware).
+ *   2026-11-11); reviewers reach them, like everything else, only after accepting the NDA (middleware);
+ * - the engine-flow files (the prediction engine's working, decision by decision), for the owner only.
  */
 import { z } from "zod";
+import type { EngineFlowCompany, EngineFlowIndex } from "@contracts/engine-flow";
 import type { FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
-import { createRouter, authedQuery } from "../middleware";
+import { adminQuery, createRouter, authedQuery } from "../middleware";
 import { deskSnapshotFor, readDeskSnapshot } from "../services/desk-snapshot";
+import { readEngineFlowFile } from "../services/engine-flow-files";
 import { readFundFlowsFile } from "../services/fund-flows-files";
 
 const entity = z.object({ cik: z.number().int().positive() });
@@ -23,4 +26,6 @@ export const deskRouter = createRouter({
   flowsOverview: authedQuery.query(() => readFundFlowsFile<FundFlowsOverview>("overview.json")),
   flowsFund: authedQuery.input(entity).query(({ input }) => readFundFlowsFile<FundFlowsFund>(`fund/${input.cik}.json`)),
   flowsCompany: authedQuery.input(entity).query(({ input }) => readFundFlowsFile<FundFlowsCompany>(`company/${input.cik}.json`)),
+  engineIndex: adminQuery.query(() => readEngineFlowFile<EngineFlowIndex>("index.json")),
+  engineCompany: adminQuery.input(entity).query(({ input }) => readEngineFlowFile<EngineFlowCompany>(`company/${input.cik}.json`)),
 });

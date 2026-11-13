@@ -168,6 +168,7 @@ export default function DeskShell({ children }: { children: ReactNode }) {
           ]
         : []),
       ...(flowsOpen ? [{ label: "Fund flows", path: "/desk/flows", group: "Desk" as const, keywords: "13f institutions funds money rotation sectors bought sold hall library of capital" }] : []),
+      ...(isAdmin ? [{ label: "Engine", path: "/desk/engine", group: "Desk" as const, keywords: "prediction engine model regression bayes probability factors step by step flow" }] : []),
       ...(isAdmin ? [{ label: "Operations", path: "/desk/operations", group: "Desk" as const, keywords: "health scheduler jobs checks" }] : []),
       ...classicDestinations(isAdmin, isPresentation),
     ],
@@ -192,6 +193,7 @@ export default function DeskShell({ children }: { children: ReactNode }) {
     ...(isPresentation ? [{ label: "Research", path: "/desk/research" }] : []),
     ...(flowsOpen ? [{ label: "Flows", path: "/desk/flows" }] : []),
     { label: "Watchlist", path: "/desk/watchlist" },
+    ...(isAdmin ? [{ label: "Engine", path: "/desk/engine" }] : []),
     ...(isAdmin ? [{ label: "Operations", path: "/desk/operations" }] : []),
   ];
   const current = (path: string) => (path === "/desk" ? location.pathname === "/desk" || location.pathname === "/desk/" : location.pathname.startsWith(path));

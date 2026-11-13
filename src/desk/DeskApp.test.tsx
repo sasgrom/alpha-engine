@@ -14,7 +14,7 @@ describe("desk view for the owner", () => {
   it("opens on Today with the brief, the owner's navigation and no development leftovers", async () => {
     desk = await mountDesk("admin");
     const nav = [...desk.host.querySelectorAll(".desk-nav a")].map((link) => link.textContent);
-    expect(nav).toEqual(["Today", "Markets", "Screener", "Research", "Flows", "Watchlist", "Operations"]);
+    expect(nav).toEqual(["Today", "Markets", "Screener", "Research", "Flows", "Watchlist", "Engine", "Operations"]);
     const text = desk.host.textContent ?? "";
     expect(text).toContain("Nvidia");
     expect(text).toContain("Your watchlist");

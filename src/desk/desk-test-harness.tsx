@@ -9,6 +9,7 @@ import { MemoryRouter, Route, Routes } from "react-router";
 import { TRPCProvider } from "@/providers/trpc";
 import type { DeskCompany, DeskSnapshot } from "@contracts/desk-snapshot";
 import DeskApp from "./DeskApp";
+import { ENGINE_COMPANY, ENGINE_INDEX } from "./engine/engine-fixtures";
 import { FLOWS_COMPANY, FLOWS_FUND, FLOWS_OVERVIEW } from "./flows/flows-fixtures";
 
 const returns = (d1: number) => ({ d1, w1: d1 * 2, m1: d1 * 3, m3: d1 * 4, ytd: d1 * 5, y1: d1 * 6 });
@@ -110,6 +111,8 @@ function answer(procedure: string, role: string): unknown {
     case "desk.flowsOverview": return FLOWS_OVERVIEW;
     case "desk.flowsFund": return FLOWS_FUND;
     case "desk.flowsCompany": return FLOWS_COMPANY;
+    case "desk.engineIndex": return ENGINE_INDEX;
+    case "desk.engineCompany": return ENGINE_COMPANY;
     case "admin.usersList": return [];
     default: return null;
   }
