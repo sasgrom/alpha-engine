@@ -2266,3 +2266,41 @@ All read only, except one probe download (below). No change to the dataset or fi
 - **Gates:** focused suites **3 files / 29 tests passed**; `npm run check` passed. The first unrestricted `npm test -- --run` had **1,361 passed / 1 timed out** (`worker-expectations.test.ts` five-second post-check timeout, not a K15 assertion). The isolated expectations suite passed **10/10**, with that case at 2.066 s. One diagnosis-based bounded retry, `npm test -- --run --maxWorkers=4`, passed **241 files / 1,362 tests**. `npm run build` and `git diff --check` passed; only established chunk-size warnings and existing test-environment warnings remain.
 - **Real-log dry read at 2026-11-13T11:45Z:** path absent, `exists=false`, `readError=null`, lines/events/dry-run/duplicate/malformed/non-split counts all zero. No real split event has been observed by this reader yet. The split watch, price rows, raw archives and upcoming-split calendar were not changed.
 - **Delivery boundaries:** no schema change, production write/push, credential access, collector or web restart. Pre-existing generated reports and `.vscode/` are excluded. K16 remains blocked until Claude accepts K15; Claude owns the web restart after review.
+
+## 153. Claude: v3 review → v3.1 final (step 1 closed); K15 accepted, web server restarted; K16 sent; price gates 6-7 — 2026-11-13 early morning
+
+- **Owner:** "go on with the v3 fundamentals workbook review so we can close the chapter of raw data cleaning … and go on with your recommendations, i will expect a report in the morning".
+- **v3 review** (Claude, on the owner's behalf):
+  - Every K14 value was set against the company's neighbouring quarters. 47 outliers were read with their evidence; suspects were checked in SEC facts.
+  - Most outliers are real: one-off losses (GPC 2020, TJX 2020, Booking, Viatris 2025, International Paper 2025-26) and seasonality (Atmos' gas cost).
+- **Corrected in v3.1** (lab `a6d62b4`):
+  - Ventas Q4 capex: the `x:` path paired the 10-K's broader `PaymentsToAcquireProductiveAssets`, 2,530m with acquisitions.
+  - Fiserv Q3 2026 cost of revenue: 8,789m → 2,337m; a 6,452m goodwill impairment sat inside total expenses.
+  - CrowdStrike D&A: `first`; a partial standard tag in the 2026 10-Q had outranked the sum.
+  - Kimco 2025 capex: zeros → 52-116m.
+  - Amcor fiscal-2026 weighted shares: 1.5-10m → 463m.
+  - Host Hotels' debt from 2008: 59 values, 58 equal to the filings.
+  - New `build.mts` rule: on one-signed lines an `x:` pair must keep pace (≤3×) and sign; a zero year-to-date passes.
+    - This made 44 wrong values gaps: CME's negative Q4 D&A 2020-25, negative costs (Merck 2008, Occidental 2012-13), ConocoPhillips' −13.5bn capex, Mondelez and Baxter interest, ITW 2008 dividends, GM's 2014 preferred redemption.
+  - All 110 K14 entries are marked `reviewed: true`.
+- **v3.1 gates against v3:** 0 broken filing matches; checks unchanged (freshness 0, revenue line 96.58%); QA equal or better (gross profit 510, signs 243).
+- **Loaded** as build `v3.1`, **final**, into `alpha_research`.
+  - Counts: 1,664,739 values (29 fewer than v3: the 44 removals, offset by Host's added debt), 32,727 quarters, 500 companies, 64 fields.
+  - 2,000 values read back, 0 different; 930 s.
+  - A final build blocks `--replace`: later builds append.
+- **Step 1 of the fundamentals is closed.** Left, documented in `STANDARD_FUNDAMENTALS.md` §5:
+  - PSA's capex versions filed in 2023;
+  - PulteGroup's debt before 2026;
+  - share-count basis items for step 2 (issued vs outstanding; one class).
+- **K15 accepted** (Kimi §152, `b39d47d`).
+  - My review: the diff matches the spec. Adding 8 to the split ratios was needed for SNDK.
+  - My test run: `split-shares-price`, `split-shares` and `market-value`, 29/29 passed.
+  - Web server restarted through the `AlphaEngine-Home-Server` task at 04:01:31 PT: one listener on port 3000 (pid 23292), HTTP 200.
+- **K16 sent** (spec `docs/engine/tasks/K16-standard-13f.md`, `14d6e59`; owner: "K15 now, K16 after"): standard 13F tables in `alpha_research` from the fund books, point in time. Kimi is working.
+- **Prices gate 7:** levels against the SEC public float (lab `b265e69`).
+  - 466 companies, 6,856 company-years: 97.8% within 0.3-1.15.
+  - The Schwab-built years do no worse than Tiingo's (1.8% outside against 2.3%).
+  - The outliers are mostly scale slips and zeros in the float facts. `STANDARD_PRICES.md` gate 7.
+- **Next:**
+  - Claude: the Yahoo US pull summary when it ends (about 07:30 PT), the morning report to the owner, K16 review on delivery.
+  - Owner: step-2 instructions (normalization, share basis); prices p1 stays provisional until the daily append exists.

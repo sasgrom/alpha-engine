@@ -127,19 +127,42 @@ Step details:
     - Q4 2010 – 2020: `…OfPublicUtility`.
     - 2021: the FPL and Gulf Power segment tags.
     - 2022 onward: `…OfFPL` again.
+- **Pairing two tags across a rename must keep the scope** (`x:` path, added 2026-11-13 for v3.1). On lines that keep one sign (capex, D&A, dividends, buybacks, stock pay, interest, cost lines), the build refuses a pair when:
+  - the later tag's year-to-date pace is more than three times the earlier tag's; or
+  - the last quarter turns the line's sign.
+  A zero year-to-date passes (a first dividend in the fourth quarter is ordinary). Lines that swing by nature (cash-flow totals, currency effects, earnings) are not tested. Better a gap than a value of another scope:
+  - Ventas' 10-K reports only the broader `PaymentsToAcquireProductiveAssets`, which includes acquisitions (2,530m), against its 10-Qs' "other capital expenditures" (194m for nine months). The pair made a Q4 of 2,336m.
+  - Other pairs made CME's fourth-quarter D&A negative every year from 2020 to 2025.
 
 ## 5. Acceptance gates
 
 Every new build is accepted only when all of these hold.
 
-| Gate | Tool | Threshold | v2 (2026-11-12) | v3-base (2026-11-13) |
-|---|---|---|---|---|
-| Our first-reported values equal each filing's own numbers (same tag, period, duration) | `checks.py` | at least 99.98% for every field; each difference explained | 99.98–100%. The 23 differences are filer mislabels the data sets copy (NiSource, Tractor Supply, Kinder Morgan and others), Mosaic's 2013 fiscal-year change, and J.B. Hunt's rounded duplicate. | unchanged |
-| Latest filing = EDGAR's latest 10-Q/10-K | `checks.py` | 0 companies behind | 0 | 0 |
-| Revenue is the income statement's largest printed revenue line | `checks.py` | not below the previous build | 96.1%; 2.2% bank identity (no total line); 1.1% not printed (44 companies) | unchanged |
-| No regression against the previous build | `compare.py` | 0 broken filing matches; removals only of impossible or mixed-basis values; every change explained | — | against v3-mech: broken 0; removed 125, all quarters whose only value mixed two bases (17 of them split-affected share counts) |
-| QA identities, signs, jumps | `qa.mts` | not worse than the previous build | gross profit identity off 4.8%; cash change off 2.2%; signs off 0.2% | counts off, v3-mech → v3-base: gross profit 536 → 516, cash change 630 → 623, signs 259 → 244, revenue jumps 61 → 58, asset jumps 48 → 48, negative Q4 revenue 4 → 1 |
-| Coverage per field from 2010 | `qa.mts` | not below the previous build, except the removals the compare gate explains | revenue 98.7%, net income 98.4%, total assets 98.4%, operating cash flow 99.1%, capex 91.1%, debt 83.1% | at most 0.02 points lower (the 125 removals) |
+| Gate | Tool | Threshold | v2 (2026-11-12) | v3-base (2026-11-13) | v3.1 (2026-11-13, final) |
+|---|---|---|---|---|---|
+| Our first-reported values equal each filing's own numbers (same tag, period, duration) | `checks.py` | at least 99.98% for every field; each difference explained | 99.98–100%. The 23 differences are filer mislabels the data sets copy (NiSource, Tractor Supply, Kinder Morgan and others), Mosaic's 2013 fiscal-year change, and J.B. Hunt's rounded duplicate. | unchanged | unchanged |
+| Latest filing = EDGAR's latest 10-Q/10-K | `checks.py` | 0 companies behind | 0 | 0 | 0 (TECH's amendment is information) |
+| Revenue is the income statement's largest printed revenue line | `checks.py` | not below the previous build | 96.1%; 2.2% bank identity (no total line); 1.1% not printed (44 companies) | unchanged | 96.58% |
+| No regression against the previous build | `compare.py` | 0 broken filing matches; removals only of impossible or mixed-basis values; every change explained | — | against v3-mech: broken 0; removed 125, all quarters whose only value mixed two bases (17 of them split-affected share counts) | against v3: broken 0. Removed 44, all wrong scope or sign of the `x:` path and their dependants. Changed: the review's corrections only (CrowdStrike D&A, Amcor weighted shares, Fiserv Q3 2026 cost of revenue, Kimco 2025 capex). Host Hotels' debt: 44 values added and 15 changed; 58 of them equal the filings and one has no filing line to compare. |
+| QA identities, signs, jumps | `qa.mts` | not worse than the previous build | gross profit identity off 4.8%; cash change off 2.2%; signs off 0.2% | counts off, v3-mech → v3-base: gross profit 536 → 516, cash change 630 → 623, signs 259 → 244, revenue jumps 61 → 58, asset jumps 48 → 48, negative Q4 revenue 4 → 1 | gross profit 510, cash change 622, signs 243, revenue jumps 58, asset jumps 48, negative Q4 revenue 1 |
+| Coverage per field from 2010 | `qa.mts` | not below the previous build, except the removals the compare gate explains | revenue 98.7%, net income 98.4%, total assets 98.4%, operating cash flow 99.1%, capex 91.1%, debt 83.1% | at most 0.02 points lower (the 125 removals) | at most the 44 removals lower |
+
+**Review of v3 and the final build v3.1 (2026-11-13).** The owner delegated the workbook review to Claude.
+- **Method:** every K14 value set against the company's neighbouring quarters. 47 added values sat more than three times away from their neighbours' median, and each was read with its evidence. Suspects were checked against the SEC facts.
+- **Real, not errors:** most outliers are one-off losses (GPC 2020, TJX 2020, Booking 2017 and 2020-22, Viatris 2025, International Paper 2025-26), seasonal lines (Atmos' gas cost, which ties to the filed year-to-date) or uneven capex.
+- **Corrected in v3.1** (lab `a6d62b4`):
+  - Ventas' Q4 capex (the scope test above);
+  - Fiserv's Q3 2026 cost of revenue, which included a 6,452m goodwill impairment (8,789m → 2,337m);
+  - CrowdStrike's D&A, where a partial standard tag in the 2026 10-Q outranked the three-line sum;
+  - Kimco's 2025 capex (zeros → 52–116m);
+  - Amcor's fiscal-2026 weighted shares (1.5–10m → 463m);
+  - Host Hotels' debt from 2008.
+- **Known and left:**
+  - PSA's capex versions filed in 2023 for Q2 2022 and Q2 2023 mix a restated, narrower line with the old first quarter. The first versions are right; the later ones are not.
+  - PulteGroup's debt before 2026 holds only a small component.
+  - Baxter's interest (gross against net) and ITW's 2008 dividends: their wrong fourth quarters (Baxter 2024 and 2025, ITW 2008) are now gaps.
+  - All are step-2 or follow-up items.
+- **Status:** v3.1 is loaded into `alpha_research` as the **final** build of step 1. All 110 K14 entries are marked reviewed.
 
 ## 6. Lessons learned (do not repeat)
 

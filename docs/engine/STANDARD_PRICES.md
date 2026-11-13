@@ -114,6 +114,17 @@ unexplained, all in stretches where Schwab carries another company (JCI, CB, LHX
 - **One class or one listing:** the filing's count covers one class or one listing, where the old database counts all (V, UPS, CMCSA, MA, BRK-B; CCL's two listed companies). Market value needs every class: a step-2 item of the fundamentals.
 - **Issued instead of outstanding:** some filers tag the year-end count of shares issued as outstanding, treasury shares included. Boeing's 10-Ks run 1.36× in the months after each 10-K and 1.00 otherwise; TYL is similar. This is a step-2 item of the fundamentals.
 
+**Gate 7, levels against the SEC public float** (`export-public-float.mts`, `public-float-check.py`, 2026-11-13).
+- Method: each 10-K states the market value of non-affiliates' shares on the last day of the second fiscal quarter (`dei:EntityPublicFloat`). On that day, float ÷ (our close × the quarter's filed share count) should be at or a little under 1.
+- Coverage: 466 companies, 6,856 company-years since 2009, Tiingo and Schwab eras alike.
+- **97.8% fall within 0.3–1.15.**
+- **By era:** 2.3% of the 5,317 Tiingo years and 1.8% of the 1,539 Schwab years fall outside. The levels built from Schwab's line hold up.
+- **The outliers are mostly faults in the float facts themselves:**
+  - scale slips: exactly ~1,000×, ~0.001 or ~10⁶ (Waters, Domino's, Everest, Corpay, GE 2011, Stryker 2012–14);
+  - zero floats (PG&E 2012–16);
+  - float dates tagged at the year end instead of mid-year (Mosaic 2025);
+  - plus controlled companies and share classes (GoDaddy after its IPO; Blackstone's units).
+
 `std_price_companies.quality` is `review` when an override says so, the option-spot median is 1% or more, or the total
 return differs from Stooq on 1% or more of sessions; `notes` holds the reasons, the distrusted stretches, the events
 found in Schwab's adjustments and the choices made after Tiingo.
