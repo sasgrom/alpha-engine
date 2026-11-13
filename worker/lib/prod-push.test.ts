@@ -39,15 +39,23 @@ describe("operational production push", () => {
     expect(prodIngestTarget()).toEqual({ url: "https://example.test/api/worker/ingest", host: "example.test" });
   });
 
-  it("pushes only successful scheduled outputs, never failed or manual jobs", () => {
-    expect(shouldPushOperationalJob("schwab-fetch-daily", "done", "cron")).toBe(true);
-    expect(shouldPushOperationalJob("macro-fred-weekly", "done", "dependency")).toBe(true);
-    expect(shouldPushOperationalJob("weekly-coverage-report", "done", "dependency")).toBe(true);
-    expect(shouldPushOperationalJob("form4-export", "done", "dependency")).toBe(true);
-    expect(shouldPushOperationalJob("form4-export", "done", "manual")).toBe(false);
-    expect(shouldPushOperationalJob("schwab-fetch-daily", "error", "cron")).toBe(false);
-    expect(shouldPushOperationalJob("schwab-fetch-daily", "done", "manual")).toBe(false);
-    expect(shouldPushOperationalJob("expectations-report", "done", "cron")).toBe(false);
+  it("pushes nothing by default (owner's decision of 2026-11-13)", () => {
+    const off = {} as NodeJS.ProcessEnv;
+    expect(shouldPushOperationalJob("schwab-fetch-daily", "done", "cron", off)).toBe(false);
+    expect(shouldPushOperationalJob("macro-fred-weekly", "done", "dependency", off)).toBe(false);
+    expect(shouldPushOperationalJob("form4-export", "done", "dependency", { OPERATIONAL_PUSH: "true" } as NodeJS.ProcessEnv)).toBe(false);
+  });
+
+  it("with the opt-in, pushes only successful scheduled outputs, never failed or manual jobs", () => {
+    const on = { OPERATIONAL_PUSH: "1" } as NodeJS.ProcessEnv;
+    expect(shouldPushOperationalJob("schwab-fetch-daily", "done", "cron", on)).toBe(true);
+    expect(shouldPushOperationalJob("macro-fred-weekly", "done", "dependency", on)).toBe(true);
+    expect(shouldPushOperationalJob("weekly-coverage-report", "done", "dependency", on)).toBe(true);
+    expect(shouldPushOperationalJob("form4-export", "done", "dependency", on)).toBe(true);
+    expect(shouldPushOperationalJob("form4-export", "done", "manual", on)).toBe(false);
+    expect(shouldPushOperationalJob("schwab-fetch-daily", "error", "cron", on)).toBe(false);
+    expect(shouldPushOperationalJob("schwab-fetch-daily", "done", "manual", on)).toBe(false);
+    expect(shouldPushOperationalJob("expectations-report", "done", "cron", on)).toBe(false);
   });
 
   it("builds exact OHLCV rows and a generated daily report without raw chains", () => {

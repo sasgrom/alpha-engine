@@ -26,8 +26,14 @@ const JOB_OUTPUTS: Record<string, { kind: OperationalPushKind; name?: string }[]
   "form4-export": [{ kind: "reportFile", name: "insider-form4.json" }],
 };
 
-export function shouldPushOperationalJob(jobId: string, status: OperationalJobStatus, trigger: string): boolean {
-  return status === "done" && trigger !== "manual" && Boolean(JOB_OUTPUTS[jobId]?.length);
+/** Owner's decision of 2026-11-13: "no pushes to prod, it was just a temp dev online". Scheduled jobs push nothing
+ * unless OPERATIONAL_PUSH=1 is set for the scheduler (an explicit opt-in if a production site returns). */
+export function operationalPushEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.OPERATIONAL_PUSH === "1";
+}
+
+export function shouldPushOperationalJob(jobId: string, status: OperationalJobStatus, trigger: string, env: NodeJS.ProcessEnv = process.env): boolean {
+  return operationalPushEnabled(env) && status === "done" && trigger !== "manual" && Boolean(JOB_OUTPUTS[jobId]?.length);
 }
 
 let loggedTargetHost: string | undefined;

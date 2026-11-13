@@ -2072,3 +2072,33 @@ All read only, except one probe download (below). No change to the dataset or fi
   1. Kimi: Stage B → v3.
   2. Me: review v3 → final load.
   3. GPU guidance run (446 companies): 6,452 of 34,833 releases at 22:03, about 5 more days.
+
+## 146. Claude: no production pushes; fresh prices in the app; scheduler watchdog — 2026-11-12, 23:00 PT
+
+- **Owner's decisions (verbatim):**
+  1. "no pushes to prod, it was just a temp dev online"
+  2. "paper trading later after confirm that engine works, otherwise nothing to trade"
+  3. "sheduler, i thought you allready set that up, if not - set up, no fresh prices on localhost by the way"
+- **Pushes:** `shouldPushOperationalJob` (`worker/lib/prod-push.ts`) now needs `OPERATIONAL_PUSH=1`, which only the owner sets. Scheduled jobs push nothing. AGENTS.md §3 records the decision; `docs/OPERATIONS.md` marks the outbox as off.
+- **Why the app was stale:** it showed prices through Nov 10 while the desk had Nov 12. The app compiles `src/data/analytics-snapshot.ts` into its bundle.
+  - `analytics-snapshot` followed the nightly `research-factors`. That chain ran at 03:18, before the evening prices were stored.
+  - `ui-production-build` waited for three parents, including the 06:00 `expectations-report`. A child runs only after all of its parents have run since its own last run, so the build of 20:17 bundled the 03:18 file.
+- **Fix:**
+  - `analytics-snapshot` now follows `schwab-daily-bars`.
+  - `ui-production-build` follows `analytics-snapshot` and `schwab-feature-lab`; the next build compiles the expectations report.
+  - The app gets each close in the evening, about 17:15, and after the 04:30 catch-up.
+  - The 20-minute live prices need no build: `api/services/desk-snapshot.ts` re-reads `desk-snapshot.json` whenever it changes.
+- **Refreshed now:**
+  - The analytics snapshot was regenerated: prices through 2026-11-12, test count 1,344. It must run from PowerShell, because it runs `vitest list`, which fails from Git Bash.
+  - Rebuilt with `npm run build`: the Analytics chunk carries `latestPriceDate:"2026-11-12"`.
+- **Watchdog:** the task `AlphaEngine-Operations-Scheduler` cannot be changed without elevation ("Access is denied"; it was registered from an elevated session).
+  - A separate task under the owner's account, `AlphaEngine-Operations-Watchdog`, runs the same wrapper (`worker/operations-scheduler-hidden.vbs`) every 15 minutes (Limited, interactive).
+  - A start while a scheduler runs exits on the lock: "not started: running".
+  - Remove it with `Unregister-ScheduledTask -TaskName AlphaEngine-Operations-Watchdog`.
+- **Scheduler restarted** at 22:55 while idle, to load the new chain and gate. The new pid 6736 took the lock over from the stopped 10700. 80 jobs are registered and the heartbeat is current.
+- **Gates:** `npm run check` 0; `npm test -- --run --maxWorkers=4`: 239 files, 1,344 tests passed; `npm run build` 0.
+- **Next:**
+  - the first live-price run, 2026-11-13 06:40 PT;
+  - the evening chain: 16:10 / 16:45 → analytics → UI build;
+  - K14 Stage B (Kimi);
+  - the GPU guidance run.

@@ -165,7 +165,9 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local static UI artifact read by desk.snapshot; no production write.", requirements: ["mysql", "driveD"], notes: "Live prices count only for a session newer than the stored closes: once the evening run stores the session's official closes, desk-snapshot replaces the provisional ones. Nothing enters the daily price history.",
   }),
   job({
-    id: "analytics-snapshot", name: "Analytics and weekly evidence snapshot", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-factors"],
+    // after the day's closes are stored (not after the nightly factors, which ran before the evening prices and left
+    // the app a session or two behind); the nightly factors are picked up by the next run, at the latest the 04:30 one
+    id: "analytics-snapshot", name: "Analytics and weekly evidence snapshot", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-daily-bars"],
     ...npx("scripts/build-analytics-snapshot.mts"), purpose: "Refresh Analytics metrics and weekly evidence from the current DB and option manifests.",
     input: "Local fundamentals, factors, tone, prices, 13F and option feature manifests.", output: "Generated analytics JSON/TypeScript and the English project-strength review.",
     destination: "Local static UI artifacts; no production write.", requirements: ["mysql", "review"], notes: "Preserves prior weekly snapshots and does not invent missing history.",
@@ -231,7 +233,9 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local research artifact only; no production write or probability promotion.", requirements: ["mysql", "driveD", "review"], notes: "Exposure must be available and non-stale at event eligibility. Debt burden is a proxy, not a floating-rate share. OOS coefficients are never refit.",
   }),
   job({
-    id: "ui-production-build", name: "Production UI rebuild", group: "delivery", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["analytics-snapshot", "schwab-feature-lab", "expectations-report"],
+    // after both evening chains (prices → analytics, chains → feature lab), so the app shows the day's close the same
+    // evening; the 06:00 expectations report is compiled by the next build instead of holding every build until 06:00
+    id: "ui-production-build", name: "Production UI rebuild", group: "delivery", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["analytics-snapshot", "schwab-feature-lab"],
     executable: "npm", args: ["run", "build"], command: "npm run build", purpose: "Compile newly generated static snapshots and the server into dist for normal production-mode operation.",
     input: "Current source and freshly generated report artifacts.", output: "dist/public and dist/boot.js.",
     destination: "Local production server files only; no cloud deployment.", requirements: ["review"], notes: "Required for application code or generated TypeScript changes, not for a Schwab-only JSON refresh. Not required for npm run dev; restart production only when server behavior changes.",

@@ -106,9 +106,11 @@ Open /workers → Delivery dry-runs
 
 ### Worker operational outbox
 
-Push only QA-passed operational outputs after successful scheduled jobs.
+**Off since 2026-11-13.** Owner: "no pushes to prod, it was just a temp dev online". Scheduled jobs push nothing. `OPERATIONAL_PUSH=1` in the scheduler's environment would be the explicit opt-in if a production site returns (`worker/lib/prod-push.ts`).
 
-- **When:** Automatically after exit-ok for Schwab prices/context, FRED vintages and daily operations. One retry with backoff; failure marks the job error. Manual triggers do not auto-push; use this explicit backfill command instead.
+Push only QA-passed operational outputs after successful scheduled jobs (when opted in).
+
+- **When:** With the opt-in, automatically after exit-ok for Schwab prices/context, FRED vintages and daily operations. One retry with backoff; failure marks the job error. Manual triggers do not auto-push; use this explicit backfill command instead.
 - **Input:** INGEST_URL, WORKER_KEY and local Schwab/FRED/operations artifacts.
 - **Output:** pricesDaily, macroPoints and whitelisted reportFile payloads; raw option chains never leave home.
 
@@ -217,7 +219,7 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Desk market snapshot | scheduled | after schwab-daily-bars | Local static UI artifact read by desk.snapshot; no production write and no push lane. |
 | Schwab live prices every 20 minutes | scheduled | 40 6 * * 1-5; 0,20,40 7-12 * * 1-5; 0,20 13 * * 1-5 | Local only: no production push and no write to the daily price history. |
 | Desk snapshot with live prices | scheduled | after schwab-intraday | Local static UI artifact read by desk.snapshot; no production write. |
-| Analytics and weekly evidence snapshot | scheduled | after research-factors | Local static UI artifacts; no production write. |
+| Analytics and weekly evidence snapshot | scheduled | after schwab-daily-bars | Local static UI artifacts; no production write. |
 | Expectations static report | scheduled | 0 6 * * * | Local static UI artifacts; partial results remain explicitly unreviewed. |
 | FRED and ALFRED weekly vintage refresh | scheduled | 30 5 * * 0 | Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local. |
 | OFAC daily event refresh | scheduled | 40 5 * * * | Local macro archive only; no production write. |
@@ -228,7 +230,7 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Historical macro shock calibration | scheduled | after macro-manifest-qa | Local Scenario Lab only; no production write. |
 | OFAC first-release macro event study | scheduled | after macro-manifest-qa | Local research artifact only; no production write or probability promotion. |
 | Macro Transmission Atlas | scheduled | after macro-event-study + research-factors | Local research artifact only; no production write or probability promotion. |
-| Production UI rebuild | scheduled | after analytics-snapshot + schwab-feature-lab + expectations-report | Local production server files only; no cloud deployment. |
+| Production UI rebuild | scheduled | after analytics-snapshot + schwab-feature-lab | Local production server files only; no cloud deployment. |
 | Local morning brief | scheduled | 15 7 * * * | Local probation when INGEST_URL is set; no automatic reviewed production promotion is added by the scheduler. |
 | Daily operations health report | scheduled | 20 7 * * * | daily-operations.json and .md automatically pushed through reportFile after exit-ok and served from the fresher of DB/static. |
 | Data health and quarantine | scheduled | after research-series + schwab-daily-bars + edgar-exhibits-daily + schwab-feature-lab | Local read-only QA artifacts; no production write, schema change or retroactive data removal. |
@@ -657,7 +659,7 @@ npx tsx scripts/build-desk-snapshot.mts
 - **ID:** `analytics-snapshot`
 - **Mode:** scheduled; **enabled by default:** yes
 - **Cron:** none
-- **Dependencies:** `research-factors`
+- **Dependencies:** `schwab-daily-bars`. It runs after the day's closes are stored, every weekday evening and after the 04:30 catch-up. Before 2026-11-13 it followed the nightly `research-factors`, which ran before the evening prices, so the app lagged a session or two. The nightly factors are picked up by the next run.
 - **Purpose:** Refresh Analytics metrics and weekly evidence from the current DB and option manifests.
 - **Input:** Local fundamentals, factors, tone, prices, 13F and option feature manifests.
 - **Output:** Generated analytics JSON/TypeScript and the English project-strength review.
@@ -847,7 +849,7 @@ npx tsx scripts/build-macro-transmission-atlas.mts
 - **ID:** `ui-production-build`
 - **Mode:** scheduled; **enabled by default:** yes
 - **Cron:** none
-- **Dependencies:** `analytics-snapshot`, `schwab-feature-lab`, `expectations-report`
+- **Dependencies:** `analytics-snapshot`, `schwab-feature-lab`. A child runs only after all of its parents have run since its last run. With `expectations-report` (06:00) as a third parent, every build waited until morning; the next build now compiles that report. The 20-minute live prices need no build: the desk re-reads `desk-snapshot.json` whenever it changes.
 - **Purpose:** Compile newly generated static snapshots and the server into dist for normal production-mode operation.
 - **Input:** Current source and freshly generated report artifacts.
 - **Output:** dist/public and dist/boot.js.
