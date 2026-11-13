@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { missingSessions, planSchwabBars, splitAtStooqEnd } from "./schwab-daily-bars";
+import { basisChange, missingSessions, planSchwabBars, splitAtStooqEnd } from "./schwab-daily-bars";
 import { schwabPriceSeries, schwabSymbol } from "./schwab-price-series";
 
 const bar = (date: string, close: number, volume: number | null = 1000, open: number | null = close) => ({ date, open, high: close + 1, low: close - 1, close, adjClose: null, volume });
@@ -24,6 +24,34 @@ describe("Schwab daily bars into local prices", () => {
   it("fills a missing field when the close agrees", () => {
     const plan = planSchwabBars([bar("2026-11-06", 100, null, null)], [bar("2026-11-06", 100, 1500, 99)]);
     expect(plan.enrich).toEqual([{ date: "2026-11-06", patch: { open: 99, volume: 1500 } }]);
+  });
+
+  it("recognises a split: Schwab re-bases every stored date by one factor, and the new session follows", () => {
+    // a 4:1 split effective 2026-11-13: the month's earlier candles come back at a quarter of the stored closes
+    const stored = [bar("2026-11-09", 400), bar("2026-11-10", 404), bar("2026-11-11", 408), bar("2026-11-12", 412)];
+    const fresh = [bar("2026-11-09", 100), bar("2026-11-10", 101), bar("2026-11-11", 102), bar("2026-11-12", 103), bar("2026-11-13", 104)];
+    expect(basisChange(stored, fresh)).toEqual({ ratio: 0.25, firstNewBasisDate: "2026-11-13", dates: 4 });
+  });
+
+  it("recognises a split seen late: re-based dates first, agreeing ones after", () => {
+    const stored = [bar("2026-11-09", 400), bar("2026-11-10", 404), bar("2026-11-11", 408), bar("2026-11-12", 103)];
+    const fresh = [bar("2026-11-09", 100), bar("2026-11-10", 101), bar("2026-11-11", 102), bar("2026-11-12", 103)];
+    expect(basisChange(stored, fresh)).toEqual({ ratio: 0.25, firstNewBasisDate: "2026-11-12", dates: 3 });
+  });
+
+  it("recognises an adjustment of the whole stored history with no new session yet", () => {
+    const stored = [bar("2026-11-10", 404), bar("2026-11-11", 408), bar("2026-11-12", 412)];
+    const fresh = [bar("2026-11-10", 101), bar("2026-11-11", 102), bar("2026-11-12", 103)];
+    expect(basisChange(stored, fresh)).toEqual({ ratio: 0.25, firstNewBasisDate: "2026-11-13", dates: 3 });
+  });
+
+  it("keeps a one-day correction, mixed factors and ordinary days as they were", () => {
+    const stored = [bar("2026-11-09", 400), bar("2026-11-10", 404), bar("2026-11-11", 408), bar("2026-11-12", 412)];
+    expect(basisChange(stored, [bar("2026-11-09", 401), bar("2026-11-10", 404), bar("2026-11-11", 408), bar("2026-11-12", 412)])).toBeNull();
+    expect(basisChange(stored, [bar("2026-11-09", 100), bar("2026-11-10", 202), bar("2026-11-11", 102), bar("2026-11-12", 103)])).toBeNull();
+    expect(basisChange(stored, stored)).toBeNull();
+    // a moved date after an agreeing one is no clean re-basing
+    expect(basisChange(stored, [bar("2026-11-09", 100), bar("2026-11-10", 404), bar("2026-11-11", 102), bar("2026-11-12", 103)])).toBeNull();
   });
 
   it("keeps Schwab bars out of the dates the Stooq history covers", () => {

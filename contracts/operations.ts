@@ -145,7 +145,13 @@ export const OPERATION_JOBS: OperationJob[] = [
     id: "schwab-daily-bars", name: "Schwab daily bars into local prices", group: "options", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-fetch-sp500", "schwab-fetch-daily"],
     ...npx("worker/schwab-daily-bars.mts"), purpose: "Store every completed official daily candle of both Schwab archives in local prices, so a day one run misses is filled by the next.",
     input: "pricehistory files of the schwab and schwab-sp500 archives (about one month each).", output: "Local prices rows (source schwab after each series' last Stooq bar, schwab-hist on dates the Stooq history covers) and worker/.runs/local-generated/schwab-daily-bars.json with inserts, conflicts and holes against SPY's sessions.",
-    destination: "Local MySQL only; the operational pricesDaily push is unchanged.", requirements: ["mysql", "driveD"], notes: "The app lets Schwab win on its dates, so raw Schwab bars never enter dates of the dividend-adjusted Stooq history (they are kept as schwab-hist). A stored close is never changed: a different close is a conflict and marks the job error; other field differences are listed.",
+    destination: "Local MySQL only; no production push (off since 2026-11-13).", requirements: ["mysql", "driveD"], notes: "The app lets Schwab win on its dates, so raw Schwab bars never enter dates of the dividend-adjusted Stooq history (they are kept as schwab-hist). A stored close is never changed one by one: a different close is a conflict and marks the job error. A split is the exception: when Schwab re-bases a series' whole history by one factor, the stored history before the new basis is re-based in every source, the event goes to worker/.runs/price-adjustments.jsonl, and the run goes on.",
+  }),
+  job({
+    id: "split-calendar", name: "Upcoming stock splits (Yahoo calendar)", group: "research", mode: "scheduled", cron: "15 6 * * *", defaultEnabled: true, dependsOn: [],
+    ...npx("worker/split-calendar.mts"), purpose: "The daily split watch: the US stock splits Yahoo's split calendar lists for the next 60 days, with the companies of our price series flagged (owner's go, 2026-11-13).",
+    input: "Yahoo's split calendar (one session cookie and crumb, at most eight requests two seconds apart) and the price-series list.", output: "D:\\research\\alpha-engine\\prices\\split-calendar\\<date>.json and latest.json.",
+    destination: "Local D: only; no production write.", requirements: ["network", "driveD"], notes: "First run 2026-11-13: SNDK 8-for-1 on 2026-11-20. The daily bars job re-bases a series when Schwab re-bases its history; this calendar says which splits to expect. A failed fetch fails the job, so it shows on the desk's operations banner.",
   }),
   job({
     id: "desk-snapshot", name: "Desk market snapshot", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-daily-bars"],

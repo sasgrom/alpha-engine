@@ -215,7 +215,8 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Schwab Feature Lab materialization | scheduled | after schwab-snapshot | Local Feature Lab UI only; no production factor promotion. |
 | Schwab market context pack | scheduled | 10 * * * * | schwab-context.json automatically pushed through reportFile after successful scheduled runs; no accounts, orders or full-universe streaming. |
 | Schwab REST daily snapshot · S&P 500 and funds | scheduled | 10 16 * * 1-5; 30 4 * * * | Local only: no operational push, no normalized UI snapshot and no production write. |
-| Schwab daily bars into local prices | scheduled | after schwab-fetch-sp500 + schwab-fetch-daily | Local MySQL only; no production push (off since 2026-11-13). |
+| Schwab daily bars into local prices | scheduled | after schwab-fetch-sp500 + schwab-fetch-daily | Local MySQL only; no production push (off since 2026-11-13). A split re-bases the stored history instead of stopping the chain. |
+| Upcoming stock splits (Yahoo calendar) | scheduled | 15 6 * * * | Local D: only (`prices\split-calendar\`). |
 | Desk market snapshot | scheduled | after schwab-daily-bars | Local static UI artifact read by desk.snapshot; no production write and no push lane. |
 | Schwab live prices every 20 minutes | scheduled | 40 6 * * 1-5; 0,20,40 7-12 * * 1-5; 0,20 13 * * 1-5 | Local only: no production push and no write to the daily price history. |
 | Desk snapshot with live prices | scheduled | after schwab-intraday | Local static UI artifact read by desk.snapshot; no production write. |

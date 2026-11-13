@@ -34,6 +34,42 @@ export function planSchwabBars(stored: PriceBar[], candidates: PriceBar[]): Schw
   return plan;
 }
 
+export interface BasisChange {
+  /** new candle ÷ stored close on every re-based date: the factor the stored history before firstNewBasisDate needs */
+  ratio: number;
+  /** the first session on the new basis: the first date whose stored close agrees, else the first new date */
+  firstNewBasisDate: string;
+  /** stored dates whose close moved by the ratio */
+  dates: number;
+}
+
+/**
+ * Schwab re-bases a series' whole history after a split (and after some spin-offs and special dividends): every stored
+ * close before one date differs from the new candle by one factor, and from that date on they agree. Three such dates
+ * at least, so that a one-day correction stays a conflict; mixed factors or a moved date after an agreeing one are no
+ * basis change either (they stay conflicts, as before).
+ */
+export function basisChange(stored: PriceBar[], candidates: PriceBar[]): BasisChange | null {
+  const byDate = new Map(stored.map((bar) => [bar.date, bar]));
+  const pairs = candidates
+    .filter((bar) => bar.close && byDate.get(bar.date)?.close)
+    .map((bar) => ({ date: bar.date, ratio: bar.close! / byDate.get(bar.date)!.close!, same: same(bar.close, byDate.get(bar.date)!.close) }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const moved = pairs.filter((pair) => !pair.same);
+  if (moved.length < 3) return null;
+  const ratio = [...moved.map((pair) => pair.ratio)].sort((a, b) => a - b)[Math.floor(moved.length / 2)];
+  if (Math.abs(Math.log(ratio)) < Math.log(1.01) || moved.some((pair) => Math.abs(Math.log(pair.ratio / ratio)) > 0.002)) return null;
+  const lastMoved = moved.at(-1)!.date;
+  if (pairs.some((pair) => pair.same && pair.date < lastMoved)) return null;
+  // the first session on the new basis: an agreeing stored date, else the first new date, else (an adjustment Schwab
+  // applied with no new session yet) the day after the last re-based date
+  const dayAfter = new Date(Date.parse(`${lastMoved}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
+  const firstNewBasisDate = pairs.find((pair) => pair.same && pair.date > lastMoved)?.date
+    ?? candidates.map((bar) => bar.date).filter((date) => date > lastMoved && !byDate.has(date)).sort()[0]
+    ?? dayAfter;
+  return { ratio, firstNewBasisDate, dates: moved.length };
+}
+
 /**
  * Where a Schwab bar is stored. The app merges sources with Schwab winning on its dates, so a raw Schwab bar on a date
  * the dividend-adjusted Stooq history already covers would put a false step into that history. Such bars go to

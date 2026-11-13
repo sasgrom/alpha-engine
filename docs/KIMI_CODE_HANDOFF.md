@@ -2167,3 +2167,26 @@ All read only, except one probe download (below). No change to the dataset or fi
   2. As-traded prices and total-return series with their gates, among them our market cap against the dump's daily Tiingo market cap (owner: the split mess was why his old model used market cap).
   3. The overnight Yahoo pull's results.
   4. K14 Stage B (Kimi).
+
+## 149. Claude: the split watch — splits no longer stop the daily chain; a daily calendar of upcoming splits — 2026-11-13 night
+
+- **Owner:** "yahoo should have future split calendar ... we can put it on daily watch", then "yes". He asked whether Schwab has one too: its market-data API has no corporate actions, and only quotes carry the next dividend ex-date.
+- **Daily bars re-base on a split** (`worker/lib/schwab-daily-bars.ts` `basisChange`, `worker/schwab-daily-bars.mts`).
+  - The pattern: when Schwab re-bases a series' history, every stored close before one date differs from the new candle by one factor (at least 3 dates), and the closes agree from that date on.
+  - Then the stored history before that date is re-based in every source (stooq, schwab-hist, schwab), year by year: prices × factor, volume ÷ factor.
+  - The event goes to `worker/.runs/price-adjustments.jsonl` with the rows changed per source (reversible by the factor), and the run goes on.
+  - A one-day correction, mixed factors, or a moved date after an agreeing one stay conflicts, as before. A dry run detects and reports but writes nothing.
+  - Checks:
+    - 10 planner tests;
+    - a dry run on a synthetic 4:1 split of AAPL ("basis change: AAPL ×0.25 before 2026-11-13, 24 stored dates moved");
+    - the re-base statements on a throwaway table in alpha_research (rows before the date re-based in all three sources, the new-basis row and other companies untouched).
+  - No scheduler restart is needed for this: jobs run as fresh processes.
+- **Upcoming splits** (`worker/split-calendar.mts`, `worker/lib/split-calendar.ts`): Yahoo's split calendar API (`v1/finance/visualization`, entityIdType `splits`, one session cookie and crumb), 60 days ahead, US listings, our price series flagged.
+  - Output: `D:\research\alpha-engine\prices\split-calendar\<date>.json` and `latest.json`.
+  - New job `split-calendar`, cron `15 6 * * *`; needs a scheduler restart to load.
+  - First run: 243 splits, 37 US, **1 in our universe: SNDK 8-for-1 on 2026-11-20**. Before tonight that split would have stopped the chain.
+  - AGENTS.md section 2 now allows Yahoo for corporate actions only.
+  - StockTitan (`stocktitan.net/news/stock-splits.html`, calendar plus RSS) is a possible second source once its terms are found (`/terms` is a 404).
+- **Still open:**
+  - `split-shares.ts` learns a split only from the first filing on the new basis. Until then, market value multiplies the old share count by the re-based price, about a quarter after each split. The price-adjustments log or the calendar should feed it (next).
+  - The desk could list upcoming splits of our companies.
