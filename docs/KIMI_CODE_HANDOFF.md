@@ -1990,3 +1990,56 @@ All read only, except one probe download (below). No change to the dataset or fi
     - General Dynamics cost of sales since 2020: `CostsAndExpenses-GeneralAndAdministrativeExpense`.
     - NextEra capex on its own tags.
   - Stage A is a pilot of 5 entries reviewed by me. Stage B is everything, with fixed gates (compare 0 broken and 0 removed; checks and QA not worse; section 9 of the process document).
+
+## 144. Claude: research database `alpha_research`; provisional load of the baseline; K14 override periods and magnitude — 2026-11-12
+
+- **Owner's permission (verbatim):** "Claude may create, alter and drop tables and write rows in the local alpha_research database without asking. alpha_engine stays read-only for research. Inserts in batches of ≤500 rows. Nothing reaches production except through the reviewed sync."
+  - Recorded as AGENTS.md section 3.2, with matching exceptions in sections 3 and 6.
+  - The owner created the database and its user `alpha_research`.
+  - Grants, checked with SHOW GRANTS: all privileges on `alpha_research`, SELECT on `alpha_engine`. So MySQL itself enforces the rule.
+  - Connection: `RESEARCH_DATABASE_URL` in `.env`, never printed.
+- **Lab helpers** (`C:\dev\alpha-engine-lab\src\`):
+  - `research-db.mts`: `researchDb()` refuses any database but `alpha_research`; `insertRows()` writes at most 500 rows per batch.
+  - `research-db-check.mts`: shows the user, its grants and a write round trip.
+- **Loader:** `src/fundamentals/load-mysql.mts <build dir> <version> <provisional|final> [--replace]`.
+  - Five tables:
+    - `std_fundamentals`: every filed version of every company, field and quarter.
+    - `std_fundamental_quarters`: with the EDGAR acceptance time.
+    - `std_fundamental_companies` and `std_fundamental_fields`.
+    - `std_fundamental_builds`: lab commit, data-set manifest and `overrides.json` SHA-256, gate numbers.
+  - `--replace` is refused once a final build is stored. Without it the loader only inserts new versions and stops on any value that differs from a stored one.
+  - Every load reads back 2,000 random values.
+- **Provisional load of v3-mech** as `2026-11-12-v3mech`:
+  - 1,661,510 values, 32,722 quarters, 499 companies and 64 fields.
+  - Read-back of 2,000 random values: 0 different. Time: 1,087 s.
+  - My own check: exact table counts equal the loader's; NVIDIA's 77 revenue versions equal the build file.
+  - The final load follows K14 Stage B (v3).
+- **K14 Stage A: Kimi's NextEra question.** NextEra's own capex tags change sign between filings, so no signed expression fits every year:
+  - the 2010 10-K stores FPL +2,605m and NEER −2,899m;
+  - the 2011 10-K stores both as positive outflows.
+
+  The tags were also renamed four times since 2009. Mechanism extension in `build.mts`, lab `e2c4bc3`:
+  - A field may have a list of entries with non-overlapping `from`/`until`. Each quarter uses the entry for its own quarter end.
+  - The cross-tag year-to-date pairing (`x:`) reads each figure with its own quarter's entry.
+  - `"magnitude": true` counts each fact by its absolute value before any year-to-date difference.
+  - Regression: two full builds without overrides are identical to v3-mech for all 499 companies (quarters, sources, fields, added filings).
+  - Test on NextEra with a synthetic config of five entries. FY2010 (5,846m) and FY2011 (6,628m) equal the 10-K lines. Q4 2010 pairs the new tags' full year with the old tags' nine months.
+- **K14 Stage A delivered and accepted.** Kimi's lab commit `3e3109e`; five entries: GD costRev, NextEra capex (one entry, magnitude), BAX capex, ILMN debt (`first`), TJX opinc.
+  - My review:
+    - a rebuild on `e2c4bc3` equals his `v3-pilot` file for file;
+    - `compare.py`: 0 removed, 0 broken;
+    - his evidence figures tie to the data sets' own numbers (GD 7,849m, ILMN 1,740m, TJX 937.299m, BAX −176m).
+  - The only changed value is ILMN's 2022-04-03 debt, 499m → 1,740m (the term and convertible notes the baseline missed).
+- **Gulf Power** (found by Kimi): "Acquisition and capital expenditures of Gulf Power" holds the 2019-01-01 purchase. Kimi left the line out everywhere.
+  - Only Q1 2019 carries the purchase as a quarter value: Q2–Q4 2019 difference two year-to-date figures that both contain it.
+  - Stage B therefore uses entries by period: Q1 2019 without the line, documented as understated by Gulf's own Q1 capex; from Q2 2019 with it, those quarters from `y:`.
+  - New rule in K14 and the process document: end an entry inside a fiscal year only at a rename.
+- **Found in the review: the year-to-date rule mixes bases after a restatement.** A filing that restates its prior-year comparatives, for example after moving a business to discontinued operations, puts the current year on a new basis. The build still subtracts the earlier filing's figure, which is on the old basis.
+  - WMB Q4 2011, first version −17m: the 2011 10-K's full year on continuing operations (after the WPX spin-off) minus the original nine months with WPX. The value a year later is 2,103m.
+  - BAX Q3 2024, first version −22m. The Q3 10-Q's nine months are 314m on continuing operations, and it restates its own 2023 nine months from 502m to 340m. The Q2 10-Q's six months it is set against are 292m, on the old basis.
+  - K14 item 4 (the four negative fourth-quarter revenues) is this mechanism. It moves from Kimi to me, as a build rule: a restated prior-year comparative in the filing blocks the pairing.
+- **Docs:** `docs/engine/STANDARD_FUNDAMENTALS.md` sections 4, 6 and 8; K14 "Several periods for one field".
+- **Next:**
+  1. Mine: the restated-basis rule in `build.mts` → new baseline → regression analysis and gates → K14 gate numbers updated.
+  2. Kimi: Stage B (items 1–3) → compare against the new baseline → v3.
+  3. Final MySQL load of v3.

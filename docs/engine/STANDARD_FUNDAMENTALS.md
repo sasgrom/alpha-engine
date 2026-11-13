@@ -99,9 +99,15 @@ Step details:
 - **Impossible values:** for fields marked `positive` (total assets and share counts), a zero or negative value is passed over for the next tag. Examples: a share class with 0 shares on the cover page; negative weighted shares from year-to-date differences.
 - **Company-specific tags (`overrides.json`):**
   - **Order:** per company and field, tags tried either as a fallback (the default: only where the field's own tags give nothing) or first (a standard tag with another scope for that company), optionally limited to a range of quarter ends.
+  - **Periods:** a field may have several entries, one per range of quarter ends (`from`/`until`; the ranges must not overlap). Each quarter uses the entry for its own quarter end. When the build pairs year-to-date figures across a tag change, it reads each figure with its own quarter's entry. So the fourth quarter after a rename pairs the new tag's full year with the old tag's nine months. End an entry inside a fiscal year only at a rename. If an entry leaves a line out on purpose for some quarters, the later quarters of that year must come from `y:` (one expression, differenced), never from such a pairing; check the sources.
+  - **Magnitude:** `"magnitude": true` counts each fact by its absolute value before any year-to-date difference; the expression's signs apply after. It is only for lines that are outflows in every filing of the range, such as capex payments, where filings store the sign either way.
   - **Evidence:** every entry carries the statement line and the values that tie.
   - **Example:** General Dynamics' cost of sales since 2020 is tagged only by product and service, so it is `CostsAndExpenses-GeneralAndAdministrativeExpense`.
-  - **Example:** NextEra's capex is on its own tags, `-custom:CapitalExpendituresOfFPL-custom:IndependentPowerInvestments`.
+  - **Example:** NextEra's capex is on its own tags, renamed four times since 2009, so it has one entry per name period, with magnitude:
+    - 2009 – Q3 2010: `CapitalExpendituresOfFPL`, then `…OfFpl`.
+    - Q4 2010 – 2020: `…OfPublicUtility`.
+    - 2021: the FPL and Gulf Power segment tags.
+    - 2022 onward: `…OfFPL` again.
 
 ## 5. Acceptance gates
 
@@ -129,6 +135,7 @@ Every new build is accepted only when all of these hold.
 - **A filing may tag one number twice at different precision** (a summary table in billions next to the statement in units). Keep the most precise; SEC does.
 - **Filers mislabel periods** (a full year tagged as a quarter). The data sets copy such mistakes: a difference against them is not automatically ours.
 - **Some totals are only tagged by part.** General Dynamics' cost of sales since 2020 exists only by product and service. Use an identity of tagged lines, or an override.
+- **A company may store the same tag with either sign in different filings.** NextEra's 2010 10-K stored FPL capex as +2,605m and NEER investments as −2,899m. Its 2011 10-K stored both as positive outflows. No signed expression fits both years; `magnitude` does, and the 2010 quarters then sum to the 10-K's 5,846m. Use it only where every part is an outflow in every filing of the range; a "payments for (proceeds from)" line that can turn into a net inflow needs its own range or no magnitude.
 - **Banks have no total-revenue line on the face of the statement**, so a check by label sees a fee line. Their revenue is the identity.
 - **The largest tag is not always the statement's figure.** Take the largest among the lines the statement prints.
 - **Restatements:** never set a restated year against an old nine-month figure (same-basis rule).
@@ -156,9 +163,36 @@ Every new build is accepted only when all of these hold.
 4. Review the new companies' gaps (series that stop, own tags) and add `overrides.json` entries with evidence.
 5. Load them.
 
-## 8. Keeping the series in MySQL (proposal; a new table needs the owner's review)
+## 8. Keeping the series in MySQL
 
 The cleaned series become static MySQL data: computed once, then extended with new quarters.
+
+- **Where:** the local research database `alpha_research`, through `RESEARCH_DATABASE_URL`. Its user has all rights there and read-only access to `alpha_engine`.
+- **Permission:** the owner's, of 2026-11-12, AGENTS.md section 3.2.
+- **Lab code:**
+  - `src/research-db.mts`: the connection and inserts of at most 500 rows.
+  - `src/research-db-check.mts`: who, grants, a write round trip.
+  - `src/fundamentals/load-mysql.mts`: the loader.
+
+**Loading a build:**
+```
+npx tsx C:/dev/alpha-engine-lab/src/fundamentals/load-mysql.mts <build dir> <build version> <provisional|final> [--replace]
+```
+- **Modes:**
+  - `--replace` empties the tables and loads the build. It is allowed only while every stored build is provisional.
+  - Otherwise it appends: only versions not stored yet are inserted. A stored version whose value differs stops the load, because a stored value is never updated; restatements arrive as new filed versions.
+- **After loading:** every table is counted, and 2,000 random values are read back and compared with the build.
+- **Build record:** each load stores the lab commit, the SHA-256 of the data-set manifest and of `overrides.json`, and the acceptance gates' numbers.
+
+**Example, point in time:** each company's revenue for every quarter, as known on 2024-06-30.
+```sql
+SELECT f.cik, f.quarterEnd, f.value
+FROM std_fundamentals f
+JOIN (SELECT cik, quarterEnd, MAX(filed) AS filed FROM std_fundamentals
+      WHERE field = 'revenue' AND filed <= '2024-06-30' GROUP BY cik, quarterEnd) k
+  ON k.cik = f.cik AND k.quarterEnd = f.quarterEnd AND k.filed = f.filed
+WHERE f.field = 'revenue';
+```
 
 **Tables:**
 
@@ -192,6 +226,8 @@ Primary key: `(cik, field, quarterEnd, filed)`. Index: `(field, quarterEnd)`.
 
 Primary key: `(cik, quarterEnd)`.
 
+`std_fundamental_companies`: ticker, name, predecessor, first and last quarter. `std_fundamental_fields`: statement, kind, unit, meaning, tags, identities.
+
 `std_fundamental_builds`, one row per load:
 
 | Column |
@@ -202,12 +238,7 @@ Primary key: `(cik, quarterEnd)`.
 | `inputs` (JSON: data-set manifest hash, companyfacts as-of date, overrides hash) |
 | `gates` (JSON: the section 5 numbers) |
 
-**Loading:**
-- Inserts only, in batches of at most 500 rows.
-- A rebuild inserts only versions not yet stored.
-- A stored version is never updated. If a value of a stored (cik, field, quarter, filed) differs, the load stops and reports it.
-
-**Gates before any load:** section 5. Local MySQL first; production only by the owner's reviewed sync.
+**Gates before a final load:** section 5. Production only through a reviewed migration and the owner's reviewed sync.
 
 ## 9. Company-specific mappings (K14)
 

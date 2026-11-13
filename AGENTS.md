@@ -30,7 +30,7 @@ Progress messages should be short status updates, not questions. Ask the owner o
 - Only explicitly reviewed data may reach production, except the owner-declared operational lane added on 2026-11-09: QA-passed `pricesDaily`, `macroPoints` and whitelisted `reportFile` outputs may auto-push after scheduled exit-ok through `/api/worker/ingest` with one retry and an honest job error on failure. Raw option chains stay local. Expectations, canonical series, factors and all other derived artifacts remain reviewed/pinned. Production apply commands for those derived artifacts are manual owner actions, never scheduled agent actions.
 - Research must remain availability-anchored and point-in-time correct. Never use future availability, retrospective smoothing or revised future data in historical signals.
 - Never modify `api/lib/`, `api/kimi/`, `.env`, infrastructure scripts or credential files.
-- Never use `db:push --force`, drop tables or perform unreviewed schema changes. Inserts are limited to 500 rows per batch.
+- Never use `db:push --force`, drop tables or perform unreviewed schema changes. Inserts are limited to 500 rows per batch. (One exception: the local research database, section 3.2.)
 - Use port 3000 only and exactly one web server. Do not start a second scheduler or duplicate an already running collector.
 - Keep raw archives on the large external D: drive with the existing realpath-aware guards. MySQL remains on C: until backup and restore testing is complete.
 - LLM keys and provider credentials never enter the browser, logs, chat, fixtures or committed files.
@@ -50,6 +50,14 @@ The external D: drive may disconnect and later remount. Treat every unexpected D
 - Resume idempotently after verification, with the normal maximum of two attempts for the same failing step followed by diagnosis. Do not redownload or rewrite valid completed work merely to make the run look clean.
 - Keep source, tests, task specifications and the handoff on C: and commit verified work promptly. Committed summaries and manifests record expected artifact hashes and counts; they support integrity checks but do not replace the raw D: archive.
 - At every interruption and recovery, update `docs/KIMI_CODE_HANDOFF.md` with the failure, last verified checkpoint, active/exited process state, remount checks, resumed command and resulting counts/hashes. Another session must be able to continue without guessing or repeating completed work.
+
+## 3.2 Research database (owner's decision, 2026-11-12)
+
+The owner's words: "Claude may create, alter and drop tables and write rows in the local alpha_research database without asking. alpha_engine stays read-only for research. Inserts in batches of ≤500 rows. Nothing reaches production except through the reviewed sync."
+
+- **Connection:** `RESEARCH_DATABASE_URL` in `.env` (MySQL user `alpha_research`). The user has all privileges on `alpha_research` and SELECT only on `alpha_engine`, so MySQL itself enforces the rule. Never print, copy or log the URL.
+- **Who:** the permission is Claude's. Other agents write to `alpha_research` only when a task specification grants it.
+- **What lives there:** research data such as the standard fundamentals (`docs/engine/STANDARD_FUNDAMENTALS.md`). The app's database `alpha_engine` and its reviewed schema process are unchanged. Research tables reach the app or production only through a reviewed migration and the reviewed sync.
 
 ## 4. Daily operations workflow
 
@@ -102,7 +110,7 @@ Git and generated artifacts:
 Stop for an explicit owner decision before:
 
 - production apply, production deployment or cloud collection;
-- schema changes, data deletion or storage migration;
+- schema changes, data deletion or storage migration (outside the research database of section 3.2);
 - manually reading, printing or rotating credentials, or when authentication requires owner interaction;
 - enabling paused GPU lanes or starting a long extraction;
 - installing new MCP servers, plugins, providers or external services;

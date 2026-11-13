@@ -47,7 +47,11 @@ None.
 
 2. **Companies under 90% coverage since 2010** for capex, intexp, depamor, debt and opinc (K13 lists), where the company files the item on its own tag or on a standard tag missing from the field's list.
 3. **Revenue that is not a printed income-statement line** (`revenueLine.companiesWithDifferences`, 44 companies). Typical cases are casinos before 2018 and companies whose `Revenues` tag has another scope. Decide per company: an override with `"use": "first"`, or a documented exception.
-4. **The four negative fourth-quarter revenues** in `qa.json`: WMB 2011, JCI 2012, AES 2017, AOS 2010. Find the cause and fix it with an override, or document it.
+4. **The four negative fourth-quarter revenues** in `qa.json`: WMB 2011, JCI 2012, AES 2017, AOS 2010. **Moved to Claude after Stage A; do not map.**
+   - They are a build rule, not a tag mapping.
+   - A filing that restates its prior-year comparatives (a business moved to discontinued operations) is on a new basis. The build subtracted the earlier filing's year-to-date figure, which is on the old basis.
+   - Examples: WMB Q4 2011, first version −17m; BAX Q3 2024 capex, first version −22m.
+   - Claude adds the rule to `build.mts` and publishes a new baseline for the Stage B comparison.
 
 **Method: follow the statement line across filings.**
 - For a series that stops, find the line in the company's last filings that still carry it (PRE: the statement, line order and `plabel`). Find the same line, by label and position, in the later filings, and read its tag there.
@@ -79,11 +83,23 @@ None.
 - `tags`;
 - `use`: "fallback" unless the standard tag's scope is wrong for the company, then "first";
 - `from` / `until` when the mapping holds only for a period;
+- `magnitude`: true only when every part of the expression is an outflow in every filing of the range and filings store the sign either way. Each fact then counts by its absolute value before any year-to-date difference, and the expression's signs apply after;
 - `evidence`: the filing (accession and period), the statement line or lines and their printed values, and that the tags give those values;
 - `by`: "kimi";
 - `reviewed`: false.
 
 The build rejects an entry without evidence.
+
+**Several periods for one field** (added after the NextEra pilot, lab commit after `0e2aba7`): a field's value may be a list of entries instead of one entry. Each entry has its own `from`/`until` and tags, and the ranges must not overlap. Each quarter uses the entry for its own quarter end. Where the build pairs year-to-date figures across a rename, each figure is read with the entry of its own quarter. End one entry at the last quarter of the old names and start the next at the first quarter of the new ones. The new entry does not need to repeat the old names.
+
+End an entry inside a fiscal year only at a rename, where both sides carry the same lines. An entry may also leave a line out on purpose for some quarters. Example: NextEra's Q1 2019 without the line that holds the Gulf Power purchase. Then the quarters after it in that year must come from `y:` (one expression, differenced), never from `x:`. An `x:` there would set a year-to-date figure with the line against one without it. Check the sources in the build output.
+
+```json
+"753308": { "capex": [
+  { "until": "2010-09-30", "tags": ["-custom:CapitalExpendituresOfFpl-custom:IndependentPowerInvestments-…", "-custom:CapitalExpendituresOfFPL-…"], "magnitude": true, "use": "first", "evidence": "…", "by": "kimi", "reviewed": false },
+  { "from": "2010-10-01", "until": "2018-12-31", "tags": ["-custom:CapitalExpendituresOfPublicUtility-…"], "magnitude": true, "use": "first", "evidence": "…", "by": "kimi", "reviewed": false }
+] }
+```
 
 ## Stages
 
