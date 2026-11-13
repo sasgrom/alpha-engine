@@ -2304,3 +2304,19 @@ All read only, except one probe download (below). No change to the dataset or fi
 - **Next:**
   - Claude: the Yahoo US pull summary when it ends (about 07:30 PT), the morning report to the owner, K16 review on delivery.
   - Owner: step-2 instructions (normalization, share basis); prices p1 stays provisional until the daily append exists.
+- **Section 153 continued (05:10 PT).**
+  - **Prices p1.1** (lab `8c2ab40`), loaded with `--replace`, provisional.
+    - Load: 2,891,701 bars, 514 companies: 505 `ok`, 9 `review` (before: 20); 1,992 random bars read back, 0 different.
+    - Fixes:
+      - SPY and the sector funds have no `companies` row: their ticker now comes from their price rows, so dividends enter their index. SPY's sessions differing from Stooq fell from 104 to 22.
+      - A single Schwab bar, where Schwab alone supplies the price, that Stooq contradicts by more than 3% and the next session reverses is left out: 123 bars (SPY 2011-08-02).
+    - Gates: total return 0.25% of sessions differ; spot 505/510; splits 440/440.
+  - **UI move** (owner, backburner: "continue with old UI functionality to be transfered to your new design … delegate"):
+    - Inventory of all classic views and plan in `docs/desk/UI_MIGRATION.md`: keep, merge or drop per view; phases K17a-e for Kimi; fixes; ideas including a Telegram add-on; Claude's to-do.
+    - Fixes to make on the way:
+      - `browse.*` and `sentiment.labStats` are open to any member;
+      - `/admin` has no route guard;
+      - the messages contact list exposes all accounts;
+      - `dashboard.stats` is polled every 5 s;
+      - Expectations bundles 27 MB.
+  - **Queued specs for Kimi, after K16:** K17a (messages and owner tools in the desk), K18 (weekly refresh of the standard prices; draft ready).

@@ -89,8 +89,21 @@ This document is the process. With it, the build can be repeated and the mistake
   applied but never enter the total-return index.
 - **Regular-looking large dividends** (a semiannual payer's final dividend, CRH every March) are not treated as specials
   where nothing at today's end checks the choice.
+- **A fund has no company row** (SPY and the eleven sector funds): its ticker comes from its own price rows. Without it
+  the index missed every dividend (SPY differed from Stooq on 104 sessions; with it, 22).
+- **A single bad Schwab bar where Schwab alone supplies the price** is left out when Stooq contradicts it by more than
+  3% and the next session reverses it. Example: SPY on 2011-08-02 closed at 132.57 on a third of the usual volume, on
+  the day SPY fell 2.6% to 125. 123 bars, most in other companies' years under a reused ticker (KDP before 2018) and in
+  TPL's history.
 
 ## 5. Acceptance gates (`std-prices-gates.py`) and the first build
+
+Build p1.1 (2026-11-13, the funds' dividends and the Schwab bad-bar rule above) changes the first three rows:
+- total return: 6,878 of 2,736,964 sessions differ (0.25%);
+- option spot: 505 of 510;
+- splits: 440 of 440.
+
+The funds now carry their option folders and their own splits. The table below keeps p1's numbers.
 
 | Gate | Rule | Build p1 (2026-11-13) |
 |---|---|---|
