@@ -2190,3 +2190,20 @@ All read only, except one probe download (below). No change to the dataset or fi
 - **Still open:**
   - `split-shares.ts` learns a split only from the first filing on the new basis. Until then, market value multiplies the old share count by the re-based price, about a quarter after each split. The price-adjustments log or the calendar should feed it (next).
   - The desk could list upcoming splits of our companies.
+
+## 150. Kimi: K14 Stage B verified — 94 companies, 110 evidence-backed mappings, all acceptance gates green — 2026-11-13T10:10:18Z
+
+- **Scope:** company-specific mappings in `C:\dev\alpha-engine-lab\src\fundamentals\overrides.json`: 94 companies, 110 entries, every one with a filing, statement lines, values and `reviewed: false`. Lab head `96325e5`; mechanism commits `e2c4bc3`, `8f6afc0`, `cd2f158`, and checks commit `35ec948` were used. Stage A was accepted by Claude before Stage B.
+- **Build:** `D:\research\alpha-engine\fundamentals\standard\v3\`: 502 company IDs, 500 with quarterly series, 30,754 company-quarters since 2010, 65 filings supplemented from SEC financial statement data sets.
+- **Mappings:** 2,093 added company-quarter values, 180 direct changes and 82 dependent-identity changes. Six original-vintage additions preserve the later version. Full normalized evidence and all changed values: `v3\mapping-report.md` and `mapping-report.json`.
+- **Acceptance gates:**
+  - `compare.py v3-base v3`: **0 removed values and 0 broken filing matches**.
+  - QA: grossProfit **511** (baseline 516), cashChange **622** (622), signs **244** (244), revenueJumps **58** (baseline 59), assetJumps **48** (48), negativeQ4Revenue **1** (the documented A. O. Smith case).
+  - `checks.py`: freshness **0**; largest printed revenue line **96.58%** (minimum 96.10%); the same five revenue tie-out differences as the baseline. TECH's amendment is information, not a freshness failure.
+  - Continuity: grossProfit/costRev 51 → 21/20; opinc 22 → 9; capex 38 → 17; revenue 1 → 0; netinc 2 → 0; ncfo 1 → 0; debt 35 → 20; sharesBasic 20 → 20; shareswa 8 → 7; epsDil 3 → 2. The halving target was not met for debt, sharesBasic, shareswa or epsDil. Every remaining reason is in `v3\remaining-stops.md`.
+  - Workbook `v3\Standard fundamentals v3 - review.xls`: 662,016 bytes, opened with xlrd, 9 sheets.
+- **Commands completed:** full 502-company build, baseline compare, `qa.mts`, `checks.py`, review workbook generation and validation, normalized mapping report and delivery-text generation. `git diff --check` passed. App `npm run check`, full tests and `npm run build` were not run: K14 specifies the lab build/QA/check/compare/workbook gates, not an application-code change.
+- **Changes and patterns:** standard and extension renames, operating-cost identities, pretax/non-operating reconciliations, own tags written `custom:Name`, casino gross revenue, REIT property totals, debt identities, and period-specific sign conventions. NextEra's Q1 2019 Gulf acquisition is excluded; later Gulf capex uses YTD differencing with Q2-Q4 2019 forced to `y:`. WRB stops before the 2026 net-proceeds period to preserve the sign gate; NiSource's revenue override stops at 2024 Q3 to avoid extreme jumps.
+- **No prohibited actions:** no production writes, schema/scheduler changes, web restarts, network requests, LLM or GDELT. No step-2 normalization or MySQL loading was started. Existing generated main-repo reports and other agents' untracked files were left untouched.
+- **Delivery:** the task file contains the full override table and gate evidence, `docs/engine/STANDARD_FUNDAMENTALS.md` section 9 is filled, and `v3\delivery-report.md`, `mapping-report.md`, `remaining-stops.md` and the validated workbook are on D:. Main-repo commit is local only; no push was made because K14 forbids network requests.
+- **Next safe action:** Claude and the owner can review the mappings and workbook. MySQL loading, step-2 normalization, production sync and any new task remain separate reviewed decisions.

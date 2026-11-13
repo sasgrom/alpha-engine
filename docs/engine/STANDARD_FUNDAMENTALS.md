@@ -272,4 +272,25 @@ Primary key: `(cik, quarterEnd)`.
 
 ## 9. Company-specific mappings (K14)
 
-Filled by K14: the method, the counts, and the patterns and traps found while mapping each company's own lines.
+K14 followed the statement line, not the tag name alone. For each stopped series the last good filing supplied the statement, line order and printed label; later filings supplied the replacement tag or a signed identity. Every override records its filing evidence and stays unreviewed. Fallbacks fill only missing values; `first` is used only when the existing tag has the wrong scope. Ranges separate renames and scope changes, and `magnitude` is limited to one-way outflows whose stored sign flips.
+
+The final set has 94 companies and 110 entries, adding 2093 company-quarter values. Direct changes total 180, with 6 original-vintage additions; dependent identities account for 82 more. The full normalized table and every changed value are in `mapping-report.md` / `mapping-report.json`.
+
+Patterns found:
+- Standard-tag renames: capex moved to `PaymentsToAcquireOtherProductiveAssets`, `PaymentsToAcquireFurnitureAndFixtures`, `PaymentsForSoftware`, `PaymentsToAcquireMachineryAndEquipment` and company extension tags. Interest, depreciation and weighted-share counts also needed exact alternate names.
+- Totals tagged only by part: General Dynamics' cost of sales is `CostsAndExpenses-GeneralAndAdministrativeExpense`; RTX, Verizon, Lennar, Waters and C.H. Robinson use similar operating-cost identities. Some other companies need the pretax/non-operating reconciliation instead.
+- Own extension tags with standard-looking names: GE interest and insurance/benefit lines, SLB interest and other income, TMO restructuring, OXY transportation/gathering, PACCAR borrowing expense, NextEra's capex and interest lines, Fiserv's acquisition amortization, and many real-estate debt/capex lines. They must be written `custom:Name`.
+- Scope differences: casinos need gross revenue before 2018 (LVS, MGM, WYNN, including `SalesRevenueGoodsGross` and `HotelAndCasinoRevenueGross`); NI uses total regulated operating revenue through 2024 Q3; CPT uses property lease revenue; VICI needs total revenue rather than lease-only revenue; RL and RTX need the consolidated total rather than component sums.
+- Debt identities: current and non-current notes, secured/unsecured debt, senior/subordinated notes, FHLB advances and lines of credit are summed only when every component is explicitly a borrowing. Securities-lending balances and accrued interest are excluded.
+
+Traps and guardrails:
+- The same custom tag can change sign convention across filings. Magnitude normalizes only true one-way outflows; it is not applied to net proceeds or other income.
+- The SEC data sets round dates to month ends and per-share units to USD, while companyfacts supplies exact dates and USD/shares.
+- A filing can be present in companyfacts while an extension fact is absent. The data-set `version` column, not the name, distinguishes an extension from a us-gaap fact.
+- BXP's 10-Q was labelled `fp=FY`; the committed build now derives the quarter from period spacing, which fixed ncfo without an override. TECH's amendment is listed separately from freshness failures.
+- Federal Realty's 2019 capex omitted development/redevelopment; four existing quarters were corrected. Illumina's 2022 Q1 debt omitted non-current term and convertible notes and changed from $499m to $1,740m.
+- NextEra's Gulf Power acquisition is present only in Q1 2019. It is excluded there; Q2-Q4 2019 and 2020-2021 include Gulf capex through YTD differencing, with Q2-Q4 2019 forced to `y:`.
+- WRB's 2026 net-proceeds line would put a positive value in the capex sign check, so its mapping stops at 2025 Q4. NiSource's revenue override stops at 2024 Q3 because later presentations caused extreme jumps. These bounds preserve QA.
+- Financial companies' pretax income is not operating income. Multi-class share counts and dimension-only debt are not consolidated into invented totals. No zero debt, share count, capex or interest is inferred from an absent line.
+
+Counts and gates are in `delivery-report.md`. Remaining continuity gaps and their reasons are in `remaining-stops.md`.
