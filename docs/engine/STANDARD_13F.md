@@ -6,9 +6,9 @@ The research tables are provisional until Claude accepts them. Nothing here chan
 
 - **Code:** `C:\dev\alpha-engine-lab\src\thirteenf\` in the lab repository.
 - **Inputs:** `D:\research\alpha-engine\fund-books\`, standard prices p1.1, and final standard fundamentals v3.1.
-- **Artifacts:** `D:\research\alpha-engine\fund-books\std\` (build `k16.3`).
+- **Artifacts:** `D:\research\alpha-engine\fund-books\std\` (build `k16.4`).
 - **Tables:** `alpha_research.std_13f_filings`, `std_13f_positions`, `std_13f_company_quarters`, `std_13f_builds`.
-- **Unit tests:** seventeen deterministic `node:test` cases in `src/thirteenf/model.test.mts`.
+- **Unit tests:** nineteen deterministic `node:test` cases in `src/thirteenf/model.test.mts`.
 
 ## 1. One filing reader and one set of book decisions
 
@@ -96,22 +96,25 @@ manifest.
 
 ## 4. Availability and company quarters
 
-A company-quarter row means **as known at the first trading session after the filing deadline**. The deadline is the
-period end + 45 calendar days, moved to the next session when that day is a weekend or holiday; `knownAt` is the
-session after that deadline. For 2026-06-30, the deadline is Friday 2026-08-14 and `knownAt` is Monday 2026-08-17.
-`availableFrom` is the first standard-price trading session strictly after the EDGAR filing date, and a filing enters
-only when `availableFrom <= knownAt`. Acceptance time is supplementary evidence; it does not replace that date rule.
-A period whose session calendar has not reached `knownAt` is deferred as `not_yet_known`, never assigned an invented
-future session.
+Every company-period has up to two rows: `deadline`, meaning **as known at the first trading session after the filing
+deadline**, and `plus_10`, exactly ten sessions later. The deadline is the period end + 45 calendar days, moved to the
+next session when that day is a weekend or holiday. For 2026-06-30, the deadline is Friday 2026-08-14 and `knownAt` is
+Monday 2026-08-17. A kind whose session is not yet in the calendar is deferred as `not_yet_known`, never assigned an
+invented future session.
 
-The merger runs independently for each `knownAt`. A later amendment cannot enter that row or replace the original
+`availableFrom` is the first session whose 09:30 ET open comes after `acceptanceDateTime`. Acceptance before the open
+can therefore enter that same session; an acceptance after the open enters the next session. With only a filing date,
+the old session-after-filing-date rule remains. A filing enters a row only when its `availableFrom <= knownAt`, so a
+deadline-evening acceptance is not incorrectly treated as a trade one session later.
+
+The merger runs independently for each row kind. A later amendment cannot enter that row or replace the original
 filing retrospectively. A filing without a verified date or next session is excluded rather than assigned an assumed
-availability day. A later task may add a later `knownAt`; it must not update an existing row.
+availability day. Every field, including the shares denominator, is selected using the row's own `knownAt`.
 
 Each row contains holders, filed-basis and today's-basis main-class shares, covered value, the ten largest holders'
-share, new/exited funds, continuing-fund shares bought/sold, and flow-exclusion counts. `fundsFiled` is the number of
-usable books available by this `knownAt`; `fundsInBook` is the number in the complete period book. `coverage` is their
-ratio, so the denominator cannot be confused with the previous quarter's fund count.
+share, continuing-fund shares bought/sold, and flow-exclusion counts. `fundsFiled` is the number of usable books
+available by this `knownAt`; `fundsInBook` is the number in the complete period book. `coverage` is their ratio, so the
+denominator cannot be confused with the previous quarter's fund count.
 
 ### Shares outstanding
 
@@ -134,8 +137,13 @@ percentage look reasonable.
 
 ### Trading versus reporting changes
 
-New and exited funds are counted separately and are not treated as continuing-fund purchases or sales. Continuing-fund
-flows use split- and class-corrected shares at each period's own `knownAt`. The following are excluded and listed in
+Continuing funds have a book at both periods of the same row kind, after newly reportable and mass-reporting funds
+are excluded. `entries` counts continuing funds that hold the company now but not before; `exits` is the reverse.
+`breadthChange = (entries − exits) / continuingFunds`, the Chen–Hong–Stein breadth measure. A full exit therefore
+remains visible even when the company has zero current holders. The old `newFunds` and `exitedFunds` fields are gone;
+whole-book presence remains in `fundsFiled`, `fundsInBook` and `coverage`, not mislabeled as trading.
+
+Flows use split- and class-corrected shares at each period's own `knownAt`. The following are excluded and listed in
 `flow-exclusions.jsonl`, with per-company reason counts in the table:
 
 - a reporting change identified by the existing `reportingChange` guard (mass moves, absorbed accounts, partial books);
@@ -147,17 +155,19 @@ flows use split- and class-corrected shares at each period's own `knownAt`. The 
 ## 5. Filing dates and the only permitted network path
 
 `alpha_engine.fund_quarters` is read-only and supplies filing dates already known there. For other accessions,
-`dates.mts` reads `data.sec.gov/submissions/CIK##########.json` only:
+`dates.mts` first reads `data.sec.gov/submissions/CIK##########.json`. The recent list contains only the latest 1,000
+filings, so an unresolved accession is then looked up only in the `filings.files` page whose range covers its signed
+date (±10 days):
 
-- at most one request per missing fund per run, with no hidden retry;
+- at most one recent-list request per missing fund and one request per selected page per run, with no hidden retry;
 - serialized requests at least 210 ms apart, below five requests a second;
 - the same declared User-Agent as the existing EDGAR collectors;
 - successful answers and their hashes cached in `D:\research\alpha-engine\fund-books\submissions\`;
-- no older-file pagination and no other endpoint.
+- no older-filing downloads and no other endpoint.
 
-The cached submissions list supplies `filingDate` and `acceptanceDateTime` when the accession is present. Anything
-still unresolved is listed and excluded from company-quarter aggregation. Request URLs, statuses, cache hits and
-unresolved accessions are recorded in `build.json`; credentials and request headers are never logged.
+The cached submissions list and dated pages supply `filingDate` and `acceptanceDateTime` when the accession is present.
+Anything still unresolved is listed with its reason and excluded from company-quarter aggregation. Request URLs,
+statuses, cache hits and unresolved reasons are recorded in `build.json`; credentials and request headers are never logged.
 
 ## 6. Acceptance gates
 
@@ -170,8 +180,9 @@ unresolved accessions are recorded in `build.json`; credentials and request head
 | 5. Ownership outliers | Every percentage above 100% is in `percent-outliers.json` with its denominator evidence and reason. |
 | 6. Legacy comparison | For the same period, report app `fund_holdings` value/companies beside the standard value/companies and the app's declared fund-quarter value. Documentation only. |
 | 7. Database load | Batches are at most 500, table counts equal the artifacts, and 2,000 deterministic random rows read back identical. |
+| 8. Dates, timing and breadth | The target is zero unresolved accessions. Any residual source gap must have an explicit reason and stay excluded; `unresolvedComplete=false` is never hidden and no date is invented. `absence-summary.json` records every absent fund-period by row kind with its reason and value. `coverage` reports both row kinds, including `not_yet_known`. `holder-drops.json` has the ten largest one-period holder drops and per-fund reasons. `breadth-evidence.json` reports each period's spread of `breadthChange` and its descriptive Pearson correlation with `(sharesBought − sharesSold) / sharesOutstanding`; this is not a signal evaluation. |
 
-A build with checks 1–4 failing is marked `failed` and cannot be loaded. Checks 5 and 6 are disclosure gates, not a
+A build with checks 1–4 or 8 failing is marked `failed` and cannot be loaded. Checks 5 and 6 are disclosure gates, not a
 reason to delete outliers or mix the legacy data into the standard series.
 
 ## 7. Batched research-database load
@@ -179,6 +190,11 @@ reason to delete outliers or mix the legacy data into the standard series.
 `load-mysql.mts` accepts only `provisional`. It first verifies the build status, exact lab code commit, table columns,
 row counts and artifact SHA256 hashes. It refuses to replace any final build. With `--replace`, only the four K16 tables
 are truncated and rebuilt; there is no schema change in `alpha_engine` and no production write.
+
+K16.4's migration is limited to the provisional research table: it adds `rowKind`, `continuingFunds`, `entries`, `exits`
+and `breadthChange`, removes the old `newFunds`/`exitedFunds` fields, and includes `rowKind` in the company-quarter
+identity. The migration runs only after the provisional replacement has been authorized and cleared, never against a
+final build or an `alpha_engine` table.
 
 The loader streams JSONL rather than holding the position table in memory. Each insert of at most 500 rows is its own
 autocommitted statement, avoiding a single multi-million-row rollback. Counts are checked after insertion, then 100
@@ -197,7 +213,7 @@ Run from the main repository so the research connection reads its configured env
 npx tsx scripts/build-fund-books.mts
 npx tsx --test C:\dev\alpha-engine-lab\src\thirteenf\model.test.mts
 npx tsx C:\dev\alpha-engine-lab\src\thirteenf\build.mts
-npx tsx C:\dev\alpha-engine-lab\src\thirteenf\load-mysql.mts D:\research\alpha-engine\fund-books\std k16.3 provisional --replace
+npx tsx C:\dev\alpha-engine-lab\src\thirteenf\load-mysql.mts D:\research\alpha-engine\fund-books\std k16.4 provisional --replace
 ```
 
 Commit the lab code before building: `build.json` and `std_13f_builds` must name the exact code commit, and the loader
@@ -224,9 +240,9 @@ full quarter, 2026-06-30, has 307 funds and 493 companies, $60.57tn filed and $4
 2,891,701 bars; final fundamentals v3.1 has 1,664,739 values. The standard build's gate and table counts are taken from
 `std\gates.json`, `std\build.json` and `std\load-report.json`, not inferred from these input totals.
 
-Build `k16.3` at lab commit `147f4df` has 7,221 filings, 2,393,709 positions and 12,077 company-quarter rows.
-Unit counts and the three unresolved unit cases match the fund-book manifest, and zero positions lack a split factor.
-The pre-load gates report:
+Build `k16.4` at lab commit `c42bcae` has 7,221 filings, 2,393,709 positions and 24,600 company-quarter rows across
+`deadline` and `plus_10`. Unit counts and the three unresolved unit cases match the fund-book manifest, and zero
+positions lack a split factor. The pre-load gates report:
 
 - Cover totals: 6,665 agree, 46 thousandfold, 199 row-count differences, 193 value differences, 116 cover-only and two
   partial tables, exactly matching the manifest. Ten random raw re-reads have zero mismatches.
@@ -237,15 +253,18 @@ The pre-load gates report:
 - Full-book corrections: four fund-company differences have five book-forming position rows. The position classes are
   one basis, zero valuation differences, three books errors and one accepted pricing anomaly; zero are unclassified or
   rejected. Four rows flag an invalid reference-book aggregate factor, including the small Arista anomaly whose primary
-  class is pricing anomaly. All four fund-company differences are explained, not silently reconciled. At
-  `knownAt=2026-08-17`, 301/307 books (98.0456%) are available; 16 later filings are separately listed.
-- Ownership: 93 above-100% rows have reasons. Another 92 raw filed counts below 1,000,000 shares are excluded with null
-  percentages and filed evidence, rather than used as denominators.
+  class is pricing anomaly. All four fund-company differences are explained, not silently reconciled.
+- Latest availability: `deadline` at 2026-08-17 has 301/307 books (98.0456%); `plus_10` at 2026-08-31 has all 307
+  (100%). Sixteen later filings remain separately listed.
+- Ownership: 187 above-100% rows across the two row kinds have reasons. Another 191 raw filed counts below 1,000,000
+  shares are excluded with null percentages and filed evidence, rather than used as denominators.
 - Legacy comparison: the app has 370 companies and $17,199,558,833,123 held against $32,126,221,264,865 declared;
   the standard series has 493 companies and $43,465,564,787,623 covered against $60,574,814,607,781 filed.
-- Date resolution used 190 cached submissions lists, resolved 618 accessions, and left 83 unresolved for lack of a
-  verified date. The final build made zero new EDGAR requests. The original date backfill made one request per missing
-  fund, 190 total, below five requests per second.
+- Date resolution used 190 cached submissions lists and 53 cached dated pages, resolved 618 accessions from recent
+  lists and 78 from dated pages, and made **zero new requests** on the final build. The first dated-page backfill made
+  53 requests, each selected by signed date and below five requests per second. Five residual SEC metadata gaps remain
+  explicitly excluded (`unresolvedComplete=false`), with exact page evidence in `unresolved-date-evidence.json`; no
+  filing or acceptance date is invented.
 
 Every correction row is shown below (fewer than ten per class); full numeric evidence is in `latest-corrections.json`.
 
@@ -263,18 +282,67 @@ pricing anomaly at or above 1% acceptable, and that uniqueness is measured again
 The anomaly fraction applies both the position's split-basis factor and its share-class factor, exactly as the company
 aggregation does.
 
+### Absence and holder drops
+
+The 498 absence records across both row kinds total $26,306,611,051,124 of book value. Every record carries a reason;
+late records include sessions (or calendar days when the session is outside the calendar) and availableFrom. The 18
+`not_filed` records are prior books with no current-period filing, not unresolved EDGAR metadata.
+
+| Reason | Fund-periods | Value |
+|---|---:|---:|
+| `late` | 459 | $26,185,925,077,748 |
+| `not_filed` | 18 | $0 (prior-book reason, not metadata failure) |
+| `cover_page_only` | 16 | $0 |
+| `unresolved_unit` | 5 | $120,685,973,376 |
+
+The five accessions still absent from SEC metadata have exact page evidence in `unresolved-date-evidence.json`:
+JPMorgan 2021-02-11 (`CIK0000019617-submissions-043.json`), 2022-02-10 (`...-037.json`), 2024-05-10 (`...-017.json`);
+Goldman Sachs 2023-11-14 (`CIK0000886982-submissions-011.json`); Morgan Stanley 2024-08-16
+(`CIK0000895421-submissions-011.json`). Their original cover metadata is preserved, but no filing date is inferred.
+
+The ten largest one-period holder drops are below. Reason counts are included per affected fund, with the previous
+period's value. `position_no_longer_reported` means the fund has a current book but not that company; it is not a
+missing-date explanation.
+
+| Period / kind | Company | Holder drop | Reason counts |
+|---|---|---:|---|
+| 2026-06-30 / plus_10 | CCL | 211 | 212 position_no_longer_reported |
+| 2026-06-30 / deadline | CCL | 207 | 206 position_no_longer_reported; 2 late |
+| 2026-03-31 / plus_10 | AMCR | 155 | 153 position_no_longer_reported; 1 unresolved; 1 cover_page_only; 1 unresolved_unit |
+| 2026-03-31 / deadline | AMCR | 149 | 146 position_no_longer_reported; 3 late; 1 unresolved; 1 cover_page_only |
+| 2024-09-30 / plus_10 | SMCI | 33 | 40 position_no_longer_reported; 1 unresolved; 2 late |
+| 2024-09-30 / plus_10 | LRCX | 32 | 34 position_no_longer_reported; 1 unresolved; 2 late |
+| 2024-09-30 / deadline | SMCI | 28 | 36 position_no_longer_reported; 8 late; 1 unresolved |
+| 2024-09-30 / deadline | LRCX | 26 | 31 position_no_longer_reported; 7 late; 1 unresolved |
+| 2022-09-30 / deadline | NKE | 24 | 17 late; 11 position_no_longer_reported |
+| 2022-09-30 / deadline | BLK | 24 | 17 late; 10 position_no_longer_reported |
+
+The first CCL drop therefore cannot be blamed on unresolved metadata: all 212 fund-level explanations are positions no
+longer reported. Full reason and value detail is in `holder-drops.json`; all absence records are in `absence-summary.json`.
+
+### Breadth evidence
+
+At 2026-06-30, 493 companies have a breadth reading. The deadline spread is min −0.705263, median 0.003509, max
+0.098246; plus_10 is min −0.704082, median 0.003401, max 0.095238. Correlation with net shares bought divided by
+shares outstanding is **0.463022** at deadline and **0.459571** at plus_10 (474 observations each). Across periods
+with at least 20 observations, the lowest correlation is −0.092793 for 2025-03-31/deadline and the highest is
+0.786792 for 2021-06-30/plus_10. These are descriptive correlations, not a predictive or alpha claim.
+
 Lam Research now uses factor 1 for both reviewed post-split positions. In particular, accession 000093041324003070 has
 16,081,071 filed shares and 16,081,071 today's-basis shares, rather than the reviewed K16.2 result of 160,810,710 after
 an erroneous factor 10. The implied price is $72.860010 against the $81.61 today's-basis period close, a 0.892783 ratio
 whose nearest company candidate is 1. Aggregate ownership is:
 
-| Period | K16.2 today's-basis shares / ownership | K16.3 today's-basis shares / ownership |
-|---|---|---|
-| 2023-09-30 | 738,471,380 / 55.914303% | 738,471,380 / 55.914303% |
-| 2024-09-30 | 644,099,885.827731 / 49.854553% | 643,995,757.327731 / 49.846493% |
+| Period / row kind | K16.2 ownership | K16.3 ownership | K16.4 ownership |
+|---|---|---|---|
+| 2023-09-30 / deadline | 55.914303% | 55.914303% | 56.201068% |
+| 2023-09-30 / plus_10 | — | — | 58.179799% |
+| 2024-09-30 / deadline | 49.854553% | 49.846493% | 55.761094% |
+| 2024-09-30 / plus_10 | — | — | 56.330033% |
 
-The earlier K16.1 ownership figures were 559.143028% and 483.380925%. Evidence files are `lam-k16.1-before.json`,
-`lam-k16.2-after.json` and `lam-k16.3-after.json`.
+The aggregate change after better date coverage is distinct from the factor correction: the 16,081,071-share position
+still uses factor 1. Earlier K16.1 ownership figures were 559.143028% and 483.380925%. Evidence files are
+`lam-k16.1-before.json`, `lam-k16.2-after.json`, `lam-k16.3-after.json` and `lam-k16.4-after.json`.
 
 Chipotle 2022-03-31 is excluded by the raw-count denominator check. Frozen v3.1 contains exactly 27,962 shares filed
 2022-04-28 through `d0:sharesBasic` (about 27,960, rather than the adjacent quarter's 28,031,948). Applying factor 50
@@ -285,41 +353,48 @@ The complete ownership list is `percent-outliers.json`. Its ten largest rows are
 10,570,841-share v3.1 denominator. They remain visible for class-scope and possible fund-duplication review; no split
 factor or replacement denominator is used to make them look reasonable.
 
-| Period | Institutional shares | Ownership | Largest fund's ownership |
+| Period / row kind | Institutional shares | Ownership | Largest fund's ownership |
 |---|---:|---:|---:|
-| 2023-06-30 | 85,606,057 | 809.832037% | 224.370994% |
-| 2022-12-31 | 69,915,429 | 661.398927% | 189.202051% |
-| 2023-03-31 | 67,259,508 | 636.273954% | 196.708455% |
-| 2021-12-31 | 64,162,100 | 606.972520% | 195.228014% |
-| 2022-09-30 | 62,873,928 | 594.786432% | 195.946141% |
-| 2022-03-31 | 59,231,196 | 560.326241% | 203.063881% |
-| 2021-09-30 | 58,284,933 | 551.374607% | 193.244322% |
-| 2022-06-30 | 58,273,139 | 551.263036% | 198.460283% |
-| 2021-03-31 | 57,674,264 | 545.597687% | 160.967079% |
-| 2020-09-30 | 54,743,867 | 517.876175% | 118.007385% |
+| 2023-06-30 / plus_10 | 89,745,433 | 848.990473% | 224.370994% |
+| 2023-06-30 / deadline | 86,917,251 | 822.235913% | 224.370994% |
+| 2022-12-31 / plus_10 | 77,569,608 | 733.807348% | 189.202051% |
+| 2022-12-31 / deadline | 76,294,340 | 721.743331% | 189.202051% |
+| 2023-03-31 / plus_10 | 74,357,853 | 703.424193% | 196.708455% |
+| 2023-03-31 / deadline | 73,599,381 | 696.249059% | 196.708455% |
+| 2022-09-30 / plus_10 | 72,070,616 | 681.786965% | 195.946141% |
+| 2021-12-31 / plus_10 | 66,551,086 | 629.572292% | 195.228014% |
+| 2021-12-31 / deadline | 64,890,671 | 613.864791% | 195.228014% |
+| 2022-03-31 / plus_10 | 64,753,144 | 612.563787% | 203.063881% |
 
 Artifact SHA256 values before the database load:
 
-- `build.json`: `41dc2067cb02e6cb896d1a7893ad25f47741784f740b7c4b60232eecbab29546`
+- `build.json`: `5ccbccb3663da1dd69810299b008bbf49db2856437bf8e103644887038397806`
 - `latest-corrections.json`: `e9657e8839abcd6b8520d6d1b188f78af230960d68bb9bf3917ec8397f800554`
-- `filings.jsonl`: `9e025ba566cfc63a0de9500ebb173eacc51154c9fe81cc02db81f6935f96adfe`
-- `positions.jsonl`: `3f1102265588f034c9d3fc18f8a404d76a7df59028a4c738a05eec7d678b3d5a`
-- `company-quarters.jsonl`: `6244f538e04420ed13392200b687e71662a77a8de17f7702e90dfebedd066774`
-- `lam-k16.3-after.json`: `8e5521aacb05dc215d68e58b4b5f8d5ce1feecdfc96c1f154f1dcab754bb1ac5`
-- `percent-outliers.json`: `8038bc7b192532f94491520c15fcd13dcb76611279e2e16e5074f9c4d94db44c`
-- `denominator-exclusions.json`: `9a4a5153e21fa02c84c757ad444d42bfb11a32eda4702470667b37096ef68d9a`
+- `filings.jsonl`: `56c89ac83f51b1a3ecf1a3391550f7436a798e5bdadce20f2ae009651dca04dd`
+- `positions.jsonl`: `0f40a18c933101c76695de8d427d53937fefdabbb09a4ada89aff89a5884d01f`
+- `company-quarters.jsonl`: `415da6c5278a5c7e11ae2c081763a8267bb286ded18d03e16420b1f56d5c0751`
+- `lam-k16.4-after.json`: `94f9295a82b62c17dcf07d4b01b28587bd4705fa5b191bc43c133f0b896b4c02`
+- `percent-outliers.json`: `af81e45db910dce28e7ec3c06b2dd930138aa0859afb87b5c388dfe8191f9e56`
+- `denominator-exclusions.json`: `55f7d11ed26005d7d7823248874fecf8ef3dc908a02f9cec31d2e0a49c2470ac`
+- `absence-summary.json`: `f44e3fa39a0151a00c9044c7e9dddfaa5776f9afe228bc39f09dbd442b6f60e0`
+- `holder-drops.json`: `8c88cd7ccb1afe4ebc0ba6378b3db4dfd44e343a1f1174ba1e1a908bfccadb46`
+- `breadth-evidence.json`: `1b9f70f72bb19f5ebe3b59b48c04654dc672cfb3b18bccf8eb59846cd5e2d519`
+- `unresolved-date-evidence.json`: `25e5d920be879865de69714d554af134d4e8e09915d309e9d374cc1e2ed25290`
 
 
-`load-report.json` confirms the provisional load completed at **2026-11-13 20:23:39** with 7,221 filings,
-2,393,709 positions and 12,077 company quarters. It inserted 2,413,007 data rows in batches of at most 500 and read
+`load-report.json` confirms the provisional load completed at **2026-11-13 23:16:24** with 7,221 filings,
+2,393,709 positions and 24,600 company quarters. It inserted 2,425,530 data rows in batches of at most 500 and read
 back 2,000 rows using seed 1601 with zero mismatches. The single `std_13f_builds` row is provisional and names exact
-code commit `147f4df28397744ec505bcd0d0d56a084ceeb800`.
+code commit `c42bcae45d73ba0cb398e101d11d5d8372ad8a81`.
 
 An independent read-only post-check repeated the three table counts and build-row checks, verified that every stored
-row is `k16.3`, and compared another 2,000 rows (100 filings, 1,700 positions and 200 company quarters) against the
-artifacts using seed **1603**. It found **zero mismatches**. It also confirmed Lam's 16,081,071-share factor-1 position,
-both Lam ownership values, Chipotle's null denominator and percentage fields, all 93 above-100% rows, and the same ten
-largest Bloom Energy rows. Evidence: `independent-postcheck.json`.
+row is `k16.4`, and compared another 2,000 rows (100 filings, 1,700 positions and 200 company quarters) against the
+artifacts using seed **1603**. It found **zero mismatches**. It confirmed the new breadth fields, removal of
+newFunds/exitedFunds, the `(cik,period,rowKind,knownAt)` identity, 12,082 deadline rows and 12,518 plus_10 rows.
+Lam's 16,081,071-share factor-1 position and all four ownership rows, Chipotle's two null percentage rows, all 187
+above-100% rows and the top ten Bloom Energy rows match. CCL's 2026-06/plus_10 drop from 215 to 4 holders and both
+latest correlations (0.4630218338977116 and 0.4595707267896085) were independently recomputed from stored rows.
+Evidence: `independent-postcheck.json`.
 
-- `load-report.json` SHA256: `e6fe8e6cc02bfbd06e67af2dc16fea729bbea257b251077513597b9321d8d3b5`
-- `independent-postcheck.json` SHA256: `a32899d0d7cf869242ee61a0092c16688d2c71835c1a0a09cb439cd57fe9fa13`
+- `load-report.json` SHA256: `20f5410db55307dbab6545a34551d21ab11a393c73484844a03593beedafb1c6`
+- `independent-postcheck.json` SHA256: `3a0b698643dc03915be27f4d04c13e72fdb363fd3dc6f93bb7180d1b7864d279`
