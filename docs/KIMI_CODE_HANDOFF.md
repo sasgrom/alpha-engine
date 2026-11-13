@@ -1826,3 +1826,40 @@ sitting) if the owner wants them; K11 when the owner names it.
   - Share counts and per-share figures are not yet on one split basis; that is a step 2 item.
 - **K13 (Kimi, owner approved routine work at 16:20):** spec `cf2e1e4`, `docs/engine/tasks/K13-standard-fundamentals-gaps.md`. It is read-only mining of which tags would fill the gaps in 19 fields. Go sent through the mailbox.
 - **Next:** the owner evaluates step 1. No normalization and no change to engine inputs before his step 2 instructions.
+
+## 140. Claude: evaluating step 1 — checks against the filings and Schwab; SEC companyfacts gap — 2026-11-12
+
+All read only, except one probe download (below). No change to the dataset or field definitions while the owner evaluates.
+
+- **Tie-out against the filings:** SEC Financial Statement Data Sets, quarter 2026q3, which holds the Q2-2026 10-Qs.
+  - Our first-reported value matched the 10-Q's own number for the same tag and period in every case: 0 differences.
+  - Fields compared: revenue, net income, diluted EPS, operating income, cost of revenue, total assets, equity, cash and total liabilities. Each field had 272–430 companies.
+  - So extraction, year-to-date differencing and version dates are right. The remaining errors are scope (which tag), freshness and gaps.
+- **SEC companyfacts gap:** 21 companies' recent 10-Qs are missing from SEC's companyfacts payloads, although EDGAR lists them. The payloads were downloaded Nov 3–6 and the collector manifests show the later 10-Qs.
+  - Companies: AEP, FRT, ETR, SO, LNT, D, NEE, C, JCI, REG, MAA, PPL, DTE, FE, SRE, PLD, EXC, CNP, DLR, DUK, EVRG.
+  - Citigroup's payload has 2,261 prospectus filings from 2026 but stops at its 2025 10-K. The others stop in April–May 2026.
+  - The SEC data-set file has all 21.
+- **Scope bug in `fields.mts` (lab), not yet fixed:**
+  - The bank revenue identity is interest income + non-interest income, which is gross. The field is defined net of interest expense. This hits BNY, FITB, RF and TFC.
+  - HBAN and MTB take `RevenueFromContractWithCustomerExcludingAssessedTax`, which is fee revenue only.
+  - Fix: net interest income + non-interest income, ahead of the contract-revenue tag for banks.
+  - The other 14 large banks are right, Citigroup included.
+- **Continuity:**
+  - Series that stop 2+ quarters before the company's last filing: gross profit / cost of revenue 50 companies, capex 35, debt 34, operating income 23, cover shares 21.
+  - Impossible zero share counts: 35 companies.
+- **Schwab fundamentals:** the existing `instruments?projection=fundamental` files, 516 companies.
+  - What it is: a snapshot of about 55 vendor values with no statements and no history. The instrument file is overwritten daily; only the dated quote files keep a small fundamental block each day.
+  - Defects:
+    - 10 fields are 0 for every company (short interest, interest coverage, EPS change, the three volume averages, and others).
+    - Operating margin copies net margin for about half the companies.
+    - Long-term debt/equity exceeds total debt/equity for 384 of 486, which is impossible.
+    - `marketCapFloat` is a share count.
+  - Agreement with our latest quarter: current ratio 92%, shares 87%, net margin 84%, book value 82%, revenue growth 81%, EPS over the last four quarters 75%, gross margin about 60%.
+  - Usable as an independent cross-check and for the dividend calendar. Not a history source.
+  - The owner's PDF is the Streamer API. Its only fundamentals are P/E and dividends; it also has hard-to-borrow fields.
+- **Probe download:**
+  - What: one SEC data-set quarter, through the project's SEC client. File `D:\research\alpha-engine\fundamentals\fsds-probe\2026q3.zip`, 65,148,008 bytes, SHA-256 `b6ebdc56b78526a6423f5b99f6e355afcb0510e7264324300ee5f0d3bd1bad21`.
+  - The full set is 71 quarters (2009q1–2026q3), about 5.4 GB. It needs the owner's go as a new bulk source.
+  - 6.9% of the statement lines in our companies' filings use company extension tags. NextEra's capex is on two of them.
+- **Kimi:** has started K13. Sector map answered: desk snapshot first (493 of 502), then `companies.sector`. The 21 companies' empty recent quarters are to be counted as "no filing data", not tag gaps.
+- **Next:** owner decisions on the SEC data-set download and on applying the step 1 fixes. Step 2 still waits for his instructions.
