@@ -17,7 +17,8 @@ None.
 
 - **Builds:**
   - `D:\research\alpha-engine\fundamentals\standard\v2\` is the evaluated build.
-  - `...\standard\v3-mech\` is the baseline for this task: v2 plus the zero rule, with no overrides. QA and checks have been run on it.
+  - `...\standard\v3-mech\` was the baseline for Stage A: v2 plus the zero rule, with no overrides.
+  - `...\standard\v3-base\` is the baseline for Stage B (2026-11-13, lab `8f6afc0`): v3-mech plus the restated-basis rule (process document, section 4), with no overrides. QA, checks and `compare.py` against v3-mech have been run on it.
 - **Code:** lab `C:\dev\alpha-engine-lab\src\fundamentals\` (commit `935307e`). The file you edit is `overrides.json`, which is empty now.
 - **Your K13 candidates:** `D:\research\alpha-engine\fundamentals\standard\v1\gaps\gaps.json`.
 - **SEC data sets, per company and quarter:** `D:\research\alpha-engine\fundamentals\fsds\extract\<quarter>\<cik>.json`. Each holds `filings[]` with:
@@ -118,7 +119,7 @@ I review before stage B.
 **Stage B, everything.**
 1. Write the remaining entries.
 2. Build all companies into `…\standard\v3\`.
-3. Run `qa.mts`, `checks.py`, and `compare.py …\v3-mech …\v3`.
+3. Run `qa.mts`, `checks.py`, and `compare.py …\v3-base …\v3`.
 4. Run the review workbook into `…\v3\Standard fundamentals v3 - review.xls`:
    `python C:/dev/alpha-engine-lab/tools/fundamentals/review-workbook.py <out> …\v3 …\v2`, with `XLWT_PATH` set to a folder where you pip-installed xlwt and xlrd. That folder must be outside both repositories.
 
@@ -128,7 +129,7 @@ I review before stage B.
   - Your mining scripts may go in `C:\dev\alpha-engine-lab\src\fundamentals\k14\`.
   - Do not change `build.mts`, `fields.mts`, `checks.py`, `compare.py`, `qa.mts`, `fsds-*`, `edgar-filings-*` or the review workbook script. If something is missing, ask through the mailbox.
 - **Lab commits:** commit there (local repository, no remote) with clear messages.
-- **Outputs:** write only to `…\standard\v3-pilot\` and `…\standard\v3\`. Never write to v1, v2 or v3-mech.
+- **Outputs:** write only to `…\standard\v3-pilot\` and `…\standard\v3\`. Never write to v1, v2, v3-mech or v3-base.
 - **Read only:**
   - the SEC data-set files and extracts, and the newest filings' files;
   - the `facts` table: SELECT per company (`WHERE cik = ?`) only.
@@ -138,7 +139,7 @@ I review before stage B.
 
 ## Acceptance gates (stage B)
 
-1. **compare.py, v3-mech → v3:**
+1. **compare.py, v3-base → v3:**
    - 0 broken filing matches and 0 removed values.
    - Every changed value (only `use: first` entries can change one) is listed in the delivery report with its reason.
 2. **checks.py on v3:**
@@ -146,7 +147,7 @@ I review before stage B.
    - Freshness stays at 0.
    - The revenue "largest printed line" share is at least 96.10%.
    - Every remaining "stops early" item is listed with its reason. Target: each field's count at least halved.
-3. **qa.mts on v3:** no check worse than the baseline. The baseline's off counts: grossProfit 536, cashChange 630, signs 259, revenueJumps 61, assetJumps 48, negativeQ4Revenue 4.
+3. **qa.mts on v3:** no check worse than the baseline. The baseline's (v3-base) off counts: grossProfit 516, cashChange 623, signs 244, revenueJumps 58, assetJumps 48, negativeQ4Revenue 1 (A. O. Smith Q4 2010, which the rule cannot see; leave it).
 4. **Overrides:** every entry has evidence. The report has a table: company, field, tags, use, period, evidence filing, and the quarters it added or changed.
 5. **Documentation:** fill section 9 of `docs/engine/STANDARD_FUNDAMENTALS.md` with:
    - the method;

@@ -82,6 +82,25 @@ Step details:
   - Filings within 10 days are one quarter.
   - The quarter number comes from the filing's fiscal period, or else from the spacing to the next fiscal year end.
 - **Same-basis year-to-date differences:** the earlier year-to-date figure is taken as known when the later one was filed, and filed within 400 days before it. Without this, a full year restated years later for a spin-off was set against an old nine-month figure, which gave COP, FE and EXC negative fourth quarters.
+- **Restated basis (added after K14 Stage A):** a filing that restates broadly stands on a new basis. Examples: a business moved to discontinued operations, or a merger that replaces the history. For share counts, a stock split does the same. Its year-to-date figure is not differenced with an earlier filing's figure on the old basis when that would move the quarter by more than 5% of its value.
+  - **Broad:** at least 15% of the filing's prior-year figures that were reported before have moved by more than 2%, sign flips aside.
+    - In a sample of 47 companies' filings, 76% move under 5% and 8% move 20% or more.
+    - Typical values: BAX's Q3 2024 10-Q 49%, WMB's 2011 10-K 20%.
+    - A line moved between two tags is not broad: UNP's Q2 2019 10-Q moved 720m of its 2018 repurchases to a second tag, which is 1%.
+    - Share counts skip this test, because a split moves only the share figures. Instead their own change must be one a split explains: 1.2 to 60 times either way.
+  - **The tag itself moved:** this is read from a figure the filing shares with earlier filings. That is the span itself when the figure is a comparative reported before, otherwise the same span a year earlier. Look under the same tag, or else under another single tag of the field (the name before a rename).
+    - The restatement, scaled to the earlier figure's span, stands for the gap between the bases.
+    - Changes within 0.5% count as rounding.
+    - A gap of a thousand or a million times is a scaling slip in one of the filings, not a restatement. GRMN's and WRB's 10-Ks gave weighted shares in thousands.
+  - **When the pair is refused:** only when the earlier filing is known to stand on the old basis. Its own shared figure, read under the same tag as the later filing's comparison, must equal the one known before it.
+    - If the earlier filing restated as well, both stand on the new basis.
+    - If it shares no figure, its basis is unknown and the pair is kept.
+  - **Plausible figures only:** a year-to-date figure counts only from a filing whose own period ends at the span's end, or one to three years after it. GD's Q3 2011 10-Q tags its nine months' dividends as the full years 2010 and 2011. Taken as an earlier full year, that would have looked like a restatement.
+  - **Effect:** the quarter then waits for a pair on one basis, usually next year's comparatives. Until then it has no value.
+  - **Examples:**
+    - WMB's Q4 2011 revenue, −17m: the 2011 10-K's full year on continuing operations after the WPX spin-off, minus nine months with WPX. It now first appears from the 2012 10-K, at 2,103m.
+    - BAX's Q3 2024 capex: Kidney Care moved to discontinued operations in the Q3 10-Q. The first version was −22m; it is now −134m, from the 2025 comparatives.
+    - JCI (the former Tyco, CIK 833444), FY2015 Q4 revenue: after the 2016 merger, the 10-K carries Johnson Controls' history. Its FY2015 minus Tyco's nine months gave a quarter of 29,782m. That version is now refused; the quarter keeps Tyco's 2,505m.
 - **Mislabelled periods:** a quarter equal to its own full year in the same filing, while another quarter of that year is not zero, is set aside. This applies to steady income and cash-flow tags only.
   - 577 figures in 63 companies, for example HSIC 2019 and NiSource Q4 2024–2025.
   - The first version also dropped Apple's legitimate $53M interest expense. The fix was to require a year of 300+ days and another nonzero quarter.
@@ -113,14 +132,14 @@ Step details:
 
 Every new build is accepted only when all of these hold.
 
-| Gate | Tool | Threshold | v2 (2026-11-12) |
-|---|---|---|---|
-| Our first-reported values equal each filing's own numbers (same tag, period, duration) | `checks.py` | at least 99.98% for every field; each difference explained | 99.98–100%. The 23 differences are filer mislabels the data sets copy (NiSource, Tractor Supply, Kinder Morgan and others), Mosaic's 2013 fiscal-year change, and J.B. Hunt's rounded duplicate. |
-| Latest filing = EDGAR's latest 10-Q/10-K | `checks.py` | 0 companies behind | 0 |
-| Revenue is the income statement's largest printed revenue line | `checks.py` | not below the previous build | 96.1%; 2.2% bank identity (no total line); 1.1% not printed (44 companies) |
-| No regression against the previous build | `compare.py` | 0 broken filing matches; removals only of impossible values; every change explained | — |
-| QA identities, signs, jumps | `qa.mts` | not worse than the previous build | gross profit identity off 4.8%; cash change off 2.2%; signs off 0.2% |
-| Coverage per field from 2010 | `qa.mts` | not below the previous build | revenue 98.7%, net income 98.4%, total assets 98.4%, operating cash flow 99.1%, capex 91.1%, debt 83.1% |
+| Gate | Tool | Threshold | v2 (2026-11-12) | v3-base (2026-11-13) |
+|---|---|---|---|---|
+| Our first-reported values equal each filing's own numbers (same tag, period, duration) | `checks.py` | at least 99.98% for every field; each difference explained | 99.98–100%. The 23 differences are filer mislabels the data sets copy (NiSource, Tractor Supply, Kinder Morgan and others), Mosaic's 2013 fiscal-year change, and J.B. Hunt's rounded duplicate. | unchanged |
+| Latest filing = EDGAR's latest 10-Q/10-K | `checks.py` | 0 companies behind | 0 | 0 |
+| Revenue is the income statement's largest printed revenue line | `checks.py` | not below the previous build | 96.1%; 2.2% bank identity (no total line); 1.1% not printed (44 companies) | unchanged |
+| No regression against the previous build | `compare.py` | 0 broken filing matches; removals only of impossible or mixed-basis values; every change explained | — | against v3-mech: broken 0; removed 125, all quarters whose only value mixed two bases (17 of them split-affected share counts) |
+| QA identities, signs, jumps | `qa.mts` | not worse than the previous build | gross profit identity off 4.8%; cash change off 2.2%; signs off 0.2% | counts off, v3-mech → v3-base: gross profit 536 → 516, cash change 630 → 623, signs 259 → 244, revenue jumps 61 → 58, asset jumps 48 → 48, negative Q4 revenue 4 → 1 |
+| Coverage per field from 2010 | `qa.mts` | not below the previous build, except the removals the compare gate explains | revenue 98.7%, net income 98.4%, total assets 98.4%, operating cash flow 99.1%, capex 91.1%, debt 83.1% | at most 0.02 points lower (the 125 removals) |
 
 ## 6. Lessons learned (do not repeat)
 
@@ -139,6 +158,14 @@ Every new build is accepted only when all of these hold.
 - **Banks have no total-revenue line on the face of the statement**, so a check by label sees a fee line. Their revenue is the identity.
 - **The largest tag is not always the statement's figure.** Take the largest among the lines the statement prints.
 - **Restatements:** never set a restated year against an old nine-month figure (same-basis rule).
+- **A restatement inside the year mixes bases too.** A spin-off or a business moved to discontinued operations restates the comparatives in the very filing whose year-to-date figure is then set against the previous quarter's figure on the old basis. That gave negative fourth-quarter revenues (WMB 2011, JCI 2012, AES 2017) and a capex of 22m instead of about 130m (BAX Q3 2024). A filing filed within 400 days is not enough: compare a figure both filings share.
+  - The check must also look under the field's other tags, because companies rename tags around the same time (BAX's capex).
+  - It must not treat "no shared figure" as "same basis": WMB's 2010 filings flipped the sign of capex on both sides of a pair that was right.
+  - It must ask whether the filing restated broadly, not only whether one tag moved. UNP moved part of its 2018 repurchases to another tag. A one-tag test refused a correct pair, and a weaker tag then gave 0.
+  - It must ignore mislabelled contexts, which look like restatements (GD's nine months tagged as full years).
+  - It must ignore scaling slips, which also look like restatements: GRMN's 2018 10-K gave weighted shares in thousands (188,6xx). The test refused the right Q4 values of 2018 and 2019 until a slip of a thousand times was excluded, and share counts were held to split-sized changes.
+  - Read the refused pairs before trusting a rule like this: `SHOW_REFUSED=1` prints each refused pair and each implausible figure.
+  - What it cannot see is a first XBRL year with nothing earlier to compare: A. O. Smith's Q4 2010 revenue stays at −166m until the 2011 comparatives give 370m.
 - **Built server:** code bundled into the server (`dist/boot.js`) must not take the repository root from `import.meta.dirname`.
 - **WebFetch cannot read SEC's PDF documentation.** Save it and read it with the PDF reader.
 - **Windows:** Git's CRLF conversion changes a script's hash. Do not let it touch `fsds-extract.py` without expecting a full re-extraction.

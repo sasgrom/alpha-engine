@@ -2043,3 +2043,32 @@ All read only, except one probe download (below). No change to the dataset or fi
   1. Mine: the restated-basis rule in `build.mts` → new baseline → regression analysis and gates → K14 gate numbers updated.
   2. Kimi: Stage B (items 1–3) → compare against the new baseline → v3.
   3. Final MySQL load of v3.
+
+## 145. Claude: the restated-basis rule; new baseline `v3-base` for K14 Stage B — 2026-11-13
+
+- **The flaw.** A filing that restates its comparatives was differenced with the earlier filing's year-to-date figure on the old basis. Causes: a business moved to discontinued operations, a merger that replaces the history, a stock split. Results in v3-mech:
+  - WMB Q4 2011 revenue −17m;
+  - JCI FY2012 Q4 −1,283m;
+  - AES Q4 2017 −64m;
+  - BAX Q3 2024 capex −22m, against about 130m a quarter;
+  - Tyco FY2012 Q4 capex +288m.
+- **The rule** (lab `8f6afc0`; process document §4 and §6; `SHOW_REFUSED=1` prints refused pairs). A pair is refused only when all of these hold:
+  - the later filing restated broadly: at least 15% of its prior-year figures, moves over 2%, sign flips aside. Share counts need a split-sized change instead (1.2–60×);
+  - the tag itself moved (same tag, or a peer tag of the field after a rename), enough to move the quarter by more than 5%;
+  - the earlier filing is known to stand on the old basis: its own shared figure, under the same tag, equals the one known before it.
+  - Scaling slips (×1000) are never restatements. Mislabelled contexts are ignored: a year-to-date figure counts only from a filing whose period ends at the span's end or whole years after it.
+- **Tuning, by refused pairs read one by one:**
+  - one tag moving is not a restatement: UNP moved 720m of 2018 repurchases to a second tag, and a weaker tag then gave 0;
+  - GD's Q3 2011 10-Q tags nine months as full years;
+  - GRMN's and WRB's 10-Ks gave weighted shares in thousands.
+- **Baseline `D:\research\alpha-engine\fundamentals\standard\v3-base\`** (no overrides), against v3-mech:
+  - `compare.py`: broken 0; removed 125. These are quarters whose only value mixed two bases (HON Q4 2025 EBT −501m, OXY Q4 2025 revenue 1,752m, ECHO Q4 2023 EBIT −2,388m), plus the split quarters of NFLX, NOW, TPL and KLAC.
+  - QA counts off: gross profit 536 → 516, cash change 630 → 623, signs 259 → 244, revenue jumps 61 → 58, asset jumps 48 → 48, negative Q4 revenue 4 → 1.
+  - `checks.py`: unchanged. Coverage is at most 0.02 points lower.
+  - Left: A. O. Smith Q4 2010 (−166m). That is its first XBRL year, with nothing earlier to compare.
+- **K14:** Stage B compares against v3-base. The gate numbers are updated, and item 4 needs nothing from Kimi.
+- **MySQL** still holds v3-mech as provisional. The final load is v3 after Stage B.
+- **Next:**
+  1. Kimi: Stage B → v3.
+  2. Me: review v3 → final load.
+  3. GPU guidance run (446 companies): 6,452 of 34,833 releases at 22:03, about 5 more days.
