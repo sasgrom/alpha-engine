@@ -161,6 +161,7 @@ Every new build is accepted only when all of these hold.
   - PSA's capex versions filed in 2023 for Q2 2022 and Q2 2023 mix a restated, narrower line with the old first quarter. The first versions are right; the later ones are not.
   - PulteGroup's debt before 2026 holds only a small component.
   - Baxter's interest (gross against net) and ITW's 2008 dividends: their wrong fourth quarters (Baxter 2024 and 2025, ITW 2008) are now gaps.
+  - **Erratum found by K16:** Chipotle's `sharesBasic` for 2022-03-31 is 27,962 shares, a thousand-scale slip of the `d0` identity between 28.03m and 27.8m. The K16 tables exclude it (raw counts under 1m). A later build appends the corrected version; v3.1 is final, so stored values are never overwritten.
   - All are step-2 or follow-up items.
 - **Status:** v3.1 is loaded into `alpha_research` as the **final** build of step 1. All 110 K14 entries are marked reviewed.
 

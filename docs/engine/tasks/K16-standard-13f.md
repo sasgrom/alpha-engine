@@ -111,3 +111,26 @@ separate owner decision and not part of this task.
 - The app's `fund_holdings`, signals and pages.
 - Fetching new 13F filings: use the cache.
 - Production, schema changes in `alpha_engine`, scheduler changes, web restarts.
+
+## 8. Corrections made during review (2026-11-13; they supersede the text above)
+
+1. **`knownAt`** is the first trading session after the filing deadline. The deadline is the period end + 45 days, moved to the next business day when it falls on a weekend or holiday. For 2026-06-30 that is Monday 2026-08-17. "Period end + 46 days" left deadline-day filings out.
+2. **Confidential treatment.** Only cover-page copies (no table) are left out. A filing with `isConfidentialOmitted` and a complete public table is used, with the flag kept. Example: Capula, 1,029 rows, $28.0bn.
+3. **Share basis per position.**
+   - Candidates are the company's own split products after the period end: `splitIndex(today) ÷ splitIndex(t)`, for sessions t from the period end to today.
+   - The chosen candidate is the one nearest in log terms to the filed price ÷ the period end's today's-basis close.
+   - Each position is classified as one of:
+     - basis: within 2%;
+     - valuation difference: 2-40%;
+     - pricing anomaly: more than 40% from every candidate, kept at the period-end factor and flagged.
+   - Funds file shares on the new basis after a split (Lam 2024), and value their books at other dates.
+4. **Percent of shares outstanding** puts the denominator on today's basis: `sharesBasic × splitIndex(today) ÷ splitIndex(filed date)`. A raw filed count under 1,000,000 shares is excluded before any factor (Chipotle's v3.1 slip of 27,962 shares).
+5. **Check 4 against the books.** A difference is explained when it is one of:
+   - a basis correction;
+   - a valuation difference;
+   - a books error (the books' factor is not among the company's candidates);
+   - a pricing anomaly under 1% of the fund's shares of that company for the period.
+   Anything else fails.
+6. **Load:** autocommitted batches of at most 500 rows, with the build row written last. No single large transaction.
+
+Delivered and accepted as build `k16.3` (lab `147f4df`, main `0359362`; Kimi's handoff sections 154-156).
