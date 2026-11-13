@@ -84,12 +84,11 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 - **Owner command palette actions:** run a job, open its log, restart a job chain, all from Ctrl+K, owner only.
 - **Reviewer access with an end date and an audit log:** who saw what, when.
 - **Password reset and invitations,** with no browser prompts.
-- **Intraday candles and views** (owner's yes, 2026-11-13): K21 (`docs/engine/tasks/K21-intraday-candles-and-views.md`).
-  - Evening collection of real 5-minute candles, right after K16.4.
-  - Views after K20:
-    - Company "Today / 5 days";
-    - Markets "Through the day";
-    - Watchlist and Today day lines.
+- **Intraday views** (owner's yes, 2026-11-13: "wanted for the page look alive, did not plan to store all of it"): K21
+  (`docs/engine/tasks/K21-intraday-candles-and-views.md`), right after K16.4.
+  - The existing price snapshots move from every 20 to every 5 minutes.
+  - Views: Company "Today / 5 days", Markets "Through the day", Watchlist and Today day lines.
+  - Intraday history for research, if ever needed, comes from the owner's Stooq 5-minute download.
 - **How members could find each other** (owner, 2026-11-13: "good plan, write it down, right now no need for it").
   Today a member sees only the owner, the admins and people they already wrote to. Steps, simplest first:
   1. **Owner introductions:**
