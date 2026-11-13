@@ -18,7 +18,6 @@ const Jobs = lazy(() => import("./pages/Jobs"));
 const Screener = lazy(() => import("./pages/Screener"));
 const DatabasePage = lazy(() => import("./pages/Database"));
 const Lab = lazy(() => import("./pages/Lab"));
-const Admin = lazy(() => import("./pages/Admin"));
 const Workers = lazy(() => import("./pages/Workers"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const Methodology = lazy(() => import("./pages/Methodology"));
@@ -27,18 +26,10 @@ const MacroScenarioLab = lazy(() => import("./pages/MacroScenarioLab"));
 const Expectations = lazy(() => import("./pages/Expectations"));
 const InsiderActivity = lazy(() => import("./pages/InsiderActivity"));
 const MarketData = lazy(() => import("./pages/MarketData"));
-const Messages = lazy(() => import("./pages/Messages"));
 const Wiki = lazy(() => import("./pages/Wiki"));
 const ProjectState = lazy(() => import("./pages/ProjectState"));
 
-/**
- * Route guard for owner-only instruments (Database browser, Sentiment Lab).
- * The nav links are hidden from role="user" (AppLayout, iteration 3c), but a
- * direct URL visit must not render the page either: the underlying queries
- * would 403 anyway, so we fail fast with an explicit screen.
- *
- * This is UI-level gating only — the real authorization stays on the API.
- */
+/** Direct URLs cannot bypass the owner-page guard; procedures also enforce the role on the server. */
 function AdminOnly({ children }: { children: ReactNode }) {
   const { user, isLoading } = useAuth({ redirectOnUnauthenticated: true })
   if (isLoading || !user) {
@@ -75,11 +66,11 @@ export default function App() {
       <Route path="/screener" element={<Screener />} />
       <Route path="/company/:ticker" element={<Company />} />
       <Route path="/jobs" element={<Jobs />} />
-      <Route path="/messages" element={<Messages />} />
+      <Route path="/messages" element={<Navigate to="/desk/messages" replace />} />
       <Route path="/wiki" element={<Wiki />} />
       <Route path="/database" element={<AdminOnly><DatabasePage /></AdminOnly>} />
       <Route path="/lab" element={<AdminOnly><Lab /></AdminOnly>} />
-      <Route path="/admin" element={<Admin />} />
+      <Route path="/admin" element={<AdminOnly><Navigate to="/desk/admin" replace /></AdminOnly>} />
       <Route path="/workers" element={<AdminOnly><Workers /></AdminOnly>} />
       <Route path="/project-state" element={<PresentationOnly><ProjectState /></PresentationOnly>} />
       <Route path="/analytics" element={<PresentationOnly><Analytics /></PresentationOnly>} />

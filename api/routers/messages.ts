@@ -1,13 +1,8 @@
 /**
- * Messages router (4c D32 → reworked 4e D34) — messenger-style DMs between
- * ANY two users, with a contact list and search. A conversation is keyed by
- * convKey = '<minUserId>_<maxUserId>'; recipientId drives unread counts.
- *
- * Participants can read their own conversation; the ADMIN may open any
- * conversation (owner's oversight requirement — the UI tells users so).
- * Admin can also INITIATE a conversation with any user (contacts list).
- *
- * Delivery stays poll-based (React Query refetch — no websockets here).
+ * Pairwise messages with a conversation list and a 2,000-character composer.
+ * Members can contact admins and people with whom they already share a thread;
+ * owners can contact every account. Every read or send is confined to a thread
+ * that includes the caller. Reviewer mutations remain blocked by middleware.
  */
 import { z } from "zod";
 import { and, asc, eq, isNull, sql } from "drizzle-orm";
@@ -20,19 +15,20 @@ const BODY_MAX = 2000;
 
 export const convKeyOf = (a: number, b: number) => (a < b ? `${a}_${b}` : `${b}_${a}`);
 
-// Read guard note: a non-admin can only ever form convKeys that include
-// THEMSELVES (ctx.user.id is always one side), so their reads are confined
-// to their own conversations by construction; the admin may open any
-// conversation (owner's oversight requirement — the UI tells users so).
+async function requireMessageContact(ctx: { user: { id: number; role: string } }, peerId: number): Promise<void> {
+  if (peerId === ctx.user.id) throw new TRPCError({ code: "BAD_REQUEST", message: "cannot message yourself" });
+  const db = getDb();
+  const [peer] = await db.select({ id: users.id, role: users.role }).from(users).where(eq(users.id, peerId)).limit(1);
+  if (!peer) throw new TRPCError({ code: "NOT_FOUND", message: "user not found" });
+  if (ctx.user.role === "admin" || peer.role === "admin") return;
+  const [existing] = await db.select({ id: messages.id }).from(messages).where(eq(messages.convKey, convKeyOf(ctx.user.id, peerId))).limit(1);
+  if (!existing) throw new TRPCError({ code: "FORBIDDEN", message: "this recipient is not in your allowed contacts" });
+}
 
 export const messagesRouter = createRouter({
-  /**
-   * Contact list: every other user with the unread count for the caller and
-   * last-activity markers. Search by name/username is client-side (the list
-   * is small by platform scale).
-   */
   contacts: authedQuery.query(async ({ ctx }) => {
     const db = getDb();
+    const owner = ctx.user.role === "admin";
     const res: any = await db.execute(sql`
       SELECT u.id, u.username, u.name, u.role, u.lastSignInAt,
              (SELECT COUNT(*) FROM messages m WHERE m.authorId = u.id AND m.recipientId = ${ctx.user.id} AND m.readAt IS NULL) AS unread,
@@ -40,50 +36,48 @@ export const messagesRouter = createRouter({
              (SELECT MAX(a.createdAt) FROM activity_events a WHERE a.userId = u.id) AS lastActivityAt
       FROM users u
       WHERE u.id <> ${ctx.user.id}
-      ORDER BY (u.role = 'admin') DESC, u.username ASC
+        ${owner ? sql`` : sql`AND (u.role = 'admin' OR EXISTS (
+          SELECT 1 FROM messages allowed
+          WHERE (allowed.authorId = u.id AND allowed.recipientId = ${ctx.user.id})
+             OR (allowed.authorId = ${ctx.user.id} AND allowed.recipientId = u.id)
+        ))`}
+      ORDER BY unread DESC, (lastMsgAt IS NULL) ASC, lastMsgAt DESC, (u.role = 'admin') DESC, u.username ASC
       LIMIT 500`);
-    return (res[0] as any[]).map((r) => ({
-      id: Number(r.id),
-      username: r.username as string | null,
-      name: r.name as string | null,
-      role: r.role as "user" | "admin",
-      lastSignInAt: r.lastSignInAt as string | null,
-      unread: Number(r.unread ?? 0),
-      lastMsgAt: r.lastMsgAt as string | null,
-      lastActivityAt: r.lastActivityAt as string | null,
+    return (res[0] as any[]).map((row) => ({
+      id: Number(row.id),
+      username: row.username as string | null,
+      name: row.name as string | null,
+      unread: Number(row.unread ?? 0),
+      lastMsgAt: row.lastMsgAt as string | null,
+      ...(owner ? {
+        role: row.role as "user" | "admin",
+        lastSignInAt: row.lastSignInAt as string | null,
+        lastActivityAt: row.lastActivityAt as string | null,
+      } : {}),
     }));
   }),
 
-  /** Messages of my conversation with withUserId, oldest → newest. */
   list: authedQuery
     .input(z.object({ withUserId: z.number(), limit: z.number().min(1).max(500).default(200) }))
     .query(async ({ input, ctx }) => {
-      const ck = convKeyOf(ctx.user.id, input.withUserId);
+      await requireMessageContact(ctx, input.withUserId);
       const rows = await getDb()
         .select()
         .from(messages)
-        .where(eq(messages.convKey, ck))
+        .where(eq(messages.convKey, convKeyOf(ctx.user.id, input.withUserId)))
         .orderBy(asc(messages.id))
         .limit(input.limit);
       return { withUserId: input.withUserId, rows };
     }),
 
-  /** Send a DM to any user (admin included). */
   send: authedQuery
     .input(z.object({ toUserId: z.number(), body: z.string().trim().min(1).max(BODY_MAX) }))
     .mutation(async ({ input, ctx }) => {
-      if (input.toUserId === ctx.user.id) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "cannot message yourself" });
-      }
-      const db = getDb();
-      const [peer] = await db.select({ id: users.id }).from(users).where(eq(users.id, input.toUserId)).limit(1);
-      if (!peer) throw new TRPCError({ code: "NOT_FOUND", message: "user not found" });
-      const res = await db.insert(messages).values({
+      await requireMessageContact(ctx, input.toUserId);
+      const res = await getDb().insert(messages).values({
         convKey: convKeyOf(ctx.user.id, input.toUserId),
         authorId: ctx.user.id,
         recipientId: input.toUserId,
-        // deprecated 4c columns stay NOT NULL in the DB — fill them for
-        // back-compat (threadUserId ≈ the non-admin side, isAdminMsg ≈ role)
         threadUserId: ctx.user.role === "admin" ? input.toUserId : ctx.user.id,
         isAdminMsg: ctx.user.role === "admin",
         body: input.body,
@@ -91,7 +85,6 @@ export const messagesRouter = createRouter({
       return { ok: true, id: Number(res[0].insertId) };
     }),
 
-  /** Mark the peer's messages in this conversation as read. */
   markRead: authedQuery
     .input(z.object({ withUserId: z.number() }))
     .mutation(async ({ input, ctx }) => {
@@ -108,7 +101,6 @@ export const messagesRouter = createRouter({
       return { ok: true };
     }),
 
-  /** Sidebar badge: my unread count across all conversations. */
   unreadCount: authedQuery.query(async ({ ctx }) => {
     const [row] = await getDb()
       .select({ n: sql<number>`COUNT(*)` })

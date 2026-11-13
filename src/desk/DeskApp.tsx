@@ -18,6 +18,8 @@ const Flows = lazy(() => import("./flows/FlowsPage"));
 const Engine = lazy(() => import("./engine/EnginePage"));
 const Watchlist = lazy(() => import("./pages/Watchlist"));
 const Operations = lazy(() => import("./pages/Operations"));
+const Messages = lazy(() => import("./pages/Messages"));
+const Admin = lazy(() => import("./pages/Admin"));
 
 function DeskNotFound() {
   return (
@@ -46,6 +48,8 @@ export default function DeskApp() {
           <Route path="engine" element={<Engine />} />
           <Route path="watchlist" element={<Watchlist />} />
           <Route path="operations" element={<Operations />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="admin" element={<Admin />} />
           <Route path="*" element={<DeskNotFound />} />
         </Routes>
       </Suspense>

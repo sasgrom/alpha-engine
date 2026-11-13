@@ -66,7 +66,7 @@ async function fetchDataHealth(): Promise<DataHealthReport | null> {
 }
 
 const OWNER_TOOL_TEXT: Record<string, string> = {
-  "/admin": "Users, reviewers, manuals, price import.",
+  "/desk/admin": "People, reviewers, manuals, logs and monitors.",
   "/workers": "Run and stop collectors, logs, the runbook.",
   "/database": "Stored tables, filings and concept series.",
   "/lab": "Sentiment scoring of filing sections.",
@@ -222,7 +222,7 @@ export default function Operations() {
             <Link key={destination.path} to={destination.path} className="desk-card desk-span-3" style={{ display: "grid", gap: 6 }}>
               <strong style={{ fontWeight: 620 }}>{destination.label}</strong>
               <span className="desk-ink-2" style={{ fontSize: 13 }}>{OWNER_TOOL_TEXT[destination.path] ?? ""}</span>
-              <span className="desk-link desk-nowrap" style={{ fontSize: 12.5 }}>Classic view <ArrowUpRight size={13} aria-hidden="true" /></span>
+              <span className="desk-link desk-nowrap" style={{ fontSize: 12.5 }}>{destination.classic ? "Classic view" : "Open in desk"} <ArrowUpRight size={13} aria-hidden="true" /></span>
             </Link>
           ))}
       </div>

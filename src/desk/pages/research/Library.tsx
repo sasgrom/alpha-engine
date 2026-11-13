@@ -16,10 +16,10 @@ const DETAILS: Record<string, { icon: typeof Activity; text: string; desk?: stri
   "/market-data": { icon: LineChart, text: "Coverage and provenance of the Schwab chains, quotes and intraday context.", desk: "Operations shows capture health." },
   "/project-state": { icon: Workflow, text: "Where code, collection, evidence and delivery each stand." },
   "/universe": { icon: ListChecks, text: "Add companies outside the index (starts a data job), groups and presets.", desk: "Watchlist follows and unfollows index companies." },
-  "/messages": { icon: MessageSquare, text: "Conversations with the team." },
+  "/desk/messages": { icon: MessageSquare, text: "Conversations with the team, with member-safe contacts and the owner's user intel." },
   "/jobs": { icon: ListChecks, text: "Data jobs and their logs." },
   "/wiki": { icon: BookOpen, text: "Definitions of the factors and measures." },
-  "/admin": { icon: ShieldCheck, text: "Users, reviewers, manuals and access." },
+  "/desk/admin": { icon: ShieldCheck, text: "People, reviewers, structured manuals, job logs and delivery monitors." },
   "/workers": { icon: Activity, text: "Run and stop collectors, the scheduler, logs and the runbook.", desk: "Operations is the read-only health view." },
   "/database": { icon: Database, text: "Browse stored tables, filings and concept series." },
   "/lab": { icon: Sparkles, text: "Sentiment scoring of filing sections." },
@@ -27,7 +27,7 @@ const DETAILS: Record<string, { icon: typeof Activity; text: string; desk?: stri
 
 const GROUP_TEXT: Record<string, string> = {
   "Research tools": "The classic research pages. Each still holds detail its desk tool does not show yet.",
-  Workspace: "Your lists, messages and jobs in the classic view.",
+  Workspace: "Your lists, messages and jobs across the desk and the remaining classic pages.",
   "Owner tools": "Administration and the controls of the data pipeline.",
 };
 
@@ -40,9 +40,9 @@ export default function Library() {
     <ResearchFrame>
       <div className="desk-page-head">
         <div>
-          <span className="desk-eyebrow">Research · methods, full records and the classic tools</span>
+          <span className="desk-eyebrow">Research · methods, full records and tools</span>
           <h1>Library</h1>
-          <p className="desk-lede">The detailed records behind the desk tools. These pages open in the classic view; the note under each says what the desk already covers.</p>
+          <p className="desk-lede">The detailed records behind the desk tools. New desk destinations open in place; the remaining classic tools are marked.</p>
         </div>
       </div>
       {groups.map(({ group, items }) => (
@@ -59,7 +59,7 @@ export default function Library() {
                   <h3>{item.label}</h3>
                   <p>{detail?.text ?? ""}</p>
                   {detail?.desk && <p className="desk-muted" style={{ fontSize: 12.5 }}>In the desk: {detail.desk}</p>}
-                  <span className="desk-link desk-nowrap">Open in the classic view <ArrowUpRight size={13} aria-hidden="true" /></span>
+                  <span className="desk-link desk-nowrap">{item.classic ? "Open in the classic view" : "Open in desk"} <ArrowUpRight size={13} aria-hidden="true" /></span>
                 </Link>
               );
             })}

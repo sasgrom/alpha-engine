@@ -90,9 +90,14 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 
 ## 5. Phases
 
-1. **K17a — Messages and owner tools in the desk** (spec after K16 is accepted).
-   - Server-side guards; the messages privacy default; `/desk/messages`, `/desk/admin`; remove dead code.
-   - Classic `/messages` and `/admin` redirect to the desk.
+1. **K17a — Messages and owner tools in the desk** (implemented; Claude review and web restart pending).
+   - [x] Server-side guards and member-safe contacts, with recipient checks on both message reads and sends.
+   - [x] `/desk/messages`: unread-first conversations, thread and composer; member-safe contacts, owner accounts and user intel. No cross-user thread reading was added.
+   - [x] `/desk/admin`: People, Reviewers, Manuals, Logs and Monitors. People includes a one-time generated-password dialog and view-as return to the tab.
+   - [x] Classic `/messages` and `/admin` redirect to the desk; the classic `/admin` route also has an owner guard.
+   - [x] Operations and Library link to the new desk destinations. The unread dot and count link to `/desk/messages`; polling stops while hidden.
+   - Dropped: the temporary price-archive upload card, the misleading "admins can read threads" footer claim, `AuthLayout.tsx`, `AuthLayoutSkeleton.tsx`, unrouted `Home.tsx`, and the reviewer guide's `/fundflows` entry.
+   - Retained: worker-note detail with its SEC source, user intel, full reviewer reset actions, all four manuals (rendered as documents), job logs, factor IC and worker intake. Literal reviewer IPs are not exposed; only the binding state is available.
 2. **K17b — Operations console:** scheduler controls, runs and logs, coverage, the useful job launchers, ingest of any SEC company.
 3. **K17c — Company, Screener and Markets on the standard data:** statements, documents, holders, corporate actions; Terminal's charts.
 4. **K17d — Research pages:** guidance, scenario lab, insider detail, options chain and features, tone and hypothesis ledger, handbooks.
@@ -107,7 +112,7 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
   - the messages privacy default;
   - Telegram yes or no (and which alerts);
   - whether the old job types (harvest, series build, section parse, sentiment scoring) still matter.
-- [ ] Write K17a after K16 is accepted. Include the guard list, the messages rules and the redirects.
+- [x] Write K17a after K16 is accepted. Include the guard list, the messages rules and the redirects.
 - [ ] Check which classic job types still run (jobs table, last runs) before K17b.
 - [ ] Design notes per phase: page sketches, data each view reads, DevNotes text.
 - [ ] Keep this file current after each phase: what moved, what was dropped and why.

@@ -107,7 +107,7 @@ export const sentimentRouter = createRouter({
     }),
 
   /** Sentiment Lab summary: coverage, evidence rate, token spend. */
-  labStats: authedQuery.query(async () => {
+  labStats: adminQuery.query(async () => {
     const db = getDb();
     const totals = await db
       .select({
@@ -131,7 +131,7 @@ export const sentimentRouter = createRouter({
   }),
 
   /** ticker for display (join companies) — a small Lab helper */
-  tickersWithScores: authedQuery.query(async () => {
+  tickersWithScores: adminQuery.query(async () => {
     return getDb()
       .selectDistinct({ cik: sentimentScores.cik, ticker: companies.ticker })
       .from(sentimentScores)

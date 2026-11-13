@@ -161,6 +161,27 @@ export const DEV_NOTES = {
     ],
     better: [["One health view per data source with freshness and coverage", "task K09 (data health), waiting for approval"]],
   },
+  messages: {
+    missing: [
+      "Search inside a long thread, attachments and a delivery state beyond the read marker.",
+      "Notifications outside the desk: this page polls only while it is visible.",
+    ],
+    better: [
+      ["Pagination for very long conversations", "a cursor contract on the message list; the current endpoint returns the first 200"],
+      ["Typing and presence indicators", "a real-time channel; the current transport is deliberately modest polling"],
+    ],
+  },
+  admin: {
+    missing: [
+      "The reviewer's literal IP address is not displayed: only its HMAC binding is stored, so the honest state is Bound or Not bound.",
+      "Invitations and a self-service password reset flow.",
+      "Bulk account actions and log search.",
+    ],
+    better: [
+      ["Filtering and saved views for long logs", "a bounded server-side log query rather than loading the first 2,000 lines"],
+      ["Scheduler and job controls beside the monitors", "the next operations-console phase"],
+    ],
+  },
 } satisfies Record<string, PageNotes>;
 
 export type DevNotesPage = keyof typeof DEV_NOTES;

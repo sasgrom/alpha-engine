@@ -47,7 +47,7 @@ export default function DeskShell({ children }: { children: ReactNode }) {
   const audienceReady = isAdmin || (!!user && !reviewer.status.isLoading);
   const flowsOpen = !isReviewer || Boolean(reviewer.status.data?.ndaAccepted);
   const snapshot = trpc.desk.snapshot.useQuery(undefined, { enabled: !!user, staleTime: 5 * 60_000, refetchOnWindowFocus: false, retry: 1 });
-  const unread = trpc.messages.unreadCount.useQuery(undefined, { enabled: !!user && !isReviewer, refetchInterval: 30_000 });
+  const unread = trpc.messages.unreadCount.useQuery(undefined, { enabled: !!user && !isReviewer, refetchInterval: 30_000, refetchIntervalInBackground: false });
   // the owner sees at once when collection stopped or failed (scheduler, jobs, the evening market run, production pushes)
   const health = trpc.desk.opsHealth.useQuery(undefined, { enabled: isAdmin, refetchInterval: 60_000, retry: false });
   const alerts = isAdmin ? health.data?.alerts ?? [] : [];
@@ -140,6 +140,7 @@ export default function DeskShell({ children }: { children: ReactNode }) {
     }
     window.dispatchEvent(new Event("alpha-viewas-changed"));
     void utils.invalidate();
+    navigate("/desk/admin");
   };
 
   // page-view telemetry: one event per path per minute, never for reviewers (same rule as the classic layout)
@@ -173,6 +174,7 @@ export default function DeskShell({ children }: { children: ReactNode }) {
       ...(flowsOpen ? [{ label: "Fund flows", path: "/desk/flows", group: "Desk" as const, keywords: "13f institutions funds money rotation sectors bought sold hall library of capital" }] : []),
       ...(isAdmin ? [{ label: "Engine", path: "/desk/engine", group: "Desk" as const, keywords: "prediction engine model regression bayes probability factors step by step flow" }] : []),
       ...(isAdmin ? [{ label: "Operations", path: "/desk/operations", group: "Desk" as const, keywords: "health scheduler jobs checks" }] : []),
+      ...(isAdmin ? [{ label: "Owner tools", path: "/desk/admin", group: "Desk" as const, keywords: "admin people reviewers manuals logs monitors" }] : []),
       ...classicDestinations(isAdmin, isPresentation),
     ],
     [isAdmin, isPresentation, flowsOpen],
@@ -250,7 +252,7 @@ export default function DeskShell({ children }: { children: ReactNode }) {
                       ))}
                     </div>
                     {!isReviewer && (
-                      <Link to="/messages" role="menuitem">
+                      <Link to="/desk/messages" role="menuitem">
                         <MessageSquare size={15} aria-hidden="true" /> Messages
                         {unreadCount > 0 && <span className="desk-badge accent" style={{ marginLeft: "auto" }}>{unreadCount} new</span>}
                       </Link>

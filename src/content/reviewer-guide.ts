@@ -121,16 +121,6 @@ export const REVIEWER_NAV_GUIDE: Record<string, ReviewerGuideContent> = {
     "Expectation gaps may explain later reaction, but extraction quality and benchmark accuracy remain open evidence questions.",
     "Use it for event review and hypothesis formation, not as a certainty about future earnings.",
   ),
-  "/fundflows": entry(
-    "Fund Flows",
-    "Read delayed institutional positioning through reported holdings.",
-    "13F holdings, holders, share/weight changes and availability-corrected flow aggregates.",
-    "Fund 13F originals and amendments are collected from SEC with actual filing dates.",
-    "Quarterly holdings become visible only on actual filing availability, including the latest required amendment.",
-    "Merged books use the maximum required filing date. Share and portfolio-weight changes are separated from USD-price effects.",
-    "Institutional accumulation may be informative, but delayed 13F books are not current trades.",
-    "Use it as slow positioning context with explicit reporting lag, never as a live order-flow feed.",
-  ),
 };
 
 const VOLATILITY_RISK_GUIDE = entry(
@@ -151,7 +141,6 @@ const PAGE_DEFAULTS: Array<[string, ReviewerGuideContent]> = [
   ["/scenario-lab", REVIEWER_NAV_GUIDE["/scenario-lab"]],
   ["/market-data", REVIEWER_NAV_GUIDE["/market-data"]],
   ["/expectations", REVIEWER_NAV_GUIDE["/expectations"]],
-  ["/fundflows", REVIEWER_NAV_GUIDE["/fundflows"]],
   ["/analytics", REVIEWER_NAV_GUIDE["/analytics"]],
   ["/project-state", REVIEWER_NAV_GUIDE["/project-state"]],
   ["/universe", REVIEWER_NAV_GUIDE["/universe"]],
@@ -221,7 +210,6 @@ export function reviewerTileGuide(pathname: string, heading: string, visibleText
     "Price context can frame valuation and event response, but free EOD history does not establish execution quality.",
     "Use it for historical comparison and event alignment, not for real-time order placement.",
   ));
-  if (/13f|institutional|fund flow|holders|smart money/.test(haystack)) return titled({ ...REVIEWER_NAV_GUIDE["/fundflows"], title: heading || REVIEWER_NAV_GUIDE["/fundflows"].title });
   if (/short interest|days.to.cover|settlement/.test(haystack)) return titled(entry(
     heading || "Short interest",
     "Show reported bearish positioning with its publication lag.",

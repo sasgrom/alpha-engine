@@ -332,7 +332,7 @@ export const jobsRouter = createRouter({
 // database browser + company fundamentals
 // ---------------------------------------------------------------------------
 export const browseRouter = createRouter({
-  filingsList: authedQuery
+  filingsList: adminQuery
     .input(
       z.object({
         cik: z.number().optional(),
@@ -371,7 +371,7 @@ export const browseRouter = createRouter({
       return { rows, total: total.n };
     }),
 
-  concepts: authedQuery.input(z.object({ cik: z.number() })).query(async ({ input }) => {
+  concepts: adminQuery.input(z.object({ cik: z.number() })).query(async ({ input }) => {
     const db = getDb();
     const rows = await db
       .selectDistinct({ concept: facts.concept, taxonomy: facts.taxonomy })
@@ -382,7 +382,7 @@ export const browseRouter = createRouter({
     return rows;
   }),
 
-  conceptSeries: authedQuery
+  conceptSeries: adminQuery
     .input(
       z.object({
         cik: z.number(),
@@ -411,7 +411,7 @@ export const browseRouter = createRouter({
         .limit(500);
     }),
 
-  filingDocument: authedQuery
+  filingDocument: adminQuery
     .input(z.object({ cik: z.number(), accessionNo: z.string(), primaryDoc: z.string().nullable().optional() }))
     .query(async ({ input }) => {
       const { docName, html } = await edgar.fetchFilingDocument(input.cik, input.accessionNo, input.primaryDoc);

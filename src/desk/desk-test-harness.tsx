@@ -98,14 +98,36 @@ const REPORTS: Record<string, unknown> = {
 
 /** What desk.opsHealth answers (no alerts unless a test sets some). */
 export const OPS_HEALTH: { alerts: { level: "error" | "warning"; code: string; text: string }[] } = { alerts: [] };
+export const DESK_DATA = { empty: false, unread: 0 };
+
+const CONTACTS = [
+  { id: 2, username: "member", name: "Member One", role: "user", lastSignInAt: "2026-11-12", unread: 2, lastMsgAt: "2026-11-13T10:00:00", lastActivityAt: "2026-11-13T11:00:00" },
+  { id: 3, username: "admin2", name: "Admin Two", role: "admin", lastSignInAt: "2026-11-12", unread: 0, lastMsgAt: "2026-11-12T10:00:00", lastActivityAt: "2026-11-12T11:00:00" },
+  { id: 4, username: "other", name: "Other Account", role: "user", lastSignInAt: null, unread: 0, lastMsgAt: null, lastActivityAt: null },
+];
+const THREAD = [
+  { id: 11, authorId: 2, recipientId: 1, body: "Could we review the filing?", createdAt: "2026-11-13T10:00:00", readAt: null },
+  { id: 12, authorId: 1, recipientId: 2, body: "I will open it now.", createdAt: "2026-11-13T10:01:00", readAt: null },
+];
+const MANUALS = [
+  { id: "engine-manual-en", title: "Engine Manual (EN)", bundledAt: "2026-11-13" },
+  { id: "engine-manual-ru", title: "Engine Manual (RU)", bundledAt: "2026-11-13" },
+  { id: "llm-context", title: "LLM Context", bundledAt: "2026-11-13" },
+  { id: "design-value-signals", title: "Design: Value & Signals", bundledAt: "2026-11-13" },
+];
 
 function answer(procedure: string, role: string): unknown {
+  const owner = role === "admin";
   switch (procedure) {
     case "desk.opsHealth": return { checkedAt: "2026-11-12T20:00:00.000Z", heartbeatAt: "2026-11-12T20:00:00.000Z", alerts: OPS_HEALTH.alerts };
     case "auth.me": return { id: 1, username: "owner", name: "Ada Owner", role };
     case "reviewer.status": return { isReviewer: false, ndaAccepted: false, ndaVersion: null, ndaTextHash: null, firstIpBound: false, tours: [] };
     case "desk.snapshot": return SNAPSHOT;
-    case "messages.unreadCount": return { count: 0 };
+    case "messages.unreadCount": return { count: DESK_DATA.unread };
+    case "messages.contacts": return DESK_DATA.empty ? [] : CONTACTS.filter((contact) => owner || contact.id !== 4).map((contact) => owner ? contact : { id: contact.id, username: contact.username, name: contact.name, unread: contact.unread, lastMsgAt: contact.lastMsgAt });
+    case "messages.list": return { withUserId: 2, rows: DESK_DATA.empty ? [] : THREAD };
+    case "messages.send": return { ok: true, id: 101 };
+    case "messages.markRead": return { ok: true };
     case "activity.track": return { ok: true };
     case "universe.list": return { rows: [{ cik: 320193, ticker: "AAPL", name: "Apple Inc." }], total: 1 };
     case "dashboard.latestFilings": return [];
@@ -117,7 +139,27 @@ function answer(procedure: string, role: string): unknown {
     case "desk.flowsCompany": return FLOWS_COMPANY;
     case "desk.engineIndex": return ENGINE_INDEX;
     case "desk.engineCompany": return ENGINE_COMPANY;
-    case "admin.usersList": return [];
+    case "admin.usersList": return DESK_DATA.empty ? [] : [
+      { id: 1, username: "owner", name: "Ada Owner", role: "admin", universeSize: 50, lastSignInAt: "2026-11-13", createdAt: "2026-01-01" },
+      { id: 2, username: "member", name: "Member One", role: "user", universeSize: 3, lastSignInAt: "2026-11-12", createdAt: "2026-02-01" },
+    ];
+    case "admin.userSummary": return { user: { id: 2, username: "member", name: "Member One", role: "user", createdAt: "2026-02-01", lastSignInAt: "2026-11-12" }, universeSize: 3, universeActive: 2, messagesSent: 8, jobsLaunched: 2, activity: { logins7d: 4, pages24h: 17, totalEvents: 120, lastLoginAt: "2026-11-12", lastSeenAt: "2026-11-13" } };
+    case "admin.userActivity": return [{ id: 1, type: "page", path: "/desk", createdAt: "2026-11-13T10:00:00" }];
+    case "admin.reviewerList": return DESK_DATA.empty ? [] : [{ userId: 5, username: "reviewer", name: "Review Reader", ndaAccepted: true, acceptedAt: "2026-11-04T12:00:00", firstIpBound: true, universeSize: 50, tours: [{ track: "geography", currentStep: 2, status: "completed" }, { track: "technical", currentStep: 0, status: "not_started" }] }];
+    case "admin.manuals": return DESK_DATA.empty ? [] : MANUALS;
+    case "admin.manualContent": return { id: "engine-manual-en", title: "Engine Manual (EN)", source: "disk", updatedAt: "2026-11-13", content: "# Manual heading\n\nA **bold** statement with [evidence](https://www.sec.gov/).\n\n| Field | Value |\n|---|---|\n| Prices | 2,000 |\n\n```ts\nconst answer = 42;\n```" };
+    case "admin.recentJobs": return DESK_DATA.empty ? [] : [{ id: 55, type: "prices", status: "done", params: "{}", message: "done", createdAt: "2026-11-13T09:00:00", finishedAt: "2026-11-13T09:01:00", startedBy: 1, startedByName: "Ada Owner" }];
+    case "admin.jobLog": return { lines: [{ id: 1, ts: "2026-11-13T09:01:00", level: "info", message: "Price load finished" }], truncated: false };
+    case "admin.factorIc": return DESK_DATA.empty ? [] : [{ factor: "assetGrowth", horizon: 63, quarter: "2026Q1", spearman: 0.12, n: 10 }];
+    case "workersMonitor.intake": return DESK_DATA.empty ? { perSource: [], recent: [], keys: [] } : {
+      perSource: [{ source: "stocktwits", rows_total: 12, liveRows: 10, backfillRows: 2, lastEventTs: "2026-11-13T10:00:00", lastIngestedAt: "2026-11-13T10:01:00" }],
+      keys: [{ id: 1, label: "home", revokedAt: null, lastUsedAt: "2026-11-13T10:01:00", createdAt: "2026-01-01" }],
+      recent: [{ cik: 320193, ticker: "AAPL", source: "edgar", signalType: "tone", eventTs: "2026-11-13T10:00:00", ingestedAt: "2026-11-13T10:01:00", score: 0.2, magnitude: 12, src: "live", note: "Full worker note evidence.", payloadKey: "llm:model:edgar:320193:0000320193-26-000001" }],
+    };
+    case "admin.createUser": return { ok: true, id: 99 };
+    case "admin.createReviewer": return { ok: true, userId: 99 };
+    case "admin.deleteUser": case "admin.resetPassword": case "admin.setUserRole": return { ok: true };
+    case "admin.resetReviewerFirstIp": case "admin.resetReviewerNda": case "admin.resetReviewerTour": return { ok: true };
     default: return null;
   }
 }
@@ -142,13 +184,14 @@ export interface MountedDesk {
   unmount: () => void;
 }
 
-export async function mountDesk(role: "admin" | "user", path = "/desk", ready = "S&P 500 companies closed higher"): Promise<MountedDesk> {
+export async function mountDesk(role: "admin" | "user", path = "/desk", ready = "S&P 500 companies closed higher", application = false): Promise<MountedDesk> {
   // load the lazy pages up front so the test waits on data, not on the module loader
   await Promise.all([
     import("./pages/Today"), import("./pages/Watchlist"), import("./pages/research/Signals"), import("./pages/research/Earnings"),
     import("./pages/research/Volatility"), import("./pages/research/Macro"), import("./pages/research/Ownership"), import("./pages/research/Library"),
-    import("./flows/FlowsPage"),
+    import("./flows/FlowsPage"), import("./pages/Messages"), import("./pages/Admin"),
   ]);
+  const Application = application ? (await import("@/App")).default : null;
   // jsdom has neither; the palette (cmdk) needs both to mount
   Element.prototype.scrollIntoView = () => {};
   if (typeof globalThis.ResizeObserver === "undefined") {
@@ -179,9 +222,7 @@ export async function mountDesk(role: "admin" | "user", path = "/desk", ready = 
     root.render(
       <TRPCProvider>
         <MemoryRouter initialEntries={[path]}>
-          <Routes>
-            <Route path="/desk/*" element={<DeskApp />} />
-          </Routes>
+          {Application ? <Application /> : <Routes><Route path="/desk/*" element={<DeskApp />} /></Routes>}
         </MemoryRouter>
       </TRPCProvider>,
     );
