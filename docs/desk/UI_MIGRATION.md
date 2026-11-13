@@ -84,6 +84,28 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 - **Owner command palette actions:** run a job, open its log, restart a job chain, all from Ctrl+K, owner only.
 - **Reviewer access with an end date and an audit log:** who saw what, when.
 - **Password reset and invitations,** with no browser prompts.
+- **Intraday candles and views** (owner's yes, 2026-11-13): K21 (`docs/engine/tasks/K21-intraday-candles-and-views.md`).
+  - Evening collection of real 5-minute candles, right after K16.4.
+  - Views after K20:
+    - Company "Today / 5 days";
+    - Markets "Through the day";
+    - Watchlist and Today day lines.
+- **How members could find each other** (owner, 2026-11-13: "good plan, write it down, right now no need for it").
+  Today a member sees only the owner, the admins and people they already wrote to. Steps, simplest first:
+  1. **Owner introductions:**
+     - the owner picks two members in the desk and introduces them;
+     - this opens a thread between them with the owner's note;
+     - no new data needed.
+  2. **Contact requests by exact username:**
+     - a member enters a username they got from that person (no browsing);
+     - the other side accepts or declines, and only accepted pairs can write;
+     - limits on pending requests per member, plus a block switch.
+  3. **Opt-in directory** (once there are more members): members who turn on "visible to members" show a display name,
+     a short bio and the sectors they follow. Contact goes through requests.
+  4. **Company or topic rooms,** as an alternative to direct messages: one discussion per company or topic, visible to
+     members and moderated by the owner. People meet there and move to direct messages through requests.
+  - Steps 2–4 need new tables in `alpha_engine` (requests, profile visibility, rooms): a schema change for the owner's
+    approval. Step 1 needs none.
 
 ## 5. Phases
 
@@ -115,9 +137,11 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 
 - [x] Inventory the classic views (2026-11-13).
 - [x] This plan.
-- [ ] Owner's answers, asked on 2026-11-13; no answer yet:
-  - the messages privacy default (K17a uses Claude's default);
-  - Telegram yes or no (and which alerts).
+- [x] Owner's answers, 2026-11-13 afternoon:
+  - the messages privacy default stays ("confirmed, no change for now");
+  - Telegram "not now";
+  - the plan for finding other members is written down (section 4), not needed now;
+  - intraday views yes (K21).
 - [x] Write K17a after K16 is accepted. Include the guard list, the messages rules and the redirects.
 - [x] Review K17a; the follow-up K17a.1 was sent (2026-11-13).
 - [x] Check which classic job types still run. The local `jobs` table holds only five `universe-add` rows (last 2026-11-05); harvest, series build, section parse and scoring have no runs.
