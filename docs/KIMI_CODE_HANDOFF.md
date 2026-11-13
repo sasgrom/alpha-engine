@@ -1796,3 +1796,33 @@ sitting) if the owner wants them; K11 when the owner names it.
   - `git diff --check`.
 - **Server:** restarts announced to Kimi (14:58, 15:59). The only listener on port 3000 is pid **23440**.
 - Not committed: the four generated files that show as modified (not mine). No production write, schema change or scheduler entry.
+
+## 139. Claude: standard fundamentals, step 1 (merged series per field) — 2026-11-12; K13 to Kimi
+
+- **Owner's order:**
+  - Apple alone has 514 raw XBRL series in our data, and engine v1 reads 18 items: "we basically dont have good data".
+  - Step 1: one merged, smooth series per standard field for every company, with typical names (the old database's convention as the base). Then stop for his evaluation.
+  - Step 2: normalization, on his later instructions.
+- **Built:** lab `84057a5`, `C:\dev\alpha-engine-lab\src\fundamentals\` (`fields.mts`, `build.mts`, `qa.mts`).
+  - **Fields:** 64. These are the 62 statement codes of the old schema (Tiingo's names) plus `goodwill` and `buybacks`. Each has its XBRL tags in order and the identities used when no tag gives the value. Cash-flow outflows are negative.
+  - **Calendar:** each company's own fiscal quarters, from its 10-Q/10-K filings, plus a year of comparatives.
+  - **Values:**
+    - Three-month figures where filed; otherwise year-to-date differences on the same basis (the earlier figure as known when the later one was filed, within 400 days). Weighted shares are differenced by days.
+    - Rarely used tags only fill gaps. Revenue takes the largest revenue tag (the total).
+    - A quarter that equals its whole year in the same filing, while another quarter of that year is not zero, is set aside as a filer's mislabelled period: 577 figures in 63 companies.
+    - ExxonMobil's predecessor registrant (34088) is joined onto XOM (2115436).
+  - **Point in time:** every filed version is kept with its filing date. Nothing is smoothed or carried back.
+- **Data:** `D:\research\alpha-engine\fundamentals\standard\v1\`.
+  - Contents: `company\<cik>.json`, `index.json`, `coverage.json`, `qa.json`, and the review workbook `Standard fundamentals v1 - review.xls`.
+  - 502 company IDs: 499 with series, XOM's predecessor merged, plus ENLT (20-F only) and VYLR (no periodic reports yet).
+  - 30,688 company-quarters from 2010.
+- **Quality, as first reported, from 2010:**
+  - Coverage: revenue 98.5%, net income 98.4%, diluted EPS 97.6%, total assets 98.4%, equity 98.6%, operating cash flow 99.1%, capex 91.2%, debt 83.1%.
+  - Identity checks off: gross profit 5.1%, change in cash 2.2%, signs 0.2%.
+  - Jumps: revenue 0.26% (mostly real events, 2020 and mergers); negative Q4 revenue 3 of 7,290.
+- **Known limits:**
+  - SEC company facts carry no company-specific extension tags (NextEra has no capex or interest expense).
+  - Banks and insurers have no cost of revenue, gross profit or operating income.
+  - Share counts and per-share figures are not yet on one split basis; that is a step 2 item.
+- **K13 (Kimi, owner approved routine work at 16:20):** spec `cf2e1e4`, `docs/engine/tasks/K13-standard-fundamentals-gaps.md`. It is read-only mining of which tags would fill the gaps in 19 fields. Go sent through the mailbox.
+- **Next:** the owner evaluates step 1. No normalization and no change to engine inputs before his step 2 instructions.
