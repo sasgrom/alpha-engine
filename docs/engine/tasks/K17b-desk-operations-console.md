@@ -76,6 +76,8 @@ disabled with one plain sentence why. They are never hidden.
   - desk tokens and patterns, light and dark, phone width;
   - each page ends with `DevNotes` (text in `src/desk/devnotes-data.ts`);
   - no stage labels, no machine paths in error states.
+- **Carried over from K17a:** the Reviewers tab deletes through `window.confirm` (`src/desk/admin/Reviewers.tsx`). Use
+  `DeskDialog`, as People does.
 - **Polling:** the console polls only while visible. Health every 60 s; runs every 10 s only while a job runs.
 - Nothing in `api/lib/`, `api/kimi/`, `.env`; no schema change. No production write.
 - **No scheduler restart or web restart.** Claude restarts after review. A change to `contracts/operations.ts` that the
