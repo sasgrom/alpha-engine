@@ -1961,3 +1961,32 @@ All read only, except one probe download (below). No change to the dataset or fi
   - Our token answers 401 on `userPreference`, so no account is linked.
   - AGENTS.md allows market data only. Any order path is the owner's decision.
   - Proposed alternative: a paper broker on live Schwab quotes (fills at the bid or ask of the first quote after a decision, slippage, commissions, every fill logged).
+- **Scheduler restarted on the new code** at 20:26 PST, when it was idle.
+  - pid 10700, lock file present, 80 jobs.
+  - Next runs: catch-ups 04:00 and 04:30, live prices from 06:40.
+  - The stale `schwab-fetch-evening` entry is gone.
+
+## 143. Claude: finishing step 1 of the standard fundamentals — mechanism done, mapping handed to Kimi (K14) — 2026-11-12
+
+- **Owner:** "lets finalize whats open in step 1, do you want to hand it to kimi? make sure he can handle it".
+  - He then added: the cleaned series become static MySQL data, new quarters and new companies go through the same process, and the steps and lessons must be documented so it can be replicated.
+- **Mechanism (mine)**, lab `935307e` and `0e2aba7`:
+  - `overrides.json`: per company and field, tags as fallback (default) or first, with an optional quarter-end range and required evidence.
+  - `custom:Name` reads the company's own tag from SEC's data sets and the newest filings.
+  - Signed tag expressions (`A+B-C`).
+  - Fields marked `positive` (assets, share counts) pass over zero or negative values.
+  - `compare.py` is the acceptance gate between builds.
+  - The review workbook generator is now in the lab (`tools/fundamentals/review-workbook.py`).
+  - Tests:
+    - A full build without overrides is identical before and after the signed-parts change.
+    - Against v2, the zero rule removes 96 impossible values and breaks 0 filing matches.
+- **Baseline for K14:** `D:\...\standard\v3-mech\`, which is v2 plus the zero rule.
+  - Impossible zeros: 0. Signs off: 259 (v2: 323). Freshness: 0. Revenue on the printed line: 96.10%.
+  - Stops early: grossProfit/costRev 51, capex 38, debt 35, opinc 22, sharesBasic 20.
+- **Process document:** `docs/engine/STANDARD_FUNDAMENTALS.md`. It covers the series, the sources and what each lacks, the steps with commands, the build rules, the acceptance gates, the lessons learned, new quarters and new companies, and a proposed MySQL design. The design (three tables, inserts only, ≤500 rows per batch) waits for the owner's review, because it is a schema change.
+- **K14 (Kimi):** `docs/engine/tasks/K14-standard-fundamentals-finish.md`.
+  - Work: map the open items by following the statement line across filings, with evidence per entry.
+  - Worked examples:
+    - General Dynamics cost of sales since 2020: `CostsAndExpenses-GeneralAndAdministrativeExpense`.
+    - NextEra capex on its own tags.
+  - Stage A is a pilot of 5 entries reviewed by me. Stage B is everything, with fixed gates (compare 0 broken and 0 removed; checks and QA not worse; section 9 of the process document).
