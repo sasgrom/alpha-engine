@@ -2415,3 +2415,53 @@ All read only, except one probe download (below). No change to the dataset or fi
 - **Browser evidence:** seven captures in `worker/.runs/k17a-ui/`: owner messages with user intel, dark phone messages, People in light and dark phone, the generated-password dialog, structured manuals and compact monitors. Light/dark themes were explicitly selected; phone width was 390 px. All have zero page overflow and zero browser errors, and were read back visually. The browser used the existing server and mocked every API response; there was no web restart or live-data mutation.
 - **Boundaries:** no schema change, production write, credential access, new external service or web restart. `api/lib/`, `api/kimi/` and `.env` were untouched. Existing generated reports and `.vscode/` remain excluded.
 - **Next safe action:** Claude reviews K17a, restarts the web server once, and checks both new pages as owner and member before writing K17b.
+
+## 159. Claude: k16.3 final withdrawn → K16.4 queued; K17a accepted (K17a.1 follow-up), web restarted; K17b and K19 specs — 2026-11-13T22:05Z
+
+- **k16.3 is provisional again.** This corrects section 157. The final status was set at 20:45Z and withdrawn at 21:30Z, with a note in `std_13f_builds`. Nothing had read the tables. Three findings:
+  - **Unresolved dates.** 83 filing dates were unresolved, so 65 fund-periods of the largest filers have no filing at `knownAt`: State Street, JPMorgan, Morgan Stanley, FMR, Bank of America.
+    - Bank of America's 2024-09-30 original has 492 positions with a null `availableFrom`.
+    - Cause: the cached EDGAR submissions lists hold only `filings.recent`, the latest 1,000 filings. That is under a year for the big banks; JPMorgan alone files about 26,000 a year. Older filings sit in the pages under `filings.files`.
+  - **Late filings.** 328 more fund-periods were filed after `knownAt`. By sessions late: 147 by one (about $17tn; accepted on the deadline evening, stamped the next day), 54 by 2–5, 15 by 6–10, and 145 by more than 60 (re-filed whole reports, confidential originals).
+  - **Timing counted as trading.** `newFunds` and `exitedFunds` count whole books present or absent, so they mostly measure filing timing.
+- **K16.4** (mailbox `20261113-213500-claude-k16-4-queued.md`; the rules are in `docs/engine/tasks/K16-standard-13f.md` section 9):
+  - resolve the dates from the older submissions pages;
+  - `availableFrom` from the acceptance time;
+  - a second row at `knownAt` + 10 sessions;
+  - Chen–Hong–Stein breadth among continuing funds (`continuingFunds`, `entries`, `exits`, `breadthChange`) instead of `newFunds`/`exitedFunds`.
+  - Kimi does it after K17a.1.
+- **K17a accepted** (`fcd1494`): guards, the messages contact rule, `/desk/messages`, `/desk/admin`, redirects. My review note arrived after the commit, so its items form **K17a.1**:
+  - `jobs.logs`: any member reads any job's log by id; limit members to their own jobs;
+  - the unrouted classic `src/pages/Admin.tsx` and `Messages.tsx` are removed;
+  - members get FORBIDDEN, not NOT_FOUND, for a missing account;
+  - `DeskDialog` replaces `window.confirm`.
+- **Web server restarted** at 21:40Z (13:40 local), once. It is one process, `node dist\boot.js`, on port 3000, and its build contains K17a's server code.
+  - `/desk/messages` and `/desk/admin` serve the app.
+  - Without a session, `messages.contacts`, `browse.filingsList`, `jobs.logs` and `/reports/daily-operations.json` answer 401.
+  - The scheduler was untouched.
+  - One more restart follows K17a.1.
+- **New specs:**
+  - `docs/engine/tasks/K17b-desk-operations-console.md`, phase 2 of the UI move:
+    - owner-only reports;
+    - honest macro lineage;
+    - the operations console with Jobs, Runs, Coverage and Reference;
+    - classic `/workers` and `/jobs` redirect;
+    - the unused job launcher goes.
+  - `docs/engine/tasks/K19-standard-options.md`: daily option readings for ~510 companies (2019 → today) in `alpha_research`:
+    - session mapping by parity spot;
+    - constant-maturity IV at 30, 60 and 91 days, skew, call-put spread and term slope;
+    - realized volatility and event moves;
+    - one reader for the DoltHub and Schwab chains, with gates.
+  - `docs/desk/UI_MIGRATION.md`: the findings, phases 2–3 and the to-do were updated.
+- **Health check at 20:43Z:**
+  - The scheduler is online: 37 jobs done today, 0 failed.
+  - CRITICAL comes only from the two macro lineage checks, a daily false alarm that K17b fixes.
+  - The Schwab warning (50/51 tickers today) is minor.
+  - The GPU guidance run stood at 10,213 of 34,833 releases at 12:36 local.
+- **Kimi's queue:** K17a.1 → K16.4 → K19 → K17b.
+- **Waiting for the owner:**
+  - K18;
+  - Telegram;
+  - the messages privacy default;
+  - the step-2 normalization of fundamentals.
+- **Next safe action:** review K17a.1 and restart the web server once; then review K16.4.

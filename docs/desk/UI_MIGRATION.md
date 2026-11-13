@@ -55,17 +55,14 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 
 ## 3. Fix on the way (found by the inventory; each goes into the phase that touches it)
 
-- **Owner-only procedures open to any member:**
-  - `browse.*` (Database) and `sentiment.labStats` / `tickersWithScores` (Lab) are `authedQuery`; only the UI hides them.
-  - `/admin` is not wrapped by the guard in `App.tsx`.
-  - Phase 1 moves every owner tool behind server-side role checks.
-- **Messages privacy:**
-  - The contact list shows every account, with its role and last activity, to every member.
-  - The footer claims admins can read threads, but nothing implements that.
-  - Proposal (Claude's default unless the owner decides otherwise):
-    - a member sees the owner and admins, plus the people they already have a thread with;
-    - the claim goes;
-    - reading other users' threads is not added unless the owner asks for it.
+- **Owner-only procedures open to any member:** fixed in K17a. `browse.*` and the two Lab procedures are owner-only, `/admin` is guarded, and 47 owner procedures have guard tests.
+  - `jobs.logs` still reads any job's log by id. K17a.1 limits members to their own jobs.
+- **Messages privacy:** fixed in K17a with Claude's default, pending the owner's word:
+  - a member sees the owner and admins, plus the people they already have a thread with;
+  - the "admins can read threads" claim is gone;
+  - reading other users' threads is not added unless the owner asks for it.
+- **Owner reports readable by reviewers:** `/reports/*` admits any reviewer who accepted the NDA, including the daily operations, weekly coverage and data-health reports. K17b adds an owner level to the report whitelist.
+- **A false CRITICAL every day:** the macro lineage checks compare run times, and the macro QA re-runs at 05:55, after the night chain built the derived reports. K17b makes the check compare input content.
 - **Heavy loads:**
   - The classic layout polls `dashboard.stats` every 5 s.
   - Expectations bundles about 27 MB into the app.
@@ -82,7 +79,7 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
   - **Needs:** the owner's decision (a new external service, AGENTS.md section 6); a bot he creates himself (BotFather), with the token in `.env` by his hand; no message content in logs.
 - **Corporate actions on the company page:** splits, dividends and spin-offs from `std_prices`, with as-traded and adjusted price.
 - **Standard statements:** the company page reads the standard fundamentals (v3.1). Each value has a hover with its filing, tag and filed date, so a reader can trace every number.
-- **Holders from K16:** the top holders, new and exited funds, and the share of the company held.
+- **Holders from K16:** the top holders, breadth (funds opening and closing positions, from K16.4), and the share of the company held.
 - **Replay for any company:** pick a company and a date, and see the readings known then and what followed. The evidence ledger's rule applies: sealed decisions stay sealed.
 - **Owner command palette actions:** run a job, open its log, restart a job chain, all from Ctrl+K, owner only.
 - **Reviewer access with an end date and an audit log:** who saw what, when.
@@ -90,7 +87,12 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 
 ## 5. Phases
 
-1. **K17a — Messages and owner tools in the desk** (implemented; Claude review and web restart pending).
+1. **K17a — Messages and owner tools in the desk** (`fcd1494`; accepted by Claude on 2026-11-13, web server restarted 21:40Z).
+   - Follow-up K17a.1:
+     - `jobs.logs` limited to the member's own jobs;
+     - the unrouted classic `pages/Admin.tsx` and `pages/Messages.tsx` removed;
+     - FORBIDDEN instead of NOT_FOUND for members who name a missing account;
+     - desk dialogs instead of `window.confirm`.
    - [x] Server-side guards and member-safe contacts, with recipient checks on both message reads and sends.
    - [x] `/desk/messages`: unread-first conversations, thread and composer; member-safe contacts, owner accounts and user intel. No cross-user thread reading was added.
    - [x] `/desk/admin`: People, Reviewers, Manuals, Logs and Monitors. People includes a one-time generated-password dialog and view-as return to the tab.
@@ -98,8 +100,13 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
    - [x] Operations and Library link to the new desk destinations. The unread dot and count link to `/desk/messages`; polling stops while hidden.
    - Dropped: the temporary price-archive upload card, the misleading "admins can read threads" footer claim, `AuthLayout.tsx`, `AuthLayoutSkeleton.tsx`, unrouted `Home.tsx`, and the reviewer guide's `/fundflows` entry.
    - Retained: worker-note detail with its SEC source, user intel, full reviewer reset actions, all four manuals (rendered as documents), job logs, factor IC and worker intake. Literal reviewer IPs are not exposed; only the binding state is available.
-2. **K17b — Operations console:** scheduler controls, runs and logs, coverage, the useful job launchers, ingest of any SEC company.
-3. **K17c — Company, Screener and Markets on the standard data:** statements, documents, holders, corporate actions; Terminal's charts.
+2. **K17b — Operations console** (spec `docs/engine/tasks/K17b-desk-operations-console.md`):
+   - Server: owner-only reports, and the honest macro lineage status.
+   - Desk Operations tabs: Health, Jobs (switch, cron edit with preview, Run and Stop with confirmation), Runs and logs, Coverage, Reference.
+   - Classic `/workers` and `/jobs` redirect. The job launcher goes: the `jobs` table holds only five `universe-add` rows, the last on 2026-11-05.
+3. **K17c — Company, Screener and Markets on the standard data:** statements, documents, holders, corporate actions; Terminal's charts. Also from phase 2:
+   - the Watchlist takes "add any SEC company" and hide from `/universe`;
+   - `/dashboard` retires.
 4. **K17d — Research pages:** guidance, scenario lab, insider detail, options chain and features, tone and hypothesis ledger, handbooks.
 5. **K17e — Retire the classic view:** redirects for every classic route, desk sign-in, password reset and invitations, then remove classic pages.
 6. **Add-ons on the owner's word:** alerts centre, Telegram.
@@ -108,11 +115,12 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 
 - [x] Inventory the classic views (2026-11-13).
 - [x] This plan.
-- [ ] Ask the owner, in the morning report:
-  - the messages privacy default;
-  - Telegram yes or no (and which alerts);
-  - whether the old job types (harvest, series build, section parse, sentiment scoring) still matter.
+- [ ] Owner's answers, asked on 2026-11-13; no answer yet:
+  - the messages privacy default (K17a uses Claude's default);
+  - Telegram yes or no (and which alerts).
 - [x] Write K17a after K16 is accepted. Include the guard list, the messages rules and the redirects.
-- [ ] Check which classic job types still run (jobs table, last runs) before K17b.
+- [x] Review K17a; the follow-up K17a.1 was sent (2026-11-13).
+- [x] Check which classic job types still run. The local `jobs` table holds only five `universe-add` rows (last 2026-11-05); harvest, series build, section parse and scoring have no runs.
+- [x] Write K17b (2026-11-13).
 - [ ] Design notes per phase: page sketches, data each view reads, DevNotes text.
 - [ ] Keep this file current after each phase: what moved, what was dropped and why.

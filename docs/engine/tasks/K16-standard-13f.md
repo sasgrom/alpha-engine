@@ -134,3 +134,31 @@ separate owner decision and not part of this task.
 6. **Load:** autocommitted batches of at most 500 rows, with the build row written last. No single large transaction.
 
 Delivered and accepted as build `k16.3` (lab `147f4df`, main `0359362`; Kimi's handoff sections 154-156).
+
+## 9. K16.4 corrections (2026-11-13 evening; they supersede the text above)
+
+Found after the acceptance of k16.3, whose final status was withdrawn the same evening:
+- **Missing big funds.** 83 filing dates were unresolved, so 65 fund-periods of the largest filers had no filing at `knownAt`: State Street, JPMorgan, Morgan Stanley, FMR, Bank of America.
+- **Late filings.** 328 more fund-periods were filed after `knownAt`. 147 of them (about $17tn) by one session: accepted on the deadline evening, and stamped with the next day's filing date.
+- **Timing counted as trading.** `newFunds` and `exitedFunds` counted whole books present or absent, which is filing timing.
+
+Rules:
+1. **Dates:**
+   - Unresolved accessions are looked up in the submissions pages listed under `filings.files`. The quick list `filings.recent` holds only the latest 1,000 filings, under a year for the big banks.
+   - Only pages whose range covers the signed date (± 10 days) are fetched, each at most once, at most 5 requests a second, and cached beside the existing lists.
+2. **`availableFrom`** is the first session whose 09:30 ET open comes after `acceptanceDateTime`. Without an acceptance time, it is the session after the filing date.
+3. **Two rows per company and period:** `knownAt` (the first session after the deadline) and that session plus 10 sessions, with the row's kind stored. Each row uses only filings available by its own `knownAt`.
+4. **Breadth** among continuing funds (a book at both periods' rows of the same kind), after the bought/sold exclusions:
+   - `continuingFunds`;
+   - `entries`: continuing funds that hold the company now and did not before;
+   - `exits`: the reverse;
+   - `breadthChange` = (entries − exits) ÷ continuingFunds (Chen, Hong and Stein).
+   - `newFunds` and `exitedFunds` are dropped.
+5. **Checks added:**
+   - unresolved dates;
+   - absent fund-periods per period and row kind, with reasons and value;
+   - coverage at both kinds;
+   - the 10 largest one-period drops in holders, with reasons;
+   - the spread of `breadthChange` per period and its correlation with net shares bought ÷ shares outstanding.
+
+Loaded as `k16.4` (provisional, `--replace`) for Claude's review.
