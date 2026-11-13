@@ -140,7 +140,9 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local only: no operational push, no normalized UI snapshot and no production write.", requirements: ["network", "driveD"], notes: "About 465 tickers in roughly 30 minutes, paced below the provider's limit of 120 requests a minute; the access token is renewed during the run. The research-50 lane, its UI snapshot and its production push are unchanged.",
   }),
   job({
-    id: "schwab-daily-bars", name: "Schwab daily bars into local prices", group: "options", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-fetch-sp500"],
+    // after BOTH archives are fetched: the 50 research companies are only in the schwab archive (16:45), the others in
+    // schwab-sp500 (16:10); after the S&P fetch alone, the 50 stayed a session behind on the desk (2026-11-12)
+    id: "schwab-daily-bars", name: "Schwab daily bars into local prices", group: "options", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-fetch-sp500", "schwab-fetch-daily"],
     ...npx("worker/schwab-daily-bars.mts"), purpose: "Store every completed official daily candle of both Schwab archives in local prices, so a day one run misses is filled by the next.",
     input: "pricehistory files of the schwab and schwab-sp500 archives (about one month each).", output: "Local prices rows (source schwab after each series' last Stooq bar, schwab-hist on dates the Stooq history covers) and worker/.runs/local-generated/schwab-daily-bars.json with inserts, conflicts and holes against SPY's sessions.",
     destination: "Local MySQL only; the operational pricesDaily push is unchanged.", requirements: ["mysql", "driveD"], notes: "The app lets Schwab win on its dates, so raw Schwab bars never enter dates of the dividend-adjusted Stooq history (they are kept as schwab-hist). A stored close is never changed: a different close is a conflict and marks the job error; other field differences are listed.",

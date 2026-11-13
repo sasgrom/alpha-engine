@@ -155,7 +155,7 @@ schtasks /Run /TN AlphaEngine-Home-Server
 schtasks /Run /TN AlphaEngine-Operations-Scheduler
 ```
 
-Both installers create hidden `ONLOGON` processes: the production UI and the single cron engine. `npm run dev` remains a manual development-only mode. `-DisableLegacyTasks` disables old Stocktwits, GDELT and Digest tasks when present and skips tasks that do not exist, so reruns are idempotent. GDELT remains frozen. Because the hidden launchers detach, Task Scheduler may show Ready rather than Running; verify the server with curl and the scheduler with its heartbeat/log. To inspect or stop the scheduler:
+Both installers create hidden `ONLOGON` processes: the production UI and the single cron engine. The scheduler's task also starts every 15 minutes as its watchdog (owner, 2026-11-13). A start while the scheduler runs ends at once (lock and log in use), and a dead scheduler is back within 15 minutes. The installer needs an elevated PowerShell, and it removes the interim second task `AlphaEngine-Operations-Watchdog`. `npm run dev` remains a manual development-only mode. `-DisableLegacyTasks` disables old Stocktwits, GDELT and Digest tasks when present and skips tasks that do not exist, so reruns are idempotent. GDELT remains frozen. Because the hidden launchers detach, Task Scheduler may show Ready rather than Running; verify the server with curl and the scheduler with its heartbeat/log. To inspect or stop the scheduler:
 
 ```powershell
 schtasks /Query /TN AlphaEngine-Operations-Scheduler /V /FO LIST
@@ -215,7 +215,7 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Schwab Feature Lab materialization | scheduled | after schwab-snapshot | Local Feature Lab UI only; no production factor promotion. |
 | Schwab market context pack | scheduled | 10 * * * * | schwab-context.json automatically pushed through reportFile after successful scheduled runs; no accounts, orders or full-universe streaming. |
 | Schwab REST daily snapshot · S&P 500 and funds | scheduled | 10 16 * * 1-5; 30 4 * * * | Local only: no operational push, no normalized UI snapshot and no production write. |
-| Schwab daily bars into local prices | scheduled | after schwab-fetch-sp500 | Local MySQL only; the operational pricesDaily push is unchanged. |
+| Schwab daily bars into local prices | scheduled | after schwab-fetch-sp500 + schwab-fetch-daily | Local MySQL only; no production push (off since 2026-11-13). |
 | Desk market snapshot | scheduled | after schwab-daily-bars | Local static UI artifact read by desk.snapshot; no production write and no push lane. |
 | Schwab live prices every 20 minutes | scheduled | 40 6 * * 1-5; 0,20,40 7-12 * * 1-5; 0,20 13 * * 1-5 | Local only: no production push and no write to the daily price history. |
 | Desk snapshot with live prices | scheduled | after schwab-intraday | Local static UI artifact read by desk.snapshot; no production write. |
@@ -591,7 +591,7 @@ npx tsx worker/schwab-fetch.mts --price-series --exclude research-universe-50.js
 - **ID:** `schwab-daily-bars`
 - **Mode:** scheduled; **enabled by default:** yes
 - **Cron:** none
-- **Dependencies:** `schwab-fetch-sp500`
+- **Dependencies:** `schwab-fetch-sp500`, `schwab-fetch-daily`. The 50 research companies are only in the `schwab` archive (16:45); the others are in `schwab-sp500` (16:10). After the S&P fetch alone, the 50 stayed a session behind and showed "—" on the desk (2026-11-12). The bars are now stored after both fetches, about 16:50.
 - **Purpose:** Store every completed official daily candle of both Schwab archives in local prices, so a day one run misses is filled by the next.
 - **Input:** pricehistory files of the schwab and schwab-sp500 archives (about one month each).
 - **Output:** Local prices rows (source schwab after each series' last Stooq bar, schwab-hist on dates the Stooq history covers) and worker/.runs/local-generated/schwab-daily-bars.json with inserts, conflicts and holes against SPY's sessions.

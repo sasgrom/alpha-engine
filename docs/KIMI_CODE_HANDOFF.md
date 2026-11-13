@@ -2102,3 +2102,26 @@ All read only, except one probe download (below). No change to the dataset or fi
   - the evening chain: 16:10 / 16:45 → analytics → UI build;
   - K14 Stage B (Kimi);
   - the GPU guidance run.
+
+## 147. Claude: the desk's 50 research companies showed "—"; banner without production uploads; one scheduler task — 2026-11-12, 23:15 PT
+
+- **Owner's screenshot (23:00):** the desk read "Production upload failed for Daily operations health report, Schwab market context pack" and showed "—" for AAPL, MSFT, NVDA, AMZN, META, TSLA, LLY and the other research companies. Owner: "i guess the server was not restarted", and then "i dont think two separate tasks doing the same thing is a good choice going forward".
+- **"—" cause:** the 50 research companies are only in the `schwab` archive (fetched 16:45). `schwab-daily-bars` depended on `schwab-fetch-sp500` (16:10) alone, so their Nov 12 closes were never stored. Their last close was Nov 11, and the desk hides returns of a stale series.
+  - Fix: `schwab-daily-bars` depends on both fetches (about 16:50).
+  - Tonight: `schwab-daily-bars` and `build-desk-snapshot` were run by hand while the scheduler was idle. The desk now has 493 companies at 2026-11-12; only KVUE is stale (its series ended earlier).
+- **Banner:** push failures recorded before the decision of §146 kept the upload warning on. The on/off rule moved to `worker/lib/operational-push-policy.ts`, which `prod-push.ts` and `operations-health.ts` share. While pushes are off, the health check shows no upload warning. Tests cover both settings.
+- **One scheduler task:** the owner's task cannot be changed without elevation. `worker/operations-scheduler-install.ps1` (an infrastructure script, changed at the owner's request) now:
+  - adds the 15-minute repeat trigger to `AlphaEngine-Operations-Scheduler`;
+  - removes the interim task `AlphaEngine-Operations-Watchdog`.
+
+  The owner runs it once from an elevated PowerShell: `powershell -ExecutionPolicy Bypass -File C:\dev\alpha-engine\worker\operations-scheduler-install.ps1`. Until then the interim task does the watchdog's work.
+- **Why the watchdog leaves no trace:**
+  - The running scheduler's command window holds `operations-scheduler.log`, so a start through the launcher fails at once ("file in use"). That is harmless and shows only one instance runs.
+  - A dead scheduler frees the log and is restarted.
+  - `operations-scheduler.mts` now flushes its "not started" line before exiting.
+- **Restarts (announced to Kimi):**
+  - web server pid 17368 → **20280** (`home-server-hidden.vbs`, one listener on 3000, HTTP 200);
+  - scheduler pid 6736 → **4712**, lock taken over.
+  - Health check: no alerts.
+- **K14 question answered:** GE's, SLB's, TMO's and OXY's "missing" concepts are the companies' own extension tags with standard-looking names (`version` = the filing's accession). Kimi writes them as `custom:Name`; no build change (my draft supplement was dropped).
+- **Gates:** `npm run check` 0; 239 files, 1,346 tests passed; `npm run build` 0.

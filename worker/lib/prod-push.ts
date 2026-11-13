@@ -9,6 +9,7 @@ import { getDb } from "../../api/queries/connection";
 import { fetchJson } from "./http";
 import { latestCompleteOfficialDailyBars, latestCompletedSchwabDailyDate } from "./schwab-daily";
 import { MACRO_SERIES } from "./macro-sources";
+import { operationalPushEnabled } from "./operational-push-policy";
 import { auditNormalizedMacroSeries } from "./macro-manifest-qa";
 import type { NormalizedMacroPoint } from "./fred";
 
@@ -26,12 +27,7 @@ const JOB_OUTPUTS: Record<string, { kind: OperationalPushKind; name?: string }[]
   "form4-export": [{ kind: "reportFile", name: "insider-form4.json" }],
 };
 
-/** Owner's decision of 2026-11-13: "no pushes to prod, it was just a temp dev online". Scheduled jobs push nothing
- * unless OPERATIONAL_PUSH=1 is set for the scheduler (an explicit opt-in if a production site returns). */
-export function operationalPushEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
-  return env.OPERATIONAL_PUSH === "1";
-}
-
+/** Owner's decision of 2026-11-13 (operational-push-policy.ts): scheduled jobs push nothing without the opt-in. */
 export function shouldPushOperationalJob(jobId: string, status: OperationalJobStatus, trigger: string, env: NodeJS.ProcessEnv = process.env): boolean {
   return operationalPushEnabled(env) && status === "done" && trigger !== "manual" && Boolean(JOB_OUTPUTS[jobId]?.length);
 }

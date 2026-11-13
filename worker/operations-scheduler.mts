@@ -5,7 +5,9 @@ import { acquireSchedulerLock, OperationsScheduler, releaseSchedulerLock } from 
 // exactly one scheduler: a second start (the logon task, a watchdog, a person) finds the running one and leaves
 const lock = acquireSchedulerLock();
 if (!lock.acquired) {
-  console.log(`[operations] not started: ${lock.reason}${lock.holder ? ` (pid ${lock.holder})` : ""}`);
+  // the line is flushed before leaving: process.exit() drops output still queued for a pipe (npx and tsx run this
+  // through pipes), and the watchdog's every-15-minute checks should leave a trace in the log
+  await new Promise<void>((done) => process.stdout.write(`[operations] not started: ${lock.reason}${lock.holder ? ` (pid ${lock.holder})` : ""} at ${new Date().toISOString()}\n`, () => done()));
   process.exit(0);
 }
 if (lock.reason !== "free") console.log(`[operations] scheduler lock ${lock.reason}${lock.holder ? ` (previous pid ${lock.holder})` : ""}`);

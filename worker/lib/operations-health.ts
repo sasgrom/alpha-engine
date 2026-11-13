@@ -1,9 +1,10 @@
 /**
  * What the owner must see about the home operations (the desk's banner): the scheduler not running, scheduled jobs whose
- * own work failed, the weekday evening market run that did not complete, and operational production pushes that failed
- * (local data is then still current). Pure: it reads the scheduler state it is given.
+ * own work failed, the weekday evening market run that did not complete, and, only while production pushes are enabled
+ * (they are off since 2026-11-13), operational pushes that failed. Pure: it reads the scheduler state it is given.
  */
 import { OPERATION_JOB_MAP } from "../../contracts/operations";
+import { operationalPushEnabled } from "./operational-push-policy";
 import type { OperationRun, OperationsState } from "./operations-scheduler";
 
 export type OperationsAlertCode = "scheduler-down" | "job-failed" | "market-run-missing" | "push-failed";
@@ -47,7 +48,7 @@ function failedPush(run: OperationRun): boolean {
 }
 const nameOf = (jobId: string) => OPERATION_JOB_MAP[jobId]?.name ?? jobId;
 
-export function operationsHealth(state: OperationsState, now = new Date()): OperationsHealth {
+export function operationsHealth(state: OperationsState, now = new Date(), pushes = operationalPushEnabled()): OperationsHealth {
   const alerts: OperationsAlert[] = [];
   const heartbeat = Date.parse(state.heartbeatAt ?? "");
   if (!Number.isFinite(heartbeat) || now.getTime() - heartbeat > SCHEDULER_SILENT_MS) {
@@ -62,9 +63,10 @@ export function operationsHealth(state: OperationsState, now = new Date()): Oper
   const desk = state.lastRuns["desk-snapshot"];
   const deskDone = desk && (desk.status === "done" || desk.localStatus === "done") && desk.endedAt ? pacific(new Date(desk.endedAt)).stamp : null;
   if (marketDay && (!deskDone || deskDone < `${marketDay} ${MARKET_RUN_START}`)) {
-    alerts.push({ level: "error", code: "market-run-missing", jobs: ["schwab-fetch-sp500", "schwab-daily-bars", "desk-snapshot"], text: `The market run of ${marketDay} has not completed: prices and the desk were last rebuilt ${deskDone ? `${deskDone} Pacific` : "never"}.` });
+    alerts.push({ level: "error", code: "market-run-missing", jobs: ["schwab-fetch-sp500", "schwab-fetch-daily", "schwab-daily-bars", "desk-snapshot"], text: `The market run of ${marketDay} has not completed: prices and the desk were last rebuilt ${deskDone ? `${deskDone} Pacific` : "never"}.` });
   }
-  const pushFailed = [...new Set(recent.filter(failedPush).map((run) => run.jobId))].sort();
+  // with pushes off, a failure recorded before the decision is history, not a problem to show
+  const pushFailed = pushes ? [...new Set(recent.filter(failedPush).map((run) => run.jobId))].sort() : [];
   if (pushFailed.length) {
     alerts.push({ level: "warning", code: "push-failed", jobs: pushFailed, text: `Production upload failed for ${pushFailed.map(nameOf).join(", ")}; local data is up to date.` });
   }

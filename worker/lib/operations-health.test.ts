@@ -42,20 +42,26 @@ describe("operations health", () => {
     expect(health.alerts[0].text).toContain("2026-11-12 19:10 Pacific");
   });
 
-  it("separates a job's own failure (error) from a failed production upload (warning)", () => {
+  it("with pushes enabled, separates a job's own failure (error) from a failed production upload (warning)", () => {
     const pushOnly = run("schwab-fetch-daily", "2026-11-13T00:50:00Z", { status: "error", localStatus: "done", push: { status: "failed", at: "2026-11-13T00:50:00Z", error: "Operational push failed: HTTP 200 answered with text/html instead of JSON" }, error: "Operational push failed: HTTP 200 answered with text/html instead of JSON" });
     const ownFailure = run("schwab-daily-bars", "2026-11-13T00:35:00Z", { status: "error", localStatus: "error", exitCode: 1, error: "Process exited with code 1" });
-    const health = operationsHealth(state("2026-11-13T03:24:30Z", [deskAfterClose, pushOnly, ownFailure]), thursdayEvening);
+    const health = operationsHealth(state("2026-11-13T03:24:30Z", [deskAfterClose, pushOnly, ownFailure]), thursdayEvening, true);
     expect(health.alerts.map((a) => [a.level, a.code, a.jobs])).toEqual([
       ["error", "job-failed", ["schwab-daily-bars"]],
       ["warning", "push-failed", ["schwab-fetch-daily"]],
     ]);
   });
 
-  it("reads runs recorded before the local status existed: a push-failed run counts as an upload problem only", () => {
+  it("with pushes enabled, reads runs recorded before the local status existed: a push-failed run counts as an upload problem only", () => {
     const legacy = run("schwab-fetch-daily", "2026-11-12T12:03:37Z", { status: "error", error: "Operational push failed: Unexpected token '<'" });
-    const health = operationsHealth(state("2026-11-13T03:24:30Z", [deskAfterClose, legacy]), thursdayEvening);
+    const health = operationsHealth(state("2026-11-13T03:24:30Z", [deskAfterClose, legacy]), thursdayEvening, true);
     expect(health.alerts.map((a) => a.code)).toEqual(["push-failed"]);
+  });
+
+  it("shows no upload warning while production pushes are off (owner's decision of 2026-11-13)", () => {
+    const pushOnly = run("schwab-context-hourly", "2026-11-13T02:00:00Z", { status: "error", localStatus: "done", push: { status: "failed", at: "2026-11-13T02:00:00Z", error: "Operational push failed: HTTP 200 answered with text/html instead of JSON" }, error: "Operational push failed: HTTP 200 answered with text/html instead of JSON" });
+    const legacy = run("daily-operations-report", "2026-11-12T12:03:37Z", { status: "error", error: "Operational push failed: Unexpected token '<'" });
+    expect(operationsHealth(state("2026-11-13T03:24:30Z", [deskAfterClose, pushOnly, legacy]), thursdayEvening, false).alerts).toEqual([]);
   });
 
   it("ignores failures of runs the owner started by hand, and failures older than a day", () => {

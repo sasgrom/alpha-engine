@@ -18,6 +18,14 @@ describe("operations scheduler installer", () => {
     expect(script).not.toContain('schtasks /Create /TN "AlphaEngine-GDELT"');
   });
 
+  it("makes the same task a 15-minute watchdog and removes the interim second task", () => {
+    expect(script).toContain("New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 15)");
+    expect(script).toContain('$Watch.Repetition.Duration = ""');
+    expect(script).toContain("$Task.Triggers = @($Task.Triggers) + $Watch");
+    expect(script).toContain('Unregister-ScheduledTask -TaskName "AlphaEngine-Operations-Watchdog" -Confirm:$false');
+    expect(script).not.toContain("Register-ScheduledTask");
+  });
+
   it("starts the scheduler through the hidden launcher", () => {
     expect(script).toContain("operations-scheduler-hidden.vbs");
     expect(script).not.toContain("$Action = \"cmd /c");
