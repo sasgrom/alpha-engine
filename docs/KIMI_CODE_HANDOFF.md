@@ -2368,3 +2368,32 @@ All read only, except one probe download (below). No change to the dataset or fi
 - **Boundaries:** only the four K16 tables in local `alpha_research` are authorized for provisional replacement, in batches of at most 500. No production write, `alpha_engine` mutation, app/page/signal change, scheduler or web restart, credential access or GDELT request occurred. Generated reports and `.vscode/` remain excluded. K17a and K18 were not started.
 
 - **Next safe action:** Claude reviews and accepts K16.3; the research build remains provisional until then. Deliver the exact lab and main documentation commits and the evidence paths through the mailbox. The main delivery must contain only `docs/engine/STANDARD_13F.md` and this handoff, with a fresh fetch and ordinary fast-forward push. K17a and K18 were not started during K16.3.
+
+## 157. Claude: K16 accepted (k16.3 final); K17a sent; v3.1 Chipotle erratum — 2026-11-13T20:45Z
+
+- **K16 accepted.**
+  - Read-only checks of k16.3:
+    - Lam 2024-09-30: the $70 group sits at factor 1 (16.08m shares); ownership is 49.85%.
+    - Chipotle 2022-03-31 has a null percentage.
+    - The build row names lab `147f4df`.
+  - `alpha_research.std_13f_builds` k16.3 is now **`final`** (one-row update with an appended note). Corrections come as a new build; stored rows are never overwritten.
+  - The spec now records what was built: `docs/engine/tasks/K16-standard-13f.md` section 8 (main `414cd8b`). It covers knownAt, confidential tables, the per-position basis from the company's own split products, the denominator basis and its raw floor, the check 4 classes, and the load pattern.
+- **Erratum:** Chipotle's v3.1 `sharesBasic` for 2022-03-31 is 27,962, a thousand-scale slip of the `d0` identity. It is noted in `docs/engine/STANDARD_FUNDAMENTALS.md` section 5 and excluded by K16. v3.1 stays final; a later build appends the corrected value.
+- **Fund books (Claude's, `scripts/build-fund-books.mts`):**
+  - Two known factor bugs remain:
+    - Amcor's consolidation is applied twice.
+    - Generic split snapping produces Thermo Fisher 1.5 and Arista 4.
+  - They affect only the books' quarter files, not the K16 tables. The fix is to port the K16 company-candidate rule. Not started.
+- **K17a sent** (`20261113-204000-claude-k16-accepted-k17a-go.md`). It is phase 1 of `docs/desk/UI_MIGRATION.md`:
+  - server-side owner guards;
+  - `/desk/messages` with the members' contact rule;
+  - `/desk/admin`;
+  - redirects and clean-up.
+  Kimi notes Claude before the full test run, the build and the commit. Claude restarts the web server after review.
+- **Running:** the guidance pass over 446 companies. At 12:36 local it stood at 10,213 of 34,833 releases (29.3%), state running; the watcher is `b9n5630q2`.
+- **Waiting for the owner:**
+  - K18, the weekly gated price rebuild, including the coverage choice for RIVN and ENLT;
+  - Telegram for messages (yes or no);
+  - the members' messages privacy default (K17a keeps "no reading of others' threads");
+  - step 2 of the fundamentals (normalization).
+- **Next safe action:** review K17a on delivery, restart the web server once, and check both pages as owner and as a member. Then write the K17b spec.
