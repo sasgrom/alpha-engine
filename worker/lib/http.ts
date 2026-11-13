@@ -32,7 +32,13 @@ export async function fetchJson<T = unknown>(
         const text = await res.text().catch(() => "");
         throw new Error(`HTTP ${res.status}: ${text.slice(0, 300)}`);
       }
-      return (await res.json()) as T;
+      const text = await res.text();
+      try {
+        return JSON.parse(text) as T;
+      } catch {
+        // say what came back (an HTML page from a server that does not route the API reads "Unexpected token '<'")
+        throw new Error(`HTTP ${res.status} answered with ${res.headers.get("content-type") ?? "no content type"} instead of JSON: ${text.slice(0, 120).replace(/\s+/g, " ")}`);
+      }
     } catch (e: any) {
       lastErr = e;
       if (e?.fatal) throw e;

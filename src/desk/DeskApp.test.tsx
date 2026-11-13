@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it } from "vitest";
-import { mountDesk, type MountedDesk } from "./desk-test-harness";
+import { mountDesk, OPS_HEALTH, waitUntil, type MountedDesk } from "./desk-test-harness";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -25,6 +25,32 @@ describe("desk view for the owner", () => {
     expect(desk.calls).not.toContain("dashboard.stats");
     // the owner sees the build notes of the page, collapsed
     expect(desk.host.querySelector(".desk-devnotes summary")?.textContent).toContain("Build notes");
+    // healthy operations: no banner
+    expect(desk.host.querySelector(".desk-banner[role=alert]")).toBeNull();
+  });
+
+  it("says when the closing prices were updated (live prices: DeskLive.test.tsx)", async () => {
+    desk = await mountDesk("admin");
+    expect(desk.host.querySelector(".desk-eyebrow")?.textContent).toMatch(/S&P 500 close · updated \d{1,2}:\d{2}/);
+    expect(desk.host.querySelector(".desk-footer")?.textContent).toMatch(/Market data through .* · updated \d{1,2}:\d{2}/);
+  });
+
+  it("puts failed collection in a banner the owner cannot miss, with a link to Operations", async () => {
+    OPS_HEALTH.alerts = [
+      { level: "error", code: "market-run-missing", text: "The market run of 2026-11-12 has not completed: prices and the desk were last rebuilt 2026-11-12 05:00 Pacific." },
+      { level: "warning", code: "push-failed", text: "Production upload failed for Schwab REST daily snapshot; local data is up to date." },
+    ];
+    try {
+      desk = await mountDesk("admin");
+      await waitUntil(() => !!desk!.host.querySelector(".desk-banner[role=alert]"));
+      const banner = desk.host.querySelector(".desk-banner[role=alert]")!;
+      expect(banner.className).toContain("ops-error");
+      expect(banner.textContent).toContain("The market run of 2026-11-12 has not completed");
+      expect(banner.textContent).toContain("Production upload failed");
+      expect(banner.querySelector("a")?.getAttribute("href")).toBe("/desk/operations");
+    } finally {
+      OPS_HEALTH.alerts = [];
+    }
   });
 
   it("shows the signal ledger with its evidence status and today's readings", async () => {

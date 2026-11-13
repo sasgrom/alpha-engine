@@ -337,6 +337,32 @@
   font-size: 13px;
 }
 
+.desk-live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 6px 1px 0;
+  border-radius: 7px;
+  background: var(--d-good);
+  vertical-align: middle;
+}
+
+.desk-banner.ops-error > div {
+  border-color: color-mix(in srgb, var(--d-critical) 50%, transparent);
+  background: color-mix(in srgb, var(--d-critical) 9%, transparent);
+}
+
+.desk-banner-lines {
+  display: grid;
+  gap: 2px;
+}
+
+.desk-banner a {
+  margin-left: auto;
+  color: var(--d-ink-2);
+  white-space: nowrap;
+}
+
 .desk-banner button {
   margin-left: auto;
   border: none;

@@ -96,8 +96,12 @@ const REPORTS: Record<string, unknown> = {
   },
 };
 
+/** What desk.opsHealth answers (no alerts unless a test sets some). */
+export const OPS_HEALTH: { alerts: { level: "error" | "warning"; code: string; text: string }[] } = { alerts: [] };
+
 function answer(procedure: string, role: string): unknown {
   switch (procedure) {
+    case "desk.opsHealth": return { checkedAt: "2026-11-12T20:00:00.000Z", heartbeatAt: "2026-11-12T20:00:00.000Z", alerts: OPS_HEALTH.alerts };
     case "auth.me": return { id: 1, username: "owner", name: "Ada Owner", role };
     case "reviewer.status": return { isReviewer: false, ndaAccepted: false, ndaVersion: null, ndaTextHash: null, firstIpBound: false, tours: [] };
     case "desk.snapshot": return SNAPSHOT;

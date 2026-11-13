@@ -4,11 +4,15 @@
  *   NDA-accepted reviewers (see services/desk-snapshot.ts);
  * - the fund-flow files (overview, one fund, one company), for every signed-in user (owner's decision of
  *   2026-11-11); reviewers reach them, like everything else, only after accepting the NDA (middleware);
- * - the engine-flow files (the prediction engine's working, decision by decision), for the owner only.
+ * - the engine-flow files (the prediction engine's working, decision by decision), for the owner only;
+ * - the home operations' health (scheduler, failed jobs, the evening market run, failed production pushes), for the
+ *   owner only: the desk shows it as a banner, so a stopped collection is never silent.
  */
 import { z } from "zod";
 import type { EngineFlowCompany, EngineFlowIndex } from "@contracts/engine-flow";
 import type { FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
+import { operationsHealth } from "../../worker/lib/operations-health";
+import { loadOperationsState } from "../../worker/lib/operations-scheduler";
 import { adminQuery, createRouter, authedQuery } from "../middleware";
 import { deskSnapshotFor, readDeskSnapshot } from "../services/desk-snapshot";
 import { readEngineFlowFile } from "../services/engine-flow-files";
@@ -28,4 +32,5 @@ export const deskRouter = createRouter({
   flowsCompany: authedQuery.input(entity).query(({ input }) => readFundFlowsFile<FundFlowsCompany>(`company/${input.cik}.json`)),
   engineIndex: adminQuery.query(() => readEngineFlowFile<EngineFlowIndex>("index.json")),
   engineCompany: adminQuery.input(entity).query(({ input }) => readEngineFlowFile<EngineFlowCompany>(`company/${input.cik}.json`)),
+  opsHealth: adminQuery.query(() => operationsHealth(loadOperationsState(), new Date())),
 });

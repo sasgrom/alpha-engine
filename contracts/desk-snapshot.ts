@@ -156,6 +156,16 @@ export interface DeskSnapshotInputs {
   registryIssues?: string[];
 }
 
+/** During a session: the intraday prices (every 20 minutes) used as the session's provisional closes. */
+export interface DeskLive {
+  session: string;
+  /** The latest regular-session trade among the quotes: the prices are "as of" this moment. */
+  asOf: string;
+  capturedAt: string;
+  /** Series that received a live price. */
+  quotes: number;
+}
+
 export interface DeskSnapshot {
   schemaVersion: typeof DESK_SNAPSHOT_SCHEMA_VERSION;
   generatedAt: string;
@@ -163,6 +173,8 @@ export interface DeskSnapshot {
   /** Latest session that at least half of the series have reached. */
   session: string;
   previousSession: string | null;
+  /** Present while the session's prices are live (provisional); null or absent once the official closes are stored. */
+  live?: DeskLive | null;
   inputs: DeskSnapshotInputs;
   benchmark: DeskBenchmark | null;
   breadth: DeskBreadth;

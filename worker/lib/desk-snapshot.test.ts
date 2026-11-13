@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  withLiveClose,
   addDays,
   addMonths,
   buildDeskSnapshot,
@@ -240,5 +241,42 @@ describe("aggregates and assembly", () => {
     expect(snapshot.companies[2].returns.d1).toBeNull();
     expect(snapshot.breadth).toMatchObject({ measured: 2, advancers: 1, decliners: 1, newHighs: 1, newLows: 1 });
     expect(snapshot.benchmark?.returns.d1).toBeGreaterThan(0);
+    expect(snapshot.live).toBeNull();
+  });
+
+  it("adds the session's live price after the last stored close, never over a stored close", () => {
+    const series = [{ date: "2026-11-11", close: 100 }, { date: "2026-11-12", close: 101 }];
+    expect(withLiveClose(series, "2026-11-13", 103)).toEqual([...series, { date: "2026-11-13", close: 103 }]);
+    expect(withLiveClose(series, "2026-11-12", 103)).toBe(series); // the official close of the session wins
+    expect(withLiveClose(series, "2026-11-13", null)).toBe(series);
+    expect(withLiveClose(series, "2026-11-13", 0)).toBe(series);
+    expect(withLiveClose([], "2026-11-13", 103)).toEqual([]);
+  });
+
+  it("measures the live session against the previous close and says it is live", () => {
+    const up = weekdays("2025-06-02", "2026-11-12", (index) => 10 + index * 0.01);
+    const down = weekdays("2025-06-02", "2026-11-12", (index) => 500 - index * 0.1);
+    const live = { session: "2026-11-13", asOf: "2026-11-13T18:39:58.000Z", capturedAt: "2026-11-13T18:40:05.000Z", quotes: 2 };
+    const lastUp = up.at(-1)!.close, lastDown = down.at(-1)!.close;
+    const snapshot = buildDeskSnapshot({
+      generatedAt: "2026-11-13T18:40:20.000Z",
+      codeVersion: "test",
+      companies: [
+        { cik: 1, ticker: "UP", registryTicker: "UP", name: "Up Inc", sector: "Tech", industry: null, research: false },
+        { cik: 2, ticker: "DN", registryTicker: "DN", name: "Down Co", sector: "Energy", industry: null, research: false },
+      ],
+      closes: new Map([[1, withLiveClose(up, live.session, lastUp * 1.02)], [2, withLiveClose(down, live.session, lastDown * 0.99)]]),
+      benchmark: { ticker: "SPY", closes: withLiveClose(up, live.session, lastUp * 1.01) },
+      fundamentals: new Map(),
+      options: new Map(),
+      events: new Map(),
+      inputs: { priceRows: 0, schwabQuoteDates: [], fundamentals: 0, quotes: 0, optionTickers: 0, optionsGeneratedAt: null, earningsEvents: 0 },
+      live,
+    });
+    expect(snapshot).toMatchObject({ session: "2026-11-13", previousSession: "2026-11-12", live });
+    expect(snapshot.companies.find((row) => row.ticker === "UP")!.returns.d1).toBeCloseTo(0.02, 10);
+    expect(snapshot.companies.find((row) => row.ticker === "DN")!.returns.d1).toBeCloseTo(-0.01, 10);
+    expect(snapshot.benchmark?.returns.d1).toBeCloseTo(0.01, 10);
+    expect(snapshot.breadth).toMatchObject({ advancers: 1, decliners: 1 });
   });
 });

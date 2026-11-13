@@ -166,7 +166,13 @@ For an interactive diagnostic run instead of the Windows task:
 npx tsx worker/operations-scheduler.mts
 ```
 
-The scheduler reads cron configuration and UI commands every 15 seconds. It runs one job at a time. Dependency children start only after successful parents. A failed parent blocks its children. A missed cron slot is caught up once after a scheduler outage; a brand-new job starts at its next future slot. Cron uses the home machine's local timezone.
+The scheduler reads cron configuration and UI commands every 15 seconds. It runs one job at a time. Dependency children start only after the parent's own work succeeded; a parent whose own work failed blocks its children. A failed operational production push is reported as the run's error, but it does not block local children (the local data is current). A missed cron slot is caught up once after a scheduler outage or sleep; a new or changed schedule starts at its next future slot. Cron uses the home machine's local timezone; a schedule may list several cron expressions separated by `;`.
+
+Daily market plan (cron only, no manual runs): during the session, every 20 minutes from 06:40 to 13:20 Pacific, schwab-intraday takes live prices and desk-snapshot-live rebuilds the desk with them ("Live · prices as of …"). On weekdays at 16:10 the S&P 500 lane collects the day's closes (a session counts as complete at 16:00 Pacific), then daily bars, the desk snapshot and the price pages are rebuilt (about 16:45); at 16:45 the research-50 options lane follows (normalized snapshot, Feature Lab). The 04:00 and 04:30 runs are catch-ups: a capture of the same UTC date resumes, so they only complete what the evening run missed.
+
+Exactly one scheduler: it holds `worker/.runs/operations-scheduler.lock` (its process id). Another start finds that process alive with a fresh heartbeat and exits at once, so the task may be started again at any time; a lock whose process is gone, or whose scheduler has been silent for ten minutes, is taken over. Unexpected errors are logged in `worker/.runs/operations-scheduler.log` and do not end the scheduler.
+
+The owner sees the operations' health on the desk (a banner on every desk page, linking to Operations): the scheduler not running, a scheduled job whose own work failed in the last day, the weekday market run not completed by 17:15 Pacific, and failed production uploads (a warning: local data is current).
 
 Persistent files, all ignored by Git:
 
@@ -202,13 +208,15 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Precomputed probability after daily prices | scheduled | after schwab-daily-bars | Local precomputed page-data artifacts only; no production write or model promotion. |
 | Precomputed probability after macro vintages | scheduled | after macro-fred-weekly | Local precomputed page-data artifacts only; no production write or model promotion. |
 | Precomputed probability after EDGAR tone | scheduled | after edgar-tone-nightly | Local precomputed page-data artifacts only; no production write or model promotion. |
-| Schwab REST daily snapshot | scheduled | 0 4 * * * | Raw chains remain local; successful scheduled runs automatically push QA-passed daily OHLCV and daily-prices-schwab.json through /api/worker/ingest. |
+| Schwab REST daily snapshot | scheduled | 45 16 * * 1-5; 0 4 * * * | Raw chains remain local; successful scheduled runs automatically push QA-passed daily OHLCV and daily-prices-schwab.json through /api/worker/ingest. |
 | Schwab normalized UI snapshot | scheduled | after schwab-fetch-daily | Normalized snapshot automatically pushed as schwab-market-data.json after exit-ok; raw chains and the local gzip stay local. |
 | Schwab Feature Lab materialization | scheduled | after schwab-snapshot | Local Feature Lab UI only; no production factor promotion. |
 | Schwab market context pack | scheduled | 10 * * * * | schwab-context.json automatically pushed through reportFile after successful scheduled runs; no accounts, orders or full-universe streaming. |
-| Schwab REST daily snapshot · S&P 500 and funds | scheduled | 30 4 * * * | Local only: no operational push, no normalized UI snapshot and no production write. |
+| Schwab REST daily snapshot · S&P 500 and funds | scheduled | 10 16 * * 1-5; 30 4 * * * | Local only: no operational push, no normalized UI snapshot and no production write. |
 | Schwab daily bars into local prices | scheduled | after schwab-fetch-sp500 | Local MySQL only; the operational pricesDaily push is unchanged. |
 | Desk market snapshot | scheduled | after schwab-daily-bars | Local static UI artifact read by desk.snapshot; no production write and no push lane. |
+| Schwab live prices every 20 minutes | scheduled | 40 6 * * 1-5; 0,20,40 7-12 * * 1-5; 0,20 13 * * 1-5 | Local only: no production push and no write to the daily price history. |
+| Desk snapshot with live prices | scheduled | after schwab-intraday | Local static UI artifact read by desk.snapshot; no production write. |
 | Analytics and weekly evidence snapshot | scheduled | after research-factors | Local static UI artifacts; no production write. |
 | Expectations static report | scheduled | 0 6 * * * | Local static UI artifacts; partial results remain explicitly unreviewed. |
 | FRED and ALFRED weekly vintage refresh | scheduled | 30 5 * * 0 | Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local. |
@@ -495,7 +503,7 @@ npx tsx scripts/build-precomputed-page-data.mts --group probability
 
 - **ID:** `schwab-fetch-daily`
 - **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** 0 4 * * *
+- **Cron:** 45 16 * * 1-5; 0 4 * * *
 - **Dependencies:** none
 - **Purpose:** Capture chains, quotes, daily price history and instruments with hashes and availability timestamps.
 - **Input:** Schwab Market Data Production; local token file; research-universe-50.json.
@@ -563,7 +571,7 @@ npx tsx worker/schwab-context.mts
 
 - **ID:** `schwab-fetch-sp500`
 - **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** 30 4 * * *
+- **Cron:** 10 16 * * 1-5; 30 4 * * *
 - **Dependencies:** none
 - **Purpose:** Capture chains, quotes, daily price history and instruments for every S&P 500 company outside the research 50 (both listings of dual-class companies), SPY and the eleven sector funds.
 - **Input:** Schwab Market Data Production; local token file; edgar-universe.json minus research-universe-50.json, plus the funds.
@@ -604,7 +612,41 @@ npx tsx worker/schwab-daily-bars.mts
 - **Output:** public/reports/desk-snapshot.json and its dist copy: one row per index company with returns, range, fundamentals, earnings dates, option features, plus breadth, sectors and the registry check.
 - **Destination:** Local static UI artifact read by desk.snapshot; no production write and no push lane.
 - **Requirements:** mysql, driveD
-- **Operational note:** Stops without writing when a Schwab archive root is missing, so the previous snapshot stays in place. Option-derived fields reach only the owner and NDA reviewers. Reports registry rows that disagree with the GICS snapshot.
+- **Operational note:** Stops without writing when a Schwab archive root is missing, so the previous snapshot stays in place. Option-derived fields reach only the owner and NDA reviewers. Reports registry rows that disagree with the GICS snapshot. During a session the snapshot carries the live prices of schwab-intraday as provisional closes (see 20a and 20b); this evening build replaces them with the official closes.
+
+```powershell
+npx tsx scripts/build-desk-snapshot.mts
+```
+
+### 20a. Schwab live prices every 20 minutes
+
+- **ID:** `schwab-intraday`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** 40 6 * * 1-5; 0,20,40 7-12 * * 1-5; 0,20 13 * * 1-5 (every 20 minutes of the regular session, 06:40–13:20 Pacific, weekdays)
+- **Dependencies:** none
+- **Purpose:** Current prices of every price series (S&P 500 with both listings of dual-class companies, the research companies, SPY, the sector funds) every 20 minutes of a trading session, so the desk shows live prices; each run also keeps the Schwab access token fresh.
+- **Input:** Schwab Market Data Production: market hours and batched quotes (about three requests); the local token file; the price-series universe.
+- **Output:** D:\research\alpha-engine\schwab-intraday: `<session>\<HHMM>.json` (compact quotes, HHMM US Eastern) and `.raw.json` (responses), `<session>\bars.json` (20-minute bars), `live.json` (the desk's live prices), `manifest.jsonl`.
+- **Destination:** Local only: no production push and no write to the daily price history.
+- **Requirements:** network, driveD
+- **Operational note:** A holiday or a time outside the regular session ends the run without a snapshot. Bars come from consecutive snapshots: open and close are snapshot prices, high and low the day's running extremes when set inside the interval (else the interval's end prices), volume the change in the day's volume. Only the newest ten sessions are kept (the owner's decision of 2026-11-12). The refresh token itself still expires seven days after the last browser authorization. `--ignore-hours` with a separate `--root` takes a verification snapshot outside the session.
+
+```powershell
+npx tsx worker/schwab-intraday.mts
+```
+
+### 20b. Desk snapshot with live prices
+
+- **ID:** `desk-snapshot-live`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** none
+- **Dependencies:** `schwab-intraday`
+- **Purpose:** Rebuild the desk snapshot after each live-price snapshot, with the session's current prices as provisional closes and the time they are as of.
+- **Input:** Everything desk-snapshot reads, plus D:\research\alpha-engine\schwab-intraday\live.json.
+- **Output:** public/reports/desk-snapshot.json and its dist copy, marked live with the prices' as-of time (the desk shows "Live · prices as of …"; after the evening run "S&P 500 close · updated …").
+- **Destination:** Local static UI artifact read by desk.snapshot; no production write.
+- **Requirements:** mysql, driveD
+- **Operational note:** Live prices count only for a session newer than the stored closes: once the evening run stores the session's official closes, desk-snapshot replaces the provisional ones. Nothing enters the daily price history.
 
 ```powershell
 npx tsx scripts/build-desk-snapshot.mts

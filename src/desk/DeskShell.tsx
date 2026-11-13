@@ -6,7 +6,7 @@
  */
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { Eye, LogOut, MessageSquare, Search, Undo2 } from "lucide-react";
+import { AlertTriangle, Eye, LogOut, MessageSquare, Search, Undo2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useReviewer } from "@/hooks/useReviewer";
 import { trpc, VIEW_AS_KEY } from "@/providers/trpc";
@@ -14,7 +14,7 @@ import { CHART_PALETTE } from "./charts/color";
 import { CommandPalette } from "./CommandPalette";
 import { DeskContext, type DeskContextValue } from "./context";
 import { classicDestinations, type PaletteDestination } from "./destinations";
-import { fmtDate, initials } from "./format";
+import { fmtClock, fmtDate, initials } from "./format";
 import { rememberView, useDeskTheme, type ThemeChoice } from "./preferences";
 import "./desk.css";
 
@@ -48,6 +48,9 @@ export default function DeskShell({ children }: { children: ReactNode }) {
   const flowsOpen = !isReviewer || Boolean(reviewer.status.data?.ndaAccepted);
   const snapshot = trpc.desk.snapshot.useQuery(undefined, { enabled: !!user, staleTime: 5 * 60_000, refetchOnWindowFocus: false, retry: 1 });
   const unread = trpc.messages.unreadCount.useQuery(undefined, { enabled: !!user && !isReviewer, refetchInterval: 30_000 });
+  // the owner sees at once when collection stopped or failed (scheduler, jobs, the evening market run, production pushes)
+  const health = trpc.desk.opsHealth.useQuery(undefined, { enabled: isAdmin, refetchInterval: 60_000, retry: false });
+  const alerts = isAdmin ? health.data?.alerts ?? [] : [];
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -264,6 +267,17 @@ export default function DeskShell({ children }: { children: ReactNode }) {
             </div>
           </div>
         </header>
+        {alerts.length > 0 && (
+          <div className={`desk-banner${alerts.some((alert) => alert.level === "error") ? " ops-error" : ""}`} role="alert">
+            <div>
+              <AlertTriangle size={15} aria-hidden="true" />
+              <span className="desk-banner-lines">
+                {alerts.map((alert) => <span key={alert.code}>{alert.text}</span>)}
+              </span>
+              <Link to="/desk/operations">Operations</Link>
+            </div>
+          </div>
+        )}
         {viewAsActive && (
           <div className="desk-banner" role="status">
             <div>
@@ -277,7 +291,12 @@ export default function DeskShell({ children }: { children: ReactNode }) {
         <footer className="desk-footer">
           <span>Alpha Engine</span>
           <span>Research data, not investment advice.</span>
-          {snapshot.data && <span>Market data through {fmtDate(snapshot.data.session)}</span>}
+          {snapshot.data && (
+            <span>
+              Market data through {fmtDate(snapshot.data.session)}
+              {snapshot.data.live ? ` · live prices as of ${fmtClock(snapshot.data.live.asOf)}` : ` · updated ${fmtClock(snapshot.data.generatedAt)}`}
+            </span>
+          )}
           <span className="spacer" />
           <span>Press {isMac ? "⌘K" : "Ctrl K"} to search</span>
           <button type="button" onClick={toClassic} style={{ border: "none", background: "transparent", color: "var(--d-ink-2)", font: "inherit", cursor: "pointer", padding: 0 }}>

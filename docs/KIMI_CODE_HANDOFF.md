@@ -1901,3 +1901,63 @@ All read only, except one probe download (below). No change to the dataset or fi
   - Alert on stale data and failed jobs.
   - The production ingest returning HTML is for the owner or a production-side look.
   - The collector "lagging" fix.
+
+## 142. Claude: the scheduler runs the daily plan on cron (owner: "no manual runs, all cron") — 2026-11-12
+
+- **Outcome of the 19:27 chain:**
+  - The desk is at the Nov 12 session; the snapshot was rebuilt 19:51 PST.
+  - Options snapshot and Feature Lab were rebuilt 19:56. All jobs ended `done`.
+- **Daily market plan, cron only.** The evening chain removed in `595c0fb` is back, as a second cron on the existing jobs, so the dependency chains are unchanged.
+  - `schwab-fetch-sp500`: `10 16 * * 1-5; 30 4 * * *`. Then daily bars, desk snapshot and price pages, ready about 16:45.
+  - `schwab-fetch-daily`: `45 16 * * 1-5; 0 4 * * *`. Then the options snapshot and Feature Lab.
+  - 16:10 is the earliest useful time: a session counts as complete at 16:00 Pacific (`latestCompletedSchwabDailyDate`).
+  - The morning runs are catch-ups. A capture of the same UTC date resumes, so they only complete what the evening run missed.
+  - A schedule may now list several cron expressions separated by `;` (`cronParts`, `nextCronRun`, `validateCron`).
+- **A failed production push no longer stops local work.**
+  - Each run records `localStatus` (the job's own result) and `push` (ok or failed).
+  - A failed push is still the run's error, but its dependents follow `localStatus`, via `succeededLocally`, `dependenciesReady` and `preflight`.
+  - Background: since Nov 11 the push failures had held the options snapshot and Feature Lab back.
+- **Exactly one scheduler.**
+  - `worker/.runs/operations-scheduler.lock` holds the scheduler's pid (`acquireSchedulerLock`).
+  - A second start finds a live holder with a fresh heartbeat and exits. A dead holder, or one silent for 10 minutes, is taken over. A lock-less scheduler still beating within 2 minutes is respected.
+  - The completion handler, log writes and state saves can no longer end the process. Uncaught errors are logged instead.
+  - Entries of removed jobs (such as the old `schwab-fetch-evening`) are dropped from the state.
+- **Repository root in the built server.** `OPERATIONS_ROOT` came out as `C:\dev` inside `dist/boot.js`. As a result the Operations page:
+  - read an empty state;
+  - wrote `C:\dev\worker\.runs\operations-config.json` on Nov 3; that file is left in place, harmless;
+  - sent its Run commands where the scheduler never looked.
+  - `repositoryRoot()` falls back to the server's working folder. `workers-local.ts` uses it.
+- **Owner alert.** `desk.opsHealth` (`worker/lib/operations-health.ts`) feeds a banner on every desk page, owner only, linking to Operations. It raises:
+  - the scheduler silent for 3 minutes;
+  - a scheduled job whose own work failed in the last day;
+  - the weekday market run not completed by 17:15 Pacific;
+  - failed production uploads, as a warning.
+- **HTTP helper (`worker/lib/http.ts`).** A non-JSON answer now names its status and content type. The old message was "Unexpected token '<'"; the production ingest has been answering with an HTML page.
+- **Gates:** `npm run check` and `npm run build` pass. The full suite passed before the root fix (237 files, 1,332 tests); the focused tests passed after it.
+- **Docs:** `docs/OPERATIONS.md` was edited by hand, because regenerating it would drop newer hand-written entries (macro-scenarios). The generator's text is updated too.
+- **Owner decision pending:** a 15-minute repeat trigger on the `AlphaEngine-Operations-Scheduler` task, so Windows restarts a stopped scheduler (safe with the lock). It is an infrastructure change (task and `worker/operations-scheduler-install.ps1`), so it is not done.
+- **Live prices every 20 minutes** (owner's request).
+  - New job `schwab-intraday`: weekdays 06:40–13:20 Pacific, every 20 minutes. Script `worker/schwab-intraday.mts`, helpers `worker/lib/schwab-intraday.ts`.
+  - Each run:
+    - renews the access token;
+    - checks Schwab's market hours: a holiday or a time outside the session ends the run with no snapshot;
+    - takes one batched quote snapshot of all 514 price series in 3 requests (`fields=quote,regular`; regular-session last trade, previous close, day open/high/low/volume).
+  - Writes to `D:\research\alpha-engine\schwab-intraday`:
+    - `<session>\<HHMM ET>.json` and `.raw.json`;
+    - `<session>\bars.json`: 20-minute bars from consecutive snapshots;
+    - `live.json` and `manifest.jsonl` (SHA-256).
+  - Keeps the newest 10 sessions; the owner approved deleting older ones.
+  - New job `desk-snapshot-live`, after `schwab-intraday`: `build-desk-snapshot.mts` adds `live.json` as provisional closes (`withLiveClose`) only for a session newer than the stored closes. The evening build's official closes replace them.
+  - Desk: the Today header shows "Live · prices as of 10:40 AM PST, refreshed every 20 minutes" or "S&P 500 close · updated 4:45 PM PST". The footer shows the same.
+  - Verified at 20:08 PST:
+    - A normal run renewed the token and stopped ("after the session").
+    - A `--ignore-hours` run into a separate folder got 514 of 514 quotes. SPY 757.12, previous close 759.81. That folder has been deleted.
+  - Full suite: 239 files, 1,343 tests.
+- **Owner's paperMoney plan, findings:**
+  - The Trader API PDF (Accounts and Trading Production) uses the same app and OAuth.
+  - The refresh token is valid 7 days from its creation. Then a browser authorization is required whatever runs in between.
+  - No sandbox yet ("later this year").
+  - No evidence that the API can reach a thinkorswim paperMoney account.
+  - Our token answers 401 on `userPreference`, so no account is linked.
+  - AGENTS.md allows market data only. Any order path is the owner's decision.
+  - Proposed alternative: a paper broker on live Schwab quotes (fills at the bid or ask of the first quote after a decision, slippage, commissions, every fill logged).

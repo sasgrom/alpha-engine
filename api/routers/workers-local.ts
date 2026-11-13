@@ -18,6 +18,7 @@ import { TRPCError } from "@trpc/server";
 import { createRouter, adminQuery } from "../middleware";
 import { OPERATION_JOB_MAP } from "../../contracts/operations";
 import {
+  OPERATIONS_ROOT,
   OPERATIONS_RUNS_DIR,
   appendOperationCommand,
   loadOperationConfig,
@@ -26,7 +27,8 @@ import {
   saveOperationConfig,
 } from "../../worker/lib/operations-scheduler";
 
-const ROOT = path.resolve(import.meta.dirname, "..", "..");
+// the repository root also when bundled into dist/boot.js (see repositoryRoot)
+const ROOT = OPERATIONS_ROOT;
 const RUNS_DIR = path.join(ROOT, "worker", ".runs");
 const REGISTRY = path.join(RUNS_DIR, "registry.json");
 

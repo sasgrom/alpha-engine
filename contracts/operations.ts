@@ -104,7 +104,10 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local precomputed page-data artifacts only; no production write or model promotion.", requirements: ["mysql", "review"], notes: "No model call occurs in this builder. The parent tone lane remains paused until separately enabled.",
   }),
   job({
-    id: "schwab-fetch-daily", name: "Schwab REST daily snapshot", group: "options", mode: "scheduled", cron: "0 4 * * *", defaultEnabled: true, dependsOn: [],
+    // after each weekday close (the session counts as complete at 16:00 Pacific; the S&P 500 lane runs first, at 16:10),
+    // and at 04:00 as a catch-up: a capture of the same UTC date resumes, so the morning run only completes what the
+    // evening run missed
+    id: "schwab-fetch-daily", name: "Schwab REST daily snapshot", group: "options", mode: "scheduled", cron: "45 16 * * 1-5; 0 4 * * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/schwab-fetch.mts", ["--universe", "research-universe-50.json"]), purpose: "Capture chains, quotes, daily price history and instruments with hashes and availability timestamps.",
     input: "Schwab Market Data Production; local token file; research-universe-50.json.", output: "D:-only raw snapshots and a resumable manifest; User Preference status is recorded separately for streaming setup.",
     destination: "Raw chains remain local; successful scheduled runs automatically push QA-passed daily OHLCV and daily-prices-schwab.json through /api/worker/ingest.", requirements: ["network", "driveD"], notes: "Same-day complete tickers resume without redownloading. Automatic operational push is allowed only after exit-ok with one retry; a push failure marks the job error. No raw option chains, accounts or orders leave home. User Preference 401 does not invalidate REST data.",
@@ -128,7 +131,9 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "schwab-context.json automatically pushed through reportFile after successful scheduled runs; no accounts, orders or full-universe streaming.", requirements: ["network", "driveD"], notes: "Hourly context is independent of daily option features. Missing endpoints remain visible; push failure marks the job error after one retry. No GPU is used.",
   }),
   job({
-    id: "schwab-fetch-sp500", name: "Schwab REST daily snapshot · S&P 500 and funds", group: "options", mode: "scheduled", cron: "30 4 * * *", defaultEnabled: true, dependsOn: [],
+    // after each weekday close, so the day's closes, the desk and the price pages are ready the same evening (about 16:45),
+    // and at 04:30 as a catch-up for anything the evening run missed (same UTC date: completed tickers resume)
+    id: "schwab-fetch-sp500", name: "Schwab REST daily snapshot · S&P 500 and funds", group: "options", mode: "scheduled", cron: "10 16 * * 1-5; 30 4 * * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/schwab-fetch.mts", ["--price-series", "--exclude", "research-universe-50.json", "--skip-preferences", "--root", "D:/research/alpha-engine/schwab-sp500"]),
     purpose: "Capture chains, quotes, daily price history and instruments for every S&P 500 company outside the research 50 (both listings of dual-class companies), SPY and the eleven sector funds.",
     input: "Schwab Market Data Production; local token file; edgar-universe.json minus research-universe-50.json, plus the funds.", output: "D:-only raw snapshots under schwab-sp500 with their own resumable manifest.",
@@ -145,6 +150,19 @@ export const OPERATION_JOBS: OperationJob[] = [
     ...npx("scripts/build-desk-snapshot.mts"), purpose: "Rebuild the one precomputed file behind the desk view (market map, screener, earnings, research tools) once the day's closes are stored.",
     input: "Local companies, daily closes (Stooq history, Schwab bars after it), earnings events, short interest, Form 4 rows, the Schwab fundamentals and latest quotes of both archives on D:, and the option features report.", output: "public/reports/desk-snapshot.json and its dist copy: one row per index company with returns, range, fundamentals, earnings dates, option features, plus breadth, sectors and the registry check.",
     destination: "Local static UI artifact read by desk.snapshot; no production write and no push lane.", requirements: ["mysql", "driveD"], notes: "Stops without writing when a Schwab archive root is missing, so the previous snapshot stays in place. Option-derived fields reach only the owner and NDA reviewers. Reports registry rows that disagree with the GICS snapshot.",
+  }),
+  job({
+    // every 20 minutes of the regular session (06:30-13:00 Pacific): 06:40 to 13:20, weekdays (the owner's request of 2026-11-12)
+    id: "schwab-intraday", name: "Schwab live prices every 20 minutes", group: "options", mode: "scheduled", cron: "40 6 * * 1-5; 0,20,40 7-12 * * 1-5; 0,20 13 * * 1-5", defaultEnabled: true, dependsOn: [],
+    ...npx("worker/schwab-intraday.mts"), purpose: "Current prices of every price series (S&P 500 with both listings of dual-class companies, the research companies, SPY, the sector funds) every 20 minutes of a trading session, so the desk shows live prices; each run also keeps the Schwab access token fresh.",
+    input: "Schwab Market Data Production: market hours and batched quotes (about three requests); the local token file; the price-series universe.", output: "D:\\research\\alpha-engine\\schwab-intraday: <session>\\<HHMM>.json (compact quotes) and .raw.json (responses), <session>\\bars.json (20-minute bars), live.json (the desk's live prices), manifest.jsonl.",
+    destination: "Local only: no production push and no write to the daily price history.", requirements: ["network", "driveD"], notes: "A holiday or a time outside the regular session ends the run without a snapshot. Bars come from consecutive snapshots: open and close are snapshot prices, high and low the day's running extremes when set inside the interval (else the interval's end prices), volume the change in the day's volume. Only the newest ten sessions are kept (the owner's decision of 2026-11-12). The refresh token itself still expires seven days after the last browser authorization.",
+  }),
+  job({
+    id: "desk-snapshot-live", name: "Desk snapshot with live prices", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-intraday"],
+    ...npx("scripts/build-desk-snapshot.mts"), purpose: "Rebuild the desk snapshot after each live-price snapshot, with the session's current prices as provisional closes and the time they are as of.",
+    input: "Everything desk-snapshot reads, plus D:\\research\\alpha-engine\\schwab-intraday\\live.json.", output: "public/reports/desk-snapshot.json and its dist copy, marked live with the prices' as-of time.",
+    destination: "Local static UI artifact read by desk.snapshot; no production write.", requirements: ["mysql", "driveD"], notes: "Live prices count only for a session newer than the stored closes: once the evening run stores the session's official closes, desk-snapshot replaces the provisional ones. Nothing enters the daily price history.",
   }),
   job({
     id: "analytics-snapshot", name: "Analytics and weekly evidence snapshot", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-factors"],

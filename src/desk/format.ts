@@ -67,6 +67,14 @@ export function fmtDate(date: string | null | undefined, style: "short" | "mediu
 }
 
 /** A full timestamp in the viewer's local time: "Nov 11, 4:20 PM". */
+/** A moment as the reader's clock time with its zone ("10:40 AM PST"): when live prices were taken, when data was rebuilt. */
+export function fmtClock(iso: string | null | undefined): string {
+  if (!iso) return DASH;
+  const date = new Date(iso);
+  if (!Number.isFinite(date.getTime())) return DASH;
+  return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZoneName: "short" });
+}
+
 export function fmtDateTime(iso: string | null | undefined): string {
   if (!iso) return DASH;
   const date = new Date(iso);

@@ -10,7 +10,7 @@ import { Card, CompanyLink, Delta, Kpi, Notice, Segmented, Shimmer, TickerMark }
 import { useDesk, useDocumentTitle } from "../context";
 import { earningsRadar, impliedMoveFor, marketBrief, movers, periodBreadth, periodLabel, useDeskSnapshot, useWatchlist } from "../data";
 import { DevNotes } from "../DevNotes";
-import { daysBetween, fmtDate, fmtNum, fmtPct, fmtPrice, localToday, relativeDay } from "../format";
+import { daysBetween, fmtClock, fmtDate, fmtNum, fmtPct, fmtPrice, localToday, relativeDay } from "../format";
 
 const PERIOD_OPTIONS = DESK_PERIODS.map((period) => ({ value: period, label: periodLabel(period) }));
 
@@ -125,7 +125,12 @@ export default function Today() {
     <div>
       <div className="desk-page-head">
         <div>
-          <span className="desk-eyebrow">{fmtDate(data.session, "long")} · S&amp;P 500 close</span>
+          <span className="desk-eyebrow">
+            {fmtDate(data.session, "long")} ·{" "}
+            {data.live
+              ? <><span className="desk-live-dot" aria-hidden="true" />Live · prices as of {fmtClock(data.live.asOf)}, refreshed every 20 minutes</>
+              : <>S&amp;P 500 close · updated {fmtClock(data.generatedAt)}</>}
+          </span>
           <h1>{greeting(userName)}</h1>
         </div>
         <Segmented label="Return period" options={PERIOD_OPTIONS} value={period} onChange={setPeriod} />
@@ -155,7 +160,7 @@ export default function Today() {
           </div>
         </Kpi>
         <Kpi label={`Median stock · ${periodLabel(period)}`} value={<Delta value={breadth.median} digits={2} />} note={`across ${breadth.measured} companies`} />
-        <Kpi label="52-week highs / lows" value={<span>{data.breadth.newHighs} <span className="desk-muted" style={{ fontWeight: 400 }}>/</span> {data.breadth.newLows}</span>} note="closing extremes at the latest close" />
+        <Kpi label="52-week highs / lows" value={<span>{data.breadth.newHighs} <span className="desk-muted" style={{ fontWeight: 400 }}>/</span> {data.breadth.newLows}</span>} note={data.live ? "extremes at the latest live prices" : "closing extremes at the latest close"} />
         <Kpi label="Above 200-day average" value={fmtPct(ma200Share, 0, false)} note={`${data.breadth.aboveMa200} of ${data.breadth.withMa200} companies`}>
           <div className="desk-meter" aria-hidden="true"><span style={{ width: `${(ma200Share ?? 0) * 100}%` }} /></div>
         </Kpi>

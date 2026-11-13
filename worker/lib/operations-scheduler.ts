@@ -6,12 +6,24 @@ import { Cron } from "croner";
 import { OPERATION_JOBS, OPERATION_JOB_MAP, type OperationJob } from "../../contracts/operations";
 import { pushOperationalJobOutput, shouldPushOperationalJob } from "./prod-push";
 
-export const OPERATIONS_ROOT = path.resolve(import.meta.dirname, "..", "..");
+/**
+ * The repository root: two folders above this module when it runs from source (tsx). Bundled into the server
+ * (dist/boot.js) the module's folder no longer says where the repository is (two folders above dist/ is C:\dev, where
+ * the Operations page wrote a stray operations-config.json on 2026-11-03); the server runs from the repository root.
+ */
+export function repositoryRoot(moduleDir: string = import.meta.dirname, cwd: string = process.cwd()): string {
+  const fromModule = path.resolve(moduleDir, "..", "..");
+  return existsSync(path.join(fromModule, "worker", "lib")) ? fromModule : cwd;
+}
+export const OPERATIONS_ROOT = repositoryRoot();
 export const OPERATIONS_RUNS_DIR = path.join(OPERATIONS_ROOT, "worker", ".runs");
 export const OPERATIONS_CONFIG_FILE = path.join(OPERATIONS_RUNS_DIR, "operations-config.json");
 export const OPERATIONS_STATE_FILE = path.join(OPERATIONS_RUNS_DIR, "operations-state.json");
 export const OPERATIONS_COMMAND_FILE = path.join(OPERATIONS_RUNS_DIR, "operations-commands.jsonl");
+export const OPERATIONS_LOCK_FILE = path.join(OPERATIONS_RUNS_DIR, "operations-scheduler.lock");
 const DEPENDENCY_FRESH_MS = 48 * 3600_000;
+/** A scheduler saves its state (and heartbeat) every 15 seconds; ten silent minutes mean it is gone or hung. */
+const HEARTBEAT_STALE_MS = 10 * 60_000;
 
 export interface OperationConfigRow { enabled: boolean; cron: string | null }
 export type OperationConfig = Record<string, OperationConfigRow>;
@@ -19,6 +31,7 @@ export type OperationRunStatus = "running" | "done" | "error" | "killed";
 export interface OperationRun {
   runId: string;
   jobId: string;
+  /** Overall result: an operational production push that fails makes it "error" (honestly reported). */
   status: OperationRunStatus;
   trigger: "cron" | "dependency" | "manual";
   startedAt: string;
@@ -26,6 +39,34 @@ export interface OperationRun {
   exitCode: number | null;
   logFile: string;
   error: string | null;
+  /** The job's own (local) result, before any production push; dependents follow this one. */
+  localStatus?: OperationRunStatus;
+  /** The operational production push after the job, when the job has one. */
+  push?: { status: "ok" | "failed"; at: string; error?: string };
+}
+
+/** The job's own work finished: dependents may run even when its production push failed. */
+export function succeededLocally(run: OperationRun | null | undefined): boolean {
+  return !!run && (run.status === "done" || run.localStatus === "done");
+}
+
+/** A schedule is one cron expression, or several separated by ";" (for example after the close and a morning catch-up). */
+export function cronParts(expression: string): string[] {
+  return expression.split(";").map((part) => part.trim()).filter(Boolean);
+}
+export function validateCron(expression: string): void {
+  const parts = cronParts(expression);
+  if (!parts.length) throw new Error(`Empty cron expression: "${expression}"`);
+  for (const part of parts) new Cron(part);
+}
+/** The earliest next run of any of the schedule's expressions, after the given moment (local time zone). */
+export function nextCronRun(expression: string, after: Date): Date | null {
+  let best: Date | null = null;
+  for (const part of cronParts(expression)) {
+    const next = new Cron(part).nextRun(after);
+    if (next && (!best || next < best)) best = next;
+  }
+  return best;
 }
 export interface OperationsState {
   schemaVersion: 1;
@@ -63,7 +104,7 @@ export function loadOperationConfig(file = OPERATIONS_CONFIG_FILE): OperationCon
       const row = saved[job.id];
       if (!row) continue;
       const cron = job.cron === null ? null : typeof row.cron === "string" ? row.cron : job.cron;
-      if (cron) new Cron(cron);
+      if (cron) validateCron(cron);
       defaults[job.id] = { enabled: typeof row.enabled === "boolean" ? row.enabled : job.defaultEnabled, cron };
     }
   } catch (error) {
@@ -76,7 +117,7 @@ export function saveOperationConfig(config: OperationConfig, file = OPERATIONS_C
   for (const job of OPERATION_JOBS) {
     const row = config[job.id];
     if (!row) throw new Error(`Missing operation config: ${job.id}`);
-    if (row.cron) new Cron(row.cron);
+    if (row.cron) validateCron(row.cron);
   }
   atomicJson(file, config);
 }
@@ -118,7 +159,7 @@ export function validateOperationRegistry(): string[] {
     if (ids.has(job.id)) issues.push(`Duplicate job id: ${job.id}`);
     ids.add(job.id);
     if (job.cron) {
-      try { new Cron(job.cron); } catch { issues.push(`Invalid cron: ${job.id}`); }
+      try { validateCron(job.cron); } catch { issues.push(`Invalid cron: ${job.id}`); }
     }
     for (const parent of job.dependsOn) if (!OPERATION_JOB_MAP[parent]) issues.push(`Missing parent: ${job.id} -> ${parent}`);
     if (["frozen", "blocked"].includes(job.mode) && job.executable) issues.push(`Unsafe executable mode: ${job.id}`);
@@ -132,10 +173,49 @@ export function appendOperationCommand(command: OperationCommand, file = OPERATI
   appendFileSync(file, `${JSON.stringify(command)}\n`);
 }
 
+function processAlive(pid: number): boolean {
+  try { process.kill(pid, 0); return true; } catch (error) { return (error as NodeJS.ErrnoException).code === "EPERM"; }
+}
+const sleepMs = (ms: number) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+
+export interface SchedulerLockResult { acquired: boolean; holder?: number; reason: string }
+/**
+ * Exactly one scheduler: the lock file names the running scheduler's process. A start finds that process alive with a
+ * fresh heartbeat and leaves (so a watchdog may start the task as often as it likes); a lock whose process is gone, or
+ * whose scheduler has been silent for ten minutes, is taken over. A scheduler from before the lock (no lock file but a
+ * heartbeat under two minutes old) is also respected. Two starts racing for a free lock: the last writer keeps it.
+ */
+export function acquireSchedulerLock(options: { file?: string; stateFile?: string; now?: number; pid?: number; settleMs?: number; alive?: (pid: number) => boolean } = {}): SchedulerLockResult {
+  const { file = OPERATIONS_LOCK_FILE, stateFile = OPERATIONS_STATE_FILE, now = Date.now(), pid = process.pid, settleMs = 300, alive = processAlive } = options;
+  mkdirSync(path.dirname(file), { recursive: true });
+  const heartbeat = Date.parse(loadOperationsState(stateFile).heartbeatAt ?? "") || 0;
+  const body = JSON.stringify({ pid, startedAt: new Date(now).toISOString() });
+  let holder: number | null = null;
+  let reason = "free";
+  if (existsSync(file)) {
+    try { holder = Number(JSON.parse(readFileSync(file, "utf8")).pid) || null; } catch { holder = null; }
+    if (holder === pid) return { acquired: true, holder, reason: "own" };
+    if (holder && alive(holder) && now - heartbeat < HEARTBEAT_STALE_MS) return { acquired: false, holder, reason: "running" };
+    reason = holder ? (alive(holder) ? "taken over from a silent scheduler" : "taken over from a stopped scheduler") : "unreadable lock replaced";
+  } else if (now - heartbeat < 2 * 60_000) {
+    return { acquired: false, reason: "a scheduler without a lock file is running" };
+  }
+  writeFileSync(file, body);
+  if (settleMs > 0) sleepMs(settleMs);
+  try {
+    if (Number(JSON.parse(readFileSync(file, "utf8")).pid) !== pid) return { acquired: false, reason: "another start took the lock" };
+  } catch { return { acquired: false, reason: "lock unreadable after writing" }; }
+  return { acquired: true, holder: holder ?? undefined, reason };
+}
+
+export function releaseSchedulerLock(file = OPERATIONS_LOCK_FILE, pid = process.pid): void {
+  try { if (Number(JSON.parse(readFileSync(file, "utf8")).pid) === pid) rmSync(file, { force: true }); } catch { /* already gone */ }
+}
+
 export function dependenciesReady(job: OperationJob, state: OperationsState, now: number): boolean {
   if (!job.dependsOn.length) return false;
   const parents = job.dependsOn.map((id) => state.lastRuns[id]);
-  if (parents.some((run) => !run || run.status !== "done" || !run.endedAt || now - Date.parse(run.endedAt) > DEPENDENCY_FRESH_MS)) return false;
+  if (parents.some((run) => !succeededLocally(run) || !run.endedAt || now - Date.parse(run.endedAt) > DEPENDENCY_FRESH_MS)) return false;
   const oldestParent = Math.min(...parents.map((run) => Date.parse(run.endedAt!)));
   const previous = state.lastRuns[job.id];
   return !previous?.endedAt || Date.parse(previous.endedAt) < oldestParent;
@@ -143,7 +223,7 @@ export function dependenciesReady(job: OperationJob, state: OperationsState, now
 
 async function preflight(job: OperationJob, state: OperationsState): Promise<void> {
   for (const parent of job.dependsOn) {
-    if (state.lastRuns[parent]?.status !== "done") throw new Error(`Dependency ${parent} did not complete successfully; run the chain from that parent`);
+    if (!succeededLocally(state.lastRuns[parent])) throw new Error(`Dependency ${parent} did not complete successfully; run the chain from that parent`);
   }
   if (job.requirements.includes("server")) {
     const response = await fetch("http://127.0.0.1:3000/", { signal: AbortSignal.timeout(5000) }).catch(() => null);
@@ -194,6 +274,9 @@ export class OperationsScheduler {
   }
 
   private reconcileSchedules(now: Date): void {
+    // jobs taken out of the registry leave no schedule behind
+    for (const id of Object.keys(this.state.nextRuns)) if (!OPERATION_JOB_MAP[id]) delete this.state.nextRuns[id];
+    for (const id of Object.keys(this.state.configuredCrons)) if (!OPERATION_JOB_MAP[id]) delete this.state.configuredCrons[id];
     for (const job of OPERATION_JOBS) {
       const row = this.config[job.id];
       if (!row.enabled || !row.cron) {
@@ -203,12 +286,19 @@ export class OperationsScheduler {
       }
       const changed = this.state.configuredCrons[job.id] !== row.cron;
       if (changed || !this.state.nextRuns[job.id]) {
+        // a changed schedule starts from now; an unchanged one continues from its last run, so a run missed while the
+        // scheduler was down (or the computer asleep) is made up at the next tick
         const previous = this.state.lastRuns[job.id]?.endedAt;
-        const base = previous ? new Date(previous) : now;
-        this.state.nextRuns[job.id] = new Cron(row.cron).nextRun(base)?.toISOString() ?? null;
+        const base = previous && !changed ? new Date(previous) : now;
+        this.state.nextRuns[job.id] = nextCronRun(row.cron, base)?.toISOString() ?? null;
         this.state.configuredCrons[job.id] = row.cron;
       }
     }
+  }
+
+  /** State is saved from timers and child-process events: a failure there is logged, never the end of the scheduler. */
+  private save(): void {
+    try { saveOperationsState(this.state); } catch (error) { console.error(`[operations] state not saved: ${String(error).slice(0, 300)}`); }
   }
 
   private enqueue(jobId: string, trigger: OperationRun["trigger"]): void {
@@ -277,38 +367,51 @@ export class OperationsScheduler {
       env: { ...process.env, INGEST_URL: process.env.INGEST_URL ?? "http://127.0.0.1:3000/api/worker/ingest" },
     });
     this.child = child;
-    const onData = (chunk: Buffer) => appendFileSync(run.logFile, chunk.toString());
+    const log = (text: string) => { try { appendFileSync(run.logFile, text); } catch { /* a locked log file must not end the run */ } };
+    const onData = (chunk: Buffer) => log(chunk.toString());
     child.stdout?.on("data", onData);
     child.stderr?.on("data", onData);
     child.on("error", (error) => {
       run.error = error.message;
-      appendFileSync(run.logFile, `PROCESS ERROR: ${error.message}\n`);
+      log(`PROCESS ERROR: ${error.message}\n`);
     });
     child.on("close", async (code) => {
-      this.child = null;
-      run.exitCode = code;
-      run.status = code === 0 ? "done" : run.error?.includes("Kill requested") ? "killed" : "error";
-      if (run.status === "error" && !run.error) run.error = `Process exited with code ${code ?? "unknown"}`;
-      if (shouldPushOperationalJob(job.id, run.status, run.trigger)) {
-        try {
-          const pushed = await pushOperationalJobOutput(job.id);
-          appendFileSync(run.logFile, `[operations] operational push completed: ${JSON.stringify(pushed)}\n`);
-        } catch (error) {
-          run.status = "error";
-          run.error = `Operational push failed: ${error instanceof Error ? error.message.slice(0, 240) : String(error).slice(0, 240)}`;
-          appendFileSync(run.logFile, `${run.error}\n`);
+      try {
+        this.child = null;
+        run.exitCode = code;
+        run.status = code === 0 ? "done" : run.error?.includes("Kill requested") ? "killed" : "error";
+        if (run.status === "error" && !run.error) run.error = `Process exited with code ${code ?? "unknown"}`;
+        run.localStatus = run.status;
+        if (shouldPushOperationalJob(job.id, run.status, run.trigger)) {
+          try {
+            const pushed = await pushOperationalJobOutput(job.id);
+            run.push = { status: "ok", at: nowIso() };
+            log(`[operations] operational push completed: ${JSON.stringify(pushed)}\n`);
+          } catch (error) {
+            // reported honestly as the run's error; the local result stands and its dependents still run
+            run.status = "error";
+            run.error = `Operational push failed: ${error instanceof Error ? error.message.slice(0, 240) : String(error).slice(0, 240)}`;
+            run.push = { status: "failed", at: nowIso(), error: run.error };
+            log(`${run.error}\n`);
+          }
         }
+      } catch (error) {
+        run.status = "error";
+        run.error = `Scheduler failure after the job: ${String(error).slice(0, 240)}`;
+        log(`${run.error}\n`);
       }
       run.endedAt = nowIso();
       this.state.current = null;
-      saveOperationsState(this.state);
-      if (run.status === "done") {
-        const now = Date.now();
-        for (const candidate of OPERATION_JOBS) {
-          if (!this.config[candidate.id].enabled || !candidate.dependsOn.includes(job.id)) continue;
-          if (dependenciesReady(candidate, this.state, now)) this.enqueue(candidate.id, "dependency");
-        }
-        saveOperationsState(this.state);
+      this.save();
+      if (run.localStatus === "done") {
+        try {
+          const now = Date.now();
+          for (const candidate of OPERATION_JOBS) {
+            if (!this.config[candidate.id].enabled || !candidate.dependsOn.includes(job.id)) continue;
+            if (dependenciesReady(candidate, this.state, now)) this.enqueue(candidate.id, "dependency");
+          }
+        } catch (error) { console.error(`[operations] dependents of ${job.id} not queued: ${String(error).slice(0, 300)}`); }
+        this.save();
       }
     });
   }
@@ -327,14 +430,14 @@ export class OperationsScheduler {
         const due = this.state.nextRuns[job.id];
         if (due && Date.parse(due) <= now) {
           this.enqueue(job.id, "cron");
-          this.state.nextRuns[job.id] = new Cron(row.cron).nextRun(new Date(now))?.toISOString() ?? null;
+          this.state.nextRuns[job.id] = nextCronRun(row.cron, new Date(now))?.toISOString() ?? null;
         }
       }
       saveOperationsState(this.state);
       await this.runNext();
     } catch (error) {
       console.error(`[operations] tick failed: ${String(error).slice(0, 300)}`);
-      saveOperationsState(this.state);
+      this.save();
     } finally {
       this.busy = false;
     }

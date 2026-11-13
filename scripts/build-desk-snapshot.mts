@@ -5,7 +5,10 @@
  *     last ~14 months (Stooq history, Schwab bars after the last Stooq date), stored 8-K earnings events;
  *   - the Schwab archives on D: — instruments (fundamentals) and the latest quotes folder of the S&P 500 root and
  *     of the research root (never the token file);
- *   - public/reports/schwab-features.json (option features of the research companies), when present.
+ *   - public/reports/schwab-features.json (option features of the research companies), when present;
+ *   - during a session, the intraday prices (D:\research\alpha-engine\schwab-intraday\live.json, every 20 minutes):
+ *     a session newer than the stored closes gets the live price as its provisional close, and the snapshot says so
+ *     (live.asOf); once the session's official closes are stored the live file is ignored.
  * The D: archives are required: when a root is missing the build stops and the previous snapshot stays in place.
  *
  *   npx tsx scripts/build-desk-snapshot.mts [--dry-run]
@@ -17,11 +20,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getDb } from "../api/queries/connection";
 import { registryCorrections } from "../api/services/canonical-ticker";
-import { buildDeskSnapshot, deskOptions, normalizeTicker, schwabFundamentals, shortInterestSummary, spliceCloses, type DeskFundamentals, type InsiderTradeRow, type ShortInterestRow, type StoredCloseRow } from "../worker/lib/desk-snapshot";
+import { buildDeskSnapshot, deskOptions, normalizeTicker, schwabFundamentals, shortInterestSummary, spliceCloses, withLiveClose, type DeskFundamentals, type InsiderTradeRow, type ShortInterestRow, type StoredCloseRow } from "../worker/lib/desk-snapshot";
 import { writeJsonAtomic } from "../worker/lib/json-file";
-import type { DeskOptions } from "../contracts/desk-snapshot";
+import type { LivePrices } from "../worker/lib/schwab-intraday";
+import type { DeskLive, DeskOptions } from "../contracts/desk-snapshot";
 
 const SCHWAB_ROOTS = ["D:/research/alpha-engine/schwab-sp500", "D:/research/alpha-engine/schwab"];
+const LIVE_FILE = "D:/research/alpha-engine/schwab-intraday/live.json";
 const OUT = path.resolve("public/reports/desk-snapshot.json");
 const DIST_OUT = path.resolve("dist/public/reports/desk-snapshot.json");
 const FEATURES = path.resolve("public/reports/schwab-features.json");
@@ -149,6 +154,27 @@ for (const row of priceRows) {
   if (row.source === "stooq" && (!seen || row.date > seen.date)) fetchedTicker.set(Number(row.cik), { date: row.date, ticker: row.ticker });
 }
 const closes = new Map([...rowsByCik].map(([cik, rows]) => [cik, spliceCloses(rows)] as const));
+let benchmarkCloses = benchmarkRows.length ? spliceCloses(benchmarkRows) : null;
+
+// --- live prices of a session newer than the stored closes (schwab-intraday, every 20 minutes) -----------------------
+let live: DeskLive | null = null;
+if (existsSync(LIVE_FILE)) {
+  const file = readJson(LIVE_FILE) as LivePrices;
+  const lastStored = benchmarkCloses?.at(-1)?.date ?? [...closes.values()].reduce((latest, series) => (series.at(-1)!.date > latest ? series.at(-1)!.date : latest), "");
+  if (file?.schemaVersion === 1 && typeof file.session === "string" && file.session > lastStored) {
+    const quotes = new Map(Object.entries(file.quotes ?? {}).map(([symbol, quote]) => [normalizeTicker(symbol), quote.last] as const));
+    let applied = 0;
+    for (const row of companyRows) {
+      const cik = Number(row.cik), series = closes.get(cik);
+      if (!series) continue;
+      const last = quotes.get(normalizeTicker(fetchedTicker.get(cik)?.ticker ?? row.ticker)) ?? quotes.get(normalizeTicker(row.ticker));
+      const updated = withLiveClose(series, file.session, last);
+      if (updated !== series) { closes.set(cik, updated); applied++; }
+    }
+    if (benchmarkCloses) benchmarkCloses = withLiveClose(benchmarkCloses, file.session, quotes.get("SPY"));
+    live = { session: file.session, asOf: file.asOf, capturedAt: file.capturedAt, quotes: applied };
+  }
+}
 const events = new Map<number, string[]>();
 for (const row of eventRows) events.set(Number(row.cik), [...(events.get(Number(row.cik)) ?? []), row.date]);
 
@@ -165,7 +191,8 @@ const snapshot = buildDeskSnapshot({
     research: research.has(Number(row.cik)),
   })),
   closes,
-  benchmark: benchmarkRows.length ? { ticker: "SPY", closes: spliceCloses(benchmarkRows) } : null,
+  benchmark: benchmarkCloses ? { ticker: "SPY", closes: benchmarkCloses } : null,
+  live,
   fundamentals,
   options,
   events,
@@ -185,7 +212,7 @@ const snapshot = buildDeskSnapshot({
 
 const covered = snapshot.companies.filter((company) => company.marketCap !== null).length;
 if (registryIssues.length) console.warn(`[desk-snapshot] registry: ${registryIssues.length} rows disagree with the GICS snapshot, e.g. ${registryIssues.slice(0, 3).join("; ")} — run scripts/remediate-registry-tickers.mts`);
-const summary = `[desk-snapshot] session ${snapshot.session} (previous ${snapshot.previousSession}) · ${snapshot.companies.length} companies, ${covered} with market cap, ${snapshot.companies.filter((company) => company.options).length} with option features · breadth ${snapshot.breadth.advancers} up / ${snapshot.breadth.decliners} down · ${snapshot.inputs.companiesWithoutPrices.length} without prices · code ${codeVersion}`;
+const summary = `[desk-snapshot] session ${snapshot.session} (previous ${snapshot.previousSession})${snapshot.live ? ` · live prices as of ${snapshot.live.asOf} for ${snapshot.live.quotes} series` : " · official closes"} · ${snapshot.companies.length} companies, ${covered} with market cap, ${snapshot.companies.filter((company) => company.options).length} with option features · breadth ${snapshot.breadth.advancers} up / ${snapshot.breadth.decliners} down · ${snapshot.inputs.companiesWithoutPrices.length} without prices · code ${codeVersion}`;
 if (dryRun) {
   console.log(`${summary} · dry run, nothing written`);
 } else {

@@ -10,6 +10,7 @@ import {
   type DeskBreadth,
   type DeskCompany,
   type DeskInsiderSummary,
+  type DeskLive,
   type DeskOptions,
   type DeskReturns,
   type DeskSector,
@@ -67,6 +68,16 @@ export function addMonths(date: string, months: number): string {
 // ---------------------------------------------------------------------------
 // series
 // ---------------------------------------------------------------------------
+/**
+ * The session's provisional close from the intraday prices, after the series' last stored close. A series that already
+ * has a close on or after the session keeps it (an official close always wins), and a missing price changes nothing.
+ */
+export function withLiveClose(series: Close[], session: string, last: number | null | undefined): Close[] {
+  if (!series.length || typeof last !== "number" || !Number.isFinite(last) || last <= 0) return series;
+  if (series.at(-1)!.date >= session) return series;
+  return [...series, { date: session, close: last }];
+}
+
 /** Stooq history plus Schwab bars after the last Stooq date; ascending, one close per date, positive closes only. */
 export function spliceCloses(rows: StoredCloseRow[]): Close[] {
   let lastStooq = "";
@@ -428,6 +439,8 @@ export interface DeskBuildInput {
   /** Form 4 rows per cik (any period); the snapshot keeps the 90 days up to the session. */
   insiderRows?: Map<number, InsiderTradeRow[]>;
   inputs: Omit<DeskSnapshotInputs, "companiesWithoutPrices" | "priceSeries" | "latestPriceDate">;
+  /** The intraday prices already added to `closes` as the session's provisional closes (withLiveClose). */
+  live?: DeskLive | null;
 }
 
 export function buildDeskSnapshot(input: DeskBuildInput): DeskSnapshot {
@@ -496,6 +509,8 @@ export function buildDeskSnapshot(input: DeskBuildInput): DeskSnapshot {
     codeVersion: input.codeVersion,
     session,
     previousSession,
+    // live only while the provisional closes are what the snapshot's session stands on
+    live: input.live && input.live.session === session ? input.live : null,
     inputs: {
       ...input.inputs,
       priceSeries: priced.length,
