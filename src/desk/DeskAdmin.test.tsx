@@ -59,9 +59,12 @@ describe("desk owner tools", () => {
 
     await click(host, "Promote");
     await waitUntil(() => desk!.calls.includes("admin.setUserRole"));
-    vi.spyOn(window, "confirm").mockReturnValue(true);
+    const confirm = vi.spyOn(window, "confirm");
     await click(host, "Delete");
+    await waitUntil(() => (host.textContent ?? "").includes("Delete member?"));
+    await click(host, "Confirm delete");
     await waitUntil(() => desk!.calls.includes("admin.deleteUser"));
+    expect(confirm).not.toHaveBeenCalled();
 
     await click(host, "View as");
     await waitUntil(() => (host.textContent ?? "").includes("Viewing as member"));

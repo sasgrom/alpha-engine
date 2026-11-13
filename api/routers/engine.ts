@@ -281,8 +281,12 @@ export const jobsRouter = createRouter({
 
   logs: authedQuery
     .input(z.object({ jobId: z.number(), afterId: z.number().default(0), limit: z.number().default(500) }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       const db = getDb();
+      if (ctx.user.role !== "admin") {
+        const [job] = await db.select({ startedBy: jobs.startedBy }).from(jobs).where(eq(jobs.id, input.jobId)).limit(1);
+        if (!job || job.startedBy !== ctx.user.id) throw new TRPCError({ code: "FORBIDDEN", message: "you can read logs only for your own jobs" });
+      }
       return db
         .select()
         .from(jobLogs)

@@ -19,7 +19,10 @@ async function requireMessageContact(ctx: { user: { id: number; role: string } }
   if (peerId === ctx.user.id) throw new TRPCError({ code: "BAD_REQUEST", message: "cannot message yourself" });
   const db = getDb();
   const [peer] = await db.select({ id: users.id, role: users.role }).from(users).where(eq(users.id, peerId)).limit(1);
-  if (!peer) throw new TRPCError({ code: "NOT_FOUND", message: "user not found" });
+  if (!peer) {
+    if (ctx.user.role !== "admin") throw new TRPCError({ code: "FORBIDDEN", message: "this recipient is not in your allowed contacts" });
+    throw new TRPCError({ code: "NOT_FOUND", message: "user not found" });
+  }
   if (ctx.user.role === "admin" || peer.role === "admin") return;
   const [existing] = await db.select({ id: messages.id }).from(messages).where(eq(messages.convKey, convKeyOf(ctx.user.id, peerId))).limit(1);
   if (!existing) throw new TRPCError({ code: "FORBIDDEN", message: "this recipient is not in your allowed contacts" });

@@ -12,11 +12,12 @@ const mocks = vi.hoisted(() => ({
   loadOperationConfig: vi.fn(() => ({})),
   loadOperationsState: vi.fn(() => ({ lastRuns: {} })),
   saveOperationConfig: vi.fn(),
+  jobStartedBy: 1,
 }));
 
 vi.mock("../queries/connection", () => ({
   getDb: () => {
-    const result = [{ n: 0 }];
+    let result: any[] = [{ n: 0 }];
     const builder: any = {
       from: () => builder,
       leftJoin: () => builder,
@@ -32,7 +33,10 @@ vi.mock("../queries/connection", () => ({
       then: (resolve: (value: unknown) => unknown, reject?: (reason: unknown) => unknown) => Promise.resolve(result).then(resolve, reject),
     };
     return {
-      select: () => builder,
+      select: (selection?: Record<string, unknown>) => {
+        result = selection && "startedBy" in selection ? [{ startedBy: mocks.jobStartedBy }] : [{ n: 0 }];
+        return builder;
+      },
       selectDistinct: () => builder,
       insert: () => builder,
       update: () => builder,
@@ -115,6 +119,7 @@ const inputs: Record<string, unknown> = {
   "admin.manualContent": { id: "engine-manual-en" },
   "admin.recentJobs": undefined,
   "admin.jobLog": { jobId: 123 },
+  "jobs.logs": { jobId: 123 },
   "admin.usersList": undefined,
   "admin.createUser": { username: "new_user", password: "test-password", name: "New User", role: "user" },
   "admin.deleteUser": { userId: 99 },
@@ -176,6 +181,7 @@ describe("owner procedure authorization", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.LOCAL_WORKER_UI = "1";
+    mocks.jobStartedBy = 1;
     mocks.spawn.mockReturnValue({ stdout: { on: vi.fn() }, stderr: { on: vi.fn() }, on: vi.fn(), kill: vi.fn() });
     mocks.execFile.mockImplementation((_file, _args, _options, callback) => callback(null, "", ""));
   });
@@ -202,5 +208,13 @@ describe("owner procedure authorization", () => {
 
   it("keeps the GDELT probe frozen even for the owner", async () => {
     await expect(invoke("admin", "workersLocal.probe")).rejects.toMatchObject({ code: "FORBIDDEN", message: expect.stringContaining("GDELT is frozen") });
+  });
+
+  it("lets a member read only logs for jobs they started", async () => {
+    mocks.jobStartedBy = 2;
+    await expect(invoke("user", "jobs.logs")).resolves.toBeDefined();
+    mocks.jobStartedBy = 1;
+    await expect(invoke("user", "jobs.logs")).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(invoke("admin", "jobs.logs")).resolves.toBeDefined();
   });
 });

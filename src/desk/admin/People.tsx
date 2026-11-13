@@ -22,6 +22,7 @@ export default function People() {
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
   const [reset, setReset] = useState<{ userId: number; username: string; password: string; done: boolean } | null>(null);
+  const [deleting, setDeleting] = useState<{ userId: number; username: string } | null>(null);
   const options = (message: string) => ({
     onSuccess: () => {
       setError("");
@@ -37,7 +38,13 @@ export default function People() {
       options("Account created").onSuccess();
     },
   });
-  const remove = trpc.admin.deleteUser.useMutation(options("Account deleted"));
+  const remove = trpc.admin.deleteUser.useMutation({
+    ...options("Account deleted"),
+    onSuccess: () => {
+      setDeleting(null);
+      options("Account deleted").onSuccess();
+    },
+  });
   const changeRole = trpc.admin.setUserRole.useMutation(options("Role updated"));
   const resetPassword = trpc.admin.resetPassword.useMutation({
     onSuccess: () => {
@@ -95,9 +102,7 @@ export default function People() {
                           }
                         }}><KeyRound size={13} /> Reset password</button>
                         <button type="button" className="desk-button" onClick={() => changeRole.mutate({ userId: account.id, role: account.role === "admin" ? "user" : "admin" })}>{account.role === "admin" ? "Demote" : "Promote"}</button>
-                        <button type="button" className="desk-button danger" onClick={() => {
-                          if (window.confirm(`Delete ${account.username ?? `account ${account.id}`}? Their universe and messages are removed too.`)) remove.mutate({ userId: account.id });
-                        }}><Trash2 size={13} /> Delete</button>
+                        <button type="button" className="desk-button danger" onClick={() => setDeleting({ userId: account.id, username: account.username ?? String(account.id) })}><Trash2 size={13} /> Delete</button>
                       </div>
                     )}
                   </td>
@@ -116,6 +121,15 @@ export default function People() {
             <button type="button" className="desk-button" onClick={() => void navigator.clipboard?.writeText(reset.password)}>Copy password</button>
             {!reset.done && <button type="button" className="desk-button primary" disabled={resetPassword.isPending} onClick={() => resetPassword.mutate({ userId: reset.userId, password: reset.password })}>Confirm reset</button>}
             <button type="button" className="desk-button" onClick={() => setReset(null)}>Close</button>
+          </div>
+        </DeskDialog>
+      )}
+      {deleting && (
+        <DeskDialog title={`Delete ${deleting.username}?`} onClose={() => setDeleting(null)}>
+          <p>This removes the account, its universe and its messages. Shared company data is not changed.</p>
+          <div className="desk-modal-actions">
+            <button type="button" className="desk-button" onClick={() => setDeleting(null)}>Cancel</button>
+            <button type="button" className="desk-button danger" disabled={remove.isPending} onClick={() => remove.mutate({ userId: deleting.userId })}>Confirm delete</button>
           </div>
         </DeskDialog>
       )}

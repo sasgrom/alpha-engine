@@ -126,9 +126,10 @@ describe("message recipient authorization", () => {
     expect(state.inserted).toMatchObject({ convKey: "1_3", authorId: 1, recipientId: 3, isAdminMsg: true });
   });
 
-  it("rejects a missing account and self-messaging", async () => {
+  it("hides missing accounts from members but keeps NOT_FOUND for the owner", async () => {
     state.peer = null;
-    await expect(caller("user").send({ toUserId: 3, body: "missing" })).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(caller("user").send({ toUserId: 3, body: "missing" })).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(caller("admin").send({ toUserId: 3, body: "missing" })).rejects.toMatchObject({ code: "NOT_FOUND" });
     await expect(caller("user").send({ toUserId: 2, body: "self" })).rejects.toMatchObject({ code: "BAD_REQUEST" });
   });
 });

@@ -2465,3 +2465,14 @@ All read only, except one probe download (below). No change to the dataset or fi
   - the messages privacy default;
   - the step-2 normalization of fundamentals.
 - **Next safe action:** review K17a.1 and restart the web server once; then review K16.4.
+
+
+## 160. Kimi: K17a.1 review corrections verified — 2026-11-13T21:53:13Z
+
+- **Baseline:** main `06e56a6` includes K17a's acceptance, K16.4's spec, K17b/K19 and Claude's handoff 159. This is a fast-forward follow-up to `fcd1494`, not an amended or rewritten commit. The exact K17a.1 commit is authoritative in `git log`.
+- **Job logs:** `jobs.logs` now applies the same ownership rule as `cancel`: an admin reads every log; a member reads only jobs they started, and missing/other users' jobs are refused. The guard inventory now covers **48 procedures as a member (FORBIDDEN)** and **47 enabled owner procedures as the owner (success)**, plus the separately frozen probe. A dedicated own/other/admin regression passes.
+- **Account privacy:** for non-admin callers, missing and disallowed recipients both return FORBIDDEN, so account existence is not revealed. Admins retain NOT_FOUND. The message regression covers both roles and self-messaging.
+- **Delete dialog:** People now confirms deletion in `DeskDialog`, with the account, universe and message consequences stated. The test proves `window.confirm` is not called; create, role, reset and view-as behavior is unchanged.
+- **Dead UI removed:** classic `src/pages/Admin.tsx` and `Messages.tsx`, plus orphaned `ReviewerAdminTab.tsx` and its test, `WorkersIntakeCard.tsx`, `FactorIcMonitor.tsx` and `PriceImportCard.tsx`. The server-side reviewer and price-import functionality remains intact.
+- **Verification:** focused **17/17** and `npm run check` passed before the full run; full `npm test -- --run --maxWorkers=4` passed **248 files / 1,385 tests**; `npm run build` and `git diff --check` passed. No live test database, production write, schema change, credential access or web restart occurred. New K17b/K19 specs and unrelated generated reports were excluded from this commit.
+- **Next safe action:** Claude reviews K17a.1 and performs the single remaining web restart. K16.4 is next in the approved queue.
