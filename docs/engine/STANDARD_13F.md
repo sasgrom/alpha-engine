@@ -6,9 +6,9 @@ The research tables are provisional until Claude accepts them. Nothing here chan
 
 - **Code:** `C:\dev\alpha-engine-lab\src\thirteenf\` in the lab repository.
 - **Inputs:** `D:\research\alpha-engine\fund-books\`, standard prices p1.1, and final standard fundamentals v3.1.
-- **Artifacts:** `D:\research\alpha-engine\fund-books\std\` (build `k16.1`).
+- **Artifacts:** `D:\research\alpha-engine\fund-books\std\` (build `k16.2`).
 - **Tables:** `alpha_research.std_13f_filings`, `std_13f_positions`, `std_13f_company_quarters`, `std_13f_builds`.
-- **Unit tests:** thirteen deterministic `node:test` cases in `src/thirteenf/model.test.mts`.
+- **Unit tests:** fifteen deterministic `node:test` cases in `src/thirteenf/model.test.mts`.
 
 ## 1. One filing reader and one set of book decisions
 
@@ -19,8 +19,8 @@ The research tables are provisional until Claude accepts them. Nothing here chan
 The builder reads the books' per-filing checkpoints, `manifest.json` mapping decisions and quarter files. A CUSIP's
 company comes from those price-level decisions, resolved to the company's SEC CIK before any synthetic price key.
 Share classes retain their CUSIP identity and a `main`/`secondary` label; the checkpoints do not preserve a literal
-class name such as A or B. Every CUSIP also carries the residual `classFactor = bookFactor / splitFactor`, covering
-both secondary classes and share-count conversions such as AMCR's 0.2. It is separate from the stock-split factor.
+class name such as A or B. A secondary class also carries the residual `classFactor = bookClassFactor / splitFactor`.
+Other share-count conversions are resolved from each position's own filed price rather than hidden in `classFactor`.
 
 A small lab extension reads only the fields missing from the original checkpoints: underlying put and call shares and
 confidential-omission flags. These live in atomic per-filing `filing-detail` checkpoints keyed by the original raw and
@@ -61,17 +61,22 @@ Standard prices provide an as-traded close and `splitIndex`. For period `p`:
 
 ```text
 splitFactor(p) = splitIndex(today) / splitIndex(p)
-sharesToday = sharesFiled × splitFactor(p)
+splitAdjustedClose(p) = asTradedClose(p) / splitFactor(p)
+positionFactor = snap((value / sharesFiled) / (splitAdjustedClose(p) × classFactor))
+sharesToday = sharesFiled × positionFactor
 mainClassSharesToday = sharesToday × classFactor
 ```
 
-The filed-basis columns are the historical evidence. Today's-basis columns are derived through the split index and
-class factor, so a later split does not rewrite history. Company aggregates use main-class-equivalent shares for
+`positionFactor` is snapped only to products of plausible split ratios. A match is labeled `filed_price`; an unclean
+ratio keeps the period-end split factor and is labeled `assumed_period_end`. When that factor is 1, the label is
+`no_split_factor`, not a newly derived split. A zero or unusable price also uses the period-end factor with the
+`assumed_period_end` label. A filing already on the new basis therefore gets factor 1, not another split multiplier.
+The filed-basis columns remain the historical evidence. Company aggregates use main-class-equivalent shares for
 comparability across CUSIPs; options remain outside holders and shares held.
 
 When a company has no standard-price series, `priceBasisSource` is `events (no standard price series)` and the split
 factor is the product of that company's split ratios in `events.json` strictly after the period. The `sharesBasic`
-basis factor is `eventFactor(filed) / eventFactor(period)`. RIVN is the only such company in this build: its entry has
+basis factor is `eventFactor(filed)`. RIVN is the only such company in this build: its entry has
 empty split, distribution and dividend lists, so its factor is an evidenced 1, not an assumption. Its first price date
 still comes from the app history for the listing exclusion; no app close is substituted into the standard-price gate.
 When a series exists but the requested date precedes its first split-index point, the same event rule applies and is
@@ -104,11 +109,11 @@ ratio, so the denominator cannot be confused with the previous quarter's fund co
 ### Shares outstanding
 
 The denominator is final v3.1 `sharesBasic`, selecting the latest quarter not after the period and the latest version
-filed by `knownAt`. Its count is returned to the period's share basis:
+filed by `knownAt`. Its count is returned to today's share basis, so a filing after a split already uses the new basis:
 
 ```text
-sharesOutstanding(period) = sharesBasic × splitIndex(period) / splitIndex(filed)
-percentOfSharesOutstanding = 100 × mainClassSharesFiled / sharesOutstanding(period)
+sharesOutstanding(today) = sharesBasic × splitIndex(today) / splitIndex(filed)
+percentOfSharesOutstanding = 100 × mainClassSharesToday / sharesOutstanding(today)
 ```
 
 A cover-derived count below 1,000,000 shares is not a credible consolidated denominator for this 500-company universe.
@@ -152,8 +157,8 @@ unresolved accessions are recorded in `build.json`; credentials and request head
 |---|---|
 | 1. Cover totals | Every filing receives the books' totals verdict. Counts must match the rebuilt manifest; differences retain their reasons. |
 | 2. Raw re-read | Ten deterministic random filings are re-read from raw XML and cover pages. Positions, shares, values, option shares and cover fields must match. |
-| 3. Price levels | `value ÷ (filed shares × as-traded close × classFactor)` must be within 2% for at least 98% of **priced** position value. Unpriced value is reported separately with its share of the total and reason; it neither passes nor fails the gate. Every exception is in `price-outliers.jsonl`, largest values first for review. |
-| 4. Latest-book tie | For 2026-06-30, the **full-book** holders, today's-basis shares and value per company must equal the quarter file exactly. Known-at rows are a separate figure with their coverage, not forced to include later filings. Differences are in `latest-tieout-differences.json`; unavailable managers and accessions are in `late-funds.json`. |
+| 3. Price levels | `(value ÷ filed shares) ÷ (splitAdjustedClose × classFactor × positionFactor)` must be within 2% for at least 98% of **priced** position value. Unpriced value is reported separately with its share of the total and reason; it neither passes nor fails the gate. Every exception is in `price-outliers.jsonl`, largest values first for review. |
+| 4. Latest-book tie and corrections | For 2026-06-30, the **full-book** holders, today's-basis shares and value per company should equal the quarter file. A difference is accepted when (a) the chosen factor puts filed price within 2% of our close and the book's factor does not, or (b) no split factor fits and the position is under 1% of that fund's shares of the company, retained at factor 1 and labeled as a pricing anomaly. `latest-corrections.json` carries fund, accession, company, filed shares/value, implied and actual closes, chosen and book factors, and the verdict. Known-at rows remain a separate coverage figure; late filings are in `late-funds.json`. |
 | 5. Ownership outliers | Every percentage above 100% is in `percent-outliers.json` with its denominator evidence and reason. |
 | 6. Legacy comparison | For the same period, report app `fund_holdings` value/companies beside the standard value/companies and the app's declared fund-quarter value. Documentation only. |
 | 7. Database load | Batches are at most 500, table counts equal the artifacts, and 2,000 deterministic random rows read back identical. |
@@ -184,7 +189,7 @@ Run from the main repository so the research connection reads its configured env
 npx tsx scripts/build-fund-books.mts
 npx tsx --test C:\dev\alpha-engine-lab\src\thirteenf\model.test.mts
 npx tsx C:\dev\alpha-engine-lab\src\thirteenf\build.mts
-npx tsx C:\dev\alpha-engine-lab\src\thirteenf\load-mysql.mts D:\research\alpha-engine\fund-books\std k16.1 provisional --replace
+npx tsx C:\dev\alpha-engine-lab\src\thirteenf\load-mysql.mts D:\research\alpha-engine\fund-books\std k16.2 provisional --replace
 ```
 
 Commit the lab code before building: `build.json` and `std_13f_builds` must name the exact code commit, and the loader
@@ -205,25 +210,27 @@ full quarter, 2026-06-30, has 307 funds and 493 companies, $60.57tn filed and $4
 2,891,701 bars; final fundamentals v3.1 has 1,664,739 values. The standard build's gate and table counts are taken from
 `std\gates.json`, `std\build.json` and `std\load-report.json`, not inferred from these input totals.
 
-Build `k16.1` at lab commit `e4c278e` has 7,221 filings, 2,393,709 positions and 12,077 company-quarter rows.
+Build `k16.2` at lab commit `142c6ea` has 7,221 filings, 2,393,709 positions and 12,077 company-quarter rows.
 Unit counts and the three unresolved unit cases match the fund-book manifest, and zero positions lack a split factor.
 The pre-load gates report:
 
 - Cover totals: 6,665 agree, 46 thousandfold, 199 row-count differences, 193 value differences, 116 cover-only and two
   partial tables, exactly matching the manifest. Ten random raw re-reads have zero mismatches.
-- Price levels: $612,625,139,992,399 of $624,725,547,067,065 priced value is within 2%, **98.063084%**. Unpriced value
-  is $301,089,711,931 (0.04817% of all position value), kept outside the denominator. The largest-first exception file
-  has 99,602 priced and 8,150 unpriced rows.
-- Full-book tie: all 493 companies have zero holder/share/value differences. At `knownAt=2026-08-17`, 301/307 books
-  (98.0456%) are available; 16 later filings are separately listed. The point-in-time rows are not forced to equal the
-  later full book.
-- Ownership: 158 above-100% rows have reasons. Another 92 cover-derived counts below 1,000,000 shares are excluded
-  with null percentages and filed evidence, rather than used as denominators.
+- Price levels after normalizing by each position's own factor: $615,013,526,601,123 of $624,725,547,067,065 priced
+  value is within 2%, **98.445394%**. Unpriced value is $301,089,711,931 (0.04817% of all position value), kept outside
+  the denominator. The largest-first exception file has 79,149 priced and 8,150 unpriced rows.
+- Full-book corrections: all 14 differences have accession-level evidence and are accepted as basis corrections or
+  explicitly bounded pricing anomalies. One Arista position (1,369 shares, 0.13% of its fund-company total) fits no
+  split product, remains at factor 1 and is labeled `no_split_factor`; it is not miscalled a split or rounding.
+  At `knownAt=2026-08-17`, 301/307 books (98.0456%) are available; 16 later filings are separately listed.
+- Ownership: 94 above-100% rows have reasons. Another 91 cover-derived counts below 1,000,000 shares are excluded
+  with null percentages and filed evidence, rather than used as denominators. Lam Research illustrates the correction:
+  2023-09 ownership is 55.9143% rather than 559.1430%, and 2024-09 is 49.8546% rather than 483.3809%.
 - Legacy comparison: the app has 370 companies and $17,199,558,833,123 held against $32,126,221,264,865 declared;
   the standard series has 493 companies and $43,465,564,787,623 covered against $60,574,814,607,781 filed.
 - Date resolution used 190 cached submissions lists, resolved 618 accessions, and left 83 unresolved for lack of a
   verified date. The final build made zero new EDGAR requests.
 
-`load-report.json` confirms the batched load completed at 2026-11-13 16:37:18 with 7,221 filings, 2,393,709
+`load-report.json` confirms the batched load completed at 2026-11-13 18:25:29 with 7,221 filings, 2,393,709
 positions, 12,077 company quarters and 2,000 random rows read back with zero mismatches. The provisional build row is
-present with code commit `e4c278e1cf61b3e1f78174e8522b6ea00f73f847`.
+present with code commit `142c6ea152bcb714bc3b83cff5ac8403a116855f`.
