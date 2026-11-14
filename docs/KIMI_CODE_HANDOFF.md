@@ -2526,7 +2526,7 @@ All read only, except one probe download (below). No change to the dataset or fi
 - **Next safe action:** review Kimi's K22 delivery when it reports; the forward check of the Fed rule uses K22's daily probabilities. Step 2 of the fundamentals waits for the owner's instructions.
 
 
-## 163. Kimi: K16.5 accepted; K22 collector and Macro expectations card — 2026-11-13T20:35:18-08:00
+## 164. Kimi: K16.5 accepted; K22 collector and Macro expectations card — 2026-11-13T20:35:18-08:00
 
 - **Accepted predecessor:** K16.5 is `final` in `alpha_research.std_13f_builds`, naming lab `7691057a99b90728b34930b5d0cd7fa08d6f91e7` and main `e72c28e1aba82669d6f706814c49680852896679`. Claude confirmed the exact books tie, both successor CUSIPs and independent read-back. The accepted tables have not been changed.
 - **K22 implementation:** `worker/prediction-markets-daily.mts` collects public, keyless market data with a single process lock, 250 ms pacing and at most two retries. It preserves the lab's D: folders and row shape, maps company KPI series deterministically, captures settlement results and daily candle histories, and writes per-run manifests and `kalshi/daily-state.jsonl`. HTTP 401/403 or a key-required response stops the job without acquiring credentials. Market-wide series and series with more than 2,000 numeric markets are excluded; political, sports, entertainment and earnings-call wording markets stay off.
