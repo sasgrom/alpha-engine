@@ -4,6 +4,7 @@ import { ArrowUpRight, Check, Download, Plus, Search } from "lucide-react";
 import { trpc } from "@/providers/trpc";
 import { DESK_PERIODS, type DeskCompany } from "@contracts/desk-snapshot";
 import { PriceChart, type ImpliedCone } from "../charts/PriceChart";
+import { IntradayCompanyPanel } from "../components/IntradayPanels";
 import { Card, CompanyLink, Delta, Notice, RangeBar, Segmented, Shimmer, TickerMark } from "../components";
 import { useDesk, useDocumentTitle } from "../context";
 import { findCompany, impliedMoveFor, peersOf, periodLabel, searchCompanies, useDeskSnapshot, useWatchlist } from "../data";
@@ -173,6 +174,7 @@ export default function CompanyPage() {
       </div>
 
       <div className="desk-grid">
+        <IntradayCompanyPanel ticker={company.ticker} />
         <Card
           className="desk-span-8"
           title="Price"
@@ -370,21 +372,23 @@ function Comparison({ company }: { company: DeskCompany }) {
   ];
   const periods = ["m1", "ytd", "y1"] as const;
   return (
-    <table className="desk-table" style={{ fontSize: 12.5 }}>
-      <thead>
-        <tr>
-          <th style={{ position: "static" }} />
-          {periods.map((period) => <th key={period} className="num" style={{ position: "static" }}>{periodLabel(period)}</th>)}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row) => (
-          <tr key={row.label} style={{ cursor: "default" }}>
-            <td style={{ fontWeight: 560 }}>{row.label}</td>
-            {periods.map((period) => <td key={period} className="num"><Delta value={row.returns[period]} digits={1} /></td>)}
+    <div className="desk-table-wrap">
+      <table className="desk-table" style={{ fontSize: 12.5 }}>
+        <thead>
+          <tr>
+            <th style={{ position: "static" }} />
+            {periods.map((period) => <th key={period} className="num" style={{ position: "static" }}>{periodLabel(period)}</th>)}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.label} style={{ cursor: "default" }}>
+              <td style={{ fontWeight: 560 }}>{row.label}</td>
+              {periods.map((period) => <td key={period} className="num"><Delta value={row.returns[period]} digits={1} /></td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

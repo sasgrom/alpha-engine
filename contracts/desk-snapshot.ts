@@ -156,7 +156,7 @@ export interface DeskSnapshotInputs {
   registryIssues?: string[];
 }
 
-/** During a session: the intraday prices (every 20 minutes) used as the session's provisional closes. */
+/** During a session: the intraday prices (every five minutes) used as the session's provisional closes. */
 export interface DeskLive {
   session: string;
   /** The latest regular-session trade among the quotes: the prices are "as of" this moment. */

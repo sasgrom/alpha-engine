@@ -2,6 +2,7 @@
  * Desk view (the new standalone UI at /desk). Reads only:
  * - the precomputed market snapshot, for every signed-in user; option-derived fields only for the owner and
  *   NDA-accepted reviewers (see services/desk-snapshot.ts);
+ * - five-minute company/session views and the shared intraday market summary, for every signed-in user;
  * - the fund-flow files (overview, one fund, one company), for every signed-in user (owner's decision of
  *   2026-11-11); reviewers reach them, like everything else, only after accepting the NDA (middleware);
  * - the engine-flow files (the prediction engine's working, decision by decision), for the owner only;
@@ -15,6 +16,7 @@ import { operationsHealth } from "../../worker/lib/operations-health";
 import { loadOperationsState } from "../../worker/lib/operations-scheduler";
 import { adminQuery, createRouter, authedQuery } from "../middleware";
 import { deskSnapshotFor, readDeskSnapshot } from "../services/desk-snapshot";
+import { intradayForCompany, readIntradayMarketReport } from "../services/intraday";
 import { readEngineFlowFile } from "../services/engine-flow-files";
 import { readFundFlowsFile } from "../services/fund-flows-files";
 
@@ -27,6 +29,8 @@ export const deskRouter = createRouter({
     const presentation = ctx.user.role === "admin" || Boolean(ctx.reviewerAccess?.acceptedAt);
     return deskSnapshotFor(snapshot, presentation);
   }),
+  intraday: authedQuery.input(z.object({ ticker: z.string().trim().min(1).max(20), sessions: z.number().int().min(1).max(5).default(1) })).query(({ input }) => intradayForCompany(input)),
+  intradayMarket: authedQuery.query(() => readIntradayMarketReport()),
   flowsOverview: authedQuery.query(() => readFundFlowsFile<FundFlowsOverview>("overview.json")),
   flowsFund: authedQuery.input(entity).query(({ input }) => readFundFlowsFile<FundFlowsFund>(`fund/${input.cik}.json`)),
   flowsCompany: authedQuery.input(entity).query(({ input }) => readFundFlowsFile<FundFlowsCompany>(`company/${input.cik}.json`)),

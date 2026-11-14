@@ -1,11 +1,12 @@
 /**
- * Intraday prices every 20 minutes of a trading session (scheduler job schwab-intraday): renews the Schwab token,
+ * Intraday prices every five minutes of a trading session (scheduler job schwab-intraday): renews the Schwab token,
  * takes one batched quote snapshot of every price series (S&P 500 with both listings of dual-class companies, the
  * research companies, SPY and the sector funds), and writes under D:\research\alpha-engine\schwab-intraday:
- *   <session>/<HHMM>.raw.json  the responses as received, <session>/<HHMM>.json the compact quotes (HHMM US Eastern),
- *   <session>/bars.json        20-minute bars of the session so far,
- *   live.json                  the live prices the desk snapshot reads,
- *   manifest.jsonl             one line per snapshot with its SHA-256.
+ *   <session>/<HHMM>.json       compact quotes (HHMM US Eastern),
+ *   <session>/<HHMM>.raw.json   responses only at 00/20/40 past the hour; existing raw files are left untouched,
+ *   <session>/bars.json         five-minute bars of the session so far, with approximate highs and lows,
+ *   live.json                   the live prices the desk snapshot reads,
+ *   manifest.jsonl              one line per snapshot with its SHA-256 and whether raw was retained.
  * Only the newest ten sessions are kept (the owner's decision of 2026-11-12). Market data only: no account, order or
  * production request, and nothing is written to the daily price history. A holiday, or a time outside the regular
  * session, ends the run without a snapshot. A failed batch fails the run: the previous live prices stay in place.
@@ -19,7 +20,7 @@ import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSyn
 import path from "node:path";
 import { writeJsonAtomic } from "./lib/json-file";
 import { parseMarketHours, schwabMarketHoursPath } from "./lib/schwab-context";
-import { buildBars, livePrices, parseQuotes, sessionsToDrop, sessionWindow, symbolBatches, type IntradayQuote, type IntradaySnapshot } from "./lib/schwab-intraday";
+import { buildBars, livePrices, parseQuotes, rawSnapshotDue, sessionsToDrop, sessionWindow, symbolBatches, type IntradayQuote, type IntradaySnapshot } from "./lib/schwab-intraday";
 import { createSchwabSession } from "./lib/schwab-paced";
 import { schwabPriceSeries } from "./lib/schwab-price-series";
 
@@ -56,18 +57,18 @@ const easternTime = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_Yo
 const hhmm = `${easternTime.find((part) => part.type === "hour")!.value}${easternTime.find((part) => part.type === "minute")!.value}`;
 const folder = path.join(ROOT, hours.date);
 mkdirSync(folder, { recursive: true });
-const rawText = JSON.stringify(raw);
-const rawSha256 = createHash("sha256").update(rawText).digest("hex");
+const rawRetained = rawSnapshotDue(capturedAt.toISOString());
+const rawSha256 = rawRetained ? createHash("sha256").update(JSON.stringify(raw)).digest("hex") : null;
 const snapshot: IntradaySnapshot = { schemaVersion: 1, session: hours.date, capturedAt: capturedAt.toISOString(), quotes };
-writeJsonAtomic(path.join(folder, `${hhmm}.raw.json`), raw);
+if (rawRetained) writeJsonAtomic(path.join(folder, `${hhmm}.raw.json`), raw);
 writeJsonAtomic(path.join(folder, `${hhmm}.json`), snapshot);
 
-// the session's 20-minute bars, from every snapshot of the session so far
+// the session's five-minute bars, from every snapshot of the session so far
 const snapshots = readdirSync(folder).filter((name) => /^\d{4}\.json$/.test(name)).sort().map((name) => JSON.parse(readFileSync(path.join(folder, name), "utf8")) as IntradaySnapshot);
-writeJsonAtomic(path.join(folder, "bars.json"), { schemaVersion: 1, session: hours.date, snapshots: snapshots.length, updatedAt: capturedAt.toISOString(), bars: buildBars(snapshots) });
+writeJsonAtomic(path.join(folder, "bars.json"), { schemaVersion: 1, session: hours.date, intervalMinutes: 5, snapshots: snapshots.length, updatedAt: capturedAt.toISOString(), bars: buildBars(snapshots) });
 const live = livePrices(snapshot);
 writeJsonAtomic(path.join(ROOT, "live.json"), live);
-appendFileSync(path.join(ROOT, "manifest.jsonl"), `${JSON.stringify({ session: hours.date, file: `${hours.date}/${hhmm}.json`, capturedAt: snapshot.capturedAt, asOf: live.asOf, quotes: Object.keys(quotes).length, missing, rawSha256 })}\n`);
+appendFileSync(path.join(ROOT, "manifest.jsonl"), `${JSON.stringify({ session: hours.date, file: `${hours.date}/${hhmm}.json`, capturedAt: snapshot.capturedAt, asOf: live.asOf, quotes: Object.keys(quotes).length, missing, rawRetained, rawSha256 })}\n`);
 
 // ten sessions kept: older snapshots and bars go (only YYYY-MM-DD folders directly under the archive root)
 const dropped: string[] = [];

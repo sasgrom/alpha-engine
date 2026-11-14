@@ -6,16 +6,20 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router";
 import { Plus, X } from "lucide-react";
 import { Sparkline } from "../charts/Sparkline";
+import { IntradaySpark } from "../charts/IntradayChart";
 import { Card, CompanyLink, Delta, Notice, Shimmer } from "../components";
 import { useDocumentTitle } from "../context";
 import { searchCompanies, useDeskSnapshot, useWatchlist } from "../data";
 import { DevNotes } from "../DevNotes";
-import { fmtCap, fmtDate, fmtPrice } from "../format";
+import { fmtCap, fmtClock, fmtDate, fmtPrice } from "../format";
+import { useDeskIntradayMarket } from "../intraday";
+import { INTRADAY_SNAPSHOT_LABEL } from "@contracts/intraday";
 
 export default function Watchlist() {
   useDocumentTitle("Watchlist");
   const snapshot = useDeskSnapshot();
   const watch = useWatchlist();
+  const intraday = useDeskIntradayMarket();
   const [query, setQuery] = useState("");
   const data = snapshot.data;
   const byCik = useMemo(() => new Map((data?.companies ?? []).map((company) => [company.cik, company])), [data]);
@@ -66,6 +70,7 @@ export default function Watchlist() {
                   <th className="num">1M</th>
                   <th className="num">YTD</th>
                   <th className="num">Market value</th>
+                  <th>Today · 5 min{intraday.data ? ` · ${fmtClock(intraday.data.asOf)}` : ""}</th>
                   <th>3 months</th>
                   <th>Last report</th>
                   <th>Next report</th>
@@ -90,6 +95,7 @@ export default function Watchlist() {
                       <td className="num"><Delta value={company?.returns.m1 ?? null} /></td>
                       <td className="num"><Delta value={company?.returns.ytd ?? null} /></td>
                       <td className="num desk-ink-2">{fmtCap(company?.marketCap ?? null)}</td>
+                      <td>{company ? <IntradaySpark points={intraday.data?.paths[company.ticker] ?? []} width={96} height={26} label={`${company.ticker} today · 5-minute snapshots`} /> : null}</td>
                       <td>{company ? <Sparkline values={company.spark} width={96} height={26} /> : null}</td>
                       <td className="desk-ink-2">{company?.lastEarnings ? <>{fmtDate(company.lastEarnings, "short")} <Delta value={company.lastEarningsReaction} /></> : "—"}</td>
                       <td className="desk-ink-2">{company?.nextEarnings ? `~${fmtDate(company.nextEarnings, "short")}` : "—"}</td>
@@ -110,6 +116,9 @@ export default function Watchlist() {
       </Card>
       <p className="desk-muted" style={{ fontSize: 12.5, marginTop: 10 }}>
         Companies outside the index are added in the <Link className="desk-link" to="/universe">classic manager</Link>, because adding one starts a data job.
+      </p>
+      <p className="desk-muted" style={{ fontSize: 12.5, marginTop: 6 }}>
+        {INTRADAY_SNAPSHOT_LABEL}. {intraday.data ? `${intraday.data.marketOpen ? "Open session" : `Last session · ${fmtDate(intraday.data.session, "short")}`} · as of ${fmtClock(intraday.data.asOf)}.` : "No 5-minute market session is stored yet."}
       </p>
       <DevNotes page="watchlist" />
     </div>

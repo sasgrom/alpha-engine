@@ -6,9 +6,10 @@
  *   - the Schwab archives on D: — instruments (fundamentals) and the latest quotes folder of the S&P 500 root and
  *     of the research root (never the token file);
  *   - public/reports/schwab-features.json (option features of the research companies), when present;
- *   - during a session, the intraday prices (D:\research\alpha-engine\schwab-intraday\live.json, every 20 minutes):
+ *   - during a session, the intraday prices (D:\research\alpha-engine\schwab-intraday\live.json, every five minutes):
  *     a session newer than the stored closes gets the live price as its provisional close, and the snapshot says so
- *     (live.asOf); once the session's official closes are stored the live file is ignored.
+ *     (live.asOf); once the session's official closes are stored the live file is ignored. The same run also builds
+ *     desk-intraday-market.json from the session bars: breadth, funds, equal weight, movers and per-company paths.
  * The D: archives are required: when a root is missing the build stops and the previous snapshot stays in place.
  *
  *   npx tsx scripts/build-desk-snapshot.mts [--dry-run]
@@ -21,6 +22,8 @@ import { fileURLToPath } from "node:url";
 import { getDb } from "../api/queries/connection";
 import { registryCorrections } from "../api/services/canonical-ticker";
 import { buildDeskSnapshot, deskOptions, normalizeTicker, schwabFundamentals, shortInterestSummary, spliceCloses, withLiveClose, type DeskFundamentals, type InsiderTradeRow, type ShortInterestRow, type StoredCloseRow } from "../worker/lib/desk-snapshot";
+import { buildIntradayMarket } from "../worker/lib/intraday-views";
+import { defaultIntradayRoot, listIntradaySessions, readStoredIntradaySession } from "../worker/lib/intraday-storage";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 import type { LivePrices } from "../worker/lib/schwab-intraday";
 import type { DeskLive, DeskOptions } from "../contracts/desk-snapshot";
@@ -29,6 +32,8 @@ const SCHWAB_ROOTS = ["D:/research/alpha-engine/schwab-sp500", "D:/research/alph
 const LIVE_FILE = "D:/research/alpha-engine/schwab-intraday/live.json";
 const OUT = path.resolve("public/reports/desk-snapshot.json");
 const DIST_OUT = path.resolve("dist/public/reports/desk-snapshot.json");
+const INTRADAY_MARKET_OUT = path.resolve("public/reports/desk-intraday-market.json");
+const DIST_INTRADAY_MARKET_OUT = path.resolve("dist/public/reports/desk-intraday-market.json");
 const FEATURES = path.resolve("public/reports/schwab-features.json");
 const RESEARCH = path.resolve("worker/research-universe-50.json");
 const dryRun = process.argv.includes("--dry-run");
@@ -156,7 +161,7 @@ for (const row of priceRows) {
 const closes = new Map([...rowsByCik].map(([cik, rows]) => [cik, spliceCloses(rows)] as const));
 let benchmarkCloses = benchmarkRows.length ? spliceCloses(benchmarkRows) : null;
 
-// --- live prices of a session newer than the stored closes (schwab-intraday, every 20 minutes) -----------------------
+// --- live prices of a session newer than the stored closes (schwab-intraday, every five minutes) ----------------------
 let live: DeskLive | null = null;
 if (existsSync(LIVE_FILE)) {
   const file = readJson(LIVE_FILE) as LivePrices;
@@ -210,14 +215,25 @@ const snapshot = buildDeskSnapshot({
   },
 });
 
+let intradayMarket: ReturnType<typeof buildIntradayMarket> | null = null;
+const intradayRoot = defaultIntradayRoot(), latestIntradaySession = listIntradaySessions(intradayRoot).at(-1);
+if (latestIntradaySession) {
+  const stored = readStoredIntradaySession(intradayRoot, latestIntradaySession);
+  if (stored) intradayMarket = buildIntradayMarket(stored, snapshot.companies.map(company => ({ ticker: company.ticker, name: company.name })));
+}
+
 const covered = snapshot.companies.filter((company) => company.marketCap !== null).length;
 if (registryIssues.length) console.warn(`[desk-snapshot] registry: ${registryIssues.length} rows disagree with the GICS snapshot, e.g. ${registryIssues.slice(0, 3).join("; ")} — run scripts/remediate-registry-tickers.mts`);
-const summary = `[desk-snapshot] session ${snapshot.session} (previous ${snapshot.previousSession})${snapshot.live ? ` · live prices as of ${snapshot.live.asOf} for ${snapshot.live.quotes} series` : " · official closes"} · ${snapshot.companies.length} companies, ${covered} with market cap, ${snapshot.companies.filter((company) => company.options).length} with option features · breadth ${snapshot.breadth.advancers} up / ${snapshot.breadth.decliners} down · ${snapshot.inputs.companiesWithoutPrices.length} without prices · code ${codeVersion}`;
+const summary = `[desk-snapshot] session ${snapshot.session} (previous ${snapshot.previousSession})${snapshot.live ? ` · live prices as of ${snapshot.live.asOf} for ${snapshot.live.quotes} series` : " · official closes"} · ${snapshot.companies.length} companies, ${covered} with market cap, ${snapshot.companies.filter((company) => company.options).length} with option features · breadth ${snapshot.breadth.advancers} up / ${snapshot.breadth.decliners} down · ${snapshot.inputs.companiesWithoutPrices.length} without prices · code ${codeVersion}${intradayMarket ? ` · intraday ${intradayMarket.coverage.measured}/${intradayMarket.coverage.expected}` : ""}`;
 if (dryRun) {
   console.log(`${summary} · dry run, nothing written`);
 } else {
   writeJsonAtomic(OUT, snapshot);
   if (existsSync(path.dirname(path.dirname(DIST_OUT)))) writeJsonAtomic(DIST_OUT, snapshot);
+  if (intradayMarket) {
+    writeJsonAtomic(INTRADAY_MARKET_OUT, intradayMarket);
+    if (existsSync(path.dirname(path.dirname(DIST_INTRADAY_MARKET_OUT)))) writeJsonAtomic(DIST_INTRADAY_MARKET_OUT, intradayMarket);
+  }
   console.log(`${summary} · ${OUT}`);
 }
 process.exit(0);

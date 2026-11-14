@@ -12,13 +12,13 @@ export interface PageNotes {
 export const DEV_NOTES = {
   today: {
     missing: [
-      "Same-day closes: the 464 names outside the research list are captured at 04:30 the next morning, so the page shows the previous session until then.",
+      "Official daily closes still arrive after the session; intraday prices and paths are provisional five-minute snapshots.",
       "Confirmed report dates. “Coming up” is projected from each company's own calendar (same quarter last year + 52 weeks, else + 13 weeks).",
       "Guidance changes and the engine's reading for companies that just reported.",
       "“Latest filings” covers watchlist companies with stored filings only (the 50 research companies).",
     ],
     better: [
-      ["Intraday prices and a live map", "a streaming quote source (Schwab streaming is specified, not built)"],
+      ["True interval highs and lows and streaming quotes", "tick or streaming data; the current highs and lows are approximations from snapshots"],
       ["An implied move on every upcoming report", "option features for the whole index: the chains are captured daily since 11 November, the feature build still runs on the research 50"],
       ["Macro tiles with change and trend", "a history endpoint over the stored FRED vintages"],
     ],
@@ -26,12 +26,12 @@ export const DEV_NOTES = {
   markets: {
     missing: [
       "Index weights: tiles are sized by market value, not by float-adjusted S&P weight.",
-      "Sector funds as benchmarks beside the sector rows.",
+      "Full raw responses at every five-minute slot: compact snapshots are kept each time, raw responses only at the 20-minute marks.",
       "Replay of past sessions: the map shows the latest snapshot only.",
     ],
     better: [
       ["Colouring the map by a signal (reaction, guidance, implied against realized volatility) instead of return", "those readings for the whole index"],
-      ["A live intraday map", "live quotes"],
+      ["True interval extremes and a streaming live map", "tick or streaming data; the current map and day paths are built from snapshots"],
     ],
   },
   screener: {
@@ -49,7 +49,7 @@ export const DEV_NOTES = {
     missing: [
       "Financial statements, filings, valuation and sentiment: still in the classic company page.",
       "Guidance history and the engine's reading for this company.",
-      "Report time of day (before the open or after the close): the K06 calendar has it for 496 companies, it is not loaded into the app database.",
+      "Exact times for 8-Ks absent from the release calendar: those markers are explicitly filing-date only; calendar releases carry their exact ET publication time.",
       "Analyst consensus: no estimates feed is collected.",
     ],
     better: [
@@ -151,7 +151,10 @@ export const DEV_NOTES = {
       "More than one list, notes per company, and alerts.",
       "Companies outside the index can be followed only from the classic manager: adding one starts a data job, and it has no desk page until the snapshot covers it.",
     ],
-    better: [["Alerts on reports, insider purchases and large moves", "a notification channel: none exists"]],
+    better: [
+      ["Alerts on reports, insider purchases and large moves", "a notification channel: none exists"],
+      ["A longer custom intraday window", "research five-minute history; only the newest ten snapshot sessions are retained here"],
+    ],
   },
   operations: {
     missing: [

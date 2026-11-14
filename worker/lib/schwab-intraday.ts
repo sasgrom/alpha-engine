@@ -1,6 +1,6 @@
 /**
- * Intraday prices every 20 minutes of a trading session (worker/schwab-intraday.mts): one batched quote snapshot of
- * every price series, 20-minute bars built from consecutive snapshots, the live prices the desk snapshot reads, and
+ * Intraday prices every five minutes of a trading session (worker/schwab-intraday.mts): one batched quote snapshot of
+ * every price series, five-minute bars built from consecutive snapshots, the live prices the desk snapshot reads, and
  * ten sessions kept (the owner's decision of 2026-11-12). Pure helpers here; the job does the requests and the files.
  */
 import type { SchwabMarketSession } from "./schwab-context";
@@ -18,6 +18,8 @@ export interface IntradayQuote {
   volume: number | null;
   /** The last regular-session trade, ms since epoch. */
   tradeTime: number | null;
+  /** False when the provider explicitly marks the quote real-time; null when the response does not say. */
+  delayed?: boolean | null;
 }
 
 export interface IntradaySnapshot {
@@ -27,7 +29,7 @@ export interface IntradaySnapshot {
   quotes: Record<string, IntradayQuote>;
 }
 
-/** A 20-minute bar ending at `end` (the snapshot's capture time). */
+/** A five-minute bar ending at `end` (the snapshot's capture time); its extremes are approximate. */
 export interface IntradayBar { end: string; o: number; h: number; l: number; c: number; v: number | null }
 
 const finite = (value: unknown): number | null => (typeof value === "number" && Number.isFinite(value) ? value : null);
@@ -49,6 +51,7 @@ export function parseQuotes(body: unknown): Map<string, IntradayQuote> {
       low: positive(quote.lowPrice),
       volume: finite(quote.totalVolume),
       tradeTime: finite(regular.regularMarketTradeTime) ?? finite(quote.tradeTime),
+      delayed: typeof value?.realtime === "boolean" ? !value.realtime : typeof quote.delayed === "boolean" ? quote.delayed : null,
     });
   }
   return out;
@@ -58,6 +61,14 @@ export function symbolBatches(symbols: string[], size = 200): string[][] {
   const batches: string[][] = [];
   for (let i = 0; i < symbols.length; i += size) batches.push(symbols.slice(i, i + size));
   return batches;
+}
+
+/** Raw responses are retained only at 00/20/40 past the hour; every compact snapshot is retained. */
+export function rawSnapshotDue(capturedAt: string): boolean {
+  const date = new Date(capturedAt);
+  if (!Number.isFinite(date.getTime())) return false;
+  const minute = Number(new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", minute: "2-digit", hourCycle: "h23" }).format(date));
+  return Number.isInteger(minute) && minute % 20 === 0;
 }
 
 /** Whether a snapshot belongs now: a trading day, from shortly before the regular session to shortly after it. */
@@ -73,7 +84,7 @@ export function sessionWindow(hours: SchwabMarketSession, now: Date, leadMinutes
 }
 
 /**
- * 20-minute bars from a session's snapshots, oldest first. Open and close are the prices of consecutive snapshots (the
+ * Five-minute bars from a session's snapshots, oldest first. Open and close are the prices of consecutive snapshots (the
  * first bar opens at the day's open); high and low are the day's running high and low when a new one was set inside
  * the interval, else the larger and smaller of open and close (a quote snapshot does not see the interval's own
  * extremes); volume is the change in the day's volume.

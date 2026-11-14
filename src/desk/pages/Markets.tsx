@@ -4,6 +4,7 @@ import { DESK_PERIODS, type DeskPeriod } from "@contracts/desk-snapshot";
 import { DivergingLegend, MarketMap } from "../charts/MarketMap";
 import { useWidth } from "../charts/scale";
 import { Card, CompanyLink, Delta, Notice, Segmented, Shimmer } from "../components";
+import { MarketIntradayPanel } from "../components/IntradayPanels";
 import { useDesk, useDocumentTitle } from "../context";
 import { periodLabel, useDeskSnapshot } from "../data";
 import { DevNotes } from "../DevNotes";
@@ -52,6 +53,8 @@ export default function Markets() {
         <Segmented label="View" options={[{ value: "map", label: "Map" }, { value: "table", label: "Table" }]} value={view} onChange={setView} />
         <span style={{ marginLeft: "auto" }}><DivergingLegend period={period} palette={palette} /></span>
       </div>
+
+      <MarketIntradayPanel />
 
       <div ref={frame}>
         {view === "map" ? (

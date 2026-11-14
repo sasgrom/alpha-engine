@@ -85,10 +85,13 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 - **Reviewer access with an end date and an audit log:** who saw what, when.
 - **Password reset and invitations,** with no browser prompts.
 - **Intraday views** (owner's yes, 2026-11-13: "wanted for the page look alive, did not plan to store all of it"): K21
-  (`docs/engine/tasks/K21-intraday-candles-and-views.md`), right after K16.4.
-  - The existing price snapshots move from every 20 to every 5 minutes.
-  - Views: Company "Today / 5 days", Markets "Through the day", Watchlist and Today day lines.
-  - Intraday history for research, if ever needed, comes from the owner's Stooq 5-minute download.
+  (`docs/engine/tasks/K21-intraday-candles-and-views.md`).
+  - [x] The existing price snapshots move from every 20 to every 5 minutes; compact snapshots stay each time, raw responses only at the 20-minute marks, and the existing ten-session retention is unchanged.
+  - [x] `desk.intraday` returns company/SPY/sector bars, cumulative VWAP, previous close, opening gap, release/8-K markers and split-rebased earlier sessions. `desk.intradayMarket` serves the shared summary.
+  - [x] `desk-snapshot-live` also builds breadth, SPY/equal weight, sector funds, movers and per-company paths from the latest session bars, including after official closes.
+  - [x] Views: Company "Today / 5 days", Markets "Through the day", Watchlist and Today day lines, with as-of/delayed/closed-session labels and five-minute visibility polling.
+  - Highs and lows are explicitly approximate; raw responses are not collected at the intermediate five-minute slots. Intraday history for research, if ever needed, comes from the owner's Stooq 5-minute download, not this display archive.
+  - Scheduler and web restarts belong to Claude's review/delivery step, not the implementation work block.
 - **How members could find each other** (owner, 2026-11-13: "good plan, write it down, right now no need for it").
   Today a member sees only the owner, the admins and people they already wrote to. Steps, simplest first:
   1. **Owner introductions:**

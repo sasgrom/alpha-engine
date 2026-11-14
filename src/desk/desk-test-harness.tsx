@@ -8,6 +8,8 @@ import { createRoot } from "react-dom/client";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { TRPCProvider } from "@/providers/trpc";
 import type { DeskCompany, DeskSnapshot } from "@contracts/desk-snapshot";
+import type { DeskIntradayMarket, DeskIntradayResponse, DeskIntradaySeries } from "@contracts/intraday";
+import { SECTOR_NAME_BY_FUND } from "@contracts/intraday";
 import DeskApp from "./DeskApp";
 import { ENGINE_COMPANY, ENGINE_INDEX } from "./engine/engine-fixtures";
 import { FLOWS_COMPANY, FLOWS_FUND, FLOWS_OVERVIEW } from "./flows/flows-fixtures";
@@ -52,6 +54,45 @@ export const SNAPSHOT: DeskSnapshot = {
     row("NVDA", "Nvidia", 1045810, 4.3e12, -0.0547),
     row("MSFT", "Microsoft", 789019, 3.9e12, 0.02),
   ],
+};
+
+const INTRADAY_TIMES = ["2026-11-13T14:40:00Z", "2026-11-13T14:45:00Z", "2026-11-13T14:50:00Z"];
+const path = (values: number[]) => values.map((value, index) => ({ time: INTRADAY_TIMES[index], value }));
+function series(previousClose: number, closes: number[], delayed: boolean | null): DeskIntradaySeries {
+  let turnover = 0, volume = 0;
+  const bars = closes.map((close, index) => {
+    turnover += close * 1000;
+    volume += 1000;
+    return { end: INTRADAY_TIMES[index], o: close - 0.1, h: close + 0.5, l: close - 0.5, c: close, v: 1000, vwap: turnover / volume };
+  });
+  return { bars, previousClose, vwap: bars.at(-1)?.vwap ?? null, openGap: bars.length ? bars[0].o / previousClose - 1 : null, delayed, splitAdjusted: false };
+}
+
+export const INTRADAY_COMPANY: DeskIntradayResponse = {
+  schemaVersion: 1, ticker: "AAPL", cik: 320193, name: "Apple Inc.", sector: "Information Technology", sectorFund: "XLK", requestedSessions: 1,
+  status: "ok", session: "2026-11-13", asOf: "2026-11-13T14:50:00Z", marketOpen: false, delayed: true,
+  sessions: [{
+    date: "2026-11-13", company: series(354.88, [359.88, 360.25, 360.5], true), spy: series(757.12, [756.86, 757.1, 757.2], false), sector: series(173.77, [170.28, 170.5, 170.6], false),
+    markers: [
+      { time: "2026-11-13T15:05:00.000Z", date: "2026-11-13", kind: "release", label: "Earnings release", accessionNo: "0000320193-26-000100", sourceUrl: "https://www.sec.gov/Archives/edgar/data/320193/000032019326000100", precision: "second" },
+      { time: null, date: "2026-11-13", kind: "8-K", label: "8-K · filing date only", accessionNo: "0000320193-26-000101", sourceUrl: "https://www.sec.gov/Archives/edgar/data/320193/000032019326000101", precision: "day" },
+    ],
+  }],
+};
+
+const MARKET_SECTORS = Object.entries(SECTOR_NAME_BY_FUND).map(([ticker, name]) => ({ ticker, name, points: path([0, ticker === "XLK" ? 0.01 : 0.001, ticker === "XLK" ? 0.02 : 0.002]), change: ticker === "XLK" ? 0.02 : 0.002 }));
+export const INTRADAY_MARKET: DeskIntradayMarket = {
+  schemaVersion: 1, generatedAt: "2026-11-13T14:50:01Z", session: "2026-11-13", asOf: "2026-11-13T14:50:00Z", marketOpen: false, delayed: true, status: "ok",
+  coverage: { expected: 3, measured: 3 },
+  breadth: [{ time: INTRADAY_TIMES[0], above: 2, measured: 3, share: 2 / 3 }, { time: INTRADAY_TIMES[1], above: 2, measured: 3, share: 2 / 3 }, { time: INTRADAY_TIMES[2], above: 2, measured: 3, share: 2 / 3 }],
+  spy: { points: path([0, 0.001, 0.002]), change: 0.002 },
+  equalWeight: { points: path([0, 0.002, 0.003]), change: 0.003 },
+  sectors: MARKET_SECTORS,
+  movers: [{ ticker: "AAPL", name: "Apple Inc.", points: path([0, 0.01, 0.02]), change: 0.02 }, { ticker: "NVDA", name: "Nvidia", points: path([0, -0.01, -0.02]), change: -0.02 }],
+  paths: {
+    AAPL: path([0, 0.01, 0.02]), NVDA: path([0, -0.01, -0.02]), MSFT: path([0, 0.005, 0.015]), SPY: path([0, 0.001, 0.002]),
+    ...Object.fromEntries(MARKET_SECTORS.map(row => [row.ticker, row.points])),
+  },
 };
 
 const evidence = (value: number | null) => ({ value, periodEnd: "2026-09-26", quality: value === null ? "missing" : "available", stale: false });
@@ -123,6 +164,8 @@ function answer(procedure: string, role: string): unknown {
     case "auth.me": return { id: 1, username: "owner", name: "Ada Owner", role };
     case "reviewer.status": return { isReviewer: false, ndaAccepted: false, ndaVersion: null, ndaTextHash: null, firstIpBound: false, tours: [] };
     case "desk.snapshot": return SNAPSHOT;
+    case "desk.intraday": return DESK_DATA.empty ? null : INTRADAY_COMPANY;
+    case "desk.intradayMarket": return DESK_DATA.empty ? null : INTRADAY_MARKET;
     case "messages.unreadCount": return { count: DESK_DATA.unread };
     case "messages.contacts": return DESK_DATA.empty ? [] : CONTACTS.filter((contact) => owner || contact.id !== 4).map((contact) => owner ? contact : { id: contact.id, username: contact.username, name: contact.name, unread: contact.unread, lastMsgAt: contact.lastMsgAt });
     case "messages.list": return { withUserId: 2, rows: DESK_DATA.empty ? [] : THREAD };

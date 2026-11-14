@@ -17,7 +17,7 @@ describe("desk view during a session", () => {
     SNAPSHOT.live = { session: SNAPSHOT.session, asOf: "2026-11-13T18:39:55.000Z", capturedAt: "2026-11-13T18:40:05.000Z", quotes: 503 };
     desk = await mountDesk("admin");
     const eyebrow = desk.host.querySelector(".desk-eyebrow");
-    expect(eyebrow?.textContent).toMatch(/Live · prices as of \d{1,2}:\d{2}.*, refreshed every 20 minutes/);
+    expect(eyebrow?.textContent).toMatch(/Live · prices as of \d{1,2}:\d{2}.*, refreshed every 5 minutes/);
     expect(eyebrow?.querySelector(".desk-live-dot")).not.toBeNull();
     expect(desk.host.querySelector(".desk-footer")?.textContent).toMatch(/live prices as of \d{1,2}:\d{2}/);
     expect(desk.host.textContent).toContain("extremes at the latest live prices");
