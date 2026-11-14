@@ -111,6 +111,10 @@ export interface FundBooksManifest {
      * value the security carries over all books.
      */
     list: { cusip: string; ticker: string; how: string; periods: number; pairs: number; consistent: number; factor: number; value: number }[];
+    /** New CUSIPs matched to a predecessor with declining holders, shared funds and a company-specific price basis. */
+    successors: { cusip: string; predecessor: string; company: string; firstQualifiedQuarter: string; t0: string; overlap: number; predecessorOverlap: number; priceRatio: number }[];
+    /** Candidates that met the overlap and predecessor tests but were not unique. */
+    ambiguous: { cusip: string; t0: string; candidates: { company: string; predecessor: string; overlap: number; predecessorOverlap: number; priceRatio: number }[] }[];
     /** Securities the map gives to one company while their prices are another company's. */
     mapCorrected: { cusip: string; mapped: string; matched: string }[];
     /** Securities the map proposes that the prices do not confirm. */

@@ -23,10 +23,11 @@
  */
 import "dotenv/config";
 import { createHash } from "node:crypto";
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, realpathSync, statSync } from "node:fs";
 import path from "node:path";
 import { getDb } from "../api/queries/connection";
 import { FUND_BOOKS_SCHEMA_VERSION, type FundBookEntry, type FundBooksManifest, type FundBooksQuarter } from "../contracts/fund-books";
+import { findSuccessors, positionBasis, standardPriceHistory } from "../worker/lib/fund-books-matching";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 import {
   FILED_TABLE_VERSION,
@@ -73,7 +74,7 @@ const sum = (values: Iterable<number>) => {
   return total;
 };
 const sha256 = (data: Buffer | string) => createHash("sha256").update(data).digest("hex");
-const codeVersion = sha256([path.resolve("scripts/build-fund-books.mts"), path.resolve("worker/lib/thirteenf-table.ts")].map((file) => readFileSync(file, "utf8")).join("\n")).slice(0, 12);
+const codeVersion = sha256([path.resolve("scripts/build-fund-books.mts"), path.resolve("worker/lib/thirteenf-table.ts"), path.resolve("worker/lib/fund-books-matching.ts")].map((file) => readFileSync(file, "utf8")).join("\n")).slice(0, 12);
 
 // --- every filing, read once -----------------------------------------------------------------------------------------------
 interface FilingFile {
@@ -175,6 +176,8 @@ const idOf = (cusip: string): number => {
 const started = Date.now();
 const filings: Filing[] = [];
 const withoutCover: string[] = [];
+const principalSecurities = new Set<number>();
+const shareSecurities = new Set<number>();
 const fundFolders = readdirSync(CACHE).filter((name) => /^\d+$/.test(name));
 let seen = 0;
 for (const folderName of fundFolders) {
@@ -191,7 +194,11 @@ for (const folderName of fundFolders) {
       throw new Error(`Reading ${folderName}/${name} failed (${error instanceof Error ? error.message : String(error)}). The run stops; the ${parsed} filings read so far are stored and will be reused.`);
     }
     const ids = new Uint32Array(file.cusips.length);
-    for (let index = 0; index < file.cusips.length; index++) ids[index] = idOf(file.cusips[index]);
+    for (let index = 0; index < file.cusips.length; index++) {
+      ids[index] = idOf(file.cusips[index]);
+      if (file.shares[index] > 0) shareSecurities.add(ids[index]);
+    }
+    for (const [index] of file.principal) principalSecurities.add(ids[index]);
     filings.push({
       fund: file.fund, accession, cover: file.cover, rows: file.rows, value: file.value, ids, shares: Float64Array.from(file.shares), values: Float64Array.from(file.values),
       puts: new Map(file.puts.map(([index, value]) => [ids[index], value])),
@@ -322,7 +329,28 @@ const totalReturn = new Map<number, (number | null)[]>();
     if (total.some((close) => close !== null)) totalReturn.set(cik, total);
   }
 }
+const STANDARD_PRICES = path.resolve("D:/research/alpha-engine/prices/std");
+if (!existsSync(STANDARD_PRICES)) throw new Error("The standard price archive is unavailable (is D: connected?). Nothing new was built.");
+if (!/^d:/i.test(realpathSync(STANDARD_PRICES))) throw new Error(`The standard price archive must stay on D: ${STANDARD_PRICES}`);
+const standardCompanies = JSON.parse(readFileSync(path.join(STANDARD_PRICES, "companies.json"), "utf8")) as Record<string, { cik: string; ticker: string }>;
+const standardHistories = new Map<number, ReturnType<typeof standardPriceHistory>>();
+for (const cik of companies.keys()) {
+  if (!standardCompanies[String(cik)]) continue;
+  const file = path.join(STANDARD_PRICES, "daily", `${cik}.csv`);
+  if (!existsSync(file)) throw new Error(`The standard price archive lists ${tickerOf(cik)} but has no ${file}`);
+  const history = standardPriceHistory(readFileSync(file, "utf8"), periods);
+  if (history) standardHistories.set(cik, history);
+}
 const holdersOf = (id: number): number[] => periods.map((_, period) => implied.get(key(period, id))?.holders ?? 0);
+const fundHolders = new Map<number, Set<number>[]>();
+for (const filing of usable) {
+  const period = periodIndex.get(filing.cover.period!)!;
+  for (const id of filing.ids) {
+    const history = fundHolders.get(id) ?? Array.from({ length: periods.length }, () => new Set<number>());
+    history[period].add(filing.fund);
+    fundHolders.set(id, history);
+  }
+}
 /** Filed prices of a security in the quarters in which it is widely held: at least `minimum` filers and a tenth of its widest quarter. */
 const runOf = (id: number, minimum: number): (number | null)[] => {
   const holders = holdersOf(id);
@@ -346,7 +374,7 @@ const proposed = new Map<number, number>();
   }
 }
 
-type MatchHow = "price levels" | "map and price levels" | "map and price moves" | "map, company without price history" | "share class of the main security";
+type MatchHow = "price levels" | "map and price levels" | "map and price moves" | "map, company without price history" | "share class of the main security" | `successor of ${string}`;
 interface SecurityMatch {
   id: number;
   company: number;
@@ -422,24 +450,26 @@ for (const id of securityIds) {
 }
 
 // 2. other share classes: a steady price ratio to the company's main security, and prices that move together
-interface MainSeries { price: (number | null)[]; factor: number[] }
+interface MainSeries { price: (number | null)[]; factor: number[]; cusip: (string | null)[] }
 const mains = new Map<number, MainSeries>();
 {
   const widest = new Map<number, number[]>();
   for (const match of matches.values()) {
     if (match.how !== "price levels" && match.how !== "map and price levels") continue;
     const holders = holdersOf(match.id);
-    const main = mains.get(match.company) ?? mains.set(match.company, { price: new Array(periods.length).fill(null), factor: flat(1) }).get(match.company)!;
+    const main = mains.get(match.company) ?? mains.set(match.company, { price: new Array(periods.length).fill(null), factor: flat(1), cusip: new Array(periods.length).fill(null) }).get(match.company)!;
     const most = widest.get(match.company) ?? widest.set(match.company, new Array(periods.length).fill(0)).get(match.company)!;
     for (let period = 0; period < periods.length; period++) {
       if (holders[period] <= most[period]) continue;
       most[period] = holders[period];
       main.price[period] = implied.get(key(period, match.id))!.price;
       main.factor[period] = match.factors[period];
+      main.cusip[period] = cusips[match.id];
     }
   }
 }
-for (const id of unmatched) {
+
+for (const id of unmatched.filter(id => !matches.has(id))) {
   const mapped = proposed.get(id);
   const prices = runOf(id, mapped === undefined ? MIN_FILERS : 1);
   const tested: number[] = [];
@@ -486,13 +516,45 @@ for (const id of unmatched) {
   }
 }
 
+// 3. successors: a short new CUSIP takes over the predecessor's funds, on the company's own price basis
+const companyHistories = (t0: number) => [...mains.entries()].flatMap(([company, main]) => {
+  const history = standardHistories.get(company);
+  if (!history) return [];
+  const cusip = main.cusip[t0 - 1] ?? main.cusip.find(value => value !== null) ?? "";
+  return [{ cusip, company, holders: fundHolders.get(cusipIds.get(cusip)!) ?? [], prices: history.map(row => row.close), factors: history.map((row, index) => row.periodFactor ?? main.factor[index]) }];
+});
+const successors: ReturnType<typeof findSuccessors> = { matches: [], ambiguous: [] };
+for (const id of unmatched.filter(id => !matches.has(id))) {
+  if ((principalSecurities.has(id) && !shareSecurities.has(id)) || runOf(id, MIN_FILERS).filter(price => price !== null).length >= MATCH_PERIODS) continue;
+  const holders = fundHolders.get(id) ?? [];
+  const result = findSuccessors([{ cusip: cusips[id], holders, prices: periods.map((_, period) => implied.get(key(period, id))?.price ?? null) }], companyHistories);
+  successors.matches.push(...result.matches);
+  successors.ambiguous.push(...result.ambiguous);
+}
+for (const successor of successors.matches) {
+  const id = cusipIds.get(successor.cusip)!;
+  matches.set(id, { id, company: successor.company, how: `successor of ${successor.predecessor}`, periods: 1, pairs: 0, consistent: 1, factors: successor.factors, splits: [], value: 0 });
+  const mapped = proposed.get(id);
+  if (mapped !== undefined && mapped !== successor.company) corrected.push({ cusip: cusips[id], mapped: tickerOf(mapped), matched: tickerOf(successor.company) });
+}
+const classFactors = new Map<number, number[]>();
+for (const match of matches.values()) {
+  const history = standardHistories.get(match.company);
+  if (!history) continue;
+  const main = mains.get(match.company);
+  const perClass = periods.map((_, period) => match.how === "share class of the main security" ? match.factors[period] / (main?.factor[period] ?? match.factors[period]) : 1);
+  if (perClass.some(factor => !(factor > 0) || !Number.isFinite(factor))) throw new Error(`Invalid class factor for ${cusips[match.id]}`);
+  classFactors.set(match.id, perClass);
+  match.factors = history.map((row, period) => (row.periodFactor ?? main?.factor[period] ?? match.factors[period]) * perClass[period]);
+}
+
 // --explain <cusip,…> prints what the books and the stock say about a security, quarter by quarter
 for (const cusip of (argument("--explain") ?? "").split(",").filter(Boolean)) {
   const id = cusipIds.get(cusip.toUpperCase());
   if (id === undefined) { console.log(`[explain] ${cusip}: not in any filing`); continue; }
   const match = matches.get(id);
   const company = match?.company ?? proposed.get(id);
-  const stock = company === undefined ? undefined : priceOnly.get(company);
+  const stock = company === undefined ? undefined : standardHistories.get(company)?.map(row => row.close) ?? priceOnly.get(company);
   console.log(`[explain] ${cusip}: ${match ? `matched ${tickerOf(match.company)} (${match.how}, ${match.consistent}/${match.pairs} pairs over ${match.periods} quarters)` : "not matched"}; map proposes ${proposed.has(id) ? tickerOf(proposed.get(id)!) : "nothing"}`);
   for (let period = 0; period < periods.length; period++) {
     const entry = implied.get(key(period, id));
@@ -578,6 +640,25 @@ for (const entry of fundQuarters) {
     if (atOtherBooks > 0.05 * stated || position.value > 0.05 * stated) suspects.push({ fund: entry.fund, quarter: entry.period, cusip, ticker: tickerOf(matches.get(id)!.company), value: Math.round(Math.max(atOtherBooks, ratio * atOtherBooks)), ratio: Number(ratio.toPrecision(3)) });
   }
 }
+
+// Select the company's own split basis after cross-filing outlier correction, as in the standard build.
+const positionBases = new Map<FundQuarter, Map<string, number | null>>();
+for (const entry of fundQuarters) {
+  const period = periodIndex.get(entry.period)!;
+  const bases = new Map<string, number | null>();
+  for (const [cusip, position] of entry.book) {
+    const match = matches.get(cusipIds.get(cusip)!)!;
+    const standard = standardHistories.get(match.company)?.[period], standardFactor = standard?.periodFactor ?? null;
+    const useStandard = standardFactor !== null && standardFactor > 0;
+    const classFactor = useStandard ? classFactors.get(match.id)?.[period] ?? 1 : 1;
+    const close = useStandard ? standard?.close ?? null : priceOnly.get(match.company)?.[period] ?? null;
+    const periodFactor = useStandard ? standardFactor : match.factors[period] ?? null;
+    const candidates = useStandard ? standard?.candidates ?? [] : periodFactor !== null ? [periodFactor] : [];
+    const basis = positionBasis(position.shares, position.value, close, classFactor, periodFactor, candidates);
+    bases.set(cusip, basis.factor === null ? null : basis.factor * classFactor);
+  }
+  positionBases.set(entry, bases);
+}
 for (const entry of fundQuarters) for (const [cusip, position] of entry.book) {
   const match = matches.get(cusipIds.get(cusip)!)!;
   match.value += position.value;
@@ -599,7 +680,7 @@ for (const period of periods) {
       calls += position.calls;
       if (!(position.shares > 0 && position.value > 0)) continue;
       const row = perCompany.get(match.company) ?? perCompany.set(match.company, { shares: 0, value: 0 }).get(match.company)!;
-      row.shares += position.shares * match.factors[index];
+      row.shares += position.shares * (positionBases.get(entry)!.get(cusip) ?? match.factors[index]);
       row.value += position.value;
     }
     for (const [company, row] of [...perCompany].sort((a, b) => a[0] - b[0])) positions.push([entry.fund, company, Math.round(row.shares), Math.round(row.value)]);
@@ -662,6 +743,8 @@ const manifest: FundBooksManifest = {
     companies: matchedCompanies.size,
     companiesWithout: [...companies].filter(([cik]) => !matchedCompanies.has(cik)).map(([, ticker]) => ticker).sort(),
     list: [...matches.values()].sort((a, b) => b.value - a.value).map((match) => ({ cusip: cusips[match.id], ticker: tickerOf(match.company), how: match.how, periods: match.periods, pairs: match.pairs, consistent: match.consistent, factor: match.factors[periods.length - 1], value: Math.round(match.value) })),
+    successors: successors.matches.map((match) => ({ cusip: match.cusip, predecessor: match.predecessor, company: tickerOf(match.company), firstQualifiedQuarter: periods[match.firstQualifiedQuarter], t0: periods[match.t0], overlap: match.overlap, predecessorOverlap: match.predecessorOverlap, priceRatio: match.priceRatio })),
+    ambiguous: successors.ambiguous.map((row) => ({ cusip: row.cusip, t0: periods[row.t0], candidates: row.candidates.map(candidate => ({ company: tickerOf(candidate.company), predecessor: candidate.predecessor, overlap: candidate.overlap, predecessorOverlap: candidate.predecessorOverlap, priceRatio: candidate.priceRatio })) })),
     mapCorrected: corrected,
     rejected,
   },
