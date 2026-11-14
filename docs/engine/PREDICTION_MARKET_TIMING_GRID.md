@@ -228,6 +228,18 @@ wait as usual and execute if it is in the money, assume realistic cost of the tr
 - **Why:** a down call is right about as often as chance, and when it is right the fall is rarely larger than the
   premium. A put pays only when the fall within the window beats 2–3% of the stock plus the spread.
 
+## 6a. After version 2 (2026-11-14, later)
+
+The owner's follow-up tests closed the Fed question; the method they produced is recorded in
+`docs/engine/FACTOR_TEST_METHOD.md`:
+- JPM with the note's Bayes done right (the market's favourite as the factor, e± conditional on the stock), leave-one-out,
+  80/20 and 90/10, the regression on the three outcomes, and a daily regression on Kalshi's expected path.
+- The 40 companies with the decision formula (history prior, the vote, E[r], Kelly, invested by default), with and
+  without e± matured on simulated 2000–21 decisions.
+- The daily rate sensitivity of 490 companies to the 2-year yield, 2000–26, and a measured dependency table.
+- Responders chosen on 2000–21 by OLS and tested on 2022–26.
+- Verdict: the Fed outcome is noise for timing; the daily rate sensitivity is a real exposure measure.
+
 ## 7. The short answer (2026-11-14)
 
 - **Version 2, as the owner specified it, mostly does not work.** Five of seven topics stay at chance in every
