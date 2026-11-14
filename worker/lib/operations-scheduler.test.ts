@@ -44,6 +44,16 @@ describe("operations registry", () => {
     expect(OPERATION_JOB_MAP["data-health"].defaultEnabled).toBe(true);
   });
 
+  it("schedules the gated standard-price refresh on Sunday without dependencies", () => {
+    const job = OPERATION_JOB_MAP["std-prices-refresh"];
+    expect(job.cron).toBe("0 2 * * 0");
+    expect(job.dependsOn).toEqual([]);
+    expect(job.requirements).toEqual(["network", "driveD"]);
+    expect(job.command).toBe("npx tsx ../alpha-engine-lab/src/prices/std-prices-refresh.mts");
+    expect(job.destination).toContain("no production write");
+    expect(nextCronRun(job.cron!, new Date(2026, 10, 14, 3, 0))).toEqual(new Date(2026, 10, 15, 2, 0));
+  });
+
   it("points every executable job at a real script", () => {
     for (const job of OPERATION_JOBS) {
       if (job.executable === "npx") expect(existsSync(path.join(OPERATIONS_ROOT, job.args[1])), job.id).toBe(true);

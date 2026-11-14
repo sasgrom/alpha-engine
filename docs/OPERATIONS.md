@@ -223,6 +223,7 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Analytics and weekly evidence snapshot | scheduled | after schwab-daily-bars | Local static UI artifacts; no production write. |
 | Expectations static report | scheduled | 0 6 * * * | Local static UI artifacts; partial results remain explicitly unreviewed. |
 | Prediction-market expectations daily | scheduled | 15 16 * * * | Local D: archive and local UI artifact only; no production writes or automatic reportFile push. |
+| Standard prices weekly gated refresh | scheduled | 0 2 * * 0 | Local D: artifacts and alpha_research only; no production write and no alpha_engine production mutation. |
 | FRED and ALFRED weekly vintage refresh | scheduled | 30 5 * * 0 | Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local. |
 | OFAC daily event refresh | scheduled | 40 5 * * * | Local macro archive only; no production write. |
 | Macro manifest and availability QA | scheduled | 55 5 * * * | Local fail-closed QA gate only. |
@@ -705,6 +706,23 @@ npx tsx worker/build-expectations-report.mts --cohorts --scope full-history
 
 ```powershell
 npx tsx worker/prediction-markets-daily.mts --scheduled-style
+```
+
+### 22b. Standard prices weekly gated refresh
+
+- **ID:** `std-prices-refresh`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** 0 2 * * 0
+- **Dependencies:** none
+- **Purpose:** Rebuild standard prices weekly from the complete current app registry, corporate actions and vendor history, then replace the loaded build only after gates, regression and staged read-back pass.
+- **Input:** Local Schwab histories including RIVN and ENLT, Yahoo corporate actions, Tiingo, options/SEC split evidence, the previous loaded standard-price build and the lab's reviewed build logic.
+- **Output:** One dated D: refresh folder per run, a regression report, staged read-back evidence, an atomic research-table swap and worker/.runs/local-generated/std-prices-refresh.json.
+- **Destination:** Local D: artifacts and alpha_research only; no production write and no alpha_engine production mutation.
+- **Requirements:** network, driveD
+- **Operational note:** Runs about 70 minutes. A failed step stops the chain with an honest error and no swap. Old run folders and the previous loaded build are preserved until the staged swap; no data is pruned. RIVN and ENLT receive a one-time 20-year Schwab backfill before export. The loader stages std_*_next, checks 2,000 rows, then swaps atomically; a failed read-back leaves the old tables in place.
+
+```powershell
+npx tsx ../alpha-engine-lab/src/prices/std-prices-refresh.mts
 ```
 
 ### 23. FRED and ALFRED weekly vintage refresh

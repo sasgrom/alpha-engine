@@ -17,11 +17,12 @@ export function schwabSymbol(ticker: string): string {
 const universe = (file: string) => JSON.parse(readFileSync(path.resolve(import.meta.dirname, "..", file), "utf8")) as { cik: number; ticker: string }[];
 
 /**
- * Every series the Schwab daily price jobs cover: the research universe, the S&P 500 snapshot (both listings of
- * dual-class companies), SPY and the eleven sector funds. Price keys follow the Stooq load, so the two sources of
- * one series share a key and differ only by prices.source.
+ * Every series the Schwab daily price jobs cover: every registry company with a price series (the 53-name research
+ * source plus the S&P 500 snapshot, both listings of dual-class companies and RIVN/ENLT), SPY and the eleven sector
+ * funds. XOM_PRE stays out. Price keys follow the Stooq load, so the two sources of one series share a key and differ
+ * only by prices.source.
  */
-export function schwabPriceSeries(files = ["research-universe-50.json", "edgar-universe.json"]): SchwabPriceSeries[] {
+export function schwabPriceSeries(files = ["research-universe-53.json", "edgar-universe.json"]): SchwabPriceSeries[] {
   const byTicker = new Map<string, SchwabPriceSeries>();
   for (const file of files) {
     for (const company of universe(file)) {

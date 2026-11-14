@@ -170,3 +170,27 @@ The build is deterministic for given inputs; `sessions.json` and `tiingo-mapping
   folders of gate 2.
 - **Use:** market value = close × shares outstanding on the same day's basis (the next step of the fundamentals,
   the owner's instructions), and the valuation factors.
+
+
+## 8. Weekly gated refresh (K18)
+
+Run `npx tsx ../alpha-engine-lab/src/prices/std-prices-refresh.mts` from `C:/dev/alpha-engine`; the scheduler registers the same command for Sunday at 02:00 local. A run takes about 70 minutes and gets its own `D:/research/alpha-engine/prices/refresh-<runId>/` folder. Existing run folders are not pruned. The previous loaded build remains in place until the final staged swap.
+
+The chain is: a one-time 20-year Schwab backfill for **RIVN and ENLT** (the two registry companies with price series outside the S&P snapshot and research 50), the existing daily-bar loader for those two files, Yahoo corporate actions for all 516 price tickers (including SPY and the 11 sector funds), event reconciliation, app-price export, standard build, and acceptance gates. `tiingo-mapping.json` is reused from the loaded build; `sessions.json` is not copied, so new sessions enter the calendar. The calendar's last date must equal the latest SPY date in the actual app export, including on a Sunday run.
+
+The regression comparator refuses to load when total-return disagreement rises by more than 0.0005, option-spot passes fall by more than two, any split move fails, unexplained steps rise by more than five, any carried-forward line misses today's basis by 0.003 or more, empty sessions rise by more than 200, or any previous company is missing. The build version is `p1.<yyyymmdd>`, status `provisional`.
+
+The loader writes only `std_prices_next`, `std_price_companies_next` and `std_price_builds_next`, checks exact counts and 2,000 random staged bars, writes the build row last, and then performs one atomic `RENAME TABLE`. Old live tables are dropped only after that swap. A failed read-back or any earlier failure leaves the previous tables in place and the staging evidence available for diagnosis. The running summary is checkpointed to `worker/.runs/local-generated/std-prices-refresh.json` and the dated D: folder after every step; a D: interruption stops the chain and resumes from verified checkpoints, never a replacement cache on C:.
+
+The Schwab backfill is the explicitly required local collection step in K18 section 3. It writes only local market-price bars through the existing loader. Production writes and `alpha_engine` production mutation remain forbidden.
+
+
+### First K18 refresh evidence — 2026-11-14
+
+Run `20261114T072020Z` completed at `2026-11-14T08:51:19.922Z` in 5,385 seconds and is recorded in `worker/.runs/local-generated/std-prices-refresh.json` (post-check hash `1aaf0b5647acd836cc0cb293a760d6bcc62feadd958d103ea5b00c876044406d`). All 516 Yahoo corporate-action requests succeeded with no failure. Reconciliation preserved two source conflicts for review; the standard gate has zero split-move failures.
+
+The regression comparator passed: total-return differing share `0.002513 → 0.002515` (increase 0.000002, limit 0.0005), option-spot passes `505 → 505`, splits `440/440`, unexplained steps `18 → 18`, no carried-forward misses at the 0.003 gate, empty sessions `5,443 → 5,443`, and no previous company missing. The calendar has 9,286 sessions through **2026-11-13**, one more than the loaded build.
+
+The atomic swap loaded **2,894,416 bars and 516 companies** (507 ok, 9 review) as `p1.20261114`, provisional. It performed 2,000 staged read-backs with zero differences. Independent post-check at `2026-11-14T08:54:39.601Z` found the same live counts, latest date `2026-11-13`, one build row, and no remaining `std_*_next` or `std_*_old` tables. RIVN has 1,258 standard sessions from `2021-11-10` through `2026-11-13`; ENLT has 944 from `2023-02-10` through `2026-11-13`.
+
+Artifact SHA256 values: gates `ee738a6b895051c93b82c83a8a655cce533f16d9d39909aeca02f3c0214bfe45`, companies `24241130c85325bec1b38b2ed79bb620c38b7ad873e9459db379fa20918d3dfc`, sessions `9f0b820946c766e20a5e1bc28e4b52059cf10b905043982dd2e65417afa494bb`, load summary `34f9cff9548b44f3fe429d8f8d61ae0be0e686cfb4bcbbdd3ab49a3116bc08e4`.
