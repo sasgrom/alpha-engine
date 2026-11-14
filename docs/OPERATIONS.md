@@ -719,7 +719,7 @@ npx tsx worker/prediction-markets-daily.mts --scheduled-style
 - **Output:** One dated D: refresh folder per run, a regression report, staged read-back evidence, an atomic research-table swap and worker/.runs/local-generated/std-prices-refresh.json.
 - **Destination:** Local D: artifacts and alpha_research only; no production write and no alpha_engine production mutation.
 - **Requirements:** network, driveD
-- **Operational note:** Runs about 70 minutes. A failed step stops the chain with an honest error and no swap. Old run folders and the previous loaded build are preserved until the staged swap; no data is pruned. RIVN and ENLT receive a one-time 20-year Schwab backfill before export. The loader stages std_*_next, checks 2,000 rows, then swaps atomically; a failed read-back leaves the old tables in place.
+- **Operational note:** Runs about 70 minutes. A failed step stops the chain with an honest error and no swap. Old run folders and the previous loaded build are preserved until the staged swap; no data is pruned. RIVN and ENLT receive a one-time 20-year Schwab backfill before export. The loader stages std_*_next, checks 2,000 rows, then swaps atomically; a failed read-back leaves the old tables in place. The orchestrator also refuses to start when any lab file it runs has uncommitted changes.
 
 ```powershell
 npx tsx ../alpha-engine-lab/src/prices/std-prices-refresh.mts

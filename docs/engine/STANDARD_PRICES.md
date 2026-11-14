@@ -194,3 +194,10 @@ The regression comparator passed: total-return differing share `0.002513 → 0.0
 The atomic swap loaded **2,894,416 bars and 516 companies** (507 ok, 9 review) as `p1.20261114`, provisional. It performed 2,000 staged read-backs with zero differences. Independent post-check at `2026-11-14T08:54:39.601Z` found the same live counts, latest date `2026-11-13`, one build row, and no remaining `std_*_next` or `std_*_old` tables. RIVN has 1,258 standard sessions from `2021-11-10` through `2026-11-13`; ENLT has 944 from `2023-02-10` through `2026-11-13`.
 
 Artifact SHA256 values: gates `ee738a6b895051c93b82c83a8a655cce533f16d9d39909aeca02f3c0214bfe45`, companies `24241130c85325bec1b38b2ed79bb620c38b7ad873e9459db379fa20918d3dfc`, sessions `9f0b820946c766e20a5e1bc28e4b52059cf10b905043982dd2e65417afa494bb`, load summary `34f9cff9548b44f3fe429d8f8d61ae0be0e686cfb4bcbbdd3ab49a3116bc08e4`.
+
+
+### Provenance correction K18.1 — 2026-11-14
+
+The `p1.20261114` build ran while the lab's K18 files were uncommitted. The orchestrator then changed once for summary metadata, so it is not byte-identical to the later `268a578` delivery. `codeCommit` therefore remains `0e5be4a806d3ee5db7957b39ffcd77247613d132`; it was not falsely replaced. The row's note is now "built from uncommitted lab code; staged load and atomic swap; provenance noted in K18.1; next Sunday produces a clean build". A guarded one-row update changed only that note and independently verified every other field. Evidence: `worker/.runs/local-generated/std-prices-refresh-provenance.json`, SHA256 `236fb2bf30746c4159b16c7042bad073c0bc9e9d0e6eb19b137e6522648b6548` (run/delivery orchestrator hashes `20e0b0ec…` / `6a7d3f98…`).
+
+Lab `443789f35357cbdd6895375be5f19e447cb84cb7` adds a preflight guard and regression: the orchestrator refuses to start when any runner file has uncommitted changes. The guard covers the orchestrator, comparator, loader, build/gate/reconcile/Yahoo/export scripts, overrides and research connection. It runs before collection or any database write; a clean tree records the exact HEAD in the summary. The next Sunday run will therefore carry a clean code commit.
