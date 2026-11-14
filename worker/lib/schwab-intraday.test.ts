@@ -1,7 +1,8 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { OPERATION_JOB_MAP } from "../../contracts/operations";
 import { cronParts, nextCronRun } from "./operations-scheduler";
-import { buildBars, livePrices, parseQuotes, rawSnapshotDue, sessionsToDrop, sessionWindow, symbolBatches, type IntradaySnapshot } from "./schwab-intraday";
+import { buildBars, livePrices, parseQuotes, rawSnapshotDue, sessionWindow, symbolBatches, type IntradaySnapshot } from "./schwab-intraday";
 
 const hours = (date: string, isOpen = true) => ({
   date, isOpen, isHoliday: !isOpen,
@@ -81,11 +82,12 @@ describe("live prices: five-minute bars, the live file and ten sessions", () => 
     expect(bars[2]).toEqual({ end: "2026-11-13T14:50:00Z", o: 102, h: 102, l: 99, c: 101, v: 600 });
   });
 
-  it("dates the live prices by the latest trade, and keeps only the newest ten sessions", () => {
+  it("dates live prices by the latest trade, keeps the true capture time and never prunes sessions", () => {
     const live = livePrices(snap("2026-11-13T18:40:00Z", 102, 103, 100, 900));
     expect(live).toMatchObject({ session: "2026-11-13", asOf: "2026-11-13T18:39:55.000Z", quotes: { XYZ: { last: 102, previousClose: 100 } } });
-    const folders = ["live.json", "manifest.jsonl", ...Array.from({ length: 12 }, (_, i) => `2026-11-${String(i + 1).padStart(2, "0")}`)];
-    expect(sessionsToDrop(folders)).toEqual(["2026-11-01", "2026-11-02"]);
-    expect(sessionsToDrop(folders.slice(0, 8))).toEqual([]);
+    const source = readFileSync(new URL("../schwab-intraday.mts", import.meta.url), "utf8");
+    expect(source).toContain("const capturedAt = new Date()");
+    expect(source).toContain("realpathSync(ROOT)");
+    expect(source).not.toMatch(/\brmSync\b|sessionsToDrop|INTRADAY_SESSIONS_KEPT/);
   });
 });

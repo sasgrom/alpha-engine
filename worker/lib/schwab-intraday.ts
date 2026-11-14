@@ -1,11 +1,9 @@
 /**
  * Intraday prices every five minutes of a trading session (worker/schwab-intraday.mts): one batched quote snapshot of
- * every price series, five-minute bars built from consecutive snapshots, the live prices the desk snapshot reads, and
- * ten sessions kept (the owner's decision of 2026-11-12). Pure helpers here; the job does the requests and the files.
+ * every price series, five-minute bars built from consecutive snapshots, and the live prices the desk snapshot reads.
+ * Sessions accumulate on D: and are never pruned; the desk reads at most five. Pure helpers here; the job does the requests and files.
  */
 import type { SchwabMarketSession } from "./schwab-context";
-
-export const INTRADAY_SESSIONS_KEPT = 10;
 
 /** One ticker in one snapshot: the regular session's last trade, the previous close and the day's running values. */
 export interface IntradayQuote {
@@ -104,12 +102,6 @@ export function buildBars(snapshots: IntradaySnapshot[]): Record<string, Intrada
     }
   }
   return bars;
-}
-
-/** Session folders (YYYY-MM-DD) beyond the newest `keep`, oldest first. */
-export function sessionsToDrop(folders: string[], keep = INTRADAY_SESSIONS_KEPT): string[] {
-  const sessions = folders.filter((name) => /^\d{4}-\d{2}-\d{2}$/.test(name)).sort();
-  return sessions.slice(0, Math.max(0, sessions.length - keep));
 }
 
 /** The desk's live prices: the snapshot's quotes with the moment of the latest regular-session trade. */

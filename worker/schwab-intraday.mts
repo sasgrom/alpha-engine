@@ -7,7 +7,7 @@
  *   <session>/bars.json         five-minute bars of the session so far, with approximate highs and lows,
  *   live.json                   the live prices the desk snapshot reads,
  *   manifest.jsonl              one line per snapshot with its SHA-256 and whether raw was retained.
- * Only the newest ten sessions are kept (the owner's decision of 2026-11-12). Market data only: no account, order or
+ * Sessions accumulate on D:; the desk reads at most five and nothing is pruned. Market data only: no account, order or
  * production request, and nothing is written to the daily price history. A holiday, or a time outside the regular
  * session, ends the run without a snapshot. A failed batch fails the run: the previous live prices stay in place.
  *
@@ -16,11 +16,11 @@
  */
 import "dotenv/config";
 import { createHash } from "node:crypto";
-import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from "node:fs";
+import { appendFileSync, mkdirSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
 import { writeJsonAtomic } from "./lib/json-file";
 import { parseMarketHours, schwabMarketHoursPath } from "./lib/schwab-context";
-import { buildBars, livePrices, parseQuotes, rawSnapshotDue, sessionsToDrop, sessionWindow, symbolBatches, type IntradayQuote, type IntradaySnapshot } from "./lib/schwab-intraday";
+import { buildBars, livePrices, parseQuotes, rawSnapshotDue, sessionWindow, symbolBatches, type IntradayQuote, type IntradaySnapshot } from "./lib/schwab-intraday";
 import { createSchwabSession } from "./lib/schwab-paced";
 import { schwabPriceSeries } from "./lib/schwab-price-series";
 
@@ -30,6 +30,8 @@ const ROOT = path.resolve(arg("--root") ?? DEFAULT_ROOT);
 const ignoreHours = process.argv.includes("--ignore-hours");
 if (process.platform === "win32" && !/^d:/i.test(ROOT)) throw new Error("The intraday archive must stay on the D: drive");
 if (ignoreHours && ROOT === DEFAULT_ROOT) throw new Error("--ignore-hours is for verification: give a separate --root, so the desk's live prices stay untouched");
+mkdirSync(ROOT, { recursive: true });
+if (process.platform === "win32" && !/^d:/i.test(realpathSync(ROOT))) throw new Error("The intraday archive must resolve to D:");
 const log = (line: string) => console.log(`[schwab-intraday ${new Date().toISOString().slice(11, 19)}] ${line}`);
 
 const session = createSchwabSession({ log });
@@ -70,13 +72,5 @@ const live = livePrices(snapshot);
 writeJsonAtomic(path.join(ROOT, "live.json"), live);
 appendFileSync(path.join(ROOT, "manifest.jsonl"), `${JSON.stringify({ session: hours.date, file: `${hours.date}/${hhmm}.json`, capturedAt: snapshot.capturedAt, asOf: live.asOf, quotes: Object.keys(quotes).length, missing, rawRetained, rawSha256 })}\n`);
 
-// ten sessions kept: older snapshots and bars go (only YYYY-MM-DD folders directly under the archive root)
-const dropped: string[] = [];
-for (const name of sessionsToDrop(existsSync(ROOT) ? readdirSync(ROOT) : [])) {
-  const target = path.join(ROOT, name);
-  if (path.dirname(target) !== ROOT) continue;
-  rmSync(target, { recursive: true, force: true });
-  dropped.push(name);
-}
-log(`session ${hours.date} ${hhmm} ET: ${Object.keys(quotes).length}/${symbols.length} quotes as of ${live.asOf}, ${snapshots.length} snapshots today${missing.length ? `; no price for ${missing.slice(0, 12).join(", ")}${missing.length > 12 ? " …" : ""}` : ""}${dropped.length ? `; dropped sessions ${dropped.join(", ")}` : ""}`);
+log(`session ${hours.date} ${hhmm} ET: ${Object.keys(quotes).length}/${symbols.length} quotes as of ${live.asOf}, ${snapshots.length} snapshots today${missing.length ? `; no price for ${missing.slice(0, 12).join(", ")}${missing.length > 12 ? " …" : ""}` : ""}`);
 process.exit(0);

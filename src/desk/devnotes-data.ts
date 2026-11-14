@@ -153,7 +153,7 @@ export const DEV_NOTES = {
     ],
     better: [
       ["Alerts on reports, insider purchases and large moves", "a notification channel: none exists"],
-      ["A longer custom intraday window", "research five-minute history; only the newest ten snapshot sessions are retained here"],
+      ["A longer custom intraday window", "research five-minute history; snapshot sessions accumulate on D:, while the desk reads at most five"],
     ],
   },
   operations: {

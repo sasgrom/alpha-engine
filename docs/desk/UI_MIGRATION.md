@@ -86,7 +86,7 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 - **Password reset and invitations,** with no browser prompts.
 - **Intraday views** (owner's yes, 2026-11-13: "wanted for the page look alive, did not plan to store all of it"): K21
   (`docs/engine/tasks/K21-intraday-candles-and-views.md`).
-  - [x] The existing price snapshots move from every 20 to every 5 minutes; compact snapshots stay each time, raw responses only at the 20-minute marks, and the existing ten-session retention is unchanged.
+  - [x] The existing price snapshots move from every 20 to every 5 minutes; compact snapshots stay each time, raw responses only at the 20-minute marks, and sessions accumulate on D: with no pruning; the desk reads at most five.
   - [x] `desk.intraday` returns company/SPY/sector bars, cumulative VWAP, previous close, opening gap, release/8-K markers and split-rebased earlier sessions. `desk.intradayMarket` serves the shared summary.
   - [x] `desk-snapshot-live` also builds breadth, SPY/equal weight, sector funds, movers and per-company paths from the latest session bars, including after official closes.
   - [x] Views: Company "Today / 5 days", Markets "Through the day", Watchlist and Today day lines, with as-of/delayed/closed-session labels and five-minute visibility polling.

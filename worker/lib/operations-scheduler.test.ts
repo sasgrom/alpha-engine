@@ -14,6 +14,7 @@ import {
   loadOperationsState,
   nextCronRun,
   operationChain,
+  queueDueOperations,
   releaseSchedulerLock,
   repositoryRoot,
   saveOperationConfig,
@@ -146,6 +147,28 @@ describe("schedules", () => {
     expect(nextCronRun(sp500, new Date(2026, 10, 13, 5, 0))).toEqual(new Date(2026, 10, 13, 16, 10)); // Friday morning -> Friday after the close
     expect(nextCronRun(sp500, new Date(2026, 10, 13, 17, 0))).toEqual(new Date(2026, 10, 14, 4, 30)); // Friday evening -> Saturday catch-up
     expect(nextCronRun(sp500, new Date(2026, 10, 14, 5, 0))).toEqual(new Date(2026, 10, 15, 4, 30)); // no Saturday evening run
+  });
+
+  it("coalesces five-minute intraday slots while another job holds the execution lane", () => {
+    const job = OPERATION_JOB_MAP["schwab-intraday"], config = defaultOperationConfig();
+    const state = loadOperationsState(path.join(tempDir(), "state.json"));
+    state.current = { runId: "context", jobId: "schwab-context-hourly", status: "running", trigger: "cron", startedAt: "2026-11-13T15:09:00Z", endedAt: null, exitCode: null, logFile: "", error: null };
+    for (const minutes of [0, 5, 10, 15]) {
+      const now = new Date(Date.parse("2026-11-13T15:10:00Z") + minutes * 60_000);
+      if (minutes === 0) state.nextRuns[job.id] = now.toISOString();
+      queueDueOperations(state, config, now, [job]);
+      expect(state.current.jobId).toBe("schwab-context-hourly");
+      expect(state.queue).toEqual([{ jobId: job.id, trigger: "cron" }]);
+      expect(state.nextRuns[job.id]).toBe(nextCronRun(job.cron!, now)?.toISOString());
+      expect(Date.parse(state.nextRuns[job.id]!)).toBeGreaterThan(now.getTime());
+    }
+    expect(state.queue.shift()).toEqual({ jobId: job.id, trigger: "cron" });
+    state.current = null;
+    const later = new Date("2026-11-13T15:30:00Z");
+    queueDueOperations(state, config, later, [job]);
+    queueDueOperations(state, config, later, [job]);
+    expect(state.queue).toEqual([{ jobId: job.id, trigger: "cron" }]);
+    expect(state.nextRuns[job.id]).toBe(nextCronRun(job.cron!, later)?.toISOString());
   });
 
   it("validates every part of a schedule", () => {

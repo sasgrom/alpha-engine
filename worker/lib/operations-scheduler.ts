@@ -68,6 +68,20 @@ export function nextCronRun(expression: string, after: Date): Date | null {
   }
   return best;
 }
+
+/** Due jobs share one execution lane: each job is pending at most once, and stale slots advance to the next future slot. */
+export function queueDueOperations(state: OperationsState, config: OperationConfig, now: Date, jobs: OperationJob[] = OPERATION_JOBS): void {
+  const timestamp = now.getTime();
+  for (const job of jobs) {
+    const row = config[job.id];
+    if (!row?.enabled || !row.cron) continue;
+    const due = state.nextRuns[job.id];
+    if (!due || Date.parse(due) > timestamp) continue;
+    if (state.current?.jobId !== job.id && !state.queue.some(entry => entry.jobId === job.id)) state.queue.push({ jobId: job.id, trigger: "cron" });
+    state.nextRuns[job.id] = nextCronRun(row.cron, now)?.toISOString() ?? null;
+  }
+}
+
 export interface OperationsState {
   schemaVersion: 1;
   schedulerStartedAt: string | null;
@@ -423,16 +437,8 @@ export class OperationsScheduler {
       this.config = loadOperationConfig();
       this.reconcileSchedules(new Date());
       this.readCommands();
-      const now = Date.now();
-      for (const job of OPERATION_JOBS) {
-        const row = this.config[job.id];
-        if (!row.enabled || !row.cron) continue;
-        const due = this.state.nextRuns[job.id];
-        if (due && Date.parse(due) <= now) {
-          this.enqueue(job.id, "cron");
-          this.state.nextRuns[job.id] = nextCronRun(row.cron, new Date(now))?.toISOString() ?? null;
-        }
-      }
+      const now = new Date();
+      queueDueOperations(this.state, this.config, now);
       saveOperationsState(this.state);
       await this.runNext();
     } catch (error) {
