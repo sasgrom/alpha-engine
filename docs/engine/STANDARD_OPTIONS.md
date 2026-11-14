@@ -205,3 +205,10 @@ Final hashes:
 - `sanity-stress-diagnostic.json`: `5ce3246d21fa2dfd9b33f58d8a2f1bc5887a001e689dda0666aef2d07f2fceb7`
 
 This is a local research-build finalization, not production transport or an alpha-signal promotion. K20 is the next approved queue item; K19.2 historical-symbol coverage still requires a proposed symbol-history source.
+
+
+## 12. Final replacement guard and staging cleanup
+
+Lab `ad72bd2920cb1608cca7189f9e7e7a8fdf51a685` moves the stored-final refusal ahead of creation of `std_option_daily_next` and `std_option_builds_next`. The build-metadata table is created or read before that refusal so a first load remains possible; a final replacement creates no staging tables. A new regression checks that no staging table is created, no staging row is written, no swap occurs and the previous build remains visible. All **30 option tests in eight files** and standalone TypeScript pass.
+
+The owner reported that Claude had already handled removal of the two empty staging tables. Kimi did not drop them. A read-only check at `2026-11-14T17:48:00Z` found only `std_option_daily` with **541,762 rows** and `std_option_builds` with one final row, with neither `_next` table present. The accepted final data was not changed by this guard or cleanup.
