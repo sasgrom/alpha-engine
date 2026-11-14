@@ -7,6 +7,7 @@ import { findCompany, useDeskSnapshot, useReport } from "../../data";
 import { DevNotes } from "../../DevNotes";
 import { fmtCap, fmtDate, fmtNum, fmtPct } from "../../format";
 import { EvidenceNote, ResearchFrame } from "../../ResearchParts";
+import MarketExpectationsCard from "../../components/MarketExpectationsCard";
 
 interface Evidence {
   value: number | null;
@@ -98,6 +99,7 @@ export default function Macro() {
       <EvidenceNote family="macro" />
 
       <div className="desk-grid">
+        <MarketExpectationsCard />
         <Card className="desk-span-4" title="Backdrop" subtitle="Latest published values (FRED)">
           {macro.isLoading ? (
             <Shimmer height={220} />

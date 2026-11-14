@@ -16,14 +16,14 @@ export function useDeskSnapshot() {
  * A whitelisted report file (the classic research artifacts). Reports are served to the owner and to reviewers who
  * accepted the NDA; a missing file is null, not an error.
  */
-export function useReport<T>(name: string, enabled = true) {
+export function useReport<T>(name: string, enabled = true, options?: { noStore?: boolean }) {
   return useQuery({
-    queryKey: ["desk", "report", name],
+    queryKey: ["desk", "report", name, options?.noStore ? "no-store" : "shared"],
     enabled,
-    staleTime: 10 * 60_000,
+    staleTime: options?.noStore ? 0 : 10 * 60_000,
     refetchOnWindowFocus: false,
     queryFn: async (): Promise<T | null> => {
-      const response = await fetch(`/reports/${name}`, { credentials: "include" });
+      const response = await fetch(`/reports/${name}`, { credentials: "include", cache: options?.noStore ? "no-store" : "default" });
       if (response.status === 404) return null;
       if (!response.ok) throw new Error(`${name} answered ${response.status}`);
       return (await response.json()) as T;

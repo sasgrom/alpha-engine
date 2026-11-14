@@ -222,6 +222,7 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Desk snapshot with live prices | scheduled | after schwab-intraday | Local static UI artifact read by desk.snapshot; no production write. |
 | Analytics and weekly evidence snapshot | scheduled | after schwab-daily-bars | Local static UI artifacts; no production write. |
 | Expectations static report | scheduled | 0 6 * * * | Local static UI artifacts; partial results remain explicitly unreviewed. |
+| Prediction-market expectations daily | scheduled | 15 16 * * 1-5 | Local D: archive and local UI artifact only; no production writes or automatic reportFile push. |
 | FRED and ALFRED weekly vintage refresh | scheduled | 30 5 * * 0 | Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local. |
 | OFAC daily event refresh | scheduled | 40 5 * * * | Local macro archive only; no production write. |
 | Macro manifest and availability QA | scheduled | 55 5 * * * | Local fail-closed QA gate only. |
@@ -687,6 +688,23 @@ npx tsx scripts/build-analytics-snapshot.mts
 
 ```powershell
 npx tsx worker/build-expectations-report.mts --cohorts --scope full-history
+```
+
+### 22a. Prediction-market expectations daily
+
+- **ID:** `prediction-markets-daily`
+- **Mode:** scheduled; **enabled by default:** yes
+- **Cron:** 15 16 * * 1-5
+- **Dependencies:** none
+- **Purpose:** Capture public Fed, CPI and recession probabilities and every mapped company KPI contract, with settlement histories and point-in-time daily expectations.
+- **Input:** The reviewed series/company mapping on D:, the local company registry and keyless public market-data endpoints.
+- **Output:** D:/research/alpha-engine/predmarkets/daily/<date> venue JSONL, per-run manifests, mapping.json, daily-state.jsonl and the local prediction-markets.json desk artifact.
+- **Destination:** Local D: archive and local UI artifact only; no production writes or automatic reportFile push.
+- **Requirements:** network, mysql, driveD
+- **Operational note:** Runs alone after the initial lab history run. One process lock, at least 250 ms between public requests, at most two retries, and an immediate stop if a key is required. Reruns append only changed quotes and never rewrite settled history. Political, sports, entertainment and earnings-call wording markets stay off. The mapping's accepted and rejected series are part of the delivery review.
+
+```powershell
+npx tsx worker/prediction-markets-daily.mts --scheduled-style
 ```
 
 ### 23. FRED and ALFRED weekly vintage refresh
