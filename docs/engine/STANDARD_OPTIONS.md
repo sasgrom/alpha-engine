@@ -144,3 +144,45 @@ Evidence hashes in the reviewed folder:
 - `source-preservation.json`: `f460fa95204da4c4d0bc69a86e002fa2f528147eb693e126f27d223997142fc6`
 - `sanity-stress-diagnostic.json`: `774077ccb2ac7f9fb0fa44a393c1520ee5c7098d0a61162aed9c1cf53292d191`
 - `delivery-summary.json`: `9e3c0c5acafb322b157977aad859c5f2324edf40933a2251382cfb9ef2dc4b85`
+
+
+## 9. Symbol validity and co-movement identity
+
+K19.1 adds issuer-specific validity windows. A chain is assigned to a CIK only when its source symbol is valid for that issuer on the snapshot date. Out-of-window rows are refused and listed; they are never assigned to another issuer or silently retained because their parity happens to be near the current close.
+
+- **COR → Cencora (CIK 1140859) from 2023-08-30.** Accession `0001104659-23-096698` says the common stock stopped trading as ABC and began trading as COR at that market open. Evidence: [Cencora Form 8-K](https://www.sec.gov/Archives/edgar/data/1140859/000110465923096698/tm2324358d1_8k.htm). Older COR chains belong to CoreSite, not Cencora.
+- **ECHO → EchoStar (CIK 1415404) from 2026-06-24.** [EchoStar's official release](https://ir.echostar.com/news-releases/news-release-details/echostar-changing-stocker-ticker-sats-echo-marking-companys-next) says ECHO began trading on Nasdaq that day; [OCC memo 59221](https://infomemo.theocc.com/infomemos?number=59221) confirms the option-symbol change. Older ECHO chains belong to Echo Global Logistics, not EchoStar. The 2024 merger is not used as the ticker-effective date.
+
+The source/session-deduplicated rows are then grouped by CIK, ticker, source and quote-session year. Consecutive rows in one group produce `Δlog(spot)` and `Δlog(closeAsTraded)`. With at least 15 intervals, the gate computes their Pearson co-movement and the mean absolute raw close gap. Co-movement below 0.5 with a mean raw gap above 5% is an unresolved identity flag and blocks loading. A weaker co-movement with a mean raw gap of at most 5% is listed as noisy thin parity and retained, not mislabeled as a wrong company. Every flag must be resolved before loading.
+
+The initial diagnostic covered 3,703 ticker-years. COR 2021 was the only unresolved case (co-movement 0.316471, mean raw gap 0.103948). WRB 2025/2026 and HST 2026 were explicitly retained as thin parity with small gaps. This is a separate identity check from the 20% parity guard and from the 98% range gate.
+
+Raw validity refusals are reported separately from net stored-row removals. COR has 337 raw refusals and ECHO 300, including 220 and 206 rows respectively that the old parity guard had already rejected. The prior provisional build therefore loses exactly **117 COR rows and 94 ECHO rows**, not the full raw-refusal counts. Historical aliases such as ABC and SATS are not backfilled by this correction; that would require a separately reviewed symbol-history source.
+
+
+## 10. K19.1 verified correction — 2026-11-14
+
+The corrected artifact is `D:/research/alpha-engine/options-std/20261114T135938Z`, built and loaded **provisionally** at lab commit `fcac02f09868fa32601bafaaef09c8105e21515c`. The previous artifact `20261114T130038Z` remains unchanged at SHA256 `c12e1c5711236a9f334a5b1e072a4b792f5edb9750063143f4ae1be19650c1ac`. Claude must review the correction before marking K19 final.
+
+The corrected build contains **541,762 rows across 510 companies**, exactly 211 fewer than before. Independent full-key comparison proves **117 COR removals and 94 ECHO removals**, with zero valid additions, unexpected removals, duplicate keys, or current validity failures. The 337 COR and 300 ECHO raw validity refusals include 220 and 206 rows already rejected by the old parity guard; they are not additional net removals.
+
+- **Spot:** 536,811 / 541,762 = **99.0861301%** inside range, with zero uncomputable rows and all 4,951 outliers listed. Raw/adjusted close shares are 95.8140290% / 96.6651408%.
+- **Identity:** 3,699 ticker-years, **zero unresolved flags**. WRB 2025/2026 and HST 2026 remain listed and retained as noisy thin parity, with mean raw gaps below 5%. COR 2021 and ECHO 2020 no longer contain the reused issuer's rows.
+- **Splits:** 65/65 spot-range passes, zero weak/spot failures; WRB, CMG and BKNG retain their publication-tagged IV outliers.
+- **Schema 3:** 1,135,139 comparisons, zero spot mismatches, rho **0.9826194617**.
+- **Sanity:** full-year 2020 remains below 0.6 at **0.5987534001 on 64,252 pairs**. The fixed stress exception has rest-of-year rho **0.7262022381 on 46,644 pairs** and crash-window rho **0.3134012643 on 17,608 pairs**. Other years are unchanged and pass. The exact exception note remains "accepted with exception: 2020 sanity below 0.6 from the COVID crash window".
+- **Seam:** median absolute change 0.0309730991, IQR 0.0276730515; AMZN, PLTR, GOOGL and DASH remain the same-gap outliers.
+
+The staged loader used at most 500 rows per batch, wrote the build row last, checked 2,000 rows with zero mismatches and 20 separately recorded DOUBLE rendering cases, and completed the atomic swap. Independent live verification at `2026-11-14T14:20:15.603Z`, seed `4276538446`, confirmed **541,762 live rows and unique source-session keys**, 510 companies, one provisional build, **2,000 full-row checks with zero mismatches**, 18 rounding-only cases and no `_next` or `_old` tables. The separate full-key identity comparison passed at `2026-11-14T14:20:13.633Z`.
+
+All **29 option tests in eight files**, the standalone option and verification TypeScript checks, the main TypeScript check, **259 main test files / 1,443 tests**, and the production build pass. No production write, `alpha_engine` mutation, Dolt refresh, new Schwab collection, historical-symbol backfill, scheduler/web restart, credential access, GDELT request, LLM bulk processing, model promotion or alpha claim occurred.
+
+Corrected-artifact hashes:
+
+- `build.json`: `2cf7b7678c8d111fad13fb0d90c38e8ae05caad460c0118408b938fe7bbc4308`
+- `duplicates.json`: `e9069cea2a813f75d168f115c294e491503dcbf078cf510fdf645d6a529a1cde`
+- `identity-difference-check.json`: `2dda5e208f677d2881dc9c8c38ef07ce64f63e9b66de6c47bc55dbabd4089162`
+- `sanity-stress-diagnostic.json`: `5ce3246d21fa2dfd9b33f58d8a2f1bc5887a001e689dda0666aef2d07f2fceb7`
+- `load-summary.json`: `29050c467b48eb9126b179ed96360b180faadcc18af1cbb3638e69dc780de552`
+- `independent-live-check.json`: `fd79810a629d5c6348eab6d0ae405dbb47423efd40d1a133256d56c5dcceff03`
+- `delivery-summary.json`: `de9583b5530c339e7c1eafe09111661df1ea36d26d73d173fa23d99ea8e1b075`
