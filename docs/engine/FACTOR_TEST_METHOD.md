@@ -101,3 +101,37 @@ The same protocol, on information that may not be in the price on the day:
 - Kalshi company KPI markets: a company's own figure, priced before its report (217 settled releases; collected daily by
   K22 since 2026-11-13).
 - The owner's SEC guidance factor, when the GPU extraction finishes (about 2026-11-17).
+
+## 8. Second and third factors: CPI and the fundamentals (night of 2026-11-14)
+
+Run on the owner's autonomy, with the same protocol. Details: lab `docs/findings-cpi-2026-11-14.md`,
+`docs/findings-fundamentals-n1-2026-11-14.md`, and `docs/engine/FUNDAMENTALS_NORMALIZATION.md`.
+
+| Factor | Direction (timing) | Exposure | Risk |
+|---|---|---|---|
+| CPI (Δ5-year breakeven, releases 2003-26) | **none**: no drift after releases, none monthly; a 6-month trend hint failed the family-wise test (12.3%) | **real**: 85 of 465 companies against about 6 by chance, 71% same sign out of sample | the surprise's size can be known from the breakeven's 20-day volatility (corr +0.59); not CPI-specific |
+| Fundamentals (39 ratios, n1, monthly 2010-26) | **none** out of sample; size "held" (t −5.5), which is the survivors' bias | not tested | partial ICs 0.04-0.09 beyond past volatility hold out of sample; about 1% lower forecast error |
+
+What these two add to the protocol:
+- **Decay.** Weight estimates by age, 0.5^(age / half-life). For CPI responses a half-life of 3-5 years is best; 1 year
+  is too noisy and no decay too stale.
+- **Count correlated factors once.**
+  - Measure k twice: from the factors' values (39 ratios hold 11.9 effective dimensions) and from their predictive
+    power (their monthly ICs carry 7.2 independent signals).
+  - A cluster of k votes with average correlation ρ counts as k / (1 + (k − 1)ρ).
+  - A level and its change are different signals.
+- **Signals answering the same question** (the Fed outcome, the 2-year yield and CPI all act through rates) go into one
+  regression together, so each gets only its own part.
+- **Family-wise control** whenever a grid of variants is searched: shift the signal in time against the returns (keeps
+  autocorrelation) and compare the best cell with the best cells of the shifts.
+- **Fix the confirmation before running it.** Use another measure of the same thing (CPI: realized inflation against
+  breakevens) or the subset where a known bias is weak (size: the 300 largest at each date).
+- **Survivors.** A universe of today's index members biases every return test toward today's winners. Get the
+  membership by date before testing returns on company characteristics.
+
+## 9. Next factors (updated 2026-11-14)
+
+- The owner's SEC guidance factor, when the GPU extraction finishes (about 2026-11-17).
+- Kalshi company KPI markets: collected daily by K22. Most companies had 1-6 settled releases by November 2026; test
+  them once two or three more quarters have settled.
+- Fundamentals return tests again, once the S&P 500 membership by date (with the companies that left) is in place.
