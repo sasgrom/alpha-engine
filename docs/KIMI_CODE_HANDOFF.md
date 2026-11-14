@@ -2632,3 +2632,64 @@ All read only, except one probe download (below). No change to the dataset or fi
 - **Restart, 2026-11-14 09:10:38Z:** waited for an idle scheduler with an empty queue, stopped cmd 21568, started the `AlphaEngine-Operations-Scheduler` task. One scheduler (lock pid 19204, "83 registered jobs · one execution lane"); `std-prices-refresh` next 2026-11-15T10:00Z (Sunday 02:00 Pacific). No web restart.
 - **Research this block (lab only; main docs `33a8350`):** the Fed outcome is closed as a timing factor (JPM workbooks, 80/20 and 90/10, 2000–21 simulated history, daily rate sensitivity of 490 companies, responders chosen by OLS). The method and formula are recorded in `docs/engine/FACTOR_TEST_METHOD.md`.
 - **Next:** Kimi K19. The GPU guidance run (pid 7824) is at 14,019 of 34,833 releases, about 2026-11-17.
+
+## 174. Claude: CPI factor closed; fundamentals step 2 (normalized panel n1) built, gated, loaded provisional; first fundamentals test; K19 gate guidance — 2026-11-14T11:40Z
+
+Night run on the owner's autonomy ("CPI seemed promising", "go on with the flow ... just dont overwrite the data").
+Nothing in production, the scheduler or the web server was touched. No existing table or build was modified.
+
+**CPI (lab `871aa26`, findings `docs/findings-cpi-2026-11-14.md` in the lab):**
+- Daily inflation exposure (Δ5-year breakeven) is real and persistent: 85 of 465 companies against about 6 by chance.
+- The release-day response flips with the regime; the best half-life is 3-5 years.
+- No timing edge: none after releases, none monthly. The 6-month trend reversal hint failed the family-wise shift test
+  (12.3%) and the realized-CPI check.
+- The size of a surprise can be predicted from the breakeven's 20-day volatility (corr +0.59), but the impact is not
+  CPI-specific.
+- Verdict: CPI is an exposure and risk input, not a timing signal.
+
+**Fundamentals step 2 = n1** (lab `a1ce4a8`, `4ece380`, `4051379`; process `docs/engine/FUNDAMENTALS_NORMALIZATION.md`; findings in
+the lab's `docs/findings-fundamentals-n1-2026-11-14.md`):
+- **Build:** `D:\research\alpha-engine\fundamentals\normalized\n1\`, 500 companies × 214 month ends × 39 ratios,
+  2,733,298 values, point in time.
+  - Inputs v3.1 and p1.1 were read only.
+  - The clean build at `4ece380` reproduces pass 2 byte for byte (panel SHA-256 `925543db…`).
+- **Rules:** TTM, the share basis from splitIndex, three share-count estimates with a price-to-sales check (filers slip
+  counts by 10³-10⁶ at about 1% of quarters), scale-slip and sign-slip repairs (134 versions dropped, one-way cash lines
+  summed as magnitudes), documented exclusions (136 fiscal year × field TTMs failing the 10-K tie-out; market cap off
+  for BRK-B, TKO, RDDT).
+- **Gates:**
+
+  | Gate | Result |
+  |---|---|
+  | Point in time against independent SQL | 0 of 3,851 different |
+  | TTM against the 10-K annual figure | 100% (98.9% before the exclusions) |
+  | Splits | 154, 0 jumps |
+  | Public float ÷ market cap | 98.2% |
+  | Unit tests | 18 of 18 |
+
+- **Loaded provisional** into new `alpha_research` tables `std_norm_values`, `std_norm_company_days`,
+  `std_norm_definitions`, `std_norm_builds` (version n1). Every row was read back after the load: 2,822,722 identical, 1,617 equal to the last digit of a DOUBLE (MySQL's text output), 0 different, 0 missing. The first run stopped on its own sampled read-back (CRLF parsing of the check, not the data); the rows were then verified in full and registered with `--complete-verified` (lab `4051379`). Status provisional: final after the owner's review.
+- **Correlation:** 39 ratios carry 11.9 effective dimensions (35 fundamentals: 10.1), in 8 clusters. Their monthly ICs
+  carry only 7.2 independent signals, which is the owner's "k" measured.
+- **First test:** no ratio, cluster or sector-relative version predicts the next month's excess return out of sample.
+  Size did (t −5.5), and that is the survivors' bias: the universe is today's S&P 500, and the effect fades among the
+  300 largest at each date and towards 2026. Fundamentals add a small, stable part to volatility forecasts (partial
+  ICs of 0.04-0.09 hold out of sample; about 1% lower error).
+- **Step-1 defects found, for a v3.2:** the AES Q1-2025 calendar slot, 136 TTM against 10-K mismatches (tag switches,
+  AMZN 2012 net income), share-count slips by filers, CCI's dividend sign.
+
+**K19 (Kimi):**
+- Gate guidance sent. Parity includes dividends; compare each class with its own series. DoltHub snapshots are not at
+  the close (KLAC 2026-06-11), so spot and split gates move to the session's traded range.
+- K19 §5.1/§5.3 amended in this commit.
+- FOX chains were compared with FOXA prices: price-build CIK 1754301 is labelled FOX but carries FOXA (`tiingoTicker`).
+  That label is mine to fix in p1.2.
+
+**Running:** the GPU guidance pass (pid 7824) was untouched, at 14.5k of 34.8k releases (ETA about 2026-11-17).
+
+**Next:**
+- The owner reviews the n1 decisions step by step.
+- Index membership by date (and delisted companies) before any more return tests on fundamentals.
+- K19 range-gate build.
+- p1.2 label fix.
+- Process the GPU guidance run when it completes.

@@ -143,9 +143,17 @@ full list can detect correlations of about 0.05. The test itself is the owner's 
 
 ## 5. Acceptance checks
 
-1. **Spot and session.**
-   - The parity spot is within 1% of the quote session's as-traded close for at least 98% of snapshots. The rest are
-     listed, largest first.
+1. **Spot and session.** (Amended 2026-11-14 after the first full build. DoltHub snapshots are not taken at the close:
+   on KLAC 2026-06-11, a +13% day, the parity spot sat mid-range, 4% below the close.)
+   - Parity includes dividends: C − P = S − PV(dividends going ex before expiry) − K·DF. The parity spot is compared
+     with the close minus the PV of the dividends going ex between the quote session and the expiry used, from
+     `std_prices.dividend`; this is QA, never a signal.
+   - A chain is compared only with its own class's as-traded series (FOX against FOX, never FOXA). A class without its
+     own price series is excluded from this gate and listed.
+   - **Gate:** the dividend-adjusted parity spot lies inside the quote session's traded range,
+     [low × 0.99, high × 1.01], for at least 98% of snapshots. The rest are listed with the distance to the nearer edge.
+   - Reported, not gated: the gap to the close (raw and dividend-adjusted) and the share within 1% of the close, per
+     ticker and year.
    - Per year, the share of DoltHub dates mapped to themselves and to the previous session.
    - Zero snapshots are mapped to a session after their date.
 2. **Coverage.**
@@ -153,8 +161,12 @@ full list can detect correlations of about 0.05. The test itself is the owner's 
    - Tickers without a company, and companies without chains.
    - Snapshots refused by the identity rule.
 3. **Splits.**
-   - For every split since 2019 in the standard price events, the spot ratio across the split equals the split ratio
-     within 2%.
+   - For every split since 2019 in the standard price events, the observed spot ratio after/before lies inside
+     [low_after / high_before × 0.99, high_after / low_before × 1.01], from as-traded `std_prices` (amended 2026-11-14:
+     the snapshots are not at the close).
+   - Reported, not gated: the ratio normalized by the price-only close move, (close × splitIndex) after ÷ before, against
+     1 / split ratio. KLAC 2026-06-12 gave 0.1048 and BKNG 2026-04-06 0.0384 this way, both inside their sessions'
+     ranges.
    - The iv30 change across the split lies within the company's 99th percentile of ordinary changes, or is listed with
      a reason.
 4. **Jumps.** The 20 largest one-snapshot iv30 moves, each with its reason (a publication, March 2020, the data).
