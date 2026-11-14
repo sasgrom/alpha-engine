@@ -2706,3 +2706,36 @@ the lab's `docs/findings-fundamentals-n1-2026-11-14.md`):
 - **Artifact hashes:** build `c12e1c5711236a9f334a5b1e072a4b792f5edb9750063143f4ae1be19650c1ac`; duplicates `d12e44ebc2cf3d23236d092ed370d0138597e885fd351b670ec92385058861aa`; load summary `59a33caec7762e304b8560d9f58c28eed1b34410e759e0e3ab1c3093ddc9587e`; independent live check `fd7dc2aae6a6eb7c113034994a1873da002208381ebfe2dd5a08303fcc18d40a`; source preservation `f460fa95204da4c4d0bc69a86e002fa2f528147eb693e126f27d223997142fc6`; stress diagnostic `774077ccb2ac7f9fb0fa44a393c1520ee5c7098d0a61162aed9c1cf53292d191`; delivery summary `9e3c0c5acafb322b157977aad859c5f2324edf40933a2251382cfb9ef2dc4b85`.
 - **Boundaries:** no production write, `alpha_engine` mutation, Dolt refresh, new Schwab collection, accepted-13F change, scheduler/web restart, new external service, credential access, GDELT request, LLM bulk processing, model promotion or alpha claim occurred. Only `docs/engine/STANDARD_OPTIONS.md` and this handoff are included in the main documentation commit; generated artifacts and unrelated work are excluded.
 - **Next safe action:** Claude reviews both the build and evidence before accepting K19. Keep the build provisional until then. The next approved queue item after acceptance is K20, not an option-model or production promotion.
+
+## 176. Claude: K19 reviewed — accepted pending K19.1 (foreign rows under reused symbols); also the macro release harness — 2026-11-14T13:50Z
+
+**K19 review (read-only):**
+- Tables: 541,973 rows, 510 companies, 2019-02-08 .. 2026-11-13. One build row, `o1.20261114`, provisional (code
+  `fb27f8b`, loader `1d67b73`).
+- The 2020 sanity exception is recorded under `gates.sanity.stressException` with the full-year failure kept (0.5986).
+  Outside the fixed window 2020-02-20 .. 2020-04-30 the year gives 0.726; inside it, 0.313.
+- 200 random stored rows against the build's JSONL, every column: 197 exact, 3 equal to the last digit, 0 different.
+- `rv21` is trailing volatility, so there is no look-ahead.
+- Identity by co-movement (Δlog spot against Δlog close per ticker-year): median 0.989 over 3,703 ticker-years.
+
+**Defect, so K19.1 is required before final.** 211 rows (0.04%) belong to other companies under a reused symbol:
+- COR 2020-21 is CoreSite; Cencora traded as ABC until 2023-08-30.
+- ECHO 2020-21 is Echo Global Logistics; our ECHO is EchoStar.
+
+Asked of Kimi:
+1. A symbol-validity rule.
+2. A co-movement identity gate: flag co-movement < 0.5 together with a mean gap > 5%.
+3. A rebuild and reload, with the removed rows reported.
+
+Historical symbols (ABC, SATS, NLOK, BK, MMC) are a later K19.2 for coverage. Everything else in K19 is accepted as
+delivered.
+
+**Also tonight (lab `cbb063e`, `8eb7eb1`):** one harness asks every macro release the CPI questions.
+- No release leaves a drift (16 cells, none |t| ≥ 2).
+- Payroll-day responses are the most stable: 89% keep their sign across 2022, against CPI's 45%.
+- The night page for the owner: https://claude.ai/artifact/8nhebhbJ2fbVFemEN6xyfT
+
+**Next:**
+- Kimi: K19.1.
+- Me: mark K19 final after its load.
+- The owner reviews n1 and decides on index membership by date and the v3.2 task.
