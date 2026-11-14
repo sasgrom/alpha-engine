@@ -2,7 +2,15 @@
 
 **Owner's approval:** 2026-11-13 ("lets review improve execute and test" Kimi's prediction-market notes).
 **Design:** `docs/DESIGN_POLYMARKET.md`, with the review and results in section 11. **Author:** Claude.
-**Coder:** Kimi. **LLM use:** none. **Order:** after K17b; the owner may move it.
+**Coder:** Kimi. **LLM use:** none.
+**Order:** right after K16.5. The owner asked "so when do we start collection? the open contracts with probabilities can
+go along with sec forms expectations as a decent signal" (2026-11-13).
+**Started already:**
+- Claude's lab run of 2026-11-13 (`C:\dev\alpha-engine-lab\src\predmarkets\kalshi_companies.py`) took the first
+  snapshot and the full history of the company series.
+- Reuse its reviewed series-to-company mapping: `D:\research\alpha-engine\predmarkets\kalshi\companies\mapping.json`.
+  A series is accepted only when the ticker in its code and the company name in its market titles agree.
+- The daily job continues from there: same folders, same row shape.
 
 ## 1. Why
 
