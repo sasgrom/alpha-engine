@@ -1,6 +1,8 @@
 # DESIGN: Prediction-Market Probability Feed (Polymarket research namespace)
 
-Status: **design + executor brief** — no implementation task has been issued yet (owner decision pending).
+Status: **reviewed and first-tested on 2026-11-13** (owner's go: "lets review improve execute and test"). Section 11
+holds the review, the improved plan and the results. The daily collector is task K22
+(`docs/engine/tasks/K22-prediction-market-collector.md`).
 Companion chapter: `docs/ALPHA_ENGINE_MANUAL.md` §22 / `docs/ALPHA_ENGINE_MANUAL_EN.md` §22.
 
 ## 1. Purpose
@@ -225,3 +227,52 @@ and continue — do not hardcode assumptions that contradict reality.
 **Out of scope for the first task**: Scenario Lab integration, event-study harness
 wiring, calibration backtests, UI, production transport. Those are separate
 reviewed steps after the collector proves itself locally.
+
+## 11. Review, improved plan and first tests (Claude, 2026-11-13)
+
+**Review.**
+- Sound and kept:
+  - read-only and keyless;
+  - political markets off by default;
+  - availability by fetch time;
+  - the liquidity gate;
+  - calibration on resolved markets;
+  - curated cross-venue matching.
+- Changed:
+  1. **Test on history first.** Both venues serve the full price history of settled markets:
+     - Kalshi `/historical/markets/{ticker}/candlesticks` (daily candles; the live series endpoint answers 404 for them);
+     - Polymarket CLOB `prices-history`.
+     A daily collector is not needed before the first test.
+  2. **Markets chosen by rule:** whole series (every Fed, CPI, payrolls market), not hand-picked ones, so the selection
+     carries no hindsight.
+  3. **Company markets added.** Kalshi lists KPI markets for about 150 companies (Amazon, Apple, Costco, Chipotle,
+     Boeing …) and 130 earnings-call wording series. They are closest to the engine's question, but started mid-2026
+     with 1–6 settled events each. They need forward collection and a later test.
+  4. **Research storage** on `D:\research\alpha-engine\predmarkets\`, code in the lab (`src/predmarkets/`). The
+     production-style collector is K22.
+- Verified live on 2026-11-13: `gamma-api.polymarket.com`, `clob.polymarket.com`, `api.elections.kalshi.com` and
+  `external-api.kalshi.com` all answer without a key.
+
+**First tests** (lab `9238b97`, `docs/findings-predmarkets-2026-11-13.md` in the lab):
+- **Data:** Kalshi Fed (660 markets, 2021–), CPI (554, 2021–), core CPI, CPI year on year and payrolls (422, 2023–).
+  Polymarket covers 15 Fed meetings from March 2025.
+- **Calibration** (Brier skill against a base-rate forecast, 1 / 7 / 30 days before):
+  - Fed 0.99 / 0.97 / 0.94;
+  - CPI 0.74 / 0.69 / 0.55;
+  - core CPI 0.73 / 0.68 / 0.61;
+  - CPI year on year 0.82 / 0.81 / 0.64;
+  - payrolls 0.32 / 0.27 / 0.27, biased low in 2023–2026.
+- **Two venues on 12 shared FOMC meetings:** Brier 0.014 (Polymarket) against 0.015 (Kalshi) the day before; the mean
+  gap is 0.6 points. The cross-venue gap carries no information for Fed decisions.
+- **Day-0 reaction:**
+  - a hot CPI surprise (per sd of the market's own distribution) moves SPY −0.47% (t −1.5, 51 releases), and real
+    estate −0.52% against SPY (t −2.3);
+  - Fed decisions were fully priced;
+  - payrolls showed nothing.
+- **Drift after the release day:** none robust. SPY |t| ≤ 1.0 at 1, 5 and 20 sessions; isolated sector values of
+  |t| 2.4–3.3 are what about 220 tests give by chance.
+
+**Conclusion.**
+- Macro prediction markets give no after-release signal for the engine.
+- They are well-calibrated expectations for context and scenario priors.
+- The forward collection of company KPI markets is the part worth building, for a test once releases accumulate.
