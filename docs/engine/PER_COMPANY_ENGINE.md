@@ -31,6 +31,23 @@ moves prices, which can be seen in volatility.
 
 ## 3. Signals and outcome: everything as percentage changes
 
+**Two factor bases, tested separately (owner, 2026-11-14), combined into one probability later:**
+- **Test A: the 64 standard fundamentals.**
+  - Each field as its change against the same quarter a year earlier (the rules below).
+  - No pre-selection: admission and the per-factor k decide which fields vote.
+  - Acceleration and surprise forms are a later A2.
+- **Test B: the 39 derived ratios of n1.**
+  - Each ratio as its change against a year earlier, as a difference where the ratio can turn negative.
+  - Computed at each report from the numbers public at that moment. Valuation ratios use market cap at entry, with n1's
+    checked share counts.
+  - The price-only measures and size are included.
+- **The admission bar rises with the number of candidates.** A field is admitted only if its skill beats the
+  time-shifted controls' best candidate, at a level of less than one expected noise admission per company.
+- **B is built from A's fields, so the two overlap.** Their later combination must weigh that overlap, measured within
+  rising and within falling quarters, as for single factors.
+
+The field list below is the narrower set first proposed.
+
 - **Signals:**
   - each fundamental's change against the same quarter a year earlier (the base as printed in the same filing);
   - **acceleration:** this quarter's year-on-year growth minus last quarter's;
