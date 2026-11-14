@@ -93,10 +93,9 @@ describe("prediction-market expectations", () => {
 
   it("extends the daily expectation state without replacing missing values with zero", () => {
     const report = buildPredictionExpectations(snapshots(), NOW, 4);
+    report.fed.next = ["2026-12-09T19:00:00Z", "2027-01-27T19:00:00Z", "2027-03-17T18:00:00Z", "2027-04-28T18:00:00Z"].map((meeting, index) => ({ meeting, expected: 4.25 - index * 0.25 }));
     const state = dailyExpectationState(report, "2026-11-13");
-    expect(state.date).toBe("2026-11-13");
-    expect(state.fedNow).toBe(4);
-    expect(state.fed1Expected).not.toBeNull();
+    expect(state).toMatchObject({ date: "2026-11-13", asOf: NOW, rule: "snapshot", fedNow: 4, fed1Meeting: "2026-12-09", fed2Meeting: "2027-01-27", fed3Meeting: "2027-03-17", fed4Meeting: "2027-04-28", fed1Expected: 4.25, fed4Expected: 3.5 });
     expect(state.fed1PCut).toBeCloseTo(0.15);
     expect(state.fed1PHike).toBeCloseTo(0.22);
     expect(state.cpiNextExpected).not.toBeNull();

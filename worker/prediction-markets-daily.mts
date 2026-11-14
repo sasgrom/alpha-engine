@@ -28,6 +28,7 @@ export interface DailyRunOptions {
   day?: string;
   scheduledStyle?: boolean;
   publicReportFile?: string;
+  distReportFile?: string;
   network?: { requests: number; retries: number };
 }
 
@@ -200,8 +201,11 @@ export async function runDailyCollection(options: DailyRunOptions): Promise<Dail
       report.notes.push("Some required markets or histories are unavailable; see the run manifest before using the values.");
     }
     const publicReportFile = options.publicReportFile ?? path.resolve("public/reports/prediction-markets.json");
+    const distReportFile = options.distReportFile ?? path.resolve("dist/public/reports/prediction-markets.json");
     store.writeJson(publicReportFile, report);
+    store.writeJson(distReportFile, report);
     artifacts["prediction-markets.json"] = createHash("sha256").update(store.readText(publicReportFile)).digest("hex");
+    artifacts["dist-prediction-markets.json"] = createHash("sha256").update(store.readText(distReportFile)).digest("hex");
     const counts: Record<string, number> = {
       kalshiCompany: companySnapshots.length,
       kalshiMacro: kalshiMacroSnapshots.length,

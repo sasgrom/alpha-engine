@@ -222,7 +222,7 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Desk snapshot with live prices | scheduled | after schwab-intraday | Local static UI artifact read by desk.snapshot; no production write. |
 | Analytics and weekly evidence snapshot | scheduled | after schwab-daily-bars | Local static UI artifacts; no production write. |
 | Expectations static report | scheduled | 0 6 * * * | Local static UI artifacts; partial results remain explicitly unreviewed. |
-| Prediction-market expectations daily | scheduled | 15 16 * * 1-5 | Local D: archive and local UI artifact only; no production writes or automatic reportFile push. |
+| Prediction-market expectations daily | scheduled | 15 16 * * * | Local D: archive and local UI artifact only; no production writes or automatic reportFile push. |
 | FRED and ALFRED weekly vintage refresh | scheduled | 30 5 * * 0 | Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local. |
 | OFAC daily event refresh | scheduled | 40 5 * * * | Local macro archive only; no production write. |
 | Macro manifest and availability QA | scheduled | 55 5 * * * | Local fail-closed QA gate only. |
@@ -694,7 +694,7 @@ npx tsx worker/build-expectations-report.mts --cohorts --scope full-history
 
 - **ID:** `prediction-markets-daily`
 - **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** 15 16 * * 1-5
+- **Cron:** 15 16 * * *
 - **Dependencies:** none
 - **Purpose:** Capture public Fed, CPI and recession probabilities and every mapped company KPI contract, with settlement histories and point-in-time daily expectations.
 - **Input:** The reviewed series/company mapping on D:, the local company registry and keyless public market-data endpoints.

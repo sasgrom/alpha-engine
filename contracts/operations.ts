@@ -187,7 +187,7 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local static UI artifacts; partial results remain explicitly unreviewed.", requirements: ["review"], notes: "Safe even while extraction is paused: it reports the actual partial state instead of fabricating completion.",
   }),
   job({
-    id: "prediction-markets-daily", name: "Prediction-market expectations daily", group: "research", mode: "scheduled", cron: "15 16 * * 1-5", defaultEnabled: true, dependsOn: [],
+    id: "prediction-markets-daily", name: "Prediction-market expectations daily", group: "research", mode: "scheduled", cron: "15 16 * * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/prediction-markets-daily.mts", ["--scheduled-style"]), purpose: "Capture public Fed, CPI and recession probabilities and every mapped company KPI contract, with settlement histories and point-in-time daily expectations.",
     input: "The reviewed series/company mapping on D:, the local company registry and keyless public market-data endpoints.", output: "D:/research/alpha-engine/predmarkets/daily/<date> venue JSONL, per-run manifests, mapping.json, daily-state.jsonl and the local prediction-markets.json desk artifact.",
     destination: "Local D: archive and local UI artifact only; no production writes or automatic reportFile push.", requirements: ["network", "mysql", "driveD"], notes: "Runs alone after the initial lab history run. One process lock, at least 250 ms between public requests, at most two retries, and an immediate stop if a key is required. Reruns append only changed quotes and never rewrite settled history. Political, sports, entertainment and earnings-call wording markets stay off. The mapping's accepted and rejected series are part of the delivery review.",

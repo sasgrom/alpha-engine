@@ -59,6 +59,8 @@ export interface PredictionExpectationsReport {
 
 export interface DailyExpectationState {
   date: string;
+  asOf?: string;
+  rule?: "snapshot";
   fedNow?: number;
   fed1Meeting?: string;
   fed1Expected?: number;

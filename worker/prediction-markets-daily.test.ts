@@ -51,7 +51,7 @@ function sources(settledPoly = false): PredictionSources {
 function input(settledPoly = false) {
   const memory = memoryPredictionStore(), root = "D:/fixture-prediction-markets";
   memory.files.set(path.join(root, "kalshi", "daily-state.jsonl"), "{\"date\":\"2026-11-12\",\"fedNow\":4}\n");
-  return { ...memory, options: { root, sources: sources(settledPoly), store: memory.store, registry, now: () => new Date(NOW), day: "2026-11-13", publicReportFile: path.join(root, "ui.json") } };
+  return { ...memory, options: { root, sources: sources(settledPoly), store: memory.store, registry, now: () => new Date(NOW), day: "2026-11-13", publicReportFile: path.join(root, "ui.json"), distReportFile: path.join(root, "dist-ui.json") } };
 }
 
 describe("daily prediction-market collection on recorded responses", () => {
@@ -78,8 +78,11 @@ describe("daily prediction-market collection on recorded responses", () => {
     const state = files.get(path.join(options.root, "kalshi", "daily-state.jsonl"))!.trim().split("\n");
     expect(state).toHaveLength(2);
     expect(JSON.parse(state[0])).toEqual({ date: "2026-11-12", fedNow: 4 });
-    expect(JSON.parse(state[1])).toMatchObject({ date: "2026-11-13", fedNow: 4, recessionThisYear: 0.22 });
-    expect(JSON.parse(files.get(path.join(options.root, "ui.json"))!).fed.outcomes.unchanged.primary).toBeCloseTo(0.63);
+    expect(JSON.parse(state[1])).toMatchObject({ date: "2026-11-13", asOf: NOW, rule: "snapshot", fedNow: 4, fed1Meeting: "2026-12-09", recessionThisYear: 0.22 });
+    const publicReport = files.get(path.join(options.root, "ui.json"))!;
+    expect(files.get(path.join(options.root, "dist-ui.json"))).toBe(publicReport);
+    expect(first.artifacts["dist-prediction-markets.json"]).toBe(first.artifacts["prediction-markets.json"]);
+    expect(JSON.parse(publicReport).fed.outcomes.unchanged.primary).toBeCloseTo(0.63);
     const second = await runDailyCollection({ ...options, scheduledStyle: true });
     expect(second.status).toBe("complete");
     expect(second.invocation).toBe("scheduled-style");

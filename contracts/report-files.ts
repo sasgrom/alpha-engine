@@ -13,6 +13,7 @@ export const REPORT_FILE_POLICY: Record<string, ReportFilePolicy> = {
   "daily-prices-schwab.json": { contentType: "application/json", automatic: true },
   "universe-coverage-50.json": { contentType: "application/json", automatic: true },
   "insider-form4.json": { contentType: "application/json", automatic: true },
+  "prediction-markets.json": { contentType: "application/json", automatic: false },
   "company-exposures.json": { contentType: "application/json", automatic: false },
   "data-health.json": { contentType: "application/json", automatic: false },
   "data-health.md": { contentType: "text/markdown", automatic: false },

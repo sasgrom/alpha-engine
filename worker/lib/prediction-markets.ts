@@ -246,15 +246,15 @@ export function buildPredictionExpectations(snapshots: PredictionSnapshot[], now
 }
 
 export function dailyExpectationState(report: PredictionExpectationsReport, date: string): DailyExpectationState {
-  const state: DailyExpectationState = { date };
+  const state: DailyExpectationState = { date, ...(report.asOf ? { asOf: report.asOf, rule: "snapshot" as const } : {}) };
   if (report.fed.currentUpper !== null) state.fedNow = report.fed.currentUpper;
   report.fed.next.forEach((row, index) => {
     if (row.expected === null) return;
-    const expected = Math.round(row.expected * 10_000) / 10_000;
-    if (index === 0) Object.assign(state, { fed1Meeting: row.meeting, fed1Expected: expected });
-    else if (index === 1) Object.assign(state, { fed2Meeting: row.meeting, fed2Expected: expected });
-    else if (index === 2) Object.assign(state, { fed3Meeting: row.meeting, fed3Expected: expected });
-    else if (index === 3) Object.assign(state, { fed4Meeting: row.meeting, fed4Expected: expected });
+    const meeting = row.meeting.slice(0, 10), expected = Math.round(row.expected * 10_000) / 10_000;
+    if (index === 0) Object.assign(state, { fed1Meeting: meeting, fed1Expected: expected });
+    else if (index === 1) Object.assign(state, { fed2Meeting: meeting, fed2Expected: expected });
+    else if (index === 2) Object.assign(state, { fed3Meeting: meeting, fed3Expected: expected });
+    else if (index === 3) Object.assign(state, { fed4Meeting: meeting, fed4Expected: expected });
   });
   if (report.fed.outcomes.hike.primary !== null) state.fed1PHike = Math.round(report.fed.outcomes.hike.primary * 10_000) / 10_000;
   if (report.fed.outcomes.cut.primary !== null) state.fed1PCut = Math.round(report.fed.outcomes.cut.primary * 10_000) / 10_000;
