@@ -186,3 +186,22 @@ Corrected-artifact hashes:
 - `load-summary.json`: `29050c467b48eb9126b179ed96360b180faadcc18af1cbb3638e69dc780de552`
 - `independent-live-check.json`: `fd79810a629d5c6348eab6d0ae405dbb47423efd40d1a133256d56c5dcceff03`
 - `delivery-summary.json`: `de9583b5530c339e7c1eafe09111661df1ea36d26d73d173fa23d99ea8e1b075`
+
+
+## 11. Final registration — 2026-11-14
+
+Claude accepted K19 after independently checking the corrected rows, validity windows, duplicate keys and co-movement evidence. The unchanged `20261114T135938Z` artifact was then loaded once more with status **final**, replacing only the provisional build metadata as permitted by the loader.
+
+The live `std_option_builds` row is `o1.20261114`, status **final**, code `fcac02f09868fa32601bafaaef09c8105e21515c`, with **541,762 rows / 510 companies**. Final independent verification at `2026-11-14T14:37:42.190Z`, seed `95391474`, confirmed 541,762 unique source-session keys, **2,000 full-row checks with zero mismatches**, 27 separately reported DOUBLE rendering cases and no `_next`/`_old` tables. A second replacement was refused as designed; staging remained empty and the accepted rows were unchanged.
+
+Final hashes:
+
+- `build.json`: `cfbb0def33e290fafbd614f910fe90f4c1cb6c47b68bb4d6cafa6998540aa8d1`
+- `load-summary.json`: `f4ace5513bb23561d68b79a7cba31ad524ac58a32c4ee6c5e224e994345f5bdd`
+- `independent-live-check.json`: `c60628fe980ae74db9074262a87bc230e175e9ed3998eb1f14a281c629fb811a`
+- `identity-difference-check.json`: `e2deabfc9856c92af1c2fa8062aa8b1635ddebce1401ec3224b29698bb4162fa`
+- `delivery-summary.json`: `91594659690ed99314b8babf255ff91b1a5d83b13074c8fa14906baba04301ff`
+- `duplicates.json`: `e9069cea2a813f75d168f115c294e491503dcbf078cf510fdf645d6a529a1cde`
+- `sanity-stress-diagnostic.json`: `5ce3246d21fa2dfd9b33f58d8a2f1bc5887a001e689dda0666aef2d07f2fceb7`
+
+This is a local research-build finalization, not production transport or an alpha-signal promotion. K20 is the next approved queue item; K19.2 historical-symbol coverage still requires a proposed symbol-history source.
