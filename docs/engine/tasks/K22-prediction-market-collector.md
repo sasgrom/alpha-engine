@@ -31,11 +31,21 @@ The first tests showed:
   - Market lists come by rule from the series and events, with no hand-picked markets. Kalshi series: `KXFED`,
     `KXCPI`, `KXCPICORE`, `KXCPIYOY`, `KXPAYROLLS`, `KXU3` if it exists, `KXRECSSNBER`. Polymarket: the "Fed decision in
     <month>" events and the CPI and recession events, found through gamma search.
-- **Company markets, Kalshi:**
-  - every open KPI and earnings-call series whose company is in our registry;
-  - the mapping is company name → CIK from `std_price_companies`, in a reviewed file `company-series.json` (series,
-    company, CIK, how matched), with ambiguous names listed and left out;
-  - political, sports and entertainment series are never collected.
+- **Company markets, Kalshi.** Owner, 2026-11-13: "maybe too strict rules, i would add any open contracts on key figures
+  in the company".
+  - Every series in Companies or Financials with at least one numeric market (a strike: above, below, between) about one
+    of our companies, whatever the figure.
+  - A company is identified by the ticker inside the series code or by its name in the titles. When the two point to
+    different companies, the series is listed as rejected.
+  - Kind: "market" (the stock's own price or market value) or "business" (everything else).
+  - The lab's `mapping.json` is the starting list.
+  - Earnings-call wording markets, political, sports and entertainment series are never collected.
+- **More macro series (history fetched 2026-11-13):** jobless claims (`JOBLESS`, `KXJOBLESS`, weekly), GDP (`GDP`,
+  `KXGDP`), core PCE (`KXPCECORE`), unemployment (`KXECONSTATU3`), recession (`KXRECSSNBER`, `KXQRECESS`), and the cut
+  path (`KXFEDCUT`, `KXRATECUT`).
+- **Daily expectations series:** after each run, extend `D:\research\alpha-engine\predmarkets\kalshi\daily-state.jsonl`
+  with the lab's `kalshi_daily_state.py` rules. Every value comes from quotes up to that day's midnight. The findings
+  pre-register two weak SPY candidates and two inflation-sector candidates on it; the forward record tests them.
 - **Per market and day:** fetch time; bid, ask, last; volume, open interest; the liquidity flag of section 6; rules
   text hash; status. When a market settles, also its result, settlement value and full daily candle history.
 - **Storage:** `D:\research\alpha-engine\predmarkets\daily\<date>\<venue>.jsonl`, append-only, with a manifest per run.
