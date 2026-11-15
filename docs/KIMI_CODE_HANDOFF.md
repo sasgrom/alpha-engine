@@ -2860,3 +2860,13 @@ delivered.
 - **Gates:** `npm run check`; 259 files / 1,445 tests; `npm run build`; `git diff --check` — all pass.
 - **Recovery:** one manual scheduler run of the `schwab-daily-bars` chain through
   `worker/.runs/operations-commands.jsonl`; the result is recorded below once finished.
+- **Recovery result (2026-11-15):**
+  - The manual scheduler chain ran: `schwab-fetch-sp500` 08:48:58Z, `schwab-fetch-daily` 08:52:35Z,
+    `schwab-daily-bars` 08:54:22Z, then `desk-snapshot` 09:07:47Z as a dependency; analytics and the rest follow.
+  - Daily bars: 1,007 corrections, of which 4 are closes (3 on 2026-11-12, 1 on 2026-11-13; at most 0.041%); 0
+    conflicts; 0 errors.
+  - 9 series were skipped because the Sunday fetch had no completed candle: CCL, CDNS, CDW, CF, CFG, CHTR, CI, IRM,
+    KEY. Their Friday bars were stored Friday evening, so nothing is missing; Monday's fetch refreshes them.
+  - `operationsHealth()` on the scheduler state returns no alerts, so the desk banner is clear.
+  - Desk chart follow-up `cce2c0f`: session numbers under 1D/5D, plain market-closed labels, local times, and no axis
+    number under the price tag.
