@@ -2782,3 +2782,28 @@ delivered.
 - **Not run:** the fresh full builder, legacy-cache acceptance, 2025 EDGAR coverage, final QA, staged load and independent load verification remain pending. `D:/research/alpha-engine/insiders/submissions-2025` is initialized and empty. Read-only `alpha_research` inventory found no `std_insider%` tables. No production or `alpha_engine` write occurred.
 - **Verification:** K20 Vitest **7 files / 56 tests passed**; standalone insider TypeScript passed. Main `npm run check`, **259 files / 1,443 tests**, and `npm run build` passed. Main documentation adds `docs/engine/STANDARD_INSIDERS.md`; unrelated generated reports, `src/data/analytics-snapshot.ts`, `.vscode/`, `desk-intraday-market.json` and `prediction-markets.json` remain excluded. The exact documentation commit is authoritative in `git log`.
 - **Next safe action:** after SEC availability recovers, make one bounded resume with `npx tsx C:/dev/alpha-engine-lab/src/insiders/edgar-insiders.mts --since 2026-10-01 --until 2026-11-13` from lab `04dbbae`, require zero errors, then run the documented full build and acceptance/load sequence. Claude has held lab commits during this attempt; the hold can end without a K20 build because collection is blocked.
+
+
+## 181. Claude: per-company engine runs, insider test, perfect-foresight ceiling; K20 503 decision — 2026-11-15T02:35Z
+
+- **Per-company engine** (design: `docs/engine/PER_COMPANY_ENGINE.md`).
+  - Lab code: `src/engine2/pc_lib.py`, `pc_run.py`, `pc_page.py` and template, in lab commits `e0f7d28`, `6a048c7` and `8c74891`. Unit tests pass 6/6.
+  - Apple (20 controls) and Ciena (30 controls) show **no signal**. The discovery maps do not beat the time-shift controls, and the probabilities are worse than the base rate (Brier 0.335 vs 0.222 for Apple test A). The step-out precision never beats both the base rate and the control.
+  - Results are in `D:\research\alpha-engine\engine\per-company\<TICKER>\result.json`; the pages are private to the owner.
+  - The new `--foresight` switch is a ceiling, never tradable. With it, row r carries the next report's scores and is held through day +1 of the next release. In test B the 14 price and market-cap ratios are masked, and results go to `<TICKER>-foresight`.
+  - A normal-mode rerun of Apple is identical to the earlier result except for the new `mode` key.
+- **Insider test and the owner's forecast design** (lab `docs/findings-insider-and-foresight-2026-11-15.md`; scripts in `src/engine2/insider/`; data in `D:\research\alpha-engine\engine\insider\i1\`; 481 companies; 200 time-shift controls per test):
+  - Nothing leaks before the release. 55–60% of the year-on-year news is priced while the quarter runs.
+  - Knowing **next** quarter's real numbers on this quarter's 10-Q day lines up with the move through the next release at **+0.10..+0.11** per company, pooled, against the sector (36 of 64 factors are outside the band).
+  - Real forecasts improve accuracy (ridge with own lags, peers and momentum: EPS 0.41 vs naive 0.26). They add about 0 to the price, because the next release moves on the forecast miss (+0.11..+0.16).
+  - With foresight, the per-company engine still finds nothing for Apple. About 50 reports per company are too few at this effect size, so learning has to be pooled across companies.
+  - The after-10-Q drift against the sector is stable before and after 2020 for opex, inventory, ppeq and depamor (−0.02..−0.03). The rnd, costRev and sga effects come mainly from 2020 on, and the profit drift only from before 2020.
+- **K20 decision** (mailbox `20261115-011000-claude-k20-sec-503-decision.md`):
+  - Make one bounded resume from `04dbbae`, no earlier than 2026-11-15 04:00 UTC.
+  - If `0001999371-26-023092` still returns 503, record it as `sourceUnavailable`, with the URLs tried, the HTTP status and the UTC timestamps. The manifest then says "complete except one source-unavailable accession", and the documented full build, the QA gates and the acceptance report (listing the gap) proceed. No placeholder rows.
+  - For this one accession, this replaces the "do not run a full build while this error remains" line in §180.
+- **Boundaries:** no production, `alpha_engine` or `alpha_research` writes; no collector, scheduler or web start; no GDELT. Only this handoff is in the main commit, and the generated reports stay excluded.
+- **Next:**
+  - The owner decides on pooled learning, meaning factor directions and reliabilities learned across companies with the per-company engine making the decision.
+  - The guidance-habit test runs when the GPU guidance run finishes, around 2026-11-17 (18,811 of 34,833 releases done at 2026-11-14 17:15 PST).
+  - Insider trades come after K20.
