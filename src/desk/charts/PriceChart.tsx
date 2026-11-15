@@ -20,12 +20,10 @@ export interface ImpliedCone {
 }
 
 const MARGIN = { top: 14, right: 64, bottom: 28, left: 8 };
-const ET = "America/New_York";
-
-/** Intraday points carry an ISO time in `date`; labels and tooltips read them in New York time. */
-const etDay = (iso: string) => new Date(iso).toLocaleDateString("en-CA", { timeZone: ET });
-const etClock = (iso: string) => new Date(iso).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: ET });
-const etWeekday = (iso: string) => new Date(iso).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: ET });
+/** Intraday points carry an ISO time in `date`; labels and tooltips read them in the viewer's time, like the desk's other clocks. */
+const etDay = (iso: string) => new Date(iso).toLocaleDateString("en-CA");
+const etClock = (iso: string) => new Date(iso).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+const etWeekday = (iso: string) => new Date(iso).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 
 export function PriceChart({ points, events = [], cone = null, height = 320, palette, mode = "daily", baseline = null }: {
   points: PricePoint[];
@@ -97,7 +95,7 @@ export function PriceChart({ points, events = [], cone = null, height = 320, pal
   const first = points[0].close;
   const reference = intraday && baseline !== null ? baseline : first;
   const ariaLabel = intraday
-    ? `Prices from ${etWeekday(points[0].date)} ${etClock(points[0].date)} to ${etWeekday(points[n - 1].date)} ${etClock(points[n - 1].date)} New York time; latest ${fmtPrice(last)}`
+    ? `Prices from ${etWeekday(points[0].date)} ${etClock(points[0].date)} to ${etWeekday(points[n - 1].date)} ${etClock(points[n - 1].date)}; latest ${fmtPrice(last)}`
     : `Closing prices from ${fmtDate(points[0].date)} to ${fmtDate(points[n - 1].date)}; last close ${fmtPrice(last)}`;
 
   const indexAt = (event: PointerEvent<SVGRectElement>) => {
@@ -145,7 +143,8 @@ export function PriceChart({ points, events = [], cone = null, height = 320, pal
           </g>
         )}
         <g className="axis">
-          {ticks.map((tick) => (
+          {/* an axis number under the latest-price tag would be covered by it: leave that one out */}
+          {ticks.filter((tick) => Math.abs(y(tick) - y(last)) >= 14).map((tick) => (
             <text key={tick} x={width - 4} y={y(tick) + 4} textAnchor="end">
               {tick >= 1000 ? tick.toLocaleString("en-US", { maximumFractionDigits: 0 }) : tick.toLocaleString("en-US", { maximumFractionDigits: 2 })}
             </text>
@@ -193,7 +192,7 @@ export function PriceChart({ points, events = [], cone = null, height = 320, pal
       {active && hover !== null && (
         <div className="desk-tooltip" style={{ left: tooltipLeft, top: MARGIN.top }}>
           <strong>{fmtPrice(active.close)}</strong>
-          <div>{intraday ? `${etWeekday(active.date)} · ${etClock(active.date)} ET` : `${fmtDate(active.date, "weekday")}, ${active.date.slice(0, 4)}`}</div>
+          <div>{intraday ? `${etWeekday(active.date)} · ${etClock(active.date)}` : `${fmtDate(active.date, "weekday")}, ${active.date.slice(0, 4)}`}</div>
           <div className="row">
             <span>{intraday ? (baseline !== null ? "Since previous close" : `Since ${etWeekday(points[0].date)}`) : `Since ${fmtDate(points[0].date, "short")}`}</span>
             <span>{fmtPct(active.close / reference - 1, intraday ? 2 : 1)}</span>

@@ -25,17 +25,19 @@ describe("desk intraday prices", () => {
     expect(desk.host.textContent).not.toContain("Today / 5 days");
     expect(desk.calls).not.toContain("desk.intraday");
     const oneDay = click(desk, "1D");
-    await waitUntil(() => desk!.host.textContent?.includes("5-minute prices as of") ?? false);
+    await waitUntil(() => desk!.host.textContent?.includes("Market closed") ?? false);
     expect(oneDay.getAttribute("aria-pressed")).toBe("true");
     expect(desk.calls).toContain("desk.intraday");
     const text = desk.host.textContent ?? "";
-    expect(text).toContain("Last session Nov 13");
-    expect(text).toContain("delayed quotes");
+    expect(text).toContain("Market closed · Fri, Nov 13 session · intraday prices");
+    const numbers = desk.host.querySelector("[aria-label='Session numbers']")?.textContent ?? "";
+    for (const label of ["Open", "High", "Low", "vs previous close"]) expect(numbers).toContain(label);
     expect(text).toContain("Prices as CSV");
     expect(text).not.toContain("No 5-minute prices are stored");
     const fiveDays = click(desk, "5D");
     await waitUntil(() => fiveDays.getAttribute("aria-pressed") === "true");
-    expect(desk.host.textContent).toContain("5-minute prices as of");
+    await waitUntil(() => desk!.host.textContent?.includes("to Nov 13 · intraday prices") ?? false);
+    expect(desk.host.querySelector("[aria-label='Session numbers']")?.textContent).toContain("over the window");
   });
 
   it("keeps the market map page free of an extra intraday panel", async () => {

@@ -98,6 +98,19 @@ export default function CompanyPage() {
   const intradayPoints = useMemo(() => (intraday.data?.sessions ?? []).flatMap((session) => session.company.bars.map((bar) => ({ date: bar.end, close: bar.c }))), [intraday.data]);
   const points = isIntraday ? intradayPoints : dailyPoints;
   const previousClose = range === "1D" ? (intraday.data?.sessions.at(-1)?.company.previousClose ?? null) : null;
+  // the numbers a 1D/5D chart owes the reader: open, range, volume and the change against the close before the window
+  const sessionStats = useMemo(() => {
+    const sessions = intraday.data?.sessions ?? [];
+    const bars = range === "1D" ? (sessions.at(-1)?.company.bars ?? []) : sessions.flatMap((session) => session.company.bars);
+    if (!bars.length) return null;
+    const volumes = bars.map((bar) => bar.v).filter((value): value is number => value !== null);
+    const reference = range === "1D" ? (sessions.at(-1)?.company.previousClose ?? null) : (sessions[0]?.company.previousClose ?? null);
+    const last = bars.at(-1)!.c;
+    return {
+      open: bars[0].o, high: Math.max(...bars.map((bar) => bar.h)), low: Math.min(...bars.map((bar) => bar.l)), last,
+      volume: volumes.length ? volumes.reduce((sum, value) => sum + value, 0) : null, change: reference ? last / reference - 1 : null,
+    };
+  }, [intraday.data, range]);
   const lastEarnings = company?.lastEarnings ?? null;
   const eventDates = useMemo(() => {
     const dates = new Set<string>((events.data ?? []).map((event) => String(event.eventDate).slice(0, 10)));
@@ -189,8 +202,10 @@ export default function CompanyPage() {
           subtitle={
             isIntraday
               ? intraday.data
-                ? <>{intraday.data.marketOpen ? <><span className="desk-live-dot" aria-hidden="true" />Live</> : <>Last session {fmtDate(intraday.data.session, "short")}</>} · 5-minute prices as of {fmtClock(intraday.data.asOf)}{intraday.data.delayed === true ? " · delayed quotes" : ""}</>
-                : "5-minute prices"
+                ? intraday.data.marketOpen
+                  ? <><span className="desk-live-dot" aria-hidden="true" />Live · intraday prices as of {fmtClock(intraday.data.asOf)}{intraday.data.delayed === true ? " · delayed quotes" : ""}</>
+                  : <>Market closed · {range === "1D" ? `${fmtDate(intraday.data.session, "weekday")} session` : `${intraday.data.sessions.length} session${intraday.data.sessions.length === 1 ? "" : "s"} to ${fmtDate(intraday.data.session, "short")}`} · intraday prices</>
+                : "Intraday prices"
               : cone && isPresentation ? "Daily closes · the shaded cone is the move options price in over the next weeks" : "Daily closes, adjusted for splits and dividends"
           }
           action={<Segmented label="Chart range" options={RANGES} value={range} onChange={setRange} />}
@@ -205,13 +220,25 @@ export default function CompanyPage() {
             </div>
           )}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10, gap: 12, flexWrap: "wrap" }}>
-            <span className="desk-legend">
-              <span><span className="desk-swatch" style={{ background: palette.accent, height: 3, borderRadius: 2 }} />{isIntraday ? "Price" : "Close"}</span>
-              {isIntraday
-                ? previousClose !== null && <span><span className="desk-swatch" style={{ borderTop: `1px dashed ${palette.muted}`, height: 0 }} />Previous close</span>
-                : <span><span className="desk-swatch" style={{ background: palette.ink, borderRadius: 10, width: 8, height: 8 }} />Earnings report</span>}
-              {!isIntraday && cone && isPresentation && <span><span className="desk-swatch" style={{ background: palette.accent, opacity: 0.25 }} />Options-implied range</span>}
-            </span>
+            {isIntraday ? (
+              <span className="desk-legend" aria-label="Session numbers">
+                {sessionStats && (
+                  <>
+                    {range === "1D" && <span>Open <strong>{fmtPrice(sessionStats.open)}</strong></span>}
+                    <span>High <strong>{fmtPrice(sessionStats.high)}</strong></span>
+                    <span>Low <strong>{fmtPrice(sessionStats.low)}</strong></span>
+                    {sessionStats.volume !== null && <span>Volume <strong>{fmtCompact(sessionStats.volume)}</strong></span>}
+                    {sessionStats.change !== null && <span>{range === "1D" ? "vs previous close" : "over the window"} <Delta value={sessionStats.change} digits={2} /></span>}
+                  </>
+                )}
+              </span>
+            ) : (
+              <span className="desk-legend">
+                <span><span className="desk-swatch" style={{ background: palette.accent, height: 3, borderRadius: 2 }} />Close</span>
+                <span><span className="desk-swatch" style={{ background: palette.ink, borderRadius: 10, width: 8, height: 8 }} />Earnings report</span>
+                {cone && isPresentation && <span><span className="desk-swatch" style={{ background: palette.accent, opacity: 0.25 }} />Options-implied range</span>}
+              </span>
+            )}
             <button type="button" className="desk-button" style={{ height: 30 }} onClick={downloadCsv} disabled={!points.length}>
               <Download size={14} aria-hidden="true" /> {isIntraday ? "Prices as CSV" : "Closes as CSV"}
             </button>
