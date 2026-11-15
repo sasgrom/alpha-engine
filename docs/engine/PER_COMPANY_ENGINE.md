@@ -63,11 +63,20 @@ The field list below is the narrower set first proposed.
   - inventory growth − sales growth, and receivables growth − sales growth (warning signs).
 - **Accounting identities are removed by construction.** Keep the parts or the total, never both (gross profit =
   revenue − cost; assets = current + non-current; free cash flow = operating cash flow + capex …).
-- **Normalization for percentage changes:**
+- **Normalization for percentage changes, step 1 (the change):**
   - flows per day of the quarter (13/14/16-week quarters, 53-week years);
   - log change for always-positive items; for items that can turn negative, the change divided by revenue;
-  - scale and sign repairs as in n1;
-  - outliers: rank correlation on the maps, and clipping at the company's own past percentiles in the engine.
+  - scale and sign repairs as in n1.
+- **Step 2 (agreed 2026-11-14): a rank-based Gaussian score on top of the change, for tests A and B.**
+  - Each change is ranked against the company's own trailing 20 quarters (past only, point in time) and turned into a
+    normal score: 0 is typical, +1 beats about 84% of its past.
+  - A flag marks values beyond the past range, so records are not lost.
+  - The votes use this score (above 0 means better than usual for this company).
+  - The maps keep using rank correlation, so the score barely changes them.
+  - Not the mean-and-standard-deviation z-score: Duke Energy's four merger quarters (+62% to +70%) triple its standard
+    deviation, from 6% to 17%. A +10% quarter then scores +0.17, while by rank it is +0.91 (better than 82% of its
+    history).
+  - Why on top and not instead: a score of the level would measure the calendar (levels trend) and the season.
 - **Outcome:** the market cap change from the entry to each day's close. Shares are on one basis, so a split is not a
   move.
 - **A number missing at the report:** that signal sits out this event. It is never zero and never guessed. A number
@@ -134,12 +143,26 @@ The corrections:
   - **the same numbers for the time-shifted control at the same coverage.**
   - Money is information only.
 
-## 7. Validation
+## 7. Validation: forward chaining in five chronological chunks (agreed 2026-11-14)
 
-- **Sliding 80/20, never random.** An unbroken block of 80% of the quarters (about 48) trains the model, which then
-  decides the next quarter. The window slides forward one quarter.
-- Every quantity is re-estimated inside each window: signal admission, directions, e±, k_i, p0 and calibration.
-- About 12 test quarters per company is a first tell. The verdict comes from repeating the test company by company.
+- Each company's quarters are cut into five chunks in time order, A (oldest) to E (newest), about 12 quarters each.
+
+  | Pass | A | B | C | D | E |
+  |---|---|---|---|---|---|
+  | 1 | train | train | **test** | – | – |
+  | 2 | train | train | train | **test** | – |
+  | 3 | train | train | train | train | **test** |
+
+  "–" is the future and is never used.
+- Each pass trains on everything before its test chunk. Every quantity is re-estimated in each pass: signal
+  admission, directions, e±, k_i, p0, the Gaussian scores and calibration.
+- The three test chunks combined, C to E (about 60% of the history, all clean), are traded and evaluated.
+- Training starts from A+B (about 24 quarters), because A alone gives only about 5-7 falling quarters to count error
+  rates from.
+- **Ceiling measurement, reported beside the result and never traded:** the owner's blocked five-fold version (each
+  chunk tested once, trained on the other four, future included). The gap to the clean result shows how much the
+  future flatters. In the earlier model, counting with the future gave an edge that vanished with past-only data.
+- The verdict comes from repeating the test company by company.
 
 ## 8. Peers
 
