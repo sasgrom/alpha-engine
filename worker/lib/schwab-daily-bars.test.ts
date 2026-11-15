@@ -21,6 +21,30 @@ describe("Schwab daily bars into local prices", () => {
     expect(volume.enrich).toEqual([]);
   });
 
+  it("takes a later fetch's final values for a recent provisional bar of the same source (2026-11-12 AAPL case)", () => {
+    const stored = [bar("2026-11-10", 350), bar("2026-11-11", 352), bar("2026-11-12", 354.838, 31_000_000)];
+    const fresh = [bar("2026-11-10", 350), bar("2026-11-11", 352), bar("2026-11-12", 354.88, 31_874_926), bar("2026-11-13", 356.27)];
+    const plan = planSchwabBars(stored, fresh, { from: "2026-11-11", maxCloseMove: 0.005 });
+    expect(plan.closeConflicts).toEqual([]);
+    expect(plan.fieldDifferences).toEqual([]);
+    expect(plan.corrections).toEqual([{ date: "2026-11-12", before: { open: 354.838, high: 355.838, low: 353.838, close: 354.838, volume: 31_000_000 }, after: { open: 354.88, high: 355.88, low: 353.88, close: 354.88, volume: 31_874_926 } }]);
+    expect(plan.insert.map((row) => row.date)).toEqual(["2026-11-13"]);
+  });
+
+  it("keeps old, large and history-wide differences as conflicts", () => {
+    const window = { from: "2026-11-11", maxCloseMove: 0.005 };
+    const old = planSchwabBars([bar("2026-11-06", 100), bar("2026-11-12", 100)], [bar("2026-11-06", 100.2), bar("2026-11-12", 100)], window);
+    expect(old.closeConflicts).toEqual([{ date: "2026-11-06", stored: 100, candidate: 100.2 }]);
+    expect(old.corrections).toEqual([]);
+    const large = planSchwabBars([bar("2026-11-12", 100)], [bar("2026-11-12", 103)], window);
+    expect(large.closeConflicts).toEqual([{ date: "2026-11-12", stored: 100, candidate: 103 }]);
+    expect(large.corrections).toEqual([]);
+    // an older close moved too: an adjustment of the whole history, so the recent small move is no correction either
+    const wide = planSchwabBars([bar("2026-11-06", 100), bar("2026-11-12", 100)], [bar("2026-11-06", 99.5), bar("2026-11-12", 99.7)], window);
+    expect(wide.corrections).toEqual([]);
+    expect(wide.closeConflicts.map((row) => row.date)).toEqual(["2026-11-06", "2026-11-12"]);
+  });
+
   it("fills a missing field when the close agrees", () => {
     const plan = planSchwabBars([bar("2026-11-06", 100, null, null)], [bar("2026-11-06", 100, 1500, 99)]);
     expect(plan.enrich).toEqual([{ date: "2026-11-06", patch: { open: 99, volume: 1500 } }]);

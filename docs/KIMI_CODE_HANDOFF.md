@@ -2835,3 +2835,28 @@ delivered.
   accumulate from Monday 2026-11-16.
 - **Kimi:** notified by mailbox (`20261115-052500-claude-k21-desk-rework.md`). The generated reports, `.vscode/` and
   the analytics snapshot stay out of this commit.
+
+
+## 183. Claude: evening market chain unblocked; Schwab provisional closes become corrections — 2026-11-15T08:45Z
+
+- **Symptom:** the desk banner said "A scheduled job failed in the last day: Schwab daily bars" and "The market run of
+  2026-11-13 has not completed". The owner saw it.
+- **Cause:**
+  - The evening run of `schwab-daily-bars` (2026-11-14 00:49 UTC) stored 513 Friday bars, but it **exited 1 on 3 close
+    conflicts**. The 2026-11-12 closes stored by the previous evening's fetch were provisional: AAPL 354.838 → 354.88,
+    NWSA 26.261 → 26.27, TSCO 36.615 → 36.63. 509 series also had open/high/low/volume differences.
+  - The dependency chain then stopped, so `desk-snapshot` last ran 2026-11-13 04:48 Pacific. Saturday's 04:34 run
+    failed the same way.
+  - The failed report is kept as `worker/.runs/local-generated/schwab-daily-bars.failed-20261114T1234Z.json`.
+- **Fix:**
+  - `planSchwabBars` takes a correction window. The newest five candles of the series' own `schwab` rows take a later
+    Schwab fetch's open/high/low/close/volume when the close moved by at most 0.5% and no older close moved.
+  - A history-wide move stays a basis change or conflict, and `schwab-hist` is untouched.
+  - Corrections are listed in the report (`corrections.list`) and do not fail the job.
+  - Two regression tests were added. The note in `contracts/operations.ts` and `docs/OPERATIONS.md` is updated by
+    hand: `scripts/build-operations-doc.mts` would revert hand-maintained policy text such as the push-off note, so it
+    was not run.
+- **Dry run:** 512 corrections (the 3 closes above plus 509 bars finalised), 0 conflicts, 0 differences, exit 0.
+- **Gates:** `npm run check`; 259 files / 1,445 tests; `npm run build`; `git diff --check` — all pass.
+- **Recovery:** one manual scheduler run of the `schwab-daily-bars` chain through
+  `worker/.runs/operations-commands.jsonl`; the result is recorded below once finished.

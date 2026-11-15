@@ -48,7 +48,7 @@ if (historyDir) {
 
 const db = getDb();
 const perSeries: any[] = [], skipped: { ticker: string; reason: string }[] = [], errors: { ticker: string; error: string }[] = [];
-const conflicts: any[] = [], differences: any[] = [], basisChanges: any[] = [];
+const conflicts: any[] = [], differences: any[] = [], basisChanges: any[] = [], corrections: any[] = [];
 let inserted = 0, insertedHistory = 0, enriched = 0;
 try {
   for (const { ticker, file } of files.sort((a, b) => a.ticker.localeCompare(b.ticker))) {
@@ -60,7 +60,7 @@ try {
       const [lastRows]: any = await db.execute(sql`SELECT DATE_FORMAT(MAX(date),'%Y-%m-%d') AS d FROM prices WHERE cik=${entry.priceKey} AND source="stooq"`);
       const lastStooq: string | null = lastRows[0]?.d ?? null;
       const parts = splitAtStooqEnd(bars, lastStooq);
-      const row: any = { ticker, priceKey: entry.priceKey, firstDate: bars[0].date, lastDate: bars.at(-1)!.date, candles: bars.length, lastStooq, inserted: 0, insertedHistory: 0, enriched: 0, unchanged: 0, closeConflicts: 0 };
+      const row: any = { ticker, priceKey: entry.priceKey, firstDate: bars[0].date, lastDate: bars.at(-1)!.date, candles: bars.length, lastStooq, inserted: 0, insertedHistory: 0, enriched: 0, corrected: 0, unchanged: 0, closeConflicts: 0 };
       const storedOf = async (source: string, from: string): Promise<PriceBar[]> => {
         const [rows]: any = await db.execute(sql`SELECT DATE_FORMAT(date,'%Y-%m-%d') AS d, open, high, low, close, adjClose, volume FROM prices WHERE cik=${entry.priceKey} AND source=${source} AND date >= ${from} ORDER BY date`);
         return rows.map((item: any) => ({ date: item.d, open: number(item.open), high: number(item.high), low: number(item.low), close: number(item.close), adjClose: number(item.adjClose), volume: number(item.volume) }));
@@ -90,7 +90,10 @@ try {
       for (const [source, part] of [["schwab-hist", parts.history], ["schwab", parts.current]] as const) {
         if (!part.length) continue;
         const stored = await storedOf(source, part[0].date);
-        const plan = planSchwabBars(stored, part);
+        // the newest five candles of the series' own Schwab rows may be finalised by this fetch (provisional evening closes)
+        const dates = part.map((bar) => bar.date).sort();
+        const window = source === "schwab" ? { from: dates[Math.max(0, dates.length - 5)], maxCloseMove: 0.005 } : null;
+        const plan = planSchwabBars(stored, part, window);
         if (!dryRun) {
           for (let offset = 0; offset < plan.insert.length; offset += 500) {
             const slice = plan.insert.slice(offset, offset + 500);
@@ -99,7 +102,12 @@ try {
           for (const { date, patch } of plan.enrich) {
             await db.execute(sql`UPDATE prices SET open = COALESCE(open, ${patch.open ?? null}), high = COALESCE(high, ${patch.high ?? null}), low = COALESCE(low, ${patch.low ?? null}), volume = COALESCE(volume, ${patch.volume ?? null}) WHERE cik=${entry.priceKey} AND date=${date} AND source=${source}`);
           }
+          for (const { date, after } of plan.corrections) {
+            await db.execute(sql`UPDATE prices SET open = ${after.open}, high = ${after.high}, low = ${after.low}, close = ${after.close}, volume = ${after.volume} WHERE cik=${entry.priceKey} AND date=${date} AND source=${source}`);
+          }
         }
+        row.corrected += plan.corrections.length;
+        corrections.push(...plan.corrections.map((item) => ({ ticker, source, ...item })));
         if (source === "schwab") row.inserted += plan.insert.length;
         else row.insertedHistory += plan.insert.length;
         row.enriched += plan.enrich.length;
@@ -141,6 +149,7 @@ try {
     insertedHistory,
     enriched,
     closeConflicts: conflicts,
+    corrections: { rule: "a later Schwab fetch finalises the newest five Schwab candles of a series when the close moved by at most 0.5% and no older close moved", count: corrections.length, list: corrections },
     basisChanges,
     fieldDifferences: { count: differences.length, first: differences.slice(0, 50) },
     holes: { calendar: "SPY Schwab sessions", from, calendarSessions: calendar.length, seriesWithHoles: holes.length, list: holes },
@@ -152,7 +161,7 @@ try {
   };
   writeJsonAtomic(`worker/.runs/local-generated/schwab-daily-bars${historyDir ? ".backfill" : ""}.json`, summary, true);
   for (const event of basisChanges) console.log(`basis change: ${event.ticker} ×${event.ratio} before ${event.firstNewBasisDate} (${event.dates} stored dates moved)${event.dryRun ? " — dry run, nothing re-based" : `; re-based ${JSON.stringify(event.rebased)}`}`);
-  console.log(JSON.stringify({ files: files.length, series: perSeries.length, inserted, insertedHistory, enriched, closeConflicts: conflicts.length, basisChanges: basisChanges.length, fieldDifferences: differences.length, seriesWithHoles: holes.length, skipped: skipped.length, errors: errors.length, latestCompletedDate: latestDate, dryRun }, null, 2));
+  console.log(JSON.stringify({ files: files.length, series: perSeries.length, inserted, insertedHistory, enriched, corrected: corrections.length, closeConflicts: conflicts.length, basisChanges: basisChanges.length, fieldDifferences: differences.length, seriesWithHoles: holes.length, skipped: skipped.length, errors: errors.length, latestCompletedDate: latestDate, dryRun }, null, 2));
   if (errors.length || conflicts.length) process.exitCode = 1;
 } finally {
   await db.$client.end();

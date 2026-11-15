@@ -600,7 +600,7 @@ npx tsx worker/schwab-fetch.mts --price-series --exclude research-universe-50.js
 - **Output:** Local prices rows (source schwab after each series' last Stooq bar, schwab-hist on dates the Stooq history covers) and worker/.runs/local-generated/schwab-daily-bars.json with inserts, conflicts and holes against SPY's sessions.
 - **Destination:** Local MySQL only; the operational pricesDaily push is unchanged.
 - **Requirements:** mysql, driveD
-- **Operational note:** The app lets Schwab win on its dates, so raw Schwab bars never enter dates of the dividend-adjusted Stooq history (they are kept as schwab-hist). A stored close is never changed: a different close is a conflict and marks the job error; other field differences are listed.
+- **Operational note:** The app lets Schwab win on its dates, so raw Schwab bars never enter dates of the dividend-adjusted Stooq history (they are kept as schwab-hist). A stored close is never changed: a different close is a conflict and marks the job error; other field differences are listed. One window is the exception (since 2026-11-15): the newest five Schwab candles of a series are finalised by a later Schwab fetch, because an evening fetch can still carry a provisional close and volume, when the close moved by at most 0.5% and no older close moved; each correction is listed in the report.
 
 ```powershell
 npx tsx worker/schwab-daily-bars.mts

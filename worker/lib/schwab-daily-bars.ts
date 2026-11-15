@@ -3,24 +3,50 @@ import type { PriceBar } from "../../api/services/prices";
 export interface SchwabBarPlan {
   insert: PriceBar[];
   enrich: { date: string; patch: Partial<Pick<PriceBar, "open" | "high" | "low" | "volume">> }[];
+  /** Recent bars of the same Schwab source whose values the later fetch finalised (see SchwabCorrectionWindow). */
+  corrections: { date: string; before: Pick<PriceBar, "open" | "high" | "low" | "close" | "volume">; after: Pick<PriceBar, "open" | "high" | "low" | "close" | "volume"> }[];
   unchanged: number;
   closeConflicts: { date: string; stored: number | null; candidate: number | null }[];
   fieldDifferences: { date: string; field: "open" | "high" | "low" | "volume"; stored: number; candidate: number }[];
 }
 
+/**
+ * A Schwab daily candle fetched soon after the close can still carry a provisional close and volume (the closing
+ * auction and late prints settle later): on 2026-11-13 three of 513 closes moved by 0.01-0.04% the next morning and
+ * 509 series changed open/high/low/volume. Inside this window a later fetch of the SAME source replaces the stored
+ * bar, as long as the close moved by at most `maxCloseMove` and no older close moved (a history-wide adjustment is a
+ * basis change, never a correction); anything older or larger stays a conflict.
+ */
+export interface SchwabCorrectionWindow {
+  /** the first date that may be corrected (the job uses the fifth newest candle of the series) */
+  from: string;
+  /** largest relative close move accepted as a correction */
+  maxCloseMove: number;
+}
+
 const same = (a: number | null, b: number | null) => (a === null || b === null ? a === b : Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(a), Math.abs(b)));
+const pick = (bar: PriceBar) => ({ open: bar.open, high: bar.high, low: bar.low, close: bar.close, volume: bar.volume });
 
 /**
  * What to write for one series: new dates are inserted; a stored bar keeps its values. A missing open/high/low/volume
  * is filled when the close agrees; a different close is a conflict and a different non-missing field is listed,
- * both left as stored (the same rule as officialBarEnrichment).
+ * both left as stored (the same rule as officialBarEnrichment). With a correction window, a recent bar whose close
+ * moved by a small amount takes the later fetch's values instead (a correction, not a conflict).
  */
-export function planSchwabBars(stored: PriceBar[], candidates: PriceBar[]): SchwabBarPlan {
+export function planSchwabBars(stored: PriceBar[], candidates: PriceBar[], window: SchwabCorrectionWindow | null = null): SchwabBarPlan {
   const byDate = new Map(stored.map((bar) => [bar.date, bar]));
-  const plan: SchwabBarPlan = { insert: [], enrich: [], unchanged: 0, closeConflicts: [], fieldDifferences: [] };
+  const plan: SchwabBarPlan = { insert: [], enrich: [], corrections: [], unchanged: 0, closeConflicts: [], fieldDifferences: [] };
+  // a history-wide adjustment (split, spin-off, special dividend) also moves older closes: then nothing is a correction
+  const olderMoved = window !== null && candidates.some((candidate) => candidate.date < window.from && byDate.has(candidate.date) && !same(byDate.get(candidate.date)!.close, candidate.close));
   for (const candidate of candidates) {
     const before = byDate.get(candidate.date);
     if (!before) { plan.insert.push(candidate); continue; }
+    const recent = window !== null && !olderMoved && candidate.date >= window.from;
+    const differs = (["open", "high", "low", "close", "volume"] as const).some((field) => before[field] !== null && candidate[field] !== null && !same(before[field], candidate[field]));
+    if (recent && differs && before.close !== null && candidate.close !== null && before.close > 0 && Math.abs(candidate.close / before.close - 1) <= window!.maxCloseMove) {
+      plan.corrections.push({ date: candidate.date, before: pick(before), after: pick(candidate) });
+      continue;
+    }
     if (!same(before.close, candidate.close)) { plan.closeConflicts.push({ date: candidate.date, stored: before.close, candidate: candidate.close }); continue; }
     const patch: SchwabBarPlan["enrich"][number]["patch"] = {};
     for (const field of ["open", "high", "low", "volume"] as const) {
