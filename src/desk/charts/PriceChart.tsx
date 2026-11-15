@@ -20,8 +20,25 @@ export interface ImpliedCone {
 }
 
 const MARGIN = { top: 14, right: 64, bottom: 28, left: 8 };
+const ET = "America/New_York";
 
-export function PriceChart({ points, events = [], cone = null, height = 320, palette }: { points: PricePoint[]; events?: string[]; cone?: ImpliedCone | null; height?: number; palette: ChartPalette }) {
+/** Intraday points carry an ISO time in `date`; labels and tooltips read them in New York time. */
+const etDay = (iso: string) => new Date(iso).toLocaleDateString("en-CA", { timeZone: ET });
+const etClock = (iso: string) => new Date(iso).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: ET });
+const etWeekday = (iso: string) => new Date(iso).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: ET });
+
+export function PriceChart({ points, events = [], cone = null, height = 320, palette, mode = "daily", baseline = null }: {
+  points: PricePoint[];
+  events?: string[];
+  cone?: ImpliedCone | null;
+  height?: number;
+  palette: ChartPalette;
+  /** "intraday": `date` is an ISO time (5-minute bars); the axis shows times, or one label per session over 5 days. */
+  mode?: "daily" | "intraday";
+  /** A dashed reference level, e.g. the previous close on the 1-day chart. */
+  baseline?: number | null;
+}) {
+  const intraday = mode === "intraday";
   const [ref, width] = useWidth<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
   const n = points.length;
@@ -37,8 +54,8 @@ export function PriceChart({ points, events = [], cone = null, height = 320, pal
     const x = (index: number) => MARGIN.left + (index / slots) * plotW;
     const last = points[n - 1].close;
     const closes = points.map((point) => point.close);
-    let min = Math.min(...closes);
-    let max = Math.max(...closes);
+    let min = Math.min(...closes, ...(baseline !== null ? [baseline] : []));
+    let max = Math.max(...closes, ...(baseline !== null ? [baseline] : []));
     const coneSlot = (days: number) => Math.min(coneSlots, Math.max(1, Math.round((days * 252) / 365)));
     for (const point of conePoints) {
       if (coneSlot(point.days) > coneSlots) continue;
@@ -61,19 +78,27 @@ export function PriceChart({ points, events = [], cone = null, height = 320, pal
       : null;
     const span = (new Date(points[n - 1].date).getTime() - new Date(points[0].date).getTime()) / 86_400_000;
     const labelCount = Math.max(2, Math.min(6, Math.floor(plotW / 110)));
-    const xLabels = Array.from({ length: labelCount }, (_, k) => Math.round((k / (labelCount - 1)) * (n - 1))).map((index) => ({
-      index,
-      text: span > 400 ? new Date(`${points[index].date}T12:00:00Z`).toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" }) : fmtDate(points[index].date, "short"),
-    }));
+    // intraday over several sessions: one label and one faint divider at the first bar of each session
+    const sessionStarts = intraday ? points.map((point, index) => (index === 0 || etDay(point.date) !== etDay(points[index - 1].date) ? index : -1)).filter((index) => index >= 0) : [];
+    const xLabels = intraday && sessionStarts.length > 1
+      ? sessionStarts.map((index) => ({ index, text: etWeekday(points[index].date) }))
+      : Array.from({ length: labelCount }, (_, k) => Math.round((k / (labelCount - 1)) * (n - 1))).map((index) => ({
+          index,
+          text: intraday ? etClock(points[index].date) : span > 400 ? new Date(`${points[index].date}T12:00:00Z`).toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" }) : fmtDate(points[index].date, "short"),
+        }));
     const byDate = new Map(points.map((point, index) => [point.date, index]));
-    const markers = events.map((date) => byDate.get(date)).filter((index): index is number => index !== undefined);
-    return { x, y, ticks, line, area, conePath, visibleCone, coneSlot, xLabels, markers: new Set(markers), last };
-  }, [points, n, plotW, plotH, cone, events]);
+    const markers = intraday ? [] : events.map((date) => byDate.get(date)).filter((index): index is number => index !== undefined);
+    return { x, y, ticks, line, area, conePath, visibleCone, coneSlot, xLabels, markers: new Set(markers), last, dividers: sessionStarts.slice(1) };
+  }, [points, n, plotW, plotH, cone, events, intraday, baseline]);
 
   if (!layout) return <div ref={ref} className="desk-chart" style={{ height }} />;
-  const { x, y, ticks, line, area, conePath, visibleCone, coneSlot, xLabels, markers, last } = layout;
+  const { x, y, ticks, line, area, conePath, visibleCone, coneSlot, xLabels, markers, last, dividers } = layout;
   const active = hover === null ? null : points[hover];
   const first = points[0].close;
+  const reference = intraday && baseline !== null ? baseline : first;
+  const ariaLabel = intraday
+    ? `Prices from ${etWeekday(points[0].date)} ${etClock(points[0].date)} to ${etWeekday(points[n - 1].date)} ${etClock(points[n - 1].date)} New York time; latest ${fmtPrice(last)}`
+    : `Closing prices from ${fmtDate(points[0].date)} to ${fmtDate(points[n - 1].date)}; last close ${fmtPrice(last)}`;
 
   const indexAt = (event: PointerEvent<SVGRectElement>) => {
     const box = event.currentTarget.getBoundingClientRect();
@@ -100,7 +125,7 @@ export function PriceChart({ points, events = [], cone = null, height = 320, pal
         width={width}
         height={height}
         role="img"
-        aria-label={`Closing prices from ${fmtDate(points[0].date)} to ${fmtDate(points[n - 1].date)}; last close ${fmtPrice(last)}`}
+        aria-label={ariaLabel}
         tabIndex={0}
         onKeyDown={onKey}
         onBlur={() => setHover(null)}
@@ -109,7 +134,16 @@ export function PriceChart({ points, events = [], cone = null, height = 320, pal
           {ticks.map((tick) => (
             <line key={tick} x1={MARGIN.left} x2={MARGIN.left + plotW} y1={Math.round(y(tick)) + 0.5} y2={Math.round(y(tick)) + 0.5} />
           ))}
+          {dividers.map((index) => (
+            <line key={`d${index}`} x1={Math.round(x(index)) + 0.5} x2={Math.round(x(index)) + 0.5} y1={MARGIN.top} y2={MARGIN.top + plotH} />
+          ))}
         </g>
+        {baseline !== null && (
+          <g pointerEvents="none">
+            <line x1={MARGIN.left} x2={MARGIN.left + plotW} y1={y(baseline)} y2={y(baseline)} stroke={palette.muted} strokeWidth={1} strokeDasharray="4 4" />
+            <text className="desk-axis-text" x={MARGIN.left + 4} y={y(baseline) - 5}>Previous close {fmtPrice(baseline)}</text>
+          </g>
+        )}
         <g className="axis">
           {ticks.map((tick) => (
             <text key={tick} x={width - 4} y={y(tick) + 4} textAnchor="end">
@@ -159,10 +193,10 @@ export function PriceChart({ points, events = [], cone = null, height = 320, pal
       {active && hover !== null && (
         <div className="desk-tooltip" style={{ left: tooltipLeft, top: MARGIN.top }}>
           <strong>{fmtPrice(active.close)}</strong>
-          <div>{fmtDate(active.date, "weekday")}, {active.date.slice(0, 4)}</div>
+          <div>{intraday ? `${etWeekday(active.date)} · ${etClock(active.date)} ET` : `${fmtDate(active.date, "weekday")}, ${active.date.slice(0, 4)}`}</div>
           <div className="row">
-            <span>Since {fmtDate(points[0].date, "short")}</span>
-            <span>{fmtPct(active.close / first - 1, 1)}</span>
+            <span>{intraday ? (baseline !== null ? "Since previous close" : `Since ${etWeekday(points[0].date)}`) : `Since ${fmtDate(points[0].date, "short")}`}</span>
+            <span>{fmtPct(active.close / reference - 1, intraday ? 2 : 1)}</span>
           </div>
           {markers.has(hover) && <div className="row"><span>Earnings report</span><span>●</span></div>}
         </div>

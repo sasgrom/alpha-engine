@@ -13,7 +13,6 @@ import { searchCompanies, useDeskSnapshot, useWatchlist } from "../data";
 import { DevNotes } from "../DevNotes";
 import { fmtCap, fmtClock, fmtDate, fmtPrice } from "../format";
 import { useDeskIntradayMarket } from "../intraday";
-import { INTRADAY_SNAPSHOT_LABEL } from "@contracts/intraday";
 
 export default function Watchlist() {
   useDocumentTitle("Watchlist");
@@ -70,7 +69,7 @@ export default function Watchlist() {
                   <th className="num">1M</th>
                   <th className="num">YTD</th>
                   <th className="num">Market value</th>
-                  <th>Today · 5 min{intraday.data ? ` · ${fmtClock(intraday.data.asOf)}` : ""}</th>
+                  <th>Today{intraday.data ? ` · ${fmtClock(intraday.data.asOf)}` : ""}</th>
                   <th>3 months</th>
                   <th>Last report</th>
                   <th>Next report</th>
@@ -118,7 +117,7 @@ export default function Watchlist() {
         Companies outside the index are added in the <Link className="desk-link" to="/universe">classic manager</Link>, because adding one starts a data job.
       </p>
       <p className="desk-muted" style={{ fontSize: 12.5, marginTop: 6 }}>
-        {INTRADAY_SNAPSHOT_LABEL}. {intraday.data ? `${intraday.data.marketOpen ? "Open session" : `Last session · ${fmtDate(intraday.data.session, "short")}`} · as of ${fmtClock(intraday.data.asOf)}.` : "No 5-minute market session is stored yet."}
+        {intraday.data ? `Today's line: 5-minute prices · ${intraday.data.marketOpen ? "open session" : `last session ${fmtDate(intraday.data.session, "short")}`} · as of ${fmtClock(intraday.data.asOf)}.` : "No 5-minute prices are stored yet."}
       </p>
       <DevNotes page="watchlist" />
     </div>

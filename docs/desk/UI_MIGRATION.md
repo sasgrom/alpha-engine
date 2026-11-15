@@ -89,7 +89,11 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
   - [x] The existing price snapshots move from every 20 to every 5 minutes; compact snapshots stay each time, raw responses only at the 20-minute marks, and sessions accumulate on D: with no pruning; the desk reads at most five.
   - [x] `desk.intraday` returns company/SPY/sector bars, cumulative VWAP, previous close, opening gap, release/8-K markers and split-rebased earlier sessions. `desk.intradayMarket` serves the shared summary.
   - [x] `desk-snapshot-live` also builds breadth, SPY/equal weight, sector funds, movers and per-company paths from the latest session bars, including after official closes.
-  - [x] Views: Company "Today / 5 days", Markets "Through the day", Watchlist and Today day lines, with as-of/delayed/closed-session labels and five-minute visibility polling.
+  - [x] Views, reworked on 2026-11-15 after the owner rejected the first version ("added extra view, not functionality"):
+    - The Company page has no separate intraday card. **1D and 5D are ranges of the existing Price chart**, drawn from the 5-minute bars, with the previous close as a dashed line on 1D and one label per session on 5D.
+    - The Markets page has no "Through the day" card. The desk snapshot itself refetches every 5 minutes while a session is live and the page is visible, so the map, the movers and the header move during the day.
+    - The Watchlist and Today day lines stay, with short labels.
+    - `desk.intradayMarket` still feeds those day lines; the Markets page no longer reads it.
   - Highs and lows are explicitly approximate; raw responses are not collected at the intermediate five-minute slots. Intraday history for research, if ever needed, comes from the owner's Stooq 5-minute download, not this display archive.
   - Scheduler and web restarts belong to Claude's review/delivery step, not the implementation work block.
 - **How members could find each other** (owner, 2026-11-13: "good plan, write it down, right now no need for it").

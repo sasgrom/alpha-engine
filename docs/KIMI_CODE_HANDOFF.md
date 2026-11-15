@@ -2807,3 +2807,31 @@ delivered.
   - The owner decides on pooled learning, meaning factor directions and reliabilities learned across companies with the per-company engine making the decision.
   - The guidance-habit test runs when the GPU guidance run finishes, around 2026-11-17 (18,811 of 34,833 releases done at 2026-11-14 17:15 PST).
   - Insider trades come after K20.
+
+
+## 182. Claude: K21 desk views reworked after the owner's rejection — 2026-11-15T06:30Z
+
+- **Owner, 2026-11-15:** "kimi did a horrible looking view of the prices, added extra view, not functionality, complete
+  crap!" The fault is shared: the K21 spec (Claude's) asked for separate panels.
+- **Company page:**
+  - The separate "Today / 5 days" card is removed. **1D and 5D are ranges of the existing Price chart.**
+  - `PriceChart` has an intraday mode: New York time labels, one label and a faint divider per session on 5D, the
+    previous close dashed on 1D, and the time in the tooltip.
+  - CSV export gives the 5-minute prices.
+- **Markets page:** the "Through the day" card is removed. While prices are live, the header shows their time.
+- **Live refresh:** `useDeskSnapshot` refetches every 5 minutes while `snapshot.live` is set and the page is visible,
+  so the map, the movers and the headers move during the session.
+- **Watchlist and Today:** the day lines stay, with short labels.
+- **Code removed:** `IntradayPanels.tsx` is deleted, and `IntradayChart.tsx` keeps only `IntradaySpark`.
+- **Unchanged:** the API, contracts and jobs. `desk.intradayMarket` still feeds the day lines.
+- **Verification:** `npm run check`; `npm test -- --run --maxWorkers=4` (259 files / 1,443 tests); `npm run build`;
+  `git diff --check` — all pass.
+  - The desk tests in `src/desk/Intraday.test.tsx` were rewritten (5 tests).
+  - Visual check in `worker/.runs/chartcheck/` (ignored): `PriceChart` with Apple's real 2026-11-13 bars, a synthetic
+    5D layout and the unchanged 1Y chart, light and dark, no console errors.
+- **No web restart:** this is a client-only change, and the production server reads `dist/public` per request. The build
+  has updated it, and no server code changed.
+- **Data note:** one intraday session is stored (2026-11-13, 20-minute bars), so 5D fills as 5-minute sessions
+  accumulate from Monday 2026-11-16.
+- **Kimi:** notified by mailbox (`20261115-052500-claude-k21-desk-rework.md`). The generated reports, `.vscode/` and
+  the analytics snapshot stay out of this commit.

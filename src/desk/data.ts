@@ -9,7 +9,14 @@ import { DESK_PERIOD_LABELS, type DeskCompany, type DeskPeriod, type DeskSnapsho
 import { daysBetween, fmtPct } from "./format";
 
 export function useDeskSnapshot() {
-  return trpc.desk.snapshot.useQuery(undefined, { staleTime: 5 * 60_000, refetchOnWindowFocus: false, retry: 1 });
+  // while a session is live the snapshot is rebuilt after every 5-minute price snapshot: follow it while the page is visible
+  return trpc.desk.snapshot.useQuery(undefined, {
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+    retry: 1,
+    refetchInterval: (query) => (typeof document !== "undefined" && document.visibilityState === "visible" && query.state.data?.live ? 5 * 60_000 : false),
+    refetchIntervalInBackground: false,
+  });
 }
 
 /**

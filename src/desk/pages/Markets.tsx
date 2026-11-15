@@ -4,11 +4,10 @@ import { DESK_PERIODS, type DeskPeriod } from "@contracts/desk-snapshot";
 import { DivergingLegend, MarketMap } from "../charts/MarketMap";
 import { useWidth } from "../charts/scale";
 import { Card, CompanyLink, Delta, Notice, Segmented, Shimmer } from "../components";
-import { MarketIntradayPanel } from "../components/IntradayPanels";
 import { useDesk, useDocumentTitle } from "../context";
 import { periodLabel, useDeskSnapshot } from "../data";
 import { DevNotes } from "../DevNotes";
-import { fmtCap, fmtDate, fmtPrice } from "../format";
+import { fmtCap, fmtClock, fmtDate, fmtPrice } from "../format";
 
 const PERIOD_OPTIONS = DESK_PERIODS.map((period) => ({ value: period, label: periodLabel(period) }));
 
@@ -37,7 +36,11 @@ export default function Markets() {
     <div>
       <div className="desk-page-head">
         <div>
-          <span className="desk-eyebrow">S&amp;P 500 · close of {fmtDate(data.session, "long")}</span>
+          <span className="desk-eyebrow">
+            {data.live
+              ? <>S&amp;P 500 · {fmtDate(data.session, "long")} · <span className="desk-live-dot" aria-hidden="true" />Live · prices as of {fmtClock(data.live.asOf)}, refreshed every 5 minutes</>
+              : <>S&amp;P 500 · close of {fmtDate(data.session, "long")}</>}
+          </span>
           <h1>Market map</h1>
           <p className="desk-lede">Every company in the index, grouped by sector, sized by market value and colored by its return. Hover a tile for the details, select it to open the company.</p>
         </div>
@@ -53,8 +56,6 @@ export default function Markets() {
         <Segmented label="View" options={[{ value: "map", label: "Map" }, { value: "table", label: "Table" }]} value={view} onChange={setView} />
         <span style={{ marginLeft: "auto" }}><DivergingLegend period={period} palette={palette} /></span>
       </div>
-
-      <MarketIntradayPanel />
 
       <div ref={frame}>
         {view === "map" ? (

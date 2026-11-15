@@ -5,7 +5,14 @@ import { DESK_DATA, mountDesk, waitUntil, type MountedDesk } from "./desk-test-h
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
-describe("desk intraday views", () => {
+function click(desk: MountedDesk, label: string) {
+  const button = [...desk.host.querySelectorAll("button")].find(row => row.textContent === label);
+  if (!button) throw new Error(`no button ${label}`);
+  act(() => button.dispatchEvent(new MouseEvent("click", { bubbles: true })));
+  return button;
+}
+
+describe("desk intraday prices", () => {
   let desk: MountedDesk | null = null;
   afterEach(() => {
     desk?.unmount();
@@ -13,60 +20,48 @@ describe("desk intraday views", () => {
     DESK_DATA.empty = false;
   });
 
-  it("renders company price, VWAP, volume, comparisons, marker tooltips and the closed-session state", async () => {
-    desk = await mountDesk("admin", "/desk/company/AAPL", "Today / 5 days");
-    await waitUntil(() => desk!.host.textContent?.includes("Last session · Nov 13") ?? false);
-    const text = desk.host.textContent ?? "";
-    expect(text).toContain("Built from 5-minute price snapshots; highs and lows are approximate");
-    expect(text).toContain("Last session · Nov 13");
-    expect(text).toContain("Delayed quotes");
-    expect(text).toContain("opening gap");
-    expect(text).toContain("8-K · filing date only · time not stored");
-    const titles = [...desk.host.querySelectorAll("svg title")].map(row => row.textContent).join("\n");
-    expect(titles).toContain("AAPL");
-    expect(titles).toContain("VWAP");
-    expect(titles).toContain("SPY");
-    expect(titles).toContain("Previous close");
-    expect(titles).toContain("Earnings release");
-    expect(desk.host.querySelector("svg[aria-label='AAPL snapshot volume on 2026-11-13']")).not.toBeNull();
-    const five = [...desk.host.querySelectorAll("button")].find(button => button.textContent === "5 days")!;
-    act(() => five.dispatchEvent(new MouseEvent("click", { bubbles: true })));
-    await waitUntil(() => five.getAttribute("aria-pressed") === "true");
+  it("draws 1D and 5D inside the company's Price chart, with no separate intraday card", async () => {
+    desk = await mountDesk("admin", "/desk/company/AAPL", "Key statistics");
+    expect(desk.host.textContent).not.toContain("Today / 5 days");
+    expect(desk.calls).not.toContain("desk.intraday");
+    const oneDay = click(desk, "1D");
+    await waitUntil(() => desk!.host.textContent?.includes("5-minute prices as of") ?? false);
+    expect(oneDay.getAttribute("aria-pressed")).toBe("true");
     expect(desk.calls).toContain("desk.intraday");
-  });
-
-  it("renders market breadth, SPY against equal weight, all sector funds and movers with hover evidence", async () => {
-    desk = await mountDesk("admin", "/desk/markets", "Through the day");
-    await waitUntil(() => desk!.host.textContent?.includes("SPY against the equal-weighted 500") ?? false);
     const text = desk.host.textContent ?? "";
-    expect(text).toContain("SPY against the equal-weighted 500");
-    expect(text).toContain("Sector funds · return from previous close");
-    expect(text).toContain("Top movers · day path");
-    expect(text).toContain("Last session · Nov 13");
-    expect(desk.host.querySelectorAll("svg[aria-label$='through the day']").length).toBeGreaterThanOrEqual(12);
-    expect([...desk.host.querySelectorAll("svg title")].some(row => row.textContent?.includes("Above previous close"))).toBe(true);
-    expect(desk.calls).toContain("desk.intradayMarket");
+    expect(text).toContain("Last session Nov 13");
+    expect(text).toContain("delayed quotes");
+    expect(text).toContain("Prices as CSV");
+    expect(text).not.toContain("No 5-minute prices are stored");
+    const fiveDays = click(desk, "5D");
+    await waitUntil(() => fiveDays.getAttribute("aria-pressed") === "true");
+    expect(desk.host.textContent).toContain("5-minute prices as of");
   });
 
-  it("renders today's path and as-of time on Watchlist", async () => {
+  it("keeps the market map page free of an extra intraday panel", async () => {
+    desk = await mountDesk("admin", "/desk/markets", "Market map");
+    expect(desk.host.textContent).not.toContain("Through the day");
+    expect(desk.calls).not.toContain("desk.intradayMarket");
+  });
+
+  it("shows today's line and its as-of time on Watchlist", async () => {
     desk = await mountDesk("admin", "/desk/watchlist", "1 followed");
-    expect(desk.host.textContent).toContain("Today · 5 min");
-    expect(desk.host.textContent).toContain("Last session · Nov 13");
+    await waitUntil(() => desk!.host.textContent?.includes("Today's line: 5-minute prices") ?? false);
+    expect(desk.host.textContent).toContain("Today's line: 5-minute prices · last session Nov 13 · as of");
     expect(desk.host.querySelector("svg[aria-label='AAPL today · 5-minute snapshots']")).not.toBeNull();
-    expect(desk.host.textContent).toContain("Built from 5-minute price snapshots; highs and lows are approximate");
   });
 
-  it("renders the same shared path in the Today watchlist", async () => {
+  it("shows the same line in the Today watchlist", async () => {
     desk = await mountDesk("admin");
-    expect(desk.host.querySelector("svg[aria-label='AAPL today · 5-minute snapshots']")).not.toBeNull();
-    expect(desk.host.textContent).toContain("Companies you follow · Built from 5-minute price snapshots; highs and lows are approximate · as of");
+    await waitUntil(() => desk!.host.querySelector("svg[aria-label='AAPL today · 5-minute snapshots']") !== null);
+    expect(desk.host.textContent).toContain("Companies you follow · today's line as of");
   });
 
-  it("shows an honest empty state without substituting a daily chart", async () => {
+  it("shows an honest empty state on 1D instead of daily closes", async () => {
     DESK_DATA.empty = true;
-    desk = await mountDesk("admin", "/desk/company/MSFT", "Today / 5 days");
-    await waitUntil(() => desk!.host.textContent?.includes("No 5-minute session snapshots are stored for this company yet.") ?? false);
-    expect(desk.host.textContent).toContain("No 5-minute session snapshots are stored for this company yet.");
-    expect(desk.host.querySelector("svg[aria-label='MSFT price and VWAP on 2026-11-13']")).toBeNull();
+    desk = await mountDesk("admin", "/desk/company/MSFT", "Key statistics");
+    click(desk, "1D");
+    await waitUntil(() => desk!.host.textContent?.includes("No 5-minute prices are stored for this company yet.") ?? false);
+    expect(desk.host.textContent).toContain("No 5-minute prices are stored for this company yet.");
   });
 });

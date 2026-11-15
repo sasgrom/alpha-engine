@@ -13,7 +13,6 @@ import { earningsRadar, impliedMoveFor, marketBrief, movers, periodBreadth, peri
 import { DevNotes } from "../DevNotes";
 import { daysBetween, fmtClock, fmtDate, fmtNum, fmtPct, fmtPrice, localToday, relativeDay } from "../format";
 import { useDeskIntradayMarket } from "../intraday";
-import { INTRADAY_SNAPSHOT_LABEL } from "@contracts/intraday";
 
 const PERIOD_OPTIONS = DESK_PERIODS.map((period) => ({ value: period, label: periodLabel(period) }));
 
@@ -239,7 +238,7 @@ export default function Today() {
           )}
         </Card>
 
-        <Card className="desk-span-12" title="Your watchlist" subtitle={intraday.data ? `Companies you follow · ${INTRADAY_SNAPSHOT_LABEL} · as of ${fmtClock(intraday.data.asOf)}` : "Companies you follow"} action={<Link className="desk-link" to="/desk/watchlist">Manage</Link>}>
+        <Card className="desk-span-12" title="Your watchlist" subtitle={intraday.data ? `Companies you follow · today's line as of ${fmtClock(intraday.data.asOf)}` : "Companies you follow"} action={<Link className="desk-link" to="/desk/watchlist">Manage</Link>}>
           {watch.isLoading ? (
             <Shimmer height={90} />
           ) : watchRows.length ? (

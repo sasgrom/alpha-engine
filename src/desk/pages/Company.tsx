@@ -4,16 +4,19 @@ import { ArrowUpRight, Check, Download, Plus, Search } from "lucide-react";
 import { trpc } from "@/providers/trpc";
 import { DESK_PERIODS, type DeskCompany } from "@contracts/desk-snapshot";
 import { PriceChart, type ImpliedCone } from "../charts/PriceChart";
-import { IntradayCompanyPanel } from "../components/IntradayPanels";
 import { Card, CompanyLink, Delta, Notice, RangeBar, Segmented, Shimmer, TickerMark } from "../components";
 import { useDesk, useDocumentTitle } from "../context";
 import { findCompany, impliedMoveFor, peersOf, periodLabel, searchCompanies, useDeskSnapshot, useWatchlist } from "../data";
 import { DevNotes } from "../DevNotes";
-import { daysBetween, entityName, fmtCap, fmtCompact, fmtDate, fmtNum, fmtPct, fmtPrice, localToday, personName, relativeDay } from "../format";
+import { daysBetween, entityName, fmtCap, fmtClock, fmtCompact, fmtDate, fmtNum, fmtPct, fmtPrice, localToday, personName, relativeDay } from "../format";
+import { useDeskIntraday } from "../intraday";
 import { rememberTicker } from "../preferences";
 
-type Range = "1M" | "3M" | "6M" | "YTD" | "1Y" | "5Y" | "ALL";
+type DailyRange = "1M" | "3M" | "6M" | "YTD" | "1Y" | "5Y" | "ALL";
+type Range = "1D" | "5D" | DailyRange;
 const RANGES: { value: Range; label: string }[] = [
+  { value: "1D", label: "1D" },
+  { value: "5D", label: "5D" },
   { value: "1M", label: "1M" },
   { value: "3M", label: "3M" },
   { value: "6M", label: "6M" },
@@ -77,7 +80,10 @@ export default function CompanyPage() {
   const [range, setRange] = useState<Range>("1Y");
   const watch = useWatchlist();
   const cik = company?.cik ?? 0;
-  const history = trpc.prices.history.useQuery({ cik, range }, { enabled: cik > 0, staleTime: 5 * 60_000, placeholderData: (previous) => previous });
+  // 1D and 5D are the same chart drawn from the 5-minute session snapshots; longer ranges use the daily closes
+  const isIntraday = range === "1D" || range === "5D";
+  const history = trpc.prices.history.useQuery({ cik, range: isIntraday ? "1M" : (range as DailyRange) }, { enabled: cik > 0 && !isIntraday, staleTime: 5 * 60_000, placeholderData: (previous) => previous });
+  const intraday = useDeskIntraday(company?.ticker ?? "", range === "5D" ? 5 : 1, isIntraday && cik > 0);
   const events = trpc.events.byCompany.useQuery({ cik }, { enabled: cik > 0 && !!company?.research, staleTime: 10 * 60_000 });
   const insiders = trpc.company.insiderTrades.useQuery({ cik }, { enabled: cik > 0, staleTime: 10 * 60_000 });
   const shortInterest = trpc.company.shortInterest.useQuery({ cik }, { enabled: cik > 0, staleTime: 10 * 60_000 });
@@ -88,7 +94,10 @@ export default function CompanyPage() {
     if (company) rememberTicker(company.ticker);
   }, [company]);
 
-  const points = useMemo(() => (history.data?.bars ?? []).filter((bar) => bar.close !== null).map((bar) => ({ date: bar.date, close: bar.close as number })), [history.data]);
+  const dailyPoints = useMemo(() => (history.data?.bars ?? []).filter((bar) => bar.close !== null).map((bar) => ({ date: bar.date, close: bar.close as number })), [history.data]);
+  const intradayPoints = useMemo(() => (intraday.data?.sessions ?? []).flatMap((session) => session.company.bars.map((bar) => ({ date: bar.end, close: bar.c }))), [intraday.data]);
+  const points = isIntraday ? intradayPoints : dailyPoints;
+  const previousClose = range === "1D" ? (intraday.data?.sessions.at(-1)?.company.previousClose ?? null) : null;
   const lastEarnings = company?.lastEarnings ?? null;
   const eventDates = useMemo(() => {
     const dates = new Set<string>((events.data ?? []).map((event) => String(event.eventDate).slice(0, 10)));
@@ -122,7 +131,7 @@ export default function CompanyPage() {
   const short = shortInterest.data?.current ?? null;
 
   const downloadCsv = () => {
-    const lines = ["date,close", ...points.map((point) => `${point.date},${point.close}`)];
+    const lines = [isIntraday ? "time,price" : "date,close", ...points.map((point) => `${point.date},${point.close}`)];
     const url = URL.createObjectURL(new Blob([`${lines.join("\n")}\n`], { type: "text/csv" }));
     const anchor = document.createElement("a");
     anchor.href = url;
@@ -174,24 +183,37 @@ export default function CompanyPage() {
       </div>
 
       <div className="desk-grid">
-        <IntradayCompanyPanel ticker={company.ticker} />
         <Card
           className="desk-span-8"
           title="Price"
-          subtitle={cone && isPresentation ? "Daily closes · the shaded cone is the move options price in over the next weeks" : "Daily closes, adjusted for splits and dividends"}
+          subtitle={
+            isIntraday
+              ? intraday.data
+                ? <>{intraday.data.marketOpen ? <><span className="desk-live-dot" aria-hidden="true" />Live</> : <>Last session {fmtDate(intraday.data.session, "short")}</>} · 5-minute prices as of {fmtClock(intraday.data.asOf)}{intraday.data.delayed === true ? " · delayed quotes" : ""}</>
+                : "5-minute prices"
+              : cone && isPresentation ? "Daily closes · the shaded cone is the move options price in over the next weeks" : "Daily closes, adjusted for splits and dividends"
+          }
           action={<Segmented label="Chart range" options={RANGES} value={range} onChange={setRange} />}
         >
-          <div className={history.isFetching && history.data ? "desk-refetching" : undefined}>
-            {history.isLoading ? <Shimmer height={320} /> : points.length >= 2 ? <PriceChart points={points} events={eventDates} cone={isPresentation ? cone : null} palette={palette} /> : <div className="desk-empty">No stored price history for this range.</div>}
-          </div>
+          {isIntraday ? (
+            <div className={intraday.isFetching && intraday.data ? "desk-refetching" : undefined}>
+              {intraday.isLoading ? <Shimmer height={320} /> : intraday.error ? <div className="desk-empty">The 5-minute prices could not be loaded: {intraday.error.message}</div> : points.length >= 2 ? <PriceChart points={points} mode="intraday" baseline={previousClose} palette={palette} /> : <div className="desk-empty">No 5-minute prices are stored for this company yet.</div>}
+            </div>
+          ) : (
+            <div className={history.isFetching && history.data ? "desk-refetching" : undefined}>
+              {history.isLoading ? <Shimmer height={320} /> : points.length >= 2 ? <PriceChart points={points} events={eventDates} cone={isPresentation ? cone : null} palette={palette} /> : <div className="desk-empty">No stored price history for this range.</div>}
+            </div>
+          )}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10, gap: 12, flexWrap: "wrap" }}>
             <span className="desk-legend">
-              <span><span className="desk-swatch" style={{ background: palette.accent, height: 3, borderRadius: 2 }} />Close</span>
-              <span><span className="desk-swatch" style={{ background: palette.ink, borderRadius: 10, width: 8, height: 8 }} />Earnings report</span>
-              {cone && isPresentation && <span><span className="desk-swatch" style={{ background: palette.accent, opacity: 0.25 }} />Options-implied range</span>}
+              <span><span className="desk-swatch" style={{ background: palette.accent, height: 3, borderRadius: 2 }} />{isIntraday ? "Price" : "Close"}</span>
+              {isIntraday
+                ? previousClose !== null && <span><span className="desk-swatch" style={{ borderTop: `1px dashed ${palette.muted}`, height: 0 }} />Previous close</span>
+                : <span><span className="desk-swatch" style={{ background: palette.ink, borderRadius: 10, width: 8, height: 8 }} />Earnings report</span>}
+              {!isIntraday && cone && isPresentation && <span><span className="desk-swatch" style={{ background: palette.accent, opacity: 0.25 }} />Options-implied range</span>}
             </span>
             <button type="button" className="desk-button" style={{ height: 30 }} onClick={downloadCsv} disabled={!points.length}>
-              <Download size={14} aria-hidden="true" /> Closes as CSV
+              <Download size={14} aria-hidden="true" /> {isIntraday ? "Prices as CSV" : "Closes as CSV"}
             </button>
           </div>
         </Card>
