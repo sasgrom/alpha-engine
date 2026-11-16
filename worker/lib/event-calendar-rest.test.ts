@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calendarRowsFromSubmissions, companyPilotChecks, parseIndexAcceptanceEt, projectRestRun, seededQuarterSample, stooqTickerMap, type ExhibitOutcome } from "./event-calendar-rest";
+import { calendarRowsFromSubmissions, companyPilotChecks, parseIndexAcceptanceEt, projectRestRun, restRunOptions, seededQuarterSample, stooqTickerMap, type ExhibitOutcome } from "./event-calendar-rest";
 import { buildQuarters, type CalendarFiling } from "./event-calendar";
 
 const company = { cik: 1, ticker: "AAA", name: "Example" };
@@ -71,5 +71,20 @@ describe("REST submissions calendar", () => {
     expect(result.projectedRemainingSeconds).toBe(12780);
     expect(result.storagePass).toBe(false);
     expect(projectRestRun({ eligibleCompanies: 20, pilotCompanies: 20, bytesDownloaded: 0, elapsedSeconds: 1, freeBytes: 100 * 2 ** 30 }).storagePass).toBe(true);
+  });
+});
+
+
+describe("REST addendum options", () => {
+  it("keeps K06 output names by default and requires a paired CIK filter and addendum", () => {
+    expect(restRunOptions([])).toEqual({ cikFilter: null, addendum: "" });
+    const result = restRunOptions(["--ciks", "27419,46080,76334,766704,1113169,1116132", "--addendum", "six"]);
+    expect(result.addendum).toBe("-six");
+    expect([...result.cikFilter!].sort((a, b) => a - b)).toEqual([27419, 46080, 76334, 766704, 1113169, 1116132]);
+    expect(() => restRunOptions(["--ciks", "27419"])).toThrow(/required together/);
+    expect(() => restRunOptions(["--addendum", "six"])).toThrow(/required together/);
+    expect(() => restRunOptions(["--ciks", "27419", "--addendum", "../six"])).toThrow(/Invalid addendum suffix/);
+    expect(() => restRunOptions(["--ciks", "0", "--addendum", "six"])).toThrow(/Invalid CIK/);
+    expect(() => restRunOptions(["--unknown"])).toThrow(/Unknown argument/);
   });
 });

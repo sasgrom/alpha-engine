@@ -8,19 +8,20 @@ import path from "node:path";
 import { sql } from "drizzle-orm";
 import { getDb } from "../api/queries/connection";
 import { buildQuarters, type CalendarFiling, type CalendarQuarter } from "../worker/lib/event-calendar";
-import { calendarRowsFromSubmissions, companyPilotChecks, parseIndexAcceptanceEt, projectRestRun, seededQuarterSample, stooqTickerMap, type ExhibitOutcome, type RestCompany } from "../worker/lib/event-calendar-rest";
+import { calendarRowsFromSubmissions, companyPilotChecks, parseIndexAcceptanceEt, projectRestRun, restRunOptions, seededQuarterSample, stooqTickerMap, type ExhibitOutcome, type RestCompany } from "../worker/lib/event-calendar-rest";
 import { fetchDoc, isPermanentSecMissing, listFilingDocs, realCacheRoot, secGet } from "../worker/lib/edgar";
 import { exhibitCacheName, selectSubstantiveExhibits } from "../worker/lib/exhibits";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 
 const outputRoot = path.resolve("D:/research/alpha-engine/engine/events");
 const cacheRoot = path.resolve("worker/cache/edgar");
-const universeFile = path.join(outputRoot, "universe-rest.json");
-const filingsFile = path.join(outputRoot, "filings-rest.jsonl");
-const quartersFile = path.join(outputRoot, "quarters-rest.jsonl");
-const progressFile = path.join(outputRoot, "progress-rest.json");
-const manifestFile = path.join(outputRoot, "manifest-rest.json");
-const summaryFile = "research/engine/event-calendar-rest.summary.json";
+const { cikFilter, addendum } = restRunOptions(process.argv.slice(2)), runSuffix = addendum || "-rest";
+const universeFile = path.join(outputRoot, `universe${runSuffix}.json`);
+const filingsFile = path.join(outputRoot, `filings${runSuffix}.jsonl`);
+const quartersFile = path.join(outputRoot, `quarters${runSuffix}.jsonl`);
+const progressFile = path.join(outputRoot, `progress${runSuffix}.json`);
+const manifestFile = path.join(outputRoot, `manifest${runSuffix}.json`);
+const summaryFile = `research/engine/event-calendar${runSuffix}.summary.json`;
 const minimumFreeBytes = 100 * 2 ** 30;
 const maximumExhibitBytes = 50 * 1024 * 1024;
 const startedAt = new Date().toISOString();
@@ -306,7 +307,7 @@ try {
     const [factRows]: any = await db.execute(sql`SELECT c.cik, c.ticker, c.name, fc.factRows, pc.priceRows, pc.priceTicker FROM companies c JOIN (SELECT cik, COUNT(*) factRows FROM facts GROUP BY cik) fc ON fc.cik=c.cik LEFT JOIN (SELECT cik, ticker priceTicker, COUNT(*) priceRows FROM prices WHERE source="stooq" GROUP BY cik,ticker) pc ON pc.cik=c.cik ORDER BY fc.factRows DESC, c.cik`);
     const [priceRows]: any = await db.execute(sql`SELECT p.cik, p.ticker, COUNT(*) priceRows, MAX(c.name) name, MAX(f.factRows) factRows FROM (SELECT cik,ticker FROM prices WHERE source="stooq" GROUP BY cik,ticker) p LEFT JOIN companies c ON c.cik=p.cik LEFT JOIN (SELECT cik,COUNT(*) factRows FROM facts GROUP BY cik) f ON f.cik=p.cik WHERE p.cik>0 GROUP BY p.cik,p.ticker ORDER BY p.cik`);
     const factCompanies = factRows.filter((row: any) => !research50.has(Number(row.cik)));
-    const eligible = factCompanies.filter((row: any) => Number(row.priceRows) > 0);
+    const eligible = factCompanies.filter((row: any) => Number(row.priceRows) > 0 && (!cikFilter || cikFilter.has(Number(row.cik))));
     const stooqTickers = stooqTickerMap(factCompanies);
     universe = eligible.map((row: any) => ({ cik: Number(row.cik), ticker: stooqTickers.get(Number(row.cik))!, name: String(row.name) }));
     universeEvidence = {
@@ -333,7 +334,7 @@ const option = (name: string) => {
 };
 const limit = Number(option("--limit") ?? 20);
 if (!Number.isInteger(limit) || limit < 1 || limit > universe.length) throw new Error(`--limit must be an integer from 1 to ${universe.length}`);
-const pilotUniverse = universe.slice(0, limit);
+const pilotUniverse = cikFilter ? universe : universe.slice(0, limit);
 const results: CompanyResult[] = [];
 let cacheHits = 0;
 let processedThisRun = 0;

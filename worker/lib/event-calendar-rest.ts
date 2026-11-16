@@ -125,3 +125,29 @@ export function projectRestRun(options: { eligibleCompanies: number; pilotCompan
   const projectedFreeBytes = options.freeBytes - projectedRemainingBytes;
   return { projectedRemainingBytes, projectedRemainingSeconds, projectedFreeBytes, minimumFreeBytes, storagePass: projectedFreeBytes >= minimumFreeBytes };
 }
+
+
+export interface RestRunOptions { cikFilter: Set<number> | null; addendum: string }
+
+export function restRunOptions(argv: string[]): RestRunOptions {
+  let cikText: string | undefined, suffix = "";
+  for (let index = 0; index < argv.length; index++) {
+    const argument = argv[index];
+    if (argument === "--limit") { index++; continue; }
+    if (argument !== "--ciks" && argument !== "--addendum") throw new Error(`Unknown argument: ${argument}`);
+    const value = argv[++index];
+    if (!value) throw new Error(`${argument} requires a value`);
+    if (argument === "--ciks") cikText = value;
+    else {
+      if (!/^[a-z0-9][a-z0-9-]*$/i.test(value)) throw new Error(`Invalid addendum suffix: ${value}`);
+      suffix = `-${value}`;
+    }
+  }
+  const cikFilter = cikText ? new Set(cikText.split(",").map(value => {
+    const cik = Number(value);
+    if (!Number.isInteger(cik) || cik <= 0) throw new Error(`Invalid CIK: ${value}`);
+    return cik;
+  })) : null;
+  if (Boolean(cikFilter) !== Boolean(suffix)) throw new Error("--ciks and --addendum are required together");
+  return { cikFilter, addendum: suffix };
+}
