@@ -28,6 +28,8 @@ The parser streams the SEC's quoted TSV tables rather than assuming newline-free
 compact accessions, resolves the actual ownership XML filename from each filing's index, and stores the XML and SEC
 acceptance header with hashes. Network requests are serialized at no more than five per second. A cached normalized
 filing is reusable only after its normalized artifact, raw XML, and acceptance header match their recorded hashes.
+SEC transaction dates may carry an explicit offset such as `2015-11-23-05:00`; normalization preserves the filed
+calendar date instead of treating it as missing. This prevents false source gaps and dateless economic groups.
 
 An accession's original filing and raw evidence are never rewritten to agree with a later index. If another daily
 index gives the same accession a different form, filing date, index CIK, or path, the verified cached filing remains
@@ -41,27 +43,32 @@ saved at day boundaries. This avoids rewriting a multi-megabyte manifest for eve
 ## 2. XML/bulk reconciliation
 
 For accessions present in both the quarterly dataset and the reviewed local XML cache, `insider-merge.mts` matches
-filed transaction lines globally with a one-to-one minimum-cost assignment. Ambiguous non-identical assignments are
-refused and listed. XML supplies full-precision filed values; bulk fields fill XML gaps where appropriate. Neither
-side's conflict evidence is discarded. The primary bulk source hash remains the filing identity hash, and the XML
-source URL and hash are retained as additional evidence.
+within each accession and derivative/non-derivative table on transaction date, code, acquired/disposed, shares, price,
+and shares owned after. Numeric fields must agree within half a cent, with `1e-6` additional float slack. A unique
+source-missing value can be filled without guessing among alternatives. Lines that also agree on their descriptive
+fields are `pairedTwin` matches in document order.
+
+If a bulk group and XML group are equal multisets on those economic fields but differ in descriptive text, the whole
+group is `pairedGroup`: both ID sets are recorded and the XML lines remain exactly as filed, including their own
+`natureOfOwnership`. No bulk-SK-to-XML-line attribution is made. Thus the three NVDA annuity-trust lines retain their
+three distinct XML descriptions. Count or economic-value mismatches stay ambiguous, with the bulk rows, XML evidence,
+and reason listed rather than assigned by nearest distance or document order.
+
+XML supplies full-precision filed values. The primary bulk source hash remains the filing identity hash, and the XML
+source URL and hash are retained as additional evidence. The build records every `pairedGroup` and `pairedTwin` and
+all source differences.
 
 The legacy-cache acceptance check independently rereads every cached XML accession and compares issuer, form, filing
-date, owners, transaction count, codes, dates, shares, prices, ownership, and security fields. Source-only fills,
-whitespace, ordering, and numeric precision are classified separately from substantive differences. Cache items whose
-actual XML issuer is outside the registry are listed, not treated as missing in-scope filings.
+date, owners, transaction count, and the same economic groups. Descriptive text is compared as group multisets rather
+than being attributed to a different bulk line. Source-only fills, whitespace, ordering, and numeric precision are
+classified separately from substantive differences. Cache items whose actual XML issuer is outside the registry are
+listed, not treated as missing in-scope filings.
 
-Bulk rounding is not silently repaired. The pinned review exception consists of exactly 15 failures: four
-`nearZeroPrice` cases and eleven `sourceConflict` cases. Their sorted accession/line/field/bulk/XML identity hash must
-be `5c7d464099a1674f5c87055fcd227790b9180b309ccc12235898e56b7eb01d9f`. All 15 remain reported as
-`rounding_gate_failed`; the threshold is unchanged. The exact acceptance note is:
-
-```text
-accepted: 4 near-zero prices, 11 XML-precedence conflicts flagged
-```
-
-A changed value, an additional failure, or an unrelated conflict invalidates that exception. The eleven source
-conflicts remain subject to Claude's review before a final build.
+The rounding gate is absolute: `|bulk − XML| <= 0.005 + 1e-6` is bulk rounding regardless of transaction-relative
+size. The full-precision XML value is kept. `nearZeroPrice` remains an informational class, not a failure or waived
+`sourceConflict`. A difference beyond half a cent fails and cannot become a rounded match. The previous pinned
+15-case exception and relative-transaction-value gate are retired; final QA requires zero failures beyond half a cent
+and no unresolved ambiguity or unexplained substantive cache mismatch.
 
 ## 3. Availability and amendments
 
@@ -136,14 +143,22 @@ listed. It may make at most 30 uncached requests. Responses and hashes are cache
 silently treated as complete. The legacy comparator tries exact filed values before rounded matches so order changes
 do not become false precision differences.
 
-`finalizeInsiderQa` requires complete downloads, zero accession conflicts, the Sequoia group check, no PIT violations,
-at least three amendment examples, a clean legacy-cache comparison, exact 2025 coverage, and either a clean merge or
-the exact pinned exception above.
+`finalizeInsiderQa` requires complete downloads or the explicitly recorded source gap, zero accession conflicts, the
+Sequoia group check, no PIT violations, at least three amendment examples, a clean legacy-cache comparison, exact 2025
+coverage, zero rounding failures beyond half a cent, and no unresolved reconciliation conflict.
 
 `load-insiders.mts` accepts only a passed artifact whose build version and lab commit match. It verifies all table
 schemas and SHA256 hashes, stages each table in batches of at most 500 rows, checks counts, and reads back 500 complete
-rows per data table (2,000 total). Only then is the single provisional build row written and the five-table atomic
-swap performed. Existing live data is not replaced before those checks pass. A final build refuses replacement.
+rows per data table (2,000 total). JSON objects are compared by recursively sorted keys with array order preserved,
+because MySQL may reorder object keys without changing their values. Only then is the single provisional build row
+written and the five-table atomic swap performed. Existing live data is not replaced before those checks pass. A final
+build refuses replacement.
+
+The database build row stores compact provenance rather than the full multi-hundred-megabyte evidence arrays. It keeps
+source gaps, paired-group identities, acceptance counts, and SHA256 references to the complete D: artifacts in
+`inputs.evidenceHashes`. An explicit `--resume-staged` run may reuse a failed run's staging rows, but it still verifies
+artifact hashes, every table count, an empty staging build table, and all 2,000 complete sampled rows before writing
+the new build row and swapping. A mismatch prevents the swap; no resume is attempted implicitly.
 
 `verify-insiders-load.mts` independently checks live counts, unique identities, 2,000 full rows with a different seed,
 availability, duplicate counts, exactly one provisional build, and absence of `_next`/`_old` tables.
@@ -174,7 +189,7 @@ bounded resume. The lab has no remote; main receives only the documentation deli
 No daily insider scheduling, app-page integration, production transport, engine reading, cluster strategy, track-record
 claim, or model promotion is part of K20. Those require separate review and owner approval.
 
-## 8. Current evidence — full build with one source gap, QA awaiting matcher review
+## 8. Current evidence — provisional build loaded and independently verified
 
 The owner authorized one retry and, if the same filing still failed, a build that records that exact gap. The retry
 finished at `2026-11-16T01:21:16Z`. Accession `0001999371-26-023092` (filing date 2026-10-19) returned HTTP 404 from
@@ -184,53 +199,63 @@ returned 503. The SEC no longer serves the filing through any listed archive. No
 The partial manifest retains every 404 URL and the UTC checkpoint. Its SHA256 is
 `37a14bdd4252ab6035e9e798d2f5b70fdee24b5802df8dbbb73d48c3eb18546e`.
 
-The full artifact is `D:\research\alpha-engine\insiders\std\20261116T012540Z`, version `i1.20261114`, built at lab
-commit `c4267c284286083d2445c0d0b0dc18fb5da21ef6`. The exact command was:
+The accepted artifact is `D:\research\alpha-engine\insiders\std\20261116T123010Z`, version `i1.20261114`, built at lab
+commit `8ed6650cb4129928631d0c4ffbe3a97ccb3e602a`. Counts are **735,721 filings, 754,154 owner rows, 1,906,883
+filed transaction lines, 24,399 persons, and 501 companies**. One company (XOM, CIK 2115436) has no filings. There
+are **141,476 linked duplicate trades**, zero accession conflicts, zero PIT violations, three real amendment examples,
+and the required Sequoia ten-owner/one-group case. `inputs.edgar.status` and `gates.checks.downloads.status` are
+`complete_with_recorded_gap`; `manifestStatus` remains `partial`, `unexpectedErrors=[]`, and the missing-filing evidence
+is stored in both inputs and gates. All 83 quarterly sources and 3,291 available post-quarter filings passed hash checks.
 
-```powershell
-npx tsx C:\dev\alpha-engine-lab\src\insiders\build-insiders.mts --build-version i1.20261114 --out D:\research\alpha-engine\insiders\std\20261116T012540Z --allow-missing-accession 0001999371-26-023092
-```
+Source acquisition used 80 quarterly ZIP downloads and three verified cache reuses. The initial complete post-quarter
+pass used 42 daily indexes, one quarter-directory index, 13,876 filing indexes, 13,875 ownership XML documents and
+13,875 acceptance headers (41,626 filing XML/metadata requests), with 2,405 cached reuses. The final authorized retry
+used 14 daily indexes and three filing indexes, with 16,281 cached reuses and zero XML/header downloads. Its three
+404 archive attempts are preserved.
 
-Its counts are **735,721 filings, 754,154 owner rows, 1,906,883 filed transaction lines, 24,399 persons, and 501
-companies**. One company (XOM, CIK 2115436) has no filings. There are 141,468 linked duplicate trades, zero accession
-conflicts, zero PIT violations, three real amendment examples, and the required Sequoia ten-owner/one-group case.
-`inputs.edgar.status` and `gates.checks.downloads.status` are `complete_with_recorded_gap`; `manifestStatus` remains
-`partial`, `unexpectedErrors=[]`, and the missing-filing evidence is stored in both inputs and gates. All 83 quarterly
-sources and 3,291 available post-quarter filings passed their hash checks.
+The reviewed group and rounding rules now pass:
 
-Passing independent checks:
+- **169 `pairedGroup` groups and 173,412 `pairedTwin` lines**. The actual NVDA accession keeps all four named-trust
+  XML rows with their own descriptions and both ID sets, with no per-line attribution.
+- **77,216 bulk/XML numeric differences, zero failures beyond `0.005 + 1e-6`**. Maximum absolute difference is
+  `0.005000002682209015`; all four near-zero price cases remain informational. Fractional-share relative size does not
+  create a false conflict.
+- SEC offset dates such as `2015-11-23-05:00` retain their calendar date. A full scan of 177,876 cached transaction
+  dates has zero unsupported values.
 
-- The 2025 comparison covers ten companies and **2,495 accessions**, with zero missing or extra. It used two new
-  requests and eight cache reuses after lab `97bc55e` limited older-page downloads to SEC-declared ranges overlapping
-  2025. The 26 out-of-range pages remain listed as skipped evidence.
+Independent acceptance is green:
+
+- Legacy cache: **55,510/55,510 in-scope accessions matched**, zero substantive mismatches, zero precision-only
+  filings, zero missing and zero read errors. Another 638 accessions are explicitly outside the registry. Order-only
+  changes total 16,787, source whitespace 218 and source fills 1,253.
+- The 2025 comparison covers ten companies and **2,495 accessions**, with zero missing or extra. Final verification
+  used **zero new requests and ten cache reuses**. The 26 out-of-range pages remain listed as skipped evidence.
 - Annual P/S price agreement within 10% is 27,421 / 27,548 (**99.5390%**) for 2025 and 24,240 / 24,397
   (**99.3565%**) for 2026. The complete annual P/S breakdown is in `gates.json`; 4,388 rows are listed in
   `price-outliers.jsonl`, including zero/negative prices and unavailable closes without repair.
 - XML/bulk fills leave zero missing transaction dates. The 146 remaining unknown owner names are listed by accession,
   issuer and owner identity in `build.json`, not silently filled.
 
-Final QA is **`qa_failed`; no staged load or live verification was attempted**. The independent findings are:
+The provisional load used an explicit `--resume-staged` because all four table hashes were identical to the fully
+staged artifact. Counts and all 2,000 complete staged read-backs passed before the build row and atomic swap. The
+compact build row is **110,288 bytes of inputs and 524,505 bytes of gates**, with full-artifact SHA256 references and
+the withdrawn accession present in both metadata locations. Only the build row was inserted on resume; the complete
+staging run used batches of at most 500.
 
-- Legacy cache: 55,510 in-scope accessions, 55,484 matched, **14 substantive mismatch filings and 12 precision-only
-  filings**, zero missing and zero read errors. Another 638 accessions are explicitly outside the registry. Lab
-  `5545a9b` removed one false precision report by trying exact filed values before rounded matches; all remaining 12
-  precision-only filings are in the ambiguous-match set.
-- The global matcher retains **136 ambiguous lines across 55 accessions**. For example, accession
-  `0001045810-16-000214` has three economically identical bulk lines with blank ownership descriptions, while XML
-  names three different trusts. Assigning those descriptions by order would invent attribution, so the rows remain
-  unresolved.
-- There are **353 rounding-gate failures**: four `nearZeroPrice` and 349 `sourceConflict`. All 15 previously reviewed
-  cases remain, with 338 additional cases exposed by the newer matcher. Their identity hash is
-  `95d24a250ac97f74c56b311fe6ea3c919fe938c63bcc1a70ca0ffbfdcc1db735`; thresholds have not changed and the old
-  15-case exception was not applied.
+Independent live verification at `2026-11-16T13:28:18.098Z`, seed `20261114`, confirmed exact table counts and unique
+identities, **2,000 complete rows with zero mismatches**, one provisional build, zero availability violations,
+141,476 duplicate trades, and no `_next`/`_old` tables. Lab `e93f0d5` changes only the independent verifier's SQL
+alias from reserved `rows` to `rowCount`; it does not change the data or artifact.
 
-Final artifact hashes: build `3d3113973c743fca017db8c81459e75b4d347d0fb2f40a49888dc842a69fb812`; gates
-`04720d38f8478e34887a8bcb801bdddd7ca0dc6937d772fd869ddf363352ccd8`; legacy cache
-`9011645ff2b07a081528da659e528a3da01e2fdd2891b87ecc62319dad6a4d72`; 2025 coverage
-`f110981bded475d2f58dadcc06bd67d3480301acac926a6efabf4edda434cae7`. Per-table JSONL hashes are in `build.json`.
+Final hashes: build `9580b46849e5b1daab86db65a114cd7e0859ff049104edf08c64783fdf7cb5db`; gates
+`bc4e39c0f61a7f3db48417860366df561c4ba17f76aed1a72a332786f9af7e42`; legacy cache
+`4f48a692bd1e91d3ff2c4fd973ecf4f941f4bc3be19c5a2e60adaeef12733544`; 2025 coverage
+`5493325f6365e9df54fecb06688a9d8e29ca296b075a3b4737535b4d2d540e1f`; load summary
+`bd017aaf7a9d54331473c9e5b22b7822a5fdec20f7c0ae14494f05beaba84ec0`; independent live check
+`d51d04b0161c1ea2181a0aa99b237f712865fc72bf37d08cb5929fcfb7e38710`.
 
-Verification: **7 insider test files / 59 tests** and standalone TypeScript pass. Main `npm run check`, its full test
-suite, and `npm run build` passed during this work. The lab is clean at `5545a9b` and has no remote. Claude has the
-build and all failure evidence for review. After that review, any load requires a fresh build at the final code commit,
-all acceptance gates, a provisional staged load and independent verification. No production or app-database write,
-model promotion, alpha-signal claim, or scheduler change occurred.
+Verification: **7 insider test files / 65 tests** and standalone TypeScript pass. Main `npm run check`, its full test
+suite, and `npm run build` passed during this work. The lab is clean and has no remote. The load is **provisional until
+Claude's final review**, which also needs the flagged-value filters and one unflagged Alphabet purchase line
+(2017-02-02, owner CIK 1695879, 7,371,008 shares, $6.02bn) noted in handoff section 185. No production or app-database
+write, model promotion, alpha-signal claim, or scheduler change occurred. Next are K23 and then K12.

@@ -2881,3 +2881,67 @@ delivered.
 - **No load:** the provisional loader and independent live verifier were not run. No production or `alpha_engine` write occurred. Final hashes: build `3d3113973c743fca017db8c81459e75b4d347d0fb2f40a49888dc842a69fb812`; gates `04720d38f8478e34887a8bcb801bdddd7ca0dc6937d772fd869ddf363352ccd8`; cache `9011645ff2b07a081528da659e528a3da01e2fdd2891b87ecc62319dad6a4d72`; coverage `f110981bded475d2f58dadcc06bd67d3480301acac926a6efabf4edda434cae7`.
 - **Verification:** K20 **7 files / 59 tests** and standalone TypeScript pass. Main `npm run check`, **259 files / 1,445 tests**, and `npm run build` passed during this work. Only K20 documentation/handoff are intended for the main commit; unrelated generated reports, analytics snapshot, `.vscode/`, `desk-intraday-market.json` and `prediction-markets.json` stay excluded. The exact documentation commit is authoritative in `git log`.
 - **Next safe action:** Claude reviews the 136 ambiguous lines and 353 rounding failures. Do not load the current artifact or apply the old 15-case exception to it. After review/resolution, rebuild at the final lab commit, rerun acceptance, then perform provisional load and independent verification. No further SEC retry or scheduler/model work is active.
+
+
+## 185. Claude (Fable 5.2): overnight research on alpha over SPY; new research data on D: — 2026-11-16T12:45Z
+
+- **Owner's brief (2026-11-16, before sleeping):** review the engine design and tests, look for better solutions with
+  the highest alpha over SPY, work autonomously, "download any data you would need, you can install any software or
+  tool". Research only: no production write, no schema change, no scheduler or collector change, no order, no
+  credential read. Both repositories are untouched except this section and the two task files below.
+- **Where the work is:** `D:\research\alpha-engine\engine\fable1\` (`code\`, `data\`, `out\`, `NOTES.md` with every
+  number). Report for the owner: Claude Doc "Overnight research: alpha over SPY (2026-11-16)".
+- **New data on D: (raw files kept unchanged, nothing existing overwritten):**
+  - `index-membership\wikipedia\` (S&P 500 constituents with date added, one page fetch);
+    `index-membership\ftd\` (12 SEC fails-to-deliver files 2020-10..2026-06, fetched with `secGet`);
+  - `shortvol\finra\raw\` (2,081 FINRA Reg SHO daily short-sale volume files, 2018-08-01..2026-11-10, 666 MB,
+    `manifest.json` with SHA-256; public CDN, generic client name);
+  - `engine\fable1\data\px.npz`, `member.npz`, `entities.json`: point-in-time S&P 500 panel, 613 companies (today's
+    500 plus 113 former members from the Tiingo extract and the Stooq archive, each identity-checked against the
+    Vanguard fund's quarter-end prices), index weights by quarter from 2019-09.
+- **Tools installed** into the per-user Python 3.12 (`pip --no-user`): lxml, lightgbm 4.7, numba 0.68.
+- **Read only:** Kimi's insider build `insiders\std\20261116T061237Z` (provisional), the GPU guidance results (89%),
+  `alpha_research.std_13f_*` and `std_13f_positions` (SELECT), the options build o1, the EDGAR document cache, the
+  intraday quote snapshots.
+- **Findings (clean era 2019Q4-2026, universe with former members):**
+  - Nothing public beats SPY reliably after market risk: engine on reported factors or the nowcast, value, momentum,
+    low volatility, a LightGBM model, guidance revisions and habit, insider trades, 13F, options before earnings,
+    earnings-night premium, drift after earnings, sector rotation.
+  - Perfect foresight of next quarter at the portfolio stage: top 20 = 27.6% a year against 15.6% for SPY.
+  - Night-and-day rotation at auction prices: alpha +36.5% a year (2006-12) fading to +4.6% (2023-26); breakeven
+    slippage about 0.75 bp per trade.
+  - Best-looking candidate (better half of the index by quality, shareholder yield and low FINRA short share, at index
+    weights): $1M -> $3.23M against $2.72M in SPY (2019-11..2026-11), but the excess is its sector mix (technology, no
+    financials); inside sectors it adds +0.35% a year (t 0.4). Only low short share holds inside sectors (+1.25% a year,
+    t 1.7). An independent review subagent re-ran the simulators (no look-ahead) and caught two benchmark errors.
+  - Median quoted spread of the 514 names (one session of intraday snapshots): 24.6 bp at 09:40, 4.6 bp at 15:40.
+- **Data notes for Kimi (already or newly reported):** six placeholder identities and five empty standard price files
+  (task K23). Insider build i1 (`20261116T061237Z`, read only; non-derivative, non-duplicate `P` and `S` lines):
+  - The `valueUsd` of the 555,987 open-market sale lines sums to 2.14e16 USD, but 2.1424e16 of it sits on the 293 lines
+    the build already flags `price_outlier` (a total typed into the price field, as in AMD 2017-08-04 and MGM
+    2016-09-01, or a price that lost its decimal point). Without `price_outlier` and `equity_swap` lines sales sum to
+    1.30e12 USD and the largest line is real (Sanofi's sale of Regeneron shares, 2020-05-29, 1.04e10 USD).
+  - Purchases: 29,480 lines, 1.51e11 USD; 447 `price_outlier` lines carry 1.01e10 and 7 `equity_swap` lines 8.76e10
+    (the three largest are one filing against Bank of America, accession 0001584209-16-000008). Without both: 6.34e10.
+  - So the flags work, and every consumer must filter on them. This is not a build defect.
+  - One unflagged purchase line looks wrong and is for the K20 review: issuer cik 1652044 (Alphabet), owner cik 1695879
+    (an individual marked ten-percent owner), 2017-02-02, 7,371,008 shares, 6.02e9 USD.
+  - Evidence: `engine\fable1\out\insider_value_check.json` and `insider_value_summary.json`.
+- **Uncommitted in the main working tree (Claude's paths):** this section, `docs/engine/tasks/K23-identity-and-empty-price-files.md`
+  (new) and `docs/engine/tasks/K12-release-figures-other-companies.md` (approved, amended). No gates were run for
+  these documentation-only changes. Lab: nothing changed; the fable1 scripts move there after the K20 hold ends.
+- **Next safe action:** the owner reads the report and decides on its next steps (expectations data, a paper test of
+  auction fills, fundamentals for former members). Kimi continues K20, then K23, then K12.
+
+
+## 186. Kimi: K20 provisional load and independent verification complete — 2026-11-16T13:31:39Z
+
+- **Accepted artifact:** `D:/research/alpha-engine/insiders/std/20261116T123010Z`, version `i1.20261114`, build/loader code `8ed6650cb4129928631d0c4ffbe3a97ccb3e602a`. Counts: **735,721 filings, 754,154 owners, 1,906,883 filed lines, 24,399 persons, 501 companies**, 141,476 duplicate trades; XOM CIK 2115436 is the only company without filings. All 83 quarterly sources and 3,291 available post-quarter filings passed hashes. `complete_with_recorded_gap` preserves `0001999371-26-023092` in inputs and gates, with `unexpectedErrors=[]` and no placeholder row.
+- **Source history:** the withdrawn accession returned 503 on 2026-11-15 and 404 on 2026-11-16 from all three listed archives; the SEC no longer serves it. Manifest SHA256 `37a14bdd4252ab6035e9e798d2f5b70fdee24b5802df8dbbb73d48c3eb18546e`. Acquisition: 80 ZIP downloads plus three cache reuses; initial post-quarter 42 daily indexes, one directory index, 13,876 filing indexes, 13,875 XML and 13,875 acceptance headers (41,626 filing metadata requests), 2,405 reuses. Authorized retry: 14 daily indexes, three filing indexes, 16,281 reuses, zero XML/header downloads.
+- **Matcher and rounding:** **169 pairedGroup groups / 173,412 pairedTwin lines**, including all four NVDA named trusts with both ID sets and no per-line attribution. **77,216 numeric differences, zero beyond `0.005 + 1e-6`**, maximum `0.005000002682209015`; four nearZeroPrice cases remain informational. SEC timezone-bearing dates are preserved; 177,876 scanned XML transaction dates have zero unsupported values. Legacy cache **55,510/55,510 matched**, zero substantive/precision mismatches, 638 outside registry, 16,787 order-only changes, 218 whitespace and 1,253 source fills. Ten-company 2025 coverage is 2,495/2,495 with zero new requests and ten reuses.
+- **Load:** all four table hashes were identical to the fully staged artifact, so explicit `--resume-staged` was used. Every count and all 2,000 complete staged rows passed before the compact build row and atomic swap. Resume inserted only the build row; complete staging used ≤500-row batches. Metadata is **110,288 bytes inputs / 524,505 gates**, with full-artifact hashes and the source gap in both places. Load summary SHA256 `bd017aaf7a9d54331473c9e5b22b7822a5fdec20f7c0ae14494f05beaba84ec0`.
+- **Independent verification:** at `2026-11-16T13:28:18.098Z`, seed `20261114`, exact table counts and unique identities, **2,000 full rows / zero mismatches**, one provisional build, zero availability violations, 141,476 duplicate trades and no `_next`/`_old` tables. SHA256 `d51d04b0161c1ea2181a0aa99b237f712865fc72bf37d08cb5929fcfb7e38710`. Lab `e93f0d5` fixes only the verifier's reserved SQL alias `rows` to `rowCount`; data and artifact are unchanged.
+- **Other evidence:** 2025 P/S within-10% 27,421/27,548 (99.5390%); 2026 24,240/24,397 (99.3565%); 4,388 outliers listed without repair. Zero missing transaction dates; 146 unknown owner names remain listed. Build hash `9580b46849e5b1daab86db65a114cd7e0859ff049104edf08c64783fdf7cb5db`; gates `bc4e39c0f61a7f3db48417860366df561c4ba17f76aed1a72a332786f9af7e42`; cache `4f48a692bd1e91d3ff2c4fd973ecf4f941f4bc3be19c5a2e60adaeef12733544`; 2025 `5493325f6365e9df54fecb06688a9d8e29ca296b075a3b4737535b4d2d540e1f`.
+- **Failure protocol:** the first JSON read-back failure and the later max-packet failure both occurred before a build row or swap; failure artifacts remain on D:. No live data was replaced by those attempts. Compact evidence fixed the packet limit without dropping source gaps or artifact hashes. No production or `alpha_engine` write, scheduler change, model promotion or alpha claim occurred.
+- **Verification and working tree:** K20 **7 files / 65 tests** and standalone TypeScript pass. Main `npm run check`, **259 files / 1,445 tests**, and `npm run build` passed during this work. Main `docs/engine/STANDARD_INSIDERS.md`, this handoff, the new K23 spec and amended K12 spec are the intended documentation delivery; unrelated generated reports, analytics snapshot, `.vscode/`, `desk-intraday-market.json` and `prediction-markets.json` remain excluded. Lab is clean and has no remote. Exact main documentation commit is authoritative in `git log`.
+- **Next safe action:** Claude reviews the provisional build, including required price-outlier/equity-swap filtering and the unflagged Alphabet purchase (2017-02-02, owner CIK 1695879, 7,371,008 shares, $6.02bn) from section 185. K20 is not final until that review. Next approved execution is K23, then K12 over 452 companies; K04/K05 stay deferred, and K11/K17b stay excluded.

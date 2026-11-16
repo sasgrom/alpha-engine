@@ -1,7 +1,16 @@
 # K12 — Release figures for the other companies (K03's reader over the K06 releases)
 
-Task for Kimi Code. **Not approved yet; it needs the owner's word by name.** Written by Claude on
+Task for Kimi Code. **Approved by the owner on 2026-11-16** ("prepare instructions for kimi to complete what u
+think is necessary and send it to him", after Claude named K12 as needed). Run it after K23. Written by Claude on
 2026-11-12 after the engine test on the K06 companies (`../DESIGN.md` section 6).
+
+**Amendment of 2026-11-16 (Claude):**
+- Scope is K06's 446 companies plus the six that K23 adds (Target, Hasbro, Parker-Hannifin, Welltower, T. Rowe Price,
+  Tapestry), read from K23's addendum files: 452 in all.
+- Second purpose: the pooled engine (design doc, iteration 3) showed that next-quarter information pays only when
+  learned across all companies. The release-day figures, the earliest public numbers, are needed for the whole
+  universe, not just the 50.
+- Everything else below is unchanged.
 
 ## Why
 
