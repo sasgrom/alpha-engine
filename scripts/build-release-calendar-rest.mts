@@ -12,6 +12,7 @@ import { calendarRowsFromSubmissions, companyPilotChecks, parseIndexAcceptanceEt
 import { fetchDoc, isPermanentSecMissing, listFilingDocs, realCacheRoot, secGet } from "../worker/lib/edgar";
 import { exhibitCacheName, selectSubstantiveExhibits } from "../worker/lib/exhibits";
 import { writeJsonAtomic } from "../worker/lib/json-file";
+import { GICS_BY_CIK } from "../api/services/gics-snapshot";
 
 const outputRoot = path.resolve("D:/research/alpha-engine/engine/events");
 const cacheRoot = path.resolve("worker/cache/edgar");
@@ -254,6 +255,7 @@ async function processCompany(company: RestCompany): Promise<{ result: CompanyRe
   const companyStarted = Date.now();
   assertStorage();
   const source = await submissions(company.cik);
+  company.name = source.pages.find(page => page.name)?.name ?? company.name;
   const checkpointFile = path.join(outputRoot, "rest-companies", `${company.cik}.json`);
   const checkpoint = readJsonIfExists<CompanyCheckpoint>(checkpointFile);
   const inheritedBytesDownloaded = checkpoint?.result.bytesDownloaded ?? 0;
@@ -307,6 +309,12 @@ try {
     const [factRows]: any = await db.execute(sql`SELECT c.cik, c.ticker, c.name, fc.factRows, pc.priceRows, pc.priceTicker FROM companies c JOIN (SELECT cik, COUNT(*) factRows FROM facts GROUP BY cik) fc ON fc.cik=c.cik LEFT JOIN (SELECT cik, ticker priceTicker, COUNT(*) priceRows FROM prices WHERE source="stooq" GROUP BY cik,ticker) pc ON pc.cik=c.cik ORDER BY fc.factRows DESC, c.cik`);
     const [priceRows]: any = await db.execute(sql`SELECT p.cik, p.ticker, COUNT(*) priceRows, MAX(c.name) name, MAX(f.factRows) factRows FROM (SELECT cik,ticker FROM prices WHERE source="stooq" GROUP BY cik,ticker) p LEFT JOIN companies c ON c.cik=p.cik LEFT JOIN (SELECT cik,COUNT(*) factRows FROM facts GROUP BY cik) f ON f.cik=p.cik WHERE p.cik>0 GROUP BY p.cik,p.ticker ORDER BY p.cik`);
     const factCompanies = factRows.filter((row: any) => !research50.has(Number(row.cik)));
+    for (const cik of cikFilter ?? []) {
+      if (factCompanies.some((row: any) => Number(row.cik) === cik) || GICS_BY_CIK.has(cik)) continue;
+      const price = priceRows.find((row: any) => Number(row.cik) === cik);
+      if (!price) throw new Error(`No price history or GICS entry for addendum CIK ${cik}`);
+      factCompanies.push({ cik, ticker: GICS_BY_CIK.get(cik)!.ticker, name: price.name ?? `CIK ${cik}`, priceTicker: price.ticker, priceRows: Number(price.priceRows), factRows: Number(price.factRows) });
+    }
     const eligible = factCompanies.filter((row: any) => Number(row.priceRows) > 0 && (!cikFilter || cikFilter.has(Number(row.cik))));
     const stooqTickers = stooqTickerMap(factCompanies);
     universe = eligible.map((row: any) => ({ cik: Number(row.cik), ticker: stooqTickers.get(Number(row.cik))!, name: String(row.name) }));
@@ -318,7 +326,6 @@ try {
       factsWithoutStooq: factCompanies.filter((row: any) => !Number(row.priceRows)).map((row: any) => ({ cik: Number(row.cik), ticker: String(row.ticker), factRows: Number(row.factRows) })),
       pricesWithoutFacts: priceRows.filter((row: any) => !research50.has(Number(row.cik)) && !Number(row.factRows)).map((row: any) => ({ cik: Number(row.cik), ticker: String(row.ticker), priceRows: Number(row.priceRows) })),
     };
-    writeJsonAtomic(universeFile, universe, true);
   } else {
     universe = existingUniverse;
   }
@@ -437,6 +444,7 @@ for (const company of pilotUniverse) {
     console.log(`[rest] ${company.ticker}: ${result.filings.length} filings, ${result.quarters.length} quarters, ${result.outcomes.length} releases, ${result.bytesDownloaded} new bytes, resumed=${resumed}, checks=${result.checks.pass ? "pass" : result.checks.issues.join("; ")}`);
     writeOutputs("running", { total: 0, matched: 0, failed: 0, rows: [] });
   }
+  writeJsonAtomic(universeFile, universe, true);
   const selected = seededQuarterSample(results.flatMap((result) => result.quarters), 30, "K06-2026-11-11");
   const indexRows = [];
   for (const quarter of selected) {
