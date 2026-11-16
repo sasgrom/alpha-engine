@@ -117,15 +117,24 @@ purchases and sales per year are retained for Claude's sanity review; this is no
 
 ## 6. Acceptance and load
 
-The builder requires all 83 complete quarterly manifests, a complete post-quarter EDGAR manifest through the latest
-standard-price session, matching registry/parser lineage, and verified raw and normalized hashes. Accession duplicates
-are collapsed by identity, but filed-content or evidence conflicts remain visible and block final QA.
+The builder requires all 83 complete quarterly manifests, post-quarter EDGAR coverage through the latest standard-price
+session, matching registry/parser lineage, and verified raw and normalized hashes. Accession duplicates are collapsed by
+identity, but filed-content or evidence conflicts remain visible and block final QA.
+
+The normal requirement is a complete EDGAR manifest with zero errors. Only an explicit owner-authorized
+`--allow-missing-accession <accession>` can waive a source failure. Every manifest error must then match a declared
+accession, the manifest remains `partial`, and `inputs.edgar.missingFilings` plus `gates.checks.downloads.missingFilings`
+retain the complete error and archive-attempt evidence. The status is `complete_with_recorded_gap`, never `complete`.
+An undeclared or additional error still fails the build. If the source recovers, the same option produces an ordinary
+complete build with no missing-filing record.
 
 In addition to the complete legacy-cache comparison, `insider-acceptance.mts coverage2025` selects ten companies and
-compares every 2025 Form 3/4/5 accession with EDGAR's submissions lists, including older `filings.files` pages. It may
-make at most 30 uncached requests. Responses and hashes are cached under
+compares every 2025 Form 3/4/5 accession with EDGAR's submissions lists. It downloads only `filings.files` pages whose
+SEC-declared ranges overlap 2025; an unknown range is included rather than risking omission, and skipped ranges remain
+listed. It may make at most 30 uncached requests. Responses and hashes are cached under
 `D:\research\alpha-engine\insiders\submissions-2025\`. Missing and extra accessions remain listed; neither side is
-silently treated as complete.
+silently treated as complete. The legacy comparator tries exact filed values before rounded matches so order changes
+do not become false precision differences.
 
 `finalizeInsiderQa` requires complete downloads, zero accession conflicts, the Sequoia group check, no PIT violations,
 at least three amendment examples, a clean legacy-cache comparison, exact 2025 coverage, and either a clean merge or
@@ -165,29 +174,63 @@ bounded resume. The lab has no remote; main receives only the documentation deli
 No daily insider scheduling, app-page integration, production transport, engine reading, cluster strategy, track-record
 claim, or model promotion is part of K20. Those require separate review and owner approval.
 
-## 8. Current evidence — blocked before the full build
+## 8. Current evidence — full build with one source gap, QA awaiting matcher review
 
-At `2026-11-15T00:59:50Z`, all 83 quarterly ZIPs remain complete. The post-quarter EDGAR manifest covers 44 calendar
-days from 2026-10-01 through 2026-11-13, including 14 days proven absent through SEC's quarter directory. It contains
-3,291 included filings, 12,989 outside-registry filings, and one unresolved error. Manifest SHA256 is
-`b2ba40aafd9633f0f7e9d21f4b8165f0b54e42231c3e93e9c4165ac7a1d72703`; its collection commit is `488e5b0`.
+The owner authorized one retry and, if the same filing still failed, a build that records that exact gap. The retry
+finished at `2026-11-16T01:21:16Z`. Accession `0001999371-26-023092` (filing date 2026-10-19) returned HTTP 404 from
+all three listed archive index URLs (CIKs 1672013, 1687273 and 1687274). Earlier bounded attempts returned 503 on
+2026-11-15, first at `00:48:11Z` and across the listed aliases by `00:55:22Z`; the full-submission document also
+returned 503. The SEC no longer serves the filing through any listed archive. No cached XML or placeholder row exists.
+The partial manifest retains every 404 URL and the UTC checkpoint. Its SHA256 is
+`37a14bdd4252ab6035e9e798d2f5b70fdee24b5802df8dbbb73d48c3eb18546e`.
 
-Accession `0001999371-26-023092` (filing date 2026-10-19) has no cached XML. Its primary archive CIK 1672013 and listed
-aliases 1687273 and 1687274 exhausted the existing bounded retries with HTTP 503. A separate bounded diagnostic request
-to the daily-index-listed full submission `0001999371-26-023092.txt` also returned 503 after retries. No alternate
-source, fabricated filing, or incomplete build is substituted. Lab commit `04dbbae` now retains structured
-`archiveAttempts` on future failures so error text truncation cannot discard alias evidence.
+The full artifact is `D:\research\alpha-engine\insiders\std\20261116T012540Z`, version `i1.20261114`, built at lab
+commit `c4267c284286083d2445c0d0b0dc18fb5da21ef6`. The exact command was:
 
-The other two earlier errors are resolved. Accession `0001999371-26-024599` retains its cached filing date 2026-11-05
-and raw SHA256 `ab57e700c8a6e234aa3a9ceba422485fe63407792e6b71e396014528439119df`; the later index date 2026-10-19
-is preserved as an index discrepancy. Accession `0001072613-26-000861` was fetched successfully and is explicitly
-outside the issuer registry.
+```powershell
+npx tsx C:\dev\alpha-engine-lab\src\insiders\build-insiders.mts --build-version i1.20261114 --out D:\research\alpha-engine\insiders\std\20261116T012540Z --allow-missing-accession 0001999371-26-023092
+```
 
-The full builder, acceptance checks, and staged load have **not** run. The 2025 submissions cache is initialized and
-empty, and the five K20 research tables were absent in the pre-load inventory. No data has been presented as accepted
-or loaded. The next safe action after SEC availability recovers is one bounded resume from lab `04dbbae`, followed by
-a fresh full build and every acceptance gate above.
+Its counts are **735,721 filings, 754,154 owner rows, 1,906,883 filed transaction lines, 24,399 persons, and 501
+companies**. One company (XOM, CIK 2115436) has no filings. There are 141,468 linked duplicate trades, zero accession
+conflicts, zero PIT violations, three real amendment examples, and the required Sequoia ten-owner/one-group case.
+`inputs.edgar.status` and `gates.checks.downloads.status` are `complete_with_recorded_gap`; `manifestStatus` remains
+`partial`, `unexpectedErrors=[]`, and the missing-filing evidence is stored in both inputs and gates. All 83 quarterly
+sources and 3,291 available post-quarter filings passed their hash checks.
 
-Verification at this checkpoint: 7 insider test files / 56 tests and the standalone insider TypeScript check pass;
-main `npm run check`, 259 test files / 1,443 tests, and `npm run build` pass. The lab working tree is clean at
-`04dbbae4d582b5eb7ac9f1ef9ccf5e25719934cf` and has no remote. No production or app-database write occurred.
+Passing independent checks:
+
+- The 2025 comparison covers ten companies and **2,495 accessions**, with zero missing or extra. It used two new
+  requests and eight cache reuses after lab `97bc55e` limited older-page downloads to SEC-declared ranges overlapping
+  2025. The 26 out-of-range pages remain listed as skipped evidence.
+- Annual P/S price agreement within 10% is 27,421 / 27,548 (**99.5390%**) for 2025 and 24,240 / 24,397
+  (**99.3565%**) for 2026. The complete annual P/S breakdown is in `gates.json`; 4,388 rows are listed in
+  `price-outliers.jsonl`, including zero/negative prices and unavailable closes without repair.
+- XML/bulk fills leave zero missing transaction dates. The 146 remaining unknown owner names are listed by accession,
+  issuer and owner identity in `build.json`, not silently filled.
+
+Final QA is **`qa_failed`; no staged load or live verification was attempted**. The independent findings are:
+
+- Legacy cache: 55,510 in-scope accessions, 55,484 matched, **14 substantive mismatch filings and 12 precision-only
+  filings**, zero missing and zero read errors. Another 638 accessions are explicitly outside the registry. Lab
+  `5545a9b` removed one false precision report by trying exact filed values before rounded matches; all remaining 12
+  precision-only filings are in the ambiguous-match set.
+- The global matcher retains **136 ambiguous lines across 55 accessions**. For example, accession
+  `0001045810-16-000214` has three economically identical bulk lines with blank ownership descriptions, while XML
+  names three different trusts. Assigning those descriptions by order would invent attribution, so the rows remain
+  unresolved.
+- There are **353 rounding-gate failures**: four `nearZeroPrice` and 349 `sourceConflict`. All 15 previously reviewed
+  cases remain, with 338 additional cases exposed by the newer matcher. Their identity hash is
+  `95d24a250ac97f74c56b311fe6ea3c919fe938c63bcc1a70ca0ffbfdcc1db735`; thresholds have not changed and the old
+  15-case exception was not applied.
+
+Final artifact hashes: build `3d3113973c743fca017db8c81459e75b4d347d0fb2f40a49888dc842a69fb812`; gates
+`04720d38f8478e34887a8bcb801bdddd7ca0dc6937d772fd869ddf363352ccd8`; legacy cache
+`9011645ff2b07a081528da659e528a3da01e2fdd2891b87ecc62319dad6a4d72`; 2025 coverage
+`f110981bded475d2f58dadcc06bd67d3480301acac926a6efabf4edda434cae7`. Per-table JSONL hashes are in `build.json`.
+
+Verification: **7 insider test files / 59 tests** and standalone TypeScript pass. Main `npm run check`, its full test
+suite, and `npm run build` passed during this work. The lab is clean at `5545a9b` and has no remote. Claude has the
+build and all failure evidence for review. After that review, any load requires a fresh build at the final code commit,
+all acceptance gates, a provisional staged load and independent verification. No production or app-database write,
+model promotion, alpha-signal claim, or scheduler change occurred.
