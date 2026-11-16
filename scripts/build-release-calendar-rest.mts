@@ -310,7 +310,7 @@ try {
     const [priceRows]: any = await db.execute(sql`SELECT p.cik, p.ticker, COUNT(*) priceRows, MAX(c.name) name, MAX(f.factRows) factRows FROM (SELECT cik,ticker FROM prices WHERE source="stooq" GROUP BY cik,ticker) p LEFT JOIN companies c ON c.cik=p.cik LEFT JOIN (SELECT cik,COUNT(*) factRows FROM facts GROUP BY cik) f ON f.cik=p.cik WHERE p.cik>0 GROUP BY p.cik,p.ticker ORDER BY p.cik`);
     const factCompanies = factRows.filter((row: any) => !research50.has(Number(row.cik)));
     for (const cik of cikFilter ?? []) {
-      if (factCompanies.some((row: any) => Number(row.cik) === cik) || GICS_BY_CIK.has(cik)) continue;
+      if (factCompanies.some((row: any) => Number(row.cik) === cik) || !GICS_BY_CIK.has(cik)) continue;
       const price = priceRows.find((row: any) => Number(row.cik) === cik);
       if (!price) throw new Error(`No price history or GICS entry for addendum CIK ${cik}`);
       factCompanies.push({ cik, ticker: GICS_BY_CIK.get(cik)!.ticker, name: price.name ?? `CIK ${cik}`, priceTicker: price.ticker, priceRows: Number(price.priceRows), factRows: Number(price.factRows) });
