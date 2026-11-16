@@ -80,12 +80,20 @@ and no unresolved ambiguity or unexplained substantive cache mismatch.
 - if the calendar does not yet contain a valid session, null with `availability_beyond_calendar`, never an invented
   future session.
 
+An available session never falls on a Saturday or Sunday, even if the supplied price-session list contains a false
+weekend date. The next weekday session is used; this does not modify the price standard.
+
 Amendments remain separate filings with independent acceptance and availability. An amendment is linked by its explicit
 reference when present, otherwise by a unique same-issuer original filing date. Missing, ambiguous, and out-of-scope
 originals are flagged. An amendment does not rewrite the original row or its historical availability. QA lists real
 amendment examples and rejects any `availableFrom` earlier than `filingDate`.
 
 ## 4. Owners, persons, and filed transaction lines
+
+`issuerCik` is the registry join key. `filedIssuerCik` preserves the issuer CIK exactly as filed on every filing, owner
+and transaction line, including predecessor identities. Owner groups are formed on the registry issuer so they remain
+continuous through a reorganization. One filed issuer cannot be assigned to two registry companies; shared successors
+remain explicitly listed rather than duplicated.
 
 Owners appearing together for an issuer form connected components. `ownerGroups` counts components rather than
 counting every affiliated co-filer as an independent insider. The Sequoia/DoorDash accession
@@ -258,4 +266,94 @@ Verification: **7 insider test files / 65 tests** and standalone TypeScript pass
 suite, and `npm run build` passed during this work. The lab is clean and has no remote. The load is **provisional until
 Claude's final review**, which also needs the flagged-value filters and one unflagged Alphabet purchase line
 (2017-02-02, owner CIK 1695879, 7,371,008 shares, $6.02bn) noted in handoff section 185. No production or app-database
-write, model promotion, alpha-signal claim, or scheduler change occurred. Next are K23 and then K12.
+write, model promotion, alpha-signal claim, or scheduler change occurred. K23 was delivered separately. The i1.1
+successor work in section 9 precedes K12.
+
+
+## 9. Consumer rules and the i1.1 review
+
+**Rules for consumers.** For every dollar-denominated measure, exclude transaction lines flagged `price_outlier` or
+`equity_swap`. In the provisional i1 evidence, 293 flagged sale lines account for 2.1424e16 USD of the 2.1426e16 USD
+raw sale total; summing the unfiltered field is not meaningful. The same filtering applies to purchases. Treat flagged
+amendment lines carefully: an amendment is separately available evidence, not permission to rewrite the original or to
+count both as independent economic activity. Use `duplicateOf`/`duplicateLineId` to select the earliest available copy
+when a strategy requires unique economic trades.
+
+The following suspicious but unflagged rows require source review, not an automatic exclusion rule:
+
+| Issuer | Owner CIK | Transaction date | Shares | Reported value | Disposition |
+| --- | ---: | --- | ---: | ---: | --- |
+| Alphabet (CIK 1652044) | 1695879 | 2017-02-02 | 7,371,008 | approximately $6.02bn | Listed for filing-level review; no automatic repair or exclusion |
+
+Following Claude's review, i1 remains provisional. The successor build, **i1.1**, must derive predecessor issuer CIKs
+from raw `SUBMISSION` and `REPORTINGOWNER` evidence, preserve `issuerCik` as the registry join key, and add
+`filedIssuerCik` to filings, owners and transaction lines. Owner groups continue through a reorganization. Every
+changeover must have a gap of at most six months, XOM must have recovered filings, and any remaining first-filing gap
+must have a documented reason. A parallel old-CIK filing history is evaluated at the actual changeover, not truncated.
+Independent acceptance and staged loading remain mandatory; i1.1 is not final until Claude reviews it.
+
+**Open p1 price-standard defect, not changed by K20.** `2007-01-06` is a Saturday but appears in the standard sessions
+(the only weekend date among 9,285 sessions). `daily/1800.csv` line 1764 carries a Schwab row repeating Friday
+`2007-01-05`; `320193.csv` has an empty row. Insider availability must exclude weekend sessions and use the next weekday
+instead. The price standard itself requires a separate owner-approved revision; no insider task changes price rows.
+
+
+## 10. i1.1 artifact and acceptance — 2026-11-16
+
+The accepted **i1.1.20261116** artifact is `D:\research\alpha-engine\insiders\std\20261116T163802Z`, built at lab
+commit `76efac29ef42b81d771619f64c5a56f5b372ceda`. It contains **762,354 filings, 781,860 owner rows, 2,052,812
+filed transaction lines, 24,877 persons, and all 501 companies**. There are no companies without filings, no accession
+conflicts, and **155,453 linked duplicate trades**. Its build and acceptance status is `built`, with
+`gates.stage=ready_for_staged_load`; this is not a final-status claim.
+
+The predecessor audit is `D:\research\alpha-engine\insiders\predecessors\20261116T154006Z\predecessors.json`, SHA256
+`36dbc85e66887f1011c24a5475917d9bae4856d121b50bdbd479b86ac4aff1c9`. It examines raw `SUBMISSION` and
+`REPORTINGOWNER` data for all 501 registry companies. **29 predecessor mappings**, all 16 companies named in Claude's
+review, zero collisions and zero unresolved late histories pass the gate. The selection contains 501 current CIKs plus
+29 filed CIKs. Each mapping includes the symbol, shared owners, actual last old-CIK filing, and the changeover used to
+enforce the six-month limit. GOOGL retains the parallel old-CIK history through 2026-07-14 while measuring the 2015
+transition correctly. SKYD uses the separately documented Paramount transaction (nine shared owners, a 35-day gap, and
+the filed 2025-08-07 acquisition 8-K); it is not inferred from a ticker match. CRH, IVZ, NXPI, ENLT and the earlier FERG
+interval have explicit 20-F/name-change/no-match evidence instead of invented CIKs. The shared FOX/NWSA predecessor is
+not assigned to either successor, because neither has continuous prices across that transition.
+
+An independent comparison with i1 found **26,633 added filings, 27,706 owner rows, 145,929 transaction lines and 478
+persons**, with **zero removed accessions and zero form/filing-date identity changes**. Exactly those 26,633 filings
+have a different `filedIssuerCik` from the registry join key. XOM now has **1,680 filings** under registry CIK 2115436
+and filed CIK 34088. The comparison is `i1-comparison.json`, SHA256
+`bdec2f56161e05987eb8d8ba3d36924df36c1e1b2134bc2dd7083f257ee7498b`.
+
+All **387** former `2007-01-06` Saturday availability values now use Monday `2007-01-08`; there are zero other
+availability changes and zero weekend dates. The independent comparison found zero unexpected availability changes.
+The false price session remains an open p1 defect for the owner's separate price-revision decision; no price row was
+changed by this work.
+
+Acceptance also confirms:
+
+- **169 pairedGroup groups / 173,412 pairedTwin lines**, **77,216 numeric differences and zero rounding failures**;
+  the maximum difference is `0.005000002682209015`, with four informational near-zero-price cases and zero unresolved
+  conflicts.
+- Legacy cache **55,510/55,510 matched**, zero missing, read errors or substantive/precision mismatches. There are
+  638 outside-registry rows, 16,787 order-only changes, 218 whitespace differences and 1,253 source fills.
+- Ten-company 2025 coverage is **2,753/2,753 accessions**, with zero missing or extra. Three uncached SEC submissions
+  requests were used and ten responses reused. The 30-request cap was not exceeded.
+- Zero point-in-time violations, zero weekend availability rows, three amendment examples with their original rows,
+  and zero missing transaction dates. **151 unknown owner names** remain explicitly listed rather than inferred.
+- The withdrawn accession `0001999371-26-023092` remains recorded with its 503-then-404 source history and no
+  placeholder row. The cached resume preserved all three 404 attempts without another filing request.
+- All 83 quarterly sources were reused with zero ZIP downloads. EDGAR has 3,291 in-scope post-quarter filings, with
+  zero XML or acceptance-header downloads on resume.
+
+Artifact hashes: build `f1b7b35cfdaa820629763a805b30305bff9c06756e9996a60976360dc3d070c8`; gates
+`fffdab99e8b1e8bab042a1dcda4563be48d0c652447316d5a9f318ad3325a08d`; legacy cache
+`360a5cdcd6ae1e0e7679e278c16b0b7716edc5a5c69c708b0ada103ef99a34a0`; 2025 coverage
+`f0d305adc44fb36fc6840f1a92ed42e751e9f217b3fae541751216356b6a1576`.
+
+Verification: **9 insider test files / 83 tests** and standalone TypeScript passed. Main `npm run check`,
+**259 files / 1,446 tests**, and `npm run build` passed. The per-company raw spool and cached weekday calendar avoid
+re-reading every quarter per company and re-sorting 9,285 sessions per filing. The two stopped partial builds are
+preserved; no acceptance or live replacement occurred from them. A representative 1,239-filing normalization retained
+2,987 lines and the same serialized size while taking 71 ms after calendar memoization.
+
+The provisional staged load and its independent live verification are reported below. **i1.1 remains provisional
+pending Claude's review, even after a successful provisional load.**
