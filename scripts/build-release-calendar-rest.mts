@@ -339,7 +339,7 @@ const option = (name: string) => {
   const index = process.argv.indexOf(name);
   return index >= 0 ? process.argv[index + 1] : undefined;
 };
-const limit = Number(option("--limit") ?? 20);
+const limit = cikFilter ? universe.length : Number(option("--limit") ?? 20);
 if (!Number.isInteger(limit) || limit < 1 || limit > universe.length) throw new Error(`--limit must be an integer from 1 to ${universe.length}`);
 const pilotUniverse = cikFilter ? universe : universe.slice(0, limit);
 const results: CompanyResult[] = [];
