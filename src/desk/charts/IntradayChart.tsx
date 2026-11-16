@@ -7,7 +7,7 @@ export function IntradaySpark({ points, width = 110, height = 30, label }: { poi
   const values = points.map(point => point.value), min = Math.min(...values), max = Math.max(...values), span = max - min || 1, pad = 3;
   const x = (index: number) => pad + (index / (points.length - 1)) * (width - pad * 2);
   const y = (value: number) => pad + (1 - (value - min) / span) * (height - pad * 2);
-  const color = values.at(-1)! >= 0 ? "var(--d-pos)" : "var(--d-neg)";
+  const color = values.at(-1)! >= 0 ? "var(--d-up)" : "var(--d-down)";
   const path = points.map((point, index) => `${index ? "L" : "M"}${x(index).toFixed(1)},${y(point.value).toFixed(1)}`).join(" ");
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label}>
