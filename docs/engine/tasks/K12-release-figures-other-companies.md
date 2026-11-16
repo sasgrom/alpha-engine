@@ -74,6 +74,48 @@ Report each as numbers, overall, by year and by company.
 7. `npm run check`, the targeted tests, `npm test -- --run`, `npm run build`, `git diff --check`.
    No production write, no schema change, no model call, no new collector or scheduler entry.
 
+## Run and resume
+
+Run from `C:\dev\alpha-engine`. The full run reads only cached exhibits and local MySQL data. It does not
+download documents or use a model. Each release is checkpointed under
+`D:\research\alpha-engine\engine\flash-rest\releases\`; no checkpoint or output falls back to C:.
+
+```powershell
+npx tsx scripts/build-flash-statements.mts --filings D:/research/alpha-engine/engine/events/filings-rest.jsonl --filings D:/research/alpha-engine/engine/events/filings-six.jsonl --quarters D:/research/alpha-engine/engine/events/quarters-rest.jsonl --quarters D:/research/alpha-engine/engine/events/quarters-six.jsonl --output D:/research/alpha-engine/engine/flash-rest --summary research/engine/flash-statements-rest.summary.json --extract D:/research/alpha-engine/engine/flash-rest/flash-quarter-rest.jsonl
+```
+
+After an interruption, first confirm that D: is mounted and the calendar files and `flash-rest` directory are
+readable. Then rerun **the same command**, without `--force`. Valid per-release checkpoints are reused and only
+missing or changed releases are processed. Do not remove the checkpoint directory or resume from a partial JSON
+file. Artifact and summary writes use a temporary file followed by an atomic rename on D: (the committed summary
+uses the same atomic-write helper in the repository).
+
+Acceptance and the unchanged 50-company regression:
+
+```powershell
+npx tsx scripts/build-flash-statements.mts
+npx tsx scripts/check-flash-golden.mts
+npx vitest run worker/lib/flash-extract.test.ts worker/lib/flash-pipeline.test.ts worker/lib/flash-summary.test.ts worker/lib/flash-facts.test.ts worker/lib/flash-html.test.ts
+npm run check
+npm test -- --run
+npm run build
+git diff --check
+```
+
+The full-run summary must have income-period match of at least 98%, gradable-value match of at least 98%, zero
+answer-key facts filed on/after release and zero values not sourced from a printed cell. Rerunning the full command
+after a successful build also serves as the resume/read-back check: every valid checkpoint should be reused.
+
+If another agent must continue K20 instead, its artifact is
+`D:\research\alpha-engine\insiders\std\20261116T223552Z`. Verify the staged ID prefix before resuming:
+
+```powershell
+npx tsx C:/dev/alpha-engine-lab/src/insiders/load-insiders.mts D:/research/alpha-engine/insiders/std/20261116T223552Z i1.1.20261116 --replace --resume-partial --artifact-code 8c2a2606c8db34663a5617733157e630a959463a
+npx tsx C:/dev/alpha-engine-lab/src/insiders/verify-insiders-load.mts D:/research/alpha-engine/insiders/std/20261116T223552Z i1.1.20261116
+```
+
+Do not mark i1.1 final unless the independent live check passes. Claude has accepted the artifact itself.
+
 ## Delivery
 
 A delivery report in this file, the usual handoff note, and a mailbox message to Claude.
