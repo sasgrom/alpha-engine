@@ -175,6 +175,38 @@ describe("incremental companyfacts collection", () => {
     expect(second.downloads).toEqual([other]);
   });
 
+  it("tries a failed company once more at the end of the run when asked, and counts it once", async () => {
+    const root = tempDir();
+    const other = 1045810;
+    const opts = options(root, [filing("10-Q", "a1")]);
+    let otherPosts = 0;
+    opts.postFactsSnapshot = async (cik) => {
+      opts.ingests.push(cik);
+      if (cik === other && otherPosts++ === 0) throw new Error("HTTP 500: Internal Server Error");
+      return { replaced: 1 };
+    };
+    const result = await runFactsCollection([company(), company(other)], { ...opts, retryFailedAfterMs: 0 });
+    expect(result).toMatchObject({ checked: 2, refreshed: 2, unchanged: 0, failed: 0 });
+    expect(opts.ingests).toEqual([CIK, other, other]);
+    expect(result.results.map((row) => [row.cik, row.status, row.attempts])).toEqual([[CIK, "refreshed", 1], [other, "refreshed", 2]]);
+    expect(result.rowsTotal).toBe(2);
+    expect(JSON.parse(readFileSync(factsManifestPath(root, other), "utf8"))).toMatchObject({ status: "refreshed", error: null });
+  });
+
+  it("makes one attempt per company unless asked, and reports a repeated failure honestly", async () => {
+    const root = tempDir();
+    const opts = options(root, [filing("10-Q", "a1")]);
+    opts.companyFacts = async (cik) => { opts.downloads.push(cik); throw new Error("mocked SEC failure"); };
+    const once = await runFactsCollection([company()], opts);
+    expect(once).toMatchObject({ checked: 1, failed: 1 });
+    expect(once.results[0].attempts).toBe(1);
+    expect(opts.downloads).toEqual([CIK]);
+    const twice = await runFactsCollection([company()], { ...opts, retryFailedAfterMs: 0 });
+    expect(twice).toMatchObject({ checked: 1, refreshed: 0, failed: 1 });
+    expect(twice.results[0]).toMatchObject({ status: "failed", attempts: 2, error: "mocked SEC failure" });
+    expect(opts.downloads).toEqual([CIK, CIK, CIK]);
+  });
+
   it("runs full reconciliation only after the CIK-specific interval", async () => {
     const root = tempDir();
     seedSuccess(1, root, "a1", { lastFullReconciliation: "2025-05-20T00:00:00.000Z" });

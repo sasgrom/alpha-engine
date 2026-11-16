@@ -93,7 +93,10 @@ export async function postFactsSnapshot(
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
     body: JSON.stringify({ kind: "factsSnapshot", cik, rows }),
-    timeoutMs: 120_000,
+    // The server replaces the company in one transaction and keeps going when the client gives up. Under a loaded
+    // database that took longer than two minutes (2026-11-16), and the retry then collided with its own unfinished
+    // transaction (ER_LOCK_WAIT_TIMEOUT). Ten minutes lets a slow replacement finish instead.
+    timeoutMs: 600_000,
     retries: 2,
   });
   if (!res.ok) throw new Error(`facts ingest failed for CIK ${cik}: ${JSON.stringify(res)}`);

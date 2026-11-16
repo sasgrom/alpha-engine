@@ -3010,3 +3010,18 @@ delivered.
 - **Cause:** `IntradaySpark` (`src/desk/charts/IntradayChart.tsx`) coloured its path and end dot with `var(--d-pos)` / `var(--d-neg)`, which no desk stylesheet defines (the tokens are `--d-up` / `--d-down`). An undefined variable leaves an SVG stroke at `none` and a fill at black, so only the dot showed. The same sparkline feeds the Watchlist page.
 - **Fix:** the two tokens replaced; new guard test `src/desk/tokens.test.tsx` fails whenever desk code uses a `--d-*` variable that no stylesheet or inline style defines (verified to fail on the old code). A scan found no other undefined token.
 - **Verification:** `npm run check` passed; `npm test -- --run` **260 files / 1,447 tests** passed; `npm run build` passed and `dist/public` now carries `var(--d-up)` / `var(--d-down)` with no `--d-pos`; `git diff --check` clean. No web or scheduler restart (dist/public is read per request); the owner needs only to reload the page. Kimi was told before the gates ran (`20261116-204311-claude-desk-fix-gates.md`).
+
+
+## 192. Claude (Opus 5.5): companyfacts jobs failed on database lock waits; reruns and a resilience fix — 2026-11-16T21:05Z
+
+- **Owner's report:** "2 scheduled jobs failed in the last day: Companyfacts local snapshot, S&P 500 incremental companyfacts" (Operations checks), with research-series and page-data-dashboard blocked behind them.
+- **Evidence:** `sp500-facts-daily` (2026-11-15 23:33 → 02:50 local) 10 of 499 failed: C, GEN, VRTX, CB, PWR, WTW, COP, DUK aborted; CSCO, GS HTTP 500. `facts-fetch-daily` (03:15 → 03:28) 3 of 50 failed: CSCO, GS (HTTP 500), COP (aborted). Earlier nights had zero failures. The runs took 3 h 16 min and 13 min against the usual 41–75 min and 1 min.
+- **Cause:** not the SEC. `worker/.runs/home-server.log` holds 13 `ER_LOCK_WAIT_TIMEOUT` errors on `delete from facts where cik = ?` inside `ingestFactsSnapshot` (CIKs 886982 GS, 858877 CSCO, 1163165 COP). MySQL was heavily loaded (overlapping the overnight insider staging into `alpha_research`). A facts snapshot POST then exceeded the client's 120-second timeout. The server kept running that transaction, so the client's retry collided with it, waited out InnoDB's lock timeout and returned HTTP 500. Aborted = the last attempt timed out.
+- **Reruns:** queued through `worker/.runs/operations-commands.jsonl` at 20:53Z (`claude-rerun-20261116T2053Z-*`) after confirming the scheduler was idle. `facts-fetch-daily` succeeded: CSCO, GS, COP refreshed, 0 failed, 2 minutes. The scheduler then queued `research-series` itself. `sp500-facts-daily` was running at the time of writing.
+- **Fix (worker only):**
+  - `worker/lib/ingest.ts`: the facts snapshot POST timeout is 600 s instead of 120 s, so a slow replacement finishes instead of being abandoned.
+  - `worker/lib/facts-incremental.ts`: optional `retryFailedAfterMs`, which gives each failed company one more attempt after the whole pass and a pause. Each result carries `attempts`.
+  - `worker/facts-fetch.mts`: the retry is on (5-minute pause, not for `--cached`), and "second attempt" shows in the log line.
+  - Two new tests in `worker/lib/facts-incremental.test.ts`: a recovered company is counted once; a repeated failure stays failed with 2 attempts; without the option, one attempt.
+- **Verification:** the collector's tests 14/14; a one-off type check of the changed worker files with 0 errors; `npm run check` passed; `npm test -- --run` **260 files / 1,449 tests** passed; `npm run build` passed; `git diff --check` clean. No web or scheduler restart is needed (each job is a fresh tsx process). Kimi was told before the gates.
+- **Request:** large MySQL loads best avoid 23:30–03:30 local, when the two facts jobs run.

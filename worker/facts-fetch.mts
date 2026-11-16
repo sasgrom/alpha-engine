@@ -19,9 +19,10 @@ const ingestUrl = process.env.INGEST_URL ?? "http://127.0.0.1:3000/api/worker/in
 assertLocalFactsIngestUrl(ingestUrl);
 
 const prog = startProgress("facts-fetch", `${universe.length} unique CIKs · local ingest · ${useCached ? "cached recovery" : "incremental SEC"}`);
-const summary = await runFactsCollection(universe, { ingestUrl, useCached });
+// A failed company gets one more attempt after the whole pass and a five-minute pause (not for an offline recovery).
+const summary = await runFactsCollection(universe, { ingestUrl, useCached, retryFailedAfterMs: useCached ? undefined : 300_000 });
 for (const [index, result] of summary.results.entries()) {
-  prog.item(index + 1, summary.checked, `${result.ticker} ${result.status} · ${result.rows} facts · ${result.reason}${result.error ? ` · ${result.error}` : ""}`);
+  prog.item(index + 1, summary.checked, `${result.ticker} ${result.status} · ${result.rows} facts · ${result.reason}${result.attempts > 1 ? " · second attempt" : ""}${result.error ? ` · ${result.error}` : ""}`);
 }
 prog.done(`all done · checked ${summary.checked} · refreshed ${summary.refreshed} · unchanged ${summary.unchanged} · failed ${summary.failed} · ${summary.rowsTotal} facts`);
 if (summary.failed > 0) process.exitCode = 1;

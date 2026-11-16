@@ -47,6 +47,8 @@ export interface FactsRunResult {
   rows: number;
   reason: string;
   error: string | null;
+  /** 1, or 2 when the company was tried again at the end of the run. */
+  attempts: number;
 }
 
 export interface FactsRunSummary {
@@ -68,6 +70,8 @@ export interface FactsCollectionOptions {
   companyFacts?: (cik: number) => Promise<any>;
   postFactsSnapshot?: (cik: number, rows: CompanyFactRow[], opts: { url: string }) => Promise<{ replaced: number }>;
   ingestUrl: string;
+  /** When set, each failed company is tried once more after the whole pass and this pause (milliseconds). */
+  retryFailedAfterMs?: number;
 }
 
 export function dedupeFactsUniverse(companies: EdgarCompany[]): EdgarCompany[] {
@@ -172,17 +176,8 @@ export async function runFactsCollection(companies: EdgarCompany[], options: Fac
   const postFactsSnapshot = options.postFactsSnapshot ?? defaultPostFactsSnapshot;
   const now = options.now ?? (() => new Date());
   const universe = dedupeFactsUniverse(companies);
-  const summary: FactsRunSummary = {
-    universeHash: factsUniverseSha256(universe),
-    checked: 0,
-    refreshed: 0,
-    unchanged: 0,
-    failed: 0,
-    rowsTotal: 0,
-    results: [],
-  };
-  for (const company of universe) {
-    summary.checked++;
+  const universeHash = factsUniverseSha256(universe);
+  const collect = async (company: EdgarCompany, attempts: number): Promise<FactsRunResult> => {
     const previous = readManifest(cacheRoot, company.cik);
     const rawBefore = readRawSnapshot(cacheRoot, company.cik);
     let signature: FilingSignature = {
@@ -209,13 +204,10 @@ export async function runFactsCollection(companies: EdgarCompany[], options: Fac
             lastRelevantSignature: signature.signature,
             status: "unchanged",
             error: null,
-            universeHash: summary.universeHash,
+            universeHash,
           };
           writeManifest(cacheRoot, entry);
-          summary.unchanged++;
-          summary.rowsTotal += rawBefore!.rows.length;
-          summary.results.push({ cik: company.cik, ticker: company.ticker, status: "unchanged", rows: rawBefore!.rows.length, reason: "unchanged", error: null });
-          continue;
+          return { cik: company.cik, ticker: company.ticker, status: "unchanged", rows: rawBefore!.rows.length, reason: "unchanged", error: null, attempts };
         }
         const payload = await companyFacts(company.cik);
         if (Number(payload?.cik) !== company.cik) throw new Error("companyfacts CIK mismatch");
@@ -241,12 +233,10 @@ export async function runFactsCollection(companies: EdgarCompany[], options: Fac
         rawSha256: rawAfter.sha256,
         status: "refreshed",
         error: null,
-        universeHash: summary.universeHash,
+        universeHash,
       };
       writeManifest(cacheRoot, entry);
-      summary.refreshed++;
-      summary.rowsTotal += rawAfter.rows.length;
-      summary.results.push({ cik: company.cik, ticker: company.ticker, status: "refreshed", rows: rawAfter.rows.length, reason: refreshed ? "new_data" : options.useCached ? "cached_recovery" : "reconciliation_or_recovery", error: null });
+      return { cik: company.cik, ticker: company.ticker, status: "refreshed", rows: rawAfter.rows.length, reason: refreshed ? "new_data" : options.useCached ? "cached_recovery" : "reconciliation_or_recovery", error: null, attempts };
     } catch (error) {
       const message = boundedError(error);
       const checkedAt = now().toISOString();
@@ -264,14 +254,31 @@ export async function runFactsCollection(companies: EdgarCompany[], options: Fac
         rawSha256: previous?.rawSha256 ?? null,
         status: "failed",
         error: message,
-        universeHash: summary.universeHash,
+        universeHash,
       };
       writeManifest(cacheRoot, entry);
-      summary.failed++;
-      summary.results.push({ cik: company.cik, ticker: company.ticker, status: "failed", rows: 0, reason: "failed", error: message });
+      return { cik: company.cik, ticker: company.ticker, status: "failed", rows: 0, reason: "failed", error: message, attempts };
+    }
+  };
+  const results: FactsRunResult[] = [];
+  for (const company of universe) results.push(await collect(company, 1));
+  // One more attempt for each failed company, after the whole pass and a pause: a slow server transaction from the
+  // first attempt has finished by then, so the retry cannot collide with it. Still failing = an honest failure.
+  if (options.retryFailedAfterMs !== undefined && results.some((row) => row.status === "failed")) {
+    await new Promise((resolve) => setTimeout(resolve, options.retryFailedAfterMs));
+    for (const [index, company] of universe.entries()) {
+      if (results[index].status === "failed") results[index] = await collect(company, 2);
     }
   }
-  return summary;
+  return {
+    universeHash,
+    checked: results.length,
+    refreshed: results.filter((row) => row.status === "refreshed").length,
+    unchanged: results.filter((row) => row.status === "unchanged").length,
+    failed: results.filter((row) => row.status === "failed").length,
+    rowsTotal: results.reduce((sum, row) => sum + row.rows, 0),
+    results,
+  };
 }
 
 export interface FactsManifestHealth {
