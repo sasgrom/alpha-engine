@@ -217,7 +217,8 @@ function rowTexts(table: RawTable): string[] {
 function statementScore(table: RawTable): { kind: StatementKind; score: number } | null {
   const title = table.title;
   const local = `${title} ${rowTexts(table).slice(0, 8).join(" ")}`;
-  if (/non-gaap|adjusted|reconciliation|segment|outlook|guidance|constant currency|highlights|contents|key metrics|summary financial|average balance/i.test(local)) return null;
+  if (/non-gaap|adjusted|reconciliation|outlook|guidance|constant currency|highlights|contents|key metrics|summary financial|average balance/i.test(local)) return null;
+  if (/segment/i.test(local) && !/income statement|statements? of (?:income|operations|earnings)|balance sheets?|statements? of financial position|statements? of cash flows?|cash flow statements?/i.test(title)) return null;
   const labels = rowTexts(table).join(" | ");
   const incomeTitle = /income statement|statements? of (?:income|operations|earnings)|results of operations/i.test(title);
   const balanceTitle = /balance sheets?|statements? of financial position/i.test(title);
@@ -261,7 +262,8 @@ export function fullDates(text: string): string[] {
 function partialMonthDay(text: string): { month: number; day: number } | null {
   const monthNames = Object.keys(MONTHS).join("|");
   const match = text.match(new RegExp(`\\b(${monthNames})\\.?\\s+(\\d{1,2})(?:st|nd|rd|th)?\\s*,?\\s*$`, "i"));
-  return match ? { month: MONTHS[match[1].toLowerCase()], day: Number(match[2]) } : null;
+  const dayFirst = text.match(new RegExp(`^\\s*(\\d{1,2})(?:st|nd|rd|th)?\\s+(${monthNames})\\.?\\s*,?\\s*$`, "i"));
+  return match ? { month: MONTHS[match[1].toLowerCase()], day: Number(match[2]) } : dayFirst ? { month: MONTHS[dayFirst[2].toLowerCase()], day: Number(dayFirst[1]) } : null;
 }
 
 function shiftFiscalPeriod(date: string, months: number): string {
@@ -295,7 +297,7 @@ export function durationMonths(text: string, context = ""): number | null {
     const months = ({ 12: 3, 13: 3, 16: 4, 17: 4, 24: 6, 26: 6, 36: 9, 39: 9, 52: 12, 53: 12 } as Record<number, number>)[Number(weeks[1])];
     if (months) return months;
   }
-  if (/thirteen\s+weeks/.test(value)) return 3;
+  if (/thirteen\s+week(?:s)?(?:\s+periods?)?/.test(value)) return 3;
   if (/twenty[- ]six\s+weeks/.test(value)) return 6;
   if (/twenty[- ]four\s+weeks/.test(value)) return 6;
   if (/thirty[- ]six\s+weeks/.test(value)) return 9;
@@ -422,6 +424,10 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
         const year = Number(quarter[2].length === 2 ? `20${quarter[2]}` : quarter[2]);
         quarterCells.push({ text: cell.text, start: cell.start, end: cell.end, row: rowIndex, quarter: Number(quarter[1]), year });
       }
+      for (const quarter of cell.text.matchAll(/\bq([1-4])[- ]?(20\d{2}|\d{2})\b/gi)) {
+        const year = Number(quarter[2].length === 2 ? `20${quarter[2]}` : quarter[2]);
+        quarterCells.push({ text: cell.text, start: cell.start, end: cell.end, row: rowIndex, quarter: Number(quarter[1]), year });
+      }
       for (const ordinal of cell.text.matchAll(/\b([1-4])(?:st|nd|rd|th)\s+qtr\.?\b/gi)) {
         const year = ordinalHeaderYear(table, { start: cell.start, end: cell.end, row: rowIndex }, cell.text);
         if (year !== null) ordinalCells.push({ start: cell.start, end: cell.end, row: rowIndex, quarter: Number(ordinal[1]), year });
@@ -433,6 +439,10 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
       if (/^(?:ytd|year to date)$/i.test(cell.text.trim()) && expectedPeriodEnd) {
         const months = durationMonths(cell.text, table.context);
         if (months !== null) candidates.push({ months, periodEnd: expectedPeriodEnd, headerRow: rowIndex, startCol: cell.start, endCol: cell.end, confidence: "expected_period" });
+      }
+      if (expectedPeriodEnd) {
+        const monthName = Object.entries(MONTHS).filter(([, month]) => month === Number(expectedPeriodEnd.slice(5, 7))).sort((a, b) => b[0].length - a[0].length)[0]?.[0], expectedYear = expectedPeriodEnd.slice(0, 4);
+        if (monthName && (/^current month$/i.test(cell.text.trim()) || new RegExp(`^${monthName}\\s+${expectedYear}$`, "i").test(cell.text.trim()))) candidates.push({ months: 1, periodEnd: expectedPeriodEnd, headerRow: rowIndex, startCol: cell.start, endCol: cell.end, confidence: "expected_period" });
       }
       const periodMonths = kind === "balance" ? 0 : durationMonths(durationText, table.context) ?? durations[cell.start] ?? rowDuration;
       const partial = partialMonthDay(cell.text);

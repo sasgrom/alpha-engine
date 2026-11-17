@@ -258,4 +258,47 @@ describe("flash HTML table reading", () => {
     expect(candidates[1].tables.map((table) => table.tableIndex)).toEqual([1]);
     expect(candidates[1].columns.map((column) => column.periodEnd)).toEqual(["2021-05-02", "2020-04-26"]);
   });
+
+  it("reads week-period headers and day-first month names", () => {
+    expect(durationMonths("Thirteen Week Periods Ended")).toBe(3);
+    const html = `<p>Consolidated Income Statements</p><table>
+      <tr><td>Thirteen Week Periods Ended</td><td>31 December</td></tr>
+      <tr><td></td><td>2016</td><td>2015</td></tr>
+      <tr><td>Sales</td><td>1882.5</td><td>1866.3</td></tr>
+      <tr><td>Operating income</td><td>328.1</td><td>372.5</td></tr>
+    </table>`;
+    expect(firstCandidate(html, "2016-12-31").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2016-12-31"], [3, "2015-12-31"]]);
+  });
+
+  it("reads short quarter-year codes", () => {
+    const html = `<p>Condensed Consolidated Income Statements</p><table>
+      <tr><td></td><td>Q1-13</td><td>Q4-12</td></tr>
+      <tr><td>Operating revenues</td><td>548.6</td><td>634.4</td></tr>
+      <tr><td>Operating income</td><td>100</td><td>120</td></tr>
+    </table>`;
+    expect(firstCandidate(html, "2013-03-31").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2013-03-31"], [3, "2012-12-31"]]);
+  });
+
+  it("keeps a canonical statement even when it contains segment rows", () => {
+    const html = `<p>Consolidated Statements of Income</p><table>
+      <tr><td></td><td>Three Months Ended June 30</td><td>Percentage</td></tr>
+      <tr><td></td><td>2013</td><td>2012</td><td>Change</td></tr>
+      <tr><td>Natural gas distribution segment</td><td>239495</td><td>195059</td><td>23</td></tr>
+      <tr><td>Operating income</td><td>500</td><td>400</td><td>25</td></tr>
+    </table>`;
+    const candidate = firstCandidate(html, "2013-06-30");
+    expect(candidate.kind).toBe("income");
+    expect(candidate.columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2013-06-30"], [3, "2012-06-30"]]);
+  });
+
+  it("maps an explicit current-month column to the expected month", () => {
+    const html = `<p>Comprehensive Income Statement March 2014</p><table>
+      <tr><td>Current Month</td><td>Comments on Monthly Results</td></tr>
+      <tr><td>Revenue</td><td>100</td></tr>
+      <tr><td>Operating income</td><td>20</td></tr>
+    </table>`;
+    expect(firstCandidate(html, "2014-03-31").columns).toEqual([expect.objectContaining({ months: 1, periodEnd: "2014-03-31", confidence: "expected_period" })]);
+    const monthYear = `<p>Comprehensive Income Statement</p><table><tr><td>March 2024</td><td>Comments on Monthly Results</td></tr><tr><td>Revenue</td><td>100</td></tr><tr><td>Operating income</td><td>20</td></tr></table>`;
+    expect(firstCandidate(monthYear, "2024-03-31").columns).toEqual([expect.objectContaining({ months: 1, periodEnd: "2024-03-31", confidence: "expected_period" })]);
+  });
 });
