@@ -510,6 +510,16 @@ export function findStatementCandidates(tables: RawTable[], expectedPeriodEnd: s
 
 const columnSignature = (columns: StatementColumn[]) => columns.map((column) => `${column.months}:${column.periodEnd}`).join("|");
 
+function hasNumericDataRow(table: RawTable): boolean {
+  return table.grid.some((row) => {
+    const labelIndex = rowLabelIndex(row);
+    if (labelIndex < 0) return false;
+    const label = row[labelIndex].text;
+    if (durationMonths(label, table.context) !== null || fullDates(label).length || excludedHeader(label) || /\b(?:[1-4]q|q[1-4]|[1-4](?:st|nd|rd|th)\s+qtr\.?|first[- ]quarter|second[- ]quarter|third[- ]quarter|fourth[- ]quarter)\b/i.test(label)) return false;
+    return row.slice(labelIndex + 1).some((cell) => parsePrintedNumber(cell.text) !== null);
+  });
+}
+
 export function joinStatementCandidates(candidates: StatementCandidate[], expectedPeriodEnd: string | null = null): StatementCandidate[] {
   const output: StatementCandidate[] = [];
   for (const candidate of candidates) {
@@ -517,7 +527,7 @@ export function joinStatementCandidates(candidates: StatementCandidate[], expect
     const continuationText = candidate.tables[0] ? `${candidate.tables[0].title} ${rowTexts(candidate.tables[0]).slice(0, 3).join(" ")}` : "";
     const explicitContinuation = /continued|continuation/i.test(continuationText);
     const cashflowContinuation = candidate.kind === "cashflow" && candidate.columns.length === 0 && /financing activities/i.test(continuationText);
-    const headerContinuation = previous && previous.columns.length === 0 && previous.tables.every((table) => table.grid.length <= 14);
+    const headerContinuation = previous && previous.columns.length === 0 && previous.tables.every((table) => table.grid.length <= 14 && !hasNumericDataRow(table));
     const dataContinuation = previous && previous.columns.length > 0 && candidate.columns.length === 0;
     let candidateTables = candidate.tables, candidateColumns = candidate.columns;
     if (previous && headerContinuation && candidate.columns.length === 0 && expectedPeriodEnd) {

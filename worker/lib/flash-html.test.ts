@@ -249,4 +249,13 @@ describe("flash HTML table reading", () => {
     </table>`;
     expect(firstCandidate(html, "2014-05-31").columns).toEqual([]);
   });
+
+  it("does not treat a table with numeric data as a header-only continuation", () => {
+    const html = `<p>GAAP</p><table><tr><td>Financial Information</td><td></td></tr><tr><td>Revenue</td><td>100</td></tr><tr><td>Operating income</td><td>20</td></tr></table>
+      <p>Consolidated Statements of Income</p><table><tr><td></td><td>Three Months Ended May 2, 2021</td><td>Three Months Ended April 26, 2020</td></tr><tr><td>Research and development</td><td>1153</td><td>920</td></tr><tr><td>Operating income</td><td>500</td><td>400</td></tr></table>`;
+    const candidates = joinStatementCandidates(findStatementCandidates(parseExhibitHtml(html, "fixture.htm", "fixture"), "2021-05-02"), "2021-05-02");
+    expect(candidates).toHaveLength(2);
+    expect(candidates[1].tables.map((table) => table.tableIndex)).toEqual([1]);
+    expect(candidates[1].columns.map((column) => column.periodEnd)).toEqual(["2021-05-02", "2020-04-26"]);
+  });
 });
