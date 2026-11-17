@@ -216,4 +216,37 @@ describe("flash HTML table reading", () => {
     </table>`;
     expect(firstCandidate(html, "2012-03-31").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2012-03-31"], [3, "2011-03-31"]]);
   });
+
+  it("resolves quarter groups when a year label sits above only one quarter", () => {
+    const html = `<p>Consolidated Statement of Operations</p><table>
+      <tr><td></td><td></td><td>2008</td><td></td><td></td><td></td><td></td><td>2009</td><td></td><td></td></tr>
+      <tr><td>1st Qtr</td><td>2nd Qtr</td><td>3rd Qtr</td><td>4th Qtr</td><td></td><td>1st Qtr</td><td>2nd Qtr</td><td>3rd Qtr</td><td>4th Qtr</td><td></td></tr>
+      <tr><td>Revenue</td><td>10</td><td>20</td><td>30</td><td>40</td><td></td><td>50</td><td>60</td><td>70</td><td>80</td></tr>
+      <tr><td>Operating income</td><td>1</td><td>2</td><td>3</td><td>4</td><td></td><td>5</td><td>6</td><td>7</td><td>8</td></tr>
+    </table>`;
+    const columns = firstCandidate(html, "2009-12-31").columns;
+    expect(columns.filter((column) => column.periodEnd === "2009-12-31").map((column) => column.startCol)).toEqual([8]);
+    expect(columns.filter((column) => column.periodEnd === "2008-12-31").map((column) => column.startCol)).toEqual([3]);
+  });
+
+  it("does not let an excluded change header overwrite a six-month duration", () => {
+    const html = `<p>Consolidated Statements of Income</p><p>Second Quarter 2024</p><table>
+      <tr><td>Quarterly Trends</td><td colspan="2"></td></tr>
+      <tr><td></td><td colspan="2">Six Months Ended June 30</td></tr>
+      <tr><td></td><td colspan="2">2024 Change</td></tr>
+      <tr><td></td><td>2024</td><td>2023</td></tr>
+      <tr><td>Revenue</td><td>100</td><td>90</td></tr>
+      <tr><td>Operating income</td><td>20</td><td>18</td></tr>
+    </table>`;
+    expect(firstCandidate(html, "2024-06-30").columns.map((column) => [column.months, column.periodEnd])).toEqual([[6, "2024-06-30"], [6, "2023-06-30"]]);
+  });
+
+  it("does not infer a period column from annual narrative around a table", () => {
+    const html = `<p>Consolidated Statements of Income</p><p>Full year results</p><table>
+      <tr><td></td><td>May 31, 2014</td><td>May 31, 2013</td></tr>
+      <tr><td>Revenue</td><td>100</td><td>90</td></tr>
+      <tr><td>Operating income</td><td>20</td><td>18</td></tr>
+    </table>`;
+    expect(firstCandidate(html, "2014-05-31").columns).toEqual([]);
+  });
 });

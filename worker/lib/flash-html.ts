@@ -349,6 +349,10 @@ function ordinalHeaderYear(table: RawTable, ordinal: { start: number; end: numbe
     const overlapping = years.find((cell) => cell.start <= ordinal.end && cell.end >= ordinal.start);
     if (overlapping) return Number(overlapping.text.trim().replace("*", "").slice(-4));
     if (ordinalIndex >= 0 && years.length === ordinalCells.length && years[ordinalIndex]) return Number(years[ordinalIndex].text.trim().replace("*", "").slice(-4));
+    if (years.length && ordinalCells.length > years.length) {
+      const nearest = years.reduce((best, cell) => Math.abs(cell.start - ordinal.start) < Math.abs(best.start - ordinal.start) ? cell : best);
+      return Number(nearest.text.trim().replace("*", "").slice(-4));
+    }
   }
   return null;
 }
@@ -407,13 +411,13 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
     const hasQuarterHeader = cells.some((cell) => /\b(?:[1-4]q(?:'|’)?(?:20\d{2}|\d{2})|q[1-4]|20\d{2}\s+q[1-4]|[1-4](?:st|nd|rd|th)\s+qtr\.?)\b/i.test(cell.text));
     const currentRowDuration = durationMonths(cells.filter((cell) => !excludedHeader(cell.text)).map((cell) => cell.text).join(" "), table.context);
     const yearHeaderRow = hasQuarterHeader || previousPeriodHeader || currentRowDuration !== null || rowLabel < 0 || excludedHeader(table.grid[rowIndex][rowLabel]?.text ?? "") || /^\s*\(?\s*(?:unaudited\b|in\s+(?:thousands|millions|billions)\b|amounts\s+in\b|dollars\s+in\b|fiscal\s+year\b|annual\b|percent\b)/i.test(table.grid[rowIndex][rowLabel]?.text ?? "");
-    const rowDuration = durationMonths(`${previousHeaderText} ${cells.map((cell) => cell.text).join(" ")}`, table.context) ?? annualTitleMonths ?? table.inheritedDurationMonths ?? durationMonths(table.context) ?? null;
+    const rowDuration = durationMonths(`${previousHeaderText} ${cells.map((cell) => cell.text).join(" ")}`, table.context) ?? annualTitleMonths ?? table.inheritedDurationMonths ?? (durationMonths(table.context) === 3 ? 3 : null) ?? null;
     for (const cell of cells) {
       const previousCell = previousCells.find((candidate) => candidate.start === cell.start || (candidate.start <= cell.start && candidate.end >= cell.start));
-      const durationText = `${previousCell?.text ?? ""} ${cell.text}`;
-      const months = durationMonths(durationText, table.context) ?? rowDuration;
-      if (months !== null) for (let col = cell.start; col <= cell.end; col++) durations[col] = months;
       if (excludedHeader(cell.text)) continue;
+      const durationText = `${previousCell?.text ?? ""} ${cell.text}`;
+      const months = durationMonths(durationText, table.context) ?? durations[cell.start] ?? rowDuration;
+      if (months !== null) for (let col = cell.start; col <= cell.end; col++) durations[col] = months;
       for (const quarter of cell.text.matchAll(/\b([1-4])q(?:'|’)?(20\d{2}|\d{2})\b/gi)) {
         const year = Number(quarter[2].length === 2 ? `20${quarter[2]}` : quarter[2]);
         quarterCells.push({ text: cell.text, start: cell.start, end: cell.end, row: rowIndex, quarter: Number(quarter[1]), year });
