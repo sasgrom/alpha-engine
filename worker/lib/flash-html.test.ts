@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { canonicalLabel, durationMonths, extractCandidateRows, findStatementCandidates, fullDates, joinStatementCandidates, parseExhibitHtml, parsePrintedNumber, rowUnit, type RawTable } from "./flash-html";
 
-const firstCandidate = (html: string, periodEnd: string) => joinStatementCandidates(findStatementCandidates(parseExhibitHtml(html, "fixture.htm", "fixture"), periodEnd))[0];
+const firstCandidate = (html: string, periodEnd: string) => joinStatementCandidates(findStatementCandidates(parseExhibitHtml(html, "fixture.htm", "fixture"), periodEnd), periodEnd)[0];
 
 describe("flash HTML table reading", () => {
   it("expands spans, preserves negative numbers and strips label footnotes", () => {
@@ -143,5 +143,77 @@ describe("flash HTML table reading", () => {
     const html = `<p>GAAP to non-GAAP reconciliation</p><table><tr><td></td><td>September 26, 2026</td></tr><tr><td>Revenue</td><td>100</td><td>Operating income</td><td>20</td></tr></table><p>Condensed Consolidated Balance Sheets (In millions)</p><table><tr><td></td><td>September 26, 2026</td></tr><tr><td>Total assets</td><td>100</td><td>Total liabilities</td><td>60</td><td>Total shareholders’ equity</td><td>40</td></tr></table>`;
     const candidates = joinStatementCandidates(findStatementCandidates(parseExhibitHtml(html, "fixture.htm", "fixture"), "2026-09-26"));
     expect(candidates.map((candidate) => candidate.kind)).toEqual(["balance"]);
+  });
+
+  it("finds a duration header above intervening title and empty rows", () => {
+    const html = `<p>Consolidated Statements of Earnings</p><table>
+      <tr><td>For the Six Months Ended June 30,</td></tr>
+      <tr><td>(in millions, except per share data)</td></tr>
+      <tr><td>(Unaudited)</td></tr><tr></tr><tr></tr>
+      <tr><td></td><td>2012</td><td>2011</td><td>% Change</td></tr>
+      <tr><td>Net revenues</td><td>12134</td><td>11563</td><td>4.9</td></tr>
+      <tr><td>Operating income</td><td>2000</td><td>1800</td></tr>
+    </table>`;
+    const candidate = firstCandidate(html, "2012-06-30");
+    expect(candidate.columns.map((column) => [column.months, column.periodEnd])).toEqual([[6, "2012-06-30"], [6, "2011-06-30"]]);
+  });
+
+  it("reads numeric quarter labels separated from their year row", () => {
+    const html = `<p>Consolidated Statement of Income</p><table>
+      <tr><td></td><td>1Q</td><td>2Q</td></tr>
+      <tr><td></td><td>2009</td><td>2008</td></tr>
+      <tr><td>Revenue</td><td>100</td><td>90</td></tr>
+      <tr><td>Operating income</td><td>20</td><td>18</td></tr>
+    </table>`;
+    expect(firstCandidate(html, "2009-06-30").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2009-03-31"], [3, "2008-06-30"]]);
+  });
+
+  it("anchors a fiscal first quarter to the latest printed year", () => {
+    const html = `<p>Condensed Consolidated Statements of Earnings</p><table>
+      <tr><td></td><td>First Quarter</td><td>First Quarter</td></tr>
+      <tr><td></td><td>2013</td><td>2012</td></tr>
+      <tr><td>Revenue</td><td>25889</td><td>26792</td></tr>
+      <tr><td>Operating income</td><td>1000</td><td>900</td></tr>
+    </table>`;
+    expect(firstCandidate(html, "2012-09-30").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2012-09-30"], [3, "2011-09-30"]]);
+  });
+
+  it("carries a split table's quarter header into its bare-year data table", () => {
+    const html = `<p>Consolidated Statements of Earnings</p><table>
+      <tr></tr><tr></tr><tr><td>Schedule 1</td></tr>
+      <tr><td>ALTRIA GROUP, INC.</td></tr><tr><td>and Subsidiaries</td></tr>
+      <tr><td>Consolidated Statements of Earnings</td></tr>
+      <tr><td>For the Quarters Ended March 31,</td></tr>
+      <tr><td>(dollars in millions)</td></tr><tr><td>(Unaudited)</td></tr>
+    </table><table>
+      <tr></tr><tr></tr><tr></tr><tr></tr>
+      <tr><td></td><td>2013</td><td>2012</td><td>% Change</td></tr>
+      <tr><td>Net revenues</td><td>5528</td><td>5647</td><td>(2.1)%</td></tr>
+      <tr><td>Operating income</td><td>1000</td><td>900</td><td>11</td></tr>
+    </table>`;
+    const candidate = firstCandidate(html, "2013-03-31");
+    expect(candidate.tables).toHaveLength(2);
+    expect(candidate.columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2013-03-31"], [3, "2012-03-31"]]);
+    expect(extractCandidateRows(candidate).find((row) => row.label === "Net revenues")?.values.map((value) => value.value)).toEqual([5528, 5647]);
+  });
+
+  it("uses the statement's external quarter context for bare year columns", () => {
+    const html = `<p>Consolidated Statements of Earnings</p><p>For the Quarters Ended March 31,</p><table>
+      <tr><td></td><td>2009</td><td>2008</td><td>% Change</td></tr>
+      <tr><td>Net revenues</td><td>4523</td><td>4410</td><td>2.6</td></tr>
+      <tr><td>Operating income</td><td>1000</td><td>900</td><td>11</td></tr>
+    </table>`;
+    expect(firstCandidate(html, "2009-03-31").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2009-03-31"], [3, "2008-03-31"]]);
+  });
+
+  it("reads abbreviated, singular and same-row duration headers", () => {
+    expect(durationMonths("3 Mos. Ended 3/31/20")).toBe(3);
+    expect(durationMonths("Three-Month Periods Ended")).toBe(3);
+    const html = `<p>Condensed Income Statement</p><table>
+      <tr><td>THREE MONTHS ENDED MARCH 31,</td><td>2012</td><td>2011</td><td>% Change</td></tr>
+      <tr><td>Total revenues</td><td>6240</td><td>5117</td><td>21.9</td></tr>
+      <tr><td>Operating income</td><td>1000</td><td>900</td><td>11</td></tr>
+    </table>`;
+    expect(firstCandidate(html, "2012-03-31").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2012-03-31"], [3, "2011-03-31"]]);
   });
 });

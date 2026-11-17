@@ -212,7 +212,7 @@ function chooseCurrentPeriodEnd(candidates: StatementCandidate[], expectedPeriod
   const income = candidates.filter((candidate) => candidate.kind === "income" && candidate.columns.length);
   if (expectedPeriodEnd) {
     const ranked = income.map((candidate) => {
-      const end = latestColumnDate(candidate.columns)!;
+      const end = candidate.columns.map((column) => column.periodEnd).sort((a, b) => Math.abs(daysBetween(a, expectedPeriodEnd)) - Math.abs(daysBetween(b, expectedPeriodEnd)) || a.localeCompare(b))[0];
       return { end, difference: Math.abs(daysBetween(end, expectedPeriodEnd)), score: candidate.score, sourceFile: candidate.tables[0].sourceFile, tableIndex: candidate.tables[0].tableIndex };
     }).sort((a, b) => a.difference - b.difference || b.score - a.score || a.sourceFile.localeCompare(b.sourceFile) || a.tableIndex - b.tableIndex);
     return ranked[0]?.end ?? null;
@@ -228,7 +228,7 @@ export function processRelease(release: ReleaseContext, exhibits: ExhibitInput[]
     tableCount += tables.length;
     candidates.push(...findStatementCandidates(tables, release.fiscalPeriodEnd));
   }
-  const joined = joinStatementCandidates(candidates).sort((a, b) => statementOrder[a.kind] - statementOrder[b.kind] || a.tables[0].sourceFile.localeCompare(b.tables[0].sourceFile) || a.tables[0].tableIndex - b.tables[0].tableIndex);
+  const joined = joinStatementCandidates(candidates, release.fiscalPeriodEnd).sort((a, b) => statementOrder[a.kind] - statementOrder[b.kind] || a.tables[0].sourceFile.localeCompare(b.tables[0].sourceFile) || a.tables[0].tableIndex - b.tables[0].tableIndex);
   const currentPeriodEnd = chooseCurrentPeriodEnd(joined, release.fiscalPeriodEnd);
   const statements: StatementRecord[] = [];
   const values: ValueRecord[] = [];

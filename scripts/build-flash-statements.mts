@@ -62,12 +62,23 @@ const codeFiles = ["scripts/build-flash-statements.mts", "scripts/check-flash-go
 const codeHash = createHash("sha256");
 for (const file of codeFiles.slice().sort()) codeHash.update(file).update("\0").update(readFileSync(file));
 const codeFingerprint = codeHash.digest("hex");
-const previousCodeFingerprint = (() => {
+const previousManifest = (() => {
   try {
-    const value = JSON.parse(readFileSync(path.join(outputRoot, "manifest.json"), "utf8")).codeHash;
-    return typeof value === "string" ? value : null;
+    return JSON.parse(readFileSync(path.join(outputRoot, "manifest.json"), "utf8")) as { codeHash?: unknown; codeCommit?: unknown };
   } catch {
     return null;
+  }
+})();
+const previousCodeFingerprint = typeof previousManifest?.codeHash === "string" ? previousManifest.codeHash : null;
+const pipelineFiles = codeFiles.filter((file) => file !== "scripts/build-flash-statements.mts" && file !== "worker/lib/flash-extract.ts");
+const previousPipelineUnchanged = (() => {
+  const previousCommit = previousManifest?.codeCommit;
+  if (typeof previousCommit !== "string" || !/^[\da-f]{40}$/.test(previousCommit)) return false;
+  try {
+    execFileSync("git", ["diff", "--quiet", previousCommit, "--", ...pipelineFiles], { stdio: "pipe" });
+    return true;
+  } catch {
+    return false;
   }
 })();
 const goldenDocuments = (JSON.parse(readFileSync("docs/engine/tasks/K03-golden.json", "utf8")) as { documents: GoldenDocument[] }).documents;
@@ -179,7 +190,7 @@ function cacheFile(release: ReleaseContext): string {
 function readCached(release: ReleaseContext, exhibits: ExhibitInput[]): ProcessReleaseResult | null {
   try {
     const cached = JSON.parse(readFileSync(cacheFile(release), "utf8")) as CachedRelease;
-    const compatibleCode = cached.codeHash === codeFingerprint || cached.codeHash === previousCodeFingerprint;
+    const compatibleCode = cached.codeHash === codeFingerprint || cached.codeHash === previousCodeFingerprint && previousPipelineUnchanged;
     if (cached.schemaVersion !== 1 || !compatibleCode || cached.inputSha256 !== inputHash(exhibits) || cached.cacheable === false || JSON.stringify(cached.context) !== JSON.stringify(release)) return null;
     return cached.result;
   } catch {
@@ -287,7 +298,7 @@ async function main() {
     if (checkOnly || ticker || accession || limit !== null) {
       const ordered = releases.map((release) => results.get(release.accessionNo)!);
       const summary = buildFlashSummary({ releases, results: ordered, generatedAt: new Date().toISOString(), codeCommit, codeHash: codeFingerprint, goldenDocuments, run, artifacts: {} });
-      console.log(JSON.stringify({ coverage: summary.coverage.overall, naming: summary.naming.overall, grades: summary.grades.overall, mismatchPatterns: summary.grades.mismatchPatterns, golden: summary.golden, pointInTime: summary.pointInTime, errors: summary.errors }, null, 2));
+      console.log(JSON.stringify({ coverage: summary.coverage.overall, naming: summary.naming.overall, grades: summary.grades.overall, mismatchPatterns: summary.grades.mismatchPatterns, periodMismatches: summary.periods.mismatches, golden: summary.golden, pointInTime: summary.pointInTime, errors: summary.errors }, null, 2));
       if (goldenOnly && summary.golden.failed.length) process.exitCode = 1;
       return;
     }

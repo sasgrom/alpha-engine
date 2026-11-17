@@ -72,4 +72,12 @@ describe("flash release pipeline", () => {
     expect(result.coverage.currentPeriodEnd).toBe("2026-09-26");
     expect(result.coverage.periodMatch).toBe(true);
   });
+
+  it("selects the expected date within a statement instead of its latest date", () => {
+    const document = `<p>Consolidated Statements of Income</p><table><tr><td></td><td>First Quarter</td><td>First Quarter</td></tr><tr><td></td><td>March 31, 2011</td><td>April 11, 2011</td></tr><tr><td>Revenue</td><td>100</td><td>90</td></tr><tr><td>Operating income</td><td>20</td><td>18</td></tr></table>`;
+    const release: ReleaseContext = { cik: 1, ticker: "AAA", accessionNo: "within-table-period", filingDate: "2011-04-20", acceptedEt: null, fiscalPeriodEnd: "2011-03-31", periodicAccession: null, periodicForm: null };
+    const result = processRelease(release, [{ file: "periods.htm", sha256: sourceSha256(document), html: document }], buildFactIndex([]));
+    expect(result.coverage.currentPeriodEnd).toBe("2011-03-31");
+    expect(result.coverage.periodMatch).toBe(true);
+  });
 });
