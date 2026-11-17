@@ -301,4 +301,75 @@ describe("flash HTML table reading", () => {
     const monthYear = `<p>Comprehensive Income Statement</p><table><tr><td>March 2024</td><td>Comments on Monthly Results</td></tr><tr><td>Revenue</td><td>100</td></tr><tr><td>Operating income</td><td>20</td></tr></table>`;
     expect(firstCandidate(monthYear, "2024-03-31").columns).toEqual([expect.objectContaining({ months: 1, periodEnd: "2024-03-31", confidence: "expected_period" })]);
   });
+
+  it("reads day-first abbreviated years and ordinal quarter labels", () => {
+    expect(fullDates("31 DEC 2019")).toEqual(["2019-12-31"]);
+    const axon = `<p>Consolidated Statements of Operations</p><table>
+      <tr><td></td><td colspan="3">Three Months Ended</td></tr>
+      <tr><td></td><td>31 DEC 2019</td><td>30 SEP 2019</td><td>31 DEC 2018</td></tr>
+      <tr><td>Net sales</td><td>171851</td><td>130837</td><td>114791</td></tr>
+      <tr><td>Operating income</td><td>500</td><td>400</td><td>300</td></tr>
+    </table>`;
+    expect(firstCandidate(axon, "2019-12-31").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2019-12-31"], [3, "2019-09-30"], [3, "2018-12-31"]]);
+    const devon = `<p>Consolidated Statements of Earnings</p><table>
+      <tr><td></td><td>2022</td><td>2021</td></tr>
+      <tr><td></td><td>Quarter 3</td><td>Quarter 3</td></tr>
+      <tr><td>Total revenues</td><td>5432</td><td>3812</td></tr>
+      <tr><td>Operating income</td><td>500</td><td>400</td></tr>
+    </table>`;
+    expect(firstCandidate(devon, "2022-09-30").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2022-09-30"], [3, "2021-09-30"]]);
+  });
+
+  it("reads explicit word-quarter years and rejects narrative-only statements", () => {
+    const wabtec = `<p>CONDENSED CONSOLIDATED STATEMENT OF OPERATIONS</p><table>
+      <tr><td></td><td>Fourth Quarter 2008</td><td>Fourth Quarter 2007</td><td>For the Year End 2008</td><td>For the Year End 2007</td></tr>
+      <tr><td>Net sales</td><td>405211</td><td>365268</td><td>1574749</td><td>1360088</td></tr>
+      <tr><td>Operating income</td><td>500</td><td>400</td><td>2000</td><td>1800</td></tr>
+    </table>`;
+    expect(firstCandidate(wabtec, "2008-12-31").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2008-12-31"], [3, "2007-12-31"], [12, "2008-12-31"], [12, "2007-12-31"]]);
+    const bullets = `<table><tr><td>•</td><td>Revenue of $7.85 billion</td></tr><tr><td>•</td><td>Operating loss of $849 million</td></tr><tr><td>•</td><td>Net loss of $876 million</td></tr><tr><td>•</td><td>Loss per share of $2.82</td></tr></table>`;
+    expect(joinStatementCandidates(findStatementCandidates(parseExhibitHtml(bullets, "fixture.htm", "fixture"), "2009-05-31"), "2009-05-31")).toEqual([]);
+    const footnote = `<p>CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS</p><table><tr><td>*</td><td>Not meaningful</td></tr></table>`;
+    expect(joinStatementCandidates(findStatementCandidates(parseExhibitHtml(footnote, "fixture.htm", "fixture"), "2023-05-31"), "2023-05-31")).toEqual([]);
+  });
+
+  it("joins a split statement after long unrelated narrative", () => {
+    const narrative = `${"Adjusted free cash flow is defined elsewhere in this release. ".repeat(5)} Consolidated Statement of Cash Flows`;
+    const html = `<p>TABLE 1 Condensed Consolidated Statement of Income (Unaudited)</p><table><tr><td>TABLE 1 Condensed Consolidated Statement of Income (Unaudited)</td></tr></table>
+      <p>${narrative}</p><table>
+      <tr><td></td><td colspan="2">Three Months Ended</td><td colspan="2">Six Months Ended</td></tr>
+      <tr><td></td><td colspan="2">June 30,</td><td colspan="2">June 30,</td></tr>
+      <tr><td></td><td>2012</td><td>2013</td><td>2012</td><td>2013</td></tr>
+      <tr><td>Revenue</td><td>15211</td><td>16270</td><td>30089</td><td>31580</td></tr>
+      <tr><td>Operating income</td><td>3079</td><td>3435</td><td>5837</td><td>6502</td></tr>
+    </table>`;
+    const candidates = joinStatementCandidates(findStatementCandidates(parseExhibitHtml(html, "fixture.htm", "fixture"), "2013-06-30"), "2013-06-30");
+    expect(candidates).toHaveLength(1);
+    expect(candidates[0].tables).toHaveLength(2);
+    expect(candidates[0].columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2012-06-30"], [3, "2013-06-30"], [6, "2012-06-30"], [6, "2013-06-30"]]);
+  });
+
+  it("reads apostrophe quarter years, numbered qtr labels and month-only headers", () => {
+    const americanExpress = `<p>Consolidated Statements of Income</p><table>
+      <tr><td></td><td>Q1'17</td><td>Q4'16</td><td>Q1'16</td></tr>
+      <tr><td>Non-interest revenues</td><td>4519</td><td>4697</td><td>4643</td></tr>
+      <tr><td>Net income</td><td>500</td><td>400</td><td>450</td></tr>
+    </table>`;
+    expect(firstCandidate(americanExpress, "2017-03-31").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2017-03-31"], [3, "2016-12-31"], [3, "2016-03-31"]]);
+    const ameriprise = `<p>Consolidated GAAP Results</p><table>
+      <tr><td></td><td>1 Qtr 2021</td><td>1 Qtr 2020</td><td>4 Qtr 2020</td></tr>
+      <tr><td>Revenues</td><td>2102</td><td>1770</td><td>2003</td></tr>
+      <tr><td>Net income</td><td>500</td><td>400</td><td>450</td></tr>
+    </table>`;
+    expect(firstCandidate(ameriprise, "2021-03-31").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2021-03-31"], [3, "2020-03-31"], [3, "2020-12-31"]]);
+    const fifthThird = `<p>Consolidated Statements of Income</p><table>
+      <tr><td></td><td colspan="3">For the Three Months Ended</td><td>Year to Date</td></tr>
+      <tr><td></td><td>September</td><td>June</td><td>September</td><td>September</td></tr>
+      <tr><td></td><td>2018</td><td>2018</td><td>2017</td><td>2018</td></tr>
+      <tr><td>Total revenue</td><td>1000</td><td>900</td><td>950</td><td>2800</td></tr>
+      <tr><td>Net income</td><td>500</td><td>400</td><td>450</td><td>1400</td></tr>
+    </table>`;
+    expect(firstCandidate(fifthThird, "2018-09-30").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2018-09-30"], [3, "2018-06-30"], [3, "2017-09-30"], [9, "2018-09-30"]]);
+    expect(firstCandidate(fifthThird, "2018-09-29").columns).toEqual([]);
+  });
 });
