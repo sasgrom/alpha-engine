@@ -81,7 +81,7 @@ download documents or use a model. Each release is checkpointed under
 `D:\research\alpha-engine\engine\flash-rest\releases\`; no checkpoint or output falls back to C:.
 
 ```powershell
-npx tsx scripts/build-flash-statements.mts --filings D:/research/alpha-engine/engine/events/filings-rest.jsonl --filings D:/research/alpha-engine/engine/events/filings-six.jsonl --quarters D:/research/alpha-engine/engine/events/quarters-rest.jsonl --quarters D:/research/alpha-engine/engine/events/quarters-six.jsonl --output D:/research/alpha-engine/engine/flash-rest --summary research/engine/flash-statements-rest.summary.json --extract D:/research/alpha-engine/engine/flash-rest/flash-quarter-rest.jsonl
+npx tsx scripts/build-flash-statements.mts --filings D:/research/alpha-engine/engine/events/filings-rest.jsonl --filings D:/research/alpha-engine/engine/events/filings-six.jsonl --quarters D:/research/alpha-engine/engine/events/quarters-rest.jsonl --quarters D:/research/alpha-engine/engine/events/quarters-six.jsonl --universe D:/research/alpha-engine/engine/events/universe-rest.json --universe D:/research/alpha-engine/engine/events/universe-six.json --output D:/research/alpha-engine/engine/flash-rest --summary research/engine/flash-statements-rest.summary.json --extract D:/research/alpha-engine/engine/flash-rest/flash-quarter-rest.jsonl
 ```
 
 After an interruption, first confirm that D: is mounted and the calendar files and `flash-rest` directory are
