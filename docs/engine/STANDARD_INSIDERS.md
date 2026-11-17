@@ -155,12 +155,12 @@ do not become false precision differences.
 Sequoia group check, no PIT violations, at least three amendment examples, a clean legacy-cache comparison, exact 2025
 coverage, zero rounding failures beyond half a cent, and no unresolved reconciliation conflict.
 
-`load-insiders.mts` accepts only a passed artifact whose build version and lab commit match. It verifies all table
-schemas and SHA256 hashes, stages each table in batches of at most 500 rows, checks counts, and reads back 500 complete
-rows per data table (2,000 total). JSON objects are compared by recursively sorted keys with array order preserved,
-because MySQL may reorder object keys without changing their values. Only then is the single provisional build row
-written and the five-table atomic swap performed. Existing live data is not replaced before those checks pass. A final
-build refuses replacement.
+`load-insiders.mts` accepts only a passed artifact whose build version and recorded artifact code match. The loader's
+commit is recorded separately in `inputs.loaderCodeCommit`. It verifies all table schemas and SHA256 hashes, stages each
+table in batches of at most 500 rows, checks counts, and reads back 500 complete rows per data table (2,000 total). JSON
+objects are compared by recursively sorted keys with array order preserved, because MySQL may reorder object keys without
+changing their values. Only then is the single provisional build row written and the five-table atomic swap performed.
+Existing live data is not replaced before those checks pass. A final build refuses replacement.
 
 The database build row stores compact provenance rather than the full multi-hundred-megabyte evidence arrays. It keeps
 source gaps, paired-group identities, acceptance counts, and SHA256 references to the complete D: artifacts in
@@ -168,8 +168,14 @@ source gaps, paired-group identities, acceptance counts, and SHA256 references t
 artifact hashes, every table count, an empty staging build table, and all 2,000 complete sampled rows before writing
 the new build row and swapping. A mismatch prevents the swap; no resume is attempted implicitly.
 
+`--resume-partial` handles a stopped partial table explicitly. It verifies every existing staged ID against the same
+artifact's prefix and inserts only the remainder, never truncating or skipping unverified rows. `--artifact-code`
+identifies the builder when loader code has changed; the loader's own commit is retained separately. Full counts, the
+2,000-row read-back, positive filed-issuer checks and atomic swap remain mandatory.
+
 `verify-insiders-load.mts` independently checks live counts, unique identities, 2,000 full rows with a different seed,
-availability, duplicate counts, exactly one provisional build, and absence of `_next`/`_old` tables.
+availability, duplicate counts, positive `filedIssuerCik`, weekend availability, XOM recovery, exactly one provisional
+build, and absence of `_next`/`_old` tables.
 
 Run from the main repository so the research connection reads its configured environment without printing it:
 
@@ -357,3 +363,106 @@ preserved; no acceptance or live replacement occurred from them. A representativ
 
 The provisional staged load and its independent live verification are reported below. **i1.1 remains provisional
 pending Claude's review, even after a successful provisional load.**
+
+
+## 11. G1 — predecessor identity and traded-line guardrails
+
+Claude's review (`20261116-200416-claude-i11-review.md`) found that CIK 919567 is **RENN Fund, Inc.**, not Texas
+Pacific Land. Its raw `ISSUERNAME` is `RENN Fund, Inc.` and its dominant symbol is RCG on 99.798% of raw filings; a
+single shared owner and two TPL-symbol filings were insufficient evidence. The earlier i1.1 TPL lines must not be used.
+Claude's subsequent price-continuity review also rejected CDW 899171: the old equity was taken private, whereas the
+registry company's standard prices begin at the new listing on 2013-06-27. Its earlier pre-IPO insider rows are not part
+of the current traded line. A prospectus documenting a business transition is not sufficient to join different securities.
+
+Every predecessor mapping now requires:
+- a dominant old-issuer trading symbol that is a registry-company symbol on at least **90%** of raw filings, unless a
+  documented corporate transition exists;
+- a matching normalized issuer name or documentary source when fewer than three owners are shared, or when the old CIK
+  continues filing in parallel;
+- at least **60 actual standard-price sessions for that registry company** before the first new-CIK filing. XOM's old CIK
+  remains active, so its reference is the latest old-CIK filing. Weekend dates are excluded. The builder independently
+  recomputes every count from `std_prices` and rejects stale supplied evidence;
+- explicit rejected-candidate evidence, including the reason and measured continuity, rather than silent removal.
+
+The retained weak mappings have explicit evidence: Texas Pacific Land Trust/Corporation names normalize to the same name;
+Alphabet's 2015-10-02 8-K12B names Alphabet as Google's successor issuer; XOM has a documented predecessor hint. FOX
+1308161 remains unmapped because it belongs to a different traded line. The accepted lineage is
+`D:\research\alpha-engine\insiders\predecessors\20261116T223012Z\predecessors.json`, SHA256
+`3c90d7120a677b0b53f34bda3020ea1497571ad8f762c0f7cfba94c60d6abf57`: **27 mappings**, zero collisions, zero
+unresolved late histories and **1,680 XOM filings**. CDW is its sole price-continuity rejection, with zero prior sessions;
+TPL 97517 has 815. Raw quarter, registry, audit and documentary-evidence hashes are unchanged from the preceding audit.
+
+The failed intermediate lineage `20261116T222201Z` used the union of all companies' sessions, retained CDW and was
+rejected before building or loading. This failure is preserved for audit. Earlier candidates `20261116T212155Z` and
+`20261116T215316Z` were likewise not loaded. The current builder is lab commit
+`8c2a2606c8db34663a5617733157e630a959463a`. Its explicit `--cached-source-links` option avoids refreshing SEC metadata;
+all 83 raw ZIPs were reused and EDGAR reused its XML/header files. The first registry-lineage mismatch stopped before
+model writes; normalization then established the corrected source registry before rebuilding.
+
+## 12. Corrected artifact and scoped comparison — 2026-11-16
+
+The artifact is `D:\research\alpha-engine\insiders\std\20261116T223552Z`, **i1.1.20261116**, with `status=built` and
+`gates.stage=ready_for_staged_load`. It contains **760,667 filings, 780,157 owner rows, 2,045,254 transaction lines,
+24,846 persons and all 501 companies**, with zero companies without filings and **153,923 duplicate trades**. Build SHA256
+`7a215c5ec6433535e79d837e3d6aff75268fe1eeee2584e7c028d653e50c5eb7`; gates SHA256
+`3009d02fe34904274743d01d139ec030e490744b267d91ac155f4e654ce93912`.
+
+The comparison with `20261116T163802Z` is `g1-comparison.json`, SHA256
+`773a743fe9fe8256872e9a64670845b436bedb354bb262976ee1267b82ca12b4`. It proves:
+- TPL removes exactly **1,589 RENN filings, 1,591 owner rows and 7,230 transaction lines**. CDW removes exactly **98
+  filings, 112 owner rows and 328 transaction lines** filed under 899171.
+- No row filed under 919567 or 899171 remains anywhere in the new filings, owners or transactions. Filing, owner and
+  transaction rows outside TPL/CDW are exactly identical.
+- TPL has 6,728 shared lines and CDW 1,629; missing/unexpected lines, unexplained field differences, duplicate changes
+  and owner-group violations are all zero. Only 57 false `ambiguous_original_date` flags disappeared at TPL.
+- Exactly 1,703 rejected owner rows were removed from the old person histories and the remainder reaggregated. The new
+  artifact matches that computation for every person: **24,807 unchanged, 31 removed, 39 changed and zero unexplained**.
+  Shared people retain their genuine roles at other companies.
+
+Legacy XML/cache acceptance is **55,510/55,510**, zero substantive or precision mismatches; its SHA256 is
+`c11a678a99969a378f607fbc16f0ca16d52b2b77b8c391376bee64f54fa22e95`. The ten-company 2025 check used **zero new
+requests and 12 cached responses**, with zero missing/extra accessions; SHA256
+`c8c5fea062d4b9017320ca6963089a8eb682e7c521e9d5de85e41ea61cd5d06a`. The withdrawn accession retains its three 404
+archive attempts. All nine insider suites (**91 tests**) and standalone TypeScript pass; main TypeScript, **260 files /
+1,449 tests**, and the production build pass. The provisional load, independent live verification and Claude's review
+are recorded in section 13, together with Claude's acceptance and the final live evidence.
+
+Reproduction sequence:
+
+```powershell
+npx tsx C:/dev/alpha-engine-lab/src/insiders/predecessor-discovery.mts --out D:/research/alpha-engine/insiders/predecessors/20261116T223012Z
+npx tsx C:/dev/alpha-engine-lab/src/insiders/sec-bulk.mts --cached-source-links --predecessor-map D:/research/alpha-engine/insiders/predecessors/20261116T223012Z/predecessors.json
+npx tsx C:/dev/alpha-engine-lab/src/insiders/edgar-insiders.mts --since 2026-10-01 --until 2026-11-13 --predecessor-map D:/research/alpha-engine/insiders/predecessors/20261116T223012Z/predecessors.json
+npx tsx C:/dev/alpha-engine-lab/src/insiders/build-insiders.mts --out D:/research/alpha-engine/insiders/std/20261116T223552Z --build-version i1.1.20261116 --predecessor-map D:/research/alpha-engine/insiders/predecessors/20261116T223012Z/predecessors.json --allow-missing-accession 0001999371-26-023092
+npx tsx C:/dev/alpha-engine-lab/src/insiders/insider-acceptance.mts cache D:/research/alpha-engine/insiders/std/20261116T223552Z
+npx tsx C:/dev/alpha-engine-lab/src/insiders/insider-acceptance.mts coverage2025 D:/research/alpha-engine/insiders/std/20261116T223552Z
+npx tsx C:/dev/alpha-engine-lab/src/insiders/insider-acceptance.mts finalize D:/research/alpha-engine/insiders/std/20261116T223552Z
+npx tsx worker/.runs/k20-g1-compare.mts D:/research/alpha-engine/insiders/std/20261116T163802Z D:/research/alpha-engine/insiders/std/20261116T223552Z
+```
+
+## 13. Final acceptance and live evidence — 2026-11-17
+
+Claude accepted artifact `20261116T223552Z` in `20261116-231625-claude-i11-accepted.md`, conditional on the staged
+load and independent live check matching it. Those conditions are now met: **3,610,925 rows** were inserted in batches
+of at most 500, the five-table swap completed, and the old staging tables were removed. The load checked **2,000 complete
+rows with zero mismatches**. `load-summary.json` SHA256 is
+`5d48d9d207c531c232c9bedbb00a665978fd09cb71966469f0bc6a034313a02e`.
+
+The independent live check has a different sampling seed and also checked 2,000 complete rows with zero mismatches.
+It confirms the exact counts above, zero availability violations, zero weekend availability, zero missing/invalid filed
+issuer CIKs, 1,680 recovered XOM filings, 153,923 duplicate trades and no `_next`/`_old` tables. Its verified timestamp is
+`2026-11-17T02:11:39.493Z`; SHA256 is `f6aa886f746c3416e8344eddb38fa37626740a6b4ec343bba6234641890c63b6`.
+
+The single local research build row was then changed transactionally from `provisional` to **final**, after checking its
+builder, source directory, counts and every stored table hash against the accepted artifact. Finalization timestamp
+`2026-11-17T02:14:36.722Z`; `finalization.json` SHA256
+`5a0425500c7a2add7e13aef867ad2da90cb7192ec81022ce25b71e0f11e7cd8a`. This is a local research-data status change,
+not a production write or model/factor promotion.
+
+Claude also corrected the earlier owner-group attribution: on TPL's 6,223 lines shared with i1, the **17-group partition
+is unchanged**. One group was legitimately relabelled through Trust 97517 history, covering 5,917 lines; the other nine
+label changes are AVGO. RENN did not cause those group changes. RENN's actual effects were the 7,230 removed lines and
+57 false ambiguity flags. Handoff section 193 carries this correction to section 190.
+
+The false p1 price session 2007-01-06 and TPL's price coverage beginning only on 2017-10-13 remain separate
+owner-decision issues. K20 changed no price rows, production data, app database, scheduler or model settings.
