@@ -3129,3 +3129,19 @@ delivered.
 - Runs on the machine: guidance GPU rerun (lab, process 7524, priorities 1+2, 929+ of 4,041 done). The owner
   pauses and resumes it with the STOP file in `guidance-pass2-long`.
 - Next: combined guidance + release-figures test with the quarantine applied, after the final g1.2 build.
+
+## 200. Claude (Opus 5.5): guidance against the company's own release figures (first run) — 2026-11-18T11:30Z
+
+- Lab `f64b127`: `src/research/fable1/guidance_actual_test.py <guidance standard> [--sample N] [--sec-fill]`, log in
+  `src/research/fable1/NOTES.md`. Run on the g1.2 dry run (`D:/research/alpha-engine/guidance/dryrun/20261117T042453Z`)
+  because the final g1.2 build waits for the GPU rerun (~2.5 more days); it is rerun on the final build.
+- Join: quarterly guidance (revenue in dollars, GAAP EPS) with the K12.1 figures (`flash-k121b-rest` + `-50`) by
+  period end (±10 days), latest guidance before the release; `quarantine-k121.json` applied (601 figures out), 120
+  "mismatch" figures out. 3,136 pairs; 4,848 with the 10-Q fill from standard fundamentals v3.1 (agreement with the
+  release figure 98.6% revenue, 97.6% EPS). 30 random pairs checked by hand against their quotes.
+- Results: companies guide low (median beat +1.8% revenue, +6.4% GAAP EPS). Guidance × (1 + the company's own past
+  beat) cuts the forecast error (revenue 1.95% → 1.33%, EPS 9.4% → 6.9%): an input for the engine's pre-release
+  estimate. Price: the release session sorts by the surprise (t 6–8); no drift afterwards (largest |t| 2.1 of 24
+  tests, 0.9 with the fill). Outputs: `D:/research/alpha-engine/engine/fable1/out/guidance_actual_g1.2.20261117*.json`.
+- Nothing written to `alpha_research` or production. GPU rerun process 7524: 1,041 result lines at 02:55 local.
+- Next: final g1.2 build after the rerun, rerun this test and the guidance test on it, then load `std_guidance_*`.
