@@ -3179,3 +3179,29 @@ delivered.
   only the revenue and EPS miss against guidance (192 switches, the fund better in 63%, +4.5% each against +1.0%
   for random placement, none of 2,000 draws as good). The two real figures as levels fail the control (p 0.74).
 - Meaning for the build: score stage 1 on real minus expected. Nothing written to `alpha_research` or production.
+
+## 203. Claude (Fable 5.2): power outage 2026-11-18, recovery state — 2026-11-18T22:45Z
+
+- **What happened (Windows event log):** unexpected shutdown, last heartbeat 07:09:38 local on 2026-11-18. The machine
+  came back with a stale clock (boot stamped 07:01:23) that Windows corrected to 12:22:23 local, so the real restart was
+  about 12:21 and file and process times between "07:01" and "07:03" belong to 12:21-12:23.
+- **Before the outage:** the scheduler wrote no job log after 04:41 and the GPU run's model calls timed out from
+  05:00 (four 30-minute timeouts to 07:07). Cause not established.
+- **D: after the restart:** `worker\cache` junction → `D:\alpha-engine\worker\cache`; standard prices 517 files,
+  fundamentals v3.1 500, companyfacts 503, flash-k121b builds and the guidance standard present; D: 475 GB free;
+  `quarantine-k121.json` sha256 starts f51f9742 as recorded. No cache recreated, nothing deleted.
+- **Processes:** home server and the operations scheduler started by their tasks at the restart (one scheduler chain,
+  heartbeat current, queue empty); MySQL running; Ollama running since the owner's login.
+- **GPU guidance rerun:** `results.jsonl` intact (1,141 lines, all valid JSON, ends with a newline, no duplicates):
+  1,137 finished (ok 1,062, none 75) and 4 `request_failed` that the run retries. The lock named the dead process
+  7524. Resumed on the owner's word at 14:35 local with the same command as **process 3752**
+  (`run-p12-resume4.out`); the model is loaded at 131,072 context.
+- **Schwab is blocked on the owner:** every Schwab job since the restart fails with "Refresh token is invalid, expired
+  or revoked" (HTTP 400). The token file is intact (829 bytes, written 04:34), so the seven-day refresh token has run
+  out; the owner must run the browser authorization `npx tsx worker/schwab-callback.mts` (OPERATIONS.md job 73). Until
+  then `schwab-fetch-daily`, `schwab-fetch-sp500`, `schwab-intraday`, `schwab-context-hourly` and their dependents
+  (snapshot, feature lab, daily bars, desk snapshot, analytics, UI build, data health) stay in error. Schwab today:
+  50 of 51 tickers captured at 04:34, before the outage.
+- **Other jobs since the restart:** facts, research series and factors, digest, page data, exposure evidence,
+  coverage report and Stocktwits completed. Operations report: CRITICAL only because of the Schwab chain.
+- Next: after the owner's authorization, run the Schwab chain of AGENTS.md section 4 once and rebuild the report.
