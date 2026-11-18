@@ -3130,7 +3130,7 @@ delivered.
   pauses and resumes it with the STOP file in `guidance-pass2-long`.
 - Next: combined guidance + release-figures test with the quarantine applied, after the final g1.2 build.
 
-## 200. Claude (Opus 5.5): guidance against the company's own release figures (first run) — 2026-11-18T11:30Z
+## 200. Claude (Opus 5.5): guidance against the company's own release figures (first run) — 2026-11-18T11:03Z
 
 - Lab `f64b127`: `src/research/fable1/guidance_actual_test.py <guidance standard> [--sample N] [--sec-fill]`, log in
   `src/research/fable1/NOTES.md`. Run on the g1.2 dry run (`D:/research/alpha-engine/guidance/dryrun/20261117T042453Z`)
@@ -3146,7 +3146,7 @@ delivered.
 - Nothing written to `alpha_research` or production. GPU rerun process 7524: 1,041 result lines at 02:55 local.
 - Next: final g1.2 build after the rerun, rerun this test and the guidance test on it, then load `std_guidance_*`.
 
-## 201. Claude (Fable 5.2): pooled engine iteration 4, guidance as a stage-1 input — 2026-11-18T13:30Z
+## 201. Claude (Fable 5.2): pooled engine iteration 4, guidance as a stage-1 input — 2026-11-18T12:25Z
 
 - Owner's go: "yes go ahead with the pooled engine". Lab `8bfb5de` (+ a wording fix after it): the pooled-engine
   scripts are now in the lab (`src/engine2/walk/`), with `pooled_guidance.py`; findings in
@@ -3164,7 +3164,7 @@ delivered.
   market's expectation. Analyst consensus is the missing input (the owner's open estimates pilot).
 - Nothing written to `alpha_research` or production. GPU rerun (process 7524) still running.
 
-## 202. Claude (Fable 5.2): the ceiling as real minus expected; correction to 201 — 2026-11-18T15:30Z
+## 202. Claude (Fable 5.2): the ceiling as real minus expected; correction to 201 — 2026-11-18T12:40Z
 
 - **Correction to section 201:** the guided decisions are in **150 companies** (117 guide revenue, 85 guide GAAP
   EPS), not 117. The 2,758 decisions and all other numbers stand.
@@ -3180,7 +3180,7 @@ delivered.
   for random placement, none of 2,000 draws as good). The two real figures as levels fail the control (p 0.74).
 - Meaning for the build: score stage 1 on real minus expected. Nothing written to `alpha_research` or production.
 
-## 203. Claude (Fable 5.2): power outage 2026-11-18, recovery state — 2026-11-18T22:45Z
+## 203. Claude (Fable 5.2): power outage 2026-11-18, recovery state — 2026-11-18T22:25Z
 
 - **What happened (Windows event log):** unexpected shutdown, last heartbeat 07:09:38 local on 2026-11-18. The machine
   came back with a stale clock (boot stamped 07:01:23) that Windows corrected to 12:22:23 local, so the real restart was
@@ -3194,7 +3194,7 @@ delivered.
   heartbeat current, queue empty); MySQL running; Ollama running since the owner's login.
 - **GPU guidance rerun:** `results.jsonl` intact (1,141 lines, all valid JSON, ends with a newline, no duplicates):
   1,137 finished (ok 1,062, none 75) and 4 `request_failed` that the run retries. The lock named the dead process
-  7524. Resumed on the owner's word at 14:35 local with the same command as **process 3752**
+  7524. Resumed on the owner's word at 14:25 local with the same command as **process 3752**
   (`run-p12-resume4.out`); the model is loaded at 131,072 context.
 - **Schwab is blocked on the owner:** every Schwab job since the restart fails with "Refresh token is invalid, expired
   or revoked" (HTTP 400). The token file is intact (829 bytes, written 04:34), so the seven-day refresh token has run
@@ -3206,9 +3206,10 @@ delivered.
   coverage report and Stocktwits completed. Operations report: CRITICAL only because of the Schwab chain.
 - Next: after the owner's authorization, run the Schwab chain of AGENTS.md section 4 once and rebuild the report.
 
-## 204. Claude (Fable 5.2): forecasting the miss on the guiding companies — 2026-11-19T01:30Z
+## 204. Claude (Fable 5.2): forecasting the miss on the guiding companies — 2026-11-18T22:37Z
 
-- **Correction to section 203:** the GPU rerun restarted at 14:25 local (process 3752), not 14:35.
+- **Correction to sections 200-204:** their header times were my estimates and are now the commit times; section 203
+  said the GPU rerun restarted at 14:35 local, the run log says 14:25 (process 3752).
 - Owner's go: "go ahead with 150 companies". Lab `src/engine2/walk/miss_forecast.py`, findings appended to
   `docs/findings-pooled-guidance-2026-11-18.md`. Runs `D:/research/alpha-engine/engine/walk/m1` (first) and `m2`
   (read this one, percent targets), logs in `walk/logs`.
