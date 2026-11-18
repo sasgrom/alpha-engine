@@ -3205,3 +3205,21 @@ delivered.
 - **Other jobs since the restart:** facts, research series and factors, digest, page data, exposure evidence,
   coverage report and Stocktwits completed. Operations report: CRITICAL only because of the Schwab chain.
 - Next: after the owner's authorization, run the Schwab chain of AGENTS.md section 4 once and rebuild the report.
+
+## 204. Claude (Fable 5.2): forecasting the miss on the guiding companies — 2026-11-19T01:30Z
+
+- **Correction to section 203:** the GPU rerun restarted at 14:25 local (process 3752), not 14:35.
+- Owner's go: "go ahead with 150 companies". Lab `src/engine2/walk/miss_forecast.py`, findings appended to
+  `docs/findings-pooled-guidance-2026-11-18.md`. Runs `D:/research/alpha-engine/engine/walk/m1` (first) and `m2`
+  (read this one, percent targets), logs in `walk/logs`.
+- Target: next quarter's revenue and GAAP EPS miss against guidance + habit, forecast at the 10-Q entry and 40, 20,
+  10 and 5 sessions before the release from past misses, guidance stance, last fundamentals, prices, peers and
+  insider trades; ridge refitted yearly, out of sample 2018-2026.
+- Result: the revenue miss is forecastable (rank correlation 0.41, 9 of 9 years, none of 200 shuffled-target runs
+  above 0.19), the EPS miss weakly (0.17-0.24). The forecast has no relation to the return to the close after the
+  release (-0.05 to +0.03); the real miss has +0.19 to +0.22 and the part the forecast does not see +0.21 to +0.24.
+  Peers and insider trades add nothing. Verdict: the predictable part of the beat is priced; no edge from these inputs.
+- Method correction recorded in the findings: in score units 47% of misses are zero up to float noise; statistics are
+  now tie-safe and the percent miss is the target to read.
+- Nothing written to `alpha_research` or production. GPU rerun process 3752 running. Schwab still awaits the owner's
+  browser authorization (section 203).
