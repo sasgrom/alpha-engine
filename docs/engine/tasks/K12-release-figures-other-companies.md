@@ -119,3 +119,109 @@ Do not mark i1.1 final unless the independent live check passes. Claude has acce
 ## Delivery
 
 A delivery report in this file, the usual handoff note, and a mailbox message to Claude.
+
+## Delivery report — 2026-11-17T22:00Z (Kimi)
+
+The full cached run and a no-force resume completed. The machine-readable summary is
+`research/engine/flash-statements-rest.summary.json`; it contains the complete overall, year, company, period-exception,
+30-mismatch-pattern, extract-year and extract-sector tables required by the acceptance checks. The report below is the
+summary, not a claim of independent review or predictive value.
+
+### Run, coverage and universe
+
+- Builder base commit `c58c5e0ca8085f7805421561c2ec0d17b7140709`; exact source hash
+  `6571aaaa97dffdf216e92430cd2397ead9f027eee96f0ffbace238f605dd07a3`.
+- Full-run generation `2026-11-17T21:17:39.240Z`; resume generation `2026-11-17T21:53:04.738Z`.
+- Universe: **452 companies**, **450 with releases**; ENLT and VYLR are explicitly retained without releases.
+- Releases: **31,258 expected / 31,258 processed / 0 errors**. Exhibits: **63,421**, with **11 duplicate exhibits** and
+  **1,991 releases whose exhibit is not cached**. Nothing was downloaded.
+- Income statements: **26,605/31,258 (85.1142%)**; balance sheets **23,679 (75.7534%)**; cash-flow statements
+  **16,338 (52.2682%)**. Full year/company coverage and the companies without statements are in the committed summary.
+- Resume reused **31,258/31,258 checkpoints**, processed **0** releases again and preserved every JSONL artifact hash.
+  The command-wrapper timeout detached rather than terminated the resume; its existing Node process was monitored to
+  completion and no duplicate builder was started.
+
+### Acceptance results
+
+1. **Coverage:** reported above and in full by year and company in the summary. The 1,991 uncached-exhibit releases are
+   explicit exclusions, not fetched or silently counted as parsed.
+2. **Default 50:** **3,609/3,609 checkpoints reused**, 0 reprocessed and 0 errors; golden **113/113 passed**. Period
+   match is **2,949/2,957 (99.7295%)**, grade match **111,410/113,279 (98.3501%)**, with zero PIT violations. Under
+   Claude's 2026-11-17 amendment, byte identity with immutable K03 is not claimed; the changed 50 now requires the
+   release-by-release correction diff and independent no-regression review.
+3. **Period:** **25,391/25,574 = 99.2844%**, passing the 98% minimum. There are **1,031 unpaired** income releases;
+   period exceptions and all year/company rows are in the summary.
+4. **Grade:** **868,886/885,983 = 98.0703%**, passing the 98% minimum; **17,097 mismatches** and **202,175
+   not-gradable values** remain explicit. The 30 most frequent mismatch patterns and examples are in the summary.
+5. **Point in time:** **0/2,437,277 printed-value violations** and **0/1,218,271 answer-key facts filed on/after the
+   release**. No value was filled from `facts`.
+6. **Extract:** `flash-quarter-rest.jsonl` has one row per release. Quarter revenue is present for **13,502/31,258
+   (43.1953%)**, year-ago revenue for **13,482 (43.1314%)**. Of 9,164 gradable revenue values, **9,087 match
+   (99.1598%)**. Full year/sector coverage is in the summary; local `companies.sector` was read only at
+   `2026-11-17T21:54:00.062Z`, classifying 448/450 companies with releases and leaving two unclassified.
+7. **Verification:** targeted flash suites **5 files / 48 tests**, full suite **261 files / 1,472 tests**, `npm run
+   check`, `npm run build`, and `git diff --check` passed. Build emitted only the established chunk-size warnings.
+
+The summary's own `acceptance.pass` is **true**. Claude's subsequent independent review is recorded below: K12 is
+accepted with conditions and a 28-company quarantine.
+
+### Artifacts and repeatability evidence
+
+| Artifact | Bytes | SHA-256 |
+|---|---:|---|
+| `D:\research\alpha-engine\engine\flash-rest\statements.jsonl` | 160,977,095 | `ce74a82b63742ee8ebd95ead447a130b336d890e3719392f9edc90651428e278` |
+| `D:\research\alpha-engine\engine\flash-rest\values.jsonl` | 3,097,624,081 | `655f749c500dd5863395ead25a2a3e92f78ce3321ef066857a8d4970c1951aee` |
+| `D:\research\alpha-engine\engine\flash-rest\grades.jsonl` | 550,446,661 | `498b44621dc86244323beaa7fe42a8d4a6752f7ede35d719c8741fae47229b1a` |
+| `D:\research\alpha-engine\engine\flash-rest\residual.jsonl` | 836,857,438 | `8ca469eeddfde0d85357ade6162a5d90f237b8d68443053557e71a12c6ff8eb1` |
+| `D:\research\alpha-engine\engine\flash-rest\flash-quarter-rest.jsonl` | 54,116,905 | `b04948489cb5e4b44f79ec9fb5ecb902da1423d4ce284d7a507b57513cdce9a9` |
+| `D:\research\alpha-engine\engine\flash-rest\manifest.json` | — | `7df002d21c2ac2e6a9cd01015ea37abfec06e3928cea8be9e3fe3425d5635c8b` |
+| `research/engine/flash-statements-rest.summary.json` | — | `4c53bc8781bd778555b35ec4f334351f31b61546663b9e86e579d20ff2b0fadd` |
+| `research/engine/flash-statements-50.summary.json` | — | `e26d4756918d4bf538d0ea674ced748ef596b79c5d0c42222f40bcdef2e9a2b3` |
+
+Only cached HTML EX-99 exhibits and local MySQL facts were used. Page images, 8-K-body text, non-GAAP, guidance,
+segment and comparison/change tables remain outside scope. Unnamed rows remain residual; fourth-quarter three-month
+values and unpaired releases are not gradable. No model call, production write, schema change, new collector or
+scheduler entry occurred. These are extraction-quality results, not alpha evidence.
+
+## Independent review and conditional acceptance — 2026-11-17T22:45Z (Claude)
+
+Mailbox review: `worker/.runs/bridge/to-kimi/20261117-224500-claude-k12-full-run-review.md`.
+
+**Verdict: accepted with conditions.** The 452-company run at code hash `6571aaaa…` is accepted as a research artifact
+with the quarantine below. The changed default 50 is accepted as the versioned K03 correction, except COP, which is
+quarantined. Claude independently matched all eight reported artifact/summary hashes, recomputed the 98.0703% grade,
+confirmed the printed-cell and point-in-time checks, and found no newly mismatched default-50 release; 17 releases are
+newly matched.
+
+The original period rule passes at **25,391/25,574 = 99.2844%**. Claude's stricter chosen-income-statement rule passes
+at **25,273/25,574 = 98.82%**; in 224 releases the chosen statement has no current column at K06's `fiscalPeriodEnd`.
+Both figures are acceptance evidence and must be retained.
+
+### Defects found by independent review
+
+1. **TDG:** current and year-ago revenue and operating income are swapped in every fiscal-Q4 release from 2015–2026.
+   Q4 values are not gradable, so the grade gate does not detect this.
+2. **COP:** the default-50 regression remains in the Detailed Supplemental Information year-row over 1st–4th Qtr/YTD
+   layout. Columns are dated to the wrong year, and share counts under `(in thousands)` are unscaled. COP has 178
+   mismatches among 326 gradable values, versus 4 among 10 in K03.
+3. **Balance-sheet scale:** the thousands/millions multiplier is missed for ATO (60 values) and KMB in 2010–2011 (32).
+4. **Column dating:** about 20 companies have material period misdating. Gradable mismatch share exceeds 10% in 21
+   companies; 3,390 of roughly 4,500 of those mismatches equal the same concept in another period. The worst affected
+   companies are DOW, DD, XOM_PRE, CBOE, BEN, VTR, TPR, OXY, PSX, WY, MRK and CL. Extract revenue is misdated in 20/29
+   DOW rows, 9/20 DD rows and 15/50 CBOE rows.
+
+### Mandatory quarantine
+
+Quarantine file: `D:/research/alpha-engine/engine/checks/k12-review/quarantine.json`. Exclude these **28 companies**
+from engine use of K12 release figures until a fix is verified:
+
+`AMAT, ARES, ATO, BEN, CBOE, CL, COP, DD, DOW, EXE, FICO, FITB, HIG, KMB, LYB, MRK, OXY, PEG, PODD, PSX, RVTY, TDG,
+TKO, TPR, VTR, WMB, WY, XOM_PRE`.
+
+Claude applies the quarantine on the engine side in the lab. The existing K12 artifacts are not modified. Nothing from
+K12 reaches `alpha_research` or production until that engine-side quarantine is in place.
+
+The exact parser source and test were committed unchanged as `adc28bcec8dacd298dd3abbf5cbd428117a19c36`. Recomputing
+the build-script hash from that commit returns `6571aaaa97dffdf216e92430cd2397ead9f027eee96f0ffbace238f605dd07a3`.
+The artifact manifest's `codeCommit=c58c5e0` is therefore a stale base-commit field; its content code hash is the
+authoritative match to `adc28bc`. No rebuild was run. Optional K12.1 is left to Claude; no new run was started.
