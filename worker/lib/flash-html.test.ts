@@ -406,4 +406,84 @@ describe("flash HTML table reading", () => {
     const columns = firstCandidate(occidental, "2022-06-30").columns.map((column) => [column.months, column.periodEnd]);
     expect(columns).toEqual(expect.arrayContaining([[3, "2021-06-30"], [3, "2022-03-31"], [3, "2022-06-30"], [6, "2022-06-30"]]));
   });
+
+  it("ignores a title line that prints both period dates across the label column", () => {
+    const html = `<table>
+      <tr><td colspan="9">CONSOLIDATED STATEMENTS OF INCOME</td></tr>
+      <tr><td colspan="9">FOR THE THIRTEEN WEEK PERIODS AND FISCAL YEARS ENDED</td></tr>
+      <tr><td colspan="9">SEPTEMBER 30, 2025 AND SEPTEMBER 30, 2024</td></tr>
+      <tr><td colspan="9">(Amounts in millions, except per share amounts)</td></tr>
+      <tr><td></td><td colspan="4">Thirteen Week Periods Ended</td><td colspan="4">Fiscal Years Ended</td></tr>
+      <tr><td></td><td colspan="2">September 30, 2025</td><td colspan="2">September 30, 2024</td><td colspan="2">September 30, 2025</td><td colspan="2">September 30, 2024</td></tr>
+      <tr><td>NET SALES</td><td>$</td><td>2,437</td><td>$</td><td>2,185</td><td>$</td><td>8,831</td><td>$</td><td>7,940</td></tr>
+      <tr><td>COST OF SALES</td><td></td><td>967</td><td></td><td>927</td><td></td><td>3,520</td><td></td><td>3,268</td></tr>
+    </table>`;
+    const candidate = firstCandidate(html, "2025-09-30");
+    const rows = extractCandidateRows(candidate);
+    expect(candidate.columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2025-09-30"], [3, "2024-09-30"], [12, "2025-09-30"], [12, "2024-09-30"]]);
+    expect(rows.find((row) => row.label === "NET SALES")?.values.map((value) => value.value)).toEqual([2437, 2185, 8831, 7940]);
+  });
+  it("dates a year-to-date column under an earlier year and reads dollar and share units printed in words", () => {
+    const html = `<table>
+      <tr><td colspan="9">CONSOLIDATED STATEMENT OF OPERATIONS</td></tr>
+      <tr><td></td><td colspan="8">Millions of Dollars</td></tr>
+      <tr><td></td><td colspan="5">2008</td><td colspan="3">2009</td></tr>
+      <tr><td></td><td>1st Qtr</td><td>2nd Qtr</td><td>3rd Qtr</td><td>4th Qtr</td><td>YTD</td><td>1st Qtr</td><td>2nd Qtr</td><td>3rd Qtr</td><td>YTD</td></tr>
+      <tr><td>Sales and other operating revenues</td><td>54,883</td><td>71,411</td><td>70,044</td><td>44,504</td><td>240,842</td><td>30,741</td><td>35,448</td><td>40,173</td><td>106,362</td></tr>
+      <tr><td>Average common shares outstanding (in thousands)</td></tr>
+      <tr><td>Diluted</td><td>1,582,025</td><td>1,555,447</td><td>1,528,187</td><td>1,486,204</td><td>1,523,432</td><td>1,495,247</td><td>1,495,700</td><td>1,498,204</td><td>1,496,391</td></tr>
+    </table>`;
+    const candidate = firstCandidate(html, "2009-09-30");
+    const table = candidate.tables[0];
+    const rows = extractCandidateRows(candidate);
+    expect(table.unitMultiplier).toBe(1e6);
+    expect(candidate.columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2008-03-31"], [3, "2008-06-30"], [3, "2008-09-30"], [3, "2008-12-31"], [12, "2008-12-31"], [3, "2009-03-31"], [3, "2009-06-30"], [3, "2009-09-30"], [9, "2009-09-30"]]);
+    expect(rowUnit(rows.find((row) => row.label === "Diluted")!, table).multiplier).toBe(1e3);
+  });
+
+  it("reads a (000s) unit", () => {
+    const html = `<table>
+      <tr><td>Condensed Balance Sheets</td><td colspan="2">September 30,</td></tr>
+      <tr><td>(000s)</td><td>2011</td><td>2010</td></tr>
+      <tr><td>Net property, plant and equipment</td><td>5,147,918</td><td>4,793,075</td></tr>
+      <tr><td>Total current assets</td><td>1,010,953</td><td>984,088</td></tr>
+    </table>`;
+    expect(parseExhibitHtml(html, "fixture.htm", "fixture")[0].unitMultiplier).toBe(1e3);
+  });
+
+  it("moves a date row printed one group left of its duration row back over the values", () => {
+    const html = `<p>Consolidated Statements of Income</p><table>
+      <tr><td>In millions, except per share amounts (Unaudited)</td><td colspan="2">Three Months Ended</td><td colspan="2">Nine Months Ended</td></tr>
+      <tr><td>Sep 30, 2024</td><td>Sep 30, 2023</td><td>Sep 30, 2024</td><td>Sep 30, 2023</td><td></td></tr>
+      <tr><td>Net sales</td><td>10,879</td><td>10,730</td><td>32,559</td><td>34,001</td></tr>
+      <tr><td>Cost of sales</td><td>9,809</td><td>9,592</td><td>28,888</td><td>30,096</td></tr>
+    </table>`;
+    const candidate = firstCandidate(html, "2024-09-30");
+    expect(candidate.columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2024-09-30"], [3, "2023-09-30"], [9, "2024-09-30"], [9, "2023-09-30"]]);
+    expect(extractCandidateRows(candidate).find((row) => row.label === "Net sales")?.values.map((value) => value.value)).toEqual([10879, 10730, 32559, 34001]);
+  });
+
+  it("does not take a dated title in the label column as a value column", () => {
+    const html = `<table>
+      <tr><td>Condensed Consolidated Statements of Income (Unaudited)</td></tr>
+      <tr><td>Three and Nine Months Ended September 30, 2014 and 2013</td></tr>
+      <tr><td></td><td colspan="2">Three Months Ended September 30,</td><td colspan="2">Nine Months Ended September 30,</td></tr>
+      <tr><td>(in thousands, except per share amounts)</td><td>2014</td><td>2013</td><td>2014</td><td>2013</td></tr>
+      <tr><td>Total operating revenues</td><td>148,910</td><td>136,743</td><td>457,000</td><td>425,000</td></tr>
+      <tr><td>Net income</td><td>45,000</td><td>40,000</td><td>140,000</td><td>130,000</td></tr>
+    </table>`;
+    const candidate = firstCandidate(html, "2014-09-30");
+    expect(candidate.columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2014-09-30"], [3, "2013-09-30"], [9, "2014-09-30"], [9, "2013-09-30"]]);
+  });
+  it("keeps a dated label-column line as the period of a consolidating table with segment columns", () => {
+    const html = `<table>
+      <tr><td>Consolidating Statements of Operations</td></tr>
+      <tr><td></td><td>ComEd</td><td>PECO</td><td>Exelon</td></tr>
+      <tr><td>Three Months Ended March 31, 2024</td></tr>
+      <tr><td>Operating revenues</td><td>2,095</td><td>1,054</td><td>6,043</td></tr>
+      <tr><td>Net income</td><td>300</td><td>120</td><td>658</td></tr>
+    </table>`;
+    const candidate = firstCandidate(html, "2024-03-31");
+    expect(candidate.columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2024-03-31"]]);
+  });
 });

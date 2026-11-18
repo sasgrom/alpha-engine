@@ -187,9 +187,16 @@ function tableTitle(table: P5Element, grid: GridCell[][], context: string): stri
 }
 
 function multiplier(text: string, fallback = 1): number {
-  const match = text.match(/(?:in|amounts in|reported in)\s+(thousands|millions|billions)/i);
+  // The first unit statement in the text wins: "Millions of Dollars" above the table beats a later
+  // "Average common shares outstanding (in thousands)" row heading.
+  const match = [
+    text.match(/(?:in|amounts in|reported in)\s+(thousands|millions|billions)/i),
+    text.match(/\b(thousands|millions|billions)\s+of\s+(?:u\.?s\.?\s+)?dollars\b/i),
+    text.match(/\(\s*(?:in\s+)?\$?\s*(000)'?s?\b[^)]{0,40}\)/i),
+  ].filter((found): found is RegExpMatchArray => found !== null).sort((left, right) => left.index! - right.index!)[0];
   if (!match) return fallback;
-  return match[1].toLowerCase() === "thousands" ? 1e3 : match[1].toLowerCase() === "millions" ? 1e6 : 1e9;
+  const unit = match[1].toLowerCase();
+  return unit === "thousands" || unit === "000" ? 1e3 : unit === "millions" ? 1e6 : 1e9;
 }
 
 function unitMultipliers(context: string, title: string, grid: GridCell[][]): { unitMultiplier: number; shareMultiplier: number } {
@@ -395,7 +402,34 @@ function distantYearDuration(table: RawTable, rowIndex: number): number | null {
   return null;
 }
 
-export function detectPeriodColumns(table: RawTable, kind: StatementKind, expectedPeriodEnd: string | null): StatementColumn[] {
+function realignShiftedDateRows(table: RawTable): RawTable {
+  // Some releases print the date row shifted left against the duration row above it, so the first date sits over
+  // the label column. When every date then fits inside a duration cell after one common shift, move the row back.
+  let grid = table.grid;
+  for (let rowIndex = 1; rowIndex < Math.min(14, grid.length); rowIndex++) {
+    const cells = headerCells(grid[rowIndex]);
+    if (cells.length < 2 || cells[0].start !== 0 || !cells.every((cell) => fullDates(cell.text).length === 1 || /^\s*(?:fy\s*)?20\d{2}\s*$/i.test(cell.text))) continue;
+    const durationCells = headerCells(grid[rowIndex - 1]).filter((cell) => cell.start > 0 && durationMonths(cell.text) !== null);
+    if (!durationCells.length) continue;
+    const shift = durationCells[0].start;
+    if (!cells.every((cell) => durationCells.some((duration) => duration.start <= cell.start + shift && duration.end >= cell.end + shift))) continue;
+    const row: GridCell[] = grid[rowIndex].map(() => ({ text: "", footnotes: [], header: true }));
+    for (const cell of cells) {
+      const moved = { ...grid[rowIndex][cell.start] };
+      for (let col = cell.start; col <= cell.end; col++) row[col + shift] = moved;
+    }
+    grid = grid.map((existing, index) => index === rowIndex ? row : existing);
+  }
+  return grid === table.grid ? table : { ...table, grid };
+}
+
+export function detectPeriodColumns(sourceTable: RawTable, kind: StatementKind, expectedPeriodEnd: string | null): StatementColumn[] {
+  const table = realignShiftedDateRows(sourceTable);
+  const dataRows = table.grid.filter((row) => row.some((cell, col) => col > 0 && cell.text && parsePrintedNumber(cell.text)));
+  const labelsInFirstColumn = dataRows.length > 0 && dataRows.filter((row) => rowLabelIndex(row) === 0).length * 2 > dataRows.length;
+  // A single dated line in the label column is the only period of a consolidating table (segments as columns),
+  // but a title when the value columns carry their own period headers.
+  const periodHeadersOutsideLabel = table.grid.slice(0, 14).some((row) => headerCells(row).some((cell) => cell.start > 0 && (fullDates(cell.text).length > 0 || durationMonths(cell.text) !== null || /^\s*(?:fy\s*)?20\d{2}\s*$/i.test(cell.text))));
   const durations: (number | null)[] = [];
   const candidates: StatementColumn[] = [];
   const yearCandidates: StatementColumn[] = [];
@@ -409,6 +443,8 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
   const partials: { month: number; day: number | null; months: number; start: number; end: number; row: number }[] = [];
   const quarterCells: { text: string; start: number; end: number; row: number; quarter: number; year: number }[] = [];
   const ordinalCells: { start: number; end: number; row: number; quarter: number; year: number }[] = [];
+  const earlierYtdCells: { start: number; end: number; row: number; year: number }[] = [];
+  const titleCandidates: StatementColumn[] = [];
   for (let rowIndex = 0; rowIndex < Math.min(14, table.grid.length); rowIndex++) {
     const cells = headerCells(table.grid[rowIndex]);
     const previousCells = rowIndex > 0 ? headerCells(table.grid[rowIndex - 1]) : [];
@@ -450,8 +486,10 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
         if (year !== null) ordinalCells.push({ start: cell.start, end: cell.end, row: rowIndex, quarter, year });
       }
       if (/^(?:ytd|year to date)$/i.test(cell.text.trim()) && expectedPeriodEnd) {
+        const year = ordinalHeaderYear(table, { start: cell.start, end: cell.end, row: rowIndex }, cell.text);
         const months = durationMonths(cell.text, table.context) ?? expectedYtdMonths;
-        if (months !== null) candidates.push({ months, periodEnd: expectedPeriodEnd, headerRow: rowIndex, startCol: cell.start, endCol: cell.end, confidence: "expected_period" });
+        if (year !== null && year < Number(expectedPeriodEnd.slice(0, 4))) earlierYtdCells.push({ start: cell.start, end: cell.end, row: rowIndex, year });
+        else if (months !== null) candidates.push({ months, periodEnd: expectedPeriodEnd, headerRow: rowIndex, startCol: cell.start, endCol: cell.end, confidence: "expected_period" });
       }
       if (expectedPeriodEnd) {
         const monthName = Object.entries(MONTHS).filter(([, month]) => month === Number(expectedPeriodEnd.slice(5, 7))).sort((a, b) => b[0].length - a[0].length)[0]?.[0], expectedYear = expectedPeriodEnd.slice(0, 4);
@@ -461,8 +499,11 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
       const partial = partialMonthDay(cell.text);
       if (partial && periodMonths !== null) partials.push({ ...partial, months: periodMonths, start: cell.start, end: cell.end, row: rowIndex });
       const dates = fullDates(cell.text);
+      // A date printed in the row-label column ("SEPTEMBER 30, 2025 AND SEPTEMBER 30, 2024",
+      // "Three and Nine Months Ended September 30, 2014 and 2013") is a table title, not a value column.
+      const titleDates = cell.start === 0 && labelsInFirstColumn && (dates.length > 1 || periodHeadersOutsideLabel);
       for (const periodEnd of dates) {
-        if (periodMonths !== null) candidates.push({ months: periodMonths, periodEnd, headerRow: rowIndex, startCol: cell.start, endCol: cell.end, confidence: "full_date" });
+        if (periodMonths !== null) (titleDates ? titleCandidates : candidates).push({ months: periodMonths, periodEnd, headerRow: rowIndex, startCol: cell.start, endCol: cell.end, confidence: "full_date" });
       }
       if (dates.length || /\b[1-4]q/i.test(cell.text) || partial) continue;
       const yearLabel = cell.text.trim().match(/^(?:fy\s*)?(20\d{2}|\d{2})\*?$/i) ?? cell.text.trim().match(/\bfor the year end(?:ed)?\s+(20\d{2})\b/i);
@@ -524,6 +565,22 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
       candidates.push({ months: kind === "balance" ? 0 : 3, periodEnd, headerRow: cell.row, startCol: cell.start, endCol: cell.end, confidence: "quarter_label" });
     }
   }
+  if (expectedPeriodEnd && earlierYtdCells.length) {
+    // A year-to-date column printed under an earlier year: the full fiscal year when that year's group prints a
+    // fourth quarter, otherwise the same year-to-date span one or more years back.
+    const expectedYear = Number(expectedPeriodEnd.slice(0, 4)), expectedMonth = Number(expectedPeriodEnd.slice(5, 7)), expectedDay = Number(expectedPeriodEnd.slice(8, 10));
+    const monthEnd = new Date(Date.UTC(expectedYear, expectedMonth, 0)).getUTCDate() === expectedDay;
+    const expectedQuarter = quarterFromContext(table.context) ?? (ordinalCells.length && !monthEnd ? bestOrdinalQuarter(ordinalCells, expectedPeriodEnd) : Math.ceil(expectedMonth / 3));
+    for (const cell of earlierYtdCells) {
+      const fullYear = ordinalCells.some((ordinal) => ordinal.row === cell.row && ordinal.year === cell.year && ordinal.quarter === 4 && ordinal.end < cell.start);
+      const months = kind === "balance" ? 0 : fullYear ? 12 : expectedYtdMonths;
+      if (months === null) continue;
+      const relativeQuarters = (cell.year - expectedYear) * 4 + (fullYear ? 4 - expectedQuarter : 0);
+      candidates.push({ months, periodEnd: shiftFiscalPeriod(expectedPeriodEnd, relativeQuarters * 3), headerRow: cell.row, startCol: cell.start, endCol: cell.end, confidence: "quarter_label" });
+    }
+  }
+  // A dated title is the table's period only when nothing else in the header yields a column.
+  if (!candidates.length) candidates.push(...titleCandidates);
   const unique = new Map<string, StatementColumn>();
   const deduplicated = candidates.filter((candidate) => candidate.confidence !== "expected_period" || !candidates.some((other) => other.confidence === "full_date" && other.startCol === candidate.startCol && other.endCol === candidate.endCol && other.months === candidate.months && other.periodEnd === candidate.periodEnd));
   for (const candidate of deduplicated) {
@@ -672,7 +729,10 @@ export function rowUnit(row: StatementRow, table: RawTable): { multiplier: numbe
   const percent = /%|\bpercent(?:age)?\b|\bmargin\b|\bratio\b|\breturn on\b|\byield\b|\bgrowth\b|\b(?:tax|interest|discount|inflation|effective)\s+(?:\w+\s+){0,2}rate\b/i.test(context);
   const shares = !percent && /shares used|weighted[- ]average(?: number of)? shares|share counts|shares outstanding/i.test(context);
   const perShare = !percent && !shares && /per (?:common )?share|earnings per share|loss per share/i.test(context);
-  return { multiplier: perShare ? 1 : shares ? table.shareMultiplier : percent ? 1 : table.unitMultiplier, perShare, shares, percent };
+  // A row or heading that states its own unit ("Average common shares outstanding (in thousands)") overrides the table unit.
+  const ownUnit = context.match(/\(\s*in\s+(thousands|millions|billions)\s*\)/i);
+  const tableMultiplier = shares ? table.shareMultiplier : table.unitMultiplier;
+  return { multiplier: perShare || percent ? 1 : ownUnit ? multiplier(`in ${ownUnit[1]}`) : tableMultiplier, perShare, shares, percent };
 }
 
 export function daysBetween(left: string, right: string): number {
