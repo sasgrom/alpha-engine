@@ -225,3 +225,46 @@ The exact parser source and test were committed unchanged as `adc28bcec8dacd298d
 the build-script hash from that commit returns `6571aaaa97dffdf216e92430cd2397ead9f027eee96f0ffbace238f605dd07a3`.
 The artifact manifest's `codeCommit=c58c5e0` is therefore a stale base-commit field; its content code hash is the
 authoritative match to `adc28bc`. No rebuild was run. Optional K12.1 is left to Claude; no new run was started.
+
+
+## K12.1 fixes and re-review — 2026-11-18 (Claude)
+
+Parser commit `876594bc9bf8d3192dda87091a54507353dfce51` (`worker/lib/flash-html.ts`, six new fixture tests, each
+failing on `adc28bc`). Build-script hash from that commit: `7f76b2c2d5f3b2facd14dd24f93d94030132f861c861125f88f342c3e3195866`,
+equal to both manifests below (their `codeCommit=56e249c` is again the stale base-commit field).
+
+Fixes:
+- A dated title in the label column is not a value column when the value columns carry their own period headers
+  (TDG Q4 swap, CBOE). It stays the period of a consolidating table whose columns are segments (EXC, ETR) and is the
+  last resort when nothing else yields a column (CL).
+- A date or year row printed one group left of its duration row is moved back (DOW, DD).
+- A YTD column under an earlier year is that year's full year when its group prints a 4th quarter, otherwise the same
+  year-to-date span earlier (COP supplemental layout).
+- Units "Millions of Dollars", "(000s)" and a row or heading "(in thousands)" are read; the first unit phrase wins
+  (COP shares, ATO, KMB).
+
+New builds (the accepted `flash-rest` and `flash` stay unchanged):
+
+| | accepted 452 (`flash-rest`) | K12.1 452 (`flash-k121b-rest`) | accepted 50 (`flash`) | K12.1 50 (`flash-k121b-50`) |
+|---|---:|---:|---:|---:|
+| grade match share | 98.07% | 98.45% | 98.35% | 98.50% |
+| mismatches | 17,097 | 14,491 | 1,869 | 1,818 |
+| period matched | 25,391 / 25,574 | 25,390 / 25,574 | 2,949 / 2,957 | 2,949 / 2,957 |
+| errors, PIT violations | 0, 0 | 0, 0 | 0, 0 | 0, 0 |
+| golden | 113/113 | 113/113 | 113/113 | 113/113 |
+
+- Release-by-release diff: no default-50 release changes its period; in the 452 one release changes, PSX
+  0001534701-26-000020, whose income table is a 2025 recast without the current quarter (the old match came from two
+  YTD columns both given the expected date). The first K12.1 run (`flash-k121-rest`) lost 52 ETR/EXC releases and one
+  CL release; the narrowed rule restores all of them.
+- Extract against SEC companyfacts (452, Q4 included): revenue 99.26% (was 98.76%), operating income 98.86% (98.53%),
+  net income 95.48% (94.99%), diluted EPS 90.61% (89.96%). TDG's fiscal-Q4 revenue now chains year to year.
+- Removed values are wrong ones: AMAT loses 93 matches and 221 mismatches; no other company loses more than 10 matches.
+
+Quarantine, the same rule re-applied to both K12.1 builds:
+`D:/research/alpha-engine/engine/checks/k12-review/quarantine-k121.json` (sha256 `f51f9742…`), **13 companies**:
+`BEN, COF, COP, EXE, FITB, HIG, LYB, PODD, PSX, RVTY, TKO, WMB, WY`. Released: AMAT, ARES, ATO, CBOE, CL, DD, DOW,
+FICO, KMB, MRK, OXY, PEG, TDG, TPR, VTR, XOM_PRE. COF was already over the line in the accepted 50 (263 of 2,408) and
+was missed because the first quarantine was computed on the 452 run only. COP improves from 178/326 to 62/571
+mismatches and stays just over. ATO and KMB each keep one release with a missed unit. The old `quarantine.json`
+applies to `flash-rest` only. Engine use of the K12.1 builds requires the new file.

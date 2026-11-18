@@ -3110,3 +3110,22 @@ delivered.
 - **Mandatory quarantine:** `D:/research/alpha-engine/engine/checks/k12-review/quarantine.json` lists **28 companies**: AMAT, ARES, ATO, BEN, CBOE, CL, COP, DD, DOW, EXE, FICO, FITB, HIG, KMB, LYB, MRK, OXY, PEG, PODD, PSX, RVTY, TDG, TKO, TPR, VTR, WMB, WY and XOM_PRE. Claude applies it on the engine side in the lab. **Nothing from K12 reaches `alpha_research` or production until that quarantine is in place.** Existing K12 artifacts were not modified.
 - **Condition 1 complete:** `worker/lib/flash-html.ts` and its test were committed exactly as reviewed in **`adc28bcec8dacd298dd3abbf5cbd428117a19c36`**. The build-script hash recomputed from that commit is **`6571aaaa97dffdf216e92430cd2397ead9f027eee96f0ffbace238f605dd07a3`**, exactly matching the run. The manifest's `codeCommit=c58c5e0` is a stale base-commit field; the content belongs to `adc28bc`. No K12 rebuild occurred. Fresh verification: targeted **30/30** flash-html tests, `npm run check`, full **261 files / 1,472 tests**, `npm run build` with established chunk warnings, and `git diff --check` all pass.
 - **Delivery:** evidence/documentation commit **`5699c8c`** contains this handoff, the K12 delivery/review section and the two intended flash summaries; both summaries retain Claude's verified SHA256 values. Source `adc28bc` and evidence `5699c8c` were pushed to `origin/main`. Unrelated generated reports, analytics snapshot, `.vscode`, desk-intraday and prediction-market files remain uncommitted and untouched. Optional **K12.1 is left to Claude**; no new run, download, model call, database write, production action or scheduler change occurred. Next safe action: Claude applies the engine-side quarantine before any K12 engine use.
+
+
+## 199. Claude (Opus 5.5): K12.1 fixes built and verified; quarantine 28 → 13; Kimi has left the project — 2026-11-18T09:30Z
+
+- **Kimi has left the project** (owner, 2026-11-18). Claude now carries all former Kimi work, specs, handoff and
+  docs commits. A goodbye was left in the mailbox.
+- **K12.1** parser commit `876594b`; build hash `7f76b2c…` equals both new manifests. New builds
+  `D:/research/alpha-engine/engine/flash-k121b-rest` (452) and `flash-k121b-50` (default 50). Details and numbers in
+  the K12 task file, section "K12.1 fixes and re-review". The accepted `flash-rest` and `flash` are unchanged.
+- Gates: grade 98.45% (452) / 98.50% (50); period 25,390/25,574 (only PSX 0001534701-26-000020 changes, intended);
+  0 errors; 0 PIT violations; golden 113/113; extract revenue 99.26%.
+- **Quarantine for the K12.1 builds:** `checks/k12-review/quarantine-k121.json`, 13 companies (BEN, COF, COP, EXE,
+  FITB, HIG, LYB, PODD, PSX, RVTY, TKO, WMB, WY). Nothing from K12 reaches `alpha_research` or production until the
+  engine side applies it.
+- Verification: `npm run check`, `npm test -- --run` (261 files / 1,478 tests), `npm run build`, `git diff --check`
+  all pass.
+- Runs on the machine: guidance GPU rerun (lab, process 7524, priorities 1+2, 929+ of 4,041 done). The owner
+  pauses and resumes it with the STOP file in `guidance-pass2-long`.
+- Next: combined guidance + release-figures test with the quarantine applied, after the final g1.2 build.
