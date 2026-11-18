@@ -3224,3 +3224,24 @@ delivered.
   now tie-safe and the percent miss is the target to read.
 - Nothing written to `alpha_research` or production. GPU rerun process 3752 running. Schwab still awaits the owner's
   browser authorization (section 203).
+
+## 205. Claude (Opus 5.5): Schwab re-authorized, chain recovered — 2026-11-18T23:41Z
+
+- The owner ran the browser authorization (`worker/schwab-callback.mts`); the token file was rewritten at 15:28 local.
+- The chains went through the scheduler's own queue, so they ran one at a time with no overlap with its crons. Three
+  commands were added to `operations-commands.jsonl` (ids `claude-reauth-20261118T2329-*`). All exited 0, 23:29–23:40Z:
+  - fetch, context and snapshot: `schwab-fetch-daily`, `schwab-fetch-sp500`, `schwab-context-hourly`,
+    `schwab-snapshot`;
+  - downstream builds: `schwab-daily-bars`, `schwab-feature-lab`, `page-data-prices`, `desk-snapshot`,
+    `analytics-snapshot`, `ui-production-build`.
+- **The daily fetch made no new capture.** It found all 50 tickers already captured for UTC 2026-11-18 (latest capture
+  01:05Z) and resumed them.
+- **Report rebuilt 23:41Z:** features current with the snapshot, context 57/57 with 0 errors, 0 manifest errors.
+- **Still open:**
+  - `schwab-intraday` (and `desk-snapshot-live` behind it) keeps its 21:21Z token error until its next market-hours
+    run, 14:40Z on 2026-11-19.
+  - "Schwab today 50/51" predates the outage. The daily fetch uses `research-universe-50.json` (with CSCO), while the
+    51 expected are `research-universe-51.json` (with RIVN and ENLT, last captured 2026-11-10). This is a
+    configuration mismatch, not a collection failure; it is left for a decision.
+- The overall status is still CRITICAL because of the intraday error. The tonight 16:45 local daily fetch captures
+  UTC 2026-11-19 as usual.
