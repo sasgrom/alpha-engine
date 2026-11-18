@@ -3145,3 +3145,21 @@ delivered.
   tests, 0.9 with the fill). Outputs: `D:/research/alpha-engine/engine/fable1/out/guidance_actual_g1.2.20261117*.json`.
 - Nothing written to `alpha_research` or production. GPU rerun process 7524: 1,041 result lines at 02:55 local.
 - Next: final g1.2 build after the rerun, rerun this test and the guidance test on it, then load `std_guidance_*`.
+
+## 201. Claude (Fable 5.2): pooled engine iteration 4, guidance as a stage-1 input — 2026-11-18T13:30Z
+
+- Owner's go: "yes go ahead with the pooled engine". Lab `8bfb5de` (+ a wording fix after it): the pooled-engine
+  scripts are now in the lab (`src/engine2/walk/`), with `pooled_guidance.py`; findings in
+  `docs/findings-pooled-guidance-2026-11-18.md`. Run folder `D:/research/alpha-engine/engine/walk/p2` (new; `p1` is
+  untouched), logs in `walk/logs`.
+- Input: quarterly revenue and GAAP EPS guidance (g1.2 dry run) for the next quarter, known at the 10-Q decision,
+  corrected by the company's habit, turned into the engine's scores. 2,758 guided decisions in 117 companies (10%).
+  Rebuilt scores equal the stored ones on 17,631 of 17,631 rows.
+- Stage 1 improves on guided decisions: revenue score correlation 0.77 → 0.89, EPS 0.45 → 0.77, all 64 scores
+  0.586 → 0.605.
+- Stage 2 and the accounts do not: rank correlation with the window return 0.014 (guidance input) against 0.016
+  (nowcast) and 0.128 (real next quarter); the guidance account never switches. The window return follows the
+  surprise against guidance (+0.21 for revenue), not what guidance says (+0.05).
+- Verdict: guidance belongs in the nowcast of the figures, but the stage-1 target must be the surprise against the
+  market's expectation. Analyst consensus is the missing input (the owner's open estimates pilot).
+- Nothing written to `alpha_research` or production. GPU rerun (process 7524) still running.
