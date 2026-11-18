@@ -3163,3 +3163,19 @@ delivered.
 - Verdict: guidance belongs in the nowcast of the figures, but the stage-1 target must be the surprise against the
   market's expectation. Analyst consensus is the missing input (the owner's open estimates pilot).
 - Nothing written to `alpha_research` or production. GPU rerun (process 7524) still running.
+
+## 202. Claude (Fable 5.2): the ceiling as real minus expected; correction to 201 — 2026-11-18T15:30Z
+
+- **Correction to section 201:** the guided decisions are in **150 companies** (117 guide revenue, 85 guide GAAP
+  EPS), not 117. The 2,758 decisions and all other numbers stand.
+- Owner's go: "go ahead with the ceiling on the 117 companies". Lab `src/engine2/walk/pooled_ceiling.py`, findings
+  appended to `docs/findings-pooled-guidance-2026-11-18.md`. Run `D:/research/alpha-engine/engine/walk/p3`
+  (`ceiling.json`, `predictions.npz`, `sim-switch/`); `p3-run1` is the first run without the same-rows tables.
+- Perfect-foresight inputs only (they size the prize). Same rows, rank correlation with the window return against
+  the sector fund: real next quarter 0.121, real minus expected 0.153 (all 16,139 decisions from 2017-04); on guided
+  decisions 0.134 and 0.183. Top minus bottom third per quarter: +3.6% → +4.4% (all), +5.8% → +6.8% (guided).
+- $1M accounts, newest 20% (about 2.5 years): all 451 companies hold $1.449M, real $1.524M, surprise $1.585M. The 96
+  companies with guided decisions in that period: hold $1.717M, real $1.808M, surprise $1.958M, and $1.850M knowing
+  only the revenue and EPS miss against guidance (192 switches, the fund better in 63%, +4.5% each against +1.0%
+  for random placement, none of 2,000 draws as good). The two real figures as levels fail the control (p 0.74).
+- Meaning for the build: score stage 1 on real minus expected. Nothing written to `alpha_research` or production.
