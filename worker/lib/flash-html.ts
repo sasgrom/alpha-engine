@@ -309,7 +309,7 @@ export function durationMonths(text: string, context = ""): number | null {
   if (/twelve\s+months|12\s*months|year\s+end(?:ed)?|years\s+ended|full[- ]year|^\s*fiscal\s+year(?:\s+(?:fy\s*)?(?:20\d{2}|\d{2}))?\s*$|\b12m\b/.test(value)) return 12;
   if (/nine\s+months|9\s*months|\b9m\b/.test(value)) return 9;
   if (/six\s+months|6\s*months|\b6m\b/.test(value)) return 6;
-  if (/three\s+months?|3\s*months|quarters?\s+ended|quarterly|first[- ]quarter|second[- ]quarter|third[- ]quarter|fourth[- ]quarter|\b(?:[1-4](?:st|nd|rd|th)?\s+qtr\.?|quarter\s+[1-4])\b|\bq[1-4]\b|\b20\d{2}\s*q[1-4]\b|\b3m\b/.test(value)) return 3;
+  if (/three\s+months?|3\s*months|quarters?\s+ended|quarterly|first[- ]quarter|second[- ]quarter|third[- ]quarter|fourth[- ]quarter|\b(?:[1-4](?:st|nd|rd|th)?\s+(?:qtr\.?|quarter)|(?:quarter|qtr)\s+[1-4])\b|\bq[1-4]\b|\b20\d{2}\s*q[1-4]\b|\b3m\b/.test(value)) return 3;
   return null;
 }
 
@@ -326,7 +326,7 @@ export function headerCells(row: GridCell[]): HeaderCell[] {
   return cells;
 }
 
-const excludedHeader = (text: string) => /percent\s+change|%\s*change|growth|constant currency|non-gaap|adjusted|\bvs\.?\b|\byoy\b|\bqoq\b|year[- ]over[- ]year|^\s*(?:(?:[1-4]q)?\d{2}(?:\d{2})?\s+)?change\s*:?\s*$/i.test(text);
+const excludedHeader = (text: string) => /percent\s+change|%\s*change|%\s*inc(?:r\.?|rease)?\s*\/|growth|constant currency|non-gaap|adjusted|\bvs\.?\b|\byoy\b|\bqoq\b|year[- ]over[- ]year|^\s*(?:seq|yr\/yr)\s*$|^\s*\(?decr(?:ease)?\)?\.?\s*$|^\s*(?:(?:[1-4]q)?\d{2}(?:\d{2})?\s+)?change\s*:?\s*$/i.test(text);
 
 export function ignoredValueColumns(table: RawTable): { start: number; end: number }[] {
   return table.grid.slice(0, 14).flatMap((row) => headerCells(row).filter((cell) => excludedHeader(cell.text)).map((cell) => ({ start: cell.start, end: cell.end })));
@@ -344,7 +344,7 @@ function quarterFromContext(context: string): number | null {
 function ordinalHeaderYear(table: RawTable, ordinal: { start: number; end: number; row: number }, text: string): number | null {
   const explicitYear = text.match(/\b(20\d{2})\b/);
   if (explicitYear) return Number(explicitYear[1]);
-  const ordinalCells = headerCells(table.grid[ordinal.row]).filter((cell) => /\b(?:(?:[1-4](?:st|nd|rd|th)?\s+qtr\.?|quarter\s+[1-4])|[1-4]q|q[1-4]|20\d{2}\s+q[1-4])\b/i.test(cell.text));
+  const ordinalCells = headerCells(table.grid[ordinal.row]).filter((cell) => /\b(?:(?:[1-4](?:st|nd|rd|th)?\s+(?:qtr\.?|quarter)|(?:quarter|qtr)\s+[1-4])|[1-4]q|q[1-4]|20\d{2}\s+q[1-4])\b/i.test(cell.text));
   const ordinalIndex = ordinalCells.findIndex((cell) => cell.start === ordinal.start && cell.end === ordinal.end);
   const rows: number[] = [];
   for (let row = ordinal.row - 1; row >= Math.max(0, ordinal.row - 3); row--) rows.push(row);
@@ -390,7 +390,7 @@ function distantYearDuration(table: RawTable, rowIndex: number): number | null {
     if (!text) continue;
     const months = durationMonths(text, table.context);
     if (months !== null) return months;
-    if (fullDates(text).length || /\b(?:[1-4]q|q[1-4]|(?:[1-4](?:st|nd|rd|th)?\s+qtr\.?|quarter\s+[1-4])|first[- ]quarter|second[- ]quarter|third[- ]quarter|fourth[- ]quarter)\b/i.test(text)) return null;
+    if (fullDates(text).length || /\b(?:[1-4]q|q[1-4]|(?:[1-4](?:st|nd|rd|th)?\s+(?:qtr\.?|quarter)|(?:quarter|qtr)\s+[1-4])|first[- ]quarter|second[- ]quarter|third[- ]quarter|fourth[- ]quarter)\b/i.test(text)) return null;
   }
   return null;
 }
@@ -400,7 +400,11 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
   const candidates: StatementColumn[] = [];
   const yearCandidates: StatementColumn[] = [];
   const yearLabels: { year: number; months: number; headerRow: number; start: number; end: number }[] = [];
-  const annualTitleMonths = /\bannual\b/i.test(table.title) ? 12 : null;
+  const immediateContext = table.context.split(" | ").at(-1) ?? "";
+  const statementTitlePattern = /income statement|statements? of (?:income|operations|earnings|cash flows?|financial position)|balance sheets?|cash flows?|results of operations/i;
+  const statementTitle = statementTitlePattern.test(table.title) ? table.title : statementTitlePattern.test(immediateContext) ? immediateContext : "";
+  const statementTitleMonths = durationMonths(statementTitle);
+  const annualTitleMonths = /\bannual\b/i.test(table.title) || statementTitleMonths === 12 ? 12 : null;
   const expectedYtdMonths = expectedPeriodEnd ? Math.ceil(Number(expectedPeriodEnd.slice(5, 7)) / 3) * 3 : null;
   const partials: { month: number; day: number | null; months: number; start: number; end: number; row: number }[] = [];
   const quarterCells: { text: string; start: number; end: number; row: number; quarter: number; year: number }[] = [];
@@ -412,12 +416,12 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
     let periodHeaderRow = rowIndex - 1;
     while (periodHeaderRow >= Math.max(0, rowIndex - 3) && headerCells(table.grid[periodHeaderRow]).length === 0) periodHeaderRow--;
     const periodHeaderText = periodHeaderRow >= 0 ? headerCells(table.grid[periodHeaderRow]).map((cell) => cell.text).join(" ") : "";
-    const previousPeriodHeader = durationMonths(periodHeaderText, table.context) !== null || fullDates(periodHeaderText).length > 0 || /\b(?:[1-4]q(?:'|’)?(?:20\d{2}|\d{2})|q[1-4]|20\d{2}\s+q[1-4]|(?:[1-4](?:st|nd|rd|th)?\s+qtr\.?|quarter\s+[1-4])|first[- ]quarter|second[- ]quarter|third[- ]quarter|fourth[- ]quarter)\b/i.test(periodHeaderText);
+    const previousPeriodHeader = durationMonths(periodHeaderText, table.context) !== null || fullDates(periodHeaderText).length > 0 || /\b(?:[1-4]q(?:'|’)?(?:20\d{2}|\d{2})|q[1-4]|20\d{2}\s+q[1-4]|(?:[1-4](?:st|nd|rd|th)?\s+(?:qtr\.?|quarter)|(?:quarter|qtr)\s+[1-4])|first[- ]quarter|second[- ]quarter|third[- ]quarter|fourth[- ]quarter)\b/i.test(periodHeaderText);
     const rowLabel = rowLabelIndex(table.grid[rowIndex]);
-    const hasQuarterHeader = cells.some((cell) => /\b(?:[1-4]q(?:'|’)?(?:20\d{2}|\d{2})|q[1-4]|20\d{2}\s+q[1-4]|(?:[1-4](?:st|nd|rd|th)?\s+qtr\.?|quarter\s+[1-4]))\b/i.test(cell.text));
+    const hasQuarterHeader = cells.some((cell) => /\b(?:[1-4]q(?:'|’)?(?:20\d{2}|\d{2})|q[1-4]|20\d{2}\s+q[1-4]|(?:[1-4](?:st|nd|rd|th)?\s+(?:qtr\.?|quarter)|(?:quarter|qtr)\s+[1-4]))\b/i.test(cell.text));
     const currentRowDuration = durationMonths(cells.filter((cell) => !excludedHeader(cell.text)).map((cell) => cell.text).join(" "), table.context);
     const yearHeaderRow = hasQuarterHeader || previousPeriodHeader || currentRowDuration !== null || rowLabel < 0 || excludedHeader(table.grid[rowIndex][rowLabel]?.text ?? "") || /^\s*\(?\s*(?:unaudited\b|in\s+(?:thousands|millions|billions)\b|amounts\s+in\b|dollars\s+in\b|fiscal\s+year\b|annual\b|percent\b)/i.test(table.grid[rowIndex][rowLabel]?.text ?? "");
-    const rowDuration = durationMonths(`${previousHeaderText} ${cells.map((cell) => cell.text).join(" ")}`, table.context) ?? annualTitleMonths ?? table.inheritedDurationMonths ?? (durationMonths(table.context) === 3 ? 3 : null) ?? null;
+    const rowDuration = durationMonths(`${previousHeaderText} ${cells.map((cell) => cell.text).join(" ")}`, table.context) ?? annualTitleMonths ?? table.inheritedDurationMonths ?? (statementTitleMonths === 3 ? 3 : null) ?? (durationMonths(table.context) === 3 ? 3 : null) ?? null;
     for (const cell of cells) {
       const previousCell = previousCells.find((candidate) => candidate.start === cell.start || (candidate.start <= cell.start && candidate.end >= cell.start));
       if (excludedHeader(cell.text)) continue;
@@ -432,11 +436,11 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
         const year = Number(quarter[2].length === 2 ? `20${quarter[2]}` : quarter[2]);
         quarterCells.push({ text: cell.text, start: cell.start, end: cell.end, row: rowIndex, quarter: Number(quarter[1]), year });
       }
-      for (const ordinal of cell.text.matchAll(/\b([1-4])(?:st|nd|rd|th)?\s+qtr\.?\b/gi)) {
+      for (const ordinal of cell.text.matchAll(/\b([1-4])(?:st|nd|rd|th)?\s+(?:qtr\.?|quarter)\b/gi)) {
         const year = ordinalHeaderYear(table, { start: cell.start, end: cell.end, row: rowIndex }, cell.text);
         if (year !== null) ordinalCells.push({ start: cell.start, end: cell.end, row: rowIndex, quarter: Number(ordinal[1]), year });
       }
-      for (const ordinal of cell.text.matchAll(/\b(?:Q([1-4])|([1-4])Q|Quarter\s+([1-4]))\b/gi)) {
+      for (const ordinal of cell.text.matchAll(/\b(?:Q([1-4])|([1-4])Q|(?:Quarter|Qtr)\s+([1-4]))\b/gi)) {
         const year = ordinalHeaderYear(table, { start: cell.start, end: cell.end, row: rowIndex }, cell.text);
         if (year !== null) ordinalCells.push({ start: cell.start, end: cell.end, row: rowIndex, quarter: Number(ordinal[1] ?? ordinal[2] ?? ordinal[3]), year });
       }
@@ -446,7 +450,7 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
         if (year !== null) ordinalCells.push({ start: cell.start, end: cell.end, row: rowIndex, quarter, year });
       }
       if (/^(?:ytd|year to date)$/i.test(cell.text.trim()) && expectedPeriodEnd) {
-        const months = durationMonths(cell.text, table.context);
+        const months = durationMonths(cell.text, table.context) ?? expectedYtdMonths;
         if (months !== null) candidates.push({ months, periodEnd: expectedPeriodEnd, headerRow: rowIndex, startCol: cell.start, endCol: cell.end, confidence: "expected_period" });
       }
       if (expectedPeriodEnd) {
@@ -471,17 +475,19 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
   }
   for (const partial of partials) {
     for (let row = partial.row + 1; row < Math.min(table.grid.length, partial.row + 3); row++) {
-      const year = headerCells(table.grid[row]).find((cell) => cell.start === partial.start && /^\s*(20\d{2})\s*$/.test(cell.text));
-      if (year) {
-        const yearNumber = Number(year.text.trim());
-        let periodEnd: string | null = null;
-        if (partial.day !== null) periodEnd = isoDate(yearNumber, partial.month, partial.day);
-        else if (expectedPeriodEnd) {
-          const expected = new Date(`${expectedPeriodEnd}T00:00:00Z`);
-          const expectedMonthEnd = new Date(Date.UTC(expected.getUTCFullYear(), expected.getUTCMonth() + 1, 0)).getUTCDate() === expected.getUTCDate();
-          if (expectedMonthEnd) periodEnd = isoDate(yearNumber, partial.month, new Date(Date.UTC(yearNumber, partial.month, 0)).getUTCDate());
+      const years = headerCells(table.grid[row]).filter((cell) => cell.start <= partial.end && cell.end >= partial.start && /^\s*(20\d{2})\s*$/.test(cell.text));
+      if (years.length) {
+        for (const year of years) {
+          const yearNumber = Number(year.text.trim());
+          let periodEnd: string | null = null;
+          if (partial.day !== null) periodEnd = isoDate(yearNumber, partial.month, partial.day);
+          else if (expectedPeriodEnd) {
+            const expected = new Date(`${expectedPeriodEnd}T00:00:00Z`);
+            const expectedMonthEnd = new Date(Date.UTC(expected.getUTCFullYear(), expected.getUTCMonth() + 1, 0)).getUTCDate() === expected.getUTCDate();
+            if (expectedMonthEnd) periodEnd = isoDate(yearNumber, partial.month, new Date(Date.UTC(yearNumber, partial.month, 0)).getUTCDate());
+          }
+          if (periodEnd) candidates.push({ months: partial.months, periodEnd, headerRow: row, startCol: year.start, endCol: year.end, confidence: "full_date" });
         }
-        if (periodEnd) candidates.push({ months: partial.months, periodEnd, headerRow: row, startCol: partial.start, endCol: partial.end, confidence: "full_date" });
         break;
       }
     }
@@ -494,7 +500,7 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
       yearCandidates.push({ months: label.months, periodEnd, headerRow: label.headerRow, startCol: label.start, endCol: label.end, confidence: "year_label" });
     }
   }
-  candidates.push(...yearCandidates.filter((year) => !(ordinalCells.length && year.months === 3) && !partials.some((partial) => partial.start === year.startCol && partial.end === year.endCol && partial.months === year.months)));
+  candidates.push(...yearCandidates.filter((year) => !(year.months === 3 && ordinalCells.some((ordinal) => ordinal.year === Number(year.periodEnd.slice(0, 4)))) && !partials.some((partial) => partial.start === year.startCol && partial.end === year.endCol && partial.months === year.months)));
   if (expectedPeriodEnd && quarterCells.length) {
     const expectedYear = Number(expectedPeriodEnd.slice(0, 4));
     const base = quarterCells.filter((cell) => cell.year === expectedYear).sort((a, b) => b.quarter - a.quarter)[0];
@@ -519,7 +525,8 @@ export function detectPeriodColumns(table: RawTable, kind: StatementKind, expect
     }
   }
   const unique = new Map<string, StatementColumn>();
-  for (const candidate of candidates) {
+  const deduplicated = candidates.filter((candidate) => candidate.confidence !== "expected_period" || !candidates.some((other) => other.confidence === "full_date" && other.startCol === candidate.startCol && other.endCol === candidate.endCol && other.months === candidate.months && other.periodEnd === candidate.periodEnd));
+  for (const candidate of deduplicated) {
     const key = candidate.confidence === "expected_period" ? `${candidate.startCol}|${candidate.endCol}|${candidate.months}|${candidate.periodEnd}` : `${candidate.months}|${candidate.periodEnd}`;
     const existing = unique.get(key);
     if (!existing || candidate.startCol < existing.startCol || (candidate.startCol === existing.startCol && candidate.headerRow < existing.headerRow)) unique.set(key, candidate);
@@ -542,7 +549,7 @@ function hasNumericDataRow(table: RawTable): boolean {
     const labelIndex = rowLabelIndex(row);
     if (labelIndex < 0) return false;
     const label = row[labelIndex].text;
-    if (durationMonths(label, table.context) !== null || fullDates(label).length || excludedHeader(label) || /\b(?:[1-4]q|q[1-4]|(?:[1-4](?:st|nd|rd|th)?\s+qtr\.?|quarter\s+[1-4])|first[- ]quarter|second[- ]quarter|third[- ]quarter|fourth[- ]quarter)\b/i.test(label)) return false;
+    if (durationMonths(label, table.context) !== null || fullDates(label).length || excludedHeader(label) || /\b(?:[1-4]q|q[1-4]|(?:[1-4](?:st|nd|rd|th)?\s+(?:qtr\.?|quarter)|(?:quarter|qtr)\s+[1-4])|first[- ]quarter|second[- ]quarter|third[- ]quarter|fourth[- ]quarter)\b/i.test(label)) return false;
     return row.slice(labelIndex + 1).some((cell) => parsePrintedNumber(cell.text) !== null);
   });
 }

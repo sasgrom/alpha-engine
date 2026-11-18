@@ -370,6 +370,40 @@ describe("flash HTML table reading", () => {
       <tr><td>Net income</td><td>500</td><td>400</td><td>450</td><td>1400</td></tr>
     </table>`;
     expect(firstCandidate(fifthThird, "2018-09-30").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2018-09-30"], [3, "2018-06-30"], [3, "2017-09-30"], [9, "2018-09-30"]]);
-    expect(firstCandidate(fifthThird, "2018-09-29").columns).toEqual([]);
+    expect(firstCandidate(fifthThird, "2018-09-29").columns.map((column) => [column.months, column.periodEnd])).toEqual([[9, "2018-09-29"]]);
+  });
+
+  it("expands shared period headers over every year and reads long statement-title durations", () => {
+    const ball = `<p>Unaudited Condensed Consolidated Statements of Earnings</p><table>
+      <tr><td></td><td colspan="2">Three Months Ended</td><td colspan="2">Nine Months Ended</td></tr>
+      <tr><td></td><td colspan="2">September 30,</td><td colspan="2">September 30,</td></tr>
+      <tr><td></td><td>2016</td><td>2015</td><td>2016</td><td>2015</td></tr>
+      <tr><td>Net sales</td><td>2815</td><td>2097</td><td>6600</td><td>6192</td></tr>
+      <tr><td>Net earnings</td><td>500</td><td>400</td><td>1400</td><td>1200</td></tr>
+    </table>`;
+    expect(firstCandidate(ball, "2016-09-30").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2016-09-30"], [3, "2015-09-30"], [9, "2016-09-30"], [9, "2015-09-30"]]);
+    const unionPacific = `<p>Condensed Consolidated Statements of Income (unaudited)</p><table>
+      <tr><td></td><td colspan="2">1st Quarter</td></tr>
+      <tr><td>For the Periods Ended March 31,</td><td>2015</td><td>2014</td></tr>
+      <tr><td>Operating Revenues</td><td>5251</td><td>5286</td></tr>
+      <tr><td>Operating income</td><td>1000</td><td>900</td></tr>
+    </table>`;
+    expect(firstCandidate(unionPacific, "2015-03-31").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2015-03-31"], [3, "2014-03-31"]]);
+    const longTitle = `${"ZIMMER HOLDINGS, INC. CONSOLIDATED STATEMENTS OF EARNINGS FOR THE THREE MONTHS ENDED DECEMBER 31, 2008 and 2007 ".repeat(2)}(in millions, except per share amounts, unaudited)`;
+    const zimmer = `<p>${longTitle}</p><table>
+      <tr><td></td><td>2008</td><td>2007</td><td>% Inc/(Dec)</td></tr>
+      <tr><td>Net Sales</td><td>1030.2</td><td>1073.5</td><td>(4)</td></tr>
+      <tr><td>Operating income</td><td>300</td><td>250</td><td>20</td></tr>
+      <tr><td>Net Earnings</td><td>500</td><td>400</td><td>25</td></tr>
+    </table>`;
+    expect(firstCandidate(zimmer, "2008-12-31").columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2008-12-31"], [3, "2007-12-31"]]);
+    const occidental = `<p>Consolidated Condensed Statements of Operations</p><table>
+      <tr><td></td><td colspan="4">2021</td><td colspan="3">2022</td></tr>
+      <tr><td></td><td>Qtr 1</td><td>Qtr 2</td><td>Qtr 3</td><td>Qtr 4</td><td>Qtr 1</td><td>Qtr 2</td><td>YTD</td></tr>
+      <tr><td>Net sales</td><td>3664</td><td>4505</td><td>4955</td><td>5817</td><td>6075</td><td>7696</td><td>13771</td></tr>
+      <tr><td>Operating income</td><td>300</td><td>400</td><td>450</td><td>500</td><td>600</td><td>700</td><td>1300</td></tr>
+    </table>`;
+    const columns = firstCandidate(occidental, "2022-06-30").columns.map((column) => [column.months, column.periodEnd]);
+    expect(columns).toEqual(expect.arrayContaining([[3, "2021-06-30"], [3, "2022-03-31"], [3, "2022-06-30"], [6, "2022-06-30"]]));
   });
 });
