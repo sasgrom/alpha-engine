@@ -3245,3 +3245,22 @@ delivered.
     configuration mismatch, not a collection failure; it is left for a decision.
 - The overall status is still CRITICAL because of the intraday error. The tonight 16:45 local daily fetch captures
   UTC 2026-11-19 as usual.
+
+## 206. Claude (Fable 5.2): options against the miss; correction to 205 — 2026-11-19T00:50Z
+
+- **Correction to section 205:** the "51" in "Schwab today 50/51" is the hard-coded default `--expected 51` of
+  `worker/build-schwab-market-data.mts`, not `research-universe-51.json`. That file is an older Schwab list (RIVN and
+  ENLT, no CSCO); the fetch, AGENTS.md section 4 and about twenty jobs use `research-universe-50.json`. The owner
+  answered "use the 51 list" to my wrong description; nothing was changed. Open decision: make the expected count
+  follow the 50-company list (my recommendation) or change the collection universe.
+- Owner's go: "go ahead with options". Lab `src/engine2/options/options_miss.py` (`5d90de3` and a wording fix after
+  it), findings appended to `docs/findings-pooled-guidance-2026-11-18.md`; result
+  `D:/research/alpha-engine/engine/options/o1-miss.json`.
+- Ten option readings (signs fixed in advance) before five decision days, against the miss, the miss minus our
+  forecast, the return and the release reaction; guided decisions from 2019-02; 500 within-quarter permutations.
+- Revenue (about 1,250 decisions, 100 companies): nothing beyond a family bound; against the unseen part of the miss
+  3 of 50 cells leave their band, all against the expected sign.
+- GAAP EPS (about 550 decisions, 56-58 companies): skew leans with the miss in the expected direction and crosses the
+  family bound three times (-0.14 to -0.18); it does not show in the return or the reaction. A hint only.
+- Verdict: option prices do not carry the part of the miss that pays. Nothing written to `alpha_research` or
+  production. GPU rerun process 3752 running, 1,266 result lines at 16:50 local.
