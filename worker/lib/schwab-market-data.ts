@@ -18,14 +18,18 @@ export interface SchwabManifest {
 export function buildSchwabMarketSnapshot(params: {
   root: string;
   tickersExpected: number;
+  /** The fetch universe. When given, only these tickers are read: an older list's last chains are not current data. */
+  tickers?: string[];
   manifest: SchwabManifest;
   generatedAt: string;
   tokenExpiresAt: string | null;
   lastRefreshAt: string | null;
 }): SchwabMarketSnapshot {
   const { root, tickersExpected, manifest, generatedAt, tokenExpiresAt, lastRefreshAt } = params;
+  const inScope = params.tickers ? new Set(params.tickers) : null;
   const latestByTicker = new Map<string, SchwabManifestEntry>();
   for (const entry of manifest.tickers) {
+    if (inScope && !inScope.has(entry.ticker)) continue;
     const previous = latestByTicker.get(entry.ticker);
     if (!previous || entry.capturedAt > previous.capturedAt) latestByTicker.set(entry.ticker, entry);
   }

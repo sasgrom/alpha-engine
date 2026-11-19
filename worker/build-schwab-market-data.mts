@@ -3,11 +3,15 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { buildSchwabMarketSnapshot, type SchwabManifest } from "./lib/schwab-market-data";
 import { loadSchwabToken, schwabTokenDirectory } from "./lib/schwab";
+import { loadEdgarUniverse } from "./lib/edgar";
+import { dedupeExpectationUniverse } from "./lib/universe";
 import { writeSchwabJsonOutputs } from "./lib/schwab-output";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const root = path.resolve(arg("--root") ?? schwabTokenDirectory());
-const tickersExpected = Number(arg("--expected") ?? 51);
+// The same list and the same de-duplication as worker/schwab-fetch.mts, so "expected" is what the fetch collects.
+const tickers = dedupeExpectationUniverse(loadEdgarUniverse(arg("--universe") ?? "research-universe-50.json")).map((company) => company.ticker);
+const tickersExpected = Number(arg("--expected") ?? tickers.length);
 if (!Number.isInteger(tickersExpected) || tickersExpected < 1) throw new Error("--expected must be a positive integer");
 const manifestPath = path.join(root, "manifest.json");
 let manifest: SchwabManifest = { schemaVersion: 1, tickers: [] };
@@ -18,6 +22,6 @@ try {
   tokenExpiresAt = token.expiresAt;
   lastRefreshAt = token.createdAt;
 } catch { /* no token metadata is exposed as an empty value, never an error */ }
-const snapshot = buildSchwabMarketSnapshot({ root, tickersExpected, manifest, generatedAt: new Date().toISOString(), tokenExpiresAt, lastRefreshAt });
+const snapshot = buildSchwabMarketSnapshot({ root, tickersExpected, tickers, manifest, generatedAt: new Date().toISOString(), tokenExpiresAt, lastRefreshAt });
 writeSchwabJsonOutputs("schwab-market-data.json", snapshot);
 console.log(`[schwab-market-data] ${snapshot.coverage.tickersCompleted}/${snapshot.coverage.tickersExpected} tickers · ${snapshot.coverage.contracts} contracts · QA ${snapshot.qa.manifestErrors} errors`);

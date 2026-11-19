@@ -32,6 +32,21 @@ describe("Schwab market snapshot builder", () => {
     expect(JSON.stringify(snapshot)).not.toContain("access_token");
   });
 
+  it("reads only the fetch universe when one is given", () => {
+    const root = mkdtempSync(path.join(tmpdir(), "schwab-market-data-"));
+    dirs.push(root);
+    writeFileSync(path.join(root, "AAPL.json"), chain);
+    writeFileSync(path.join(root, "RIVN.json"), chain);
+    const entry = (ticker: string) => ({ ticker, status: "complete" as const, capturedAt: "2026-10-30T12:00:00Z", sourceHash: sha256Text(chain), file: `${ticker}.json` });
+    const build = (tickers?: string[]) => buildSchwabMarketSnapshot({
+      root, tickersExpected: 1, tickers, manifest: { schemaVersion: 1, tickers: [entry("AAPL"), entry("RIVN")] },
+      generatedAt: "2026-10-30T12:01:00Z", tokenExpiresAt: null, lastRefreshAt: null,
+    });
+    expect(build(["AAPL"]).files.map((file) => file.ticker)).toEqual(["AAPL"]);
+    expect(build(["AAPL"]).coverage.tickersCompleted).toBe(1);
+    expect(build().coverage.tickersCompleted).toBe(2);
+  });
+
   it("rejects a source hash mismatch instead of publishing stale provenance", () => {
     const root = mkdtempSync(path.join(tmpdir(), "schwab-market-data-"));
     dirs.push(root);
