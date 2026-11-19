@@ -3264,3 +3264,17 @@ delivered.
   family bound three times (-0.14 to -0.18); it does not show in the return or the reaction. A hint only.
 - Verdict: option prices do not carry the part of the miss that pays. Nothing written to `alpha_research` or
   production. GPU rerun process 3752 running, 1,266 result lines at 16:50 local.
+
+## 207. Claude (Fable 5.2): Schwab snapshot follows the fetch universe (50/50) — 2026-11-19T01:25Z
+
+- Owner's decision on the open item of section 206: "50". Source `821c678`:
+  - `worker/build-schwab-market-data.mts` takes `--universe` (default `research-universe-50.json`, de-duplicated as
+    `schwab-fetch.mts` does) and expects that many tickers; `--expected` still overrides the count.
+  - `buildSchwabMarketSnapshot` reads only the tickers of that list when one is given, so RIVN and ENLT (last captured
+    2026-11-10 under the older list) no longer count as readable latest chains. Raw D: archives are untouched.
+  - One new test (reads only the fetch universe). Gates: `npm run check`, 261 files / 1,479 tests, `npm run build`,
+    `git diff --check` all pass. No scheduler or server restart was needed: the job runs the script fresh.
+- Evidence, 2026-11-19 UTC: the scheduled `schwab-fetch-daily` (01:11Z) and its chain exited 0; report rebuilt at
+  01:25Z: **Schwab 50/50 captured today, 50/50 readable latest chains, 0 manifest errors, status ok**; latest capture
+  01:14:59Z; 23 checks ok, 2 warnings (`macro-atlas-lineage` partial, `data-health` waiting for its parent), 0 errors.
+- AGENTS.md section 4 already names the 50-company list; no change there.
