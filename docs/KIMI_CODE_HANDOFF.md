@@ -3278,3 +3278,17 @@ delivered.
   01:25Z: **Schwab 50/50 captured today, 50/50 readable latest chains, 0 manifest errors, status ok**; latest capture
   01:14:59Z; 23 checks ok, 2 warnings (`macro-atlas-lineage` partial, `data-health` waiting for its parent), 0 errors.
 - AGENTS.md section 4 already names the 50-company list; no change there.
+
+## 208. Claude (Fable 5.2): guidance rerun finished; Ollama stopped on the owner's word — 2026-11-21T23:05Z
+
+- **Guidance GPU rerun finished 2026-11-19 14:47 local** (process 3752, "run ended: finished", 2,822 releases in that
+  run). `guidance-pass2-long/results.jsonl`: 4,046 lines; 4,040 of the 4,041 exhibits of `keys-p12.txt` finished
+  (ok 3,596, none 444); one exhibit (UNH, accepted 2026-07-16) ended in `request_failed` (HTTP 500) with 6 failed
+  attempts recorded in all. No run lock is left.
+- **Owner, 2026-11-21: "pause it until further notice".** No GPU job of mine was running. The only project use of the
+  GPU was the hourly `stocktwits-hourly` crowd read through Ollama (qwen3.5:9b, 32k context), beside the owner's own
+  video application. After the 14:30 run ended I unloaded the model and stopped Ollama (app and server). The job was
+  not disabled: without Ollama it still stores its deterministic rows and skips the LLM crowd rows. GPU memory in use
+  fell from 15.5 GB to 8.2 GB. Start Ollama again only on the owner's word.
+- Not started, no GPU needed: the final g1.2 union build with `GUIDANCE_RERUN=<results.jsonl>` and a new version
+  date, the reruns of the guidance, pooled and miss tests on it, and the `std_guidance_*` load.
