@@ -199,6 +199,11 @@ const COMPANY_ACTIONS = {
   dividends: [{ date: "2026-11-12", amount: 0.27 }, { date: "2026-08-10", amount: 0.27 }, { date: "2026-05-11", amount: 0.27 }, { date: "2026-02-09", amount: 0.26 }],
   dividendsLastYear: 1.07,
 };
+// eleven closes: up to a high, a fall of a fifth, a partial recovery
+const PRICE_HISTORY = {
+  source: "test",
+  bars: [100, 102, 104, 110, 99, 88, 90, 92, 91, 95, 96.8].map((close, index) => ({ date: `2026-11-${String(index + 2).padStart(2, "0")}`, close, volume: 1_000_000 })),
+};
 const COMPANY_HOLDERS = {
   schemaVersion: 2, cik: 320193, ticker: "AAPL", version: "k16.5", builtAt: "2026-11-22T00:00:00.000Z",
   quarters: [
@@ -251,6 +256,7 @@ function answer(procedure: string, role: string): unknown {
     case "desk.flowsCompany": return FLOWS_COMPANY;
     case "desk.companyStatements": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_STATEMENTS;
     case "desk.companyGuidance": return DESK_DATA.empty || DESK_DATA.noStatements || !owner ? null : COMPANY_GUIDANCE;
+    case "prices.history": return DESK_DATA.empty ? null : PRICE_HISTORY;
     case "desk.companyActions": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_ACTIONS;
     case "desk.companyHolders": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_HOLDERS;
     case "desk.companyInsiders": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_INSIDERS;

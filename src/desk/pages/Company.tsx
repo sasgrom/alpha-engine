@@ -15,6 +15,7 @@ import { CompanyActions } from "./company/Actions";
 import { CompanyGuidance } from "./company/Guidance";
 import { CompanyHolders } from "./company/Holders";
 import { CompanyInsiders } from "./company/Insiders";
+import { CompanyRisk } from "./company/Risk";
 import { CompanyStatements } from "./company/Statements";
 
 type DailyRange = "1M" | "3M" | "6M" | "YTD" | "1Y" | "5Y" | "ALL";
@@ -248,6 +249,8 @@ export default function CompanyPage() {
             <Stat label="50-day / 200-day average" value={`${fmtPrice(company.ma50)} / ${fmtPrice(company.ma200)}`} />
           </div>
         </Card>
+
+        <CompanyRisk points={dailyPoints} rangeLabel={RANGES.find((item) => item.value === range)?.label ?? range} intraday={isIntraday} />
 
         <Card className="desk-span-4" title="Earnings" subtitle="Report dates and how the stock reacted">
           <div className="desk-stats" style={{ gridTemplateColumns: "1fr" }}>

@@ -21,15 +21,24 @@ const MARGIN = { top: 10, right: 8, bottom: 22 };
 export function PeriodBars({
   bars,
   format,
+  axisFormat,
   yearSteps,
+  labelAt,
+  labelAtEdge = false,
   name,
   height = 170,
   palette,
 }: {
   bars: PeriodBar[];
   format: (value: number) => string;
-  /** How many bars back the same period a year earlier is (4 for quarters, 1 for years). */
+  /** Axis labels, when they should be shorter than the tooltip's figure. */
+  axisFormat?: (value: number) => string;
+  /** How many bars back the same period a year earlier is (4 for quarters, 1 for years); 0 when the bars are not periods. */
   yearSteps: number;
+  /** Which bars get an axis label; by default every one that fits, else every fourth counted from the newest. */
+  labelAt?: (index: number) => boolean;
+  /** Put a bar's label at its left edge instead of under its middle: for bars that are ranges of a scale, labelled by where they start. */
+  labelAtEdge?: boolean;
   /** What the bars are, for assistive technology. */
   name: string;
   height?: number;
@@ -45,12 +54,12 @@ export function PeriodBars({
     const ticks = niceTicks(Math.min(0, ...values), Math.max(0, ...values), 3);
     const domain: [number, number] = [Math.min(ticks[0], 0, ...values), Math.max(ticks[ticks.length - 1], 0, ...values)];
     // the left margin fits the longest axis label ("−$100.0M" is wider than "50.0B")
-    const left = Math.max(44, Math.max(...ticks.map((tick) => format(tick).length)) * 6.3 + 14);
+    const left = Math.max(44, Math.max(...ticks.map((tick) => (axisFormat ?? format)(tick).length)) * 6.3 + 14);
     const plotW = width - left - MARGIN.right;
     const plotH = height - MARGIN.top - MARGIN.bottom;
     const step = plotW / bars.length;
     return { ticks, y: linear(domain, [MARGIN.top + plotH, MARGIN.top]), step, bar: Math.max(2, Math.min(26, step - 2)), plotW, left };
-  }, [bars, width, height, format]);
+  }, [bars, width, height, format, axisFormat]);
 
   if (!layout) return <div className="desk-empty" style={{ padding: "18px 0" }}>No figures to chart for this line.</div>;
   const { ticks, y, step, bar, plotW, left } = layout;
@@ -63,7 +72,7 @@ export function PeriodBars({
     setHover(index >= 0 && index < bars.length ? index : null);
   };
   const active = hover !== null ? bars[hover] : null;
-  const before = hover !== null && hover >= yearSteps ? bars[hover - yearSteps].value : null;
+  const before = hover !== null && yearSteps > 0 && hover >= yearSteps ? bars[hover - yearSteps].value : null;
   const change = active && active.value !== null && before !== null && before > 0 && active.value > 0 ? active.value / before - 1 : null;
   return (
     <div ref={ref} style={{ position: "relative" }}>
@@ -71,7 +80,7 @@ export function PeriodBars({
         {ticks.map((tick) => (
           <g key={tick}>
             <line x1={left} x2={left + plotW} y1={y(tick)} y2={y(tick)} stroke={tick === 0 ? palette.axis : palette.grid} strokeWidth={1} />
-            <text x={left - 8} y={y(tick) + 3.5} textAnchor="end" fontSize={10.5} fill={palette.muted} style={{ fontVariantNumeric: "tabular-nums" }}>{format(tick)}</text>
+            <text x={left - 8} y={y(tick) + 3.5} textAnchor="end" fontSize={10.5} fill={palette.muted} style={{ fontVariantNumeric: "tabular-nums" }}>{(axisFormat ?? format)(tick)}</text>
           </g>
         ))}
         {bars.map((item, index) => {
@@ -80,8 +89,8 @@ export function PeriodBars({
           const size = Math.max(1, Math.abs(y(item.value) - y(0)));
           return <rect key={item.key} data-bar={item.key} x={center(index) - bar / 2} y={top} width={bar} height={size} rx={Math.min(3, bar / 2, size / 2)} fill={palette.accent} opacity={hover === null || hover === index ? 1 : 0.55} />;
         })}
-        {bars.map((item, index) => ((bars.length - 1 - index) % every === 0 ? (
-          <text key={item.key} x={center(index)} y={height - 6} textAnchor="middle" fontSize={10.5} fill={palette.muted}>{item.label}</text>
+        {bars.map((item, index) => ((labelAt ? labelAt(index) : (bars.length - 1 - index) % every === 0) ? (
+          <text key={item.key} x={center(index) - (labelAtEdge ? step / 2 : 0)} y={height - 6} textAnchor="middle" fontSize={10.5} fill={palette.muted}>{item.label}</text>
         ) : null))}
       </svg>
       {active && hover !== null && (

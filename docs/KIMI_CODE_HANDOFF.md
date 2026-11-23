@@ -3465,3 +3465,27 @@ delivered.
 - Files rebuilt: 107.9 MB, content hash `88e52657733c`. Web server restarted at 2026-11-23T06:36:43Z after proving
   one process (two new procedures; both answer 401 without a session). Looked at on screenshots of the live page with
   the real files (AAPL, JPM), not by a signed-in person.
+
+## 215. Claude (Fable 5.2): adjusted earnings are not in the release tables; risk card on the company page — 2026-11-23T06:51Z
+
+- Third and fourth items of the owner's list.
+- **Adjusted (non-GAAP) earnings per share: not built, because the data does not exist.** In section 212 and to the
+  owner I wrote that the reported adjusted figure would come "from the release tables". That was an assumption, and
+  it is wrong:
+  - the K12.1 extract (`flash-k121b-rest/flash-quarter-rest.jsonl`) has revenue, net income, GAAP diluted earnings
+    per share and operating income only; its `values.jsonl` (the statement rows) holds 34 rows labelled as adjusted
+    or non-GAAP earnings per share in 31,258 releases. The K12 spec says non-GAAP was left out;
+  - the guidance standard g1.2 holds 766 non-forward adjusted per-share rows; they cover 259 of the 9,722 quarters
+    and years with adjusted per-share guidance (2.7%).
+  - Adjusted guidance is the common kind (24,749 forward adjusted per-share rows against 7,722 GAAP), so the gap
+    matters. Ways to close it, none started (a new extraction needs the owner's go, AGENTS.md section 6): a parser
+    for the releases' reconciliation tables over the cached exhibits (no GPU; needs a golden set like K03's); a
+    local-model pass over the releases (GPU, which is to stay free); or a vendor's reported earnings history, which
+    belongs to the open estimates decision.
+- **Risk and returns card** (`src/desk/pages/company/Risk.tsx`, `price-risk.ts`, `src/desk/charts/DrawdownChart.tsx`):
+  the classic Terminal's drawdown chart, return histogram and period statistics, on the desk Company page under the
+  price chart and following its range. From the same daily closes the chart shows (the app's `prices.history`): return,
+  annualized volatility, the largest fall from a high with its two dates, the distance below the high now, best and
+  worst day, share of days up; the fall from the highest close so far as a line with the deepest point marked; the
+  daily returns in round bins around zero, the most extreme 1% of days on each side in the end bins. The intraday
+  ranges show a hint instead. No new server code, no new files.

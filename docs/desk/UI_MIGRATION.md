@@ -175,11 +175,16 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
   - [x] Holders and breadth from the 13F standard k16.5; insiders from the insider standard i1.1 (2026-11-22). The
     desk page no longer reads the classic 13F summary (`company.institutional`, the stored table with half the money
     missing) or the Form 4 table (`company.insiderTrades`). The short-interest lines still come from the app.
-  - [ ] Terminal's three charts: drawdown, return histogram, period statistics.
+  - [x] Terminal's three charts (2026-11-22): a "Risk and returns" card under the price chart, from the closes of the
+    chosen range: the period's figures, the fall from the high, the spread of daily returns.
   - [ ] Documents reader and filings list.
   - [x] Guidance history (2026-11-22, `c958388`): each guided quarter and fiscal year from the guidance standard g1.2 final,
     release after release, beside the figure first filed; owner and NDA reviewers only. 349 companies have guidance.
-  - [ ] Adjusted (non-GAAP) earnings: the reported figure, from the release tables (K12.1), so adjusted guidance can be compared.
+  - [ ] Adjusted (non-GAAP) earnings: the reported figure, so adjusted guidance can be compared. **Not in any data we
+    have** (checked 2026-11-22, handoff 215): the K12.1 release tables hold GAAP lines only (34 adjusted
+    per-share rows in 31,258 releases; the K12 spec left non-GAAP out), and the guidance standard has a reported
+    adjusted figure for 259 of 9,722 adjusted-guided periods. It needs a new reading of the releases'
+    reconciliation tables (a parser task, or a local-model pass), or a vendor's reported earnings. Owner's call.
   - [x] Owner, 2026-11-22 ("agree"): the valuation, probability and sentiment panels of the classic company page are
     left out of the desk. They come from the app's old factor engine, which never passed an out-of-sample test.
 - [ ] Design notes per phase: page sketches, data each view reads, DevNotes text.
