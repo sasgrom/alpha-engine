@@ -3306,3 +3306,26 @@ delivered.
 - Two findings to act on: `alpha-bridge-agent` is enabled in `operations-config.json` and runs every two minutes
   although AGENTS.md section 9 keeps it paused (11,606 idle logs); `daily-digest` has failed since 2026-11-21 because
   Ollama is stopped on the owner's word.
+
+## 210. Claude (Fable 5.2): first prune pass; desk statements from the standard fundamentals — 2026-11-23T02:42Z
+
+- **Owner's decisions, 2026-11-22:** first prune pass yes; disable the two-minute bridge job but keep the Kimi bridge
+  (Kimi's few credits end on 2026-11-30); pause the morning brief; then "lets continue with old functionality rebuild
+  and move to new platform".
+- **Prune pass** (details and what was kept: `docs/PROJECT_REVIEW_2026-11-22.md` section 8):
+  - source: `74279ad` root leftovers, `c919504` 42 unused components, `29c95ea` 14-day run-log retention job;
+  - C: 71 run folders and packages, 5.19 GB, and 3,979 old logs; D: 40 superseded build folders, 103.4 GB;
+  - every removal went through a guarded script (allowed roots, kept names, no reparse points) with manifests on D:;
+  - `operations-config.json`: `alpha-bridge-agent` and `daily-digest` disabled.
+- **Desk Company statements** (`82491c7`): `scripts/build-desk-company.mts` builds one file per company from the
+  standard fundamentals v3.1 (500 companies, 20 quarters, content hash `e80fdfe337af`) into
+  `worker/.runs/desk-company/`; `desk.companyStatements` serves it; the Company page shows the three statements with
+  filing date and tag on hover. Manual job `desk-company-statements`. Plan and order: `docs/desk/UI_MIGRATION.md`.
+- **Gates:** `npm run check`, 264 files / 1,490 tests, `npm run build`, `git diff --check` pass.
+- **Restarts, each after proving one process and an idle lane:** scheduler at 02:23Z (84 jobs, the retention job
+  registered; the manual statements job registers at its next restart); web server at 02:42Z (one process on port
+  3000; `desk.companyStatements` answers 401 without a session, the desk page 200).
+- **Also:** the owner restarted Windows at 17:21 local; Ollama came back with the sign-in and was stopped again on his
+  standing word. Lab `c2b180f`: the insider feature script reads the final insiders build.
+- **Open:** final guidance build g1.2 (ready, no GPU, not started: the owner has not answered); whether Ollama's
+  autostart should be turned off; the estimates pilot.

@@ -152,5 +152,28 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 - [x] Review K17a; the follow-up K17a.1 was sent (2026-11-13).
 - [x] Check which classic job types still run. The local `jobs` table holds only five `universe-add` rows (last 2026-11-05); harvest, series build, section parse and scoring have no runs.
 - [x] Write K17b (2026-11-13).
+- [x] 2026-11-22, owner: "lets continue with old functionality rebuild and move to new platform". Kimi's credits end on
+  2026-11-30; Claude builds, and K17b stays ready for Kimi if the owner starts it.
+- **Order from here** (classic pages stay untouched until their replacement is in the desk; then they redirect and are
+  removed together with the pipelines behind them):
+  1. Company page, piece by piece on the standard data (below).
+  2. Operations console (K17b).
+  3. Research pages on the standards: guidance record (g1.2), insiders (i1.1), option chains, scenario lab, handbooks.
+  4. Retire the classic view, then prune the old pipelines listed in `docs/PROJECT_REVIEW_2026-11-22.md` section 6.4.
+- **How the desk reads the standards:** a builder turns a standard's own files on D: into compact per-company files
+  under `worker/.runs/desk-company/`, and a desk procedure serves them. The research database is never read at request
+  time, and the app database gets no new tables.
+- **Company page on the standard data:**
+  - [x] Financial statements (2026-11-22, `82491c7`): 20 quarters of income, balance sheet and cash flow lines from the
+    standard fundamentals v3.1, as first reported; hover shows the filing date and XBRL tag; a later different figure
+    is marked. Builder `scripts/build-desk-company.mts` (manual job `desk-company-statements`), 500 companies.
+  - [ ] Annual and trailing-twelve-month views; a chart per line.
+  - [ ] Corporate actions (splits, dividends, spin-offs) from the standard prices.
+  - [ ] Holders and breadth from the 13F standard; insiders from the insider standard (replaces the Form 4 table).
+  - [ ] Terminal's three charts: drawdown, return histogram, period statistics.
+  - [ ] Documents reader and filings list.
+  - [ ] Guidance history from the guidance standard, once g1.2 is final.
+  - [ ] Decide with the owner: valuation, probability and sentiment panels come from the app's old factor engine, which
+    never passed an out-of-sample test (review section 4). Rebuild only what has evidence.
 - [ ] Design notes per phase: page sketches, data each view reads, DevNotes text.
 - [ ] Keep this file current after each phase: what moved, what was dropped and why.

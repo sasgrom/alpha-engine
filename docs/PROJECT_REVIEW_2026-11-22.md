@@ -227,3 +227,21 @@ through them. Some are still wanted as manual tools. By group:
 4. The desk migration K17b to K17e, now Claude's work.
 5. Older open decisions: the false price session of 2007-01-06, the TPL price gap, the SEC data-set download,
    whether Ollama may run each morning for the digest.
+
+## 8. First prune pass, done 2026-11-22 (owner: "1. yes")
+
+| What | Result |
+|---|---|
+| Root leftovers | 52 `t_*.mts`, `53tickers.zip`, `merge-backup.patch`, `info.md` removed (`74279ad`). **The 28 `apply-ddl-*.mts` stay:** two have tests and the production runbooks name them |
+| Unused interface code | 42 components, `use-mobile.ts`, `contracts/types.ts` removed (`c919504`), 5,111 lines |
+| Run logs | New daily job `run-log-retention` (`29c95ea`), 14 days; first run removed 3,979 logs |
+| Run folders on C: | 71 folders and packages, 5.19 GB. Kept: production rollback evidence (`production-sync-2026-11-05`, two `cusip-map-ticker-text-*`), folders the code reads (`precomputed-page-data`, `cohort-qa`, `form4-qa`), `k17a-ui`, `k21-ui`, two loose failure logs of paused pipelines |
+| Superseded builds on D: | 40 folders, 103.4 GB: 11 insider builds and `std-smoke`, `flash-k121-rest` and `-50`, 20 option builds, 2 price refreshes and 1 backup, 3 scratch folders |
+| Not removed | Older fundamentals versions (0.6 GB) and guidance builds (1.8 GB): wait for the final guidance build. `flash-rest` and `flash` (10.5 GB): owner's call |
+| Scheduler | `alpha-bridge-agent` disabled, `daily-digest` paused (both in `operations-config.json`). Bridge code, mailbox and AGENTS.md sections 8-10 stay until Kimi's credits end on 2026-11-30 |
+
+Manifests of every removed folder: `D:esearchlpha-engine\prune-manifest-*-20261122.json`, log `prune-20261122.log`.
+Free space after the pass: C: 79.1 GB (was 74.7), D: 491.2 GB (was 393.7).
+A guard stopped one removal: `scratch-clean-tree
+ode_modules` was a junction to the repository's real `node_modules`.
+Only the link was removed.
