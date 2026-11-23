@@ -173,6 +173,22 @@ const COMPANY_STATEMENTS = {
   },
 };
 
+const COMPANY_GUIDANCE = {
+  schemaVersion: 1, cik: 320193, ticker: "AAPL", guidanceVersion: "g1.2.20261122", standard: "v3.1", builtAt: "2026-11-22T00:00:00.000Z",
+  periods: [
+    { metric: "revenue", basis: "unclear", kind: "Q", periodEnd: "2026-12-26", fy: null, fq: null, updates: [{ issued: "2026-10-30", low: 120e9, high: 126e9, mid: 123e9 }], reaffirmed: 0, actual: null, note: "not_reported_yet" },
+    { metric: "revenue", basis: "unclear", kind: "Q", periodEnd: "2026-09-26", fy: 2026, fq: 4, updates: [{ issued: "2026-07-31", low: 108e9, high: 112e9, mid: 110e9 }], reaffirmed: 0, actual: { value: 114_477_000_000, filed: "2026-11-03", how: "quarter" }, note: null },
+    { metric: "revenue", basis: "unclear", kind: "FY", periodEnd: "2025-09-27", fy: 2025, fq: null, updates: [{ issued: "2025-01-30", low: null, high: null, mid: 400e9 }, { issued: "2025-07-31", low: null, high: null, mid: 410e9 }], reaffirmed: 1, actual: { value: 405e9, filed: "2025-10-31", how: "four_quarters" }, note: null },
+    { metric: "eps", basis: "non_gaap", kind: "Q", periodEnd: "2026-09-26", fy: 2026, fq: 4, updates: [{ issued: "2026-07-31", low: 1.7, high: 1.8, mid: 1.75 }], reaffirmed: 0, actual: null, note: "adjusted_basis" },
+  ],
+};
+const COMPANY_ACTIONS = {
+  schemaVersion: 1, cik: 320193, ticker: "AAPL", pricesAsOf: "2026-11-20", lastClose: 342.845, builtAt: "2026-11-22T00:00:00.000Z",
+  splits: [{ date: "2020-08-31", ratio: 4 }, { date: "2014-06-09", ratio: 7 }], distributions: [],
+  dividends: [{ date: "2026-11-12", amount: 0.27 }, { date: "2026-08-10", amount: 0.27 }, { date: "2026-05-11", amount: 0.27 }, { date: "2026-02-09", amount: 0.26 }],
+  dividendsLastYear: 1.07,
+};
+
 function answer(procedure: string, role: string): unknown {
   const owner = role === "admin";
   switch (procedure) {
@@ -197,6 +213,8 @@ function answer(procedure: string, role: string): unknown {
     case "desk.flowsFund": return FLOWS_FUND;
     case "desk.flowsCompany": return FLOWS_COMPANY;
     case "desk.companyStatements": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_STATEMENTS;
+    case "desk.companyGuidance": return DESK_DATA.empty || DESK_DATA.noStatements || !owner ? null : COMPANY_GUIDANCE;
+    case "desk.companyActions": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_ACTIONS;
     case "desk.engineIndex": return ENGINE_INDEX;
     case "desk.engineCompany": return ENGINE_COMPANY;
     case "admin.usersList": return DESK_DATA.empty ? [] : [

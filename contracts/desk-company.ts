@@ -55,8 +55,71 @@ export interface DeskCompanyIndex {
   schemaVersion: typeof DESK_COMPANY_SCHEMA_VERSION;
   standard: string;
   standardGeneratedAt: string;
+  /** The guidance standard version, and the last session of the standard prices, the other files were built from. */
+  guidanceVersion: string;
+  pricesAsOf: string | null;
   builtAt: string;
   /** sha256 over the built company files, in CIK order. */
   contentHash: string;
-  companies: Array<{ cik: number; ticker: string; quarters: number; lastQuarter: string | null; rows: number }>;
+  companies: Array<{ cik: number; ticker: string; quarters: number; lastQuarter: string | null; rows: number; guidancePeriods: number; actions: boolean }>;
+}
+
+/** One statement of guidance for a period, as a release gave it; amounts in dollars (or dollars per share). */
+export interface DeskGuidanceUpdate {
+  /** First session the release could be acted on. */
+  issued: string;
+  low: number | null;
+  high: number | null;
+  mid: number;
+}
+
+export type DeskGuidanceNote = "not_reported_yet" | "adjusted_basis" | "not_in_standard" | "other_meaning";
+
+/** What a company said about one period and one measure, release after release, and what it then reported. */
+export interface DeskGuidancePeriod {
+  metric: "revenue" | "eps";
+  basis: "gaap" | "non_gaap" | "unclear";
+  kind: "Q" | "FY";
+  /** Fiscal period end, YYYY-MM-DD (the company's own quarter end where the standard fundamentals have it). */
+  periodEnd: string;
+  fy: number | null;
+  fq: number | null;
+  /** Oldest first; a release that repeated the previous figures is counted in `reaffirmed`, not listed. */
+  updates: DeskGuidanceUpdate[];
+  reaffirmed: number;
+  /** The figure as first reported, when the standard fundamentals carry a comparable one. */
+  actual: { value: number; filed: string; how: "quarter" | "four_quarters" } | null;
+  /** Why there is nothing to compare with, when `actual` is null. */
+  note: DeskGuidanceNote | null;
+}
+
+export interface DeskCompanyGuidance {
+  schemaVersion: typeof DESK_COMPANY_SCHEMA_VERSION;
+  cik: number;
+  ticker: string;
+  /** The guidance standard and the standard fundamentals the file was built from. */
+  guidanceVersion: string;
+  standard: string;
+  builtAt: string;
+  /** Newest period first. */
+  periods: DeskGuidancePeriod[];
+}
+
+/** Splits, dividends and other distributions from the standard prices, in as-traded amounts. */
+export interface DeskCompanyActions {
+  schemaVersion: typeof DESK_COMPANY_SCHEMA_VERSION;
+  cik: number;
+  ticker: string;
+  /** Last session in the standard prices and its as-traded close. */
+  pricesAsOf: string;
+  lastClose: number;
+  /** Newest first. A split of 4 means four shares for one; below 1 is a reverse split. */
+  splits: Array<{ date: string; ratio: number }>;
+  /** Spin-offs and special distributions, as the factor the price was adjusted by. Newest first. */
+  distributions: Array<{ date: string; factor: number }>;
+  /** Cash dividends by ex-date, in dollars per share as paid then. Newest first. */
+  dividends: Array<{ date: string; amount: number }>;
+  /** Cash dividends of the 365 days up to `pricesAsOf`. */
+  dividendsLastYear: number;
+  builtAt: string;
 }

@@ -11,6 +11,8 @@ import { DevNotes } from "../DevNotes";
 import { daysBetween, entityName, fmtCap, fmtClock, fmtCompact, fmtDate, fmtNum, fmtPct, fmtPrice, localToday, personName, relativeDay } from "../format";
 import { useDeskIntraday } from "../intraday";
 import { rememberTicker } from "../preferences";
+import { CompanyActions } from "./company/Actions";
+import { CompanyGuidance } from "./company/Guidance";
 import { CompanyStatements } from "./company/Statements";
 
 type DailyRange = "1M" | "3M" | "6M" | "YTD" | "1Y" | "5Y" | "ALL";
@@ -380,6 +382,8 @@ export default function CompanyPage() {
         </Card>
 
         <CompanyStatements cik={cik} />
+        {isPresentation && <CompanyGuidance cik={cik} />}
+        <CompanyActions cik={cik} />
       </div>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", marginTop: 22 }}>

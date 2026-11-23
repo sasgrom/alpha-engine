@@ -38,6 +38,15 @@ describe("desk view for a member", () => {
     expect(host.textContent).not.toContain("Database browser");
   });
 
+  it("shows a member the filed statements and the splits and dividends, but not the guidance reading", async () => {
+    desk = await mountDesk("user", "/desk/company/AAPL", "Splits and dividends");
+    await waitUntil(() => desk!.host.textContent?.includes("Dividends, last 12 months") ?? false);
+    expect(desk.host.textContent).toContain("Financial statements");
+    // guidance is the owner's and the reviewers' research: no card, and no request for it
+    expect(desk.host.textContent).not.toContain("Guidance and what was reported");
+    expect(desk.calls).not.toContain("desk.companyGuidance");
+  });
+
   it("opens the fund-flow page for a member, without the owner's build notes", async () => {
     desk = await mountDesk("user", "/desk/flows?view=reading", "Most bought");
     expect(desk.calls).toContain("desk.flowsOverview");

@@ -351,10 +351,10 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local credential store only.", requirements: ["network"], notes: "Browser authorization is needed only after revocation, credential/app changes or an outage long enough to lose the refresh window. The daily collector also refreshes an expired access token when credentials are available.",
   }),
   job({
-    id: "desk-company-statements", name: "Desk company statements", group: "research", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
-    ...npx("scripts/build-desk-company.mts"), purpose: "Rebuild the per-company statements files behind the desk Company page from the standard fundamentals.",
-    input: "The standard fundamentals on D: (index.json with the field list and one file per company). The research database is not read.", output: "worker/.runs/desk-company/statements/<cik>.json (20 quarters, each figure as first reported with its filing date and tag) and index.json with a content hash.",
-    destination: "Local files read by desk.companyStatements; no production write.", requirements: ["driveD"], notes: "Run after a new standard fundamentals version is accepted. A missing or incomplete source stops the build and leaves the previous files in place. --dry-run measures without writing.",
+    id: "desk-company-statements", name: "Desk company files", group: "research", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
+    ...npx("scripts/build-desk-company.mts"), purpose: "Rebuild the per-company files behind the desk Company page from the research standards: statements, guidance history, splits and dividends.",
+    input: "On D:, the standards' own files: the standard fundamentals (index.json and one file per company), the guidance standard's statements, and the standard daily prices. The research database is not read.", output: "worker/.runs/desk-company/statements, guidance and actions, one file per company, and index.json with the versions used and a content hash.",
+    destination: "Local files read by desk.companyStatements, desk.companyGuidance and desk.companyActions; no production write.", requirements: ["driveD"], notes: "Run after a new fundamentals or guidance standard is accepted, and after the weekly standard prices refresh for current dividends. A missing or incomplete source stops the build and leaves the previous files in place. --dry-run measures without writing.",
   }),
   job({
     id: "research-reconciliation", name: "Read-only research reconciliation", group: "research", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
