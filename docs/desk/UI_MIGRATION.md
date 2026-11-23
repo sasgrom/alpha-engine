@@ -182,8 +182,10 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
     exhibit. The classic documents tab (the app's `documents` table, 51 companies) is not used by the desk.
   - [x] Guidance history (2026-11-22, `c958388`): each guided quarter and fiscal year from the guidance standard g1.2 final,
     release after release, beside the figure first filed; owner and NDA reviewers only. 349 companies have guidance.
-  - [ ] Adjusted (non-GAAP) earnings: the reported figure, so adjusted guidance can be compared. **Not in any data we
-    have** (checked 2026-11-22, handoff 215): the K12.1 release tables hold GAAP lines only (34 adjusted
+  - [x] Adjusted (non-GAAP) earnings, first version (2026-11-23, handoffs 217 and 218): read from the releases'
+    reconciliation tables by `scripts/build-adjusted-eps.mts` (a2); 890 of 1,672 adjusted quarterly guidance periods
+    on the page have the reported figure. More table layouts and the fiscal-year figures are the next version.
+    Background: the figure was **not in any data we had** (checked 2026-11-22, handoff 215): the K12.1 release tables hold GAAP lines only (34 adjusted
     per-share rows in 31,258 releases; the K12 spec left non-GAAP out), and the guidance standard has a reported
     adjusted figure for 259 of 9,722 adjusted-guided periods. It needs a new reading of the releases'
     reconciliation tables (a parser task, or a local-model pass), or a vendor's reported earnings. Owner's call.

@@ -97,7 +97,7 @@ export function GuidanceTable({ data, metric, limit }: { data: DeskCompanyGuidan
                       ? `The adjusted figure as the earnings release printed it, ${fmtDate(period.actual.filed, "medium")}; it is not in the filed statements`
                       : `As first reported, filed ${fmtDate(period.actual.filed, "medium")}${period.actual.how === "four_quarters" ? " · the sum of the year's four quarters" : ""}`
                     : undefined}>
-                    {period.actual ? money(period.actual.value, metric) : <span className="desk-muted">{NOTE[period.note ?? "not_in_standard"]}</span>}
+                    {period.actual ? money(period.actual.value, metric) : <span className="desk-muted" style={{ display: "inline-block", maxWidth: 230, whiteSpace: "normal", textAlign: "right" }}>{NOTE[period.note ?? "not_in_standard"]}</span>}
                   </td>
                   <td className="num">
                     {against ? (

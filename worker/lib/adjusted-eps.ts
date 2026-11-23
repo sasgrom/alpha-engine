@@ -294,7 +294,7 @@ export interface StoredRelease { accession: string; acceptedEt: string; fiscalPe
  * Only confirmed and same_row figures are for use.
  */
 export type AdjustedEpsGrade = "confirmed" | "same_row" | "restated" | "unchecked";
-export interface DecidedFigure { value: number; grade: AdjustedEpsGrade; label: string; diluted: boolean; file: string; tableIndex: number; rowIndex: number; laterValues: number[] }
+export interface DecidedFigure { value: number; grade: AdjustedEpsGrade; label: string; diluted: boolean; file: string; tableIndex: number; rowIndex: number; how: AdjustedEpsReading["how"]; laterValues: number[] }
 export interface DecidedRelease { accession: string; acceptedEt: string; fiscalPeriodEnd: string; quarter: DecidedFigure | null; year: DecidedFigure | null; quarterNote: string | null; yearNote: string | null }
 
 /** A row label without its footnote marks, so that the same row is the same row from release to release. */
@@ -302,6 +302,8 @@ export function rowKey(label: string): string {
   return canonicalLabel(label).replace(/[¹²³⁰-⁹*†‡]+/g, " ").replace(/\s*\(\s*(?:\d{1,2}|[a-z])\s*\)/g, " ").replace(/\s+\d{1,2}$/g, "").replace(/[\s:;,.\-–—]+$/g, "").replace(/\s+/g, " ").trim();
 }
 
+/** Per-share lines that are not earnings of the whole company, whatever else their label says. */
+const OTHER_PER_SHARE = /\b(distributions?|discontinued|dividends?)\b/i;
 const DAY = 86_400_000;
 const nearPeriod = (a: string, b: string) => Math.abs(Date.parse(a) - Date.parse(b)) <= PERIOD_DAYS * DAY;
 const cents = (value: number) => Math.round(value * 100);
@@ -314,7 +316,11 @@ const cents = (value: number) => Math.round(value * 100);
  * `splits` are the company's splits (date, ratio): a later release restates an earlier quarter for them.
  */
 export function decideCompany(releases: StoredRelease[], splits: Array<{ date: string; ratio: number }> = []): DecidedRelease[] {
-  const ordered = [...releases].sort((a, b) => a.acceptedEt.localeCompare(b.acceptedEt));
+  // Only rows whose own label says adjusted are decided on. A plain "earnings per share" row standing under an
+  // adjusted heading is as often the GAAP line or a dividend line (found on the full read: Analog Devices 2017, UDR's
+  // distributions), and a later release repeating it proves nothing about its meaning.
+  const ordered = [...releases].sort((a, b) => a.acceptedEt.localeCompare(b.acceptedEt))
+    .map((release) => ({ ...release, readings: release.readings.filter((reading) => isAdjustedEpsLabel(reading.label) && !OTHER_PER_SHARE.test(reading.label)) }));
   const splitFactor = (from: string, to: string) => splits.filter((split) => split.date > from.slice(0, 10) && split.date <= to.slice(0, 10) && split.ratio > 0).reduce((product, split) => product * split.ratio, 1);
   // what later releases print for a period: [value put back on the earlier release's share basis]
   const laterValues = (release: StoredRelease, months: number): number[] => {
@@ -350,7 +356,7 @@ export function decideCompany(releases: StoredRelease[], splits: Array<{ date: s
     const later = laterValues(release, months);
     const grade = (value: number, row: boolean): AdjustedEpsGrade => (later.length ? (equal(value, later) ? "confirmed" : "restated") : row ? "same_row" : "unchecked");
     const figure = (reading: StoredReading, row: boolean): DecidedFigure => ({
-      value: reading.value, grade: grade(reading.value, row), label: reading.label, diluted: reading.diluted, file: reading.file, tableIndex: reading.tableIndex, rowIndex: reading.rowIndex,
+      value: reading.value, grade: grade(reading.value, row), label: reading.label, diluted: reading.diluted, file: reading.file, tableIndex: reading.tableIndex, rowIndex: reading.rowIndex, how: reading.how ?? "period_header",
       laterValues: [...new Set(later.map((value) => Math.round(value * 1e4) / 1e4))].slice(0, 6),
     });
     const rows = readings.filter((reading) => trusted(reading.label)).sort((a, b) => (record.get(rowKey(b.label))!.confirmed - record.get(rowKey(a.label))!.confirmed) || Number(b.diluted) - Number(a.diluted));

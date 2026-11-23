@@ -36,6 +36,7 @@ const step = Math.max(1, Math.floor(usable.length / sample));
 const picked = usable.filter((_, index) => index % step === 0).slice(0, sample);
 let found = 0, noText = 0;
 const byGrade: Record<string, { checked: number; found: number }> = {};
+const byHow: Record<string, { checked: number; found: number }> = {};
 const notFound: Array<Record<string, unknown>> = [];
 for (const row of picked) {
   const directory = path.join(cache, String(row.cik)), stem = row.accession.replaceAll("-", "");
@@ -46,12 +47,17 @@ for (const row of picked) {
   const said = sentences.some((sentence) => number.test(sentence) && ADJUSTED.test(sentence) && PER_SHARE.test(sentence));
   const grade = (byGrade[row.quarter!.grade] ??= { checked: 0, found: 0 });
   grade.checked++;
+  const how = (byHow[row.quarter!.how] ??= { checked: 0, found: 0 });
+  how.checked++;
+  if (said) how.found++;
   if (!sentences.length) noText++;
   if (said) { found++; grade.found++; }
   else if (notFound.length < 200) notFound.push({ ticker: row.ticker, accession: row.accession, periodEnd: row.fiscalPeriodEnd, value: row.quarter!.value, grade: row.quarter!.grade, label: row.quarter!.label });
 }
 
 // ---- 2. against the company's adjusted guidance ----
+// the guidance of a release for a quarter, as the page builder takes it: the middle of that release's rows for the
+// quarter, and nothing when they differ by more than a tenth (two different things, not one statement)
 const guided = new Map<string, Array<{ issued: string; mid: number; low: number | null; high: number | null }>>();
 const BAD = new Set(["metric_conflict", "metric_unconfirmed", "unit_mismatch", "low_above_high"]);
 for await (const line of createInterface({ input: createReadStream(path.join(guidanceDir, "statements.jsonl"), "utf8"), crlfDelay: Infinity })) {
@@ -68,8 +74,13 @@ const far: Array<Record<string, unknown>> = [];
 for (const row of usable) {
   const list = (guided.get(String(row.cik)) ?? []) as Array<{ issued: string; mid: number; low: number | null; high: number | null; periodEnd: string }>;
   const before = list.filter((item) => Math.abs(Date.parse(item.periodEnd) - Date.parse(row.fiscalPeriodEnd)) <= 10 * DAY && item.issued < row.acceptedEt && Date.parse(row.acceptedEt) - Date.parse(item.issued) < 200 * DAY).sort((a, b) => a.issued.localeCompare(b.issued));
-  const last = before.at(-1);
-  if (!last || last.mid === 0) continue;
+  const newest = before.at(-1);
+  if (!newest) continue;
+  const same = before.filter((item) => item.issued === newest.issued);
+  const mids = same.map((item) => item.mid).sort((a, b) => a - b);
+  if (mids[0] === 0 || (mids[mids.length - 1] - mids[0]) / Math.abs(mids[0]) > 0.1) continue;
+  const lows = same.map((item) => item.low).filter((value): value is number => value !== null), highs = same.map((item) => item.high).filter((value): value is number => value !== null);
+  const last = { mid: mids.length % 2 ? mids[(mids.length - 1) / 2] : (mids[mids.length / 2 - 1] + mids[mids.length / 2]) / 2, low: lows.length ? Math.min(...lows) : null, high: highs.length ? Math.max(...highs) : null };
   const surprise = (row.quarter!.value - last.mid) / Math.abs(last.mid);
   surprises.push(surprise);
   if (last.low !== null && last.high !== null && last.low !== last.high) { withRange++; if (row.quarter!.value >= last.low - 0.005 && row.quarter!.value <= last.high + 0.005) inRange++; }
@@ -80,11 +91,11 @@ const at = (p: number) => (surprises.length ? Math.round(surprises[Math.floor(p 
 const share = (test: (value: number) => boolean) => (surprises.length ? Math.round((1000 * surprises.filter(test).length) / surprises.length) / 10 : null);
 const checks = {
   version: ADJUSTED_EPS_VERSION, generatedAt: new Date().toISOString(), usableQuarterFigures: usable.length,
-  ownWords: { sampled: picked.length, found, foundPct: Math.round((1000 * found) / Math.max(1, picked.length)) / 10, withoutRunningText: noText, byGrade, notFound },
+  ownWords: { sampled: picked.length, found, foundPct: Math.round((1000 * found) / Math.max(1, picked.length)) / 10, withoutRunningText: noText, byGrade, byHow, notFound },
   againstGuidance: {
     pairs: surprises.length, median: at(0.5), p10: at(0.1), p90: at(0.9), withinTenPercentPct: share((value) => Math.abs(value) <= 0.1), aboveMidPct: share((value) => value > 0),
     fartherThanHalfPct: share((value) => Math.abs(value) > 0.5), inOrAtRangePct: withRange ? Math.round((1000 * inRange) / withRange) / 10 : null, withRange, far,
   },
 };
 writeJsonAtomic(path.join(dir, "checks.json"), checks, true);
-console.log(`[check-adjusted-eps] ${usable.length} usable quarter figures · own words: ${found} of ${picked.length} sampled say the figure (${checks.ownWords.foundPct}%) ${JSON.stringify(byGrade)} · against guidance: ${surprises.length} pairs, median ${at(0.5)}, 10th to 90th percentile ${at(0.1)} to ${at(0.9)}, within 10% of the midpoint ${checks.againstGuidance.withinTenPercentPct}%, farther than half ${checks.againstGuidance.fartherThanHalfPct}%`);
+console.log(`[check-adjusted-eps] ${usable.length} usable quarter figures · own words: ${found} of ${picked.length} sampled say the figure (${checks.ownWords.foundPct}%) ${JSON.stringify(byGrade)} ${JSON.stringify(byHow)} · against guidance: ${surprises.length} pairs, median ${at(0.5)}, 10th to 90th percentile ${at(0.1)} to ${at(0.9)}, within 10% of the midpoint ${checks.againstGuidance.withinTenPercentPct}%, farther than half ${checks.againstGuidance.fartherThanHalfPct}%`);

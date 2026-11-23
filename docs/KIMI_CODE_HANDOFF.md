@@ -3564,3 +3564,40 @@ delivered.
   fund books, a k16.6 build of the 13F standard into a new folder (the loader holds one version and refuses to
   replace a final one, so the database keeps k16.5 until that is changed), the Flows files and the desk files; for
   v3.2, `checks.py`, `compare.py` against the control and against v3.1, then the load and the desk's switch to it.
+
+## 218. Claude (Fable 5.2): adjusted earnings read for all companies, checked, on the company page — 2026-11-23T09:40Z
+
+- Continues section 217, item 1 of the three running jobs.
+- **Full read (a2):** `scripts/build-adjusted-eps.mts`, 23:47 to 01:31 local, 6,202 s, no errors: 494 companies,
+  39,201 releases; readings under `D:/research/alpha-engine/engine/adjusted-eps/a2/readings` (reader hash
+  `8779034f7999dc4b`), decisions in `figures.jsonl`, counts in `summary.json`.
+- **Acceptance tightened after the first look at the whole set** (decision rules only; no re-read): only rows whose
+  own label says adjusted are decided on, and per-share lines of distributions, dividends or discontinued operations
+  are left out. A plain "earnings per share" row under an adjusted heading was as often the GAAP line or a dividend
+  line (Analog Devices 2017, UDR's distributions), and a later release repeating it proves nothing about its meaning.
+- **Result:** quarter figures: 10,313 confirmed by a later release, 1,483 from the same row (11,796 usable, 347
+  companies); 1,105 restated and 832 unchecked (kept, not used); 509 releases ambiguous. Fiscal years: 1,829 usable.
+  By route: the GAAP row's column 7,853, period headers 2,939, the GAAP row's block 663, across one row 341.
+- **Checks** (`scripts/check-adjusted-eps.mts`, `a2/checks.json`):
+  - against what I know independently: for 13 companies (J&J, Salesforce, Merck, Cisco, AMD, Coca-Cola, Analog
+    Devices, Applied Materials, Abbott, Lilly, UnitedHealth, Honeywell, Intel), every usable figure of the quarters
+    mid-2024 to mid-2025 equals the published adjusted figure: 46 of 46. Honeywell's three newest and one Intel
+    quarter are graded restated and not used;
+  - the release's own words: 1,162 of 1,500 sampled usable figures (77.5%) are stated in the running text in a
+    sentence that says adjusted and per share (99.5% on the 13 pilot companies). Not found is not an error: many
+    releases give the figure only in tables or lists;
+  - against the company's adjusted guidance (2,249 pairs): median 6.0% above the midpoint, 10th to 90th percentile
+    −1.1% to +27.8%, 60.5% within a tenth, 6.9% farther than half. The far cases spread evenly over the reading
+    routes and peak in 2020 and 2009; several are guidance rows of another meaning (Aon 6.48 against "0.36",
+    Stryker's yearly guidance typed as quarterly), a few are misreads (Pentair 2018-09-30: a nine-month figure).
+- **Coverage, plainly:** companies that print an adjusted figure but are not read: Nvidia, Broadcom, Procter &
+  Gamble, Oracle, Medtronic, Clorox, Equifax (layouts the reader does not know). Fiscal-year figures come through
+  the period headers only. Both are the next reader version; the read itself resumes per company.
+- **Company page:** `scripts/build-desk-company.mts` takes the usable figures; of the adjusted earnings guidance of
+  the last six years, 890 of 1,672 quarterly periods and 315 of 1,217 fiscal years now show the reported figure (149
+  companies); 80 more are far from the guidance and shown as another measure. Files rebuilt, content hash
+  `78bd3c18ad1e`. No server change, no restart.
+- **Found in the guidance standard on the way:** some rows labelled adjusted are GAAP figures (Analog Devices: 0.97
+  and 1.23 for quarters whose adjusted results were 1.85 and 2.05, guided at about 1.68 and 1.92). The page shows
+  them as another measure. A basis check against the GAAP and adjusted actuals could repair the label in a g1.3.
+- Still to come tonight: items 2 and 3 of section 217 (13F refresh at 03:32, fundamentals builds after the facts jobs).
