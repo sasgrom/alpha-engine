@@ -177,7 +177,9 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
     missing) or the Form 4 table (`company.insiderTrades`). The short-interest lines still come from the app.
   - [x] Terminal's three charts (2026-11-22): a "Risk and returns" card under the price chart, from the closes of the
     chosen range: the period's figures, the fall from the high, the spread of daily returns.
-  - [ ] Documents reader and filings list.
+  - [x] Filings list and a reader for the earnings releases (2026-11-22): five years of 10-K, 10-Q and 8-K filings
+    from the release calendar, each linked to the SEC's copy; an earnings release opens as plain text from the cached
+    exhibit. The classic documents tab (the app's `documents` table, 51 companies) is not used by the desk.
   - [x] Guidance history (2026-11-22, `c958388`): each guided quarter and fiscal year from the guidance standard g1.2 final,
     release after release, beside the figure first filed; owner and NDA reviewers only. 349 companies have guidance.
   - [ ] Adjusted (non-GAAP) earnings: the reported figure, so adjusted guidance can be compared. **Not in any data we

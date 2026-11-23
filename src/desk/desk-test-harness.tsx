@@ -204,6 +204,15 @@ const PRICE_HISTORY = {
   source: "test",
   bars: [100, 102, 104, 110, 99, 88, 90, 92, 91, 95, 96.8].map((close, index) => ({ date: `2026-11-${String(index + 2).padStart(2, "0")}`, close, volume: 1_000_000 })),
 };
+const COMPANY_FILINGS = {
+  schemaVersion: 2, cik: 320193, ticker: "AAPL", asOf: "2026-11-05", builtAt: "2026-11-22T00:00:00.000Z",
+  filings: [
+    { accession: "0000320193-26-000101", form: "10-K", filed: "2026-11-03", acceptedEt: "2026-11-03T06:01:00", period: "2026-09-26", items: [], earnings: false, primaryDoc: "aapl-20260926.htm", exhibits: [] },
+    { accession: "0000320193-26-000099", form: "8-K", filed: "2026-10-29", acceptedEt: "2026-10-29T16:30:12", period: "2026-10-29", items: ["2.02", "9.01"], earnings: true, primaryDoc: "aapl-8k.htm", exhibits: ["000032019326000099.ex-a8kex991.htm", "000032019326000099.ex-slides.htm"] },
+    { accession: "0000320193-26-000080", form: "8-K", filed: "2026-09-10", acceptedEt: null, period: "2026-09-09", items: ["5.02", "7.77"], earnings: false, primaryDoc: null, exhibits: [] },
+    ...Array.from({ length: 11 }, (_, index) => ({ accession: `0000320193-25-0000${String(40 - index).padStart(2, "0")}`, form: "10-Q", filed: `2025-${String(12 - index).padStart(2, "0")}-01`, acceptedEt: null, period: `2025-${String(12 - index).padStart(2, "0")}-01`, items: [], earnings: false, primaryDoc: "q.htm", exhibits: [] })),
+  ],
+};
 const COMPANY_HOLDERS = {
   schemaVersion: 2, cik: 320193, ticker: "AAPL", version: "k16.5", builtAt: "2026-11-22T00:00:00.000Z",
   quarters: [
@@ -258,6 +267,8 @@ function answer(procedure: string, role: string): unknown {
     case "desk.companyGuidance": return DESK_DATA.empty || DESK_DATA.noStatements || !owner ? null : COMPANY_GUIDANCE;
     case "prices.history": return DESK_DATA.empty ? null : PRICE_HISTORY;
     case "desk.companyActions": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_ACTIONS;
+    case "desk.companyFilings": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_FILINGS;
+    case "desk.companyDocument": return DESK_DATA.empty ? null : { accession: "0000320193-26-000099", file: "000032019326000099.ex-a8kex991.htm", paragraphs: ["Apple reports fourth quarter results", "Revenue | $114.5 billion"], truncated: false };
     case "desk.companyHolders": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_HOLDERS;
     case "desk.companyInsiders": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_INSIDERS;
     case "desk.engineIndex": return ENGINE_INDEX;

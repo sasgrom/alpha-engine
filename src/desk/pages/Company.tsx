@@ -12,6 +12,7 @@ import { daysBetween, fmtCap, fmtClock, fmtCompact, fmtDate, fmtNum, fmtPct, fmt
 import { useDeskIntraday } from "../intraday";
 import { rememberTicker } from "../preferences";
 import { CompanyActions } from "./company/Actions";
+import { CompanyFilings } from "./company/Filings";
 import { CompanyGuidance } from "./company/Guidance";
 import { CompanyHolders } from "./company/Holders";
 import { CompanyInsiders } from "./company/Insiders";
@@ -317,13 +318,14 @@ export default function CompanyPage() {
         <CompanyStatements cik={cik} />
         {isPresentation && <CompanyGuidance cik={cik} />}
         <CompanyActions cik={cik} />
+        <CompanyFilings cik={cik} />
       </div>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", marginTop: 22 }}>
         <Link className="desk-button" to={`/company/${encodeURIComponent(company.registryTicker)}`}>
           Full analysis in the classic view <ArrowUpRight size={14} aria-hidden="true" />
         </Link>
-        <span className="desk-muted" style={{ fontSize: 12.5 }}>Filings, valuation and sentiment are in the classic company page.</span>
+        <span className="desk-muted" style={{ fontSize: 12.5 }}>Valuation and sentiment are in the classic company page.</span>
       </div>
       <DevNotes page="company" />
     </div>

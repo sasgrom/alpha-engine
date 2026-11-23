@@ -12,7 +12,8 @@
  * filing) are marked and enter none of these figures.
  */
 import {
-  DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyActions, type DeskCompanyGuidance, type DeskCompanyHolders, type DeskCompanyInsiders, type DeskCompanyStatements,
+  DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyActions, type DeskCompanyFilings, type DeskCompanyGuidance, type DeskCompanyHolders, type DeskCompanyInsiders,
+  type DeskCompanyStatements,
   type DeskGuidancePeriod, type DeskGuidanceUpdate,
   type DeskStatementCell, type DeskStatementKind, type DeskStatementName, type DeskStatementQuarter, type DeskStatementRow, type DeskStatementSum,
   type DeskStatementSumRow, type DeskStatementYear,
@@ -669,4 +670,77 @@ export function buildDeskCompanyInsiders(params: { cik: number; ticker: string; 
     quarters: ends.map((end) => { const q = quarters.get(end)!; return { quarter: end, bought: cents(q.bought), sold: cents(q.sold), buyers: q.buyers.size, sellers: q.sellers.size }; }),
     year: { bought: cents(year.bought), sold: cents(year.sold), buyers: year.buyers.size, sellers: year.sellers.size, soldUnderPlan: cents(year.soldUnderPlan) },
   };
+}
+
+// --- filings: the release calendar --------------------------------------------------------------------------------------------
+
+/** One row of the release calendar's filings files (only the fields used here). */
+export interface CalendarFilingRow {
+  cik: number;
+  accessionNo: string;
+  form: string;
+  filingDate: string;
+  reportDate: string | null;
+  acceptedEt: string | null;
+  items: string | null;
+  isEarningsRelease: boolean;
+  primaryDoc: string | null;
+  cachedFiles: Array<{ name: string; bytes: number }>;
+}
+
+/** A cached exhibit's name: the accession without dashes, ".ex", an optional name, ".htm". Nothing else is ever opened. */
+export const EXHIBIT_FILE = /^\d{18}\.ex[A-Za-z0-9._-]{0,80}\.html?$/;
+
+/**
+ * A company's reports of the last years, newest first. An earnings release lists its cached exhibits (largest first:
+ * the release itself is usually the largest) so the page can show their text; other filings link to the SEC.
+ */
+export function buildDeskCompanyFilings(params: { cik: number; ticker: string; rows: CalendarFilingRow[]; asOf: string; builtAt: string; years?: number }): DeskCompanyFilings | null {
+  const since = new Date(Date.parse(params.asOf) - (params.years ?? 5) * 365.25 * DAY).toISOString().slice(0, 10);
+  const seen = new Set<string>();
+  const filings: DeskCompanyFilings["filings"] = [];
+  for (const row of params.rows) {
+    if (row.filingDate < since || row.filingDate > params.asOf || seen.has(row.accessionNo)) continue;
+    seen.add(row.accessionNo);
+    const stem = row.accessionNo.replaceAll("-", "");
+    filings.push({
+      accession: row.accessionNo, form: row.form, filed: row.filingDate, acceptedEt: row.acceptedEt, period: row.reportDate,
+      items: (row.items ?? "").split(",").map((item) => item.trim()).filter(Boolean), earnings: row.isEarningsRelease, primaryDoc: row.primaryDoc,
+      exhibits: row.isEarningsRelease
+        ? [...row.cachedFiles].filter((file) => file.name.startsWith(`${stem}.ex`) && EXHIBIT_FILE.test(file.name)).sort((a, b) => b.bytes - a.bytes).map((file) => file.name)
+        : [],
+    });
+  }
+  if (!filings.length) return null;
+  filings.sort((a, b) => b.filed.localeCompare(a.filed) || (b.acceptedEt ?? "").localeCompare(a.acceptedEt ?? "") || b.accession.localeCompare(a.accession));
+  return { schemaVersion: DESK_COMPANY_SCHEMA_VERSION, cik: params.cik, ticker: params.ticker, asOf: params.asOf, builtAt: params.builtAt, filings };
+}
+
+const ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: "\"", apos: "'", nbsp: " ", ndash: "–", mdash: "—", rsquo: "’", lsquo: "‘", rdquo: "”", ldquo: "“", bull: "•", middot: "·", reg: "®", trade: "™", copy: "©", hellip: "…", cent: "¢", sect: "§", deg: "°" };
+
+/**
+ * An HTML exhibit as paragraphs of plain text: scripts, styles and hidden XBRL headers dropped, a paragraph per block,
+ * a table row per paragraph with its cells set apart by " | ". No markup survives, so the page shows text only.
+ */
+export function htmlToParagraphs(html: string, limit = 1500): { paragraphs: string[]; truncated: boolean } {
+  // an exhibit saved out of the SEC's full submission starts with that file's own header lines (type, sequence, file name) before <TEXT>
+  const body = html.search(/<TEXT>/i);
+  const text = (body >= 0 ? html.slice(body + 6) : html)
+    .replace(/<!--[\s\S]*?-->/g, " ")
+    .replace(/<(script|style|head|ix:header)\b[\s\S]*?<\/\1\s*>/gi, " ")
+    .replace(/<\/(td|th)\s*>/gi, "\u0001")
+    .replace(/<(br|\/p|\/div|\/tr|\/li|\/h[1-6]|\/table|hr)\b[^>]*>/gi, "\n")
+    .replace(/<[^>]*>/g, "")
+    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
+    .replace(/&([a-z]+);/gi, (whole, name) => ENTITIES[name.toLowerCase()] ?? whole);
+  const paragraphs: string[] = [];
+  for (const raw of text.split("\n")) {
+    const cells = raw.split("\u0001").map((cell) => cell.replace(/[\s ]+/g, " ").trim()).filter(Boolean);
+    // "$" and ")" get their own cells in release tables: join them back to their numbers
+    const line = cells.join(" | ").replace(/\$ \| /g, "$").replace(/\( \| /g, "(").replace(/ \| \)/g, ")").replace(/ \| %/g, "%");
+    if (line) paragraphs.push(line);
+    if (paragraphs.length >= limit) return { paragraphs, truncated: true };
+  }
+  return { paragraphs, truncated: false };
 }

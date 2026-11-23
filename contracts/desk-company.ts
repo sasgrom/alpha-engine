@@ -124,7 +124,9 @@ export interface DeskCompanyIndex {
   holdersPeriod: string | null;
   insidersVersion: string | null;
   insidersAsOf: string | null;
-  companies: Array<{ cik: number; ticker: string; quarters: number; lastQuarter: string | null; rows: number; guidancePeriods: number; actions: boolean; holders: boolean; insiderTrades: number }>;
+  /** The last filing date of the release calendar behind the filings files. */
+  filingsAsOf: string | null;
+  companies: Array<{ cik: number; ticker: string; quarters: number; lastQuarter: string | null; rows: number; guidancePeriods: number; actions: boolean; holders: boolean; insiderTrades: number; filings: number }>;
 }
 
 /** One statement of guidance for a period, as a release gave it; amounts in dollars (or dollars per share). */
@@ -269,4 +271,45 @@ export interface DeskCompanyInsiders {
   quarters: DeskInsiderQuarter[];
   /** Open-market purchases and sales of the 365 days to `asOf`. */
   year: { bought: number; sold: number; buyers: number; sellers: number; soldUnderPlan: number };
+}
+
+/** One periodic or current report of the company, from the engine's release calendar. */
+export interface DeskCompanyFiling {
+  accession: string;
+  /** 10-K, 10-Q, 8-K and their amendments. */
+  form: string;
+  filed: string;
+  /** Acceptance by the SEC, Eastern time, when known. */
+  acceptedEt: string | null;
+  /** The period a 10-K or 10-Q reports on; for an 8-K, the date of the event. */
+  period: string | null;
+  /** 8-K item numbers ("2.02", "9.01"). */
+  items: string[];
+  /** The 8-K carries the quarter's earnings release. */
+  earnings: boolean;
+  /** The filing's main document, for the link to the SEC's copy. */
+  primaryDoc: string | null;
+  /** Cached exhibits of an earnings release that the page can show as text, largest first. */
+  exhibits: string[];
+}
+
+export interface DeskCompanyFilings {
+  schemaVersion: typeof DESK_COMPANY_SCHEMA_VERSION;
+  cik: number;
+  ticker: string;
+  /** The last filing date the calendar holds for any company: nothing after it is listed. */
+  asOf: string;
+  builtAt: string;
+  /** Newest first, the last five years. */
+  filings: DeskCompanyFiling[];
+}
+
+/** A cached release exhibit as plain text. */
+export interface DeskDocumentText {
+  accession: string;
+  file: string;
+  /** Paragraphs in reading order; table rows are one paragraph each, cells set apart by " | ". */
+  paragraphs: string[];
+  /** True when the document was longer than the page shows. */
+  truncated: boolean;
 }

@@ -3489,3 +3489,34 @@ delivered.
   worst day, share of days up; the fall from the highest close so far as a line with the deepest point marked; the
   daily returns in round bins around zero, the most extreme 1% of days on each side in the end bins. The intraday
   ranges show a hint instead. No new server code, no new files.
+
+## 216. Claude (Fable 5.2): company page filings list and release reader — 2026-11-23T07:02Z
+
+- Fifth item of the owner's list; with it the company-page list of section 212 is worked through (item 3, adjusted
+  earnings, is blocked on data: section 215).
+- **Builder:** `filings/<cik>.json` from the release calendar (`D:/research/alpha-engine/engine/events/filings-50.jsonl`,
+  `filings-rest.jsonl`, `filings-six.jsonl`): the 10-K, 10-Q and 8-K filings (and amendments) of the last five years,
+  with acceptance time, period, 8-K items and the earnings-release flag. An earnings release lists its cached
+  exhibits, taken from the exhibit cache itself (`worker/cache/edgar/<cik>/<accession>.ex*.htm`, the folder the
+  release-figure builder reads), because the research 50's calendar rows do not list them. 500 companies; the
+  calendar's last filing date is 2026-11-12. The calendar is built by hand (`scripts/build-event-calendar.mts`,
+  `scripts/build-release-calendar-rest.mts`), so the list ends there until it is rerun.
+- **Server:** `desk.companyFilings`, and `desk.companyDocument` (`api/services/desk-documents.ts`), which returns a
+  cached exhibit as paragraphs of plain text. It opens only a file that the company's own built filings list names
+  for that filing, whose name matches the exhibit pattern; no markup leaves the server; a missing file (D: away) is
+  null and the page points to the SEC. Tests cover an unlisted file, another filing, another company and a path.
+- **Page:** a Filings card (all / annual and quarterly / earnings releases / other 8-Ks) with what each filing is
+  about and a link to the SEC's copy; "Read the release" opens the text in a dialog, with a switch when a release
+  has several exhibits.
+- **Checked on the data** through the real service: the newest earnings release of 498 companies (2 have none in
+  five years) reads for all 498; none came back with fewer than 5 paragraphs; 47 are longer than the 1,500
+  paragraphs shown and say so.
+- Files rebuilt: 117.2 MB under `worker/.runs/desk-company`, content hash `d64ac28ff128`; the build takes about 80 s.
+  Gates: `npm run check`, 273 files / 1,545 tests, `npm run build`, `git diff --check`. Web server restarted at
+  2026-11-23T07:05:28Z after proving one process (two new procedures; `/desk` answers 200, the procedures 401 without
+  a session; the scheduler's heartbeat was current at 07:05:46Z). Looked at on screenshots of the live page with the
+  real files (AAPL), not by a signed-in person.
+- **Still open from this list:** adjusted earnings (owner's call, section 215); the 13F quarter to September is not
+  in the fund books (section 214); the standard fundamentals' out-of-scale share figures (section 213).
+- Next in `docs/desk/UI_MIGRATION.md` section 6: the Operations console (K17b), the research pages on the standards,
+  then retiring the classic view.

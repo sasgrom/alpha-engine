@@ -47,7 +47,9 @@ export const DEV_NOTES = {
   },
   company: {
     missing: [
-      "Filings and the documents reader, valuation and sentiment: still in the classic company page.",
+      "Valuation and sentiment: left in the classic company page on purpose (the old factor engine never passed an out-of-sample test).",
+      "Filings: 10-K, 10-Q and 8-K only, to the release calendar's last run (November 12, 2026); the calendar is rebuilt by hand, not on a schedule. Proxy statements, prospectuses and insider forms are not listed.",
+      "The reader shows earnings releases only, as plain text (tables as rows of cells). Annual and quarterly reports open at the SEC.",
       "Statements: 197 filed share counts and per-share figures of the last ten years are out of scale (a filing gave millions or thousands) and are named, not shown; their years have no per-share figure (McDonald's since 2023). The standard fundamentals could repair them.",
       "Guidance: adjusted (non-GAAP) earnings have no reported figure to compare with. The filed statements and the release tables we read carry GAAP only; the adjusted figure sits in the releases' reconciliation tables, which nothing reads yet.",
       "Fund holdings end at the June 2026 quarter: the September quarter's 13F reports (due November 16) are not in the fund books and the 13F standard yet.",

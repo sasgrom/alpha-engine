@@ -6,21 +6,23 @@
  * - the fund-flow files (overview, one fund, one company), for every signed-in user (owner's decision of
  *   2026-11-11); reviewers reach them, like everything else, only after accepting the NDA (middleware);
  * - the company files built from the research standards (one file per company): the statements, the splits and
- *   dividends, the fund holdings and the insider transactions for every signed-in user (figures the companies, the
- *   funds and the insiders filed, and public corporate actions); the guidance
+ *   dividends, the fund holdings, the insider transactions, the list of filings and the text of cached earnings
+ *   releases for every signed-in user (what the companies, the funds and the insiders filed with the SEC, and public
+ *   corporate actions); the guidance
  *   history, which is our own reading of the releases, only for the owner and NDA-accepted reviewers;
  * - the engine-flow files (the prediction engine's working, decision by decision), for the owner only;
  * - the home operations' health (scheduler, failed jobs, the evening market run, failed production pushes), for the
  *   owner only: the desk shows it as a banner, so a stopped collection is never silent.
  */
 import { z } from "zod";
-import type { DeskCompanyActions, DeskCompanyGuidance, DeskCompanyHolders, DeskCompanyInsiders, DeskCompanyStatements } from "@contracts/desk-company";
+import type { DeskCompanyActions, DeskCompanyFilings, DeskCompanyGuidance, DeskCompanyHolders, DeskCompanyInsiders, DeskCompanyStatements } from "@contracts/desk-company";
 import type { EngineFlowCompany, EngineFlowIndex } from "@contracts/engine-flow";
 import type { FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
 import { operationsHealth } from "../../worker/lib/operations-health";
 import { loadOperationsState } from "../../worker/lib/operations-scheduler";
 import { adminQuery, createRouter, authedQuery } from "../middleware";
 import { readDeskCompanyFile } from "../services/desk-company-files";
+import { readDeskDocumentText } from "../services/desk-documents";
 import { deskSnapshotFor, readDeskSnapshot } from "../services/desk-snapshot";
 import { intradayForCompany, readIntradayMarketReport } from "../services/intraday";
 import { readEngineFlowFile } from "../services/engine-flow-files";
@@ -44,6 +46,11 @@ export const deskRouter = createRouter({
   companyActions: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyActions>(`actions/${input.cik}.json`)),
   companyHolders: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyHolders>(`holders/${input.cik}.json`)),
   companyInsiders: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyInsiders>(`insiders/${input.cik}.json`)),
+  companyFilings: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyFilings>(`filings/${input.cik}.json`)),
+  // the text of a cached earnings-release exhibit; the service opens only a file the company's filings list names
+  companyDocument: authedQuery
+    .input(z.object({ cik: z.number().int().positive(), accession: z.string().regex(/^\d{10}-\d{2}-\d{6}$/), file: z.string().min(8).max(120) }))
+    .query(({ input }) => readDeskDocumentText(input)),
   // guidance is our own reading of the releases (a research product): the owner and NDA-accepted reviewers only, like the option fields
   companyGuidance: authedQuery.input(entity).query(({ ctx, input }) =>
     ctx.user.role === "admin" || ctx.reviewerAccess?.acceptedAt ? readDeskCompanyFile<DeskCompanyGuidance>(`guidance/${input.cik}.json`) : null),
