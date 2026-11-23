@@ -279,6 +279,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local read-only QA artifacts; no production write, schema change or retroactive data removal.", requirements: ["mysql", "driveD", "review"], notes: "All option snapshots receive spot/IV checks; parity strikes are checked on monthly first trading dates and the latest date through the Dolt clone.",
   }),
   job({
+    id: "run-log-retention", name: "Run log retention", group: "maintenance", mode: "scheduled", cron: "20 3 * * *", defaultEnabled: true, dependsOn: [],
+    ...npx("scripts/prune-run-logs.mts", ["--days", "14"]), purpose: "Remove the scheduler's per-run log files older than 14 days.",
+    input: "worker/.runs/<epoch ms>-<job id>.log files and their modification times.", output: "One line with the counts and megabytes removed and kept.",
+    destination: "Local worker/.runs only.", requirements: [], notes: "Only files named like a run log are touched. The scheduler log, the server log, state files and run folders stay. --dry counts without deleting.",
+  }),
+  job({
     id: "weekly-coverage-report", name: "Weekly coverage and drift report", group: "maintenance", mode: "scheduled", cron: "45 7 * * 1", defaultEnabled: true, dependsOn: ["daily-operations-report"],
     ...npx("scripts/build-weekly-coverage.mts"), purpose: "Compare the latest two inventory snapshots per table with row deltas, content hashes and latest dates.",
     input: "The current reviewed inventory and the previous local inventory snapshot.", output: "weekly-coverage.json and .md with per-table counts, deltas and hash drift.",
