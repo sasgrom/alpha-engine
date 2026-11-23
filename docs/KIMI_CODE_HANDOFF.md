@@ -3292,3 +3292,17 @@ delivered.
   fell from 15.5 GB to 8.2 GB. Start Ollama again only on the owner's word.
 - Not started, no GPU needed: the final g1.2 union build with `GUIDANCE_RERUN=<results.jsonl>` and a new version
   date, the reruns of the guidance, pooled and miss tests on it, and the `std_guidance_*` load.
+
+## 209. Claude (Fable 5.2): project review and prune list — 2026-11-23T02:30Z
+
+- Owner's request: re-analyze the project, list complete and incomplete work (UI, backend, algorithms, data fetch,
+  current tasks) and what to prune. Result: `docs/PROJECT_REVIEW_2026-11-22.md`. Read-only review; **nothing was
+  deleted or changed**. Every removal waits for the owner's go.
+- Method: import graph of the tracked source (429 of 965 files reachable from the web app, the server and the 68
+  registered scripts), scheduler state, table sizes, C: and D: folder sizes.
+- Largest prune candidates: 4.8 GB of run folders on C: (24 `expectations-reviewed*` exports are 3.9 GB), about
+  106 GB of superseded builds on D: (11 insider builds 63.8 GB, `std-smoke` 23.5 GB), 80 one-off scripts in the
+  repository root, 42 unused interface components, and 90 unregistered scripts with 50 library files behind them.
+- Two findings to act on: `alpha-bridge-agent` is enabled in `operations-config.json` and runs every two minutes
+  although AGENTS.md section 9 keeps it paused (11,606 idle logs); `daily-digest` has failed since 2026-11-21 because
+  Ollama is stopped on the owner's word.
