@@ -3350,3 +3350,27 @@ delivered.
   it). Its own log shows the app launched at 15:00 on 2026-11-21, a minute after it was stopped, and at 17:23 on
   2026-11-22 after the owner's restart, each time with its window. It is not running now. What launches it is not
   established.
+
+## 212. Claude (Fable 5.2): guidance standard loaded; company page guidance history, splits and dividends — 2026-11-23T04:38Z
+
+- Owner: "go ahead with the guidance loader and company page".
+- **Guidance standard in `alpha_research`** (lab `a867f3a`, `src/research/guidance/load-mysql.mts`): build
+  `D:/research/alpha-engine/guidance/std/20261123T033803Z` registered as **g1.2.20261122 final**.
+  - New version-keyed tables `std_guidance_releases` (48,351), `std_guidance_statements` (176,459; `isGuidance` = 1
+    for the 157,031 rows of the guidance view), `std_guidance_rejected` (128,969), `std_guidance_builds`.
+  - Batches of 500; output hashes checked against `build.json` before writing; every row read back and compared with
+    the files: 353,626 exact, 153 equal to the last digit of a double, 0 different, 0 missing. 665 s, 20:35-20:46
+    local. Log `guidance/load-g12-final-20261122.log`. Nothing replaced; `alpha_engine` not touched.
+- **Desk Company page** (`c958388`), built by `scripts/build-desk-company.mts` into `worker/.runs/desk-company`
+  (content hash `b68eb13071a9`):
+  - guidance history: what the company guided for each quarter and fiscal year, release after release, beside the
+    figure it first filed; difference to the midpoint, place against the range, the company's habit; 349 companies,
+    7,266 periods; revenue and GAAP EPS have a reported figure, adjusted EPS says why it has none.
+    `desk.companyGuidance` answers only the owner and NDA-accepted reviewers;
+  - splits, dividends and distributions from the standard prices (to 2026-11-20), 500 companies, for every member.
+- Gates: `npm run check`, 267 files / 1,506 tests, `npm run build`, `git diff --check`. Web server restarted at 04:40Z
+  after proving one process (one listener on port 3000; both new procedures answer 401 without a session). Looked at
+  on screenshots of the live page with the real files (AMZN, LMT), not by a signed-in person.
+- Not done: a `docs/engine/STANDARD_GUIDANCE.md` for the guidance standard (the rules are in the builder's header and
+  the lab notes); annual and trailing-year statement views; holders and insiders from the standards; the documents
+  reader; adjusted EPS from the release tables.

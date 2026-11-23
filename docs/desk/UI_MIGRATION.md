@@ -168,11 +168,13 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
     standard fundamentals v3.1, as first reported; hover shows the filing date and XBRL tag; a later different figure
     is marked. Builder `scripts/build-desk-company.mts` (manual job `desk-company-statements`), 500 companies.
   - [ ] Annual and trailing-twelve-month views; a chart per line.
-  - [ ] Corporate actions (splits, dividends, spin-offs) from the standard prices.
+  - [x] Splits, dividends and other distributions from the standard prices (2026-11-22, `c958388`), for every member.
   - [ ] Holders and breadth from the 13F standard; insiders from the insider standard (replaces the Form 4 table).
   - [ ] Terminal's three charts: drawdown, return histogram, period statistics.
   - [ ] Documents reader and filings list.
-  - [ ] Guidance history from the guidance standard, once g1.2 is final.
+  - [x] Guidance history (2026-11-22, `c958388`): each guided quarter and fiscal year from the guidance standard g1.2 final,
+    release after release, beside the figure first filed; owner and NDA reviewers only. 349 companies have guidance.
+  - [ ] Adjusted (non-GAAP) earnings: the reported figure, from the release tables (K12.1), so adjusted guidance can be compared.
   - [x] Owner, 2026-11-22 ("agree"): the valuation, probability and sentiment panels of the classic company page are
     left out of the desk. They come from the app's old factor engine, which never passed an out-of-sample test.
 - [ ] Design notes per phase: page sketches, data each view reads, DevNotes text.
