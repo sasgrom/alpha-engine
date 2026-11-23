@@ -11,7 +11,7 @@ const METRICS: { value: Metric; label: string }[] = [
 ];
 const NOTE: Record<NonNullable<DeskGuidancePeriod["note"]>, string> = {
   not_reported_yet: "Not reported yet",
-  adjusted_basis: "Guided on an adjusted basis; the filed statements carry GAAP only",
+  adjusted_basis: "Guided on an adjusted basis; no adjusted figure could be verified in the release",
   not_in_standard: "No comparable figure in the filed statements",
   other_meaning: "The guided figure is another measure (a segment or another definition)",
 };
@@ -92,7 +92,11 @@ export function GuidanceTable({ data, metric, limit }: { data: DeskCompanyGuidan
                     {changes > 0 && <span className="desk-muted"> · changed {changes === 1 ? "once" : `${changes} times`}</span>}
                   </td>
                   <td>{fmtDate(period.updates[0].issued, "medium")}</td>
-                  <td className="num" title={period.actual ? `As first reported, filed ${fmtDate(period.actual.filed, "medium")}${period.actual.how === "four_quarters" ? " · the sum of the year's four quarters" : ""}` : undefined}>
+                  <td className="num" title={period.actual
+                    ? period.actual.how === "release"
+                      ? `The adjusted figure as the earnings release printed it, ${fmtDate(period.actual.filed, "medium")}; it is not in the filed statements`
+                      : `As first reported, filed ${fmtDate(period.actual.filed, "medium")}${period.actual.how === "four_quarters" ? " · the sum of the year's four quarters" : ""}`
+                    : undefined}>
                     {period.actual ? money(period.actual.value, metric) : <span className="desk-muted">{NOTE[period.note ?? "not_in_standard"]}</span>}
                   </td>
                   <td className="num">

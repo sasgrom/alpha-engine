@@ -191,6 +191,7 @@ const COMPANY_GUIDANCE = {
     { metric: "revenue", basis: "unclear", kind: "Q", periodEnd: "2026-09-26", fy: 2026, fq: 4, updates: [{ issued: "2026-07-31", low: 108e9, high: 112e9, mid: 110e9 }], reaffirmed: 0, actual: { value: 114_477_000_000, filed: "2026-11-03", how: "quarter" }, note: null },
     { metric: "revenue", basis: "unclear", kind: "FY", periodEnd: "2025-09-27", fy: 2025, fq: null, updates: [{ issued: "2025-01-30", low: null, high: null, mid: 400e9 }, { issued: "2025-07-31", low: null, high: null, mid: 410e9 }], reaffirmed: 1, actual: { value: 405e9, filed: "2025-10-31", how: "four_quarters" }, note: null },
     { metric: "eps", basis: "non_gaap", kind: "Q", periodEnd: "2026-09-26", fy: 2026, fq: 4, updates: [{ issued: "2026-07-31", low: 1.7, high: 1.8, mid: 1.75 }], reaffirmed: 0, actual: null, note: "adjusted_basis" },
+    { metric: "eps", basis: "non_gaap", kind: "Q", periodEnd: "2026-06-27", fy: 2026, fq: 3, updates: [{ issued: "2026-05-01", low: 1.45, high: 1.55, mid: 1.5 }], reaffirmed: 0, actual: { value: 1.62, filed: "2026-07-31", how: "release" }, note: null },
   ],
 };
 const COMPANY_ACTIONS = {

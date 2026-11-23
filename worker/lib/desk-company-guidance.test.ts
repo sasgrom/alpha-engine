@@ -59,6 +59,27 @@ describe("desk company guidance", () => {
     expect(eps.map((period) => [period.basis, period.actual?.value ?? period.note])).toEqual([["gaap", 1.1], ["non_gaap", "adjusted_basis"]]);
   });
 
+  it("sets adjusted guidance against the adjusted figure the release printed, when one was verified", () => {
+    const adjusted = [{ kind: "Q" as const, periodEnd: "2026-03-29", value: 1.46, released: "2026-05-01" }, { kind: "FY" as const, periodEnd: "2026-03-31", value: 9, released: "2026-05-01" }];
+    const rows = [
+      row({ metric: "eps", unit: "usd_per_share", basis: "non_gaap", low: 1.3, high: 1.5, mid: 1.4 }),
+      row({ metric: "eps", unit: "usd_per_share", basis: "gaap", low: 1, high: 1.2, mid: 1.1 }),
+    ];
+    const out = buildDeskCompanyGuidance({ doc, rows, guidanceVersion: "g-test", standard: "v-test", builtAt: "", adjusted, adjustedVersion: "a-test" });
+    const byBasis = new Map(out.periods.map((period) => [period.basis, period]));
+    // the release's period end is two days off the company's quarter end: the same quarter; the yearly figure is not a quarter's
+    expect(byBasis.get("non_gaap")).toMatchObject({ actual: { value: 1.46, filed: "2026-05-01", how: "release" }, note: null });
+    // GAAP guidance keeps the filed figure
+    expect(byBasis.get("gaap")!.actual).toMatchObject({ value: 1.1, how: "quarter" });
+    expect(out.adjustedVersion).toBe("a-test");
+    // a figure printed before the guidance was given is not its outcome, and a figure far from the guidance is another measure
+    const early = buildDeskCompanyGuidance({ doc, rows, guidanceVersion: "g-test", standard: "v-test", builtAt: "", adjusted: [{ ...adjusted[0], released: "2026-02-11" }], adjustedVersion: "a-test" });
+    expect(early.periods.find((period) => period.basis === "non_gaap")).toMatchObject({ actual: null, note: "adjusted_basis" });
+    expect(early.adjustedVersion).toBeUndefined();
+    const far = buildDeskCompanyGuidance({ doc, rows, guidanceVersion: "g-test", standard: "v-test", builtAt: "", adjusted: [{ ...adjusted[0], value: 3.2 }] });
+    expect(far.periods.find((period) => period.basis === "non_gaap")).toMatchObject({ actual: null, note: "other_meaning" });
+  });
+
   it("says why there is nothing to compare with", () => {
     const out = build([
       row({ periodEnd: "2026-06-30", low: 150, high: 160, mid: 155 }),                         // the quarter is not reported yet

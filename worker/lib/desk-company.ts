@@ -431,12 +431,18 @@ function firstReported(doc: StandardCompanyDoc, field: string, quarterIndex: num
   return versions.length ? { value: versions[0][1], filed: versions[0][0] } : null;
 }
 
+/** An adjusted earnings-per-share figure an earnings release printed for a period (scripts/build-adjusted-eps.mts), usable grades only. */
+export interface AdjustedEpsActual { kind: "Q" | "FY"; periodEnd: string; value: number; released: string }
+
 export function buildDeskCompanyGuidance(params: {
   doc: StandardCompanyDoc;
   rows: GuidanceStatementRow[];
   guidanceVersion: string;
   standard: string;
   builtAt: string;
+  /** The company's reported adjusted earnings per share, and the version of that reading. */
+  adjusted?: AdjustedEpsActual[];
+  adjustedVersion?: string;
   /** Periods ending more than this many years before the company's latest quarter are left out. */
   years?: number;
 }): DeskCompanyGuidance {
@@ -491,7 +497,12 @@ export function buildDeskCompanyGuidance(params: {
     const reportedOwn = quarter !== null && quarter.q.form != null && OWN_FORMS.has(quarter.q.form);
     let actual: DeskGuidancePeriod["actual"] = null;
     let note: DeskGuidancePeriod["note"] = null;
-    if (!reportedOwn) note = lastOwn !== null && group.periodEnd > lastOwn ? "not_reported_yet" : "not_in_standard";
+    // adjusted earnings per share: the figure the release for that period printed (the filed statements carry GAAP only)
+    const printed = group.metric === "eps" && group.basis === "non_gaap"
+      ? (params.adjusted ?? []).find((item) => item.kind === group.kind && daysApart(item.periodEnd, group.periodEnd) <= 10 && item.released > updates.at(-1)!.issued) ?? null
+      : null;
+    if (printed) actual = { value: printed.value, filed: printed.released, how: "release" };
+    else if (!reportedOwn) note = lastOwn !== null && group.periodEnd > lastOwn ? "not_reported_yet" : "not_in_standard";
     else if (group.metric === "eps" && group.basis !== "gaap") note = group.basis === "non_gaap" ? "adjusted_basis" : "not_in_standard";
     else if (group.kind === "Q") {
       const first = firstReported(doc, group.metric === "revenue" ? "revenue" : "epsDil", quarter!.index);
@@ -517,7 +528,10 @@ export function buildDeskCompanyGuidance(params: {
     });
   }
   periods.sort((a, b) => b.periodEnd.localeCompare(a.periodEnd) || a.metric.localeCompare(b.metric) || a.kind.localeCompare(b.kind) || a.basis.localeCompare(b.basis));
-  return { schemaVersion: DESK_COMPANY_SCHEMA_VERSION, cik: doc.cik, ticker: doc.ticker, guidanceVersion, standard, builtAt, periods };
+  return {
+    schemaVersion: DESK_COMPANY_SCHEMA_VERSION, cik: doc.cik, ticker: doc.ticker, guidanceVersion, standard,
+    ...(params.adjustedVersion && periods.some((period) => period.actual?.how === "release") ? { adjustedVersion: params.adjustedVersion } : {}), builtAt, periods,
+  };
 }
 
 // --- splits and dividends --------------------------------------------------------------------------------------------

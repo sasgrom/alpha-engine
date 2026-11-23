@@ -3520,3 +3520,47 @@ delivered.
   in the fund books (section 214); the standard fundamentals' out-of-scale share figures (section 213).
 - Next in `docs/desk/UI_MIGRATION.md` section 6: the Operations console (K17b), the research pages on the standards,
   then retiring the classic view.
+
+## 217. Claude (Fable 5.2): adjusted-earnings reader, scale repair for v3.2, and three jobs running tonight — 2026-11-23T07:52Z
+
+- Owner, after section 216's three open points: "go on with best solution". Taken as: the parser for adjusted
+  earnings, the repair of the out-of-scale share figures in a new fundamentals version, and the September 13F quarter.
+- **Adjusted (non-GAAP) earnings per share reader** (`worker/lib/adjusted-eps.ts`, `scripts/build-adjusted-eps.mts`,
+  19 tests). Reads the adjusted per-share row of each release's reconciliation tables from the cached exhibits.
+  - Which printed figure belongs to which period is settled by the table's own GAAP line: the column (or block, or
+    row) where it prints the GAAP earnings per diluted share known for the quarter from the standard fundamentals
+    (first report and later versions, and across splits) is that quarter's. Three layouts: adjusted and GAAP as
+    rows; measures as columns with "Reported (GAAP)" / "Comparable (Non-GAAP)" rows (Coca-Cola); one per-share row
+    with reported, adjustments and adjusted side by side, which must add up (Abbott). Tables without a GAAP line fall
+    back to the release-figure parser's period headers.
+  - A figure is used only when borne out: `confirmed` (a later release prints the same figure for the period, to the
+    cent or after the splits in between) or `same_row` (not printed again yet, from the row whose figures were
+    confirmed at least twice and in 80% of the checked cases). `restated` and `unchecked` figures are kept, not used.
+  - Pilot, 13 companies the header-only first version mostly missed (2019 on, 430 releases): usable quarters about
+    24 → 221 (194 confirmed, 27 same row); Coca-Cola's latest quarter 0.91 equals the release's table. Not read:
+    Clorox, Equifax (other layouts); American Express and Dollar General rarely print an adjusted figure.
+  - Wired into the desk guidance history: adjusted guidance gets the release's figure (`how: "release"`); the builder
+    takes it from `D:/research/alpha-engine/engine/adjusted-eps/a2/figures.jsonl` when that file exists.
+- **Scale repair for the fundamentals standard** (lab `6c8de69`, `src/fundamentals/scale.mts`, 9 tests,
+  `SCALE_REPAIR=0` switches it off): before the build, a share count 30 times or more off the count that the
+  filings' own net income / earnings per share imply is multiplied by a thousand or a million (either way) when that
+  brings it within 1.5 times, the other filings nearby bear the yardstick out, and the tag's own record of agreeing
+  facts says the same. Smoke build of 8 companies: McDonald's (78 facts, x1,000,000), ConocoPhillips (222, x1,000),
+  Garmin, Brown & Brown, Apple (2 cover counts), Waters, Berkshire repaired; ICE untouched (its first filings as a
+  new registrant give net income in millions, which a first draft took for a share slip; two guards and tests now).
+- **Running or queued at the time of writing** (all started from this session; logs on D:):
+  1. `scripts/build-adjusted-eps.mts`, all companies, started 23:47 local, about 1.5 h. Log
+     `D:/research/alpha-engine/engine/adjusted-eps/a2-run-20261123.log`; per-company checkpoints under `a2/readings`,
+     so a stopped run resumes with the same command.
+  2. Queued for 03:32 local: `npx tsx scripts/13f-refresh.mts --universe funds-13f-top300.json --quarters 2` (the
+     scheduled job covers 30 funds only; the fund books have 53 funds for 2026-09-30). It writes the app's local 13F
+     tables as that collector always does. Log `D:/research/alpha-engine/fund-books/refresh-top300-20261123.log`. It
+     does not start while another 13f-refresh runs. The books of 2026-11-14 behind k16.5 are copied to
+     `fund-books/snapshots/k16.5-books-20261114`.
+  3. Queued for after tonight's facts jobs (not before 03:20 local): the fundamentals build twice from the same facts,
+     `standard/v3.2-control` (repair off) and `standard/v3.2`, each with `qa.mts`. Log
+     `D:/research/alpha-engine/fundamentals/standard/v3.2-build-20261123.log`. Nothing is loaded into MySQL by it.
+- **Next, in this order:** grade and check the adjusted figures, rebuild the desk files; after the 13F refresh, the
+  fund books, a k16.6 build of the 13F standard into a new folder (the loader holds one version and refuses to
+  replace a final one, so the database keeps k16.5 until that is changed), the Flows files and the desk files; for
+  v3.2, `checks.py`, `compare.py` against the control and against v3.1, then the load and the desk's switch to it.

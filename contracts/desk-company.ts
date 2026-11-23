@@ -152,8 +152,12 @@ export interface DeskGuidancePeriod {
   /** Oldest first; a release that repeated the previous figures is counted in `reaffirmed`, not listed. */
   updates: DeskGuidanceUpdate[];
   reaffirmed: number;
-  /** The figure as first reported, when the standard fundamentals carry a comparable one. */
-  actual: { value: number; filed: string; how: "quarter" | "four_quarters" } | null;
+  /**
+   * The figure as first reported: from the standard fundamentals ("quarter", or "four_quarters" for a fiscal year's
+   * revenue), or, for adjusted earnings per share, the figure the earnings release itself printed ("release"; `filed`
+   * is then the release's first session, and only figures a later release repeated, or from that same row, are used).
+   */
+  actual: { value: number; filed: string; how: "quarter" | "four_quarters" | "release" } | null;
   /** Why there is nothing to compare with, when `actual` is null. */
   note: DeskGuidanceNote | null;
 }
@@ -165,6 +169,8 @@ export interface DeskCompanyGuidance {
   /** The guidance standard and the standard fundamentals the file was built from. */
   guidanceVersion: string;
   standard: string;
+  /** The version of the adjusted-earnings reading, when the file carries figures from it. */
+  adjustedVersion?: string;
   builtAt: string;
   /** Newest period first. */
   periods: DeskGuidancePeriod[];

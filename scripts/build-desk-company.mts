@@ -30,7 +30,7 @@ import { createInterface } from "node:readline";
 import { DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyIndex, type DeskCompanyInsiders } from "../contracts/desk-company";
 import {
   buildDeskCompanyActions, buildDeskCompanyFilings, buildDeskCompanyGuidance, buildDeskCompanyHolders, buildDeskCompanyInsiders, buildDeskCompanyStatements, isGuidanceRow,
-  type CalendarFilingRow, type GuidanceStatementRow, type InsiderFilingDoc, type StandardCompanyDoc, type StandardField, type StandardPriceRow, type ThirteenFCompanyQuarter,
+  type AdjustedEpsActual, type CalendarFilingRow, type GuidanceStatementRow, type InsiderFilingDoc, type StandardCompanyDoc, type StandardField, type StandardPriceRow, type ThirteenFCompanyQuarter,
 } from "../worker/lib/desk-company";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 
@@ -41,6 +41,9 @@ const pricesDir = path.resolve(arg("--prices") ?? "D:/research/alpha-engine/pric
 const holdersDir = path.resolve(arg("--holders") ?? "D:/research/alpha-engine/fund-books/std");
 const insidersDir = path.resolve(arg("--insiders") ?? "D:/research/alpha-engine/insiders/std/20261116T223552Z");
 const calendarDir = path.resolve(arg("--calendar") ?? "D:/research/alpha-engine/engine/events");
+// The adjusted earnings per share the releases print (scripts/build-adjusted-eps.mts). Optional: without the folder the
+// guidance history simply has no reported figure for adjusted guidance.
+const adjustedDir = path.resolve(arg("--adjusted") ?? "D:/research/alpha-engine/engine/adjusted-eps/a2");
 const out = path.resolve(arg("--out") ?? "worker/.runs/desk-company");
 const quarters = Number(arg("--quarters") ?? 40);
 const dryRun = process.argv.includes("--dry-run");
@@ -159,6 +162,22 @@ async function insiderFilings(cik: number): Promise<InsiderFilingDoc[] | null> {
   return filings;
 }
 
+const adjustedActuals = new Map<number, AdjustedEpsActual[]>();
+let adjustedVersion: string | undefined;
+if (existsSync(path.join(adjustedDir, "figures.jsonl")) && existsSync(path.join(adjustedDir, "summary.json"))) {
+  adjustedVersion = (JSON.parse(readFileSync(path.join(adjustedDir, "summary.json"), "utf8")) as { version: string }).version;
+  for await (const line of createInterface({ input: createReadStream(path.join(adjustedDir, "figures.jsonl"), "utf8"), crlfDelay: Infinity })) {
+    if (!line) continue;
+    const row = JSON.parse(line) as { cik: number; acceptedEt: string; fiscalPeriodEnd: string; quarter: { value: number; grade: string } | null; year: { value: number; grade: string } | null };
+    const usable = (figure: { value: number; grade: string } | null) => figure !== null && (figure.grade === "confirmed" || figure.grade === "same_row");
+    const list = adjustedActuals.get(row.cik) ?? adjustedActuals.set(row.cik, []).get(row.cik)!;
+    // a release accepted after the close counts from the next day, like the guidance standard's availability
+    const released = row.acceptedEt.slice(11, 16) >= "16:00" ? new Date(Date.parse(`${row.acceptedEt.slice(0, 10)}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10) : row.acceptedEt.slice(0, 10);
+    if (usable(row.quarter)) list.push({ kind: "Q", periodEnd: row.fiscalPeriodEnd, value: row.quarter!.value, released });
+    if (usable(row.year)) list.push({ kind: "FY", periodEnd: row.fiscalPeriodEnd, value: row.year!.value, released });
+  }
+}
+
 if (!existsSync(pricesDir)) throw new Error(`Standard prices not found at ${pricesDir}; nothing was changed`);
 function priceRows(cik: number): StandardPriceRow[] | null {
   const file = path.join(pricesDir, `${cik}.csv`);
@@ -185,7 +204,7 @@ for (const name of files) {
   const actions = prices ? buildDeskCompanyActions({ cik: doc.cik, ticker: doc.ticker, rows: prices, builtAt }) : null;
   // without a standard price file the splits are unknown: no share basis, so no fiscal-year or trailing-year per-share figures
   const statements = buildDeskCompanyStatements({ doc, fields: index.fields, standard, standardGeneratedAt: index.generatedAt, builtAt, quarters, splits: actions ? actions.splits : null });
-  const guidance = buildDeskCompanyGuidance({ doc, rows: guidanceRows.get(doc.cik) ?? [], guidanceVersion: guidanceBuild.guidanceVersion, standard, builtAt });
+  const guidance = buildDeskCompanyGuidance({ doc, rows: guidanceRows.get(doc.cik) ?? [], guidanceVersion: guidanceBuild.guidanceVersion, standard, builtAt, adjusted: adjustedActuals.get(doc.cik), adjustedVersion });
   const holders = buildDeskCompanyHolders({ cik: doc.cik, ticker: doc.ticker, rows: holderRows.get(doc.cik) ?? [], builtAt });
   const filings = await insiderFilings(doc.cik);
   if (filings) {
@@ -233,4 +252,4 @@ const summary: DeskCompanyIndex = {
 };
 if (!dryRun) writeJsonAtomic(path.join(out, "index.json"), summary, true);
 const empty = companies.filter((company) => company.quarters === 0).length;
-console.log(`[desk-company] ${dryRun ? "dry run · " : ""}${companies.length} companies · statements from ${standard} (${quarters} quarters, ${empty} without own quarters, ${outOfScale} share or per-share figures marked out of scale) · guidance ${guidanceBuild.guidanceVersion} for ${withGuidance} · splits and dividends for ${withActions} (prices to ${pricesAsOf}) · holders ${holdersBuild.buildVersion} for ${withHolders} (to ${holdersPeriod}) · insiders ${insidersFinal.buildVersion} for ${withInsiders} (filings to ${insidersAsOf}) · filings for ${withFilings} (calendar to ${filingsAsOf}) · ${(bytes / 1_048_576).toFixed(1)} MB · hash ${summary.contentHash.slice(0, 12)} · ${out}`);
+console.log(`[desk-company] ${dryRun ? "dry run · " : ""}${companies.length} companies · statements from ${standard} (${quarters} quarters, ${empty} without own quarters, ${outOfScale} share or per-share figures marked out of scale) · guidance ${guidanceBuild.guidanceVersion} for ${withGuidance} (adjusted earnings ${adjustedVersion ?? "not read"} for ${adjustedActuals.size} companies) · splits and dividends for ${withActions} (prices to ${pricesAsOf}) · holders ${holdersBuild.buildVersion} for ${withHolders} (to ${holdersPeriod}) · insiders ${insidersFinal.buildVersion} for ${withInsiders} (filings to ${insidersAsOf}) · filings for ${withFilings} (calendar to ${filingsAsOf}) · ${(bytes / 1_048_576).toFixed(1)} MB · hash ${summary.contentHash.slice(0, 12)} · ${out}`);

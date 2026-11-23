@@ -52,7 +52,12 @@ describe("desk company guidance, splits and dividends", () => {
     const row = rowOf(tableWith(desk, "First given"), "Q4 FY26");
     expect(row.textContent).toContain("Q4 FY26 · adjusted");
     expect(row.textContent).toContain("$1.70 to $1.80");
-    expect(row.textContent).toContain("Guided on an adjusted basis; the filed statements carry GAAP only");
+    expect(row.textContent).toContain("Guided on an adjusted basis; no adjusted figure could be verified in the release");
+    // an adjusted figure read from the release is shown, and the hover says where it is from
+    const read = [...rowOf(tableWith(desk, "First given"), "Q3 FY26").querySelectorAll("td")];
+    expect(read[2].textContent).toBe("$1.62");
+    expect(read[2].getAttribute("title")).toBe("The adjusted figure as the earnings release printed it, Jul 31, 2026; it is not in the filed statements");
+    expect(read[3].textContent).toBe("+8.0% · above the range");
   });
 
   it("shows splits and dividends from the standard prices", async () => {
