@@ -48,7 +48,7 @@ export const DEV_NOTES = {
   company: {
     missing: [
       "Filings and the documents reader, valuation and sentiment: still in the classic company page.",
-      "Statements: annual and trailing-twelve-month views, and a chart per line. The table shows quarters only.",
+      "Statements: 197 filed share counts and per-share figures of the last ten years are out of scale (a filing gave millions or thousands) and are named, not shown; their years have no per-share figure (McDonald's since 2023). The standard fundamentals could repair them.",
       "Guidance: adjusted (non-GAAP) earnings have no reported figure to compare with, because the filed statements carry GAAP only; the release tables would have them.",
       "The engine's reading for this company.",
       "Exact times for 8-Ks absent from the release calendar: those markers are explicitly filing-date only; calendar releases carry their exact ET publication time.",

@@ -2,7 +2,7 @@
  * Per-company files behind the desk Company page, built from the research standards (never read from the research
  * database at request time): scripts/build-desk-company.mts writes them, api/services/desk-company-files.ts reads them.
  */
-export const DESK_COMPANY_SCHEMA_VERSION = 1;
+export const DESK_COMPANY_SCHEMA_VERSION = 2;
 
 export type DeskStatementName = "income" | "balance" | "cashflow";
 export type DeskStatementKind = "flow" | "instant" | "shares" | "perShare";
@@ -27,6 +27,18 @@ export interface DeskStatementCell {
   source: string;
   /** The latest filed value and its date, only when it differs from the first report. */
   restated?: { value: number; filed: string };
+  /**
+   * Set when a share count or per-share figure is out of scale against the company's other share figures (a units
+   * slip in the filing, or a figure derived from one). The page names it instead of showing it as a figure, and it
+   * enters no fiscal-year or trailing-year figure.
+   */
+  suspect?: true;
+  /**
+   * Share counts and per-share figures only, and only when a split came after the filing the figure is from: today's
+   * share basis / that filing's. The page multiplies a share count by it and divides a per-share figure by it, so a
+   * line reads on one basis; the hover gives the figure as filed.
+   */
+  factor?: number;
 }
 
 export interface DeskStatementRow {
@@ -35,6 +47,46 @@ export interface DeskStatementRow {
   kind: DeskStatementKind;
   /** One cell per quarter of `quarters`, in the same order; null where the company reported nothing. */
   cells: Array<DeskStatementCell | null>;
+}
+
+/**
+ * A figure for four consecutive quarters (a fiscal year, or the year ending at a quarter): flows are summed, weighted
+ * share counts averaged by days, per-share lines summed on one share basis.
+ */
+export interface DeskStatementSum {
+  /** From the figures known when the period's last quarter was first reported. */
+  value: number;
+  /** The same from the latest filed figures, only when it differs. */
+  restated?: number;
+  /**
+   * Set only when one of the four figures was first filed after the period's own report (a year restated for a
+   * spin-off, for example): the date all four were known, and the figures are as known on that date.
+   */
+  filed?: string;
+  /** Per-share lines: true when the figure is net income to common stockholders / the average share count, not a sum of the quarters' figures. */
+  ratio?: true;
+  /**
+   * Share counts and per-share figures only, and only when a split came after the filing the figure is from: today's
+   * share basis / that filing's. The page multiplies a share count by it and divides a per-share figure by it, so a
+   * line reads on one basis; the hover gives the figure as filed.
+   */
+  factor?: number;
+}
+
+/** One line's sums; lines that are amounts at a date (the balance sheet) are not here: their quarter-end cell is the figure. */
+export interface DeskStatementSumRow {
+  code: string;
+  cells: Array<DeskStatementSum | null>;
+}
+
+export interface DeskStatementYear {
+  /** Fiscal year end, YYYY-MM-DD. */
+  end: string;
+  fy: number | null;
+  /** Filing date of the annual report. */
+  filed: string | null;
+  /** Column of the year's last quarter in `quarters`. */
+  quarter: number;
 }
 
 export interface DeskCompanyStatements {
@@ -49,6 +101,12 @@ export interface DeskCompanyStatements {
   /** Oldest first. */
   quarters: DeskStatementQuarter[];
   statements: Record<DeskStatementName, DeskStatementRow[]>;
+  /** Fiscal years that end inside `quarters` with an annual report, oldest first. */
+  years: DeskStatementYear[];
+  /** One cell per entry of `years`. */
+  annual: Record<DeskStatementName, DeskStatementSumRow[]>;
+  /** The year ending at each quarter: one cell per entry of `quarters`. */
+  trailing: Record<DeskStatementName, DeskStatementSumRow[]>;
 }
 
 export interface DeskCompanyIndex {

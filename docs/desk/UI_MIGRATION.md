@@ -167,7 +167,10 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
   - [x] Financial statements (2026-11-22, `82491c7`): 20 quarters of income, balance sheet and cash flow lines from the
     standard fundamentals v3.1, as first reported; hover shows the filing date and XBRL tag; a later different figure
     is marked. Builder `scripts/build-desk-company.mts` (manual job `desk-company-statements`), 500 companies.
-  - [ ] Annual and trailing-twelve-month views; a chart per line.
+  - [x] Annual and trailing-year views; a chart per line (2026-11-22). 40 quarters; a fiscal year or trailing year is
+    four consecutive quarters as known at the last one's report; share counts and per-share lines on today's share
+    basis; figures out of scale are named, not shown. Checked against the filed annual facts by
+    `scripts/check-desk-company-years.mts` (handoff 213).
   - [x] Splits, dividends and other distributions from the standard prices (2026-11-22, `c958388`), for every member.
   - [ ] Holders and breadth from the 13F standard; insiders from the insider standard (replaces the Form 4 table).
   - [ ] Terminal's three charts: drawdown, return histogram, period statistics.

@@ -500,6 +500,27 @@
   font-weight: 500;
 }
 
+/* a statement line that charts itself when clicked */
+.desk-line-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.desk-line-button:hover {
+  color: var(--d-accent-ink);
+  text-decoration: underline;
+}
+
+.desk-line-button[aria-pressed="true"] {
+  color: var(--d-accent-ink);
+  font-weight: 640;
+}
+
 .desk-link:hover {
   text-decoration: underline;
 }

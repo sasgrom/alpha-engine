@@ -1,13 +1,14 @@
 /**
  * Builds the per-company files behind the desk Company page from the research standards on D: (the standards' own
  * files; the research database is never read here, and nothing is written to it):
- *   statements/<cik>.json  20 quarters of income, balance sheet and cash flow lines, from the standard fundamentals
+ *   statements/<cik>.json  40 quarters of income, balance sheet and cash flow lines, with fiscal-year and trailing-year
+ *                          figures, from the standard fundamentals (splits from the standard prices set the share basis)
  *   guidance/<cik>.json    what the company guided for each period, release after release, and what it then reported,
  *                          from the guidance standard and the standard fundamentals
  *   actions/<cik>.json     splits, dividends and other distributions, from the standard prices
  *
  *   npx tsx scripts/build-desk-company.mts [--source <fundamentals standard folder>] [--guidance <guidance build folder>]
- *                                           [--prices <standard prices daily folder>] [--out <folder>] [--quarters 20] [--dry-run]
+ *                                           [--prices <standard prices daily folder>] [--out <folder>] [--quarters 40] [--dry-run]
  *
  * Defaults: D:\research\alpha-engine\fundamentals\standard\v3.1, D:\research\alpha-engine\guidance\std\20261123T033803Z
  * (g1.2 final), D:\research\alpha-engine\prices\std\daily. Output: worker/.runs/desk-company, written atomically, with
@@ -30,7 +31,7 @@ const source = path.resolve(arg("--source") ?? "D:/research/alpha-engine/fundame
 const guidanceDir = path.resolve(arg("--guidance") ?? "D:/research/alpha-engine/guidance/std/20261123T033803Z");
 const pricesDir = path.resolve(arg("--prices") ?? "D:/research/alpha-engine/prices/std/daily");
 const out = path.resolve(arg("--out") ?? "worker/.runs/desk-company");
-const quarters = Number(arg("--quarters") ?? 20);
+const quarters = Number(arg("--quarters") ?? 40);
 const dryRun = process.argv.includes("--dry-run");
 if (!Number.isInteger(quarters) || quarters < 4) throw new Error("--quarters must be an integer of at least 4");
 
@@ -84,13 +85,14 @@ const hash = createHash("sha256");
 // The hash covers what the page shows, not the build time, so unchanged standards give an unchanged hash.
 const stable = (value: { builtAt: string }) => { const { builtAt: _builtAt, ...rest } = value; return JSON.stringify(rest); };
 const companies: DeskCompanyIndex["companies"] = [];
-let bytes = 0, withGuidance = 0, withActions = 0, pricesAsOf: string | null = null;
+let bytes = 0, withGuidance = 0, withActions = 0, outOfScale = 0, pricesAsOf: string | null = null;
 for (const name of files) {
   const doc = JSON.parse(readFileSync(path.join(companyDir, name), "utf8")) as StandardCompanyDoc;
-  const statements = buildDeskCompanyStatements({ doc, fields: index.fields, standard, standardGeneratedAt: index.generatedAt, builtAt, quarters });
-  const guidance = buildDeskCompanyGuidance({ doc, rows: guidanceRows.get(doc.cik) ?? [], guidanceVersion: guidanceBuild.guidanceVersion, standard, builtAt });
   const prices = priceRows(doc.cik);
   const actions = prices ? buildDeskCompanyActions({ cik: doc.cik, ticker: doc.ticker, rows: prices, builtAt }) : null;
+  // without a standard price file the splits are unknown: no share basis, so no fiscal-year or trailing-year per-share figures
+  const statements = buildDeskCompanyStatements({ doc, fields: index.fields, standard, standardGeneratedAt: index.generatedAt, builtAt, quarters, splits: actions ? actions.splits : null });
+  const guidance = buildDeskCompanyGuidance({ doc, rows: guidanceRows.get(doc.cik) ?? [], guidanceVersion: guidanceBuild.guidanceVersion, standard, builtAt });
   const texts = [stable(statements), stable(guidance), actions ? stable(actions) : "null"];
   hash.update(`${doc.cik}\0${texts.join("\0")}\0`);
   bytes += texts.reduce((sum, text) => sum + text.length, 0);
@@ -100,6 +102,7 @@ for (const name of files) {
     if (pricesAsOf === null || actions.pricesAsOf > pricesAsOf) pricesAsOf = actions.pricesAsOf;
   }
   const rows = statements.statements.income.length + statements.statements.balance.length + statements.statements.cashflow.length;
+  for (const row of [...statements.statements.income, ...statements.statements.balance]) outOfScale += row.cells.filter((cell) => cell?.suspect).length;
   companies.push({ cik: doc.cik, ticker: doc.ticker, quarters: statements.quarters.length, lastQuarter: statements.quarters.at(-1)?.end ?? null, rows, guidancePeriods: guidance.periods.length, actions: actions !== null });
   if (dryRun) continue;
   writeJsonAtomic(path.join(out, "statements", `${doc.cik}.json`), statements);
@@ -113,4 +116,4 @@ const summary: DeskCompanyIndex = {
 };
 if (!dryRun) writeJsonAtomic(path.join(out, "index.json"), summary, true);
 const empty = companies.filter((company) => company.quarters === 0).length;
-console.log(`[desk-company] ${dryRun ? "dry run · " : ""}${companies.length} companies · statements from ${standard} (${quarters} quarters, ${empty} without own quarters) · guidance ${guidanceBuild.guidanceVersion} for ${withGuidance} · splits and dividends for ${withActions} (prices to ${pricesAsOf}) · ${(bytes / 1_048_576).toFixed(1)} MB · hash ${summary.contentHash.slice(0, 12)} · ${out}`);
+console.log(`[desk-company] ${dryRun ? "dry run · " : ""}${companies.length} companies · statements from ${standard} (${quarters} quarters, ${empty} without own quarters, ${outOfScale} share or per-share figures marked out of scale) · guidance ${guidanceBuild.guidanceVersion} for ${withGuidance} · splits and dividends for ${withActions} (prices to ${pricesAsOf}) · ${(bytes / 1_048_576).toFixed(1)} MB · hash ${summary.contentHash.slice(0, 12)} · ${out}`);

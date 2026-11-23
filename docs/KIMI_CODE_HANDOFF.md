@@ -3374,3 +3374,62 @@ delivered.
 - Not done: a `docs/engine/STANDARD_GUIDANCE.md` for the guidance standard (the rules are in the builder's header and
   the lab notes); annual and trailing-year statement views; holders and insiders from the standards; the documents
   reader; adjusted EPS from the release tables.
+
+## 213. Claude (Fable 5.2): company statements by fiscal year and trailing year, a chart per line — 2026-11-23T06:26Z
+
+- Owner: "go ahead in that order" (the company-page list of section 212). This is its first item.
+- **Builder** (`worker/lib/desk-company.ts`, `scripts/build-desk-company.mts`; statements file schema 2, 40 quarters):
+  - a fiscal year (the quarter reported in a 10-K) and the year ending at each quarter are four consecutive quarters
+    (each starts the day after the one before, within 7 days; 350 to 380 days in all), each figure as known when the
+    last quarter was first reported. That is the rule of the normalized panel
+    (`docs/engine/FUNDAMENTALS_NORMALIZATION.md` section 4);
+  - when one of the four was first filed later (a year restated for a spin-off, whose fourth quarter on the new basis
+    came with a later filing), all four are taken as known on that later day, so one sum never mixes two bases;
+  - flows are summed; weighted share counts are averaged by days; a year's earnings per share is net income to common
+    stockholders / the average share count, else the sum of the quarters' figures;
+  - share basis: each report's basis is the product of the splits (standard prices) it shows. A report filed up to 60
+    days before a split is settled by its own share count (it jumps by the ratio, or it does not; else unknown, and
+    no per-share figure is formed). Each share count and per-share figure carries `factor` = today's basis / its
+    filing's, and a later figure that differs only by a split is not called restated;
+  - **scale check:** three estimates of a quarter's share count (balance sheet, weighted average, net income / filed
+    earnings per share) are set against each other; two within 3 times agree, else the nearest settled quarters
+    decide. A share count 30 times or more off, or an earnings-per-share figure 30 times off net income / that count,
+    is marked `suspect`, shown as "n/a" with the filed figure on hover, and enters no yearly figure.
+- **Check against the filings:** `npx tsx scripts/check-desk-company-years.mts` sets every built fiscal year against
+  the annual fact of the same tag that the 10-K filed (SEC companyfacts cache; within 0.5%, per-share within 0.5% or
+  one cent). 500 companies, fiscal years inside the last 40 quarters:
+
+  | Line | Years compared | Equal | Over 5% off | Over 20% off |
+  |---|---|---|---|---|
+  | Revenue | 4,568 | 98.5% | 36 | 9 |
+  | Net income | 4,146 | 99.5% | 9 | 2 |
+  | Operating income | 3,635 | 98.7% | 18 | 6 |
+  | Cash from operations | 4,633 | 99.3% | 15 | 7 |
+  | Capital expenditure | 4,195 | 98.7% | 37 | 31 |
+  | Earnings per basic share | 4,449 | 95.9% | 58 | 24 |
+  | Earnings per diluted share | 4,463 | 91.6% | 82 | 31 |
+  | Weighted diluted shares | 4,467 | 95.5% | 18 | 8 |
+
+  - Years with a split inside: 86 of 87 basic and 81 of 86 diluted per-share figures equal the filed one.
+  - Diluted earnings per share: half the differences are under 0.1%, 90% under 0.7%, 95% under 1.8%. Summing the
+    quarters' own figures instead matched 82%, so the ratio is used.
+  - The remaining differences are mostly years the annual report restated (spin-offs: IBM 2021, GE, HPE, Dollar
+    Tree), lines where the check picked another tag than the standard's expression (capital expenditure), and
+    annual facts that are themselves out of scale in the filing (10 share counts).
+- **Finding about the standard fundamentals v3.1:** 197 of 91,422 share counts and per-share figures in the last 40
+  quarters are out of scale (53 basic and 50 diluted weighted counts, 28 balance-sheet counts, 33 + 33 per-share
+  figures). The filing gave millions or thousands (McDonald's weighted shares since 2023, PACCAR 2019, Church &
+  Dwight 2022, ConocoPhillips 2016-2021), and the standard's fourth quarters derived from them are wrong with them.
+  The normalized panel n1 already drops such counts by its own rule; the standard itself still carries them. A
+  repair in a v3.2 (rescale by 1,000 or 1,000,000 where that restores agreement) is open; nothing was changed in the
+  standard.
+- **Page** (`src/desk/pages/company/Statements.tsx`, `src/desk/charts/PeriodBars.tsx`): Quarterly / Annual / Trailing
+  year; 2, 5 or 10 years; a bar chart of the chosen line over all periods (revenue, total assets or cash from
+  operations until a line is clicked) with the change against a year earlier on hover; a balance-sheet line under a
+  yearly view is its year-end amount; wide tables open at the newest periods with the line names pinned.
+- Files rebuilt: 500 companies, 97.5 MB, content hash `f0c0565aeef7`. Gates: `npm run check`, 268 files / 1,524
+  tests, `npm run build`, `git diff --check`. Web server restarted at 2026-11-23T06:15:38Z after proving one process
+  (the schema changed; the statements procedure answers 401 without a session). Looked at on screenshots of the live
+  page with the real files (AAPL, NVDA, MSFT, AMZN, MCD, COP; light and dark), not by a signed-in person.
+- Next on the list: holders and insiders from the standards, adjusted earnings from the release tables, Terminal's
+  three charts, the documents reader.

@@ -158,7 +158,7 @@ const MANUALS = [
 ];
 
 const COMPANY_STATEMENTS = {
-  schemaVersion: 1, cik: 320193, ticker: "AAPL", name: "Apple Inc.", standard: "v3.1", standardGeneratedAt: "2026-11-13T11:58:15.693Z", builtAt: "2026-11-22T00:00:00.000Z",
+  schemaVersion: 2, cik: 320193, ticker: "AAPL", name: "Apple Inc.", standard: "v3.1", standardGeneratedAt: "2026-11-13T11:58:15.693Z", builtAt: "2026-11-22T00:00:00.000Z",
   quarters: [
     { end: "2026-06-27", fy: 2026, fq: 3, form: "10-Q", filed: "2026-07-31" },
     { end: "2026-09-26", fy: 2026, fq: 4, form: "10-K", filed: "2026-11-03" },
@@ -167,14 +167,25 @@ const COMPANY_STATEMENTS = {
     income: [
       { code: "revenue", label: "Revenue", kind: "flow", cells: [{ value: 94_036_000_000, filed: "2026-07-31", source: "Revenues", restated: { value: 94_100_000_000, filed: "2026-11-03" } }, { value: 114_477_000_000, filed: "2026-11-03", source: "Revenues" }] },
       { code: "epsDil", label: "Diluted earnings per share", kind: "perShare", cells: [null, { value: 1.85, filed: "2026-11-03", source: "derived" }] },
+      { code: "eps", label: "Earnings per basic share", kind: "perShare", cells: [{ value: 7.6, filed: "2026-07-31", source: "EarningsPerShareBasic", factor: 4 }, { value: 1.86, filed: "2026-11-03", source: "EarningsPerShareBasic" }] },
+      { code: "shareswaDil", label: "Weighted average diluted shares", kind: "shares", cells: [{ value: 14_800, filed: "2026-07-31", source: "WeightedAverageNumberOfDilutedSharesOutstanding", suspect: true }, { value: 14_750_000_000, filed: "2026-11-03", source: "WeightedAverageNumberOfDilutedSharesOutstanding" }] },
     ],
     balance: [{ code: "totalAssets", label: "Total assets", kind: "instant", cells: [null, { value: 359_241_000_000, filed: "2026-11-03", source: "Assets" }] }],
     cashflow: [],
   },
+  years: [{ end: "2026-09-26", fy: 2026, filed: "2026-11-03", quarter: 1 }],
+  annual: {
+    income: [{ code: "revenue", cells: [{ value: 478_834_000_000, restated: 479_000_000_000 }] }, { code: "epsDil", cells: [{ value: 8.31, ratio: true }] }],
+    balance: [], cashflow: [],
+  },
+  trailing: {
+    income: [{ code: "revenue", cells: [{ value: 466_823_000_000 }, { value: 478_834_000_000, restated: 479_000_000_000 }] }, { code: "epsDil", cells: [null, { value: 8.31, ratio: true }] }],
+    balance: [], cashflow: [],
+  },
 };
 
 const COMPANY_GUIDANCE = {
-  schemaVersion: 1, cik: 320193, ticker: "AAPL", guidanceVersion: "g1.2.20261122", standard: "v3.1", builtAt: "2026-11-22T00:00:00.000Z",
+  schemaVersion: 2, cik: 320193, ticker: "AAPL", guidanceVersion: "g1.2.20261122", standard: "v3.1", builtAt: "2026-11-22T00:00:00.000Z",
   periods: [
     { metric: "revenue", basis: "unclear", kind: "Q", periodEnd: "2026-12-26", fy: null, fq: null, updates: [{ issued: "2026-10-30", low: 120e9, high: 126e9, mid: 123e9 }], reaffirmed: 0, actual: null, note: "not_reported_yet" },
     { metric: "revenue", basis: "unclear", kind: "Q", periodEnd: "2026-09-26", fy: 2026, fq: 4, updates: [{ issued: "2026-07-31", low: 108e9, high: 112e9, mid: 110e9 }], reaffirmed: 0, actual: { value: 114_477_000_000, filed: "2026-11-03", how: "quarter" }, note: null },
@@ -183,7 +194,7 @@ const COMPANY_GUIDANCE = {
   ],
 };
 const COMPANY_ACTIONS = {
-  schemaVersion: 1, cik: 320193, ticker: "AAPL", pricesAsOf: "2026-11-20", lastClose: 342.845, builtAt: "2026-11-22T00:00:00.000Z",
+  schemaVersion: 2, cik: 320193, ticker: "AAPL", pricesAsOf: "2026-11-20", lastClose: 342.845, builtAt: "2026-11-22T00:00:00.000Z",
   splits: [{ date: "2020-08-31", ratio: 4 }, { date: "2014-06-09", ratio: 7 }], distributions: [],
   dividends: [{ date: "2026-11-12", amount: 0.27 }, { date: "2026-08-10", amount: 0.27 }, { date: "2026-05-11", amount: 0.27 }, { date: "2026-02-09", amount: 0.26 }],
   dividendsLastYear: 1.07,
