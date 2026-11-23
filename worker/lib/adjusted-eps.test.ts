@@ -101,6 +101,34 @@ describe("settling the period by the table's GAAP line", () => {
     expect(adjustedEpsFromExhibits([exhibit(html("2.40"))], "2026-09-26", [QUARTER, YEAR_AGO]).readings).toEqual([]);
   });
 
+  it("reads rows named only GAAP and Non-GAAP under a per-share heading", () => {
+    const html = plain([["Diluted net income per share"], ["GAAP", "$", "1.85", "$", "2.10", "$", "1.60"], ["Non-GAAP", "$", "1.95", "$", "2.20", "$", "1.69"], ["Weighted average shares", "2,400", "2,410", "2,450"]]);
+    const out = adjustedEpsFromExhibits([exhibit(html)], "2026-09-26", [QUARTER, YEAR_AGO]);
+    expect(out.readings.map((reading) => [reading.how, reading.label, reading.periodEnd, reading.value, reading.diluted])).toEqual([
+      ["gaap_column", "Diluted net income per share · Non-GAAP", "2026-09-26", 1.95, true],
+      ["gaap_column", "Diluted net income per share · Non-GAAP", "2025-09-27", 1.69, true],
+    ]);
+  });
+
+  it("reads a row whose first half is GAAP and second half adjusted, by the headers or by a name inside the row", () => {
+    const halves = plain([["", "GAAP", "Non-GAAP"], ["Earnings per common share - diluted", "$", "1.85", "$", "1.60", "+$0.25", "$", "1.95", "$", "1.69", "+$0.26"]]);
+    expect(adjustedEpsFromExhibits([exhibit(halves)], "2026-09-26", [QUARTER, YEAR_AGO]).readings.map((reading) => [reading.how, reading.periodEnd, reading.value])).toEqual([["gaap_row", "2026-09-26", 1.95], ["gaap_row", "2025-09-27", 1.69]]);
+    const named = plain([["Diluted EPS", "$1.85", "$1.60", "16%", "Core EPS", "$1.95", "$1.69", "+15%"]]);
+    const out = adjustedEpsFromExhibits([exhibit(named)], "2026-09-26", [QUARTER, YEAR_AGO]);
+    expect(out.readings.map((reading) => [reading.label, reading.periodEnd, reading.value])).toEqual([["Diluted EPS · Core EPS", "2026-09-26", 1.95], ["Diluted EPS · Core EPS", "2025-09-27", 1.69]]);
+  });
+
+  it("reads a row that prints GAAP and adjusted in turn", () => {
+    const html = plain([["", "GAAP", "Non-GAAP", "GAAP", "Non-GAAP"], ["DILUTED EARNINGS PER SHARE", "$", "1.85", "$", "1.95", "$", "1.60", "$", "1.69"]]);
+    expect(adjustedEpsFromExhibits([exhibit(html)], "2026-09-26", [QUARTER, YEAR_AGO]).readings.map((reading) => [reading.how, reading.periodEnd, reading.value])).toEqual([["gaap_row", "2026-09-26", 1.95], ["gaap_row", "2025-09-27", 1.69]]);
+  });
+
+  it("reads twin tables headed GAAP and Non-GAAP by the column of the GAAP table", () => {
+    const one = (title: string, eps: string[]) => plain([[title], ["($ in millions, except earnings per share)", "Q3 FY26", "Q2 FY26", "Q3 FY25"], ["Revenue", "500", "480", "450"], ["Diluted earnings per share", ...eps]]);
+    const out = adjustedEpsFromExhibits([exhibit(one("GAAP", ["$1.85", "$2.10", "$1.60"]) + one("Non-GAAP", ["$1.95", "$2.20", "$1.69"]))], "2026-09-26", [QUARTER, YEAR_AGO]);
+    expect(out.readings.filter((reading) => reading.how === "gaap_table").map((reading) => [reading.periodEnd, reading.value])).toEqual([["2026-09-26", 1.95], ["2025-09-27", 1.69]]);
+  });
+
   it("reads nothing from a GAAP line that prints no known figure", () => {
     const html = plain([["GAAP diluted earnings per share", "9.99", "8.88"], ["Non-GAAP diluted earnings per share", "1.95", "1.69"]]);
     expect(adjustedEpsFromExhibits([exhibit(html)], "2026-09-26", [QUARTER, YEAR_AGO]).readings).toEqual([]);

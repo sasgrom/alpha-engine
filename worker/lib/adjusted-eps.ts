@@ -12,14 +12,16 @@
  * share of the quarter (and of the quarter a year before) are known from the filed statements, so the column where the
  * table's GAAP row prints that figure is that period's column, whatever the headers look like. The same holds for
  * tables turned the other way (measures as columns, "Reported (GAAP)" and "Comparable (Non-GAAP)" as rows) and for a
- * per-share row that carries "as reported", the adjustments and "as adjusted" side by side. Only where
+ * per-share row that carries "as reported", the adjustments and "as adjusted" side by side, for a row that prints
+ * GAAP figures in one half and adjusted ones in the other or the two in turn, for rows named "GAAP" and "Non-GAAP"
+ * under a per-share heading, and for twin tables headed "GAAP" and "Non-GAAP". Only where
  * a table has no GAAP line are the period columns taken from its headers, with the release-figure parser
  * (flash-html.ts). The figure of a period is taken only when the readings agree: rows labelled diluted come first, then the others; different figures at the same rank are
  * ambiguous and nothing is taken. Pure: no file or network access here.
  */
 import { canonicalLabel, daysBetween, detectPeriodColumns, extractCandidateRows, parseExhibitHtml, parsePrintedNumber, type RawTable, type StatementColumn } from "./flash-html";
 
-export const ADJUSTED_EPS_VERSION = "a2";
+export const ADJUSTED_EPS_VERSION = "a3";
 
 const ADJUSTED = /\b(adjusted|non[- ]?gaap|core|operating|normalized|comparable|underlying|economic|ongoing|excluding)\b/i;
 const PER_SHARE = /\b(?:e\.?p\.?s\.?|(?:earnings|income|loss|profit)(?:\s*\(loss\))?[^|]{0,70}per[^|]{0,16}share|per (?:diluted |common |basic )*share)\b/i;
@@ -48,7 +50,7 @@ export interface AdjustedEpsReading {
   value: number;
   raw: string;
   /** How the period was settled: by the GAAP row's column, by the GAAP row's block (measures as columns), or by the table's period headers. */
-  how: "gaap_column" | "gaap_block" | "gaap_row" | "period_header";
+  how: "gaap_column" | "gaap_block" | "gaap_row" | "gaap_table" | "period_header";
 }
 
 export interface AdjustedEpsFigure {
@@ -88,7 +90,7 @@ export function isAdjustedEpsLabel(label: string, headings: string[] = []): bool
 /** A period the release reports, with the GAAP earnings per diluted share known for it (several candidates: as filed, and after later splits). */
 export interface EpsAnchor { months: number; periodEnd: string; gaap: number[] }
 
-interface PlainRow { rowIndex: number; label: string; heading: string | null; values: Array<number | null>; texts: number }
+interface PlainRow { rowIndex: number; label: string; heading: string | null; values: Array<number | null>; texts: number; inner: string[] }
 
 /** Every row of a table as its label and its printed numbers in order (a dash keeps its place as null); no period logic. */
 function plainRows(table: RawTable): PlainRow[] {
@@ -100,18 +102,19 @@ function plainRows(table: RawTable): PlainRow[] {
     let label = "";
     const values: Array<number | null> = [];
     let pendingNegative = false, texts = 0;
+    const inner: string[] = [];
     for (const text of cells) {
       if (/^[$]+$/.test(text)) continue;
       if (text === "(" || text === "$(" || text === "$ (") { pendingNegative = true; continue; }
       if (text === ")" || text === "%" || text === ")%") { if (text.includes(")") && values.length && values[values.length - 1] !== null) values[values.length - 1] = -Math.abs(values[values.length - 1]!); continue; }
       const parsed = parsePrintedNumber(text);
-      if (!parsed) { texts++; if (!label && !values.length) label = text; continue; }
+      if (!parsed) { texts++; if (!label && !values.length) label = text; else if (values.length) inner.push(text); continue; }
       values.push(parsed.value === null ? null : pendingNegative ? -Math.abs(parsed.value) : parsed.value);
       pendingNegative = false;
     }
     if (!label) return;
-    if (!values.some((value) => value !== null)) { if (texts === 1) heading = label; out.push({ rowIndex, label, heading: null, values: [], texts }); return; }
-    out.push({ rowIndex, label, heading, values, texts });
+    if (!values.some((value) => value !== null)) { if (texts === 1) heading = label; out.push({ rowIndex, label, heading: null, values: [], texts, inner }); return; }
+    out.push({ rowIndex, label, heading, values, texts, inner });
   });
   return out;
 }
@@ -126,8 +129,13 @@ const ANCHOR_CENTS = 0.0101;
  * The column of a period is the one where the GAAP row prints the GAAP figure known for that period.
  */
 function anchoredRows(table: RawTable, rows: PlainRow[], anchors: EpsAnchor[]): AdjustedEpsReading[] {
-  const gaapRows = rows.filter((row) => row.values.length && isGaapEpsLabel(row.label) && !isAdjustedEpsLabel(row.label, row.heading ? [row.heading] : []));
-  const adjustedRows = rows.filter((row) => row.values.length && isAdjustedEpsLabel(row.label, row.heading ? [row.heading] : []));
+  // a row may also be named by its basis alone ("GAAP", "Non-GAAP") under a heading that names the per-share measure
+  const underPerShare = (row: PlainRow) => row.heading !== null && PER_SHARE.test(canonicalLabel(row.heading)) && !NOT_THE_FIGURE.test(canonicalLabel(row.heading)) && !PER_SHARE.test(canonicalLabel(row.label));
+  const basisGaap = (row: PlainRow) => underPerShare(row) && GAAP_LINE.test(canonicalLabel(row.label));
+  const basisAdjusted = (row: PlainRow) => underPerShare(row) && ADJUSTED.test(row.label) && !GAAP_LINE.test(canonicalLabel(row.label)) && !NOT_THE_FIGURE.test(canonicalLabel(row.label));
+  const gaapRows = rows.filter((row) => row.values.length && (basisGaap(row) || (isGaapEpsLabel(row.label) && !isAdjustedEpsLabel(row.label, row.heading ? [row.heading] : []))));
+  const adjustedRows = rows.filter((row) => row.values.length && (basisAdjusted(row) || isAdjustedEpsLabel(row.label, row.heading ? [row.heading] : [])))
+    .map((row) => (basisAdjusted(row) ? { ...row, label: `${row.heading} · ${row.label}`, heading: null } : row));
   const out: AdjustedEpsReading[] = [];
   for (const adjusted of adjustedRows) {
     const words = `${adjusted.label} ${adjusted.heading ?? ""}`;
@@ -221,6 +229,82 @@ function anchoredAcross(table: RawTable, rows: PlainRow[], anchors: EpsAnchor[])
   return out;
 }
 
+/** The cells of a header row that name a basis, in order: true for adjusted, false for GAAP. */
+function basisCells(table: RawTable, rowIndex: number): boolean[] {
+  const row = table.grid[rowIndex];
+  return row.filter((cell, col) => col === 0 || row[col] !== row[col - 1]).map((cell) => canonicalLabel(cell.text)).filter((text) => text !== "" && text.length < 60)
+    .map((text) => (GAAP_LINE.test(text) ? false : ADJUSTED.test(text) && !NOT_THE_FIGURE.test(text) ? true : null)).filter((basis): basis is boolean => basis !== null);
+}
+
+/**
+ * GAAP and adjusted figures inside one per-share row, told apart by the column headers: the first half GAAP and the
+ * second half adjusted (Broadcom; Procter & Gamble's summary names the second half inside the row), or GAAP and
+ * adjusted in turn (Oracle). The adjusted figure of a period is the one in the place that answers to the place where
+ * the row prints the period's known GAAP figure.
+ */
+function anchoredWithinRow(table: RawTable, rows: PlainRow[], anchors: EpsAnchor[]): AdjustedEpsReading[] {
+  const out: AdjustedEpsReading[] = [];
+  let header: boolean[] = [];
+  for (const row of rows) {
+    if (!row.values.length) { if (row.texts >= 2) { const cells = basisCells(table, row.rowIndex); if (cells.length >= 2) header = cells; } continue; }
+    const count = row.values.length;
+    if (count < 2 || !isGaapEpsLabel(row.label) || isAdjustedEpsLabel(row.label)) continue;
+    const named = row.inner.find((text) => isAdjustedEpsLabel(text)) ?? null;
+    let partner: ((index: number) => number | null) | null = null, basis = "";
+    if (named !== null && count % 2 === 0) { partner = (index) => (index < count / 2 ? index + count / 2 : null); basis = named; }
+    else if (header.length === 2 && !header[0] && header[1] && count % 2 === 0 && count >= 4) { partner = (index) => (index < count / 2 ? index + count / 2 : null); basis = "Non-GAAP"; }
+    else if (header.length === count && header.every((adjusted, index) => adjusted === (index % 2 === 1))) { partner = (index) => (index % 2 === 0 ? index + 1 : null); basis = "Non-GAAP"; }
+    if (!partner) continue;
+    for (const anchor of anchors) {
+      const figures = new Set<number>();
+      row.values.forEach((value, index) => {
+        const at = matches(value, anchor.gaap) ? partner!(index) : null;
+        const adjusted = at === null ? null : row.values[at];
+        if (adjusted !== null && adjusted !== undefined && Math.abs(adjusted) <= MAX_PER_SHARE) figures.add(Math.round(adjusted * 100));
+      });
+      if (figures.size !== 1) continue;
+      const value = [...figures][0] / 100;
+      out.push({
+        file: table.sourceFile, tableIndex: table.tableIndex, rowIndex: row.rowIndex, label: `${row.label} · ${basis}`, heading: null, diluted: /dilut/i.test(row.label), basic: /\bbasic\b/i.test(row.label) && !/dilut/i.test(row.label),
+        months: anchor.months, periodEnd: anchor.periodEnd, value, raw: String(value), how: "gaap_row",
+      });
+    }
+  }
+  return out;
+}
+
+/**
+ * Twin tables: one headed "GAAP", the next headed "Non-GAAP", with the same rows and columns (Nvidia's summary). The
+ * column of a period is where the GAAP table's per-share row prints the known GAAP figure; the adjusted figure is in
+ * the same column of the same row of the non-GAAP table.
+ */
+function twinTables(tables: RawTable[], anchors: EpsAnchor[]): AdjustedEpsReading[] {
+  const out: AdjustedEpsReading[] = [];
+  const titled = tables.map((table) => ({ table, title: canonicalLabel(table.title) }));
+  titled.forEach(({ table, title }, index) => {
+    if (title.length > 40 || !ADJUSTED.test(title) || GAAP_LINE.test(title) || NOT_THE_FIGURE.test(title)) return;
+    const twin = titled.slice(Math.max(0, index - 2), index).reverse().find((other) => other.title.length <= 40 && GAAP_LINE.test(other.title));
+    if (!twin) return;
+    const gaapRows = plainRows(twin.table).filter((row) => row.values.length && isGaapEpsLabel(row.label));
+    for (const row of plainRows(table)) {
+      if (!row.values.length || !isGaapEpsLabel(row.label)) continue;
+      const same = gaapRows.find((other) => rowKey(other.label) === rowKey(row.label) && other.values.length === row.values.length);
+      if (!same) continue;
+      for (const anchor of anchors) {
+        const figures = new Set<number>();
+        same.values.forEach((value, column) => { const adjusted = row.values[column]; if (matches(value, anchor.gaap) && adjusted !== null && Math.abs(adjusted) <= MAX_PER_SHARE) figures.add(Math.round(adjusted * 100)); });
+        if (figures.size !== 1) continue;
+        const value = [...figures][0] / 100;
+        out.push({
+          file: table.sourceFile, tableIndex: table.tableIndex, rowIndex: row.rowIndex, label: `${row.label} · ${table.title}`, heading: null, diluted: /dilut/i.test(row.label), basic: /\bbasic\b/i.test(row.label) && !/dilut/i.test(row.label),
+          months: anchor.months, periodEnd: anchor.periodEnd, value, raw: String(value), how: "gaap_table",
+        });
+      }
+    }
+  });
+  return out;
+}
+
 /** The period columns as the statement reader finds them (the first version's way): used where a table has no GAAP line to anchor on. */
 function headerRows(table: RawTable, expectedPeriodEnd: string): AdjustedEpsReading[] {
   let columns: StatementColumn[];
@@ -252,7 +336,7 @@ function rowsOf(table: RawTable, expectedPeriodEnd: string, anchors: EpsAnchor[]
   // cheap test first: most tables of a release name no per-share figure at all
   if (!table.grid.some((row) => row.some((cell) => cell.text.length < 200 && PER_SHARE.test(cell.text)))) return [];
   const rows = plainRows(table);
-  const anchored = [...anchoredRows(table, rows, anchors), ...anchoredColumns(table, rows, anchors), ...anchoredAcross(table, rows, anchors)];
+  const anchored = [...anchoredRows(table, rows, anchors), ...anchoredColumns(table, rows, anchors), ...anchoredAcross(table, rows, anchors), ...anchoredWithinRow(table, rows, anchors)];
   // A period the GAAP line has settled is not read again from the column headers; the headers serve the other periods.
   const settled = new Set(anchored.map((reading) => `${reading.rowIndex}|${reading.months}|${reading.periodEnd}`));
   return [...anchored, ...headerRows(table, expectedPeriodEnd).filter((reading) => !settled.has(`${reading.rowIndex}|${reading.months}|${reading.periodEnd}`))];
@@ -385,6 +469,7 @@ export function adjustedEpsFromExhibits(exhibits: AdjustedEpsExhibit[], expected
     let tables: RawTable[];
     try { tables = parseExhibitHtml(exhibit.html, exhibit.file, exhibit.sha256); } catch { continue; }
     for (const table of tables) readings.push(...rowsOf(table, expectedPeriodEnd, anchors));
+    readings.push(...twinTables(tables, anchors));
   }
   const at = (months: number) => readings.filter((reading) => reading.months === months && daysBetween(reading.periodEnd, expectedPeriodEnd) <= PERIOD_DAYS && daysBetween(expectedPeriodEnd, reading.periodEnd) <= PERIOD_DAYS);
   const quarter = agreeOn(at(3)), year = agreeOn(at(12));
