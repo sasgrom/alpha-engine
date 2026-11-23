@@ -240,8 +240,7 @@ through them. Some are still wanted as manual tools. By group:
 | Not removed | Older fundamentals versions (0.6 GB) and guidance builds (1.8 GB): wait for the final guidance build. `flash-rest` and `flash` (10.5 GB): owner's call |
 | Scheduler | `alpha-bridge-agent` disabled, `daily-digest` paused (both in `operations-config.json`). Bridge code, mailbox and AGENTS.md sections 8-10 stay until Kimi's credits end on 2026-11-30 |
 
-Manifests of every removed folder: `D:esearchlpha-engine\prune-manifest-*-20261122.json`, log `prune-20261122.log`.
+Manifests of every removed folder: `D:/research/alpha-engine/prune-manifest-*-20261122.json`, log `prune-20261122.log`.
 Free space after the pass: C: 79.1 GB (was 74.7), D: 491.2 GB (was 393.7).
-A guard stopped one removal: `scratch-clean-tree
-ode_modules` was a junction to the repository's real `node_modules`.
+A guard stopped one removal: `scratch-clean-tree/node_modules` was a junction to the repository's real `node_modules`.
 Only the link was removed.
