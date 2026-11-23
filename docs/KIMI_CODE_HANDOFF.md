@@ -3433,3 +3433,35 @@ delivered.
   page with the real files (AAPL, NVDA, MSFT, AMZN, MCD, COP; light and dark), not by a signed-in person.
 - Next on the list: holders and insiders from the standards, adjusted earnings from the release tables, Terminal's
   three charts, the documents reader.
+
+## 214. Claude (Fable 5.2): company page holders and insiders from the standards — 2026-11-23T06:39Z
+
+- Second item of the owner's list ("go ahead in that order").
+- **Builder** (`scripts/build-desk-company.mts`, `worker/lib/desk-company.ts`), two more file kinds under
+  `worker/.runs/desk-company`:
+  - `holders/<cik>.json` from the 13F standard's `company-quarters.jsonl` (`D:/research/alpha-engine/fund-books/std`,
+    k16.5; the row count is checked against its `build.json`): 20 quarters, per quarter the later of the standard's
+    two rows (ten sessions after the deadline, with the late reports): holders of the funds on file, share of the
+    stock (null where the standard marks it above 100%), value, entries and exits among continuing funds, shares
+    bought and sold on today's basis, the ten largest holders' part. 493 companies, to 2026-06-30;
+  - `insiders/<cik>.json` from the insider standard's per-company files
+    (`D:/research/alpha-engine/insiders/std/20261116T223552Z`, i1.1; only a build whose `finalization.json` says final
+    is read): the stock lines of the last three years (newest 80), 20 calendar quarters of open-market purchases and
+    sales, and the 365 days to the standard's last filing date (2026-11-13). Rules, each with a test: original
+    reports only (an amended report is separate evidence, not a second trade), each economic trade once
+    (`duplicateOf`), no derivative lines; dollar sums count codes P and S only and leave out lines flagged
+    `price_outlier` or `equity_swap` (the standard's consumer rule), which are listed without a value. 500 companies.
+  - The build takes 74 s now (it reads 2.3 GB of insider files).
+- **Page:** the Ownership card reads `desk.companyHolders` (and the three largest holders from the Flows company
+  file, the same fund books); the Insider transactions card reads `desk.companyInsiders`: the year in one sentence,
+  a bar per quarter of purchases less sales, the lines with role and 10b5-1 mark. Both for every signed-in member
+  (filed public reports). `company.institutional` and `company.insiderTrades` are no longer called by the desk; the
+  classic page still uses them.
+- Checked on the data: JPMorgan's "11 insiders sold $126.0M, 100% under 10b5-1 plans" equals 42 sale lines of the
+  standard, every one with the SEC's own plan checkbox, $126,048,942.
+- **Not current:** the fund books and the 13F standard end at the June 2026 quarter. The September quarter's reports
+  were due 2026-11-16. Bringing them in means rebuilding the books, a new version of the 13F standard and the Flows
+  files; not started. The page says so under the Ownership card.
+- Files rebuilt: 107.9 MB, content hash `88e52657733c`. Web server restarted at 2026-11-23T06:36:43Z after proving
+  one process (two new procedures; both answer 401 without a session). Looked at on screenshots of the live page with
+  the real files (AAPL, JPM), not by a signed-in person.

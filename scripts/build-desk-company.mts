@@ -6,12 +6,18 @@
  *   guidance/<cik>.json    what the company guided for each period, release after release, and what it then reported,
  *                          from the guidance standard and the standard fundamentals
  *   actions/<cik>.json     splits, dividends and other distributions, from the standard prices
+ *   holders/<cik>.json     20 quarters of fund holdings (holders, share of the stock, entries and exits), from the 13F
+ *                          standard's company quarters
+ *   insiders/<cik>.json    three years of insider stock transactions and 20 quarters of open-market purchases and
+ *                          sales, from the insider standard's per-company files
  *
  *   npx tsx scripts/build-desk-company.mts [--source <fundamentals standard folder>] [--guidance <guidance build folder>]
- *                                           [--prices <standard prices daily folder>] [--out <folder>] [--quarters 40] [--dry-run]
+ *                                           [--prices <standard prices daily folder>] [--holders <13F standard folder>]
+ *                                           [--insiders <insider standard build folder>] [--out <folder>] [--quarters 40] [--dry-run]
  *
  * Defaults: D:\research\alpha-engine\fundamentals\standard\v3.1, D:\research\alpha-engine\guidance\std\20261123T033803Z
- * (g1.2 final), D:\research\alpha-engine\prices\std\daily. Output: worker/.runs/desk-company, written atomically, with
+ * (g1.2 final), D:\research\alpha-engine\prices\std\daily, D:\research\alpha-engine\fund-books\std (k16.5),
+ * D:\research\alpha-engine\insiders\std\20261116T223552Z (i1.1 final). Output: worker/.runs/desk-company, written atomically, with
  * index.json. A missing or unreadable source stops the build and leaves the previous files in place (AGENTS.md
  * section 3.1: a missing D: is never an empty archive).
  */
@@ -19,10 +25,10 @@ import { createHash } from "node:crypto";
 import { createReadStream, existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { createInterface } from "node:readline";
-import { DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyIndex } from "../contracts/desk-company";
+import { DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyIndex, type DeskCompanyInsiders } from "../contracts/desk-company";
 import {
-  buildDeskCompanyActions, buildDeskCompanyGuidance, buildDeskCompanyStatements, isGuidanceRow,
-  type GuidanceStatementRow, type StandardCompanyDoc, type StandardField, type StandardPriceRow,
+  buildDeskCompanyActions, buildDeskCompanyGuidance, buildDeskCompanyHolders, buildDeskCompanyInsiders, buildDeskCompanyStatements, isGuidanceRow,
+  type GuidanceStatementRow, type InsiderFilingDoc, type StandardCompanyDoc, type StandardField, type StandardPriceRow, type ThirteenFCompanyQuarter,
 } from "../worker/lib/desk-company";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 
@@ -30,6 +36,8 @@ const arg = (name: string) => { const i = process.argv.indexOf(name); return i >
 const source = path.resolve(arg("--source") ?? "D:/research/alpha-engine/fundamentals/standard/v3.1");
 const guidanceDir = path.resolve(arg("--guidance") ?? "D:/research/alpha-engine/guidance/std/20261123T033803Z");
 const pricesDir = path.resolve(arg("--prices") ?? "D:/research/alpha-engine/prices/std/daily");
+const holdersDir = path.resolve(arg("--holders") ?? "D:/research/alpha-engine/fund-books/std");
+const insidersDir = path.resolve(arg("--insiders") ?? "D:/research/alpha-engine/insiders/std/20261116T223552Z");
 const out = path.resolve(arg("--out") ?? "worker/.runs/desk-company");
 const quarters = Number(arg("--quarters") ?? 40);
 const dryRun = process.argv.includes("--dry-run");
@@ -68,6 +76,53 @@ for await (const line of createInterface({ input: createReadStream(guidanceFile,
 }
 if (guidanceRead !== guidanceBuild.rows.statements) throw new Error(`Guidance statements read ${guidanceRead}, the manifest says ${guidanceBuild.rows.statements}; nothing was changed`);
 
+// The 13F standard: its company quarters, checked against its manifest's row count.
+const holdersBuildFile = path.join(holdersDir, "build.json");
+const holdersFile = path.join(holdersDir, "company-quarters.jsonl");
+if (!existsSync(holdersBuildFile) || !existsSync(holdersFile)) throw new Error(`13F standard not found at ${holdersDir}; nothing was changed`);
+const holdersBuild = JSON.parse(readFileSync(holdersBuildFile, "utf8")) as { buildVersion: string; companyQuarterRows: number };
+const holderRows = new Map<number, ThirteenFCompanyQuarter[]>();
+let holdersRead = 0, holdersPeriod: string | null = null;
+for await (const line of createInterface({ input: createReadStream(holdersFile, "utf8"), crlfDelay: Infinity })) {
+  if (!line) continue;
+  holdersRead++;
+  const row = JSON.parse(line) as ThirteenFCompanyQuarter;
+  if (row.buildVersion !== holdersBuild.buildVersion) throw new Error(`${holdersFile} holds build ${row.buildVersion}, its manifest ${holdersBuild.buildVersion}`);
+  holderRows.set(row.cik, [...(holderRows.get(row.cik) ?? []), row]);
+  if (holdersPeriod === null || row.period > holdersPeriod) holdersPeriod = row.period;
+}
+if (holdersRead !== holdersBuild.companyQuarterRows) throw new Error(`13F company quarters read ${holdersRead}, the manifest says ${holdersBuild.companyQuarterRows}; nothing was changed`);
+
+// The insider standard: one file of filings per company; only a build marked final is read.
+const insidersFinalFile = path.join(insidersDir, "finalization.json");
+const insidersCompanies = path.join(insidersDir, "companies");
+if (!existsSync(insidersFinalFile) || !existsSync(insidersCompanies)) throw new Error(`Insider standard not found at ${insidersDir}; nothing was changed`);
+const insidersFinal = JSON.parse(readFileSync(insidersFinalFile, "utf8")) as { status: string; buildVersion: string };
+if (insidersFinal.status !== "final") throw new Error(`Insider standard at ${insidersDir} is ${insidersFinal.status}, not final; nothing was changed`);
+/** Only the filings of the last years are kept, slimmed to what the page uses. */
+const INSIDER_YEARS = 6;
+const insiderSince = new Date(Date.now() - INSIDER_YEARS * 365.25 * 86_400_000).toISOString().slice(0, 10);
+async function insiderFilings(cik: number): Promise<InsiderFilingDoc[] | null> {
+  const file = path.join(insidersCompanies, `${cik}.jsonl`);
+  if (!existsSync(file)) return null;
+  const filings: InsiderFilingDoc[] = [];
+  for await (const line of createInterface({ input: createReadStream(file, "utf8"), crlfDelay: Infinity })) {
+    if (!line) continue;
+    const doc = JSON.parse(line) as InsiderFilingDoc;
+    if (doc.filing.buildVersion !== insidersFinal.buildVersion) throw new Error(`${file} holds build ${doc.filing.buildVersion}, the standard is ${insidersFinal.buildVersion}`);
+    if (doc.filing.filingDate < insiderSince) continue;
+    filings.push({
+      filing: { accessionNo: doc.filing.accessionNo, form: doc.filing.form, filingDate: doc.filing.filingDate, buildVersion: doc.filing.buildVersion },
+      owners: doc.owners.map((owner) => ({ ownerName: owner.ownerName, groupId: owner.groupId, director: owner.director, officer: owner.officer, officerTitle: owner.officerTitle, tenPercentOwner: owner.tenPercentOwner })),
+      transactions: doc.transactions.filter((line) => !line.derivative).map((line) => ({
+        groupId: line.groupId, derivative: line.derivative, transactionDate: line.transactionDate, code: line.code, shares: line.shares, price: line.price,
+        valueUsd: line.valueUsd, plan10b5: line.plan10b5, duplicateOf: line.duplicateOf, flags: line.flags,
+      })),
+    });
+  }
+  return filings;
+}
+
 if (!existsSync(pricesDir)) throw new Error(`Standard prices not found at ${pricesDir}; nothing was changed`);
 function priceRows(cik: number): StandardPriceRow[] | null {
   const file = path.join(pricesDir, `${cik}.csv`);
@@ -85,7 +140,9 @@ const hash = createHash("sha256");
 // The hash covers what the page shows, not the build time, so unchanged standards give an unchanged hash.
 const stable = (value: { builtAt: string }) => { const { builtAt: _builtAt, ...rest } = value; return JSON.stringify(rest); };
 const companies: DeskCompanyIndex["companies"] = [];
-let bytes = 0, withGuidance = 0, withActions = 0, outOfScale = 0, pricesAsOf: string | null = null;
+let bytes = 0, withGuidance = 0, withActions = 0, withHolders = 0, outOfScale = 0, pricesAsOf: string | null = null;
+const insiderInputs: Array<{ cik: number; ticker: string; filings: InsiderFilingDoc[]; at: number }> = [];
+let insidersAsOf: string | null = null;
 for (const name of files) {
   const doc = JSON.parse(readFileSync(path.join(companyDir, name), "utf8")) as StandardCompanyDoc;
   const prices = priceRows(doc.cik);
@@ -93,27 +150,48 @@ for (const name of files) {
   // without a standard price file the splits are unknown: no share basis, so no fiscal-year or trailing-year per-share figures
   const statements = buildDeskCompanyStatements({ doc, fields: index.fields, standard, standardGeneratedAt: index.generatedAt, builtAt, quarters, splits: actions ? actions.splits : null });
   const guidance = buildDeskCompanyGuidance({ doc, rows: guidanceRows.get(doc.cik) ?? [], guidanceVersion: guidanceBuild.guidanceVersion, standard, builtAt });
-  const texts = [stable(statements), stable(guidance), actions ? stable(actions) : "null"];
+  const holders = buildDeskCompanyHolders({ cik: doc.cik, ticker: doc.ticker, rows: holderRows.get(doc.cik) ?? [], builtAt });
+  const filings = await insiderFilings(doc.cik);
+  if (filings) {
+    for (const item of filings) if (insidersAsOf === null || item.filing.filingDate > insidersAsOf) insidersAsOf = item.filing.filingDate;
+    insiderInputs.push({ cik: doc.cik, ticker: doc.ticker, filings, at: companies.length });
+  }
+  const texts = [stable(statements), stable(guidance), actions ? stable(actions) : "null", holders ? stable(holders) : "null"];
   hash.update(`${doc.cik}\0${texts.join("\0")}\0`);
   bytes += texts.reduce((sum, text) => sum + text.length, 0);
   if (guidance.periods.length) withGuidance++;
+  if (holders) withHolders++;
   if (actions) {
     withActions++;
     if (pricesAsOf === null || actions.pricesAsOf > pricesAsOf) pricesAsOf = actions.pricesAsOf;
   }
   const rows = statements.statements.income.length + statements.statements.balance.length + statements.statements.cashflow.length;
   for (const row of [...statements.statements.income, ...statements.statements.balance]) outOfScale += row.cells.filter((cell) => cell?.suspect).length;
-  companies.push({ cik: doc.cik, ticker: doc.ticker, quarters: statements.quarters.length, lastQuarter: statements.quarters.at(-1)?.end ?? null, rows, guidancePeriods: guidance.periods.length, actions: actions !== null });
+  companies.push({ cik: doc.cik, ticker: doc.ticker, quarters: statements.quarters.length, lastQuarter: statements.quarters.at(-1)?.end ?? null, rows, guidancePeriods: guidance.periods.length, actions: actions !== null, holders: holders !== null, insiderTrades: 0 });
   if (dryRun) continue;
   writeJsonAtomic(path.join(out, "statements", `${doc.cik}.json`), statements);
   // a company without guidance, or without a standard price file, gets no file: the page says so instead of guessing
   if (guidance.periods.length) writeJsonAtomic(path.join(out, "guidance", `${doc.cik}.json`), guidance);
   if (actions) writeJsonAtomic(path.join(out, "actions", `${doc.cik}.json`), actions);
+  if (holders) writeJsonAtomic(path.join(out, "holders", `${doc.cik}.json`), holders);
+}
+// The insider windows end at the last filing date of all companies, so these files are built after the loop, in the same order.
+let withInsiders = 0;
+for (const input of insiderInputs) {
+  const insiders: DeskCompanyInsiders | null = insidersAsOf ? buildDeskCompanyInsiders({ cik: input.cik, ticker: input.ticker, filings: input.filings, asOf: insidersAsOf, builtAt }) : null;
+  const text = insiders ? stable(insiders) : "null";
+  hash.update(`${input.cik}|insiders|${text}|`);
+  bytes += text.length;
+  if (!insiders) continue;
+  withInsiders++;
+  companies[input.at].insiderTrades = insiders.tradeCount;
+  if (!dryRun) writeJsonAtomic(path.join(out, "insiders", `${input.cik}.json`), insiders);
 }
 const summary: DeskCompanyIndex = {
-  schemaVersion: DESK_COMPANY_SCHEMA_VERSION, standard, standardGeneratedAt: index.generatedAt, guidanceVersion: guidanceBuild.guidanceVersion, pricesAsOf, builtAt,
+  schemaVersion: DESK_COMPANY_SCHEMA_VERSION, standard, standardGeneratedAt: index.generatedAt, guidanceVersion: guidanceBuild.guidanceVersion, pricesAsOf,
+  holdersVersion: holdersBuild.buildVersion, holdersPeriod, insidersVersion: insidersFinal.buildVersion, insidersAsOf, builtAt,
   contentHash: hash.digest("hex"), companies,
 };
 if (!dryRun) writeJsonAtomic(path.join(out, "index.json"), summary, true);
 const empty = companies.filter((company) => company.quarters === 0).length;
-console.log(`[desk-company] ${dryRun ? "dry run · " : ""}${companies.length} companies · statements from ${standard} (${quarters} quarters, ${empty} without own quarters, ${outOfScale} share or per-share figures marked out of scale) · guidance ${guidanceBuild.guidanceVersion} for ${withGuidance} · splits and dividends for ${withActions} (prices to ${pricesAsOf}) · ${(bytes / 1_048_576).toFixed(1)} MB · hash ${summary.contentHash.slice(0, 12)} · ${out}`);
+console.log(`[desk-company] ${dryRun ? "dry run · " : ""}${companies.length} companies · statements from ${standard} (${quarters} quarters, ${empty} without own quarters, ${outOfScale} share or per-share figures marked out of scale) · guidance ${guidanceBuild.guidanceVersion} for ${withGuidance} · splits and dividends for ${withActions} (prices to ${pricesAsOf}) · holders ${holdersBuild.buildVersion} for ${withHolders} (to ${holdersPeriod}) · insiders ${insidersFinal.buildVersion} for ${withInsiders} (filings to ${insidersAsOf}) · ${(bytes / 1_048_576).toFixed(1)} MB · hash ${summary.contentHash.slice(0, 12)} · ${out}`);

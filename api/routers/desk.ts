@@ -5,15 +5,16 @@
  * - five-minute company/session views and the shared intraday market summary, for every signed-in user;
  * - the fund-flow files (overview, one fund, one company), for every signed-in user (owner's decision of
  *   2026-11-11); reviewers reach them, like everything else, only after accepting the NDA (middleware);
- * - the company files built from the research standards (one file per company): the statements and the splits and
- *   dividends for every signed-in user (figures the companies filed, and public corporate actions); the guidance
+ * - the company files built from the research standards (one file per company): the statements, the splits and
+ *   dividends, the fund holdings and the insider transactions for every signed-in user (figures the companies, the
+ *   funds and the insiders filed, and public corporate actions); the guidance
  *   history, which is our own reading of the releases, only for the owner and NDA-accepted reviewers;
  * - the engine-flow files (the prediction engine's working, decision by decision), for the owner only;
  * - the home operations' health (scheduler, failed jobs, the evening market run, failed production pushes), for the
  *   owner only: the desk shows it as a banner, so a stopped collection is never silent.
  */
 import { z } from "zod";
-import type { DeskCompanyActions, DeskCompanyGuidance, DeskCompanyStatements } from "@contracts/desk-company";
+import type { DeskCompanyActions, DeskCompanyGuidance, DeskCompanyHolders, DeskCompanyInsiders, DeskCompanyStatements } from "@contracts/desk-company";
 import type { EngineFlowCompany, EngineFlowIndex } from "@contracts/engine-flow";
 import type { FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
 import { operationsHealth } from "../../worker/lib/operations-health";
@@ -41,6 +42,8 @@ export const deskRouter = createRouter({
   flowsCompany: authedQuery.input(entity).query(({ input }) => readFundFlowsFile<FundFlowsCompany>(`company/${input.cik}.json`)),
   companyStatements: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyStatements>(`statements/${input.cik}.json`)),
   companyActions: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyActions>(`actions/${input.cik}.json`)),
+  companyHolders: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyHolders>(`holders/${input.cik}.json`)),
+  companyInsiders: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyInsiders>(`insiders/${input.cik}.json`)),
   // guidance is our own reading of the releases (a research product): the owner and NDA-accepted reviewers only, like the option fields
   companyGuidance: authedQuery.input(entity).query(({ ctx, input }) =>
     ctx.user.role === "admin" || ctx.reviewerAccess?.acceptedAt ? readDeskCompanyFile<DeskCompanyGuidance>(`guidance/${input.cik}.json`) : null),

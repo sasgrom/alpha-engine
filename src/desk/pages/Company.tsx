@@ -8,11 +8,13 @@ import { Card, CompanyLink, Delta, Notice, RangeBar, Segmented, Shimmer, TickerM
 import { useDesk, useDocumentTitle } from "../context";
 import { findCompany, impliedMoveFor, peersOf, periodLabel, searchCompanies, useDeskSnapshot, useWatchlist } from "../data";
 import { DevNotes } from "../DevNotes";
-import { daysBetween, entityName, fmtCap, fmtClock, fmtCompact, fmtDate, fmtNum, fmtPct, fmtPrice, localToday, personName, relativeDay } from "../format";
+import { daysBetween, fmtCap, fmtClock, fmtCompact, fmtDate, fmtNum, fmtPct, fmtPrice, localToday, relativeDay } from "../format";
 import { useDeskIntraday } from "../intraday";
 import { rememberTicker } from "../preferences";
 import { CompanyActions } from "./company/Actions";
 import { CompanyGuidance } from "./company/Guidance";
+import { CompanyHolders } from "./company/Holders";
+import { CompanyInsiders } from "./company/Insiders";
 import { CompanyStatements } from "./company/Statements";
 
 type DailyRange = "1M" | "3M" | "6M" | "YTD" | "1Y" | "5Y" | "ALL";
@@ -28,19 +30,6 @@ const RANGES: { value: Range; label: string }[] = [
   { value: "5Y", label: "5Y" },
   { value: "ALL", label: "Max" },
 ];
-
-const INSIDER_CODES: Record<string, string> = {
-  P: "Purchase",
-  S: "Sale",
-  A: "Grant or award",
-  M: "Option exercise",
-  X: "Option exercise",
-  F: "Tax withholding",
-  G: "Gift",
-  D: "Returned to issuer",
-  C: "Conversion",
-  J: "Other",
-};
 
 function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -88,10 +77,7 @@ export default function CompanyPage() {
   const history = trpc.prices.history.useQuery({ cik, range: isIntraday ? "1M" : (range as DailyRange) }, { enabled: cik > 0 && !isIntraday, staleTime: 5 * 60_000, placeholderData: (previous) => previous });
   const intraday = useDeskIntraday(company?.ticker ?? "", range === "5D" ? 5 : 1, isIntraday && cik > 0);
   const events = trpc.events.byCompany.useQuery({ cik }, { enabled: cik > 0 && !!company?.research, staleTime: 10 * 60_000 });
-  const insiders = trpc.company.insiderTrades.useQuery({ cik }, { enabled: cik > 0, staleTime: 10 * 60_000 });
   const shortInterest = trpc.company.shortInterest.useQuery({ cik }, { enabled: cik > 0, staleTime: 10 * 60_000 });
-  // the 13F summary is the one slow read: it starts after the price history so it never holds the chart back
-  const institutional = trpc.company.institutional.useQuery({ cik }, { enabled: cik > 0 && history.isSuccess, staleTime: 30 * 60_000 });
 
   useEffect(() => {
     if (company) rememberTicker(company.ticker);
@@ -143,7 +129,6 @@ export default function CompanyPage() {
   const daysToReport = company.nextEarnings ? daysBetween(data.session, company.nextEarnings) : null;
   const implied = daysToReport !== null ? impliedMoveFor(company, daysToReport) : null;
   const atm30 = company.options?.buckets.find((bucket) => bucket.bucket === "8-30D") ?? null;
-  const institutionalData = institutional.data;
   const short = shortInterest.data?.current ?? null;
 
   const downloadCsv = () => {
@@ -309,26 +294,8 @@ export default function CompanyPage() {
           </Card>
         )}
 
-        <Card className="desk-span-4" title="Ownership" subtitle="13F institutional holdings and short interest">
-          {institutional.isPending ? (
-            <div style={{ display: "grid", gap: 8 }}>
-              <Shimmer height={16} />
-              <Shimmer height={16} width="70%" />
-              <span className="desk-muted" style={{ fontSize: 12 }}>Reading institutional filings…</span>
-            </div>
-          ) : institutional.isError ? (
-            <div className="desk-empty" style={{ padding: "6px 0" }}>Institutional holdings could not be read right now.</div>
-          ) : institutionalData && institutionalData.holders > 0 ? (
-            <div className="desk-stats" style={{ gridTemplateColumns: "1fr" }}>
-              <Stat label={`Institutions holding (${fmtDate(institutionalData.quarterDate, "short")})`} value={institutionalData.holders.toLocaleString("en-US")} />
-              {/* the summary reports both shares in percent units (25.2 = 25.2%) */}
-              <Stat label="Share of stock held" value={fmtPct(institutionalData.ownershipPct === null ? null : institutionalData.ownershipPct / 100, 1, false)} />
-              <Stat label="Change in shares held, quarter on quarter" value={<Delta value={institutionalData.qoqSharesDeltaPct === null ? null : institutionalData.qoqSharesDeltaPct / 100} digits={1} />} />
-              {institutionalData.top.slice(0, 3).map((holder) => <Stat key={holder.fundName} label={entityName(holder.fundName)} value={fmtCap(holder.valueUsd)} />)}
-            </div>
-          ) : (
-            <div className="desk-empty" style={{ padding: "6px 0" }}>No institutional holdings are stored for this company.</div>
-          )}
+        <Card className="desk-span-4" title="Ownership" subtitle="Fund holdings from their 13F reports, and short interest">
+          <CompanyHolders cik={cik} />
           {short?.sharesShort ? (
             <div className="desk-stats" style={{ gridTemplateColumns: "1fr", marginTop: 6 }}>
               <Stat label={`Short interest (${fmtDate(short.settlementDate, "short")})`} value={`${fmtCompact(short.sharesShort)} shares`} />
@@ -338,44 +305,7 @@ export default function CompanyPage() {
           ) : null}
         </Card>
 
-        <Card className="desk-span-7" title="Insider transactions" subtitle="Form 4 filings by officers and directors, newest first">
-          {insiders.isLoading ? (
-            <Shimmer height={160} />
-          ) : insiders.data?.length ? (
-            <div className="desk-table-wrap">
-              <table className="desk-table" style={{ fontSize: 12.5 }}>
-                <thead>
-                  <tr>
-                    <th style={{ position: "static" }}>Date</th>
-                    <th style={{ position: "static" }}>Insider</th>
-                    <th style={{ position: "static" }}>Transaction</th>
-                    <th className="num" style={{ position: "static" }}>Shares</th>
-                    <th className="num" style={{ position: "static" }}>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {insiders.data.slice(0, 10).map((trade) => (
-                    <tr key={trade.id} style={{ cursor: "default" }}>
-                      <td>{fmtDate(trade.tradeDate ?? trade.filingDate, "short")}</td>
-                      <td style={{ maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis" }}>
-                        {trade.insiderName ? personName(trade.insiderName) : "—"}
-                        {trade.insiderRole && <span className="desk-muted"> · {trade.insiderRole}</span>}
-                      </td>
-                      <td>
-                        {INSIDER_CODES[trade.code] ?? trade.code}
-                        {trade.is10b5 && <span className="desk-badge" style={{ marginLeft: 6, height: 18 }} title="Executed under a Rule 10b5-1 trading plan">Plan</span>}
-                      </td>
-                      <td className="num">{fmtCompact(trade.shares)}</td>
-                      <td className="num">{trade.shares && trade.price ? fmtCap(trade.shares * trade.price) : "—"}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="desk-empty">No insider transactions are stored for this company.</div>
-          )}
-        </Card>
+        <CompanyInsiders cik={cik} />
 
         <Card className="desk-span-5" title={isPresentation && company.options ? "Peers" : "Compared with the index"} subtitle={isPresentation && company.options ? `${company.industry ?? company.sector} · largest first` : "Returns of this company, its sector and the S&P 500"}>
           {isPresentation && company.options ? <PeerList peers={peers} /> : <Comparison company={company} />}

@@ -16,7 +16,7 @@ export interface PeriodBar {
   value: number | null;
 }
 
-const MARGIN = { top: 10, right: 8, bottom: 22, left: 52 };
+const MARGIN = { top: 10, right: 8, bottom: 22 };
 
 export function PeriodBars({
   bars,
@@ -44,20 +44,22 @@ export function PeriodBars({
     if (!values.length) return null;
     const ticks = niceTicks(Math.min(0, ...values), Math.max(0, ...values), 3);
     const domain: [number, number] = [Math.min(ticks[0], 0, ...values), Math.max(ticks[ticks.length - 1], 0, ...values)];
-    const plotW = width - MARGIN.left - MARGIN.right;
+    // the left margin fits the longest axis label ("−$100.0M" is wider than "50.0B")
+    const left = Math.max(44, Math.max(...ticks.map((tick) => format(tick).length)) * 6.3 + 14);
+    const plotW = width - left - MARGIN.right;
     const plotH = height - MARGIN.top - MARGIN.bottom;
     const step = plotW / bars.length;
-    return { ticks, y: linear(domain, [MARGIN.top + plotH, MARGIN.top]), step, bar: Math.max(2, Math.min(26, step - 2)), plotW };
-  }, [bars, width, height]);
+    return { ticks, y: linear(domain, [MARGIN.top + plotH, MARGIN.top]), step, bar: Math.max(2, Math.min(26, step - 2)), plotW, left };
+  }, [bars, width, height, format]);
 
   if (!layout) return <div className="desk-empty" style={{ padding: "18px 0" }}>No figures to chart for this line.</div>;
-  const { ticks, y, step, bar, plotW } = layout;
-  const center = (index: number) => MARGIN.left + step * (index + 0.5);
+  const { ticks, y, step, bar, plotW, left } = layout;
+  const center = (index: number) => left + step * (index + 0.5);
   // every bar is labelled when they fit; otherwise every fourth, counted from the newest
   const every = step >= 44 ? 1 : 4;
   const onMove = (event: PointerEvent<SVGSVGElement>) => {
     const box = event.currentTarget.getBoundingClientRect();
-    const index = Math.floor(((event.clientX - box.left) * (width / (box.width || width)) - MARGIN.left) / step);
+    const index = Math.floor(((event.clientX - box.left) * (width / (box.width || width)) - left) / step);
     setHover(index >= 0 && index < bars.length ? index : null);
   };
   const active = hover !== null ? bars[hover] : null;
@@ -68,8 +70,8 @@ export function PeriodBars({
       <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${name}, ${bars.length} periods`} onPointerMove={onMove} onPointerLeave={() => setHover(null)} style={{ display: "block", touchAction: "pan-y" }}>
         {ticks.map((tick) => (
           <g key={tick}>
-            <line x1={MARGIN.left} x2={MARGIN.left + plotW} y1={y(tick)} y2={y(tick)} stroke={tick === 0 ? palette.axis : palette.grid} strokeWidth={1} />
-            <text x={MARGIN.left - 8} y={y(tick) + 3.5} textAnchor="end" fontSize={10.5} fill={palette.muted} style={{ fontVariantNumeric: "tabular-nums" }}>{format(tick)}</text>
+            <line x1={left} x2={left + plotW} y1={y(tick)} y2={y(tick)} stroke={tick === 0 ? palette.axis : palette.grid} strokeWidth={1} />
+            <text x={left - 8} y={y(tick) + 3.5} textAnchor="end" fontSize={10.5} fill={palette.muted} style={{ fontVariantNumeric: "tabular-nums" }}>{format(tick)}</text>
           </g>
         ))}
         {bars.map((item, index) => {

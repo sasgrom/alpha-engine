@@ -12,7 +12,8 @@
  * filing) are marked and enter none of these figures.
  */
 import {
-  DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyActions, type DeskCompanyGuidance, type DeskCompanyStatements, type DeskGuidancePeriod, type DeskGuidanceUpdate,
+  DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyActions, type DeskCompanyGuidance, type DeskCompanyHolders, type DeskCompanyInsiders, type DeskCompanyStatements,
+  type DeskGuidancePeriod, type DeskGuidanceUpdate,
   type DeskStatementCell, type DeskStatementKind, type DeskStatementName, type DeskStatementQuarter, type DeskStatementRow, type DeskStatementSum,
   type DeskStatementSumRow, type DeskStatementYear,
 } from "../../contracts/desk-company";
@@ -547,5 +548,125 @@ export function buildDeskCompanyActions(params: { cik: number; ticker: string; r
     schemaVersion: DESK_COMPANY_SCHEMA_VERSION, cik: params.cik, ticker: params.ticker, pricesAsOf: last.date, lastClose: Number(last.close),
     splits: splits.reverse(), distributions: distributions.reverse(), dividends: dividends.reverse(),
     dividendsLastYear: Math.round(dividendsLastYear * 1e6) / 1e6, builtAt: params.builtAt,
+  };
+}
+
+// --- holders: the 13F standard --------------------------------------------------------------------------------------------
+
+/** One row of the 13F standard's company quarters (only the fields used here). */
+export interface ThirteenFCompanyQuarter {
+  cik: number;
+  period: string;
+  knownAt: string;
+  /** "deadline": as known at the filing deadline; "plus_10": ten sessions later, with the late reports. */
+  rowKind: string;
+  holders: number;
+  valueHeldUsd: number;
+  /** In percent (57.4 = 57.4%). */
+  percentOfSharesOutstanding: number | null;
+  percentAbove100: boolean;
+  continuingFunds: number | null;
+  entries: number | null;
+  exits: number | null;
+  breadthChange: number | null;
+  sharesBought: number | null;
+  sharesSold: number | null;
+  top10Share: number | null;
+  fundsFiled: number;
+  fundsInBook: number;
+  buildVersion: string;
+}
+
+/** A company's last quarters of fund holdings: per quarter the later of the standard's two rows (the one with the late reports). */
+export function buildDeskCompanyHolders(params: { cik: number; ticker: string; rows: ThirteenFCompanyQuarter[]; builtAt: string; quarters?: number }): DeskCompanyHolders | null {
+  const byPeriod = new Map<string, ThirteenFCompanyQuarter>();
+  for (const row of params.rows) {
+    const held = byPeriod.get(row.period);
+    if (!held || row.knownAt > held.knownAt) byPeriod.set(row.period, row);
+  }
+  const rows = [...byPeriod.values()].sort((a, b) => a.period.localeCompare(b.period)).slice(-(params.quarters ?? 20));
+  if (!rows.length) return null;
+  return {
+    schemaVersion: DESK_COMPANY_SCHEMA_VERSION, cik: params.cik, ticker: params.ticker, version: rows[rows.length - 1].buildVersion, builtAt: params.builtAt,
+    quarters: rows.map((row) => ({
+      period: row.period, knownAt: row.knownAt, holders: row.holders, fundsFiled: row.fundsFiled, fundsInBook: row.fundsInBook, valueUsd: row.valueHeldUsd,
+      shareOfStock: row.percentOfSharesOutstanding === null || row.percentAbove100 ? null : row.percentOfSharesOutstanding / 100,
+      entries: row.entries, exits: row.exits, continuing: row.continuingFunds, breadthChange: row.breadthChange,
+      sharesBought: row.sharesBought, sharesSold: row.sharesSold, top10Share: row.top10Share,
+    })),
+  };
+}
+
+// --- insiders: the insider standard -----------------------------------------------------------------------------------------
+
+/** One filing of the insider standard's per-company file (only the fields used here). */
+export interface InsiderFilingDoc {
+  filing: { accessionNo: string; form: string; filingDate: string; buildVersion: string };
+  owners: Array<{ ownerName: string; groupId: string; director: boolean; officer: boolean; officerTitle: string | null; tenPercentOwner: boolean }>;
+  transactions: Array<{
+    groupId: string; derivative: boolean; transactionDate: string | null; code: string | null; shares: number | null; price: number | null;
+    valueUsd: number | null; plan10b5: boolean; duplicateOf: string | null; flags: string[];
+  }>;
+}
+
+/** The standard's consumer rule: a line with one of these flags has no usable dollar value. */
+const NO_DOLLARS = new Set(["price_outlier", "equity_swap"]);
+const quarterEnd = (date: string): string => {
+  const year = Number(date.slice(0, 4)), quarter = Math.ceil(Number(date.slice(5, 7)) / 3);
+  return `${year}-${String(quarter * 3).padStart(2, "0")}-${quarter === 1 || quarter === 4 ? 31 : 30}`;
+};
+
+/**
+ * A company's insider transactions for the page: the stock lines of original reports (an amended report is separate
+ * evidence, not a second trade), each economic trade once (the standard's duplicate links), no derivative lines.
+ * Dollar sums count open-market purchases and sales only (codes P and S) and leave out lines the standard flags.
+ * `asOf` is the last filing date the standard holds for any company: the windows end there.
+ */
+export function buildDeskCompanyInsiders(params: { cik: number; ticker: string; filings: InsiderFilingDoc[]; asOf: string; builtAt: string; years?: number; limit?: number }): DeskCompanyInsiders | null {
+  const { asOf } = params;
+  const back = (days: number) => new Date(Date.parse(asOf) - days * DAY).toISOString().slice(0, 10);
+  const since = back((params.years ?? 3) * 365.25), yearAgo = back(365);
+  const ends: string[] = [];
+  // twenty calendar quarters ending with the one `asOf` is in: step back three months at a time
+  for (let end = quarterEnd(asOf); ends.length < 20; end = quarterEnd(new Date(Date.UTC(Number(end.slice(0, 4)), Number(end.slice(5, 7)) - 4, 15)).toISOString().slice(0, 10))) ends.unshift(end);
+  const quarters = new Map(ends.map((end) => [end, { bought: 0, sold: 0, buyers: new Set<string>(), sellers: new Set<string>() }]));
+  const year = { bought: 0, sold: 0, buyers: new Set<string>(), sellers: new Set<string>(), soldUnderPlan: 0 };
+  const trades: DeskCompanyInsiders["trades"] = [];
+  let version = "";
+  for (const { filing, owners, transactions } of params.filings) {
+    version ||= filing.buildVersion;
+    if (filing.form.endsWith("/A") || filing.filingDate > asOf) continue;
+    for (const line of transactions) {
+      if (line.derivative || line.duplicateOf || !line.transactionDate || !line.code) continue;
+      const usable = line.valueUsd !== null && line.valueUsd > 0 && line.price !== null && line.price > 0 && !line.flags.some((flag) => NO_DOLLARS.has(flag));
+      if (usable && (line.code === "P" || line.code === "S")) {
+        const quarter = quarters.get(quarterEnd(line.transactionDate));
+        const side = line.code === "P" ? "bought" : "sold";
+        if (quarter) { quarter[side] += line.valueUsd!; quarter[line.code === "P" ? "buyers" : "sellers"].add(line.groupId); }
+        if (line.transactionDate > yearAgo && line.transactionDate <= asOf) {
+          year[side] += line.valueUsd!;
+          year[line.code === "P" ? "buyers" : "sellers"].add(line.groupId);
+          if (line.code === "S" && line.plan10b5) year.soldUnderPlan += line.valueUsd!;
+        }
+      }
+      if (filing.filingDate < since) continue;
+      const group = owners.filter((owner) => owner.groupId === line.groupId);
+      const named = group[0] ?? owners[0];
+      if (!named) continue;
+      trades.push({
+        date: line.transactionDate, filed: filing.filingDate, owner: named.ownerName, more: Math.max(0, group.length - 1),
+        role: named.officerTitle?.trim() || (named.director ? "Director" : named.tenPercentOwner ? "10% owner" : named.officer ? "Officer" : null),
+        code: line.code, shares: line.shares, price: line.price, valueUsd: usable ? line.valueUsd : null, plan: line.plan10b5,
+      });
+    }
+  }
+  if (!version) return null;
+  trades.sort((a, b) => b.date.localeCompare(a.date) || b.filed.localeCompare(a.filed) || (b.valueUsd ?? 0) - (a.valueUsd ?? 0));
+  const cents = (value: number) => Math.round(value * 100) / 100;
+  return {
+    schemaVersion: DESK_COMPANY_SCHEMA_VERSION, cik: params.cik, ticker: params.ticker, version, asOf, builtAt: params.builtAt,
+    trades: trades.slice(0, params.limit ?? 80), tradeCount: trades.length,
+    quarters: ends.map((end) => { const q = quarters.get(end)!; return { quarter: end, bought: cents(q.bought), sold: cents(q.sold), buyers: q.buyers.size, sellers: q.sellers.size }; }),
+    year: { bought: cents(year.bought), sold: cents(year.sold), buyers: year.buyers.size, sellers: year.sellers.size, soldUnderPlan: cents(year.soldUnderPlan) },
   };
 }

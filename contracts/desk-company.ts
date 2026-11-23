@@ -119,7 +119,12 @@ export interface DeskCompanyIndex {
   builtAt: string;
   /** sha256 over the built company files, in CIK order. */
   contentHash: string;
-  companies: Array<{ cik: number; ticker: string; quarters: number; lastQuarter: string | null; rows: number; guidancePeriods: number; actions: boolean }>;
+  /** The 13F standard's build and last quarter, and the insider standard's build and last filing date, behind the holders and insiders files. */
+  holdersVersion: string | null;
+  holdersPeriod: string | null;
+  insidersVersion: string | null;
+  insidersAsOf: string | null;
+  companies: Array<{ cik: number; ticker: string; quarters: number; lastQuarter: string | null; rows: number; guidancePeriods: number; actions: boolean; holders: boolean; insiderTrades: number }>;
 }
 
 /** One statement of guidance for a period, as a release gave it; amounts in dollars (or dollars per share). */
@@ -180,4 +185,88 @@ export interface DeskCompanyActions {
   /** Cash dividends of the 365 days up to `pricesAsOf`. */
   dividendsLastYear: number;
   builtAt: string;
+}
+
+/** One quarter of the 13F standard for a company: the funds read, as known a set time after the quarter. */
+export interface DeskHoldersQuarter {
+  /** Quarter end, YYYY-MM-DD. */
+  period: string;
+  /** The day the reports counted here were all on file. */
+  knownAt: string;
+  /** Funds holding the company, of `fundsFiled` funds whose report for the quarter was on file by then (`fundsInBook` filed in the end). */
+  holders: number;
+  fundsFiled: number;
+  fundsInBook: number;
+  valueUsd: number;
+  /** Shares held by those funds / shares outstanding; null where the standard marks the figure as unusable. */
+  shareOfStock: number | null;
+  /** Among funds that reported both this quarter and the one before: new holders, full exits, and (entries - exits) / those funds. */
+  entries: number | null;
+  exits: number | null;
+  continuing: number | null;
+  breadthChange: number | null;
+  /** Shares bought and sold over the quarter, on today's share basis. */
+  sharesBought: number | null;
+  sharesSold: number | null;
+  /** The ten largest holders' part of the value held. */
+  top10Share: number | null;
+}
+
+export interface DeskCompanyHolders {
+  schemaVersion: typeof DESK_COMPANY_SCHEMA_VERSION;
+  cik: number;
+  ticker: string;
+  /** The 13F standard's build. */
+  version: string;
+  builtAt: string;
+  /** Oldest first. */
+  quarters: DeskHoldersQuarter[];
+}
+
+/** One filed line of a Form 4 or 5: a transaction in the company's stock by an officer, director or large holder. */
+export interface DeskInsiderTrade {
+  /** Transaction date and the filing's date. */
+  date: string;
+  filed: string;
+  /** The reporting person as filed, and how many others reported the same line jointly. */
+  owner: string;
+  more: number;
+  /** Officer title, "Director" or "10% owner". */
+  role: string | null;
+  /** SEC transaction code: P purchase, S sale, A grant, M exercise, F tax withholding, G gift ... */
+  code: string;
+  shares: number | null;
+  price: number | null;
+  /** shares x price as filed; null without a price, or when the standard flags the price as out of line. */
+  valueUsd: number | null;
+  /** Reported under a Rule 10b5-1 trading plan. */
+  plan: boolean;
+}
+
+/** Open-market purchases and sales (codes P and S) of one calendar quarter, in dollars, with the number of insiders on each side. */
+export interface DeskInsiderQuarter {
+  /** Quarter end, YYYY-MM-DD. */
+  quarter: string;
+  bought: number;
+  sold: number;
+  buyers: number;
+  sellers: number;
+}
+
+export interface DeskCompanyInsiders {
+  schemaVersion: typeof DESK_COMPANY_SCHEMA_VERSION;
+  cik: number;
+  ticker: string;
+  /** The insider standard's build, and the last filing date it holds for any company. */
+  version: string;
+  asOf: string;
+  builtAt: string;
+  /** Stock transactions of the last three years, newest first (at most 80). */
+  trades: DeskInsiderTrade[];
+  /** How many such lines the three years hold in all. */
+  tradeCount: number;
+  /** The last 20 calendar quarters, oldest first. */
+  quarters: DeskInsiderQuarter[];
+  /** Open-market purchases and sales of the 365 days to `asOf`. */
+  year: { bought: number; sold: number; buyers: number; sellers: number; soldUnderPlan: number };
 }

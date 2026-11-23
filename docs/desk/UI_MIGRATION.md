@@ -172,7 +172,9 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
     basis; figures out of scale are named, not shown. Checked against the filed annual facts by
     `scripts/check-desk-company-years.mts` (handoff 213).
   - [x] Splits, dividends and other distributions from the standard prices (2026-11-22, `c958388`), for every member.
-  - [ ] Holders and breadth from the 13F standard; insiders from the insider standard (replaces the Form 4 table).
+  - [x] Holders and breadth from the 13F standard k16.5; insiders from the insider standard i1.1 (2026-11-22). The
+    desk page no longer reads the classic 13F summary (`company.institutional`, the stored table with half the money
+    missing) or the Form 4 table (`company.insiderTrades`). The short-interest lines still come from the app.
   - [ ] Terminal's three charts: drawdown, return histogram, period statistics.
   - [ ] Documents reader and filings list.
   - [x] Guidance history (2026-11-22, `c958388`): each guided quarter and fiscal year from the guidance standard g1.2 final,

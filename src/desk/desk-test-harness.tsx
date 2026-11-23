@@ -199,6 +199,32 @@ const COMPANY_ACTIONS = {
   dividends: [{ date: "2026-11-12", amount: 0.27 }, { date: "2026-08-10", amount: 0.27 }, { date: "2026-05-11", amount: 0.27 }, { date: "2026-02-09", amount: 0.26 }],
   dividendsLastYear: 1.07,
 };
+const COMPANY_HOLDERS = {
+  schemaVersion: 2, cik: 320193, ticker: "AAPL", version: "k16.5", builtAt: "2026-11-22T00:00:00.000Z",
+  quarters: [
+    { period: "2026-03-31", knownAt: "2026-06-02", holders: 264, fundsFiled: 303, fundsInBook: 303, valueUsd: 2.025e12, shareOfStock: 0.5444, entries: 7, exits: 3, continuing: 284, breadthChange: 0.0141, sharesBought: 173e6, sharesSold: 107e6, top10Share: 0.5725 },
+    { period: "2026-06-30", knownAt: "2026-08-31", holders: 270, fundsFiled: 307, fundsInBook: 307, valueUsd: 2.425e12, shareOfStock: 0.5747, entries: 6, exits: 5, continuing: 294, breadthChange: 0.0034, sharesBought: 309.2e6, sharesSold: 124.3e6, top10Share: 0.5548 },
+  ],
+};
+const COMPANY_INSIDERS = {
+  schemaVersion: 2, cik: 320193, ticker: "AAPL", version: "i1.1.20261116", asOf: "2026-11-13", builtAt: "2026-11-22T00:00:00.000Z",
+  trades: [
+    { date: "2026-10-01", filed: "2026-10-03", owner: "COOK TIMOTHY D", more: 0, role: "Chief Executive Officer", code: "S", shares: 100_000, price: 250, valueUsd: 25_000_000, plan: true },
+    { date: "2026-10-01", filed: "2026-10-03", owner: "COOK TIMOTHY D", more: 0, role: "Chief Executive Officer", code: "F", shares: 50_000, price: 250, valueUsd: 12_500_000, plan: false },
+    { date: "2026-08-10", filed: "2026-08-12", owner: "LEVINSON ARTHUR D", more: 1, role: "Director", code: "P", shares: 2_000, price: 230, valueUsd: 460_000, plan: false },
+    { date: "2026-05-04", filed: "2026-05-05", owner: "SEQUOIA CAPITAL FUND", more: 0, role: "10% owner", code: "S", shares: 10_000, price: 900, valueUsd: null, plan: false },
+    ...Array.from({ length: 9 }, (_, index) => ({ date: `2026-03-${String(20 - index).padStart(2, "0")}`, filed: "2026-03-21", owner: "MAESTRI LUCA", more: 0, role: "Chief Financial Officer", code: "A", shares: 1_000 + index, price: null, valueUsd: null, plan: false })),
+  ],
+  tradeCount: 13,
+  quarters: [
+    ...["2022-03-31", "2022-06-30", "2022-09-30", "2022-12-31", "2023-03-31", "2023-06-30", "2023-09-30", "2023-12-31", "2024-03-31", "2024-06-30", "2024-09-30", "2024-12-31", "2025-03-31", "2025-06-30", "2025-09-30", "2025-12-31", "2026-03-31"]
+      .map((quarter) => ({ quarter, bought: 0, sold: 0, buyers: 0, sellers: 0 })),
+    { quarter: "2026-06-30", bought: 0, sold: 9_000_000, buyers: 0, sellers: 1 },
+    { quarter: "2026-09-30", bought: 460_000, sold: 0, buyers: 1, sellers: 0 },
+    { quarter: "2026-12-31", bought: 0, sold: 25_000_000, buyers: 0, sellers: 1 },
+  ],
+  year: { bought: 460_000, sold: 34_000_000, buyers: 1, sellers: 2, soldUnderPlan: 25_000_000 },
+};
 
 function answer(procedure: string, role: string): unknown {
   const owner = role === "admin";
@@ -226,6 +252,8 @@ function answer(procedure: string, role: string): unknown {
     case "desk.companyStatements": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_STATEMENTS;
     case "desk.companyGuidance": return DESK_DATA.empty || DESK_DATA.noStatements || !owner ? null : COMPANY_GUIDANCE;
     case "desk.companyActions": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_ACTIONS;
+    case "desk.companyHolders": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_HOLDERS;
+    case "desk.companyInsiders": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_INSIDERS;
     case "desk.engineIndex": return ENGINE_INDEX;
     case "desk.engineCompany": return ENGINE_COMPANY;
     case "admin.usersList": return DESK_DATA.empty ? [] : [
