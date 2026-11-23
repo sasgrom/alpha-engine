@@ -135,6 +135,8 @@ export const DEV_NOTES = {
       ["A test of whether following the money pays, with intervals and a hold-out period", "time: the figures shown are a description of 22 quarters, not a test"],
       ["Books that open: a company's page inside the hall with price, reports and the funds around it", "time only"],
       ["Walking the hall by keyboard alone, with every book and person reachable in order", "time; the reading view is the accessible twin until then"],
+      ["The walk through the quarter with more stops: each sector in turn, the largest buyers and sellers, a fund's own story", "time; the six stops shown are computed from the quarter's figures"],
+      ["Names on every ribbon and on the threads of a selected book or fund", "label room: the five or six widest ribbons are named, the rest only on hover"],
       ["Talking, typing and sitting people", "animation clips the free figures do not have (Mixamo or hand-made loops)"],
       ["History before the third quarter of 2020", "the older 13F reports, which were never downloaded"],
       ["Daily rebuild after new reports arrive", "a scheduler entry for the two build scripts (they take about two minutes together)"],

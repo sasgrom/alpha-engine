@@ -34,6 +34,18 @@ function showing(cut: Cut, t: number): boolean {
   return false;
 }
 
+/**
+ * The top of a stream's arc (the control point of its curve). Rotation streams lean towards the middle of the hall and
+ * stay under the top of the walls, so the whole arc, and its name at the top, is in the picture from the overview.
+ */
+export function arcControl(kind: "rotation" | "thread", from: THREE.Vector3, to: THREE.Vector3): THREE.Vector3 {
+  const span = from.distanceTo(to);
+  const middle = from.clone().add(to).multiplyScalar(0.5);
+  return kind === "rotation"
+    ? new THREE.Vector3(middle.x * 0.35, Math.max(from.y, to.y) + 1.4 + span * 0.07, middle.z * 0.35)
+    : new THREE.Vector3(middle.x, Math.max(from.y, to.y) + 1.5 + span * 0.18, middle.z);
+}
+
 export interface StreamSpec {
   from: THREE.Vector3;
   to: THREE.Vector3;
@@ -136,7 +148,7 @@ function bandTexture(): THREE.CanvasTexture {
   canvas.height = 4;
   const context = canvas.getContext("2d")!;
   const gradient = context.createLinearGradient(0, 0, 256, 0);
-  for (let stop = 0; stop <= 8; stop++) gradient.addColorStop(stop / 8, stop % 2 ? "rgb(255,255,255)" : "rgb(170,170,170)");
+  for (let stop = 0; stop <= 8; stop++) gradient.addColorStop(stop / 8, stop % 2 ? "rgb(255,255,255)" : "rgb(226,226,226)");
   context.fillStyle = gradient;
   context.fillRect(0, 0, 256, 4);
   const texture = new THREE.CanvasTexture(canvas);
@@ -164,7 +176,9 @@ function ribbon(curve: THREE.QuadraticBezierCurve3, width: number, start: THREE.
     const taper = Math.min(1, t / 0.07, (1 - t) / 0.07);
     const half = (width / 2) * (0.35 + 0.65 * taper);
     positions.push(point.x - side.x * half, point.y - side.y * half, point.z - side.z * half, point.x + side.x * half, point.y + side.y * half, point.z + side.z * half);
-    color.copy(start).lerp(end, THREE.MathUtils.smoothstep(t, 0.15, 0.85));
+    // each half keeps its own colour (red where the money left, blue where it arrived) with a short turn in the middle:
+    // a long blend made every ribbon mostly purple, which says nothing about direction
+    color.copy(start).lerp(end, THREE.MathUtils.smoothstep(t, 0.38, 0.62));
     colors.push(color.r, color.g, color.b, color.r, color.g, color.b);
     uvs.push(t * repeats, 0, t * repeats, 1);
     along.push(t, t);
@@ -203,14 +217,14 @@ export class MoneyStreams {
     geometry.setDrawRange(0, 0);
     this.bubbles = new THREE.Points(
       geometry,
-      new THREE.PointsMaterial({ size: 0.5, map: this.bubbleTexture, vertexColors: true, transparent: true, alphaTest: 0.04, depthWrite: false, sizeAttenuation: true }),
+      new THREE.PointsMaterial({ size: 0.66, map: this.bubbleTexture, vertexColors: true, transparent: true, alphaTest: 0.04, depthWrite: false, sizeAttenuation: true }),
     );
     fadeNear(this.bubbles.material as THREE.Material);
     this.bubbles.frustumCulled = false;
     this.group.add(this.bubbles);
   }
 
-  /** Replaces the streams. The widest rotation stream is 2.4 m wide, the widest thread 0.9 m; width follows the dollars. */
+  /** Replaces the streams. The widest rotation stream is 1.8 m wide, the widest thread 0.9 m; width follows the dollars. */
   set(specs: StreamSpec[]): void {
     for (const item of this.built) {
       item.mesh.geometry.dispose();
@@ -227,21 +241,15 @@ export class MoneyStreams {
     };
     const top = { rotation: widest("rotation"), thread: widest("thread") };
     for (const spec of specs) {
-      const span = spec.from.distanceTo(spec.to);
-      const middle = spec.from.clone().add(spec.to).multiplyScalar(0.5);
-      const control =
-        spec.kind === "rotation"
-          ? new THREE.Vector3(middle.x * 0.35, Math.max(spec.from.y, spec.to.y) + 2.5 + span * 0.14, middle.z * 0.35)
-          : new THREE.Vector3(middle.x, Math.max(spec.from.y, spec.to.y) + 1.5 + span * 0.18, middle.z);
-      const curve = new THREE.QuadraticBezierCurve3(spec.from, control, spec.to);
+      const curve = new THREE.QuadraticBezierCurve3(spec.from, arcControl(spec.kind, spec.from, spec.to), spec.to);
       const length = curve.getLength();
       const share = Math.min(1, spec.usd / (spec.kind === "rotation" ? top.rotation : top.thread));
-      const width = spec.kind === "rotation" ? 0.18 + 2.2 * share : 0.1 + 0.8 * share;
+      const width = spec.kind === "rotation" ? 0.3 + 1.5 * share : 0.1 + 0.8 * share;
       const material = new THREE.MeshBasicMaterial({
         map: this.bandTexture,
         vertexColors: true,
         transparent: true,
-        opacity: spec.lit ? (this.dark ? 0.82 : 0.9) : 0.07,
+        opacity: spec.lit ? (this.dark ? 0.72 : 0.78) : 0.07,
         side: THREE.DoubleSide,
         depthWrite: false,
       });
@@ -262,7 +270,8 @@ export class MoneyStreams {
       this.built.push(item);
       this.apply(item);
       if (!spec.lit) continue;
-      const count = Math.round(Math.max(spec.kind === "rotation" ? 6 : 3, Math.min(spec.kind === "rotation" ? 140 : 30, share * (spec.kind === "rotation" ? 140 : 30))));
+      // a few bubbles ride each stream to show which way the money goes; hundreds of them read as grain from afar
+      const count = Math.round(Math.max(spec.kind === "rotation" ? 4 : 3, Math.min(spec.kind === "rotation" ? 22 : 16, share * (spec.kind === "rotation" ? 22 : 16))));
       for (let index = 0; index < count && this.riders.length < MAX_BUBBLES; index++) {
         // evenly spaced and all at the stream's pace (about four and a half metres a second), so they never bunch up
         this.riders.push({ stream: streamIndex, phase: (index + ((streamIndex * 0.37) % 1)) / count, speed: 4.5 / length });

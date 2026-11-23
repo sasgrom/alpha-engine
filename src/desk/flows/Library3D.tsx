@@ -15,6 +15,8 @@ import { topLists } from "./hall/lists";
 import { HallStage, type StageData, type StageFigure, type StageSelection, type StageTarget } from "./hall/stage";
 import type { StreamPart } from "./hall/streams";
 
+export type HallRest = "overview" | "door" | "above";
+
 export interface LibraryProps {
   overview: FundFlowsOverview;
   row: FlowQuarter;
@@ -25,9 +27,12 @@ export interface LibraryProps {
   selection: StageSelection;
   dark: boolean;
   palette: ChartPalette;
-  /** Changes when the reader asks to be taken back to the entrance, or up to look over the whole hall. */
-  homeSignal: number;
-  aboveSignal: number;
+  /**
+   * Where the hall rests while no sector is in focus and nothing is selected: the overview (the opening view), facing
+   * the doorway, or straight down from above. `restTick` changes when the reader asks for it again.
+   */
+  rest: HallRest;
+  restTick: number;
   /** Pixels of the hall covered by the panel on the right (0 when it is closed) and by the strip at the bottom. */
   inset: number;
   insetBottom: number;
@@ -42,7 +47,7 @@ export interface LibraryProps {
   onPick: (target: StageTarget) => void;
 }
 
-export default function Library3D({ overview, row, mode, real, focus, selection, dark, palette, homeSignal, aboveSignal, inset, insetBottom, game, who, audience, streams, onPick }: LibraryProps) {
+export default function Library3D({ overview, row, mode, real, focus, selection, dark, palette, rest, restTick, inset, insetBottom, game, who, audience, streams, onPick }: LibraryProps) {
   const host = useRef<HTMLDivElement>(null);
   const stage = useRef<HallStage | null>(null);
   const pick = useRef(onPick);
@@ -137,18 +142,15 @@ export default function Library3D({ overview, row, mode, real, focus, selection,
   }, [selection, ready]);
 
   useEffect(() => {
-    if (selection.kind === null) stage.current?.flyToSector(focus);
-    // a selection has its own vantage point; the sector only matters without one
+    // a selection has its own vantage point; a sector in focus has the view of its bookcase; otherwise the hall rests
+    // where the reader (or the walk through the quarter) last asked
+    if (selection.kind !== null) return;
+    if (focus !== null) stage.current?.flyToSector(focus);
+    else if (rest === "door") stage.current?.flyToDoor();
+    else if (rest === "above") stage.current?.flyAbove();
+    else stage.current?.flyOverview();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focus, ready]);
-
-  useEffect(() => {
-    if (homeSignal > 0) stage.current?.flyHome();
-  }, [homeSignal]);
-
-  useEffect(() => {
-    if (aboveSignal > 0) stage.current?.flyAbove();
-  }, [aboveSignal]);
+  }, [focus, rest, restTick, ready]);
 
   useEffect(() => {
     stage.current?.setInset(inset, insetBottom);

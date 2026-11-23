@@ -5,7 +5,7 @@
  */
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Navigate, useSearchParams } from "react-router";
-import { BookOpen, ChevronDown, ChevronUp, DoorOpen, Eye, Gamepad2, Info, Library, Minimize2, PanelRightClose, PanelRightOpen, Pause, Play, X } from "lucide-react";
+import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Gamepad2, Info, Library, Minimize2, PanelRightClose, PanelRightOpen, Pause, Play, Route, X } from "lucide-react";
 import type { FlowQuarter, FundFlowsOverview } from "@contracts/fund-flows";
 import { Card, Notice, Segmented, Shimmer } from "../components";
 import { useDesk, useDocumentTitle } from "../context";
@@ -14,12 +14,15 @@ import { fmtCap, fmtDate, fmtPct } from "../format";
 import { FlowTape, FlowTimeline, RotationDiagram } from "./charts";
 import { deflatorSince, quarterLabel, quarterSentence, standingOf, useFlowsCompany, useFlowsFund, useFlowsOverview, type Who } from "./data";
 import type { StageSelection, StageTarget } from "./hall/stage";
+import type { HallRest } from "./Library3D";
 import type { StreamPart } from "./hall/streams";
 import { webglAvailable } from "./hall/webgl";
 import { CatalogPanel, CompanyPanel, FundPanel, QuarterPanel, Sentence, type FlowNav } from "./panels";
+import { quarterStory } from "./story";
 
 const Library3D = lazy(() => import("./Library3D"));
 const HEAD_KEY = "alpha.desk.flows.head";
+const TOUR_KEY = "alpha.desk.flows.tour";
 
 type View = "library" | "reading";
 type Mode = "flow" | "outcome" | "held";
@@ -93,8 +96,25 @@ export default function FlowsPage() {
   };
   const [helpOpen, setHelpOpen] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [homeSignal, setHomeSignal] = useState(0);
-  const [aboveSignal, setAboveSignal] = useState(0);
+  // where the hall rests while nothing is in focus; asking again (the tick) flies there from wherever the reader went
+  const [rest, setRest] = useState<{ view: HallRest; tick: number }>({ view: "overview", tick: 0 });
+  const restAt = useCallback((view: HallRest) => setRest((current) => ({ view, tick: current.tick + 1 })), []);
+  // the guided walk through the quarter: open on the first visit, and wherever the reader left it after that
+  const [tour, setTour] = useState<number | null>(() => {
+    try {
+      if (params.get("sector") || params.get("fund") || params.get("company")) return null;
+      return window.localStorage.getItem(TOUR_KEY) === "closed" ? null : 0;
+    } catch {
+      return 0;
+    }
+  });
+  const rememberTour = (open: boolean) => {
+    try {
+      window.localStorage.setItem(TOUR_KEY, open ? "open" : "closed");
+    } catch {
+      // storage may be unavailable; the walk still opens and closes for this visit
+    }
+  };
   // the game view: the hall fills the screen, the site's header out of sight; Esc goes back to the page
   const [game, setGame] = useState(false);
   const hall = useRef<HTMLDivElement>(null);
@@ -172,8 +192,26 @@ export default function FlowsPage() {
     return { kind: null, id: null, threads: [] };
   }, [row, fund, company, fundFile.data, companyFile.data]);
 
+  const companyNames = useMemo(() => new Map((overview.data?.companies ?? []).map((entry) => [entry.cik, entry.name])), [overview.data]);
+  const story = useMemo(() => (row ? quarterStory(row, companyNames) : []), [row, companyNames]);
+  /** Takes the reader to a step of the walk: its view of the hall and what is selected there. */
+  const showStep = useCallback(
+    (index: number) => {
+      const step = story[index];
+      if (!step) return;
+      setTour(index);
+      if ("view" in step.go) {
+        set({ sector: null, fund: null, company: null });
+        restAt(step.go.view);
+      } else if ("sector" in step.go) set({ sector: step.go.sector, fund: null, company: null });
+      else set({ company: step.go.company, fund: null, sector: null });
+    },
+    [story, set, restAt],
+  );
+
   const onPick = useCallback(
     (target: StageTarget) => {
+      if (target.kind === "company" || target.kind === "fund" || target.kind === "sector" || target.kind === "outside") setTour(null);
       // a second click on the book or the person already chosen lets it go (the hall flies back to where the reader was)
       if (target.kind === "company") {
         if (target.id === company) set({ company: null });
@@ -269,7 +307,7 @@ export default function FlowsPage() {
       <>
         <div className="desk-lib" ref={hall} data-game={game ? "on" : undefined}>
           <Suspense fallback={<div className="desk-lib-stage"><Shimmer height={520} /></div>}>
-            <Library3D overview={data} row={row} mode={mode} real={real} focus={sector} selection={selection} dark={theme.resolved === "dark"} palette={palette} homeSignal={homeSignal} aboveSignal={aboveSignal} inset={panelOpen ? 418 : 0} insetBottom={150} game={game} who={who} audience={audience} streams={mode === "held" ? "all" : streams} onPick={onPick} />
+            <Library3D overview={data} row={row} mode={mode} real={real} focus={sector} selection={selection} dark={theme.resolved === "dark"} palette={palette} rest={rest.view} restTick={rest.tick} inset={panelOpen ? 418 : 0} insetBottom={tour !== null && story[tour] ? 262 : 150} game={game} who={who} audience={audience} streams={mode === "held" ? "all" : streams} onPick={onPick} />
           </Suspense>
           {game && (
             <div className="desk-lib-keys" aria-hidden="true">
@@ -332,12 +370,13 @@ export default function FlowsPage() {
             {viewSwitch}
             {modeSwitch}
             {mode === "outcome" && inflation}
-            <button type="button" className="desk-icon-button" onClick={() => { set({ sector: null, fund: null, company: null }); setHomeSignal((count) => count + 1); }} aria-label="Back to the entrance" title="Back to the entrance">
-              <DoorOpen size={16} aria-hidden="true" />
-            </button>
-            <button type="button" className="desk-icon-button" onClick={() => setAboveSignal((count) => count + 1)} aria-label="View from above" title="View from above: the whole floor at once">
-              <Eye size={16} aria-hidden="true" />
-            </button>
+            <div className="desk-seg" role="group" aria-label="Views of the hall">
+              <button type="button" aria-pressed={rest.view === "overview" && !sector && !fund && !company} onClick={() => { set({ sector: null, fund: null, company: null }); restAt("overview"); }} title="Back to the opening view, with nothing selected">Overview</button>
+              <button type="button" aria-pressed={rest.view === "above" && !sector && !fund && !company} onClick={() => { set({ sector: null, fund: null, company: null }); restAt("above"); }} title="Straight down on the whole floor">From above</button>
+              <button type="button" aria-pressed={tour !== null} onClick={() => { if (tour === null) { rememberTour(true); showStep(0); } else { rememberTour(false); setTour(null); } }} title="A short walk through the quarter, one view at a time">
+                <Route size={14} aria-hidden="true" style={{ marginRight: 5, verticalAlign: "-2px" }} />Walk me through
+              </button>
+            </div>
             <button type="button" className="desk-icon-button" aria-pressed={game} onClick={() => (game ? leaveGame() : enterGame())} aria-label={game ? "Leave the game view" : "Game view: the hall on the whole screen"} title={game ? "Leave the game view (Esc)" : "Game view: the hall on the whole screen"}>
               {game ? <Minimize2 size={16} aria-hidden="true" /> : <Gamepad2 size={16} aria-hidden="true" />}
             </button>
@@ -352,21 +391,45 @@ export default function FlowsPage() {
             <div className="desk-lib-help" role="note">
               <strong>How to read the hall</strong>
               <ul>
-                <li>Each bookcase is a sector; each book a company. A thicker book: more of it is held by the funds.</li>
-                <li>A book pulled out toward you was bought this quarter, a book pushed back was sold. The further, the more dollars.</li>
-                <li>The people are the funds. Each stands at the bookcase where it bought most this quarter (or where it leans most), the largest funds tallest. A blue jacket bought more than it sold, a red jacket sold more. The index giants keep the library at the map table in the middle.</li>
-                <li>A figure is a man or a woman when a public source names the firm's leader; a wooden mannequin otherwise. Clothes follow the holdings: suits for banks and industry, tech wear for technology, casual in between.</li>
-                <li>The streams overhead are the estimated rotation, as wide as the dollars: red where money left, blue where it arrived. All flows, Bought, Sold: every stream, or only the money going in where it was bought (blue), or only the money coming out where it was sold (red). The doorway opens onto Main Street, everything outside these stocks; the plaque over it shows what came in from outside and what went out.</li>
-                <li>Over each bookcase its scoreboard shows what came in and went out, with the net on the plaque above. Click a top-ten board on the walls to stand in front of it, then a row to select it.</li>
-                <li>Select a person to see its money run to the books, or a book to see who traded it; select it again to let it go, and the view goes back to where you were. Change the quarter and the people walk to their new places.</li>
-                <li>All, Winners, Losers: a winner's book did better in the quarter than all tracked funds together, a loser's worse. The others walk out and wait outside until you switch back.</li>
-                <li>People: the famous faces behind the tracked funds (Buffett, Griffin, Dalio, Cathie Wood and others) stand for their firms' money; the public figures and investors whose trades are not collected wait by the entrance.</li>
-                <li>Older firms (on the SEC's records since its first years) are older people, some with canes; the youngest firms ride scooters and bikes; larger funds are taller and broader.</li>
-                <li>Drag to look around, scroll or W A S D to walk, R and F to rise and fall. The game view fills the screen. The reading view has the same figures as charts and tables.</li>
+                <li><b>Bookcases and books.</b> A bookcase is a sector, a book a company. A book pulled out was bought this quarter, a book pushed back was sold; the further it moved, the more dollars.</li>
+                <li><b>Ribbons overhead.</b> Money that moved between two sectors, as wide as the dollars: red at the end where it was sold, blue where it was bought. It is an estimate: each fund's sales are paired with its own purchases.</li>
+                <li><b>The doorway.</b> Money that came in from outside the covered stocks, and money that left.</li>
+                <li><b>People.</b> The funds, each at the bookcase where it bought most; the largest are the tallest. A blue jacket bought more than it sold, a red one sold more. The index funds keep the library at the map table.</li>
+                <li><b>Selecting.</b> Click a book to see who traded it, a person to follow its money to the shelves; click again to let go. The boards over the bookcases show what came in and went out.</li>
+                <li><b>Moving.</b> Drag to turn the hall, scroll to move in and out. Overview takes you back to the start; Walk me through shows the quarter in six views. The game view is for walking with W A S D.</li>
               </ul>
             </div>
           )}
-          {panelOpen && <aside className="desk-lib-panel" aria-label="Details">{panel}</aside>}
+          {tour !== null && story[tour] && (
+            <section className="desk-lib-story" aria-label="A walk through the quarter" data-panel={panelOpen ? "open" : "closed"}>
+              <div className="desk-lib-story-text">
+                <div className="desk-lib-story-top">
+                  <span className="desk-lib-story-count">{tour + 1} of {story.length}</span>
+                  <h2>{story[tour].title}</h2>
+                </div>
+                <p>{story[tour].text}</p>
+                <p className="desk-lib-story-hint">{story[tour].hint}</p>
+              </div>
+              <div className="desk-lib-story-nav">
+                <button type="button" className="desk-button" disabled={tour === 0} onClick={() => showStep(tour - 1)} aria-label="Previous view">
+                  <ChevronLeft size={14} aria-hidden="true" /> Back
+                </button>
+                {tour < story.length - 1 ? (
+                  <button type="button" className="desk-button primary" onClick={() => showStep(tour + 1)} title={story[tour + 1].title}>
+                    Next <ChevronRight size={14} aria-hidden="true" />
+                  </button>
+                ) : (
+                  <button type="button" className="desk-button primary" onClick={() => { rememberTour(false); setTour(null); set({ sector: null, fund: null, company: null }); restAt("overview"); }}>
+                    Explore freely
+                  </button>
+                )}
+                <button type="button" className="desk-icon-button" onClick={() => { rememberTour(false); setTour(null); }} aria-label="Close the walk and explore freely" title="Close and explore freely">
+                  <X size={14} aria-hidden="true" />
+                </button>
+              </div>
+            </section>
+          )}
+          {panelOpen &&<aside className="desk-lib-panel" aria-label="Details">{panel}</aside>}
           <div className="desk-lib-foot" data-panel={panelOpen ? "open" : "closed"}>
             <div className="desk-lib-time">
               {playButton}

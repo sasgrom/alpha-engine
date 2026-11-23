@@ -1,8 +1,10 @@
 /**
  * The rotunda of the fund-flow view, drawn with three.js: a round library with a bookcase for every sector, a book
  * for every company, the funds as people standing at the bookcase where their money went, the index funds keeping
- * the library at the map table, and the quarter's money flowing under the dome. Game-like controls: drag to look,
- * W A S D or the arrow keys to walk, R and F to rise and fall, the wheel to move forward, a click to select.
+ * the library at the map table, and the quarter's money flowing under the dome. The reader turns the hall like a
+ * model: drag to turn it round its middle, the wheel to move in and out, a click to select; prepared views (the
+ * overview, a bookcase, the doorway, from above) do the walking. In the game view the controls are a walker's: drag
+ * to look, W A S D or the arrow keys to walk, R and F to rise and fall.
  *
  * No React in here: the page hands in data and receives hover and pick events. Labels are plain elements the stage
  * positions itself, so nothing re-renders per frame.
@@ -15,12 +17,13 @@ import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { FLOW_OUTSIDE, type FlowLink } from "@contracts/fund-flows";
 import { mixOklab, type ChartPalette } from "../../charts/color";
+import { fmtCap } from "../../format";
 import { buildHall, DOORWAY, loadHallTextures, WALL_RADIUS, type HallBuilding } from "./building";
 import type { Look } from "./figures";
 import type { Carry } from "./character";
 import { angleOf, crowdSlots, crowdWedges, hallLayout, polar, ROTUNDA, staffSlots, type HallCompany, type HallLayout, type Slot } from "./layout";
 import { Crowd, loadPrototypes, type BodyKind } from "./people";
-import { MoneyStreams, type StreamPart, type StreamSpec } from "./streams";
+import { arcControl, MoneyStreams, type StreamPart, type StreamSpec } from "./streams";
 import { MapTable, type StateFlow, type UsaTopology } from "./usa-map";
 import { MainStreet } from "./mainstreet";
 import { Providence } from "./providence";
@@ -106,6 +109,16 @@ interface PlacedLabel { element: HTMLElement; at: THREE.Vector3; reach: number; 
 
 /** Where the reader comes in: inside the entrance, looking across the hall. */
 const HOME: Pose = { x: 0, y: 6.4, z: 21, yaw: 0, pitch: -0.12 };
+/**
+ * Where the hall opens and where "Overview" returns: over the doorway at the height of the wall's top, looking down
+ * across the floor, so the bookcases, the people at them and the ribbons under the dome are in one picture.
+ */
+const OVERVIEW: Pose = { x: 0, y: 15.2, z: 24.5, yaw: 0, pitch: -0.36 };
+const SHORT_SECTOR: Record<string, string> = {
+  "Information Technology": "Tech", "Communication Services": "Communication", "Consumer Discretionary": "Cons. Discretionary",
+  "Consumer Staples": "Cons. Staples", [FLOW_OUTSIDE]: "Outside",
+};
+const shortSector = (sector: string) => SHORT_SECTOR[sector] ?? sector;
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 const clamp = (value: number, low: number, high: number) => Math.min(high, Math.max(low, value));
 
@@ -130,6 +143,8 @@ export class HallStage {
   private crowd: Crowd | null = null;
   private readonly labelLayer: HTMLDivElement;
   private labels: PlacedLabel[] = [];
+  /** The names of the streams on show: "Financials → Tech · $12.30B", at the top of each arc. */
+  private streamNotes: { text: string; at: THREE.Vector3 }[] = [];
   private mainStreet: MainStreet | null = null;
   private providence: Providence | null = null;
   private scoreboards: Scoreboards | null = null;
@@ -153,7 +168,7 @@ export class HallStage {
   private pointerDirty = false;
   private dragging: { x: number; y: number; moved: number } | null = null;
   private readonly keys = new Set<string>();
-  private readonly pose: Pose = { ...HOME };
+  private readonly pose: Pose = { ...OVERVIEW };
   private flight: { from: Pose; to: Pose; started: number; duration: number } | null = null;
   /** Where the reader stood before choosing the current selection: letting it go flies back there. */
   private returnPose: Pose | null = null;
@@ -196,7 +211,7 @@ export class HallStage {
     // a reading room's light: soft, nothing burnt out
     this.renderer.toneMappingExposure = dark ? 0.82 : 0.78;
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFShadowMap;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.domElement.style.cssText = "display:block;width:100%;height:100%;outline:none;touch-action:none;cursor:grab";
     this.renderer.domElement.tabIndex = 0;
     this.renderer.domElement.setAttribute("role", "img");
@@ -254,7 +269,10 @@ export class HallStage {
     this.halo.visible = false;
     this.scene.add(this.halo);
 
-    this.composer = new EffectComposer(this.renderer);
+    // The composer draws into its own target, where the canvas's antialiasing does not reach: without samples every
+    // edge of a book, a railing and a ribbon is a staircase, which reads as grain. Half floats keep the highlights
+    // for the bloom.
+    this.composer = new EffectComposer(this.renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 }));
     this.composer.addPass(new RenderPass(this.scene, this.camera));
     this.bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), dark ? 0.32 : 0.1, 0.45, dark ? 0.86 : 0.95);
     this.composer.addPass(this.bloom);
@@ -398,7 +416,7 @@ export class HallStage {
 
   // --- labels -----------------------------------------------------------------------------------------------------
   private label(text: string, className: string, at: THREE.Vector3, reach: number, target?: StageTarget, follow?: number): PlacedLabel {
-    const rank = className.startsWith("sector") ? 0 : className.startsWith("desk") ? 1 : className.startsWith("book") ? 2 : 3;
+    const rank = className.startsWith("sector") ? 0 : className.startsWith("desk") || className.startsWith("stream") ? 1 : className.startsWith("book") ? 2 : 3;
     const element = document.createElement(target ? "button" : "div");
     element.className = `desk-lib-label ${className}`;
     element.textContent = text;
@@ -415,6 +433,7 @@ export class HallStage {
     this.labels = [];
     const data = this.data;
     if (!data) return;
+    for (const note of this.streamNotes) this.labels.push(this.label(note.text, "stream", note.at, 130));
     // the books carry their tickers on their spines; floating names only for a sector in focus and a selection
     const named = new Set<number>();
     if (this.selection.kind === null && data.focus !== null) {
@@ -474,13 +493,17 @@ export class HallStage {
         if (taken.some((other) => box[0] < other[2] && box[2] > other[0] && box[1] < other[3] && box[3] > other[1])) visible = false;
         else taken.push(box);
       }
+      // a stream's name under the toolbar says nothing; one that would sit behind the title panel is drawn below it
+      const streamName = label.element.classList.contains("stream");
+      if (visible && streamName && y < 150) visible = false;
+      const top = visible && streamName && x < 640 && y < 262 ? 262 : y;
       label.shown = visible;
       if (!visible) {
         if (label.element.style.display !== "none") label.element.style.display = "none";
         continue;
       }
       label.element.style.display = "";
-      label.element.style.transform = `translate(-50%, -100%) translate(${x}px, ${y}px)`;
+      label.element.style.transform = `translate(-50%, -100%) translate(${x}px, ${top}px)`;
       label.element.style.opacity = String(clamp(1.25 - distance / label.reach, 0.3, 1));
     }
   }
@@ -723,14 +746,21 @@ export class HallStage {
     // the quarter's largest streams; Main Street's to and from every sector (the money from and to outside the covered
     // stocks); and with a sector in focus its own largest, in and out. A smaller sector's money rarely ranks among the
     // hall's largest streams, and would otherwise show none
-    const links = data.mode === "held" ? [] : data.links.filter((item) => item.from !== item.to && item.usd > 0);
-    const shown = links.slice(0, 16);
-    for (const link of links) if ((link.from === FLOW_OUTSIDE || link.to === FLOW_OUTSIDE) && !shown.includes(link)) shown.push(link);
-    if (data.focus !== null) for (const link of links.filter((item) => item.from === data.focus || item.to === data.focus).slice(0, 12)) if (!shown.includes(link)) shown.push(link);
+    const links = data.mode === "held" ? [] : [...data.links].filter((item) => item.from !== item.to && item.usd > 0).sort((a, b) => b.usd - a.usd);
+    // Few enough to read: the quarter's eight largest streams, or, with a sector in focus, that sector's ten largest
+    // and nothing else. More than that, and dimmed streams left hanging in the air, turn the dome into haze. A
+    // selection's own threads replace them.
+    const shown = quiet ? [] : data.focus === null ? links.slice(0, 8) : links.filter((item) => item.from === data.focus || item.to === data.focus).slice(0, 10);
+    this.streamNotes = [];
     for (const link of shown) {
       const from = this.anchorOf(link.from);
       const to = this.anchorOf(link.to);
       if (!from || !to) continue;
+      // the stream's own name, at the top of its arc: where the money left, where it arrived, how much
+      if (this.streamNotes.length < (data.focus === null ? 5 : 6)) {
+        const apex = from.clone().multiplyScalar(0.25).add(arcControl("rotation", from, to).multiplyScalar(0.5)).add(to.clone().multiplyScalar(0.25));
+        this.streamNotes.push({ text: `${shortSector(link.from)} \u2192 ${shortSector(link.to)} \u00b7 ${fmtCap(link.usd)}`, at: apex });
+      }
       specs.push({ from, to, usd: link.usd, start: this.negative, end: this.positive, kind: "rotation", lit: !quiet && (data.focus === null || link.from === data.focus || link.to === data.focus), label: { from: link.from, to: link.to } });
     }
     // a selected fund's money runs between the person and the books; a selected book's to and from its traders
@@ -838,19 +868,29 @@ export class HallStage {
 
   /** Stand in the hall facing a sector's bookcase, far enough back to see it and the crowd in front of it. */
   flyToSector(sector: string | null): void {
-    if (sector === null) return this.flyHome();
+    if (sector === null) return this.flyOverview();
     const alcove = this.layout.alcoves.find((item) => item.sector === sector);
     if (!alcove) return;
     const half = THREE.MathUtils.degToRad(this.camera.fov / 2);
-    const distance = clamp((alcove.width / 2 + 1.5) / (Math.tan(half) * Math.max(0.6, this.openAspect())), 11, 22);
+    // from across the hall and above the heads: the bookcase with its board, the crowd in front of it, and the
+    // sector's ribbons arriving and leaving over it, all inside the part of the view the panels leave open
+    const distance = clamp(((alcove.width / 2 + 1.5) / (Math.tan(half) * Math.max(0.6, this.openAspect()))) * 1.7, 24, 34);
     const middle = ROTUNDA.shelfBase + (ROTUNDA.rows * ROTUNDA.rowHeight) / 2 + 0.6;
-    // looking a little above the bookcase's middle: the books in the lower half of the view, the sector's streams
-    // rising from over the bookcase in the upper half
-    this.fly(this.aim(new THREE.Vector3(...polar(alcove.mid, ROTUNDA.radius - distance, middle + 3.4)), new THREE.Vector3(...polar(alcove.mid, ROTUNDA.radius, middle + 1.9))));
+    this.fly(this.aim(new THREE.Vector3(...polar(alcove.mid, ROTUNDA.radius - distance, middle + 9.4)), new THREE.Vector3(...polar(alcove.mid, ROTUNDA.radius, middle + 2.3))));
   }
 
   flyHome(): void {
     this.fly({ ...HOME });
+  }
+
+  /** The opening view: the whole hall from over the doorway. */
+  flyOverview(): void {
+    this.fly({ ...OVERVIEW });
+  }
+
+  /** From the middle of the floor, facing the doorway: the money that came in from outside and the money that left. */
+  flyToDoor(): void {
+    this.fly(this.aim(new THREE.Vector3(0, 9.5, -15), new THREE.Vector3(0, 7.4, ROTUNDA.radius)));
   }
 
   /** Square in front of a top-ten board, near enough to read it whole, centred in the part of the view left open. */
@@ -909,7 +949,18 @@ export class HallStage {
       this.dragging = { x: event.clientX, y: event.clientY, moved: this.dragging.moved + Math.abs(dx) + Math.abs(dy) };
       this.flight = null;
       if (this.dragging.moved >= 5) this.focusedBoard = null;
-      this.pose.yaw += dx * 0.0042;
+      if (this.game) {
+        // a walker turns the head
+        this.pose.yaw += dx * 0.0042;
+      } else {
+        // the reader turns the hall: the camera goes round the middle of the floor and keeps facing the same way
+        // relative to it, so a drag to the right brings what was on the left into view, as with a model on a table
+        const angle = -dx * 0.0036;
+        const { x, z } = this.pose;
+        this.pose.x = x * Math.cos(angle) + z * Math.sin(angle);
+        this.pose.z = -x * Math.sin(angle) + z * Math.cos(angle);
+        this.pose.yaw += angle;
+      }
       this.pose.pitch = clamp(this.pose.pitch + dy * 0.0032, -1.2, 1.1);
     } else this.pointerDirty = true;
   };
@@ -973,7 +1024,7 @@ export class HallStage {
       if (key !== "shift") this.focusedBoard = null;
     } else if (key === "home") {
       event.preventDefault();
-      this.flyHome();
+      this.flyOverview();
     }
   };
 
