@@ -16,7 +16,7 @@ import path from "node:path";
 import { buildDeskCompanyActions, buildDeskCompanyStatements, type StandardCompanyDoc, type StandardField, type StandardPriceRow } from "../worker/lib/desk-company";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
-const source = path.resolve(arg("--source") ?? "D:/research/alpha-engine/fundamentals/standard/v3.1");
+const source = path.resolve(arg("--source") ?? "D:/research/alpha-engine/fundamentals/standard/v3.2");
 const pricesDir = path.resolve(arg("--prices") ?? "D:/research/alpha-engine/prices/std/daily");
 const factsDir = path.resolve("worker/cache/companyfacts");
 for (const folder of [path.join(source, "company"), pricesDir, factsDir]) if (!existsSync(folder)) throw new Error(`Not found: ${folder}`);

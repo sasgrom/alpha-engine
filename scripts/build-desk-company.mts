@@ -15,12 +15,16 @@
  *
  *   npx tsx scripts/build-desk-company.mts [--source <fundamentals standard folder>] [--guidance <guidance build folder>]
  *                                           [--prices <standard prices daily folder>] [--holders <13F standard folder>]
- *                                           [--insiders <insider standard build folder>] [--out <folder>] [--quarters 40] [--dry-run]
+ *                                           [--insiders <insider standard build folder>] [--calendar <release calendar folder>]
+ *                                           [--exhibits <EDGAR exhibit cache>] [--adjusted <adjusted-eps build folder>]
+ *                                           [--out <folder>] [--quarters 40] [--dry-run]
  *
- * Defaults: D:\research\alpha-engine\fundamentals\standard\v3.1, D:\research\alpha-engine\guidance\std\20261123T033803Z
- * (g1.2 final), D:\research\alpha-engine\prices\std\daily, D:\research\alpha-engine\fund-books\std (k16.5),
- * D:\research\alpha-engine\insiders\std\20261116T223552Z (i1.1 final). Output: worker/.runs/desk-company, written atomically, with
- * index.json. A missing or unreadable source stops the build and leaves the previous files in place (AGENTS.md
+ * Defaults: D:\research\alpha-engine\fundamentals\standard\v3.2 (share counts and per-share figures back on their scale,
+ * docs/engine/STANDARD_FUNDAMENTALS.md section 10), D:\research\alpha-engine\guidance\std\20261123T033803Z (g1.2 final),
+ * D:\research\alpha-engine\prices\std\daily, D:\research\alpha-engine\fund-books\std-k16.6 (k16.6 with the September
+ * 2026 quarter; files only, the research database keeps the final k16.5), D:\research\alpha-engine\insiders\std\20261116T223552Z
+ * (i1.1 final), D:\research\alpha-engine\engine\events, worker/cache/edgar and D:\research\alpha-engine\engine\adjusted-eps\a2.
+ * Output: worker/.runs/desk-company, written atomically, with index.json. A missing or unreadable source stops the build and leaves the previous files in place (AGENTS.md
  * section 3.1: a missing D: is never an empty archive).
  */
 import { createHash } from "node:crypto";
@@ -35,10 +39,10 @@ import {
 import { writeJsonAtomic } from "../worker/lib/json-file";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
-const source = path.resolve(arg("--source") ?? "D:/research/alpha-engine/fundamentals/standard/v3.1");
+const source = path.resolve(arg("--source") ?? "D:/research/alpha-engine/fundamentals/standard/v3.2");
 const guidanceDir = path.resolve(arg("--guidance") ?? "D:/research/alpha-engine/guidance/std/20261123T033803Z");
 const pricesDir = path.resolve(arg("--prices") ?? "D:/research/alpha-engine/prices/std/daily");
-const holdersDir = path.resolve(arg("--holders") ?? "D:/research/alpha-engine/fund-books/std");
+const holdersDir = path.resolve(arg("--holders") ?? "D:/research/alpha-engine/fund-books/std-k16.6");
 const insidersDir = path.resolve(arg("--insiders") ?? "D:/research/alpha-engine/insiders/std/20261116T223552Z");
 const calendarDir = path.resolve(arg("--calendar") ?? "D:/research/alpha-engine/engine/events");
 // The adjusted earnings per share the releases print (scripts/build-adjusted-eps.mts). Optional: without the folder the

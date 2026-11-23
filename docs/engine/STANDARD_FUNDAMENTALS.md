@@ -321,3 +321,62 @@ Traps and guardrails:
 - Financial companies' pretax income is not operating income. Multi-class share counts and dimension-only debt are not consolidated into invented totals. No zero debt, share count, capex or interest is inferred from an absent line.
 
 Counts and gates are in `delivery-report.md`. Remaining continuity gaps and their reasons are in `remaining-stops.md`.
+
+## 10. v3.2: share counts and earnings per share back on their scale (2026-11-23)
+
+Owner, 2026-11-22, on the out-of-scale share figures the company page found in v3.1: "go on with best solution".
+
+**The problem.** Some filings give a share count in thousands or millions while tagging it as a plain count
+(McDonald's 10-Ks from 2023: weighted shares "732.3"; ConocoPhillips' 10-Qs 2016-2021: thousands; Coca-Cola 2018:
+"4265"; AIG 2009: 135 trillion), and a few give earnings per share in another unit (Halliburton 2020-2021:
+"-1,910,000"). v3.1 took such facts as filed, and the quarters derived from them (Q4 = year - nine months, weighted by
+days; EPS = net income / shares) were wrong with them.
+
+**The rule** (lab `src/fundamentals/scale.mts`, 9 tests in `scale.test.mts`, applied by `build.mts` before anything
+else; `SCALE_REPAIR=0` builds without it):
+- The yardstick is scale-free: net income / filed earnings per share of the same filing and period is the share
+  count that filing itself implies. Its median over nearby periods (±200 days; the filing's own pairs first) is the
+  anchor, and at least two pairs from other filings must exist nearby.
+- A share count 30 times or more off its anchor is multiplied by a thousand or a million (either way) when that
+  brings it within 1.5 times of it, and only when the tag's own record says the same: at least four facts of the tag
+  agree with their anchors, the filed value is 30 times or more off the tag's nearest agreeing facts (within three
+  years) and the repaired value is not. A tag always far from the anchor is another share class (Berkshire's class B),
+  not a slip; a run of filings that gives income on another scale (ICE's first year as a new registrant) leaves the
+  share counts fitting their own record.
+- An earnings-per-share fact 30 times or more off net income / the weighted shares of the same filing is judged only
+  when the share count is confirmed by a second count (a shares-outstanding fact of the filing, or the other
+  filings' implied count, within 3 times) and the income by another filing's income for the same period. It is
+  rescaled by 100 or 1,000 (either way) when that fits within 1.5 times, else dropped, so the build derives it.
+- Every change is listed in `scale-repairs.json` and in each company file (`scaleRepairs`).
+
+**The build.** `D:\research\alpha-engine\fundamentals\standard\v3.2` (code: lab `6c8de69`), and beside it
+`v3.2-control`, the same code and the same facts with the repair off. Both were built 2026-11-23 03:20-03:33 local.
+2,018 facts repaired in 132 companies: 1,923 share counts rescaled, 7 earnings-per-share facts rescaled, 88 dropped.
+
+**Gates** (v3.2 against its control):
+
+| Gate | Result |
+|---|---|
+| Scope (`compare.py`) | only `sharesBasic`, `shareswa`, `shareswaDil`, `eps`, `epsDil` changed; every other field of every company is identical |
+| Departures from a filing | 408 values no longer equal their filing's number, every one an exact rescale of it: 258 ×1,000, 101 ×1,000,000, 29 ÷1,000, 20 ÷1,000,000 |
+| Removed values | 6, all wrong (Hershey Q4 2010 diluted shares 230,856 and EPS 587; Datadog Q4 2019 shares 295,022 and EPS 3.02) |
+| QA (`qa.mts`) | identical; coverage of diluted EPS 97.68% → 97.70%, of diluted shares 95.95% → 96.00% |
+| Checks against the filings (`checks.py`) | EPS equal to the filing 12 and 13 times fewer (the rescaled or dropped facts, now derived); one new difference, Public Storage Q3 2009: ours 1.00 against a filed 0.01, the ×100 repair that net income / shares confirms |
+| Share figures 3 times or more off their company's level (every version) | 1,044 in the control, 190 in v3.2 |
+| On the company page | figures marked out of scale 197 → 24; fiscal-year EPS equal to the 10-K: basic 95.9% → 96.0%, diluted 91.6% → 91.7% |
+
+**Residuals, listed:**
+- 14 share figures are off their company's level only in v3.2. Most were there before and stand out now that their
+  neighbours are repaired (Corpay 2010 in thousands, Hershey 2011, EchoStar's 2023 quarters restated after the DISH
+  merger). Three are new wrong later versions: Fifth Third Q4 2010 and Q4 2011 diluted shares (3.1 and 3.6 billion
+  against about 0.8 billion; the repaired annual figure was paired with another wrong fact, a "6,000,000") and
+  Everest Q4 2019 basic shares (159.7 million against about 40 million). First reports are not affected.
+- A share count far off with no thousand or million factor that fits is kept as filed; dropping such facts when
+  the filing's own pairs give the anchor is the next refinement.
+- The fiscal-year check of the company page compares with the 10-K's own annual fact: 33 of its 35 diluted-share
+  years more than 20% off are unit slips in that annual fact itself.
+
+**Where it is used.** The desk Company page reads v3.2's files. The research database keeps v3.1: its tables hold
+one value per company, field, quarter and filing date, so the loader's append stops on any changed value and refuses
+to replace a final build. Loading v3.2 there needs tables keyed by build version, a change for the owner to approve
+with the research code that reads them.

@@ -5,10 +5,10 @@ The research tables are provisional until Claude accepts them. Nothing here chan
 `alpha_engine` data, or the legacy table.
 
 - **Code:** `C:\dev\alpha-engine-lab\src\thirteenf\` in the lab repository.
-- **Inputs:** `D:\research\alpha-engine\fund-books\`, standard prices p1.1, and final standard fundamentals v3.1.
-- **Artifacts:** `D:\research\alpha-engine\fund-books\std\` (build `k16.5`).
-- **Tables:** `alpha_research.std_13f_filings`, `std_13f_positions`, `std_13f_company_quarters`, `std_13f_builds`.
-- **Unit tests:** nineteen deterministic `node:test` cases in `src/thirteenf/model.test.mts`, plus eleven fund-book matching and standard-price-basis regressions in `worker/lib/fund-books-matching.test.ts`.
+- **Inputs:** `D:\research\alpha-engine\fund-books\`, the standard price build loaded in the research database (p1.1 for k16.5, p1.20261122 for k16.6), and final standard fundamentals v3.1.
+- **Artifacts:** `D:\research\alpha-engine\fund-books\std\` (build `k16.5`, loaded and final) and `D:\research\alpha-engine\fund-books\std-k16.6\` (build `k16.6` with the September 2026 quarter, files only; section 10).
+- **Tables:** `alpha_research.std_13f_filings`, `std_13f_positions`, `std_13f_company_quarters`, `std_13f_builds` (k16.5).
+- **Unit tests:** nineteen deterministic `node:test` cases in `src/thirteenf/model.test.mts` and five on the build's inputs in `src/thirteenf/build-inputs.test.mts`, plus eleven fund-book matching and standard-price-basis regressions in `worker/lib/fund-books-matching.test.ts`.
 
 ## 1. One filing reader and one set of book decisions
 
@@ -228,10 +228,22 @@ Run from the main repository so the research connection reads its configured env
 
 ```powershell
 npx tsx scripts/build-fund-books.mts
-npx tsx --test C:\dev\alpha-engine-lab\src\thirteenf\model.test.mts
-npx tsx C:\dev\alpha-engine-lab\src\thirteenf\build.mts
+npx tsx --test C:\dev\alpha-engine-lab\src\thirteenf\model.test.mts C:\dev\alpha-engine-lab\src\thirteenf\build-inputs.test.mts
+npx tsx C:\dev\alpha-engine-lab\src\thirteenf\build.mts --out D:\research\alpha-engine\fund-books\std-k16.6 --build-version k16.6 --prices-build p1.20261122
 npx tsx C:\dev\alpha-engine-lab\src\thirteenf\load-mysql.mts D:\research\alpha-engine\fund-books\std k16.5 provisional --replace
 ```
+
+Each build goes into its own folder. The builder refuses a folder that already holds a finished `build.json` (its
+defaults name the k16.5 folder), so an accepted build is never written over; a folder without one holds at most an
+interrupted run, whose filing-detail checkpoints are reused when their hashes match.
+
+Prices come from the one standard price build the research database holds (the price loader swaps whole tables, and
+the weekly refresh replaces the build), read from that build's own folder (`sourceDir`) with the corporate-events file
+it was made from (named in the folder's `refresh-inputs.json`; the reconciled events of 2026-11-13 for p1.1).
+`--prices-build` pins the expected version, so a refresh between two runs stops the build instead of mixing prices.
+`build.json` records the price build row, its folder, the events file and their hashes. The latest-quarter checks
+(tie-out, corrections, late funds, the app comparison) use the books manifest's last quarter (lab `9e86c73`; until
+then they named 2026-06-30 and the prices p1.1).
 
 Commit the lab code before building: `build.json` and `std_13f_builds` must name the exact code commit, and the loader
 refuses an uncommitted-code mismatch. A later code fix requires a new build and load, not a hand-edited artifact.
@@ -422,3 +434,55 @@ missing-build-row evidence is preserved separately as `independent-postcheck-ini
 
 - `load-report.json` SHA256: `c7aee667f91f7d447a361b4cfd34e841db89bf7e58df0e9012f62a3905e1eb54`
 - `independent-postcheck.json` SHA256: `7c575884db8855fe25c0756f1d647e8a72b6d98b954fa3cdeb8bbd65788b42f5`
+
+## 10. k16.6: the September 2026 quarter (2026-11-23)
+
+Owner, 2026-11-22, on the September quarter among the open points of the company page: "go on with best solution".
+
+**Inputs.**
+- The fund books, rebuilt 2026-11-23 03:52 local after a manual 13F refresh of the top 300 funds (the scheduled
+  refresh covers 30). Books code `054992dfd00a`, unchanged. 28 quarters to 2026-09-30; September has 304 funds and
+  108,602 positions in 500 companies, $59.70tn filed and $43.50tn covered. `manifest.json` SHA256
+  `1293d13c1dccb3d3759f767dbb3cd27e9dcadf8b599c201d6637c5b45192681c`, `quarters/2026-09-30.json`
+  `f8292cb1959674aecaba1613b4c6a48344a3fe92efef46f21f8b0220ecbf8564`.
+- Standard prices `p1.20261122`, the weekly refresh of 2026-11-22 (sessions to 2026-11-20), with its own events file.
+  That file adds SANDISK's 8-for-1 split of 2026-11-20. Final fundamentals v3.1.
+
+**Build.** `D:\research\alpha-engine\fund-books\std-k16.6`, lab `9e86c730a2d8dc59e103782a342538746a38449f`,
+generated 2026-11-23T12:17:55.847Z: 7,480 filings, 2,514,735 positions, 25,433 company quarters. No network
+request: 623 accessions resolved from cached submissions lists, 78 from cached dated pages. `build.json` SHA256
+`a72b68ab028938db0b15e2b0c1f3c2a4e80daad1ecf654e5e103adcbdfe5f35b`, `gates.json`
+`768dd9119281770f2419815ddb0b01e3168f709c24f54c37eaa9258ff5a8e3ad`.
+
+**Gates**, all passed (k16.5 in brackets):
+- Cover totals agree with the manifest; ten random raw re-reads have zero mismatches.
+- Price levels: 98.367% of $663.55tn priced value is within 2% (98.412% of $624.78tn). Unpriced value is 0.026% of
+  all position value (0.048%).
+- Full-book corrections: zero differences across 500 companies (493).
+- Latest availability: `deadline` at 2026-11-17 has 302 of 304 September books. Four funds' filings came later: New
+  York State Common Retirement Fund and Allworth Financial on 2026-11-18, Brookfield on 2026-11-19, and American
+  Century's date is unresolved. September's `plus_10` rows are not yet known: their day falls after the last price
+  session.
+- Ownership: 192 above-100% rows with reasons (187); 194 small denominators excluded (191).
+- Dates: six residual SEC metadata gaps, each with its reason (five).
+- Two September fund quarters have no table in the cache and are left out (CIKs 1374170 and 1767640), as are k16.5's
+  eight without a table and three with an unresolved unit.
+
+**What changed in the quarters k16.5 also has** (24,600 company quarters in both, 22,616 identical):
+- Seven more companies. After 2026-11-14 the app's company list gained Target, Hasbro, Parker-Hannifin, Welltower,
+  T. Rowe Price and Tapestry, and Enlight Renewable Energy now matches by price levels. Their positions add about
+  1,000 to 1,400 per quarter. Exxon's new holding-company CUSIP (30233Q108) is matched as the successor of
+  30231G102, which gives two more holders in June 2026.
+- SANDISK: shares on today's basis, shares outstanding and flows are eight times larger in all its quarters (the split).
+- Rivian: the price basis comes from its own standard series now (38 rows; before, from the events file only).
+- One fund at the edge of the reporting-change rule (`reportingChange`, section 4), Capula Management:
+  - its number of holdings goes from 105 at 2021-03-31 to 212 at 2021-06-30 (209 in k16.5), more than doubling, so
+    that quarter now counts as a reporting change;
+  - in 2025-03-31, 58 of its 97 continuing holdings grew past 1.5 times (59.8%, under the 60% line; 58 of 96 in
+    k16.5), so that quarter no longer does.
+  - The fund leaves the flows of 2021-06-30 and returns to those of 2025-03-31. The continuing-fund count and breadth
+    of every company in those two quarters move by one (about 1,900 rows).
+
+**Not loaded.** The research tables hold k16.5, final: the loader keeps one build and refuses to replace a final one.
+k16.6 is used from its files by the desk Company page (`scripts/build-desk-company.mts`). Loading it next to k16.5
+needs tables keyed by build version, a change for the owner to approve.

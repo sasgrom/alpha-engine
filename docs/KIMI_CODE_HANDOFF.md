@@ -3638,3 +3638,45 @@ delivered.
   Looked at on screenshots of the live page with the real files (overview, from above, the walk's six views, a
   selected fund, the display popover, light and dark, 1600 and 1100 pixels wide), not by a signed-in person.
 - Not done: the phone layout; the September 13F quarter is not in the books yet (section 217, running tonight).
+
+## 220. Claude (Opus 5.5): 13F standard k16.6 with the September quarter; the company page on v3.2 and k16.6 — 2026-11-23T12:29Z
+
+- Continues section 217's list (owner: "go on with best solution"; this morning: "go ahead with the next steps").
+- **Why the first k16.6 build stopped** (03:53 local, log `fund-books/std-k16.6-build-20261123.log`, kept): the lab
+  build required the price build `p1.1`. The weekly price refresh replaced it on 2026-11-22 02:54 with `p1.20261122`
+  (516 companies, 2,896,991 bars, sessions to 2026-11-20, plus SANDISK's 8-for-1 split of 2026-11-20).
+  `std_price_builds` holds one row; `prices/std` is the refresh's published copy, byte-identical; the refresh's events
+  are in `prices/refresh-20261122T100533Z/events/`, while `prices/events/events.json` stays the 2026-11-13 file.
+- **Fix** (lab `9e86c73`; `src/thirteenf/build-inputs.mts`, 5 tests, 24 of 24 with the model tests):
+  - the build takes the one loaded price build, reads its own folder and the events file it was made from, and
+    `--prices-build` pins a version;
+  - the latest-quarter checks follow the books manifest's last quarter (ten places named 2026-06-30);
+  - a folder that already holds a finished `build.json` is refused (the defaults named the final k16.5 folder).
+- **k16.6** (`D:/research/alpha-engine/fund-books/std-k16.6`, 04:02 to 04:18 local, log
+  `std-k16.6-build-20261123-2.log`): 7,480 filings, 2,514,735 positions, 25,433 company quarters. Every gate passed;
+  September's deadline rows (2026-11-17) have 302 of 304 books. Every difference from k16.5 in the shared quarters is
+  explained in `docs/engine/STANDARD_13F.md` section 10: seven more companies (the app's company list gained six
+  after 2026-11-14, Enlight now matches), Exxon's successor CUSIP, SANDISK's split, Rivian's own price series, and one
+  fund (Capula Management) at the edge of the reporting-change rule in 2021-06-30 and 2025-03-31. Not loaded: the
+  research tables keep the final k16.5.
+- **Company page switched:**
+  - `scripts/build-desk-company.mts` defaults to statements from v3.2 and holders from k16.6;
+    `scripts/check-desk-company-years.mts` defaults to v3.2.
+  - Files rebuilt 04:23 local, content hash `4e5729c6e27f`. The files before (`78bd3c18ad1e`) are kept at
+    `D:/research/alpha-engine/engine/desk-company-before/78bd3c18ad1e`.
+  - Compared cell by cell by period end, the statements changed only in share counts and per-share lines (24
+    companies), plus five cells from filings of 2026-11-19 and 11-20 (Palo Alto Networks, PTC, Intuit). Cells marked
+    out of scale: 197 → 24. Four are newly marked, real outliers that v3.1's off-scale shares had hidden: Paramount
+    Skydance's pre-merger count of 1,000 shares and Coherent's March 2020 EPS filed as "70" and "60".
+  - Holders run to 2026-09-30 for 499 companies (June, 493).
+  - Fiscal-year check on v3.2: EPS equal to the 10-K, basic 96.0%, diluted 91.7%.
+  - Looked at on screenshots: Waters (its merger's share count: 59.5M, 82.1M, 98.2M), McDonald's annual figures,
+    Apple's and SANDISK's ownership. SANDISK's 72.8% fall from June 25 to November 20 is in the Schwab prices
+    themselves, not the split (split day −16.0% on the old basis, the index the same).
+- `docs/engine/STANDARD_FUNDAMENTALS.md` section 10 (v3.2) is committed with this.
+- Gates: `npm run check`, 274 files / 1,569 tests (`--maxWorkers=4`), `npm run build`, `git diff --check`. Files only;
+  no server change, no restart.
+- **Still running:** the adjusted-EPS reader a3, re-reading every release since 02:51 local (325 of 494 companies at
+  04:24, log `D:/research/alpha-engine/engine/adjusted-eps/a3-run-20261123.log`). On the 242 companies both versions
+  had finished, a3 reads a figure in 555 more releases than a2 and loses none. Next: its summary and the two checks,
+  then the page's switch to a3.
