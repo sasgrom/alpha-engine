@@ -30,6 +30,12 @@ describe("which row is the adjusted per-share figure", () => {
     expect(isAdjustedEpsLabel("Diluted earnings per share", ["Adjusted", "As reported"])).toBe(false);
   });
 
+  it("leaves a part of the reconciliation that names an adjusted per-share figure", () => {
+    expect(isAdjustedEpsLabel("Less: Adjusted earnings (loss) per share attributable to trivago")).toBe(false);
+    expect(isAdjustedEpsLabel("Add: adjusted EPS of the acquired business")).toBe(false);
+    expect(isAdjustedEpsLabel("Adjusted earnings per share excluding trivago")).toBe(true);
+  });
+
   it("knows the same row from release to release whatever footnote mark it carries", () => {
     expect(rowKey("Adjusted Diluted Earnings per Share 1")).toBe("adjusted diluted earnings per share");
     expect(rowKey("Adjusted diluted earnings per share (3)")).toBe("adjusted diluted earnings per share");
@@ -133,6 +139,53 @@ describe("settling the period by the table's GAAP line", () => {
     const html = plain([["GAAP diluted earnings per share", "9.99", "8.88"], ["Non-GAAP diluted earnings per share", "1.95", "1.69"]]);
     expect(adjustedEpsFromExhibits([exhibit(html)], "2026-09-26", [QUARTER, YEAR_AGO]).readings).toEqual([]);
   });
+
+  // the cases below are layouts the full read of a3 misread (CMS, CF, Union Pacific, Dominion, Sempra, TE
+  // Connectivity, Lululemon, Kimberly-Clark); the anchored readings must take the adjusted figure or nothing
+  const anchored = (html: string, anchors = [QUARTER, YEAR_AGO]) => adjustedEpsFromExhibits([exhibit(html)], "2026-09-26", anchors).readings.filter((reading) => reading.how !== "period_header").map((reading) => [reading.how, reading.periodEnd, reading.value]);
+
+  it("takes no caption of units for a per-share heading, and no other measure named by its basis", () => {
+    // an income statement: "Operating Income" and "Adjusted EBITDA" in millions under the units caption
+    const statement = plain([["In Millions, Except Per Share Amounts"], ["Operating Income", "379", "280", "1,338", "1,256"], ["Adjusted EBITDA", "342", "708", "642", "1,178"], ["Diluted earnings per share", "1.85", "1.60", "5.10", "4.40"]]);
+    expect(anchored(statement)).toEqual([]);
+    // an operating ratio under a heading that names shares and per-share figures
+    const ratio = plain([["Share and Per Share"], ["Diluted earnings per share", "1.85", "1.60"], ["Operating Ratio", "60.1", "61.3"]]);
+    expect(anchored(ratio)).toEqual([]);
+  });
+
+  it("takes no amount for a per-share figure", () => {
+    expect(anchored(plain([["Diluted EPS (GAAP)", "1.85", "1.60"], ["Adjusted diluted EPS", "379", "280"]]))).toEqual([]);
+  });
+
+  it("pairs a GAAP row only with the adjusted rows of its own period block", () => {
+    const html = plain([
+      ["", "Three months ended September 30,"], ["Earnings Per Share (EPS):"],
+      ["OPERATING EARNINGS", "$1.95", "$1.69", "$0.26"], ["Items excluded from operating earnings", "(0.10)", "(0.09)", "(0.01)"], ["REPORTED EARNINGS", "$1.85", "$1.60", "$0.25"],
+      ["", "Nine months ended September 30,"], ["Earnings Per Share (EPS):"],
+      ["OPERATING EARNINGS", "$5.35", "$4.45", "$0.90"], ["Items excluded from operating earnings", "(0.25)", "(0.05)", "(0.20)"], ["REPORTED EARNINGS", "$5.10", "$4.40", "$0.70"],
+    ]);
+    expect(anchored(html)).toEqual([["gaap_column", "2026-09-26", 1.95], ["gaap_column", "2025-09-27", 1.69]]);
+  });
+
+  it("reads reported, adjustments and adjusted side by side, never as GAAP and adjusted halves", () => {
+    // the header names GAAP and Non-GAAP with the adjustments between them
+    const charges = plain([["", "U.S. GAAP", "Charges", "(Credits), Net", "Adjusted (Non-GAAP)"], ["Diluted Earnings per Share from Continuing Operations", "$", "1.85", "$", "0.04", "$", "0.06", "$", "1.95"]]);
+    expect(anchored(charges)).toEqual([["gaap_row", "2026-09-26", 1.95]]);
+    // two header rows, the second naming the adjustments
+    const twoRows = plain([["", "GAAP Results", "Adjustments", "Adjusted Results (Non-GAAP)"], ["", "Tax on Repatriation", "U.S. Tax Reform"], ["Diluted earnings per share", "$", "1.85", "$", "0.18", "$", "(0.08)", "$", "1.95"]]);
+    expect(anchored(twoRows)).toEqual([["gaap_row", "2026-09-26", 1.95]]);
+  });
+
+  it("reads adjustments printed as charges taken off, and gives a year-ago figure a cent from this quarter's to the year-ago quarter", () => {
+    const thisQuarter = { months: 3, periodEnd: "2026-09-26", gaap: [1.85] }, yearAgo = { months: 3, periodEnd: "2025-09-27", gaap: [1.84] };
+    const html = plain([["", "As Reported", "Restructuring", "Acquisition-Related Costs", "As Adjusted Non-GAAP"], ["Diluted Earnings per Share", "1.84", "(0.31)", "(0.03)", "2.18"]]);
+    expect(anchored(html, [thisQuarter, yearAgo])).toEqual([["gaap_row", "2025-09-27", 2.18]]);
+  });
+
+  it("still reads GAAP and adjusted in turn where the header also names the adjustments", () => {
+    const html = plain([["(In millions, except per share amounts)", "Reported", "Adjustments", "Adjusted", "Reported", "Adjustments", "Adjusted"], ["Earnings per share - Diluted", "$", "1.85", "$", "1.95", "$", "1.60", "$", "1.69"]]);
+    expect(anchored(html)).toEqual([["gaap_row", "2026-09-26", 1.95], ["gaap_row", "2025-09-27", 1.69]]);
+  });
 });
 
 describe("the figure the readings agree on", () => {
@@ -189,6 +242,15 @@ describe("deciding a company's figures release by release", () => {
     const out = decideCompany(company(FIGURES, undefined, (index) => [row(ENDS[index], FIGURES[index] + 0.5, { label: "Adjusted diluted EPS excluding the divested business", rowIndex: 12 })]));
     expect(out[8].quarter).toMatchObject({ value: 1.8, grade: "same_row", label: "Adjusted diluted EPS" });
     expect(out[8].quarterNote).toBeNull();
+  });
+
+  it("prefers a trusted diluted row to a basic row confirmed more often", () => {
+    const basic = (end: string, value: number) => row(end, value, { label: "Adjusted basic EPS", diluted: false, basic: true, rowIndex: 12 });
+    const releases = company(FIGURES, undefined, (index) => [basic(ENDS[index], FIGURES[index] + 0.02), ...(index >= 4 ? [basic(ENDS[index - 4], FIGURES[index - 4] + 0.02)] : [])]);
+    // the diluted row is missing from the first two releases, so the basic row has the longer record
+    for (const release of releases.slice(0, 2)) release.readings = release.readings.filter((reading) => reading.basic);
+    const out = decideCompany(releases);
+    expect(out[8].quarter).toMatchObject({ value: 1.8, label: "Adjusted diluted EPS" });
   });
 
   it("decides the fiscal year from the twelve-month column and returns nothing for a release without rows", () => {

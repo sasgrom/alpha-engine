@@ -3680,3 +3680,45 @@ delivered.
   04:24, log `D:/research/alpha-engine/engine/adjusted-eps/a3-run-20261123.log`). On the 242 companies both versions
   had finished, a3 reads a figure in 555 more releases than a2 and loses none. Next: its summary and the two checks,
   then the page's switch to a3.
+
+## 221. Claude (Opus 5.5): adjusted-earnings reader a3 checked and not used; a4 fixes its misreads — 2026-11-23T13:05Z
+
+- **a3 full read** (02:51 to 04:48 local, 7,049 s; 494 companies, 39,201 releases, the same set as a2):
+  - usable quarter figures 11,796 → 12,599 (10,994 confirmed, 1,605 from the same row); companies 347 → 367;
+  - checks: 77.4% stated in the release's own words (a2 77.5%); against guidance 2,430 pairs, median +5.9%, 59.8%
+    within a tenth, 7.6% farther than half (a2: 6.9%).
+- **Release by release against a2:** 11,699 kept, 867 new, 64 lost, 33 changed, and nearly every changed value was
+  wrong in a3. Replaying single releases through the reader found eight mechanisms:
+  1. units captions ("In Millions, Except Per Share Amounts") were taken for per-share headings, so "Operating
+     Income", "Adjusted EBITDA" or "Total Adjusted provision for income taxes" in millions were read as adjusted EPS
+     (CMS 379 for 0.51, CF, Expedia, Fastenal, J.M. Smucker, Franklin Resources);
+  2. rows named by their basis that name another measure: Union Pacific's "Operating Ratio" under "Share and Per
+     Share", Fox's "Non-operating other, net", Dominion's "Items excluded from operating earnings";
+  3. a GAAP row was paired with the adjusted row of another period block of the same table (Dominion's six-month
+     operating earnings 1.44 for the quarter's 0.59; Sempra's full year 5.42 for the quarter's 1.54);
+  4. side-by-side reconciliations (GAAP, charges, credits, non-GAAP) were read as GAAP and adjusted halves, taking an
+     adjustment for the figure (TE Connectivity 0.04 for 1.27, Duke 2.21 for 1.08, PepsiCo, Lululemon, Kimberly-Clark);
+  5. a year-ago GAAP figure a cent from this quarter's passed for it (Kimberly-Clark);
+  6. basic rows were anchored on the diluted figure through the cent of tolerance (Ameriprise);
+  7. "Less: adjusted earnings per share attributable to trivago" was taken as a figure (Expedia; already in a2);
+  8. the decision ranked trusted rows by confirmations before diluted and basic (Ameriprise's basic 0.83 over the
+     diluted 0.81). A systematic misread confirms itself, because the next release prints the same wrong row's
+     year-ago column; only the reading rules can stop it.
+- **a4** (`worker/lib/adjusted-eps.ts`; 8 new tests, 31 in all, 7 of them fail on a3):
+  - a units caption is not a per-share heading; a row named by its basis that names another measure or a part of the
+    reconciliation is not the figure, nor is any "Less:" or "Add:" row;
+  - a GAAP row pairs only with adjusted rows of its own period block (no "Six months ended" or "Year ended" between);
+  - halves only under a header that names the two bases and nothing else, and never for a row whose figures add up
+    as reported, adjustments and adjusted; the side-by-side route reads the whole header block and adjustments added
+    or taken off;
+  - a printed GAAP figure belongs to the nearest known figure only (a tie gives nothing); basic rows are not anchored;
+    an adjusted figure 40 times the GAAP one (and above 10) is an amount;
+  - the decision ranks trusted rows diluted, unlabelled, basic, then by confirmations.
+- **Replayed on a4:** CMS 0.51, CF 0.33, Dominion 0.59, Sempra 1.54, Duke 1.08, TE Connectivity 1.27, PepsiCo 1.12,
+  Lululemon 1.85, Kimberly-Clark 1.62, Ameriprise 0.81 diluted; Expedia ambiguous (3.38 against 3.37 excluding
+  trivago). a3's genuine gains are kept: Fortinet 0.24, Amgen 6.45, Broadcom 3.32, Waste Management 2.02, Oracle
+  2.26, Carrier 0.87. Not every pair far from guidance is a misread: Western Digital 0.63 against 0.05 and SANDISK
+  1.22 against 0.80 were real beats, and Fortinet guided before its five-for-one split.
+- The company page stays on a2 until a4 is read and checked. The full a4 read started 05:03 local into
+  `D:/research/alpha-engine/engine/adjusted-eps/a4` (log `a4-run-20261123.log`); a3 is kept for comparison.
+- Gates: `npm run check`, 274 files / 1,577 tests, `npm run build`, `git diff --check`.
