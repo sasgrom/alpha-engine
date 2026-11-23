@@ -3293,7 +3293,7 @@ delivered.
 - Not started, no GPU needed: the final g1.2 union build with `GUIDANCE_RERUN=<results.jsonl>` and a new version
   date, the reruns of the guidance, pooled and miss tests on it, and the `std_guidance_*` load.
 
-## 209. Claude (Fable 5.2): project review and prune list — 2026-11-23T02:30Z
+## 209. Claude (Fable 5.2): project review and prune list — 2026-11-23T01:40Z
 
 - Owner's request: re-analyze the project, list complete and incomplete work (UI, backend, algorithms, data fetch,
   current tasks) and what to prune. Result: `docs/PROJECT_REVIEW_2026-11-22.md`. Read-only review; **nothing was
