@@ -173,7 +173,7 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
   - [ ] Terminal's three charts: drawdown, return histogram, period statistics.
   - [ ] Documents reader and filings list.
   - [ ] Guidance history from the guidance standard, once g1.2 is final.
-  - [ ] Decide with the owner: valuation, probability and sentiment panels come from the app's old factor engine, which
-    never passed an out-of-sample test (review section 4). Rebuild only what has evidence.
+  - [x] Owner, 2026-11-22 ("agree"): the valuation, probability and sentiment panels of the classic company page are
+    left out of the desk. They come from the app's old factor engine, which never passed an out-of-sample test.
 - [ ] Design notes per phase: page sketches, data each view reads, DevNotes text.
 - [ ] Keep this file current after each phase: what moved, what was dropped and why.

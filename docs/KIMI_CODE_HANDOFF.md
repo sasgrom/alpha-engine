@@ -3329,3 +3329,24 @@ delivered.
   standing word. Lab `c2b180f`: the insider feature script reads the final insiders build.
 - **Open:** final guidance build g1.2 (ready, no GPU, not started: the owner has not answered); whether Ollama's
   autostart should be turned off; the estimates pilot.
+
+## 211. Claude (Fable 5.2): final guidance build g1.2; Flows hall rework — 2026-11-23T03:59Z
+
+- **Owner's answers, 2026-11-22:** the old factor engine's panels (valuation, probability, sentiment) stay out of the
+  desk; run the final guidance build; turn Ollama's autostart off; and a second pass at the Flows library ("too
+  grainy, not smooth ... flows hard to understand ... controls too much of the game like engine ... more
+  default/reset or pre thought views").
+- **Final guidance standard g1.2** (lab `c3fcbf7`, version g1.2.20261122): union of the first pass and the long
+  rerun, `D:/research/alpha-engine/guidance/std/20261123T033803Z`, gates pass. 48,351 releases, 176,459 statements
+  (+19,913 from the rerun), guidance view 157,031. Reruns on it (lab `ffc3e49` and the fix after it; log
+  `guidance/reruns-g12-final-20261122.log`; runs `walk/p3-g12f`, `walk/m3-g12f`): every verdict unchanged.
+  **Not done: the load of `std_guidance_*` into `alpha_research`; no loader script exists yet.**
+- **Flows hall** (`63af001`): four-sample antialiasing on the post-processing target and soft shadows; eight streams
+  instead of up to forty, named at the top of their arcs; "Walk me through", six computed views with captions
+  (`src/desk/flows/story.ts`); the hall opens and rests on an overview; dragging turns the hall. Checked on
+  screenshots of the live page with the real data (light and dark), not by a signed-in person.
+  Gates: `npm run check`, 265 files / 1,495 tests, `npm run build`, `git diff --check`. No restart needed (client only).
+- **Ollama:** no autostart entry exists (no Run key, no Startup shortcut, no task; nothing in this repository starts
+  it). Its own log shows the app launched at 15:00 on 2026-11-21, a minute after it was stopped, and at 17:23 on
+  2026-11-22 after the owner's restart, each time with its window. It is not running now. What launches it is not
+  established.
