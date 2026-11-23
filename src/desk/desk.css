@@ -1889,79 +1889,197 @@ button.desk-lib-label {
   text-transform: uppercase;
 }
 
-.desk-lib-head {
+/*
+ * The controls over the hall. The hall gets the screen: a title and one bar of controls along the top, the details
+ * panel only when something is selected or asked for, and the walk and the timeline as one compact stack at the
+ * bottom left. Stacking: the hall, the names in the hall, the controls.
+ */
+.desk-lib-labels {
+  z-index: 2;
+}
+
+.desk-lib-bar {
   position: absolute;
-  top: 18px;
+  z-index: 3;
+  top: 14px;
   left: max(18px, calc((100% - var(--d-max)) / 2 + var(--d-gutter)));
-  max-width: min(440px, calc(100% - 36px));
-  padding: 9px 10px 10px 14px;
-  border: 1px solid var(--d-border);
-  border-radius: var(--d-radius);
-  background: var(--d-glass);
-  backdrop-filter: blur(10px);
-}
-
-.desk-lib-head-top {
+  right: 18px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
+  gap: 16px;
+  pointer-events: none;
 }
 
-.desk-lib-head h1 {
+.desk-lib-bar > * {
+  pointer-events: auto;
+}
+
+/* a soft, borderless glass keeps the title readable over whatever part of the hall is behind it */
+.desk-lib-title {
+  min-width: 0;
+  margin-left: -14px;
+  padding: 8px 16px 9px 14px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--d-page) 66%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.desk-lib-title h1 {
   margin: 0;
-  font-size: 17px;
-  font-weight: 650;
-  letter-spacing: -0.012em;
+  font-family: Cinzel, "Trajan Pro", "Times New Roman", serif;
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.05em;
+  color: var(--d-ink);
 }
 
-.desk-lib-fold.desk-icon-button {
-  width: 26px;
-  height: 26px;
-  flex: none;
-}
-
-.desk-lib-head p {
-  margin: 2px 0 0;
+.desk-lib-title p {
+  margin: 4px 0 0;
   color: var(--d-ink-2);
   font-size: 12.5px;
   line-height: 1.45;
 }
 
-.desk-lib-head p strong {
+.desk-lib-title p strong {
   color: var(--d-ink);
   font-weight: 620;
 }
 
-.desk-lib-tools {
-  position: absolute;
-  top: 18px;
-  right: 18px;
+.desk-lib-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.desk-lib-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 9px 0 10px;
+  border: 1px solid color-mix(in srgb, var(--d-accent) 40%, var(--d-border));
+  border-radius: 999px;
+  background: var(--d-glass);
+  backdrop-filter: blur(8px);
+  color: var(--d-ink);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 560;
+  cursor: pointer;
+}
+
+.desk-lib-chip:hover {
+  border-color: var(--d-accent);
+}
+
+.desk-lib-controls {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
-  gap: 8px;
-  max-width: calc(100% - 580px);
-  padding: 6px 8px;
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid var(--d-border);
+  border-radius: 14px;
+  background: var(--d-glass);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--d-shadow);
+}
+
+.desk-lib-controls > .desk-seg {
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+}
+
+.desk-lib-controls > .desk-seg + .desk-seg {
+  padding-left: 6px;
+  border-left: 1px solid var(--d-border);
+  border-radius: 0;
+}
+
+.desk-lib-icons {
+  display: inline-flex;
+  gap: 2px;
+  padding-left: 6px;
+  border-left: 1px solid var(--d-border);
+}
+
+.desk-lib-icons .desk-icon-button {
+  width: 32px;
+  height: 32px;
+}
+
+.desk-lib-icons .desk-icon-button[aria-pressed="true"] {
+  background: var(--d-hover);
+  color: var(--d-ink);
+}
+
+.desk-lib-pop {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(440px, calc(100vw - 36px));
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px 16px;
   border: 1px solid var(--d-border);
   border-radius: var(--d-radius);
-  background: var(--d-glass);
-  backdrop-filter: blur(10px);
+  background: var(--d-raised);
+  box-shadow: var(--d-shadow);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.desk-lib-pop-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  color: var(--d-ink-2);
+  font-size: 12.5px;
+}
+
+.desk-lib-pop-row .desk-seg button {
+  height: 26px;
+  padding: 0 10px;
+  font-size: 12.5px;
+}
+
+.desk-lib-note {
+  margin: -4px 0 0;
+  color: var(--d-muted);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.desk-lib-help ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  color: var(--d-ink-2);
 }
 
 .desk-lib-panel {
   position: absolute;
-  top: 84px;
+  z-index: 3;
+  top: 78px;
   right: 18px;
   bottom: 18px;
-  width: min(400px, calc(100% - 36px));
+  width: min(394px, calc(100% - 36px));
   display: flex;
   flex-direction: column;
   border: 1px solid var(--d-border);
-  border-radius: var(--d-radius);
+  border-radius: 14px;
   background: var(--d-glass);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(16px);
   box-shadow: var(--d-shadow);
   overflow: hidden;
 }
@@ -2031,84 +2149,65 @@ button.desk-lib-label {
   overflow: visible;
 }
 
-.desk-lib-foot {
+/* the walk and the timeline, one stack at the bottom left */
+.desk-lib-bottom {
   position: absolute;
+  z-index: 3;
   left: 18px;
-  right: 18px;
   bottom: 18px;
-  display: grid;
-  gap: 8px;
-  padding: 10px 14px;
-  border: 1px solid var(--d-border);
-  border-radius: var(--d-radius);
-  background: var(--d-glass);
-  backdrop-filter: blur(10px);
+  width: min(640px, calc(100% - 36px));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
 }
 
-.desk-lib-foot[data-panel="open"] {
-  right: calc(min(400px, 100% - 36px) + 30px);
+.desk-lib-bottom > * {
+  pointer-events: auto;
+}
+
+.desk-lib-bottom[data-panel="open"] {
+  width: min(640px, calc(100% - 36px - 406px));
+}
+
+.desk-lib-foot {
+  display: grid;
+  gap: 2px;
+  padding: 6px 14px 8px 8px;
+  border: 1px solid var(--d-border);
+  border-radius: 14px;
+  background: var(--d-glass);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--d-shadow);
 }
 
 .desk-lib-time {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .desk-lib-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
+  gap: 2px 14px;
+  padding-left: 44px;
   color: var(--d-ink-2);
-  font-size: 12px;
+  font-size: 11.5px;
 }
 
-.desk-lib-help {
-  position: absolute;
-  top: 84px;
-  left: max(18px, calc((100% - var(--d-max)) / 2 + var(--d-gutter)));
-  max-width: 440px;
-  margin-top: 96px;
-  padding: 14px 16px;
-  border: 1px solid var(--d-border);
-  border-radius: var(--d-radius);
-  background: var(--d-raised);
-  box-shadow: var(--d-shadow);
-  font-size: 13px;
-  line-height: 1.5;
+.desk-lib-legend-note {
+  color: var(--d-muted);
 }
 
-.desk-lib-help ul {
-  margin: 8px 0 0;
-  padding-left: 18px;
-  display: grid;
-  gap: 5px;
-  color: var(--d-ink-2);
-}
-
-/* The guided walk through the quarter: a caption card over the hall, above the timeline. */
 .desk-lib-story {
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 158px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: 18px;
-  align-items: center;
-  padding: 10px 14px 12px 16px;
+  gap: 4px;
+  padding: 12px 14px 12px 16px;
   border: 1px solid var(--d-border);
-  border-radius: var(--d-radius);
+  border-radius: 14px;
   background: var(--d-raised);
   box-shadow: var(--d-shadow);
-}
-
-.desk-lib-story[data-panel="open"] {
-  right: 436px;
-}
-
-.desk-lib-story-text {
-  min-width: 0;
 }
 
 .desk-lib-story-top {
@@ -2118,28 +2217,38 @@ button.desk-lib-label {
 }
 
 .desk-lib-story-count {
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  flex: none;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--d-muted);
 }
 
 .desk-lib-story h2 {
+  flex: 1;
+  min-width: 0;
   margin: 0;
-  font-size: 16px;
-  line-height: 1.25;
+  font-size: 15.5px;
+  line-height: 1.3;
+}
+
+.desk-lib-story-close.desk-icon-button {
+  flex: none;
+  align-self: center;
+  width: 26px;
+  height: 26px;
+  margin: -4px -4px 0 0;
 }
 
 .desk-lib-story p {
-  margin: 4px 0 0;
+  margin: 0;
   font-size: 13.5px;
   line-height: 1.5;
   color: var(--d-ink);
 }
 
 .desk-lib-story p.desk-lib-story-hint {
-  margin-top: 3px;
   font-size: 12.5px;
   color: var(--d-ink-2);
 }
@@ -2147,52 +2256,40 @@ button.desk-lib-label {
 .desk-lib-story-nav {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
-}
-
-@media (max-width: 900px) {
-  .desk-lib-story,
-  .desk-lib-story[data-panel="open"] {
-    right: 18px;
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: 8px;
-  }
+  margin-top: 6px;
 }
 
 .desk-lib-story-nav .desk-button {
-  height: 32px;
+  height: 30px;
+}
+
+.desk-lib-story-dots {
+  display: flex;
+  gap: 5px;
+  margin-right: auto;
+}
+
+.desk-lib-story-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--d-border);
+}
+
+.desk-lib-story-dots span[data-on="true"] {
+  width: 16px;
+  background: var(--d-ink);
 }
 
 .desk-lib-tip {
+  z-index: 4;
   width: 270px;
 }
 
-.desk-lib-switches {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 8px;
-  margin-top: 8px;
-}
-
-.desk-lib-switches .desk-seg {
-  padding: 2px;
-}
-
-.desk-lib-switches .desk-seg button {
-  height: 24px;
-  padding: 0 9px;
-  font-size: 12.5px;
-}
-
-.desk-lib-head p.desk-lib-note {
-  margin-top: 6px;
-  color: var(--d-muted);
-  font-size: 11.5px;
-  line-height: 1.4;
-}
-
-/* the game view: the hall over the whole window (and the whole screen where the browser allows it) */
-.desk-lib[data-game="on"] {
+/* full screen: the hall over the whole window (and the whole screen where the browser allows it) */
+.desk-lib[data-full="on"] {
   position: fixed;
   inset: 0;
   z-index: 200;
@@ -2205,11 +2302,9 @@ button.desk-lib-label {
 
 .desk-lib-keys {
   position: absolute;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 14px;
+  z-index: 3;
+  right: 18px;
+  bottom: 18px;
   padding: 6px 12px;
   border: 1px solid var(--d-border);
   border-radius: 999px;
@@ -2224,7 +2319,7 @@ button.desk-lib-label {
 .desk-lib-keys kbd {
   display: inline-block;
   min-width: 18px;
-  margin-right: 3px;
+  margin: 0 2px 0 0;
   padding: 0 4px;
   border: 1px solid var(--d-border);
   border-radius: 4px;
@@ -2236,6 +2331,7 @@ button.desk-lib-label {
 
 .desk-lib-loading {
   position: absolute;
+  z-index: 3;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -2250,24 +2346,13 @@ button.desk-lib-label {
   text-align: center;
 }
 
-@media (max-width: 1100px) {
-  .desk-lib-keys {
-    display: none;
+@media (max-width: 1180px) {
+  .desk-lib-bar {
+    flex-wrap: wrap;
   }
 
-  .desk-lib-tools {
-    top: 112px;
-    left: 18px;
-    right: 18px;
-    max-width: none;
-    flex-wrap: nowrap;
+  .desk-lib-controls {
     justify-content: flex-start;
-    overflow-x: auto;
-  }
-
-  .desk-lib-help {
-    margin-top: 80px;
-    max-width: calc(100% - 36px);
   }
 
   .desk-lib-panel {
@@ -2275,7 +2360,11 @@ button.desk-lib-label {
     height: 46%;
   }
 
-  .desk-lib-foot[data-panel="open"] {
+  .desk-lib-bottom[data-panel="open"] {
+    display: none;
+  }
+
+  .desk-lib-keys {
     display: none;
   }
 }

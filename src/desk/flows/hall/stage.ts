@@ -3,8 +3,8 @@
  * for every company, the funds as people standing at the bookcase where their money went, the index funds keeping
  * the library at the map table, and the quarter's money flowing under the dome. The reader turns the hall like a
  * model: drag to turn it round its middle, the wheel to move in and out, a click to select; prepared views (the
- * overview, a bookcase, the doorway, from above) do the walking. In the game view the controls are a walker's: drag
- * to look, W A S D or the arrow keys to walk, R and F to rise and fall.
+ * overview, a bookcase, the doorway, from above) do the walking. With the hall in focus (and anywhere in full screen)
+ * W A S D or the arrow keys walk, Q and E turn, R and F rise and fall.
  *
  * No React in here: the page hands in data and receives hover and pick events. Labels are plain elements the stage
  * positions itself, so nothing re-renders per frame.
@@ -14,6 +14,7 @@ import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { FLOW_OUTSIDE, type FlowLink } from "@contracts/fund-flows";
 import { mixOklab, type ChartPalette } from "../../charts/color";
@@ -105,15 +106,61 @@ export interface StageEvents {
 }
 
 interface Pose { x: number; y: number; z: number; yaw: number; pitch: number }
-interface PlacedLabel { element: HTMLElement; at: THREE.Vector3; reach: number; rank: number; shown: boolean; follow?: number }
+/** A label over the hall; `spots` are other places it may stand (along its own stream) when the first is taken. */
+interface PlacedLabel { element: HTMLElement; at: THREE.Vector3; reach: number; rank: number; shown: boolean; follow?: number; spots?: THREE.Vector3[] }
+
+/** Where along a stream its name may stand, best first: towards where the money left, where the streams are still apart. */
+const NOTE_SPOTS = [0.3, 0.46, 0.2, 0.6];
+/**
+ * The page's controls over the hall: the bar along the top (two rows in a window narrower than the stylesheet's
+ * 1180 pixels, where it wraps), and the title block at its left (pixels).
+ */
+const BAR_CLEAR = { wide: 82, narrow: 188, below: 1180 };
+const TITLE_BLOCK = { width: 440, height: 136 };
+
+/**
+ * The finish of the picture: the edges a little darker, so the eye goes to the middle of the open part of the view,
+ * and a touch of warmth (or of night). Applied to the linear image before the tone mapping.
+ */
+const GRADE = {
+  name: "HallGrade",
+  uniforms: {
+    tDiffuse: { value: null },
+    centre: { value: new THREE.Vector2(0.5, 0.5) },
+    aspect: { value: 1 },
+    strength: { value: 0.3 },
+    tint: { value: new THREE.Vector3(1, 1, 1) },
+  },
+  vertexShader: /* glsl */ `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}`,
+  fragmentShader: /* glsl */ `
+uniform sampler2D tDiffuse;
+uniform vec2 centre;
+uniform float aspect;
+uniform float strength;
+uniform vec3 tint;
+varying vec2 vUv;
+void main() {
+  vec4 texel = texture2D(tDiffuse, vUv);
+  vec2 offset = (vUv - centre) * vec2(aspect, 1.0);
+  float fall = smoothstep(0.32, 1.08, length(offset));
+  texel.rgb *= tint * (1.0 - strength * fall);
+  gl_FragColor = texel;
+}`,
+};
 
 /** Where the reader comes in: inside the entrance, looking across the hall. */
 const HOME: Pose = { x: 0, y: 6.4, z: 21, yaw: 0, pitch: -0.12 };
 /**
- * Where the hall opens and where "Overview" returns: over the doorway at the height of the wall's top, looking down
- * across the floor, so the bookcases, the people at them and the ribbons under the dome are in one picture.
+ * Where the hall opens and where "Overview" returns: over the doorway, a little under the wall's top, looking down
+ * across the floor, so the bookcases, the people at them and the ribbons under the dome are in one picture, the
+ * ribbons high in it and not much empty floor in front.
  */
-const OVERVIEW: Pose = { x: 0, y: 15.2, z: 24.5, yaw: 0, pitch: -0.36 };
+const OVERVIEW: Pose = { x: 0, y: 13.6, z: 24.2, yaw: 0, pitch: -0.3 };
 const SHORT_SECTOR: Record<string, string> = {
   "Information Technology": "Tech", "Communication Services": "Communication", "Consumer Discretionary": "Cons. Discretionary",
   "Consumer Staples": "Cons. Staples", [FLOW_OUTSIDE]: "Outside",
@@ -128,6 +175,7 @@ export class HallStage {
   private readonly camera = new THREE.PerspectiveCamera(58, 1, 0.1, 400);
   private readonly composer: EffectComposer;
   private readonly bloom: UnrealBloomPass;
+  private readonly grade: ShaderPass;
   private readonly layout: HallLayout;
   private building: HallBuilding | null = null;
   private map: MapTable | null = null;
@@ -143,8 +191,8 @@ export class HallStage {
   private crowd: Crowd | null = null;
   private readonly labelLayer: HTMLDivElement;
   private labels: PlacedLabel[] = [];
-  /** The names of the streams on show: "Financials → Tech · $12.30B", at the top of each arc. */
-  private streamNotes: { text: string; at: THREE.Vector3 }[] = [];
+  /** The names of the streams on show ("Financials → Tech · $12.30B") and the places along each stream they may stand. */
+  private streamNotes: { text: string; spots: THREE.Vector3[] }[] = [];
   private mainStreet: MainStreet | null = null;
   private providence: Providence | null = null;
   private scoreboards: Scoreboards | null = null;
@@ -223,9 +271,10 @@ export class HallStage {
 
     this.scene.background = new THREE.Color(this.tone.sky);
     this.scene.fog = new THREE.Fog(this.tone.sky, 60, 140);
-    this.scene.add(new THREE.HemisphereLight(dark ? 0x9fb0d0 : 0xfff6e8, dark ? 0x1c1612 : 0xb9ab95, dark ? 0.4 : 0.55));
+    // daylight: a softer fill and a warmer, stronger light from above, so the floor, the people and the bookcases model
+    this.scene.add(new THREE.HemisphereLight(dark ? 0x9fb0d0 : 0xfff3e2, dark ? 0x1c1612 : 0xa8987e, dark ? 0.4 : 0.47));
     // light through the oculus, casting the people's shadows on the marble
-    const sun = new THREE.DirectionalLight(dark ? 0xbfcaf0 : 0xfff1d6, dark ? 0.8 : 1.35);
+    const sun = new THREE.DirectionalLight(dark ? 0xbfcaf0 : 0xfff2df, dark ? 0.8 : 1.55);
     sun.position.set(8, 40, 12);
     sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048);
@@ -274,8 +323,12 @@ export class HallStage {
     // for the bloom.
     this.composer = new EffectComposer(this.renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 }));
     this.composer.addPass(new RenderPass(this.scene, this.camera));
-    this.bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), dark ? 0.32 : 0.1, 0.45, dark ? 0.86 : 0.95);
+    this.bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), dark ? 0.36 : 0.12, 0.5, dark ? 0.84 : 0.94);
     this.composer.addPass(this.bloom);
+    this.grade = new ShaderPass(GRADE);
+    this.grade.uniforms.strength.value = dark ? 0.42 : 0.3;
+    this.grade.uniforms.tint.value.set(...(dark ? [0.98, 1, 1.04] : [1.01, 1, 0.99]) as [number, number, number]);
+    this.composer.addPass(this.grade);
     this.composer.addPass(new OutputPass());
 
     this.applyPose();
@@ -415,7 +468,7 @@ export class HallStage {
   }
 
   // --- labels -----------------------------------------------------------------------------------------------------
-  private label(text: string, className: string, at: THREE.Vector3, reach: number, target?: StageTarget, follow?: number): PlacedLabel {
+  private label(text: string, className: string, at: THREE.Vector3, reach: number, target?: StageTarget, follow?: number, spots?: THREE.Vector3[]): PlacedLabel {
     const rank = className.startsWith("sector") ? 0 : className.startsWith("desk") || className.startsWith("stream") ? 1 : className.startsWith("book") ? 2 : 3;
     const element = document.createElement(target ? "button" : "div");
     element.className = `desk-lib-label ${className}`;
@@ -425,7 +478,7 @@ export class HallStage {
       element.addEventListener("click", () => this.events.onPick(target));
     }
     this.labelLayer.appendChild(element);
-    return { element, at, reach, rank, shown: false, follow };
+    return { element, at, reach, rank, shown: false, follow, spots };
   }
 
   private refreshLabels(): void {
@@ -433,7 +486,7 @@ export class HallStage {
     this.labels = [];
     const data = this.data;
     if (!data) return;
-    for (const note of this.streamNotes) this.labels.push(this.label(note.text, "stream", note.at, 130));
+    for (const note of this.streamNotes) this.labels.push(this.label(note.text, "stream", note.spots[0], 130, undefined, undefined, note.spots.slice(1)));
     // the books carry their tickers on their spines; floating names only for a sector in focus and a selection
     const named = new Set<number>();
     if (this.selection.kind === null && data.focus !== null) {
@@ -469,6 +522,7 @@ export class HallStage {
   private placeLabels(): void {
     const width = this.host.clientWidth;
     const height = this.host.clientHeight;
+    const open = width - (this.inset < width * 0.6 ? this.inset : 0);
     const projected = new THREE.Vector3();
     const ordered = [...this.labels].sort((a, b) => a.rank - b.rank || Number(b.shown) - Number(a.shown));
     const taken: [number, number, number, number][] = [];
@@ -481,30 +535,33 @@ export class HallStage {
         }
         label.at.y += 0.28;
       }
-      projected.copy(label.at);
-      const distance = projected.distanceTo(this.camera.position);
-      projected.project(this.camera);
-      let visible = projected.z < 1 && Math.abs(projected.x) < 1.05 && Math.abs(projected.y) < 1.05 && distance < label.reach;
-      const x = ((projected.x + 1) / 2) * width;
-      const y = ((1 - projected.y) / 2) * height;
-      if (visible) {
-        const half = ((label.element.textContent?.length ?? 6) * (label.rank === 0 ? 7.2 : 6.6) + 22) / 2;
-        const box: [number, number, number, number] = [x - half, y - 24, x + half, y + 2];
-        if (taken.some((other) => box[0] < other[2] && box[2] > other[0] && box[1] < other[3] && box[3] > other[1])) visible = false;
-        else taken.push(box);
-      }
-      // a stream's name under the toolbar says nothing; one that would sit behind the title panel is drawn below it
       const streamName = label.element.classList.contains("stream");
-      if (visible && streamName && y < 150) visible = false;
-      const top = visible && streamName && x < 640 && y < 262 ? 262 : y;
-      label.shown = visible;
-      if (!visible) {
+      const half = ((label.element.textContent?.length ?? 6) * (label.rank === 0 ? 7.2 : 6.6) + 22) / 2;
+      let placed: { x: number; y: number; distance: number } | null = null;
+      for (const spot of [label.at, ...(label.spots ?? [])]) {
+        projected.copy(spot);
+        const distance = projected.distanceTo(this.camera.position);
+        projected.project(this.camera);
+        if (!(projected.z < 1 && Math.abs(projected.x) < 1.05 && Math.abs(projected.y) < 1.05 && distance < label.reach)) continue;
+        const x = ((projected.x + 1) / 2) * width;
+        const y = ((1 - projected.y) / 2) * height;
+        // a label behind the panel, under the bar along the top or behind the title says nothing: try the next place
+        if (x + half > open - 8) continue;
+        if (streamName && (y < (width < BAR_CLEAR.below ? BAR_CLEAR.narrow : BAR_CLEAR.wide) + 24 || (x - half < TITLE_BLOCK.width && y < TITLE_BLOCK.height + 24))) continue;
+        const box: [number, number, number, number] = [x - half, y - 24, x + half, y + 2];
+        if (taken.some((other) => box[0] < other[2] && box[2] > other[0] && box[1] < other[3] && box[3] > other[1])) continue;
+        taken.push(box);
+        placed = { x, y, distance };
+        break;
+      }
+      label.shown = placed !== null;
+      if (!placed) {
         if (label.element.style.display !== "none") label.element.style.display = "none";
         continue;
       }
       label.element.style.display = "";
-      label.element.style.transform = `translate(-50%, -100%) translate(${x}px, ${top}px)`;
-      label.element.style.opacity = String(clamp(1.25 - distance / label.reach, 0.3, 1));
+      label.element.style.transform = `translate(-50%, -100%) translate(${placed.x}px, ${placed.y}px)`;
+      label.element.style.opacity = String(clamp(1.25 - placed.distance / label.reach, 0.3, 1));
     }
   }
 
@@ -756,10 +813,12 @@ export class HallStage {
       const from = this.anchorOf(link.from);
       const to = this.anchorOf(link.to);
       if (!from || !to) continue;
-      // the stream's own name, at the top of its arc: where the money left, where it arrived, how much
+      // the stream's own name: where the money left, where it arrived, how much. It stands on the stream towards where
+      // the money left, where the streams are still apart (they meet where much of the money arrives), or further
+      // along when that place is taken or out of view
       if (this.streamNotes.length < (data.focus === null ? 5 : 6)) {
-        const apex = from.clone().multiplyScalar(0.25).add(arcControl("rotation", from, to).multiplyScalar(0.5)).add(to.clone().multiplyScalar(0.25));
-        this.streamNotes.push({ text: `${shortSector(link.from)} \u2192 ${shortSector(link.to)} \u00b7 ${fmtCap(link.usd)}`, at: apex });
+        const curve = new THREE.QuadraticBezierCurve3(from, arcControl("rotation", from, to), to);
+        this.streamNotes.push({ text: `${shortSector(link.from)} \u2192 ${shortSector(link.to)} \u00b7 ${fmtCap(link.usd)}`, spots: NOTE_SPOTS.map((t) => curve.getPoint(t)) });
       }
       specs.push({ from, to, usd: link.usd, start: this.negative, end: this.positive, kind: "rotation", lit: !quiet && (data.focus === null || link.from === data.focus || link.to === data.focus), label: { from: link.from, to: link.to } });
     }
@@ -949,18 +1008,13 @@ export class HallStage {
       this.dragging = { x: event.clientX, y: event.clientY, moved: this.dragging.moved + Math.abs(dx) + Math.abs(dy) };
       this.flight = null;
       if (this.dragging.moved >= 5) this.focusedBoard = null;
-      if (this.game) {
-        // a walker turns the head
-        this.pose.yaw += dx * 0.0042;
-      } else {
-        // the reader turns the hall: the camera goes round the middle of the floor and keeps facing the same way
-        // relative to it, so a drag to the right brings what was on the left into view, as with a model on a table
-        const angle = -dx * 0.0036;
-        const { x, z } = this.pose;
-        this.pose.x = x * Math.cos(angle) + z * Math.sin(angle);
-        this.pose.z = -x * Math.sin(angle) + z * Math.cos(angle);
-        this.pose.yaw += angle;
-      }
+      // the reader turns the hall: the camera goes round the middle of the floor and keeps facing the same way relative
+      // to it, so a drag to the right brings what was on the left into view, as with a model on a table
+      const angle = -dx * 0.0036;
+      const { x, z } = this.pose;
+      this.pose.x = x * Math.cos(angle) + z * Math.sin(angle);
+      this.pose.z = -x * Math.sin(angle) + z * Math.cos(angle);
+      this.pose.yaw += angle;
       this.pose.pitch = clamp(this.pose.pitch + dy * 0.0032, -1.2, 1.1);
     } else this.pointerDirty = true;
   };
@@ -1062,13 +1116,13 @@ export class HallStage {
     window.addEventListener("blur", this.onBlur);
   }
 
-  /** The full-screen game view: the keys work wherever the focus is, and the hall takes the focus at once. */
   /** All the streams, only what was bought (the money going in, in blue) or only what was sold (coming out, in red). */
   setStreamPart(part: StreamPart): void {
     this.streams.setPart(part);
     this.settling = true;
   }
 
+  /** Full screen: the keys walk the hall wherever the focus is, and the hall takes the focus at once. */
   setGame(on: boolean): void {
     this.game = on;
     this.keys.clear();
@@ -1139,6 +1193,8 @@ export class HallStage {
     const right = this.inset < width * 0.6 ? this.inset : 0;
     this.camera.setViewOffset(width, height, right / 2, Math.min(this.insetBottom, height * 0.3) * 0.3, width, height);
     this.camera.updateProjectionMatrix();
+    this.grade.uniforms.centre.value.set((width - right) / 2 / width, 0.5);
+    this.grade.uniforms.aspect.value = width / height;
   }
 
   private readonly tick = (now: number): void => {

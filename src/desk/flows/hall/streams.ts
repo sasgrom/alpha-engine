@@ -1,6 +1,7 @@
 /**
- * Streams of money in the hall. A stream is a ribbon as wide as the dollars it carries, red where the money left and
- * blue where it arrived, with bands that flow along it and bubbles marked "$" riding on it: more money, more bubbles.
+ * Streams of money in the hall. A stream is a ribbon of light as wide as the dollars it carries, red where the money
+ * left and blue where it arrived, soft at its edges, with faint bands flowing along it and small glints riding on it
+ * the way the money goes: more money, more glints.
  * Rotation streams arc under the dome from bookcase to bookcase; threads run between a person and the books it
  * traded. The reader can show all of it, only what was bought (the money going in, in blue) or only what was sold
  * (the money coming out, in red).
@@ -73,39 +74,30 @@ interface Built {
 }
 
 const SEGMENTS = 64;
+const WHITE = new THREE.Color(1, 1, 1);
 const MAX_BUBBLES = 3600;
 
+/** A glint of light: a bright core in a soft halo (the colour comes from the stream it rides on). */
 function bubbleTexture(): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
-  canvas.width = canvas.height = 128;
+  canvas.width = canvas.height = 64;
   const context = canvas.getContext("2d")!;
-  const body = context.createRadialGradient(56, 52, 6, 64, 64, 62);
-  body.addColorStop(0, "rgba(255,255,255,0.95)");
-  body.addColorStop(0.55, "rgba(255,255,255,0.55)");
-  body.addColorStop(0.9, "rgba(255,255,255,0.35)");
-  body.addColorStop(1, "rgba(255,255,255,0)");
-  context.fillStyle = body;
-  context.beginPath();
-  context.arc(64, 64, 62, 0, Math.PI * 2);
-  context.fill();
-  context.lineWidth = 5;
-  context.strokeStyle = "rgba(255,255,255,0.95)";
-  context.beginPath();
-  context.arc(64, 64, 56, 0, Math.PI * 2);
-  context.stroke();
-  context.fillStyle = "rgba(20,20,24,0.9)";
-  context.font = "bold 80px Georgia, 'Times New Roman', serif";
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.fillText("$", 64, 70);
+  const glow = context.createRadialGradient(32, 32, 0, 32, 32, 32);
+  glow.addColorStop(0, "rgba(255,255,255,1)");
+  glow.addColorStop(0.18, "rgba(255,255,255,0.95)");
+  glow.addColorStop(0.42, "rgba(255,255,255,0.38)");
+  glow.addColorStop(0.72, "rgba(255,255,255,0.08)");
+  glow.addColorStop(1, "rgba(255,255,255,0)");
+  context.fillStyle = glow;
+  context.fillRect(0, 0, 64, 64);
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   return texture;
 }
 
 /**
- * Streams and bubbles close to the eye fade away (fully gone within three metres, whole again from twelve), so the
- * reader sees past the money passing overhead to the dome and the hall beyond.
+ * Streams and glints close to the eye fade away (gone within five metres, whole again from seventeen), so the reader
+ * sees past the money passing overhead, or starting at the doorway under the opening view, to the hall beyond.
  */
 function fadeNear(material: THREE.Material): void {
   material.onBeforeCompile = (shader) => {
@@ -114,28 +106,43 @@ function fadeNear(material: THREE.Material): void {
       .replace("#include <project_vertex>", "#include <project_vertex>\nvEyeDistance = -mvPosition.z;");
     shader.fragmentShader = shader.fragmentShader
       .replace("#include <common>", "#include <common>\nvarying float vEyeDistance;")
-      .replace("#include <opaque_fragment>", "diffuseColor.a *= smoothstep(3.0, 12.0, vEyeDistance);\n#include <opaque_fragment>");
+      .replace("#include <opaque_fragment>", "diffuseColor.a *= smoothstep(5.0, 17.0, vEyeDistance);\n#include <opaque_fragment>");
   };
   material.customProgramCacheKey = () => "hall-stream-near";
 }
 
 /**
  * As `fadeNear`, for a ribbon: and only the part of it the reader chose, in one colour when only one side shows (the
- * position along the stream is `along`; the values are the ribbon's own `uniforms`).
+ * position along the stream is `along`; the values are the ribbon's own `uniforms`). The ribbon turns its full width
+ * towards the eye round its own line, wherever the reader stands, so a stream seen from above is as wide as one seen
+ * from the side (the geometry on the CPU stays flat, for pointing).
  */
 function ribbonShader(material: THREE.Material, uniforms: StreamUniforms): void {
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
     shader.vertexShader = shader.vertexShader
-      .replace("#include <common>", "#include <common>\nattribute float along;\nuniform float streamSolid;\nuniform vec3 streamTone;\nvarying float vAlong;\nvarying float vEyeDistance;")
+      .replace("#include <common>", "#include <common>\nattribute float along;\nattribute float across;\nattribute vec3 centre;\nattribute vec3 heading;\nattribute float halfWidth;\nuniform float streamSolid;\nuniform vec3 streamTone;\nvarying float vAlong;\nvarying float vAcross;\nvarying float vEyeDistance;")
+      .replace(
+        "#include <begin_vertex>",
+        `vec3 transformed = vec3(position);
+{
+  vec3 toEye = normalize(cameraPosition - (modelMatrix * vec4(centre, 1.0)).xyz);
+  vec3 side = cross(heading, toEye);
+  float size = length(side);
+  if (size > 1e-4) transformed = centre + side / size * halfWidth * across;
+}`,
+      )
       .replace("#include <color_vertex>", "#include <color_vertex>\nvColor.rgb = mix(vColor.rgb, streamTone, streamSolid);")
-      .replace("#include <project_vertex>", "#include <project_vertex>\nvEyeDistance = -mvPosition.z;\nvAlong = along;");
+      .replace("#include <project_vertex>", "#include <project_vertex>\nvEyeDistance = -mvPosition.z;\nvAlong = along;\nvAcross = across;");
     shader.fragmentShader = shader.fragmentShader
-      .replace("#include <common>", "#include <common>\nuniform float streamCut;\nvarying float vAlong;\nvarying float vEyeDistance;")
+      .replace("#include <common>", "#include <common>\nuniform float streamCut;\nvarying float vAlong;\nvarying float vAcross;\nvarying float vEyeDistance;")
       .replace(
         "#include <opaque_fragment>",
         `float keep = streamCut < 0.5 ? 1.0 : streamCut < 1.5 ? smoothstep(${FADE.arriving[0]}, ${FADE.arriving[1]}, vAlong) : streamCut < 2.5 ? 1.0 - smoothstep(${FADE.leaving[0]}, ${FADE.leaving[1]}, vAlong) : 0.0;
-diffuseColor.a *= smoothstep(3.0, 12.0, vEyeDistance) * keep;
+// soft at both edges like a band of light, and a little brighter down the middle
+float edge = abs(vAcross);
+diffuseColor.a *= smoothstep(5.0, 17.0, vEyeDistance) * keep * (1.0 - smoothstep(0.46, 1.0, edge));
+outgoingLight = mix(outgoingLight, vec3(1.0), 0.16 * (1.0 - smoothstep(0.0, 0.3, edge)));
 #include <opaque_fragment>`,
       );
   };
@@ -148,7 +155,7 @@ function bandTexture(): THREE.CanvasTexture {
   canvas.height = 4;
   const context = canvas.getContext("2d")!;
   const gradient = context.createLinearGradient(0, 0, 256, 0);
-  for (let stop = 0; stop <= 8; stop++) gradient.addColorStop(stop / 8, stop % 2 ? "rgb(255,255,255)" : "rgb(226,226,226)");
+  for (let stop = 0; stop <= 8; stop++) gradient.addColorStop(stop / 8, stop % 2 ? "rgb(255,255,255)" : "rgb(236,236,236)");
   context.fillStyle = gradient;
   context.fillRect(0, 0, 256, 4);
   const texture = new THREE.CanvasTexture(canvas);
@@ -163,6 +170,10 @@ function ribbon(curve: THREE.QuadraticBezierCurve3, width: number, start: THREE.
   const colors: number[] = [];
   const uvs: number[] = [];
   const along: number[] = [];
+  const across: number[] = [];
+  const centres: number[] = [];
+  const headings: number[] = [];
+  const halves: number[] = [];
   const indices: number[] = [];
   const up = new THREE.Vector3(0, 1, 0);
   let side = new THREE.Vector3(1, 0, 0);
@@ -182,6 +193,10 @@ function ribbon(curve: THREE.QuadraticBezierCurve3, width: number, start: THREE.
     colors.push(color.r, color.g, color.b, color.r, color.g, color.b);
     uvs.push(t * repeats, 0, t * repeats, 1);
     along.push(t, t);
+    across.push(-1, 1);
+    centres.push(point.x, point.y, point.z, point.x, point.y, point.z);
+    headings.push(tangent.x, tangent.y, tangent.z, tangent.x, tangent.y, tangent.z);
+    halves.push(half, half);
   }
   for (let index = 0; index < SEGMENTS; index++) {
     const a = index * 2;
@@ -192,6 +207,10 @@ function ribbon(curve: THREE.QuadraticBezierCurve3, width: number, start: THREE.
   geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
   geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
   geometry.setAttribute("along", new THREE.Float32BufferAttribute(along, 1));
+  geometry.setAttribute("across", new THREE.Float32BufferAttribute(across, 1));
+  geometry.setAttribute("centre", new THREE.Float32BufferAttribute(centres, 3));
+  geometry.setAttribute("heading", new THREE.Float32BufferAttribute(headings, 3));
+  geometry.setAttribute("halfWidth", new THREE.Float32BufferAttribute(halves, 1));
   geometry.setIndex(indices);
   return geometry;
 }
@@ -217,14 +236,14 @@ export class MoneyStreams {
     geometry.setDrawRange(0, 0);
     this.bubbles = new THREE.Points(
       geometry,
-      new THREE.PointsMaterial({ size: 0.66, map: this.bubbleTexture, vertexColors: true, transparent: true, alphaTest: 0.04, depthWrite: false, sizeAttenuation: true }),
+      new THREE.PointsMaterial({ size: dark ? 0.42 : 0.36, map: this.bubbleTexture, vertexColors: true, transparent: true, depthWrite: false, sizeAttenuation: true, blending: dark ? THREE.AdditiveBlending : THREE.NormalBlending }),
     );
     fadeNear(this.bubbles.material as THREE.Material);
     this.bubbles.frustumCulled = false;
     this.group.add(this.bubbles);
   }
 
-  /** Replaces the streams. The widest rotation stream is 1.8 m wide, the widest thread 0.9 m; width follows the dollars. */
+  /** Replaces the streams. The widest rotation stream is 1.5 m wide, the widest thread 0.7 m; width follows the dollars. */
   set(specs: StreamSpec[]): void {
     for (const item of this.built) {
       item.mesh.geometry.dispose();
@@ -244,12 +263,12 @@ export class MoneyStreams {
       const curve = new THREE.QuadraticBezierCurve3(spec.from, arcControl(spec.kind, spec.from, spec.to), spec.to);
       const length = curve.getLength();
       const share = Math.min(1, spec.usd / (spec.kind === "rotation" ? top.rotation : top.thread));
-      const width = spec.kind === "rotation" ? 0.3 + 1.5 * share : 0.1 + 0.8 * share;
+      const width = spec.kind === "rotation" ? 0.26 + 1.24 * share : 0.08 + 0.62 * share;
       const material = new THREE.MeshBasicMaterial({
         map: this.bandTexture,
         vertexColors: true,
         transparent: true,
-        opacity: spec.lit ? (this.dark ? 0.72 : 0.78) : 0.07,
+        opacity: spec.lit ? (this.dark ? 0.8 : 0.9) : 0.06,
         side: THREE.DoubleSide,
         depthWrite: false,
       });
@@ -270,8 +289,8 @@ export class MoneyStreams {
       this.built.push(item);
       this.apply(item);
       if (!spec.lit) continue;
-      // a few bubbles ride each stream to show which way the money goes; hundreds of them read as grain from afar
-      const count = Math.round(Math.max(spec.kind === "rotation" ? 4 : 3, Math.min(spec.kind === "rotation" ? 22 : 16, share * (spec.kind === "rotation" ? 22 : 16))));
+      // glints ride each stream to show which way the money goes, more on the wider ones
+      const count = Math.round(Math.max(spec.kind === "rotation" ? 5 : 3, Math.min(spec.kind === "rotation" ? 26 : 16, share * (spec.kind === "rotation" ? 26 : 16))));
       for (let index = 0; index < count && this.riders.length < MAX_BUBBLES; index++) {
         // evenly spaced and all at the stream's pace (about four and a half metres a second), so they never bunch up
         this.riders.push({ stream: streamIndex, phase: (index + ((streamIndex * 0.37) % 1)) / count, speed: 4.5 / length });
@@ -336,10 +355,11 @@ export class MoneyStreams {
       const t = (rider.phase + seconds * rider.speed) % 1;
       if (!showing(cutOf(item.spec, this.part), t)) continue;
       item.curve.getPoint(t, point);
-      // the bubbles ride a little above the ribbon so they read against it
-      positions.setXYZ(shown, point.x, point.y + 0.22, point.z);
-      if (this.part === "all") color.copy(item.spec.start).lerp(item.spec.end, THREE.MathUtils.smoothstep(t, 0.15, 0.85));
+      // the glints ride on the ribbon, a little whiter than it, so they read as light running along it
+      positions.setXYZ(shown, point.x, point.y + 0.05, point.z);
+      if (this.part === "all") color.copy(item.spec.start).lerp(item.spec.end, THREE.MathUtils.smoothstep(t, 0.38, 0.62));
       else color.copy(this.part === "sold" ? item.spec.start : item.spec.end);
+      color.lerp(WHITE, this.dark ? 0.3 : 0.42);
       colors.setXYZ(shown, color.r, color.g, color.b);
       shown++;
     }

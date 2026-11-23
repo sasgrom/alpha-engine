@@ -20,6 +20,9 @@ export function FlowTimeline({ quarters, selected, onSelect, palette, height = 1
   const bar = Math.min(22, Math.max(4, band - 6));
   const half = (height - 22) / 2;
   const active = hover === null ? null : quarters[hover];
+  // a year is named at its first quarter; the first quarter shown is named too unless the next year begins too close
+  const firstMarch = quarters.findIndex((row) => row.quarter.slice(5, 7) === "03");
+  const named = (index: number) => quarters[index].quarter.slice(5, 7) === "03" || (index === 0 && (firstMarch < 0 || firstMarch * band >= 38));
   return (
     <div ref={ref} className="desk-chart" style={{ height }} onMouseLeave={() => setHover(null)}>
       {width > 0 && (
@@ -35,7 +38,7 @@ export function FlowTimeline({ quarters, selected, onSelect, palette, height = 1
                 <rect x={index * band} y={0} width={band} height={height} fill={isSelected ? palette.accent : "transparent"} fillOpacity={isSelected ? 0.1 : 0} />
                 <path d={`M${x},${half - 1} v${-(up - 3)} a3,3 0 0 1 3,-3 h${bar - 6} a3,3 0 0 1 3,3 v${up - 3} z`} fill={palette.pos} opacity={isSelected || hover === index ? 1 : 0.72} />
                 <path d={`M${x},${half + 2} v${down - 3} a3,3 0 0 0 3,3 h${bar - 6} a3,3 0 0 0 3,-3 v${-(down - 3)} z`} fill={palette.neg} opacity={isSelected || hover === index ? 1 : 0.72} />
-                {(row.quarter.slice(5, 7) === "03" || index === 0) && (
+                {named(index) && (
                   <text className="desk-axis-text" x={index * band + 2} y={height - 5}>{row.quarter.slice(0, 4)}</text>
                 )}
               </g>

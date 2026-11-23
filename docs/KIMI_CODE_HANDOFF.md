@@ -3601,3 +3601,40 @@ delivered.
   and 1.23 for quarters whose adjusted results were 1.85 and 2.05, guided at about 1.68 and 1.92). The page shows
   them as another measure. A basis check against the GAAP and adjusted actuals could repair the label in a g1.3.
 - Still to come tonight: items 2 and 3 of section 217 (13F refresh at 03:32, fundamentals builds after the facts jobs).
+
+## 219. Claude (Opus 5.5): Flows hall, second pass: the hall gets the screen — 2026-11-23T11:39Z
+
+- Owner: "go ahead with the hall pass, make it look beautiful" (after my status note that five overlays covered
+  about two thirds of the view, that ribbon names piled up where streams end in the same sector, and that the
+  controls were still game-like).
+- **Layout** (`src/desk/flows/FlowsPage.tsx`, the hall's section of `src/desk/desk.css`):
+  - one bar along the top: the title in Cinzel on a soft borderless glass, the quarter's line, chips for whatever
+    the reader has narrowed the hall to (sector, famous faces, winners or losers, bought or sold ribbons, after
+    inflation; each clears with a click); on the right one strip of controls: what the colour shows, Overview /
+    From above / Walk me through, then icons for the display options, the help, the reading view, the details panel
+    and full screen;
+  - the display options (who stands in the hall, whose books, which ribbons, after inflation) moved into a popover;
+    the help into another; both close on Esc or a click elsewhere;
+  - the details panel opens with a selection (a fund or a company) and is closed otherwise; opening or closing it by
+    hand holds until the next selection;
+  - the walk's caption (with step dots) and the timeline are one compact stack at the bottom left; the legend is
+    one line, the rest is in the help;
+  - the gamepad is gone: a full-screen button instead; dragging always turns the hall like a model, and the keys walk
+    it after a click on it (anywhere in full screen).
+- **Scene** (`src/desk/flows/hall/stage.ts`, `streams.ts`, `building.ts`):
+  - ribbons are bands of light: they turn their full width towards the eye round their own line (in the vertex
+    shader; the CPU geometry stays flat for pointing), soft at both edges with a faint sheen down the middle,
+    1.5 m at the widest; streams near the eye fade out over 5 to 17 m, so those starting at the doorway under the
+    opening view no longer stand as pillars;
+  - the "$" coins became small glints of the ribbon's colour, additive in the dark hall;
+  - a finishing pass after the bloom: a gentle vignette centred on the open part of the view, a touch of warmth (or
+    night); daylight gradients in the windows and a glowing oculus; a cooler tint keeps the marble cream; a little
+    more contrast in the daylight;
+  - the opening view sits a little lower and flatter (more ribbons and dome, less empty floor);
+  - ribbon names stand on their own stream towards where the money left, trying three further places along it when
+    a place is taken, behind the panel, under the bar (two rows in a narrow window) or behind the title.
+- The timeline no longer prints two year labels on top of each other at its start.
+- Gates: `npm run check`, 274 files / 1,569 tests, `npm run build`, `git diff --check`. Client only; no restart.
+  Looked at on screenshots of the live page with the real files (overview, from above, the walk's six views, a
+  selected fund, the display popover, light and dark, 1600 and 1100 pixels wide), not by a signed-in person.
+- Not done: the phone layout; the September 13F quarter is not in the books yet (section 217, running tonight).

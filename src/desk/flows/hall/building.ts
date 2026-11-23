@@ -214,7 +214,8 @@ export function buildHall(layout: HallLayout, textures: HallTextures | null, dar
 
   // materials
   // light veined marble in large squares; a soft normal and a fairly rough finish, so it does not sparkle at a distance
-  const floor = material(textures?.marble ?? null, { color: dark ? 0xbdb7ab : 0xf3eee4, roughness: 0.62, normalScale: new THREE.Vector2(0.25, 0.25) }, [1, 1]);
+  // a cool tint under the warm light keeps the marble cream, not tan
+  const floor = material(textures?.marble ?? null, { color: dark ? 0xbdb7ab : 0xe6e9ec, roughness: 0.62, normalScale: new THREE.Vector2(0.25, 0.25) }, [1, 1]);
   const wood = material(textures?.darkWood ?? null, { color: dark ? 0x8a7a68 : 0xa08a72, roughness: 0.62 }, [1, 1]);
   const woodPlain = new THREE.MeshStandardMaterial({ color: dark ? 0x2b2018 : 0x4a3727, roughness: 0.55, metalness: 0.05 });
   const marble = material(textures?.marble ?? null, { color: dark ? 0xc9c4ba : 0xe2ddd2, roughness: 0.38 }, [1, 2]);
@@ -370,7 +371,11 @@ export function buildHall(layout: HallLayout, textures: HallTextures | null, dar
   {
     const upper = arcWall(wallRadius, -Math.PI, Math.PI, galleryHeight + 3.4, wallTop, "in", 160);
     group.add(new THREE.Mesh(upper, plaster));
-    const glass = new THREE.MeshBasicMaterial({ color: dark ? 0x26324a : 0xc9d3dd, fog: false });
+    // daylight through the glass: warm low in the window, sky towards the top (at night a deep blue), brighter than
+    // the room so the windows glow a little
+    const glassWidth = 2.6;
+    const glassHeight = wallTop - galleryHeight - 4.6;
+    const glass = new THREE.MeshBasicMaterial({ map: windowLight(dark, glassWidth, glassHeight), color: new THREE.Color().setScalar(dark ? 1.25 : 1.45), fog: false });
     const frame = new THREE.MeshStandardMaterial({ color: dark ? 0x3a3128 : 0xcfc5b3, roughness: 0.6 });
     const windowShape = (width: number, height: number) => {
       const shape = new THREE.Shape();
@@ -385,8 +390,8 @@ export function buildHall(layout: HallLayout, textures: HallTextures | null, dar
     for (const alcove of layout.alcoves) if (alcove.width > 9) windowAngles.push(alcove.mid);
     windowAngles.push(Math.PI); // over the entrance
     for (const angle of windowAngles) {
-      const width = 2.6;
-      const height = wallTop - galleryHeight - 4.6;
+      const width = glassWidth;
+      const height = glassHeight;
       const pane = new THREE.Mesh(new THREE.ShapeGeometry(windowShape(width, height), 16), glass);
       const [x, , z] = polar(angle, wallRadius - 0.04);
       pane.position.set(x, galleryHeight + 3.9, z);
@@ -421,7 +426,8 @@ export function buildHall(layout: HallLayout, textures: HallTextures | null, dar
     domeMesh.position.y = wallTop;
     group.add(domeMesh);
     const oculusRadius = Math.sin(0.12) * wallRadius;
-    const oculus = new THREE.Mesh(new THREE.CircleGeometry(oculusRadius, 48), new THREE.MeshBasicMaterial({ color: dark ? 0x31405e : 0xffffff, fog: false }));
+    // the oculus: open sky, bright enough to glow (at night a dark blue)
+    const oculus = new THREE.Mesh(new THREE.CircleGeometry(oculusRadius, 48), new THREE.MeshBasicMaterial({ color: dark ? new THREE.Color(0x31405e) : new THREE.Color(0xf4f8ff).multiplyScalar(2.2), fog: false }));
     oculus.rotation.x = Math.PI / 2;
     oculus.position.y = wallTop + domeHeight * Math.cos(0.12) + 0.05;
     group.add(oculus);
@@ -525,6 +531,36 @@ function mergeStatic(group: THREE.Group, keep: Set<THREE.Object3D>): void {
     }
     group.add(joined);
   }
+}
+
+/**
+ * The light seen through a window, as a texture over the window's own shape (whose texture coordinates are metres:
+ * across from -width/2 to width/2, up from 0 to height): a warm glow low down, sky above; at night deep blue.
+ */
+function windowLight(dark: boolean, width: number, height: number): THREE.CanvasTexture {
+  const canvas = document.createElement("canvas");
+  canvas.width = 8;
+  canvas.height = 256;
+  const context = canvas.getContext("2d")!;
+  // the canvas's top is the window's top
+  const light = context.createLinearGradient(0, 256, 0, 0);
+  if (dark) {
+    light.addColorStop(0, "#1c2538");
+    light.addColorStop(0.55, "#22314f");
+    light.addColorStop(1, "#2d4168");
+  } else {
+    light.addColorStop(0, "#fff1d8");
+    light.addColorStop(0.35, "#fbf6ec");
+    light.addColorStop(0.75, "#e6eef4");
+    light.addColorStop(1, "#cfe1f0");
+  }
+  context.fillStyle = light;
+  context.fillRect(0, 0, 8, 256);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.repeat.set(1 / width, 1 / height);
+  texture.offset.set(0.5, 0);
+  return texture;
 }
 
 /** A coffered ceiling painted on a canvas: rows of recessed squares with gilt rosettes, lighter towards the top. */
