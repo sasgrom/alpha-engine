@@ -139,7 +139,7 @@ const REPORTS: Record<string, unknown> = {
 
 /** What desk.opsHealth answers (no alerts unless a test sets some). */
 export const OPS_HEALTH: { alerts: { level: "error" | "warning"; code: string; text: string }[] } = { alerts: [] };
-export const DESK_DATA = { empty: false, unread: 0 };
+export const DESK_DATA = { empty: false, unread: 0, noStatements: false };
 
 const CONTACTS = [
   { id: 2, username: "member", name: "Member One", role: "user", lastSignInAt: "2026-11-12", unread: 2, lastMsgAt: "2026-11-13T10:00:00", lastActivityAt: "2026-11-13T11:00:00" },
@@ -156,6 +156,22 @@ const MANUALS = [
   { id: "llm-context", title: "LLM Context", bundledAt: "2026-11-13" },
   { id: "design-value-signals", title: "Design: Value & Signals", bundledAt: "2026-11-13" },
 ];
+
+const COMPANY_STATEMENTS = {
+  schemaVersion: 1, cik: 320193, ticker: "AAPL", name: "Apple Inc.", standard: "v3.1", standardGeneratedAt: "2026-11-13T11:58:15.693Z", builtAt: "2026-11-22T00:00:00.000Z",
+  quarters: [
+    { end: "2026-06-27", fy: 2026, fq: 3, form: "10-Q", filed: "2026-07-31" },
+    { end: "2026-09-26", fy: 2026, fq: 4, form: "10-K", filed: "2026-11-03" },
+  ],
+  statements: {
+    income: [
+      { code: "revenue", label: "Revenue", kind: "flow", cells: [{ value: 94_036_000_000, filed: "2026-07-31", source: "Revenues", restated: { value: 94_100_000_000, filed: "2026-11-03" } }, { value: 114_477_000_000, filed: "2026-11-03", source: "Revenues" }] },
+      { code: "epsDil", label: "Diluted earnings per share", kind: "perShare", cells: [null, { value: 1.85, filed: "2026-11-03", source: "derived" }] },
+    ],
+    balance: [{ code: "totalAssets", label: "Total assets", kind: "instant", cells: [null, { value: 359_241_000_000, filed: "2026-11-03", source: "Assets" }] }],
+    cashflow: [],
+  },
+};
 
 function answer(procedure: string, role: string): unknown {
   const owner = role === "admin";
@@ -180,6 +196,7 @@ function answer(procedure: string, role: string): unknown {
     case "desk.flowsOverview": return FLOWS_OVERVIEW;
     case "desk.flowsFund": return FLOWS_FUND;
     case "desk.flowsCompany": return FLOWS_COMPANY;
+    case "desk.companyStatements": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_STATEMENTS;
     case "desk.engineIndex": return ENGINE_INDEX;
     case "desk.engineCompany": return ENGINE_COMPANY;
     case "admin.usersList": return DESK_DATA.empty ? [] : [

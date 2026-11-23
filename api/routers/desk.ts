@@ -5,16 +5,20 @@
  * - five-minute company/session views and the shared intraday market summary, for every signed-in user;
  * - the fund-flow files (overview, one fund, one company), for every signed-in user (owner's decision of
  *   2026-11-11); reviewers reach them, like everything else, only after accepting the NDA (middleware);
+ * - the company statements files built from the standard fundamentals (one file per company), for every signed-in
+ *   user: the same figures the companies filed with the SEC, with their filing dates and tags;
  * - the engine-flow files (the prediction engine's working, decision by decision), for the owner only;
  * - the home operations' health (scheduler, failed jobs, the evening market run, failed production pushes), for the
  *   owner only: the desk shows it as a banner, so a stopped collection is never silent.
  */
 import { z } from "zod";
+import type { DeskCompanyStatements } from "@contracts/desk-company";
 import type { EngineFlowCompany, EngineFlowIndex } from "@contracts/engine-flow";
 import type { FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
 import { operationsHealth } from "../../worker/lib/operations-health";
 import { loadOperationsState } from "../../worker/lib/operations-scheduler";
 import { adminQuery, createRouter, authedQuery } from "../middleware";
+import { readDeskCompanyFile } from "../services/desk-company-files";
 import { deskSnapshotFor, readDeskSnapshot } from "../services/desk-snapshot";
 import { intradayForCompany, readIntradayMarketReport } from "../services/intraday";
 import { readEngineFlowFile } from "../services/engine-flow-files";
@@ -34,6 +38,7 @@ export const deskRouter = createRouter({
   flowsOverview: authedQuery.query(() => readFundFlowsFile<FundFlowsOverview>("overview.json")),
   flowsFund: authedQuery.input(entity).query(({ input }) => readFundFlowsFile<FundFlowsFund>(`fund/${input.cik}.json`)),
   flowsCompany: authedQuery.input(entity).query(({ input }) => readFundFlowsFile<FundFlowsCompany>(`company/${input.cik}.json`)),
+  companyStatements: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyStatements>(`statements/${input.cik}.json`)),
   engineIndex: adminQuery.query(() => readEngineFlowFile<EngineFlowIndex>("index.json")),
   engineCompany: adminQuery.input(entity).query(({ input }) => readEngineFlowFile<EngineFlowCompany>(`company/${input.cik}.json`)),
   opsHealth: adminQuery.query(() => operationsHealth(loadOperationsState(), new Date())),

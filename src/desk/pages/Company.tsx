@@ -11,6 +11,7 @@ import { DevNotes } from "../DevNotes";
 import { daysBetween, entityName, fmtCap, fmtClock, fmtCompact, fmtDate, fmtNum, fmtPct, fmtPrice, localToday, personName, relativeDay } from "../format";
 import { useDeskIntraday } from "../intraday";
 import { rememberTicker } from "../preferences";
+import { CompanyStatements } from "./company/Statements";
 
 type DailyRange = "1M" | "3M" | "6M" | "YTD" | "1Y" | "5Y" | "ALL";
 type Range = "1D" | "5D" | DailyRange;
@@ -377,13 +378,15 @@ export default function CompanyPage() {
         <Card className="desk-span-5" title={isPresentation && company.options ? "Peers" : "Compared with the index"} subtitle={isPresentation && company.options ? `${company.industry ?? company.sector} · largest first` : "Returns of this company, its sector and the S&P 500"}>
           {isPresentation && company.options ? <PeerList peers={peers} /> : <Comparison company={company} />}
         </Card>
+
+        <CompanyStatements cik={cik} />
       </div>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", marginTop: 22 }}>
         <Link className="desk-button" to={`/company/${encodeURIComponent(company.registryTicker)}`}>
           Full analysis in the classic view <ArrowUpRight size={14} aria-hidden="true" />
         </Link>
-        <span className="desk-muted" style={{ fontSize: 12.5 }}>Financial statements, filings, valuation and sentiment are in the classic company page.</span>
+        <span className="desk-muted" style={{ fontSize: 12.5 }}>Filings, valuation and sentiment are in the classic company page.</span>
       </div>
       <DevNotes page="company" />
     </div>

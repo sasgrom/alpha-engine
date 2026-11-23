@@ -47,7 +47,8 @@ export const DEV_NOTES = {
   },
   company: {
     missing: [
-      "Financial statements, filings, valuation and sentiment: still in the classic company page.",
+      "Filings and the documents reader, valuation and sentiment: still in the classic company page.",
+      "Statements: annual and trailing-twelve-month views, and a chart per line. The table shows quarters only.",
       "Guidance history and the engine's reading for this company.",
       "Exact times for 8-Ks absent from the release calendar: those markers are explicitly filing-date only; calendar releases carry their exact ET publication time.",
       "Analyst consensus: no estimates feed is collected.",
