@@ -16,8 +16,10 @@
  *                          and each company's record against its own guidance
  *   screen.json            the Screener's fundamentals for all companies: the last four quarters' revenue, net
  *                          income, free cash flow and diluted earnings per share, and the three-month dollar volume
+ *   filings-latest.json    the last 90 days' filings across all companies, newest first (the Today page's feed)
  *   filings/<cik>.json     five years of 10-K, 10-Q and 8-K filings with the cached exhibits of the earnings releases,
- *                          from the release calendar (D:\research\alpha-engine\engine\events, --calendar)
+ *                          from the release calendar (D:\research\alpha-engine\engine\events, --calendar) and, for the
+ *                          days since the calendar was built, from the nightly SEC cache's manifests (--exhibits)
  *
  *   npx tsx scripts/build-desk-company.mts [--source <fundamentals standard folder>] [--guidance <guidance build folder>]
  *                                           [--prices <standard prices daily folder>] [--holders <13F standard folder>]
@@ -37,10 +39,10 @@ import { createHash } from "node:crypto";
 import { createReadStream, existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { createInterface } from "node:readline";
-import { DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyGuidance, type DeskCompanyIndex, type DeskCompanyInsiders, type DeskScreen, type DeskScreenCompany } from "../contracts/desk-company";
+import { DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyFilings, type DeskCompanyGuidance, type DeskCompanyIndex, type DeskCompanyInsiders, type DeskScreen, type DeskScreenCompany } from "../contracts/desk-company";
 import {
-  buildDeskCompanyActions, buildDeskCompanyFilings, buildDeskCompanyGuidance, buildDeskCompanyHolders, buildDeskCompanyInsiders, buildDeskCompanyStatements, buildDeskGuidanceMarket, buildDeskInsiderMarket, buildDeskScreenCompany, isGuidanceRow,
-  type AdjustedEpsActual, type CalendarFilingRow, type GuidanceStatementRow, type InsiderFilingDoc, type StandardCompanyDoc, type StandardField, type StandardPriceRow, type ThirteenFCompanyQuarter,
+  buildDeskCompanyActions, buildDeskCompanyFilings, buildDeskLatestFilings, calendarRowsFromCache, buildDeskCompanyGuidance, buildDeskCompanyHolders, buildDeskCompanyInsiders, buildDeskCompanyStatements, buildDeskGuidanceMarket, buildDeskInsiderMarket, buildDeskScreenCompany, isGuidanceRow,
+  type AdjustedEpsActual, type CachedFilingEntry, type CalendarFilingRow, type GuidanceStatementRow, type InsiderFilingDoc, type StandardCompanyDoc, type StandardField, type StandardPriceRow, type ThirteenFCompanyQuarter,
 } from "../worker/lib/desk-company";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 
@@ -114,6 +116,8 @@ const calendarFiles = ["filings-50.jsonl", "filings-rest.jsonl", "filings-six.js
 if (calendarFiles.slice(0, 2).some((file) => !existsSync(file))) throw new Error(`Release calendar not found at ${calendarDir}; nothing was changed`);
 const filingRows = new Map<number, CalendarFilingRow[]>();
 let filingsAsOf: string | null = null;
+// each calendar file ends on the day it was built; a company's later filings come from the nightly cache (below)
+const calendarEnds = new Map<string, string>(), calendarFileOf = new Map<number, string>();
 for (const file of calendarFiles.filter((name) => existsSync(name))) {
   for await (const line of createInterface({ input: createReadStream(file, "utf8"), crlfDelay: Infinity })) {
     if (!line) continue;
@@ -123,13 +127,28 @@ for (const file of calendarFiles.filter((name) => existsSync(name))) {
       isEarningsRelease: row.isEarningsRelease, primaryDoc: row.primaryDoc, cachedFiles: row.isEarningsRelease ? row.cachedFiles : [],
     }]);
     if (filingsAsOf === null || row.filingDate > filingsAsOf) filingsAsOf = row.filingDate;
+    if (row.filingDate > (calendarEnds.get(file) ?? "")) calendarEnds.set(file, row.filingDate);
+    calendarFileOf.set(row.cik, file);
   }
 }
 if (!filingsAsOf) throw new Error(`Release calendar at ${calendarDir} holds no filings; nothing was changed`);
+const calendarAsOf = filingsAsOf;
 // The exhibits of an earnings release are taken from the exhibit cache itself (the folder the release-figure builder
 // reads), because the calendar of the research 50 does not list them: every cached file named <accession>.ex*.htm.
 const exhibitCache = path.resolve(arg("--exhibits") ?? "worker/cache/edgar");
 if (!existsSync(exhibitCache)) throw new Error(`Exhibit cache not found at ${exhibitCache}; nothing was changed`);
+// The filings since the calendar was built, from the manifests the nightly SEC fetch keeps beside the cached documents
+// (worker/edgar-fetch.mts). A manifest that cannot be read stops the build: the previous files stay in place.
+let filingsFromCache = 0;
+for (const [cik, rows] of filingRows) {
+  const manifestFile = path.join(exhibitCache, String(cik), "manifest.json");
+  if (!existsSync(manifestFile)) continue;
+  const added = calendarRowsFromCache({ cik, calendar: rows, cached: JSON.parse(readFileSync(manifestFile, "utf8")) as CachedFilingEntry[], calendarAsOf: calendarEnds.get(calendarFileOf.get(cik)!)! });
+  if (!added.length) continue;
+  filingRows.set(cik, [...rows, ...added]);
+  filingsFromCache += added.length;
+  for (const row of added) if (row.filingDate > filingsAsOf) filingsAsOf = row.filingDate;
+}
 function withCachedExhibits(cik: number, rows: CalendarFilingRow[]): CalendarFilingRow[] {
   const directory = path.join(exhibitCache, String(cik));
   if (!existsSync(directory)) return rows;
@@ -204,6 +223,7 @@ const hash = createHash("sha256");
 // The hash covers what the page shows, not the build time, so unchanged standards give an unchanged hash.
 const stable = (value: { builtAt: string }) => { const { builtAt: _builtAt, ...rest } = value; return JSON.stringify(rest); };
 const companies: DeskCompanyIndex["companies"] = [];
+const filedLists: DeskCompanyFilings[] = [];
 let bytes = 0, withGuidance = 0, withActions = 0, withHolders = 0, withFilings = 0, outOfScale = 0, pricesAsOf: string | null = null;
 const insiderInputs: Array<{ cik: number; ticker: string; filings: InsiderFilingDoc[]; at: number }> = [];
 const screen: DeskScreenCompany[] = [];
@@ -226,7 +246,7 @@ for (const name of files) {
     insiderInputs.push({ cik: doc.cik, ticker: doc.ticker, filings, at: companies.length });
   }
   const filed = buildDeskCompanyFilings({ cik: doc.cik, ticker: doc.ticker, rows: withCachedExhibits(doc.cik, filingRows.get(doc.cik) ?? []), asOf: filingsAsOf, builtAt });
-  if (filed) withFilings++;
+  if (filed) { withFilings++; filedLists.push(filed); }
   const texts = [stable(statements), stable(guidance), actions ? stable(actions) : "null", holders ? stable(holders) : "null", filed ? stable(filed) : "null"];
   hash.update(`${doc.cik}\0${texts.join("\0")}\0`);
   bytes += texts.reduce((sum, text) => sum + text.length, 0);
@@ -267,6 +287,10 @@ const guidanceMarket = buildDeskGuidanceMarket({ companies: guided, standard, bu
 hash.update(`guidance-market|${guidanceMarket ? stable(guidanceMarket) : "null"}|`);
 if (guidanceMarket && !dryRun) writeJsonAtomic(path.join(out, "guidance-market.json"), guidanceMarket);
 const screenFile: DeskScreen = { schemaVersion: DESK_COMPANY_SCHEMA_VERSION, standard, pricesAsOf, builtAt, companies: screen };
+// the Today page's feed: the last 90 days' filings across all companies
+const latestFilings = buildDeskLatestFilings({ companies: filedLists, asOf: filingsAsOf, builtAt });
+hash.update(`filings-latest|${stable(latestFilings)}|`);
+if (!dryRun) writeJsonAtomic(path.join(out, "filings-latest.json"), latestFilings);
 hash.update(`screen|${stable(screenFile)}|`);
 if (!dryRun) writeJsonAtomic(path.join(out, "screen.json"), screenFile);
 const summary: DeskCompanyIndex = {
@@ -276,4 +300,4 @@ const summary: DeskCompanyIndex = {
 };
 if (!dryRun) writeJsonAtomic(path.join(out, "index.json"), summary, true);
 const empty = companies.filter((company) => company.quarters === 0).length;
-console.log(`[desk-company] ${dryRun ? "dry run · " : ""}${companies.length} companies · statements from ${standard} (${quarters} quarters, ${empty} without own quarters, ${outOfScale} share or per-share figures marked out of scale) · guidance ${guidanceBuild.guidanceVersion} for ${withGuidance} (adjusted earnings ${adjustedVersion ?? "not read"} for ${adjustedActuals.size} companies) · splits and dividends for ${withActions} (prices to ${pricesAsOf}) · holders ${holdersBuild.buildVersion} for ${withHolders} (to ${holdersPeriod}) · insiders ${insidersFinal.buildVersion} for ${withInsiders} (filings to ${insidersAsOf}) · filings for ${withFilings} (calendar to ${filingsAsOf}) · ${(bytes / 1_048_576).toFixed(1)} MB · hash ${summary.contentHash.slice(0, 12)} · ${out}`);
+console.log(`[desk-company] ${dryRun ? "dry run · " : ""}${companies.length} companies · statements from ${standard} (${quarters} quarters, ${empty} without own quarters, ${outOfScale} share or per-share figures marked out of scale) · guidance ${guidanceBuild.guidanceVersion} for ${withGuidance} (adjusted earnings ${adjustedVersion ?? "not read"} for ${adjustedActuals.size} companies) · splits and dividends for ${withActions} (prices to ${pricesAsOf}) · holders ${holdersBuild.buildVersion} for ${withHolders} (to ${holdersPeriod}) · insiders ${insidersFinal.buildVersion} for ${withInsiders} (filings to ${insidersAsOf}) · filings for ${withFilings} (calendar to ${calendarAsOf}, with ${filingsFromCache} later ones from the nightly cache to ${filingsAsOf}) · ${(bytes / 1_048_576).toFixed(1)} MB · hash ${summary.contentHash.slice(0, 12)} · ${out}`);

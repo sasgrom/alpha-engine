@@ -1,9 +1,11 @@
 import { z } from "zod";
-import { and, desc, eq, inArray, sql, count } from "drizzle-orm";
+import { and, eq, sql, count } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import type { DeskLatestFilings } from "@contracts/desk-company";
 import { createRouter, authedQuery, effectiveUserId } from "../middleware";
 import { getDb } from "../queries/connection";
-import { companies, filings, userUniverse } from "@db/schema";
+import { companies, userUniverse } from "@db/schema";
+import { latestWatchlistFilings, readDeskCompanyFile } from "../services/desk-company-files";
 import { recordUniverseAction } from "../services/runner";
 import { companyInDb, invalidateScreenerCache } from "../services/membership";
 import { latestMacro } from "../services/macro";
@@ -19,28 +21,16 @@ export const dashboardRouter = createRouter({
    * personal world, not a global firehose). Empty universe → empty feed;
    * the page empty-state points at Universe to add tickers.
    */
-  latestFilings: authedQuery.input(z.object({ limit: z.number().default(15) })).query(async ({ input, ctx }) => {
+  latestFilings: authedQuery.input(z.object({ limit: z.number().int().min(1).max(100).default(15) })).query(async ({ input, ctx }) => {
     const db = getDb();
     const myCiks = await db
       .select({ cik: userUniverse.cik })
       .from(userUniverse)
       .where(and(eq(userUniverse.userId, effectiveUserId(ctx)), eq(userUniverse.active, true)));
     if (myCiks.length === 0) return [];
-    return db
-      .select({
-        id: filings.id,
-        cik: filings.cik,
-        ticker: companies.ticker,
-        name: companies.name,
-        form: filings.form,
-        filingDate: filings.filingDate,
-        accessionNo: filings.accessionNo,
-      })
-      .from(filings)
-      .innerJoin(companies, eq(filings.cik, companies.cik))
-      .where(inArray(filings.cik, myCiks.map((r) => r.cik)))
-      .orderBy(desc(filings.filingDate), desc(filings.id))
-      .limit(input.limit);
+    // The feed is read from the desk's own file (scripts/build-desk-company.mts: the release calendar and, after it,
+    // the nightly SEC cache). The app's filings table is not read: nothing has filled it since 2026-11-05.
+    return latestWatchlistFilings(readDeskCompanyFile<DeskLatestFilings>("filings-latest.json"), myCiks.map((row) => row.cik), input.limit);
   }),
 
   /** 4m (D46): the FRED regime pack's latest values — the Stage 4 seed card. */

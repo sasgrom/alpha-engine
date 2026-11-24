@@ -168,7 +168,8 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 - **Company page on the standard data:**
   - [x] Financial statements (2026-11-22, `82491c7`): 20 quarters of income, balance sheet and cash flow lines from the
     standard fundamentals v3.1, as first reported; hover shows the filing date and XBRL tag; a later different figure
-    is marked. Builder `scripts/build-desk-company.mts` (manual job `desk-company-statements`), 500 companies.
+    is marked. Builder `scripts/build-desk-company.mts` (job `desk-company-statements`, since 2026-11-24
+    run every night after the SEC fetch), 500 companies.
   - [x] Annual and trailing-year views; a chart per line (2026-11-22). 40 quarters; a fiscal year or trailing year is
     four consecutive quarters as known at the last one's report; share counts and per-share lines on today's share
     basis; figures out of scale are named, not shown. Checked against the filed annual facts by

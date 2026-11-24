@@ -12,7 +12,7 @@
  * filing) are marked and enter none of these figures.
  */
 import {
-  DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyActions, type DeskCompanyFilings, type DeskCompanyGuidance, type DeskCompanyHolders, type DeskCompanyInsiders,
+  DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyActions, type DeskCompanyFilings, type DeskLatestFilings, type DeskCompanyGuidance, type DeskCompanyHolders, type DeskCompanyInsiders,
   type DeskCompanyStatements, type DeskScreenCompany,
   type DeskGuidanceChange, type DeskGuidanceMarket, type DeskGuidanceRecord,
   type DeskInsiderCompanyNet, type DeskInsiderMarket, type DeskInsiderMarketTrade, type DeskInsiderWindow,
@@ -916,6 +916,57 @@ export interface CalendarFilingRow {
   isEarningsRelease: boolean;
   primaryDoc: string | null;
   cachedFiles: Array<{ name: string; bytes: number }>;
+}
+
+/** A filing as the nightly cache's manifest lists it (worker/edgar-fetch.mts; only the fields used here). */
+export interface CachedFilingEntry {
+  accessionNo: string;
+  form: string;
+  filingDate: string;
+  reportDate?: string | null;
+  primaryDoc?: string | null;
+  acceptedEt?: string | null;
+  items?: string | null;
+}
+
+/**
+ * The filings the nightly cache holds beyond the release calendar. The calendar is a pinned research file that ends on
+ * the day it was built; the cache is refreshed every night. A cached 10-K, 10-Q or 8-K (or an amendment) is added when
+ * the calendar does not list its accession and it was filed on or after the calendar's last day: before that day the
+ * calendar is complete and is the only source. An 8-K is an earnings release when its items name 2.02; a cached entry
+ * without items (written before the cache kept them) is not marked as one.
+ */
+export function calendarRowsFromCache(params: { cik: number; calendar: CalendarFilingRow[]; cached: CachedFilingEntry[]; calendarAsOf: string }): CalendarFilingRow[] {
+  const listed = new Set(params.calendar.map((row) => row.accessionNo));
+  const rows: CalendarFilingRow[] = [];
+  for (const entry of params.cached) {
+    if (!/^(10-K|10-Q|8-K)(\/A)?$/.test(entry.form) || !/^\d{4}-\d{2}-\d{2}$/.test(entry.filingDate)) continue;
+    if (entry.filingDate < params.calendarAsOf || listed.has(entry.accessionNo)) continue;
+    listed.add(entry.accessionNo);
+    const items = entry.items?.trim() ? entry.items.trim() : null;
+    rows.push({
+      cik: params.cik, accessionNo: entry.accessionNo, form: entry.form, filingDate: entry.filingDate, reportDate: entry.reportDate?.trim() ? entry.reportDate : null,
+      acceptedEt: entry.acceptedEt ?? null, items,
+      isEarningsRelease: /^8-K/.test(entry.form) && items !== null && /(^|,)2\.02(,|$)/.test(items.replace(/\s/g, "")),
+      primaryDoc: entry.primaryDoc?.trim() ? entry.primaryDoc : null, cachedFiles: [],
+    });
+  }
+  return rows;
+}
+
+/** The newest filings across companies: everything filed in the last `days` before the newest filing date, newest first. */
+export function buildDeskLatestFilings(params: { companies: DeskCompanyFilings[]; asOf: string; builtAt: string; days?: number }): DeskLatestFilings {
+  const days = params.days ?? 90;
+  const since = new Date(Date.parse(params.asOf) - days * DAY).toISOString().slice(0, 10);
+  const filings: DeskLatestFilings["filings"] = [];
+  for (const company of params.companies) {
+    for (const filing of company.filings) {
+      if (filing.filed < since) break; // a company's list is newest first
+      filings.push({ cik: company.cik, ticker: company.ticker, accession: filing.accession, form: filing.form, filed: filing.filed, acceptedEt: filing.acceptedEt, earnings: filing.earnings === true });
+    }
+  }
+  filings.sort((a, b) => b.filed.localeCompare(a.filed) || (b.acceptedEt ?? "").localeCompare(a.acceptedEt ?? "") || b.accession.localeCompare(a.accession));
+  return { schemaVersion: DESK_COMPANY_SCHEMA_VERSION, asOf: params.asOf, days, builtAt: params.builtAt, filings };
 }
 
 /** A cached exhibit's name: the accession without dashes, ".ex", an optional name, ".htm". Nothing else is ever opened. */

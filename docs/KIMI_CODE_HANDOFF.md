@@ -4502,3 +4502,49 @@ delivered.
   reads, for the owner to confirm by name before any drop (AGENTS.md section 3); one web-server and one scheduler
   restart to load the smaller server and registry.
 - Gates: `npm run check`, 256 files / 1,582 tests, `npm run build`, `git diff --check`.
+
+## 240. Claude (Fable 5.2): source freshness check; the desk's filings now follow the nightly SEC cache — 2026-11-24T09:30Z
+
+The owner asked whether the SEC forms arrive late, and for a check of every source. Evidence is the data's own newest
+dates, not job status (every scheduled collector reported "done" within a day).
+
+- **On time (raw collectors):** 10-K/10-Q/8-K documents for 502 companies (newest filing 2026-11-20; nightly at 02:00
+  local, so a filing waits 9 to 20 hours); SEC company facts (filed to 2026-11-23); 13F (306 funds for the September
+  quarter, newest filing 2026-11-20); Schwab prices and chains (2026-11-23); standard prices and the split calendar
+  (2026-11-23); Stocktwits (hourly); Kalshi and Polymarket (capture of 2026-11-24T00:35Z: 4,221 Kalshi company
+  quotes for 69 companies, 4,153 Kalshi macro, 112 Polymarket macro, no errors).
+- **Late, because nothing scheduled builds them:** the release calendar behind the desk's filings list (a pinned
+  research file of 2026-11-10/12); the insider standard (forms to 2026-11-13, lab fetch by hand); the guidance
+  standard (releases to 2026-11-10; 14 guided companies have reported since); FINRA short interest (archive to the
+  2026-10-30 settlement, fetched by hand).
+- **Stale, because the page read an old app table nothing fills:** Today "Latest filings" (`filings`: 51 companies,
+  newest 2026-11-05), Today "Macro backdrop" (`macro_points`: 8 series, newest 2026-11-06, while the FRED archive
+  on D: holds 22 series to 2026-11-19/20 and is fetched on Sundays only), the company page's earnings markers
+  (`events`, 2026-11-05) and short interest (`short_interest`: 50 companies, 2026-10-15).
+- **Defect found:** no cached filing carried its acceptance time (0 of 330,742 manifest entries).
+  `worker/lib/edgar.ts` expects the old 14-digit form; the SEC's submissions pages give an ISO time, so `eventTs`
+  always fell back to midnight. The cache also never kept an 8-K's item codes.
+
+**Fixed in this commit (filings only):**
+- `worker/lib/edgar-listing.ts` (new): the same submissions pages read with `acceptedEt` (New York wall clock, by
+  the calendar's own `acceptanceEt`) and `items`. `worker/edgar-fetch.mts` uses it and fills both fields on stored
+  entries that lack them (a stored value is never replaced). `edgar.ts` is untouched on purpose: the release
+  calendar's code fingerprint includes it. `eventTs` is written exactly as before.
+- `scripts/build-desk-company.mts`: after the calendar, each company's later 10-K/10-Q/8-K filings are added from
+  the cache manifests (`calendarRowsFromCache`: accession not in the calendar, filed on or after that calendar
+  file's last day; an 8-K is an earnings release by item 2.02). Dry run: 212 later filings, list to 2026-11-20.
+  New file `filings-latest.json` (last 90 days across companies).
+- `dashboard.latestFilings` reads that file filtered by the viewer's watchlist; the `filings` table is no longer
+  read by any page. Today marks an earnings release by name.
+- Registry: `desk-company-statements` is now scheduled after `edgar-fetch-daily` (was manual), so the desk files
+  rebuild every night after the SEC fetch.
+- Verified on one company before the nightly run (`--only AAPL`): 462 of 494 entries got a time, 238 their items.
+- Gates: `npm run check`, 259 files / 1,595 tests, `npm run build`, `git diff --check`.
+
+**Not done, in order of value:** a scheduled daily Form 3/4/5 fetch and insider build (lab
+`src/insiders/edgar-insiders.mts`, by hand so far); the Today macro card from the FRED archive and FRED daily
+instead of weekly; short interest from the FINRA archive for all companies; guidance for the companies that
+reported since 2026-11-10 (local model on the GPU: needs the owner's go). Not fetched at all: Form 144, analyst
+estimates, a forward earnings-date calendar, S&P index-change announcements, Polymarket company markets.
+**Owner action:** the Schwab login ends Wed 25 Nov about 15:28 local (`npx tsx worker/schwab-callback.mts`).
+**Still open from section 239:** the classic styles in `src/index.css`; the table list for the owner.

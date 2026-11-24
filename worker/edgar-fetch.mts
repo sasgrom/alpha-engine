@@ -29,12 +29,17 @@ function assertDiskSpace() {
     // statfs unavailable → don't block the run on a failed check
   }
 }
-import { fetchDoc, fetchFilingDocument, isEightKForm, isPermanentSecMissing, listFilingDocs, listFilings, loadEdgarUniverse, realCacheRoot, shouldDownloadExhibit, type EdgarFiling } from "./lib/edgar";
+import { fetchDoc, fetchFilingDocument, isEightKForm, isPermanentSecMissing, listFilingDocs, loadEdgarUniverse, realCacheRoot, shouldDownloadExhibit, type EdgarFiling } from "./lib/edgar";
+import { fillFilingDetails, listFilingsDetailed } from "./lib/edgar-listing";
 import { startProgress } from "./lib/progress";
 import { writeJsonAtomic } from "./lib/json-file";
 
 export interface CachedExhibitFile { name: string; size: number; sha256: string }
 export interface ManifestEntry extends EdgarFiling {
+  /** New York wall clock of the SEC's acceptance and an 8-K's item codes (lib/edgar-listing). Entries written before
+   * 2026-11-24 lack both until the next run fills them from the same listing. */
+  acceptedEt?: string | null;
+  items?: string | null;
   docName: string | null;
   fetched: boolean;
   scored: boolean;
@@ -108,7 +113,7 @@ for (const co of universe) {
   } else {
     // One bad CIK must never kill the full crawl.
     let filingsAll: EdgarFiling[];
-    try { filingsAll = await listFilings(co.cik); }
+    try { filingsAll = await listFilingsDetailed(co.cik); }
     catch (err) { prog.log(`x ${co.ticker} (CIK ${co.cik}): company-level error, SKIPPED — ${String(err).slice(0, 150)}`); continue; }
     filings = filingsAll;
   }
@@ -124,6 +129,8 @@ for (const co of universe) {
       manifest.push(entry);
       known.set(f.accessionNo, entry);
       fresh++;
+    } else {
+      fillFilingDetails(entry, f as ManifestEntry);
     }
     if (exhibitsOnly && !entry.fetched) continue;
     // legacy errors (pre-dead-flag runs) get two last chances, not infinity

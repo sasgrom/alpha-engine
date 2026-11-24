@@ -463,11 +463,34 @@ export interface DeskCompanyFilings {
   schemaVersion: typeof DESK_COMPANY_SCHEMA_VERSION;
   cik: number;
   ticker: string;
-  /** The last filing date the calendar holds for any company: nothing after it is listed. */
+  /** The last filing date held for any company (release calendar, then the nightly SEC cache): nothing after it is listed. */
   asOf: string;
   builtAt: string;
   /** Newest first, the last five years. */
   filings: DeskCompanyFiling[];
+}
+
+/** One line of the newest filings across companies (the Today page's feed). */
+export interface DeskLatestFiling {
+  cik: number;
+  ticker: string;
+  accession: string;
+  form: string;
+  filed: string;
+  /** New York wall clock of the SEC's acceptance; null where the source does not give it. */
+  acceptedEt: string | null;
+  earnings: boolean;
+}
+
+/** The filings of the last days across all companies, newest first. */
+export interface DeskLatestFilings {
+  schemaVersion: typeof DESK_COMPANY_SCHEMA_VERSION;
+  /** The newest filing date held for any company. */
+  asOf: string;
+  /** How many days back from asOf the list reaches. */
+  days: number;
+  builtAt: string;
+  filings: DeskLatestFiling[];
 }
 
 /** A cached release exhibit as plain text. */

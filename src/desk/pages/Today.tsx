@@ -276,7 +276,7 @@ export default function Today() {
                 <a key={filing.id} className="desk-list-row" href={`https://www.sec.gov/Archives/edgar/data/${filing.cik}/${filing.accessionNo.replaceAll("-", "")}`} target="_blank" rel="noreferrer">
                   <span className="desk-list-main">
                     <span className="desk-ticker" style={{ minWidth: 52 }}>{byCik.get(filing.cik)?.ticker ?? filing.ticker}</span>
-                    <span className="name">{FORM_LABELS[filing.form] ?? filing.form} <span className="desk-muted">· {filing.form}</span></span>
+                    <span className="name">{filing.earnings ? "Earnings release" : FORM_LABELS[filing.form] ?? filing.form} <span className="desk-muted">· {filing.form}</span></span>
                   </span>
                   <span className="desk-list-side desk-muted" style={{ fontSize: 12.5 }}>
                     {fmtDate(filing.filingDate, "short")} <ArrowUpRight size={13} aria-hidden="true" />
