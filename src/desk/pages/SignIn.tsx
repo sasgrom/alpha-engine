@@ -20,6 +20,8 @@ export function returnPath(next: string | null): string {
 function failureText(message: string, mode: Mode): string {
   if (/captcha/i.test(message)) return mode === "signin" ? "Solve the sum below to go on: there were several failed attempts." : "That answer was not right or the sum had expired. Here is a new one.";
   if (/username is taken/i.test(message)) return "That username is taken.";
+  if (/second factor required/i.test(message)) return "Enter the 6-digit code from your authenticator app.";
+  if (/invalid code/i.test(message)) return "That code is not right. Wait for the next one and try again.";
   const text = message.replace(/\s+—\s+/g, ": ").trim();
   return /[.!?]$/.test(text) ? text : `${text.charAt(0).toUpperCase()}${text.slice(1)}.`;
 }
@@ -35,6 +37,9 @@ export default function SignIn({ mode }: { mode: Mode }) {
   const [confirm, setConfirm] = useState("");
   const [answer, setAnswer] = useState("");
   const [error, setError] = useState<string | null>(null);
+  // the second factor is asked for only after the server has accepted the password and says the account has one
+  const [codeNeeded, setCodeNeeded] = useState(false);
+  const [code, setCode] = useState("");
   // signing in asks for the sum only after the server says so; creating an account always does
   const [sumNeeded, setSumNeeded] = useState(mode === "signup");
   const captcha = trpc.auth.captcha.useQuery(undefined, { enabled: sumNeeded, retry: false, refetchOnWindowFocus: false, staleTime: Infinity });
@@ -60,6 +65,7 @@ export default function SignIn({ mode }: { mode: Mode }) {
   };
   const failed = (message: string) => {
     if (/captcha/i.test(message)) setSumNeeded(true);
+    if (/second factor required|invalid code/i.test(message)) { setCodeNeeded(true); setCode(""); }
     if (sumNeeded) void captcha.refetch();
     setAnswer("");
     setError(failureText(message, mode));
@@ -73,7 +79,7 @@ export default function SignIn({ mode }: { mode: Mode }) {
   const passwordOk = password.length >= 12 && /[a-zA-Z]/.test(password) && /[0-9]/.test(password);
   const mismatch = confirm.length > 0 && confirm !== password;
   const ready = mode === "signin"
-    ? name.length > 0 && password.length > 0 && (!sumNeeded || answer.trim().length > 0)
+    ? name.length > 0 && password.length > 0 && (!sumNeeded || answer.trim().length > 0) && (!codeNeeded || code.trim().length >= 6)
     : nameOk && passwordOk && confirm === password && answer.trim().length > 0 && !!captcha.data;
 
   const submit = (event: FormEvent) => {
@@ -81,7 +87,7 @@ export default function SignIn({ mode }: { mode: Mode }) {
     if (!ready || busy) return;
     setError(null);
     // the sum's id and answer travel only when a sum was asked for
-    if (mode === "signin") login.mutate({ username: name, password, ...(sumNeeded && captcha.data ? { captchaId: captcha.data.id, captchaAnswer: answer.trim() } : {}) });
+    if (mode === "signin") login.mutate({ username: name, password, ...(sumNeeded && captcha.data ? { captchaId: captcha.data.id, captchaAnswer: answer.trim() } : {}), ...(codeNeeded ? { code: code.trim() } : {}) });
     else signup.mutate({ username: name, password, captchaId: captcha.data!.id, captchaAnswer: answer.trim() });
   };
   const other = mode === "signin" ? "/signup" : "/login";
@@ -127,6 +133,14 @@ export default function SignIn({ mode }: { mode: Mode }) {
                 <input id="desk-signin-sum" className="desk-input" inputMode="numeric" value={answer} onChange={(event) => setAnswer(event.target.value)} autoComplete="off" style={{ width: 96 }} />
                 <button type="button" className="desk-link" style={{ border: "none", background: "transparent", padding: 0, font: "inherit", fontSize: 12.5, cursor: "pointer" }} onClick={() => { setAnswer(""); void captcha.refetch(); }}>Another sum</button>
               </div>
+            </>
+          )}
+
+          {mode === "signin" && codeNeeded && (
+            <>
+              <label htmlFor="desk-signin-code">Code from your authenticator app</label>
+              <input id="desk-signin-code" className="desk-input" value={code} onChange={(event) => setCode(event.target.value)} inputMode="numeric" autoComplete="one-time-code" autoCapitalize="none" spellCheck={false} autoFocus />
+              <p className="desk-signin-hint">Six digits. If you lost the phone, type one of your recovery codes instead.</p>
             </>
           )}
 

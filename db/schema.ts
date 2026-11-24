@@ -902,3 +902,36 @@ export const reports = mysqlTable("reports", {
   updatedAt: timestamp("updatedAt").defaultNow().notNull().$onUpdate(() => new Date()),
 });
 export type ReportRow = typeof reports.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// Signed-in sessions and the second factor (DDL 034, owner's decision 2026-11-24).
+// A session row lets one sign-in be ended; the token itself is never stored, only its SHA-256.
+// ---------------------------------------------------------------------------
+export const userSessions = mysqlTable(
+  "user_sessions",
+  {
+    id: serial("id").primaryKey(),
+    userId: bigint("userId", { mode: "number", unsigned: true }).notNull(),
+    tokenHash: char("tokenHash", { length: 64 }).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    lastSeenAt: timestamp("lastSeenAt").defaultNow().notNull(),
+    expiresAt: timestamp("expiresAt").notNull(),
+    revokedAt: timestamp("revokedAt"),
+    ip: varchar("ip", { length: 64 }),
+    userAgent: varchar("userAgent", { length: 255 }),
+  },
+  (table) => [uniqueIndex("uq_user_sessions_token").on(table.tokenHash), index("idx_user_sessions_user").on(table.userId, table.revokedAt)],
+);
+export type UserSession = typeof userSessions.$inferSelect;
+
+/** One row per account that set up a second factor: the secret encrypted, recovery codes as hashes. */
+export const userSecondFactor = mysqlTable("user_second_factor", {
+  userId: bigint("userId", { mode: "number", unsigned: true }).primaryKey(),
+  secretEnc: varchar("secretEnc", { length: 255 }).notNull(),
+  enabledAt: timestamp("enabledAt"),
+  lastStep: bigint("lastStep", { mode: "number" }).default(0).notNull(),
+  recoveryHashes: text("recoveryHashes").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull().$onUpdate(() => new Date()),
+});
+export type UserSecondFactor = typeof userSecondFactor.$inferSelect;

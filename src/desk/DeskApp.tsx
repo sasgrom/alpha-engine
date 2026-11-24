@@ -5,6 +5,7 @@ import DeskShell from "./DeskShell";
 import { Notice, Shimmer } from "./components";
 
 const Today = lazy(() => import("./pages/Today"));
+const Security = lazy(() => import("./pages/Security"));
 const Markets = lazy(() => import("./pages/Markets"));
 const Screener = lazy(() => import("./pages/Screener"));
 const CompanyPage = lazy(() => import("./pages/Company"));
@@ -55,6 +56,7 @@ export default function DeskApp() {
           <Route path="watchlist" element={<Watchlist />} />
           <Route path="operations" element={<Operations />} />
           <Route path="messages" element={<Messages />} />
+          <Route path="security" element={<Security />} />
           <Route path="admin" element={<Admin />} />
           <Route path="*" element={<DeskNotFound />} />
         </Routes>

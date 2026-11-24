@@ -117,8 +117,8 @@ export function archiveTargets(sourceTicker: string, wanted: Map<string, number>
  * Returns the stored key so the client can verify.
  */
 export async function handleChunkUpload(req: Request): Promise<Response> {
-  const { authenticateRequest } = await import("../kimi/auth");
-  const user = await authenticateRequest(req.headers).catch(() => null);
+  const { authenticateSession } = await import("./sessions");
+  const user = await authenticateSession(req.headers).catch(() => null);
   if (!user || user.role !== "admin") {
     return Response.json({ error: "Forbidden — admin only" }, { status: 403 });
   }
@@ -150,8 +150,8 @@ export function partIndexFromKey(key: string): number | null {
  * 8-char random suffix (platform), so parsing goes through partIndexFromKey.
  */
 export async function handleListParts(req: Request): Promise<Response> {
-  const { authenticateRequest } = await import("../kimi/auth");
-  const user = await authenticateRequest(req.headers).catch(() => null);
+  const { authenticateSession } = await import("./sessions");
+  const user = await authenticateSession(req.headers).catch(() => null);
   if (!user || user.role !== "admin") {
     return Response.json({ error: "Forbidden — admin only" }, { status: 403 });
   }

@@ -4753,3 +4753,36 @@ session cookie with `SameSite=None` kept for a year; passwords the owner set ski
 session can be revoked (both need a schema change, which is his decision); an outer gate before the app if it is ever
 published beyond Tailscale (Cloudflare Access); showing the event log on the Operations page; the unstable test
 `DeskApp.member.test.tsx` (guidance redirect, about one run in four) still to fix.
+
+## 248. Claude (Fable 5.2): second factor, sessions that can be ended, sign-in attempts on the Operations page — 2026-11-24T12:25Z
+
+Owner: "implement 1,2,3 and fix One unstable older test".
+
+- **Schema (his decision; DDL 034, `db/ddl/034_sessions_and_second_factor.sql`, applied to the local app database by
+  `scripts/apply-ddl-034.mts`, CREATE TABLE IF NOT EXISTS only):** `user_sessions` (token as SHA-256, created, last
+  seen, expires, revoked, address, browser) and `user_second_factor` (secret encrypted with AES-256-GCM under a key
+  derived from the server secret, last used step, recovery codes as SHA-256). Both cascade on deleting the user.
+- **Sessions (`api/services/sessions.ts`):** the shared sign-in library (not modified) issues a token valid for a
+  year on its own. Every sign-in now records its token's hash, and `authenticateSession` (used by the tRPC context,
+  the report files and the old import handlers) accepts a request only while that row is open and within 30 days.
+  The check is cached 30 s per token; ending a session clears the cache. Sign-out, a password reset by the owner and
+  turning the second factor on end sessions. **Every cookie issued before this change is refused: everyone signs in
+  once more.** Each token carries a random `sid`, so two sign-ins in one second are two tokens (the end-to-end check
+  found that they were one).
+- **Second factor (`api/services/totp.ts`, `second-factor.ts`):** RFC 6238 codes (tested against the RFC's vectors),
+  accepted for the current 30-second step and one either side, each step once; ten single-use recovery codes. At
+  sign-in the code is asked for only after the password is right (`PRECONDITION_FAILED`, "second factor required").
+  Set-up needs the password again and a code from the app; turning it off needs the password and a code. Lost phone
+  and lost recovery codes: `npx tsx scripts/reset-second-factor.mts <username> --yes` on the home machine.
+- **Pages:** `/desk/security` (account menu, Security): set-up with a QR code (`qrcode-generator`, new dependency)
+  and the key as text, recovery codes shown once, the open sessions with End and "Sign out everywhere else". The
+  sign-in page shows the code field when the server asks. Operations, Health tab: "Sign-in attempts" (the last 24
+  hours by kind, the latest 40 events); ten failed sign-ins in an hour raise a red banner on every owner page.
+- **End-to-end check on the live server** with a throwaway account, deleted afterwards (scratch
+  `probe-security.mts`): 21 of 21 pass, including cookie attributes, an ended session refused at once, a used code
+  refused, a recovery code working once.
+- **Unstable test fixed (`64508a6`):** the guidance page asked the server for the record whatever the viewer's role;
+  the query now waits for the audience and runs only for the owner and approved reviewers.
+- Gates: `npm run check`, 276 files / 1,669 tests, `npm run build`, `git diff --check`. Web server restarted.
+- **For the owner to do:** sign in again, open Security and turn the second factor on; a password under 12
+  characters should be changed on the People page.

@@ -1,6 +1,6 @@
 import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import type { User } from "@db/schema";
-import { authenticateRequest } from "./kimi/auth";
+import { authenticateSession } from "./services/sessions";
 import { getReviewerAccess, type ReviewerAccess } from "./services/reviewer-access";
 
 export type TrpcContext = {
@@ -23,7 +23,8 @@ export async function createContext(
 ): Promise<TrpcContext> {
   const ctx: TrpcContext = { req: opts.req, resHeaders: opts.resHeaders, viewAsUserId: null };
   try {
-    ctx.user = await authenticateRequest(opts.req.headers);
+    // the token must verify AND its session must still be open (a sign-in can be ended: services/sessions.ts)
+    ctx.user = await authenticateSession(opts.req.headers);
     if (ctx.user) ctx.reviewerAccess = await getReviewerAccess(ctx.user.id);
     if (ctx.user?.role === "admin") {
       const raw = opts.req.headers.get("x-view-as");

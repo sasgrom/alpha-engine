@@ -29,6 +29,7 @@ import { sql } from "drizzle-orm";
 import { MANUALS_BUNDLED, MANUALS_BUNDLED_AT } from "../services/manuals-content";
 import { activitySummary, recentActivity } from "../services/activity";
 import { hashPassword, passwordPolicyError, usernamePolicyError } from "../services/passwords";
+import { revokeAllSessions } from "../services/sessions";
 import {
   createLocalUser,
   deleteUserCascade,
@@ -205,6 +206,8 @@ export const adminRouter = createRouter({
       const pErr = passwordPolicyError(input.password);
       if (pErr) throw new TRPCError({ code: "BAD_REQUEST", message: pErr });
       await setUserPassword(input.userId, await hashPassword(input.password));
+      // a new password ends every sign-in made with the old one
+      await revokeAllSessions(input.userId);
       return { ok: true };
     }),
 

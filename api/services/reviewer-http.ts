@@ -1,11 +1,11 @@
 import type { Context, Next } from "hono";
 import { REPORT_FILE_POLICY } from "@contracts/report-files";
-import { authenticateRequest } from "../kimi/auth";
+import { authenticateSession } from "./sessions";
 import { getReviewerAccess } from "./reviewer-access";
 
 /** Enforce NDA on direct report URLs as well as the React shell. */
 export async function reviewerReportAccess(c: Context, next: Next) {
-  const user = await authenticateRequest(c.req.raw.headers).catch(() => null);
+  const user = await authenticateSession(c.req.raw.headers).catch(() => null);
   if (!user) return c.json({ error: "Authentication required" }, 401);
   if (user.role !== "admin") {
     const access = await getReviewerAccess(user.id);

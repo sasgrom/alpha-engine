@@ -6,7 +6,7 @@
  */
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { AlertTriangle, Eye, LogOut, MessageSquare, Search } from "lucide-react";
+import { AlertTriangle, Eye, LogOut, MessageSquare, Search, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useReviewer } from "@/hooks/useReviewer";
 import { trpc, VIEW_AS_KEY } from "@/providers/trpc";
@@ -255,6 +255,9 @@ export default function DeskShell({ children }: { children: ReactNode }) {
                         {unreadCount > 0 && <span className="desk-badge accent" style={{ marginLeft: "auto" }}>{unreadCount} new</span>}
                       </Link>
                     )}
+                    <Link to="/desk/security" role="menuitem">
+                      <ShieldCheck size={15} aria-hidden="true" /> Security
+                    </Link>
                     <button type="button" role="menuitem" onClick={logout}>
                       <LogOut size={15} aria-hidden="true" /> Sign out
                     </button>

@@ -138,6 +138,25 @@ export const REPORTS: Record<string, unknown> = {
 
 /** What desk.opsHealth answers (no alerts unless a test sets some). */
 export const OPS_HEALTH: { alerts: { level: "error" | "warning"; code: string; text: string }[] } = { alerts: [] };
+/** The Security page: no second factor yet, this browser and one other sign-in. */
+export const SECURITY = {
+  secondFactor: { enabled: false, enabledAt: null as string | null, recoveryCodesLeft: 0 },
+  sessions: [
+    { id: 7, createdAt: "2026-11-24T10:00:00.000Z", lastSeenAt: "2026-11-24T12:00:00.000Z", ip: "local", userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/142.0 Safari/537.36", current: true },
+    { id: 5, createdAt: "2026-11-20T08:00:00.000Z", lastSeenAt: "2026-11-23T09:00:00.000Z", ip: "100.82.217.81", userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 19_0 like Mac OS X) AppleWebKit/605.1.15 Version/19.0 Mobile/15E148 Safari/604.1", current: false },
+  ],
+};
+
+/** The Operations page's sign-in attempts card. */
+export const SECURITY_EVENTS = {
+  checkedAt: "2026-11-24T12:00:00.000Z", lastHour: { login_failed: 12 }, lastDay: { login_failed: 12, refused: 3, login: 1 }, failedSignInsLastHour: 12, spike: true,
+  events: [
+    { at: "2026-11-24T11:59:00.000Z", kind: "login_failed", ip: "203.0.113.9", detail: "name of 5 characters" },
+    { at: "2026-11-24T11:40:00.000Z", kind: "refused", ip: "203.0.113.9", path: "/api/worker/ingest", detail: "machine route through the proxy" },
+    { at: "2026-11-24T10:00:00.000Z", kind: "login", ip: "local", detail: "user 1" },
+  ],
+};
+
 /** Whether the server offers sign-up (closed in production unless the owner opened it); a test may close it. */
 export const SIGNUP = { open: true };
 
@@ -327,6 +346,13 @@ function answer(procedure: string, role: string, input?: unknown): unknown {
     case "desk.opsHealth": return { checkedAt: "2026-11-12T20:00:00.000Z", heartbeatAt: "2026-11-12T20:00:00.000Z", alerts: OPS_HEALTH.alerts };
     case "auth.me": return { id: 1, username: "owner", name: "Ada Owner", role };
     case "auth.captcha": return { id: "sum-1", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40"><text x="10" y="26">3 + 4</text></svg>' };
+    case "auth.security": return SECURITY;
+    case "auth.secondFactorBegin": return { secret: "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP", uri: "otpauth://totp/Alpha%20Engine:ada?secret=JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP&issuer=Alpha%20Engine" };
+    case "auth.secondFactorEnable": return { recoveryCodes: ["aaaaa-bbbbb", "ccccc-ddddd"] };
+    case "auth.secondFactorDisable": return { ok: true };
+    case "auth.revokeSession": return { ok: true };
+    case "auth.revokeOtherSessions": return { ended: 1 };
+    case "desk.securityEvents": return SECURITY_EVENTS;
     case "auth.signupOpen": return { open: SIGNUP.open };
     case "auth.login": case "auth.signup": return { ok: true, role, name: "Ada Owner" };
     case "reviewer.status": return { isReviewer: false, ndaAccepted: false, ndaVersion: null, ndaTextHash: null, firstIpBound: false, tours: [] };

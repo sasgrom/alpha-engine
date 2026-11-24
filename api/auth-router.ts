@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import * as cookie from "cookie";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
@@ -12,7 +13,18 @@ import { issueCaptcha, verifyCaptcha } from "./services/captcha";
 import { loginFailed, loginGate, loginSucceeded, signupAllowed, signupOpen } from "./services/login-guard";
 import { recordEvent } from "./services/activity";
 import { recordSecurityEvent, trustedClientIp } from "./services/perimeter";
+import { listSessions, registerSession, revokeAllSessions, revokeSession, revokeToken, sessionToken, tokenHash } from "./services/sessions";
+import { beginSecondFactor, checkSecondFactor, enableSecondFactor, removeSecondFactor, secondFactorEnabled, secondFactorStatus } from "./services/second-factor";
 import { bindReviewerIp } from "./services/reviewer-access";
+
+/**
+ * A session token for one sign-in. The shared signer writes whatever claims it is given; `sid` is a random id of this
+ * sign-in, so two sign-ins of one account in the same second are still two different tokens (and two sessions that
+ * can be ended separately). The verifier reads only unionId and clientId.
+ */
+function newSessionToken(unionId: string): Promise<string> {
+  return signSessionToken({ unionId, clientId: env.appId, sid: randomUUID() } as Parameters<typeof signSessionToken>[0]);
+}
 
 /** How long the browser keeps the session cookie. */
 const SESSION_COOKIE_DAYS = 30;
@@ -46,6 +58,8 @@ export const authRouter = createRouter({
     return safe;
   }),
   logout: authedQuery.mutation(async ({ ctx }) => {
+    const current = sessionToken(ctx.req.headers);
+    if (current) await revokeToken(current);
     const opts = getSessionCookieOptions(ctx.req.headers);
     ctx.resHeaders.append(
       "set-cookie",
@@ -85,6 +99,8 @@ export const authRouter = createRouter({
         password: z.string().min(1).max(200),
         captchaId: z.string().optional(),
         captchaAnswer: z.string().optional(),
+        /** The second factor: a 6-digit code from the authenticator app, or a recovery code. Asked for only when the account has one. */
+        code: z.string().max(40).optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -108,13 +124,70 @@ export const authRouter = createRouter({
         await new Promise((resolve) => setTimeout(resolve, FAILURE_DELAY_MS));
         throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid username or password" });
       }
+      // the second factor, only after the password is right: an attacker without the password learns nothing about it
+      if (await secondFactorEnabled(user.id)) {
+        if (!input.code?.trim()) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "second factor required" });
+        const passed = await checkSecondFactor(user.id, input.code);
+        if (!passed) {
+          loginFailed(ip, input.username);
+          recordSecurityEvent({ kind: "second_factor_failed", ip, detail: `user ${user.id}` });
+          await new Promise((resolve) => setTimeout(resolve, FAILURE_DELAY_MS));
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid code" });
+        }
+        if (passed === "recovery") recordSecurityEvent({ kind: "recovery_code_used", ip, detail: `user ${user.id}` });
+      }
       loginSucceeded(ip, input.username);
       await bindReviewerIp(user.id, ip);
       await touchSignIn(user.id);
       await recordEvent(user.id, "login", { ip }); // D35: activity collection
-      const token = await signSessionToken({ unionId: user.unionId, clientId: env.appId });
+      const token = await newSessionToken(user.unionId);
+      await registerSession({ userId: user.id, token, ip, userAgent: ctx.req.headers.get("user-agent") });
+      recordSecurityEvent({ kind: "login", ip, detail: `user ${user.id}` });
       return { ...sessionCookie(ctx, user.unionId, token), role: user.role, name: user.name };
     }),
+
+  /** The viewer's own security state: the second factor and the open sessions. */
+  security: authedQuery.query(async ({ ctx }) => {
+    const current = sessionToken(ctx.req.headers);
+    return { secondFactor: await secondFactorStatus(ctx.user.id), sessions: await listSessions(ctx.user.id, current ? tokenHash(current) : null) };
+  }),
+
+  /** Starts setting up the second factor: the password again, then a secret for the authenticator app. */
+  secondFactorBegin: authedQuery.input(z.object({ password: z.string().min(1).max(200) })).mutation(async ({ input, ctx }) => {
+    if (ctx.viewAsUserId) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "read-only view-as mode" });
+    if (!(await verifyPassword(input.password, ctx.user.passwordHash))) throw new TRPCError({ code: "UNAUTHORIZED", message: "Wrong password" });
+    try { return await beginSecondFactor(ctx.user.id, ctx.user.username ?? ctx.user.name ?? String(ctx.user.id)); }
+    catch (error) { throw new TRPCError({ code: "CONFLICT", message: error instanceof Error ? error.message : "second factor is already on" }); }
+  }),
+
+  /** Confirms the set-up with a code from the app. Returns the recovery codes: shown this once, never again. */
+  secondFactorEnable: authedQuery.input(z.object({ code: z.string().min(6).max(12) })).mutation(async ({ input, ctx }) => {
+    const codes = await enableSecondFactor(ctx.user.id, input.code);
+    if (!codes) throw new TRPCError({ code: "BAD_REQUEST", message: "That code is not right. Check the app's clock and try the next code." });
+    // every other sign-in was made with the password alone: they end
+    const current = sessionToken(ctx.req.headers);
+    await revokeAllSessions(ctx.user.id, current ? tokenHash(current) : null);
+    recordSecurityEvent({ kind: "second_factor_on", ip: trustedClientIp(ctx.req.headers), detail: `user ${ctx.user.id}` });
+    return { recoveryCodes: codes };
+  }),
+
+  /** Turns the second factor off: the password and a current code (or a recovery code). */
+  secondFactorDisable: authedQuery.input(z.object({ password: z.string().min(1).max(200), code: z.string().min(6).max(40) })).mutation(async ({ input, ctx }) => {
+    if (ctx.viewAsUserId) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "read-only view-as mode" });
+    if (!(await verifyPassword(input.password, ctx.user.passwordHash)) || !(await checkSecondFactor(ctx.user.id, input.code))) throw new TRPCError({ code: "UNAUTHORIZED", message: "Wrong password or code" });
+    await removeSecondFactor(ctx.user.id);
+    recordSecurityEvent({ kind: "second_factor_off", ip: trustedClientIp(ctx.req.headers), detail: `user ${ctx.user.id}` });
+    return { ok: true };
+  }),
+
+  /** Ends one of the viewer's own sessions. */
+  revokeSession: authedQuery.input(z.object({ id: z.number().int().positive() })).mutation(async ({ input, ctx }) => ({ ok: await revokeSession(ctx.user.id, input.id) })),
+
+  /** Ends every other session of the viewer ("sign out everywhere else"). */
+  revokeOtherSessions: authedQuery.mutation(async ({ ctx }) => {
+    const current = sessionToken(ctx.req.headers);
+    return { ended: await revokeAllSessions(ctx.user.id, current ? tokenHash(current) : null) };
+  }),
 
   /**
    * Public signup (4d, D33) — creates a role="user" account only (no
@@ -157,7 +230,8 @@ export const authRouter = createRouter({
       });
       if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "signup failed" });
       await recordEvent(user.id, "signup", { ip }); // D35
-      const token = await signSessionToken({ unionId: user.unionId, clientId: env.appId });
+      const token = await newSessionToken(user.unionId);
+      await registerSession({ userId: user.id, token, ip, userAgent: ctx.req.headers.get("user-agent") });
       return { ...sessionCookie(ctx, user.unionId, token), role: user.role, name: user.name };
     }),
 });

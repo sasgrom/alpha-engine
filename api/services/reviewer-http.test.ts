@@ -1,11 +1,11 @@
 import { Hono } from "hono";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { REPORT_FILE_POLICY } from "@contracts/report-files";
-import { authenticateRequest } from "../kimi/auth";
+import { authenticateSession as authenticateRequest } from "./sessions";
 import { getReviewerAccess } from "./reviewer-access";
 import { reviewerReportAccess, reviewerSecurityHeaders } from "./reviewer-http";
 
-vi.mock("../kimi/auth", () => ({ authenticateRequest: vi.fn() }));
+vi.mock("./sessions", () => ({ authenticateSession: vi.fn() }));
 vi.mock("./reviewer-access", () => ({ getReviewerAccess: vi.fn() }));
 
 const ownerReports = Object.entries(REPORT_FILE_POLICY).filter(([, policy]) => policy.access === "owner").map(([name]) => name);

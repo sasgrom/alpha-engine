@@ -21,6 +21,7 @@ import type { EngineFlowCompany, EngineFlowIndex } from "@contracts/engine-flow"
 import type { FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
 import { operationsHealth } from "../../worker/lib/operations-health";
 import { readSourceFreshness } from "../services/source-freshness";
+import { readSecuritySummary } from "../services/security-events";
 import { loadOperationsState } from "../../worker/lib/operations-scheduler";
 import { adminQuery, createRouter, authedQuery } from "../middleware";
 import { readDeskCompanyFile } from "../services/desk-company-files";
@@ -69,7 +70,15 @@ export const deskRouter = createRouter({
     ctx.user.role === "admin" || ctx.reviewerAccess?.acceptedAt ? readDeskCompanyFile<DeskGuidanceMarket>("guidance-market.json") : null),
   engineIndex: adminQuery.query(() => readEngineFlowFile<EngineFlowIndex>("index.json")),
   engineCompany: adminQuery.input(entity).query(({ input }) => readEngineFlowFile<EngineFlowCompany>(`company/${input.cik}.json`)),
-  opsHealth: adminQuery.query(() => operationsHealth(loadOperationsState(), new Date())),
+  opsHealth: adminQuery.query(() => {
+    const health = operationsHealth(loadOperationsState(), new Date());
+    // someone guessing passwords is the owner's business at once, on every page
+    const security = readSecuritySummary();
+    if (security.spike) health.alerts.push({ level: "error", code: "sign-in-attempts", text: `${security.failedSignInsLastHour} failed sign-ins in the last hour: see Operations, Sign-in attempts.` });
+    return health;
+  }),
+  // the server's security events (refusals, failed and successful sign-ins) for the Operations page
+  securityEvents: adminQuery.query(() => readSecuritySummary()),
   // how current each data source is, by the newest day in its own data (the Operations page's Sources table)
   sourceFreshness: adminQuery.query(() => readSourceFreshness()),
 });

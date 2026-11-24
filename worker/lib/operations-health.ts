@@ -7,7 +7,7 @@ import { OPERATION_JOB_MAP } from "../../contracts/operations";
 import { operationalPushEnabled } from "./operational-push-policy";
 import type { OperationRun, OperationsState } from "./operations-scheduler";
 
-export type OperationsAlertCode = "scheduler-down" | "job-failed" | "market-run-missing" | "push-failed";
+export type OperationsAlertCode = "scheduler-down" | "job-failed" | "market-run-missing" | "push-failed" | "sign-in-attempts";
 export interface OperationsAlert { level: "error" | "warning"; code: OperationsAlertCode; text: string; jobs?: string[] }
 export interface OperationsHealth { checkedAt: string; heartbeatAt: string | null; alerts: OperationsAlert[] }
 

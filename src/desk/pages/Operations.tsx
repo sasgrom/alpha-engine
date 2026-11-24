@@ -78,6 +78,10 @@ const OWNER_TOOL_TEXT: Record<string, string> = {
 
 const ORDER: Record<string, number> = { critical: 0, error: 0, warning: 1, pending: 2, unknown: 3, ok: 4 };
 
+const SECURITY_KIND: Record<string, string> = {
+  login: "Signed in", login_failed: "Wrong password", login_locked: "Locked out", second_factor_failed: "Wrong code", recovery_code_used: "Recovery code used",
+  signup_refused: "Sign-up refused", refused: "Request refused", second_factor_on: "Second factor turned on", second_factor_off: "Second factor turned off", session_ended: "Session ended",
+};
 const SOURCE_STATUS = { current: "ok", late: "warning", failed: "error", unknown: "warning" } as const;
 const SOURCE_LABEL = { current: "Current", late: "Late", failed: "Refresh failed", unknown: "Unknown" } as const;
 
@@ -108,6 +112,7 @@ export default function Operations() {
   const report = useQuery({ queryKey: ["desk", "daily-operations"], queryFn: fetchReport, enabled: isAdmin, refetchInterval: 60_000 });
   const health = useQuery({ queryKey: ["desk", "data-health"], queryFn: fetchDataHealth, enabled: isAdmin, refetchInterval: 60_000 });
   const snapshot = useDeskSnapshot();
+  const security = trpc.desk.securityEvents.useQuery(undefined, { enabled: isAdmin, refetchInterval: 60_000, staleTime: 30_000 });
   const sources = trpc.desk.sourceFreshness.useQuery(undefined, { enabled: isAdmin, refetchInterval: 5 * 60_000, staleTime: 60_000 });
   const checks = useMemo(() => {
     const rows = [...(report.data?.checks ?? [])].sort((a, b) => (ORDER[statusKind(a.status)] ?? 3) - (ORDER[statusKind(b.status)] ?? 3));
@@ -207,6 +212,38 @@ export default function Operations() {
           ) : (
             <div className="desk-empty">The sources could not be read.</div>
           )}
+        </Card>
+
+        <Card
+          className="desk-span-12"
+          title="Sign-in attempts"
+          subtitle="What the server refused and who signed in. Addresses are the ones the proxy saw; no password is ever recorded."
+          action={security.data ? <StatusLabel status={security.data.spike ? "error" : "ok"} label={security.data.spike ? `${security.data.failedSignInsLastHour} failed sign-ins in the last hour` : `${security.data.failedSignInsLastHour} failed in the last hour`} /> : undefined}
+        >
+          {security.isLoading ? <Shimmer height={120} /> : security.data ? (
+            <>
+              <p className="desk-ink-2" style={{ margin: "0 0 10px", fontSize: 13 }}>
+                Last 24 hours: {Object.keys(security.data.lastDay).length ? Object.entries(security.data.lastDay).sort((a, b) => b[1] - a[1]).map(([kind, count]) => `${SECURITY_KIND[kind] ?? kind} ${count}`).join(" · ") : "nothing recorded"}
+              </p>
+              {security.data.events.length ? (
+                <div className="desk-table-wrap" style={{ maxHeight: 260, overflowY: "auto" }}>
+                  <table className="desk-table">
+                    <thead><tr><th>When</th><th>What</th><th>Address</th><th>Detail</th></tr></thead>
+                    <tbody>
+                      {security.data.events.slice(0, 40).map((event, index) => (
+                        <tr key={`${event.at}-${index}`}>
+                          <td className="desk-nowrap">{fmtDateTime(event.at)}</td>
+                          <td>{SECURITY_KIND[event.kind] ?? event.kind}</td>
+                          <td className="desk-ink-2">{event.ip}</td>
+                          <td className="desk-ink-2" style={{ whiteSpace: "normal" }}>{[event.path, event.detail].filter(Boolean).join(" · ")}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : <div className="desk-empty">Nothing has been refused and nobody has signed in since the log began.</div>}
+            </>
+          ) : <div className="desk-empty">The event log could not be read.</div>}
         </Card>
 
         <Card
