@@ -21,13 +21,10 @@ export const REPORT_FILE_POLICY: Record<string, ReportFilePolicy> = {
   "macro-scenarios.json": { contentType: "application/json", automatic: false, access: "reviewer" },
   "exposure-latest.json": { contentType: "application/json", automatic: false, access: "reviewer" },
   "macro-transmission-atlas.json": { contentType: "application/json", automatic: false, access: "reviewer" },
-  "expectations-report.json": { contentType: "application/json", automatic: false, access: "owner" },
   // Read by pages (Scenario Lab, Feature Lab, Analytics); served locally, not part of the automatic push.
   "pilot-exposure-evidence.json": { contentType: "application/json", automatic: false, access: "reviewer" },
   "shock-calibration.json": { contentType: "application/json", automatic: false, access: "reviewer" },
   "schwab-features.json": { contentType: "application/json", automatic: false, access: "reviewer" },
-  "weekly-metrics.json": { contentType: "application/json", automatic: false, access: "reviewer" },
-  "project-strength-review.md": { contentType: "text/markdown", automatic: false, access: "owner" },
 };
 
 export function reportFilePolicy(name: string): ReportFilePolicy {

@@ -4465,3 +4465,40 @@ delivered.
 - **Next (owner's go needed for tables):** the server procedures and services nothing calls any more, with the
   tables behind them (`factor_points` and the old probability, sentiment and digest data); the classic styles in
   `src/index.css`; the manual and paused jobs of the old pipelines (tone, cohorts, CBOE options).
+
+## 239. Claude (Fable 5.2): the rest of the clean-up, part one: procedures, old registry entries, leftover files — 2026-11-24T09:15Z
+
+- **Owner:** "go ahead with the rest of the clean-up".
+- **Server procedures.** Of 135 tRPC procedures, 71 had no caller left but tests (measured: every `trpc.x.y` in
+  `src/`, and any call from worker or script code, of which there are none). They are removed with the TypeScript
+  parser (scratch tool `remove-procedures.mjs`): the whole `jobs`, `browse`, `documents`, `series`, `pipeline`,
+  `sections`, `scope`, `screener`, `sentiment` and `digests` routers; the classic parts of `dashboard`, `universe`,
+  `company`, `prices` and `events`; `admin.factorIc`, `admin.fundFlows`, `admin.resetReviewerTour`; and the first
+  console's `workersLocal.runs / run / kill / logTail / scheduler / probe` (the launcher that spawned workers from
+  the server, GDELT's among them, and the upstream probe). 64 procedures remain, every one called by the desk.
+  - Files gone with them: `api/routers/digests.ts`, `scope.ts`, `sentiment.ts`, `document-cache.ts`, and the tests
+    of removed procedures. `api/routers/workers-local.ts` is rewritten around the scheduler's files only.
+  - `api/routers/owner-guards.test.ts` now checks the owner-only procedures that remain, that none of them starts a
+    process or an old job, that the removed launchers are gone, and that its table covers every `admin`,
+    `workersLocal` and `workersMonitor` procedure the server has.
+- **Server files nothing reaches** (scratch tool `api-reach.mjs`: roots are `api/boot.ts`, every `scripts/*.mts` and
+  every `worker/*.mts`; `api/lib` and `api/kimi` are never candidates): six, removed with their tests
+  (`api/services/execution-cost.ts`, `api/services/signals.ts`, `worker/lib/expectation-metrics.ts`,
+  `gamma-exposure.ts`, `page-data-resume.ts`, and the document cache above). 129 files are reached only by scripts
+  or workers and stay: pruning scripts is the review's own list (`docs/PROJECT_REVIEW_2026-11-22.md`).
+  - **Not cut deeper:** `api/services/runner.ts` still carries the handlers of the old job types. It also serves
+    the collectors' ingest path and the universe log, so trimming it is its own careful pass.
+- **Registry: ten more entries removed** (76 jobs to 66), none of which ran on its own: the tone lane
+  (`edgar-tone-nightly`, `tone-event-study`, `tone-ic`, `edgar-tone-readiness-audit`), the Cboe option lane
+  (`options-cboe-fetch`, `options-features`, `options-qa`) and the old cohort extraction (`expectations-cohorts`,
+  `expectations-extract`, `expectations-benchmark`; the guidance standard is built by the lab's own extraction).
+  Their scripts stay in the repository. `docs/OPERATIONS.md` edited by hand again (sections and rows removed, a
+  note in section 5).
+- **Leftover files:** `public/reports/expectations-report.json` (26 MB), `weekly-metrics.json` and
+  `project-strength-review.md` removed from the repository, the served folder and the report whitelist; 102 stale
+  precomputed page-data artifacts deleted from `worker/.runs/precomputed-page-data` (2 MB; the option snapshot's
+  compressed copy, which `schwab-snapshot` still writes, is kept).
+- **Still to do from this block:** the classic styles in `src/index.css`; the list of database tables nothing
+  reads, for the owner to confirm by name before any drop (AGENTS.md section 3); one web-server and one scheduler
+  restart to load the smaller server and registry.
+- Gates: `npm run check`, 256 files / 1,582 tests, `npm run build`, `git diff --check`.

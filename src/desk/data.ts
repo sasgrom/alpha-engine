@@ -49,7 +49,6 @@ export function useWatchlist() {
   const done = () => {
     setError(null);
     void utils.universe.list.invalidate();
-    void utils.screener.table.invalidate();
     void utils.dashboard.latestFilings.invalidate();
   };
   const add = trpc.universe.add.useMutation({ onSuccess: done, onError: (failure) => setError(failure.message) });

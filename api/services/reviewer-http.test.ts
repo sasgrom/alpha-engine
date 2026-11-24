@@ -27,7 +27,6 @@ describe("reviewer report access", () => {
     expect(ownerReports).toEqual([
       "daily-operations.json", "daily-operations.md", "weekly-coverage.json", "weekly-coverage.md",
       "daily-prices-schwab.json", "universe-coverage-50.json", "data-health.json", "data-health.md",
-      "expectations-report.json", "project-strength-review.md",
     ]);
   });
 

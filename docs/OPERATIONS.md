@@ -231,21 +231,12 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Weekly coverage and drift report | scheduled | 45 7 * * 1 | weekly-coverage.json and .md automatically pushed through reportFile after exit-ok and exposed in Workers → Weekly coverage. |
 | Alpha Bridge captain executor | paused | */2 * * * * | Local command protocol only; no production transport. |
 | 13F holdings and full-book refresh | scheduled | 0 5 * * 1,4 | Local MySQL; production transfer is a separate reviewed manual job. |
-| EDGAR local tone scoring | paused | after edgar-fetch-daily | Local MySQL/outbox only; production copy remains reviewed and manual. |
-| Quarterly cohort pack builder | paused | after edgar-exhibits-daily | Local cache only. |
-| Cohort LLM extraction | paused | after expectations-cohorts | Local research files only. |
-| Independent extraction benchmark | paused | after expectations-extract | Local benchmark artifact only. |
-| Legacy Cboe option snapshot | paused | 30 4 * * * | Local option cache; never silently merged with Schwab or DoltHub. |
-| Offline DTE option features | paused | after options-cboe-fetch | Local option-features cache. |
-| Offline option provider QA | paused | after options-features | Local QA artifacts only. |
 | Schwab token keepalive | scheduled | 0 2 */2 * * | Local credential store only. |
 | Read-only research reconciliation | manual | manual | Console/log only. |
 | Fundamental integrity and continuity audit | manual | manual | Read-only QA report; no repairs, deletions or silent interpolation. |
 | EDGAR coverage and continuity gap analysis | manual | after fundamental-integrity-audit | Read-only EDGAR remediation manifest. |
 | Schwab fundamental gap mapping | manual | after edgar-gap-analysis + schwab-context-hourly | Read-only candidate map for a later reviewed repair plan. |
 | Per-company EDGAR remediation and Schwab fallback | manual | after schwab-context-hourly | Local reviewed remediation plan; no automatic value insertion or production sync. |
-| Availability-anchored tone event study | manual | manual | Local research artifact. |
-| Tone IC and turnover evaluation | manual | manual | Local research artifact. |
 | DoltHub historical option export | manual | manual | D:-only historical research archive. |
 | DoltHub export validation | manual | after dolthub-export | Local QA artifact. |
 | Historical option feature materialization | manual | after dolthub-validate | Local historical feature archive. |
@@ -257,7 +248,6 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Facts production dry-run | manual | manual | Review console only. |
 | Reviewed signals production push | blocked | after signals-dry-review | Production only after explicit terminal review. |
 | Reviewed facts production push | blocked | after facts-dry-review | Production only after explicit terminal review. |
-| EDGAR tone readiness audit | manual | manual | Console/log only; no Ollama, ingest or manifest writes. |
 | Independent-universe and macro-regime validation | manual | manual | Console/log research evidence only. |
 | Sector-neutral portfolio evaluation | manual | manual | Console/log research evidence only. |
 | Sector volatility-target holdout evaluation | manual | manual | Console/log research evidence only. |
@@ -279,6 +269,10 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 > (sections 7 to 13, 21 and 22 of this list; the numbers of the other sections are unchanged). Their registry
 > entries and scripts are removed, except `scripts/materialize-research-factors.mts`, which stays until the factor
 > tables themselves are decided. The morning brief is paused, not removed.
+>
+> **Also retired on 2026-11-24 (handoff 239), registry entries only:** the paused and manual jobs of the old tone,
+> cohort-extraction and Cboe option lanes (39. EDGAR local tone scoring; 52. Availability-anchored tone event study; 53. Tone IC and turnover evaluation; 65. EDGAR tone readiness audit; 43. Legacy Cboe option snapshot; 44. Offline DTE option features; 45. Offline option provider QA; 40. Quarterly cohort pack builder; 41. Cohort LLM extraction; 42. Independent extraction benchmark). Their scripts are still in the repository and can
+> be run by hand; none was scheduled.
 
 ### 1. Stocktwits hourly pulse
 
@@ -844,125 +838,6 @@ npx tsx worker/alpha-bridge-agent.mts
 npx tsx scripts/13f-refresh.mts --quarters 4
 ```
 
-### 39. EDGAR local tone scoring
-
-- **ID:** `edgar-tone-nightly`
-- **Mode:** paused; **enabled by default:** no
-- **Cron:** none
-- **Dependencies:** `edgar-fetch-daily`
-- **Purpose:** Score newly cached filings with local Ollama after the expectations lane is explicitly declared stable.
-- **Input:** Cached filings, qwen3.5:9b, 32K context and existing score manifests.
-- **Output:** Local tone rows, atomic checkpoints, skip taxonomy and token/rate telemetry.
-- **Destination:** Local MySQL/outbox only; production copy remains reviewed and manual.
-- **Requirements:** server, gpu, mysql
-- **Operational note:** Paused by default. Enabling it shares the single scheduler lane, so it cannot overlap the expectations GPU run.
-
-```powershell
-npx tsx worker/edgar-tone.mts --universe edgar-universe.json --concurrency 2
-```
-
-### 40. Quarterly cohort pack builder
-
-- **ID:** `expectations-cohorts`
-- **Mode:** paused; **enabled by default:** no
-- **Cron:** none
-- **Dependencies:** `edgar-exhibits-daily`
-- **Purpose:** Build deterministic, period-aligned bounded containers from complete guidance and actual blocks.
-- **Input:** Complete EX-99 cache and filing period metadata.
-- **Output:** cohort-pack-v2.json with source hashes and explicit unpacked failures.
-- **Destination:** Local cache only.
-- **Requirements:** driveD
-- **Operational note:** Paused with the active LLM lane so the operator does not accidentally start a second full-history run.
-
-```powershell
-npx tsx worker/edgar-cohorts.mts --universe research-universe-50.json
-```
-
-### 41. Cohort LLM extraction
-
-- **ID:** `expectations-extract`
-- **Mode:** paused; **enabled by default:** no
-- **Cron:** none
-- **Dependencies:** `expectations-cohorts`
-- **Purpose:** Extract guidance, comparable actuals and factual fallback notes with atomic source-level resume.
-- **Input:** Bounded cohort packs and local Ollama; prompt/schema remain fixed by the research protocol.
-- **Output:** cohort-v2.json, structured statements, fallback notes and explicit failures.
-- **Destination:** Local research files only.
-- **Requirements:** gpu, driveD
-- **Operational note:** Paused by default. Never runs concurrently with tone because the scheduler has one execution lane.
-
-```powershell
-npx tsx worker/edgar-cohort-extract.mts --universe research-universe-50.json
-```
-
-### 42. Independent extraction benchmark
-
-- **ID:** `expectations-benchmark`
-- **Mode:** paused; **enabled by default:** no
-- **Cron:** none
-- **Dependencies:** `expectations-extract`
-- **Purpose:** Compare extraction with the independent gold benchmark before any reviewed status is allowed.
-- **Input:** Official gold statements and current cohort extraction results.
-- **Output:** Recall and exact-field issue report without treating extra review items as automatic errors.
-- **Destination:** Local benchmark artifact only.
-- **Requirements:** review
-- **Operational note:** A report cannot become reviewed merely because extraction completed.
-
-```powershell
-npx tsx worker/expectations-benchmark.mts --cohorts
-```
-
-### 43. Legacy Cboe option snapshot
-
-- **ID:** `options-cboe-fetch`
-- **Mode:** paused; **enabled by default:** no
-- **Cron:** 30 4 * * *
-- **Dependencies:** none
-- **Purpose:** Maintain the independent delayed-Cboe provider lane for cross-provider checks when explicitly enabled.
-- **Input:** Cboe delayed public chains for the current research universe.
-- **Output:** Immutable raw and normalized provider-specific snapshots.
-- **Destination:** Local option cache; never silently merged with Schwab or DoltHub.
-- **Requirements:** network, driveD
-- **Operational note:** Paused to avoid maintaining duplicate current-provider lanes without a research need.
-
-```powershell
-npx tsx worker/options-fetch.mts --source cboe --universe research-universe-50.json
-```
-
-### 44. Offline DTE option features
-
-- **ID:** `options-features`
-- **Mode:** paused; **enabled by default:** no
-- **Cron:** none
-- **Dependencies:** `options-cboe-fetch`
-- **Purpose:** Compute ATM IV, term slope, skew, put/call and liquidity features from the latest Cboe chain per ticker.
-- **Input:** Normalized Cboe snapshots.
-- **Output:** DTE-bucket feature sets and manifest with actual DTE and honest nulls.
-- **Destination:** Local option-features cache.
-- **Requirements:** offline computation only
-- **Operational note:** Dependency-triggered only when the legacy Cboe lane is enabled.
-
-```powershell
-npx tsx worker/option-features.mts
-```
-
-### 45. Offline option provider QA
-
-- **ID:** `options-qa`
-- **Mode:** paused; **enabled by default:** no
-- **Cron:** none
-- **Dependencies:** `options-features`
-- **Purpose:** Audit provider coverage, duplicates, quote quality, IV/Greeks, timestamps and manifest completeness.
-- **Input:** All normalized option snapshots and provider manifest.
-- **Output:** options-qa.json and options-qa.md.
-- **Destination:** Local QA artifacts only.
-- **Requirements:** review
-- **Operational note:** Data quality is not evidence of predictive value.
-
-```powershell
-npx tsx worker/options-qa.mts
-```
-
 ### 46. Schwab token keepalive
 
 - **ID:** `schwab-refresh-manual`
@@ -1063,40 +938,6 @@ npx tsx scripts/schwab-fundamental-gap-map.mts
 
 ```powershell
 npx tsx scripts/remediate-company.mts
-```
-
-### 52. Availability-anchored tone event study
-
-- **ID:** `tone-event-study`
-- **Mode:** manual; **enabled by default:** no
-- **Cron:** none
-- **Dependencies:** none
-- **Purpose:** Estimate abnormal returns and CAR after filings with conservative post-close availability.
-- **Input:** Local tone events, prices and SPY.
-- **Output:** Event-study JSON used by the Analytics CAR chart.
-- **Destination:** Local research artifact.
-- **Requirements:** mysql, review
-- **Operational note:** Measurement windows are not automatically tradable signals.
-
-```powershell
-npx tsx scripts/tone-event-study.mts
-```
-
-### 53. Tone IC and turnover evaluation
-
-- **ID:** `tone-ic`
-- **Mode:** manual; **enabled by default:** no
-- **Cron:** none
-- **Dependencies:** none
-- **Purpose:** Validate slow tone against 63/126-session excess returns with block-bootstrap uncertainty.
-- **Input:** Local tone, prices and the production v1 model provenance.
-- **Output:** IC, quantile spread, autocorrelation, turnover and confidence intervals.
-- **Destination:** Local research artifact.
-- **Requirements:** mysql, review
-- **Operational note:** A research evaluation, not a scheduled production factor rebuild.
-
-```powershell
-npx tsx scripts/tone-ic.mts
 ```
 
 ### 54. DoltHub historical option export
@@ -1284,23 +1125,6 @@ npx tsx scripts/push-local-signals.mts --source edgar
 
 ```powershell
 npx tsx scripts/push-local-facts.mts --universe research-universe-50.json
-```
-
-### 65. EDGAR tone readiness audit
-
-- **ID:** `edgar-tone-readiness-audit`
-- **Mode:** manual; **enabled by default:** no
-- **Cron:** none
-- **Dependencies:** none
-- **Purpose:** Inspect exact deterministic skips, pending work and prompt sizes before any long GPU run.
-- **Input:** Cached filings, manifests and the production tone preparation path.
-- **Output:** Read-only skip taxonomy, planned calls, windows and prompt-character totals.
-- **Destination:** Console/log only; no Ollama, ingest or manifest writes.
-- **Requirements:** driveD, review
-- **Operational note:** Use --manifest-only for the instant manifest report or the full CPU scan before enabling tone.
-
-```powershell
-npx tsx worker/edgar-tone-audit.mts --universe edgar-universe.json
 ```
 
 ### 66. Independent-universe and macro-regime validation

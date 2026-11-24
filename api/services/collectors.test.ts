@@ -2,7 +2,6 @@
 // are worker-run; the parsing/storing logic is what's pinned here).
 import { describe, it, expect } from "vitest";
 import { parseForm4 } from "./insiders";
-import { parseSeenDate, toneToScore } from "./signals";
 
 const FORM4_FIXTURE = `
 <ownershipDocument>
@@ -42,18 +41,5 @@ describe("parseForm4 (fixture)", () => {
     const p = parseForm4("<ownershipDocument></ownershipDocument>");
     expect(p.txs).toEqual([]);
     expect(p.is10b5).toBe(false);
-  });
-});
-
-describe("signals helpers", () => {
-  it("parseSeenDate converts GDELT seendate", () => {
-    expect(parseSeenDate("20261019T123000Z")).toBe("2026-10-19 12:30:00");
-    expect(parseSeenDate("garbage")).toBeNull();
-    expect(parseSeenDate(undefined)).toBeNull();
-  });
-  it("toneToScore clamps Goldstein to [-1,1]", () => {
-    expect(toneToScore(-25)).toBe(-1);
-    expect(toneToScore(3.4)).toBeCloseTo(0.34);
-    expect(toneToScore(undefined)).toBeNull();
   });
 });

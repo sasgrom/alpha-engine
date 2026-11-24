@@ -1,16 +1,13 @@
 import { authRouter } from "./auth-router";
 import { createRouter, publicQuery } from "./middleware";
-import { dashboardRouter, universeRouter, jobsRouter, browseRouter } from "./routers/engine";
-import { documentsRouter, seriesRouter, companyRouter, pipelineRouter, sectionsRouter } from "./routers/iteration2";
-import { scopeRouter } from "./routers/scope";
-import { sentimentRouter } from "./routers/sentiment";
+import { dashboardRouter, universeRouter } from "./routers/engine";
+import { companyRouter } from "./routers/iteration2";
 import { adminRouter } from "./routers/admin";
 import { pricesRouter } from "./routers/prices";
-import { screenerRouter, eventsRouter } from "./routers/screener";
+import { eventsRouter } from "./routers/screener";
 import { messagesRouter } from "./routers/messages";
 import { activityRouter } from "./routers/activity";
 import { workersLocalRouter } from "./routers/workers-local";
-import { digestsRouter } from "./routers/digests";
 import { workersMonitorRouter } from "./routers/workers-monitor";
 import { reviewerRouter } from "./routers/reviewer";
 import { deskRouter } from "./routers/desk";
@@ -20,24 +17,14 @@ export const appRouter = createRouter({
   auth: authRouter,
   dashboard: dashboardRouter,
   universe: universeRouter,
-  jobs: jobsRouter,
-  browse: browseRouter,
-  documents: documentsRouter,
-  series: seriesRouter,
   company: companyRouter,
-  pipeline: pipelineRouter,
-  scope: scopeRouter,
-  sections: sectionsRouter,
-  sentiment: sentimentRouter,
   prices: pricesRouter,
-  screener: screenerRouter,
   events: eventsRouter,
   messages: messagesRouter,
   activity: activityRouter,
   admin: adminRouter,
   workersLocal: workersLocalRouter,
   workersMonitor: workersMonitorRouter,
-  digests: digestsRouter,
   reviewer: reviewerRouter,
   desk: deskRouter,
 });

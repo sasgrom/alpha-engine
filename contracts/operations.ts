@@ -247,48 +247,6 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local MySQL; production transfer is a separate reviewed manual job.", requirements: ["network", "mysql", "driveD"], notes: "Monday and Thursday checks are sufficient for a quarterly disclosure source with a long filing lag. No LLM is used.",
   }),
   job({
-    id: "edgar-tone-nightly", name: "EDGAR local tone scoring", group: "sec", mode: "paused", cron: null, defaultEnabled: false, dependsOn: ["edgar-fetch-daily"],
-    ...npx("worker/edgar-tone.mts", ["--universe", "edgar-universe.json", "--concurrency", "2"]), purpose: "Score newly cached filings with local Ollama after the expectations lane is explicitly declared stable.",
-    input: "Cached filings, qwen3.5:9b, 32K context and existing score manifests.", output: "Local tone rows, atomic checkpoints, skip taxonomy and token/rate telemetry.",
-    destination: "Local MySQL/outbox only; production copy remains reviewed and manual.", requirements: ["server", "gpu", "mysql"], notes: "Paused by default. Enabling it shares the single scheduler lane, so it cannot overlap the expectations GPU run.",
-  }),
-  job({
-    id: "expectations-cohorts", name: "Quarterly cohort pack builder", group: "expectations", mode: "paused", cron: null, defaultEnabled: false, dependsOn: ["edgar-exhibits-daily"],
-    ...npx("worker/edgar-cohorts.mts", ["--universe", "research-universe-50.json"]), purpose: "Build deterministic, period-aligned bounded containers from complete guidance and actual blocks.",
-    input: "Complete EX-99 cache and filing period metadata.", output: "cohort-pack-v2.json with source hashes and explicit unpacked failures.",
-    destination: "Local cache only.", requirements: ["driveD"], notes: "Paused with the active LLM lane so the operator does not accidentally start a second full-history run.",
-  }),
-  job({
-    id: "expectations-extract", name: "Cohort LLM extraction", group: "expectations", mode: "paused", cron: null, defaultEnabled: false, dependsOn: ["expectations-cohorts"],
-    ...npx("worker/edgar-cohort-extract.mts", ["--universe", "research-universe-50.json"]), purpose: "Extract guidance, comparable actuals and factual fallback notes with atomic source-level resume.",
-    input: "Bounded cohort packs and local Ollama; prompt/schema remain fixed by the research protocol.", output: "cohort-v2.json, structured statements, fallback notes and explicit failures.",
-    destination: "Local research files only.", requirements: ["gpu", "driveD"], notes: "Paused by default. Never runs concurrently with tone because the scheduler has one execution lane.",
-  }),
-  job({
-    id: "expectations-benchmark", name: "Independent extraction benchmark", group: "expectations", mode: "paused", cron: null, defaultEnabled: false, dependsOn: ["expectations-extract"],
-    ...npx("worker/expectations-benchmark.mts", ["--cohorts"]), purpose: "Compare extraction with the independent gold benchmark before any reviewed status is allowed.",
-    input: "Official gold statements and current cohort extraction results.", output: "Recall and exact-field issue report without treating extra review items as automatic errors.",
-    destination: "Local benchmark artifact only.", requirements: ["review"], notes: "A report cannot become reviewed merely because extraction completed.",
-  }),
-  job({
-    id: "options-cboe-fetch", name: "Legacy Cboe option snapshot", group: "options", mode: "paused", cron: "30 4 * * *", defaultEnabled: false, dependsOn: [],
-    ...npx("worker/options-fetch.mts", ["--source", "cboe", "--universe", "research-universe-50.json"]), purpose: "Maintain the independent delayed-Cboe provider lane for cross-provider checks when explicitly enabled.",
-    input: "Cboe delayed public chains for the current research universe.", output: "Immutable raw and normalized provider-specific snapshots.",
-    destination: "Local option cache; never silently merged with Schwab or DoltHub.", requirements: ["network", "driveD"], notes: "Paused to avoid maintaining duplicate current-provider lanes without a research need.",
-  }),
-  job({
-    id: "options-features", name: "Offline DTE option features", group: "options", mode: "paused", cron: null, defaultEnabled: false, dependsOn: ["options-cboe-fetch"],
-    ...npx("worker/option-features.mts"), purpose: "Compute ATM IV, term slope, skew, put/call and liquidity features from the latest Cboe chain per ticker.",
-    input: "Normalized Cboe snapshots.", output: "DTE-bucket feature sets and manifest with actual DTE and honest nulls.",
-    destination: "Local option-features cache.", requirements: [], notes: "Dependency-triggered only when the legacy Cboe lane is enabled.",
-  }),
-  job({
-    id: "options-qa", name: "Offline option provider QA", group: "options", mode: "paused", cron: null, defaultEnabled: false, dependsOn: ["options-features"],
-    ...npx("worker/options-qa.mts"), purpose: "Audit provider coverage, duplicates, quote quality, IV/Greeks, timestamps and manifest completeness.",
-    input: "All normalized option snapshots and provider manifest.", output: "options-qa.json and options-qa.md.",
-    destination: "Local QA artifacts only.", requirements: ["review"], notes: "Data quality is not evidence of predictive value.",
-  }),
-  job({
     id: "schwab-refresh-manual", name: "Schwab token keepalive", group: "maintenance", mode: "scheduled", cron: "0 2 */2 * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/schwab-refresh.mts"), purpose: "Rotate the access and refresh tokens every two days so the seven-day refresh-token window does not expire during normal unattended operation.",
     input: "Local refresh token and Schwab client credentials available in the scheduler process environment.", output: "Updated local token file and an AAPL HTTP smoke result; no token values in the UI.",
@@ -329,18 +287,6 @@ export const OPERATION_JOBS: OperationJob[] = [
     ...npx("scripts/remediate-company.mts"), purpose: "Run a bounded EDGAR refresh, uncapped per-company integrity audit and only then a defensible Schwab fallback candidate map.",
     input: "One --ticker, EDGAR cache, local facts/series/factors and Schwab instrument profile.", output: "public/reports/remediation/<ticker>.json with stages, errors, recent gaps, availability inversions, candidates and next action.",
     destination: "Local reviewed remediation plan; no automatic value insertion or production sync.", requirements: ["network", "server", "mysql", "driveD", "review"], notes: "Default dry-run. Use --apply for EDGAR network refresh and --strict to fail on remaining errors. One ticker per run; no hidden retries.",
-  }),
-  job({
-    id: "tone-event-study", name: "Availability-anchored tone event study", group: "research", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
-    ...npx("scripts/tone-event-study.mts"), purpose: "Estimate abnormal returns and CAR after filings with conservative post-close availability.",
-    input: "Local tone events, prices and SPY.", output: "Event-study JSON used by the Analytics CAR chart.",
-    destination: "Local research artifact.", requirements: ["mysql", "review"], notes: "Measurement windows are not automatically tradable signals.",
-  }),
-  job({
-    id: "tone-ic", name: "Tone IC and turnover evaluation", group: "research", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
-    ...npx("scripts/tone-ic.mts"), purpose: "Validate slow tone against 63/126-session excess returns with block-bootstrap uncertainty.",
-    input: "Local tone, prices and the production v1 model provenance.", output: "IC, quantile spread, autocorrelation, turnover and confidence intervals.",
-    destination: "Local research artifact.", requirements: ["mysql", "review"], notes: "A research evaluation, not a scheduled production factor rebuild.",
   }),
   job({
     id: "dolthub-export", name: "DoltHub historical option export", group: "research", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
@@ -407,12 +353,6 @@ export const OPERATION_JOBS: OperationJob[] = [
     executable: null, args: [], command: "npx tsx scripts/push-local-facts.mts --universe research-universe-50.json", purpose: "Replace reviewed per-CIK production snapshots transactionally.",
     input: "A reviewed dry-run and complete local snapshots.", output: "Production facts replaced per company in 500-row chunks.",
     destination: "Production only after explicit terminal review.", requirements: ["network", "mysql", "review"], notes: "Deliberately not UI-runnable and never scheduled; missing local coverage fails the apply run.",
-  }),
-  job({
-    id: "edgar-tone-readiness-audit", name: "EDGAR tone readiness audit", group: "sec", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],
-    ...npx("worker/edgar-tone-audit.mts", ["--universe", "edgar-universe.json"]), purpose: "Inspect exact deterministic skips, pending work and prompt sizes before any long GPU run.",
-    input: "Cached filings, manifests and the production tone preparation path.", output: "Read-only skip taxonomy, planned calls, windows and prompt-character totals.",
-    destination: "Console/log only; no Ollama, ingest or manifest writes.", requirements: ["driveD", "review"], notes: "Use --manifest-only for the instant manifest report or the full CPU scan before enabling tone.",
   }),
   job({
     id: "macro-regime-validation", name: "Independent-universe and macro-regime validation", group: "research", mode: "manual", cron: null, defaultEnabled: false, dependsOn: [],

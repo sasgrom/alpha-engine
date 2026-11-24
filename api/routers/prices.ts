@@ -8,15 +8,8 @@
  * numbers we can stand behind (data-honesty rule).
  */
 import { z } from "zod";
-import { and, eq } from "drizzle-orm";
-import { createRouter, authedQuery, adminQuery } from "../middleware";
-import { getDb } from "../queries/connection";
-import { metricHistory } from "@db/schema";
-import { createJob } from "../services/runner";
-import { avgVolume, beta5y, changePct, fundamentalsFromSeries, getBars, week52 } from "../services/prices";
-import { dailyPrice } from "../services/daily-price";
-import { createSplitShareProvider } from "../services/split-shares";
-import { getCurrentMarketValue } from "../services/market-value";
+import { createRouter, authedQuery } from "../middleware";
+import { getBars } from "../services/prices";
 
 export const PRICE_RANGES = ["1M", "3M", "6M", "YTD", "1Y", "5Y", "ALL"] as const;
 export type PriceRange = (typeof PRICE_RANGES)[number];
@@ -43,98 +36,5 @@ export const pricesRouter = createRouter({
     .query(async ({ input }) => {
       const bars = await getBars(input.cik, rangeStart(input.range));
       return { bars, source: bars[0]?.source ?? null };
-    }),
-
-  /** Point-in-time canonical daily close; legacy providers are not substitutes. */
-  daily: authedQuery.input(z.object({ cik: z.number(), date: z.string(), asOf: z.string().optional() })).query(async ({ input }) => {
-    return dailyPrice(input.cik, input.date, input.asOf ?? new Date().toISOString());
-  }),
-
-  /**
-   * Quote header + stats grid for the company Overview tab.
-   * Canonical last/same-source previous close → change; 52-week extremes;
-   * 3-month average volume; market cap and P/E use our canonical series;
-   * beta = 5-year monthly regression vs our SPY series.
-   */
-  quote: authedQuery.input(z.object({ cik: z.number() })).query(async ({ input }) => {
-    // 5Y+ of bars covers beta and the 52w window in one read
-    const bars = await getBars(input.cik, rangeStart("5Y"));
-    const asOf = new Date().toISOString();
-    const last = bars.at(-1);
-    const previous = bars.at(-2);
-    const daily = last ? await dailyPrice(input.cik, last.date, asOf) : null;
-    if (!last || daily?.status !== "ready") return { available: false as const };
-    const previousDaily = previous ? await dailyPrice(input.cik, previous.date, asOf) : null;
-    const lastClose = daily.price;
-    const previousClose = previousDaily?.status === "ready" && previousDaily.source === daily.source ? previousDaily.price : null;
-    const lastBar = daily.bar!;
-    const w52 = week52(bars);
-    const shareProvider = await createSplitShareProvider(input.cik);
-    const [{ epsTtm }, currentMarket] = await Promise.all([fundamentalsFromSeries(input.cik, shareProvider), getCurrentMarketValue(input.cik, shareProvider)]);
-    const bench = await getBars(0, rangeStart("5Y")); // SPY pseudo-cik
-    const beta = bench.length > 0 ? beta5y(bars, bench) : null;
-
-    return {
-      available: true as const,
-      asOf: daily.actualAsOf,
-      actualAsOf: daily.actualAsOf,
-      fetchedAt: daily.fetchedAt,
-      source: daily.source,
-      quality: daily.quality,
-      currency: "USD",
-      price: lastClose,
-      open: lastBar.open,
-      dayHigh: lastBar.high,
-      dayLow: lastBar.low,
-      volume: lastBar.volume,
-      prevClose: previousClose,
-      change: lastClose !== null && previousClose !== null ? lastClose - previousClose : null,
-      changePct: lastClose !== null && previousClose !== null ? changePct(lastClose, previousClose) : null,
-      week52High: w52.high,
-      week52Low: w52.low,
-      avgVolume3m: avgVolume(bars, 92),
-      marketCap: currentMarket.marketCap,
-      epsTtm,
-      peTtm: currentMarket.price !== null && epsTtm !== null && epsTtm !== 0 ? currentMarket.price / epsTtm : null,
-      beta,
-    };
-  }),
-
-  /** Job launcher: incremental (default) or full-backfill price sync. ADMIN-only since 4c (D31): writes shared tables. */
-  startPrices: adminQuery
-    .input(
-      z.object({
-        tickers: z.string().default("universe"),
-        exclude: z.string().default(""),
-        mode: z.enum(["incremental", "backfill"]).default("incremental"),
-      })
-    )
-    .mutation(({ input, ctx }) => createJob("prices", input, ctx.user.id)),
-
-  /**
-   * 3g bulk import (admin-only — storage is billed to the owner): launches
-   * the import job over a previously chunk-uploaded Stooq archive batch.
-   * The client uploads parts via POST /api/prices-import/chunk first and
-   * passes the batch id here.
-   */
-  startImport: adminQuery
-    .input(z.object({ batch: z.string().regex(/^[0-9a-f-]{36}$/) }))
-    .mutation(({ input, ctx }) => createJob("prices", { mode: "import", batch: input.batch }, ctx.user.id)),
-
-  /**
-   * 4n (D47): the pre-computed month-end history of one quote-grid metric —
-   * reads metric_history (static, immediate display; the chart opens on the
-   * stat tile click).
-   */
-  metricHistory: authedQuery
-    .input(z.object({ cik: z.number(), metric: z.enum(["volume", "avgVolume3m", "marketCap", "epsTtm", "peTtm", "beta5y"]) }))
-    .query(async ({ input }) => {
-      const db = getDb();
-      return db
-        .select({ date: metricHistory.date, value: metricHistory.value })
-        .from(metricHistory)
-        .where(and(eq(metricHistory.cik, input.cik), eq(metricHistory.metric, input.metric)))
-        .orderBy(metricHistory.date)
-        .limit(600);
     }),
 });

@@ -22,9 +22,7 @@ import path from "node:path";
 import { z } from "zod";
 import { desc, eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import { createRouter, adminQuery, authedQuery } from "../middleware";
-import { crossSectionFactorIc } from "../services/factor-ic";
-import { fundFlowsGraph } from "../services/institutional";
+import { createRouter, adminQuery } from "../middleware";
 import { getDb } from "../queries/connection";
 import { jobs, jobLogs, users } from "@db/schema";
 import { sql } from "drizzle-orm";
@@ -39,7 +37,7 @@ import {
   setUserPassword,
   setUserRole,
 } from "../queries/users";
-import { createReviewerAccount, listReviewerProfiles, resetReviewerFirstIp, resetReviewerNda, resetReviewerTour } from "../services/reviewer-access";
+import { createReviewerAccount, listReviewerProfiles, resetReviewerFirstIp, resetReviewerNda } from "../services/reviewer-access";
 
 /**
  * Candidate docs directories, tried in order. Dev (vite/tsx) resolves via
@@ -78,11 +76,6 @@ async function readManualFromDisk(file: string): Promise<{ content: string; upda
 }
 
 export const adminRouter = createRouter({
-  /** 6a: cross-sectional factor IC by quarter (owner's factor monitor). */
-  factorIc: adminQuery.query(async () => crossSectionFactorIc()),
-
-  /** 5g-3D: fund×company flow graph for the 3D visualization. */
-  fundFlows: authedQuery.input(z.object({ limit: z.number().int().min(50).max(1000).default(400) })).query(({ input }) => fundFlowsGraph(input.limit)),
 
   /**
    * Manual list with metadata. `source` tells the UI whether the text came
@@ -235,7 +228,6 @@ export const adminRouter = createRouter({
 
   resetReviewerFirstIp: adminQuery.input(z.object({ userId: z.number() })).mutation(async ({ input }) => resetReviewerFirstIp(input.userId)),
   resetReviewerNda: adminQuery.input(z.object({ userId: z.number() })).mutation(async ({ input }) => resetReviewerNda(input.userId)),
-  resetReviewerTour: adminQuery.input(z.object({ userId: z.number() })).mutation(async ({ input }) => resetReviewerTour(input.userId)),
 
   /**
    * Per-user info summary (4e, D35): account + universe size + message count

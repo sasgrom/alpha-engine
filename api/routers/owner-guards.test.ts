@@ -108,18 +108,10 @@ vi.mock("node:child_process", async (importActual) => ({
 }));
 
 const inputs: Record<string, unknown> = {
-  "browse.filingsList": {},
-  "browse.concepts": { cik: 320193 },
-  "browse.conceptSeries": { cik: 320193, concept: "Revenues" },
-  "browse.filingDocument": { cik: 320193, accessionNo: "0000320193-26-000001", primaryDoc: "filing.htm" },
-  "sentiment.labStats": undefined,
-  "sentiment.tickersWithScores": undefined,
-  "admin.factorIc": undefined,
   "admin.manuals": undefined,
   "admin.manualContent": { id: "engine-manual-en" },
   "admin.recentJobs": undefined,
   "admin.jobLog": { jobId: 123 },
-  "jobs.logs": { jobId: 123 },
   "admin.usersList": undefined,
   "admin.createUser": { username: "new_user", password: "test-password", name: "New User", role: "user" },
   "admin.deleteUser": { userId: 99 },
@@ -129,36 +121,19 @@ const inputs: Record<string, unknown> = {
   "admin.createReviewer": { username: "new_reviewer", password: "test-password", name: "New Reviewer" },
   "admin.resetReviewerFirstIp": { userId: 99 },
   "admin.resetReviewerNda": { userId: 99 },
-  "admin.resetReviewerTour": { userId: 99 },
   "admin.userSummary": { userId: 99 },
   "admin.userActivity": { userId: 99, limit: 10 },
   "workersLocal.enabled": undefined,
-  "workersLocal.runs": { limit: 10 },
-  "workersLocal.run": { worker: "stocktwits" },
-  "workersLocal.kill": { id: "missing-worker" },
-  "workersLocal.logTail": { id: "missing-worker", lines: 10 },
-  "workersLocal.scheduler": undefined,
   "workersLocal.operations": undefined,
   "workersLocal.setOperation": { jobId: "job1", enabled: true, cron: "0 * * * *" },
   "workersLocal.runOperation": { jobId: "job1" },
   "workersLocal.killOperation": { jobId: "job1" },
   "workersLocal.operationLog": { jobId: "job1", lines: 10 },
-  "workersLocal.probe": { query: "not executed" },
-  "jobs.startBootstrap": {},
-  "jobs.startFilingRefresh": {},
-  "jobs.startStream": {},
-  "pipeline.startHarvest": {},
-  "pipeline.startSeriesBuild": {},
-  "pipeline.startSectionParse": {},
-  "sentiment.startScore": {},
-  "prices.startPrices": {},
-  "prices.startImport": { batch: "00000000-0000-0000-0000-000000000000" },
-  "screener.refresh": undefined,
-  "scope.enrichClassification": undefined,
   "workersMonitor.intake": undefined,
 };
 
-const enabledOwnerProcedures = Object.keys(inputs).filter((name) => name !== "workersLocal.probe");
+/** Owner procedures removed with the classic view on 2026-11-24: the launchers of the old pipelines and the first console. */
+const REMOVED = ["browse.filingsList", "browse.concepts", "browse.conceptSeries", "browse.filingDocument", "sentiment.labStats", "sentiment.tickersWithScores", "admin.factorIc", "jobs.logs", "admin.resetReviewerTour", "workersLocal.runs", "workersLocal.run", "workersLocal.kill", "workersLocal.logTail", "workersLocal.scheduler", "workersLocal.probe", "jobs.startBootstrap", "jobs.startFilingRefresh", "jobs.startStream", "pipeline.startHarvest", "pipeline.startSeriesBuild", "pipeline.startSectionParse", "sentiment.startScore", "prices.startPrices", "prices.startImport", "screener.refresh", "scope.enrichClassification"];
 
 function caller(role: "admin" | "user") {
   return appRouter.createCaller({
@@ -198,23 +173,26 @@ describe("owner procedure authorization", () => {
     expect(mocks.spawn).not.toHaveBeenCalled();
   });
 
-  it("allows the owner for every enabled owner procedure with mocked side effects", async () => {
-    for (const procedure of enabledOwnerProcedures) {
+  it("allows the owner for every owner procedure, and none of them starts a process or an old job", async () => {
+    for (const procedure of Object.keys(inputs)) {
       await expect(invoke("admin", procedure), procedure).resolves.toBeDefined();
     }
-    expect(mocks.createJob).toHaveBeenCalled();
-    expect(mocks.spawn).toHaveBeenCalledOnce();
+    // Run and Stop go to the scheduler's command file; nothing is spawned from the server any more
+    expect(mocks.createJob).not.toHaveBeenCalled();
+    expect(mocks.spawn).not.toHaveBeenCalled();
   });
 
-  it("keeps the GDELT probe frozen even for the owner", async () => {
-    await expect(invoke("admin", "workersLocal.probe")).rejects.toMatchObject({ code: "FORBIDDEN", message: expect.stringContaining("GDELT is frozen") });
+  it("no longer has the launchers of the old pipelines, the first console or the GDELT probe", async () => {
+    for (const procedure of REMOVED) {
+      await expect(invoke("admin", procedure), procedure).rejects.toThrow();
+      const [namespace, method] = procedure.split(".");
+      expect(((appRouter as any)._def.procedures ?? {})[`${namespace}.${method}`], procedure).toBeUndefined();
+    }
   });
 
-  it("lets a member read only logs for jobs they started", async () => {
-    mocks.jobStartedBy = 2;
-    await expect(invoke("user", "jobs.logs")).resolves.toBeDefined();
-    mocks.jobStartedBy = 1;
-    await expect(invoke("user", "jobs.logs")).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(invoke("admin", "jobs.logs")).resolves.toBeDefined();
+  it("covers every owner-only procedure the server has", () => {
+    const procedures = (appRouter as any)._def.procedures as Record<string, { _def: { meta?: unknown } }>;
+    const ownerOnly = Object.keys(procedures).filter((name) => /^(admin|workersLocal|workersMonitor)\./.test(name)).sort();
+    expect(Object.keys(inputs).sort()).toEqual(ownerOnly);
   });
 });

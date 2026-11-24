@@ -69,8 +69,11 @@ describe("operations registry", () => {
     expect(OPERATION_JOB_MAP["mysql-backup-restore"]).toMatchObject({ mode: "manual", defaultEnabled: false, cron: null });
     expect(OPERATION_JOB_MAP["mysql-backup-restore"].command).toContain("--full --source-env DATABASE_URL");
     expect(OPERATION_JOB_MAP["mysql-backup-restore"].command).not.toContain("--apply");
-    expect(OPERATION_JOB_MAP["edgar-tone-nightly"].defaultEnabled).toBe(false);
-    expect(OPERATION_JOB_MAP["expectations-extract"].defaultEnabled).toBe(false);
+    // the paused GPU lanes of the old tone and cohort pipelines left the registry on 2026-11-24: they cannot be queued
+    expect(OPERATION_JOB_MAP["edgar-tone-nightly"]).toBeUndefined();
+    expect(OPERATION_JOB_MAP["expectations-extract"]).toBeUndefined();
+    // what is left that needs the local model stays off unless the owner switches it on
+    expect(OPERATION_JOBS.filter((job) => job.requirements.includes("gpu") && job.defaultEnabled).map((job) => job.id)).toEqual([]);
   });
 
   it("orders every parent before its child in a run chain", () => {
