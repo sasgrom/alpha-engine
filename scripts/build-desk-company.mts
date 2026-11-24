@@ -12,6 +12,8 @@
  *                          sales, from the insider standard's per-company files
  *   insiders-market.json   the same lines across companies: the last 90 days' totals, recent purchases, windows of
  *                          several buying insiders, the largest net buyers and sellers
+ *   screen.json            the Screener's fundamentals for all companies: the last four quarters' revenue, net
+ *                          income, free cash flow and diluted earnings per share, and the three-month dollar volume
  *   filings/<cik>.json     five years of 10-K, 10-Q and 8-K filings with the cached exhibits of the earnings releases,
  *                          from the release calendar (D:\research\alpha-engine\engine\events, --calendar)
  *
@@ -33,9 +35,9 @@ import { createHash } from "node:crypto";
 import { createReadStream, existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { createInterface } from "node:readline";
-import { DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyIndex, type DeskCompanyInsiders } from "../contracts/desk-company";
+import { DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyIndex, type DeskCompanyInsiders, type DeskScreen, type DeskScreenCompany } from "../contracts/desk-company";
 import {
-  buildDeskCompanyActions, buildDeskCompanyFilings, buildDeskCompanyGuidance, buildDeskCompanyHolders, buildDeskCompanyInsiders, buildDeskCompanyStatements, buildDeskInsiderMarket, isGuidanceRow,
+  buildDeskCompanyActions, buildDeskCompanyFilings, buildDeskCompanyGuidance, buildDeskCompanyHolders, buildDeskCompanyInsiders, buildDeskCompanyStatements, buildDeskInsiderMarket, buildDeskScreenCompany, isGuidanceRow,
   type AdjustedEpsActual, type CalendarFilingRow, type GuidanceStatementRow, type InsiderFilingDoc, type StandardCompanyDoc, type StandardField, type StandardPriceRow, type ThirteenFCompanyQuarter,
 } from "../worker/lib/desk-company";
 import { writeJsonAtomic } from "../worker/lib/json-file";
@@ -190,8 +192,8 @@ function priceRows(cik: number): StandardPriceRow[] | null {
   const [header, ...lines] = readFileSync(file, "utf8").split(/\r?\n/).filter(Boolean);
   const names = header.split(",");
   const at = (name: string) => { const i = names.indexOf(name); if (i < 0) throw new Error(`${file} has no column ${name}`); return i; };
-  const [date, close, dividend, splitRatio, distribution] = [at("date"), at("close"), at("dividend"), at("splitRatio"), at("distribution")];
-  return lines.map((line) => { const cells = line.split(","); return { date: cells[date], close: cells[close], dividend: cells[dividend], splitRatio: cells[splitRatio], distribution: cells[distribution] }; });
+  const [date, close, dividend, splitRatio, distribution, volume] = [at("date"), at("close"), at("dividend"), at("splitRatio"), at("distribution"), at("volume")];
+  return lines.map((line) => { const cells = line.split(","); return { date: cells[date], close: cells[close], dividend: cells[dividend], splitRatio: cells[splitRatio], distribution: cells[distribution], volume: cells[volume] }; });
 }
 
 const standard = path.basename(source);
@@ -202,6 +204,7 @@ const stable = (value: { builtAt: string }) => { const { builtAt: _builtAt, ...r
 const companies: DeskCompanyIndex["companies"] = [];
 let bytes = 0, withGuidance = 0, withActions = 0, withHolders = 0, withFilings = 0, outOfScale = 0, pricesAsOf: string | null = null;
 const insiderInputs: Array<{ cik: number; ticker: string; filings: InsiderFilingDoc[]; at: number }> = [];
+const screen: DeskScreenCompany[] = [];
 let insidersAsOf: string | null = null;
 for (const name of files) {
   const doc = JSON.parse(readFileSync(path.join(companyDir, name), "utf8")) as StandardCompanyDoc;
@@ -209,6 +212,8 @@ for (const name of files) {
   const actions = prices ? buildDeskCompanyActions({ cik: doc.cik, ticker: doc.ticker, rows: prices, builtAt }) : null;
   // without a standard price file the splits are unknown: no share basis, so no fiscal-year or trailing-year per-share figures
   const statements = buildDeskCompanyStatements({ doc, fields: index.fields, standard, standardGeneratedAt: index.generatedAt, builtAt, quarters, splits: actions ? actions.splits : null });
+  const screened = buildDeskScreenCompany({ statements, prices });
+  if (screened) screen.push(screened);
   const guidance = buildDeskCompanyGuidance({ doc, rows: guidanceRows.get(doc.cik) ?? [], guidanceVersion: guidanceBuild.guidanceVersion, standard, builtAt, adjusted: adjustedActuals.get(doc.cik), adjustedVersion });
   const holders = buildDeskCompanyHolders({ cik: doc.cik, ticker: doc.ticker, rows: holderRows.get(doc.cik) ?? [], builtAt });
   const filings = await insiderFilings(doc.cik);
@@ -254,6 +259,9 @@ for (const input of insiderInputs) {
 const insiderMarket = insidersAsOf ? buildDeskInsiderMarket({ companies: insiderInputs, asOf: insidersAsOf, builtAt }) : null;
 hash.update(`insiders-market|${insiderMarket ? stable(insiderMarket) : "null"}|`);
 if (insiderMarket && !dryRun) writeJsonAtomic(path.join(out, "insiders-market.json"), insiderMarket);
+const screenFile: DeskScreen = { schemaVersion: DESK_COMPANY_SCHEMA_VERSION, standard, pricesAsOf, builtAt, companies: screen };
+hash.update(`screen|${stable(screenFile)}|`);
+if (!dryRun) writeJsonAtomic(path.join(out, "screen.json"), screenFile);
 const summary: DeskCompanyIndex = {
   schemaVersion: DESK_COMPANY_SCHEMA_VERSION, standard, standardGeneratedAt: index.generatedAt, guidanceVersion: guidanceBuild.guidanceVersion, pricesAsOf,
   holdersVersion: holdersBuild.buildVersion, holdersPeriod, insidersVersion: insidersFinal.buildVersion, insidersAsOf, filingsAsOf, builtAt,

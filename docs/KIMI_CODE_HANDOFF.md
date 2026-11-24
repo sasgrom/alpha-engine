@@ -3996,3 +3996,61 @@ delivered.
   goes); the research pages (`docs/desk/UI_MIGRATION.md` section 7.3). For the owner: the Schwab refresh token
   ends on Wednesday 25 November about 15:28 local (login of 18 November); `npx tsx worker/schwab-callback.mts`
   before then.
+
+## 226. Claude (Fable 5.2): the Screener's fundamentals from the standards; two data defects found on the way — 2026-11-24T02:50Z
+
+- **Screener** (`src/desk/pages/Screener.tsx`): two views, kept in the address (`?view=fundamentals`).
+  - Performance: the columns as before, without P/E and yield.
+  - Fundamentals: price, market value, P/E, diluted EPS, revenue, revenue growth, net margin, FCF margin, yield,
+    three-month dollar volume, and the quarter the figures end at. Sorting, the sector filter and the CSV export
+    cover both views.
+  - The figures come from `screen.json`, which `scripts/build-desk-company.mts` now writes
+    (`buildDeskScreenCompany` in `worker/lib/desk-company.ts`, contract `DeskScreen`, procedure `desk.screen`): the
+    four quarters ending at the company's last reported quarter, in the latest filed figures, per-share figures on
+    today's share basis; the mean of close × volume over the last 63 sessions of the standard prices.
+  - P/E is the snapshot's price over that EPS; a loss shows no P/E.
+  - Built file (v3.2, prices to 2026-11-20, desk files hash `b244d913ca06`): 500 companies; revenue for 489, net
+    income 492, free cash flow 435, EPS 479, volume 500. Against Schwab's EPS (450 pairs): median ratio 1.000, 95.3%
+    within 5%, 9 farther than 25% (MLM, KMB, OXY, CRWD, HON, TKO, BDX, APTV, COR; not resolved one by one).
+  - Six companies have no trailing-year EPS in the company files because the standard lacks the fourth quarter's
+    share count in a year with a split (NFLX, NOW, KLAC, LEN, CVNA, TPL): there the four quarters' net income to
+    common is divided by the last quarter's diluted shares, and the cell's hover says so. Five of the six are within
+    5% of Schwab; Carvana is 19% above (two share classes).
+  - 21 companies have no per-share figure in the standard (several share classes: V, HSY, KKR, BRK-B, STZ and
+    others; the new registrants XOM, FDXF, HONA, SKYD, VYLR; FedEx's changed fiscal year). Schwab's EPS and P/E stand
+    in for 20 of them, shown grey with a hover; Berkshire's are refused, because Schwab divides the B share's price by
+    the A share's earnings (a "P/E" of 0.01): a Schwab P/E below 1 never stands in.
+  - Market value, yield and beta stay Schwab's, and the page says so. Tried from our own data and not used:
+    price × shares outstanding has no figure for 39 companies (several classes) and is stale after mergers
+    (Kimberly-Clark, Skyworks); the dividends of the last year have gaps (below). Schwab's market value is itself
+    off for some (Nvidia $3.03 tn at $165, about 18.4 bn shares against 24 bn filed).
+- **Defect 1, standard prices: dividends after April 2024 are missing for 91 of 380 dividend payers** (companies
+  with at least two dividends in 2023; 289 are complete). Coca-Cola, Caterpillar, Texas Instruments, Abbott,
+  American Express, Bristol-Myers, Ford and others show no dividend between 2024 and their latest one.
+  - Cause, read in the stored answers of 2026-11-13: Yahoo's chart answer for `range=max&interval=1mo` comes back at
+    three-month bars and carries as many dividend events as bars (169), the oldest first, plus the latest one.
+    Coca-Cola's list runs 1962 to March 2004 and then September 2026; Abbott's 1983 to October 2024 and then October
+    2026. Tiingo covers the years to April 2024, so the hole is from there to the latest dividend.
+  - Effect: the company page's dividends card lists too few dividends for these companies, and the standard's
+    total-return index (`trIndex`) misses those dividends (about the yield, for up to two and a half years). Research
+    that used standard total returns for 2024-04 onward understates these companies by that much.
+  - Fix, not done: read Yahoo again in bounded windows (daily bars from 2024-01-01), rebuild the events and the
+    standard prices as a new version. The read is within AGENTS.md section 2; the prices revision is the owner's call.
+- **Defect 2, standard fundamentals v3.2: L3Harris' fourth quarter of 2025 (ending 2026-01-02) holds the full
+  year's revenue** ($21.865 bn as a directly tagged quarter; the other quarters are $5.1 to $6.1 bn), so its trailing
+  revenue reads $39.6 bn. A scan of every company's quarterly revenue for a quarter above 2.2 times its neighbours
+  found 28 in 17 companies; three look like a year for a quarter (LHX, Tractor Supply 2020-12-26, DuPont 2017-12-31,
+  the last perhaps the merger itself), FactSet 2017-08-31 is a units slip, the rest are real (Micron, Sandisk,
+  Moderna, Intuit's tax quarters). In the screen a year with one quarter above three times each of the other three is
+  withheld (LHX shows no revenue, growth or margins). The company page still shows the cell as the standard has it.
+  Also seen: Exxon Mobil has no quarters from 2025-06-30 to 2026-03-31 in v3.2 (the registrant changed). Both go on
+  the v3.3 list.
+- **Web server** restarted once at 2026-11-24T02:41Z for `desk.screen`, through the `AlphaEngine-Home-Server` task,
+  after the build: scheduler idle (no current job, empty queue, heartbeat current), one listener on port 3000 before
+  (pid 1432) and after (pid 17928), the procedure answers 401 without a session. Screener (both views) and Ownership
+  checked by screenshot on the running server with the real files.
+- Tests: `worker/lib/desk-company-screen.test.ts` (4), `src/desk/pages/Screener.test.tsx` (3),
+  `Screener.class.test.tsx` (1).
+- Gates: `npm run check`, 278 files / 1,635 tests, `npm run build`, `git diff --check`.
+- **Next:** the bounded Yahoo read and a list of the missing dividends (read-only preparation for the prices
+  revision); the Watchlist's "add any SEC company".

@@ -344,6 +344,44 @@ export interface DeskInsiderMarket {
   netSellers: DeskInsiderCompanyNet[];
 }
 
+/**
+ * One company's figures for the Screener, from the standard fundamentals and the standard prices: the four quarters
+ * ending at its last reported quarter, in the latest filed figures.
+ */
+export interface DeskScreenCompany {
+  cik: number;
+  ticker: string;
+  /** End of the last quarter the company has reported, and the day that report was filed. */
+  periodEnd: string;
+  filed: string | null;
+  /** Revenue of the four quarters, in dollars, and of the four quarters before them; null where one of the four is missing. */
+  revenue: number | null;
+  revenueYearAgo: number | null;
+  /** Net income to common stockholders (net income where the standard has no such line) and free cash flow of the four quarters. */
+  netIncome: number | null;
+  freeCashFlow: number | null;
+  /** Diluted earnings per share of the four quarters, on today's share basis. */
+  epsDiluted: number | null;
+  /**
+   * How it was computed: "year" as on the company page (net income to common / the year's average diluted shares, or
+   * the four quarters' figures added up); "last_shares" where the standard lacks a quarter's share count (the fourth
+   * quarter of a year with a split): the four quarters' net income to common / the last quarter's diluted shares.
+   */
+  epsHow: "year" | "last_shares" | null;
+  /** Mean of close x volume over the last 63 sessions of the standard prices (about three months), in dollars a day. */
+  dollarVolume: number | null;
+}
+
+/** The Screener's fundamentals for all companies. */
+export interface DeskScreen {
+  schemaVersion: typeof DESK_COMPANY_SCHEMA_VERSION;
+  /** The standard fundamentals version and the last session of the standard prices behind the figures. */
+  standard: string;
+  pricesAsOf: string | null;
+  builtAt: string;
+  companies: DeskScreenCompany[];
+}
+
 /** One periodic or current report of the company, from the engine's release calendar. */
 export interface DeskCompanyFiling {
   accession: string;

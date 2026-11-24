@@ -13,7 +13,7 @@
  */
 import {
   DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyActions, type DeskCompanyFilings, type DeskCompanyGuidance, type DeskCompanyHolders, type DeskCompanyInsiders,
-  type DeskCompanyStatements,
+  type DeskCompanyStatements, type DeskScreenCompany,
   type DeskInsiderCompanyNet, type DeskInsiderMarket, type DeskInsiderMarketTrade, type DeskInsiderWindow,
   type DeskGuidancePeriod, type DeskGuidanceUpdate,
   type DeskStatementCell, type DeskStatementKind, type DeskStatementName, type DeskStatementQuarter, type DeskStatementRow, type DeskStatementSum,
@@ -538,7 +538,48 @@ export function buildDeskCompanyGuidance(params: {
 // --- splits and dividends --------------------------------------------------------------------------------------------
 
 /** One session of a standard price file (only the fields used here; empty cells are empty strings). */
-export interface StandardPriceRow { date: string; close: string; dividend: string; splitRatio: string; distribution: string }
+export interface StandardPriceRow { date: string; close: string; dividend: string; splitRatio: string; distribution: string; volume?: string }
+
+/**
+ * One company's row of the Screener's fundamentals: the four quarters ending at its last reported quarter, in the
+ * latest filed figures (a screen asks what the company earns now, not what was known on a past day), with per-share
+ * figures on today's share basis; and the mean dollar volume of the last 63 sessions.
+ */
+export function buildDeskScreenCompany(params: { statements: DeskCompanyStatements; prices: StandardPriceRow[] | null }): DeskScreenCompany | null {
+  const { statements } = params;
+  let at = statements.quarters.length - 1;
+  while (at >= 0 && !statements.quarters[at].filed) at--;
+  if (at < 0) return null;
+  const year = (name: DeskStatementName, code: string, index: number): DeskStatementSum | null => (index < 0 ? null : statements.trailing[name].find((row) => row.code === code)?.cells[index] ?? null);
+  const latest = (sum: DeskStatementSum | null): number | null => (sum ? sum.restated ?? sum.value : null);
+  const netIncome = latest(year("income", "netIncComStock", at)) ?? latest(year("income", "netinc", at));
+  const perShare = year("income", "epsDil", at);
+  let epsDiluted = perShare ? latest(perShare)! / (perShare.factor ?? 1) : null;
+  let epsHow: DeskScreenCompany["epsHow"] = epsDiluted === null ? null : "year";
+  if (epsDiluted === null && netIncome !== null) {
+    const shares = statements.statements.income.find((row) => row.code === "shareswaDil")?.cells[at];
+    const count = shares && !shares.suspect ? (shares.restated?.value ?? shares.value) * (shares.factor ?? 1) : null;
+    if (count !== null && count > 0) { epsDiluted = netIncome / count; epsHow = "last_shares"; }
+  }
+  // One quarter above three times each of the other three is no year of revenue: a full year's figure standing in a
+  // quarter's place (L3Harris' fourth quarter of 2025 in v3.2). The year's revenue is then withheld, not shown.
+  const quarterly = statements.statements.income.find((row) => row.code === "revenue")?.cells ?? [];
+  const revenueOf = (end: number): number | null => {
+    const four = quarterly.slice(Math.max(0, end - 3), end + 1).map((cell) => (cell ? cell.restated?.value ?? cell.value : null));
+    const spike = four.some((value, index) => value !== null && value > 0 && four.every((other, at2) => at2 === index || (other !== null && other > 0 && value > 3 * other)));
+    return spike ? null : latest(year("income", "revenue", end));
+  };
+  const sessions = (params.prices ?? []).filter((row) => Number(row.close) > 0 && Number(row.volume) > 0).slice(-63);
+  const round = (value: number | null, digits: number) => (value === null ? null : Math.round(value * 10 ** digits) / 10 ** digits);
+  return {
+    cik: statements.cik, ticker: statements.ticker, periodEnd: statements.quarters[at].end, filed: statements.quarters[at].filed,
+    revenue: revenueOf(at), revenueYearAgo: revenueOf(at - 4),
+    netIncome, freeCashFlow: latest(year("cashflow", "freeCashFlow", at)),
+    epsDiluted: round(epsDiluted, 4), epsHow,
+    // fewer than a month of sessions is no three-month average
+    dollarVolume: sessions.length >= 21 ? Math.round(sessions.reduce((sum, row) => sum + Number(row.close) * Number(row.volume), 0) / sessions.length) : null,
+  };
+}
 
 export function buildDeskCompanyActions(params: { cik: number; ticker: string; rows: StandardPriceRow[]; builtAt: string; dividendYears?: number }): DeskCompanyActions | null {
   const rows = params.rows.filter((row) => row.date && Number(row.close) > 0);

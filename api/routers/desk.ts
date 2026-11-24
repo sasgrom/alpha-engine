@@ -15,7 +15,7 @@
  *   owner only: the desk shows it as a banner, so a stopped collection is never silent.
  */
 import { z } from "zod";
-import type { DeskCompanyActions, DeskCompanyFilings, DeskCompanyGuidance, DeskCompanyHolders, DeskCompanyInsiders, DeskCompanyStatements, DeskInsiderMarket } from "@contracts/desk-company";
+import type { DeskCompanyActions, DeskCompanyFilings, DeskCompanyGuidance, DeskCompanyHolders, DeskCompanyInsiders, DeskCompanyStatements, DeskInsiderMarket, DeskScreen } from "@contracts/desk-company";
 import type { EngineFlowCompany, EngineFlowIndex } from "@contracts/engine-flow";
 import type { FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
 import { operationsHealth } from "../../worker/lib/operations-health";
@@ -48,6 +48,8 @@ export const deskRouter = createRouter({
   companyInsiders: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyInsiders>(`insiders/${input.cik}.json`)),
   // insider trading across companies, from the same build as the company files (public Form 4 reports)
   insiderMarket: authedQuery.query(() => readDeskCompanyFile<DeskInsiderMarket>("insiders-market.json")),
+  // the Screener's fundamentals for all companies (figures from public filings and prices)
+  screen: authedQuery.query(() => readDeskCompanyFile<DeskScreen>("screen.json")),
   companyFilings: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyFilings>(`filings/${input.cik}.json`)),
   // the text of a cached earnings-release exhibit; the service opens only a file the company's filings list names
   companyDocument: authedQuery

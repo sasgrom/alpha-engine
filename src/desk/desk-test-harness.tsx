@@ -235,6 +235,15 @@ const COMPANY_HOLDERS = {
     { period: "2026-06-30", knownAt: "2026-08-31", holders: 270, fundsFiled: 307, fundsInBook: 307, valueUsd: 2.425e12, shareOfStock: 0.5747, entries: 6, exits: 5, continuing: 294, breadthChange: 0.0034, sharesBought: 309.2e6, sharesSold: 124.3e6, top10Share: 0.5548 },
   ],
 };
+/** The Screener's fundamentals: Apple with every figure, Nvidia with a loss, Microsoft without a row (Schwab's figures stand in). */
+const SCREEN = {
+  schemaVersion: 2, standard: "v3.2", pricesAsOf: "2026-11-20", builtAt: "2026-11-23T00:00:00.000Z",
+  companies: [
+    { cik: 320193, ticker: "AAPL", periodEnd: "2026-09-26", filed: "2026-11-03", revenue: 400e9, revenueYearAgo: 320e9, netIncome: 100e9, freeCashFlow: 80e9, epsDiluted: 5, epsHow: "year", dollarVolume: 14.6e9 },
+    { cik: 1045810, ticker: "NVDA", periodEnd: "2026-10-25", filed: "2026-11-18", revenue: 200e9, revenueYearAgo: null, netIncome: -10e9, freeCashFlow: null, epsDiluted: -2, epsHow: "last_shares", dollarVolume: 33.3e9 },
+  ],
+};
+
 const INSIDER_MARKET = {
   schemaVersion: 2, version: "i-test", asOf: "2026-11-13", builtAt: "2026-11-23T00:00:00Z", companies: 500, days: 90,
   totals: { bought: 12_400_000, sold: 2_100_000_000, buyers: 14, sellers: 610, buyingCompanies: 9, sellingCompanies: 302, soldUnderPlan: 1_470_000_000 },
@@ -303,6 +312,7 @@ function answer(procedure: string, role: string): unknown {
     case "workersLocal.runOperation": return { id: "1-schwab-snapshot", chain: ["schwab-fetch-daily", "schwab-snapshot"] };
     case "workersLocal.operationLog": return { lines: ["[edgar] 412 of 503 companies", "[edgar] waiting 0.2 s"] };
     case "desk.insiderMarket": return DESK_DATA.empty ? null : INSIDER_MARKET;
+    case "desk.screen": return DESK_DATA.empty ? null : SCREEN;
     case "desk.companyInsiders": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_INSIDERS;
     case "desk.engineIndex": return ENGINE_INDEX;
     case "desk.engineCompany": return ENGINE_COMPANY;

@@ -211,7 +211,7 @@ calls. 18 classic routes are still live; only `/messages` and `/admin` redirect 
 | Company `/company/:ticker` | **Mostly moved, on the standards:** statements (v3.2, quarter, year, trailing year, a chart per line), guidance and the reported figure (g1.2, adjusted EPS), splits and dividends, holders (13F k16.6), insiders (i1.1), short interest, filings with a release reader (500 companies instead of the old documents tab's 51), risk and returns (Terminal's charts), price, options, peers, reactions | Any-concept series explorer, data-health tab, signal stream, LLM briefs. **Dropped by the owner (2026-11-22):** valuation, probability, factor IC and sentiment panels |
 | Terminal | Its three charts (Risk and returns card) | The route stays live and is still the landing page for users who chose the classic view |
 | Dashboard | Today (filings, FRED values, watchlist, coming up, just reported); Flows and Ownership for sector flows | Morning brief (paused by the owner); launch buttons (go to Operations) |
-| Screener | Price, 12−1 momentum, market value, P/E, yield, beta, volatility, 52-week range, trend, next report | EPS TTM, FCF margin, 3-month volume, revision rate ("sentiment (prototype)" is to be dropped) |
+| Screener | **Moved** (handoff 226): two views. Performance: price, returns, 12−1 momentum, market value, beta, volatility, 52-week range, trend, next report. Fundamentals, from the standard fundamentals and prices: P/E, diluted EPS, revenue and its growth, net margin, FCF margin (last four reported quarters), three-month dollar volume; yield and market value are Schwab's | Revision rate (belongs to the guidance record); "sentiment (prototype)" is dropped. Market value and yield from our own data wait for share counts of multi-class companies and for the dividend gaps in the standard prices |
 | Universe | Watchlist follows and unfollows index companies | Add any SEC company (starts an ingest), hide, scope presets, GICS re-enrichment, S&P bootstrap |
 | Workers | **Moved** (handoff 225): Operations → Jobs (switch, schedule edit with the next runs, Run and Stop after a confirmation that names the chain), Runs (running, waiting, last run of each job, logs), Coverage, Reference (what follows what); `/workers` redirects, the classic page is removed | Owner-only reports and the honest macro status on the server (K24) |
 | Jobs | — | The classic `/jobs` page stays until the Watchlist can add a company (its only use: five `universe-add` rows) |
@@ -259,7 +259,7 @@ Volatility research, the intraday ranges.
 1. ~~Correct the Signals ledger from the research record.~~ Done.
 2. ~~Ownership's sector flows from the 13F standard; its insider cards from the insider standard.~~ Done.
 3. ~~Operations console (K17b).~~ Done; `/workers` is retired, `/jobs` follows with the Watchlist's "add a company".
-4. Screener columns from the standard fundamentals; Watchlist "add any SEC company".
+4. ~~Screener columns from the standard fundamentals.~~ Done (handoff 226). Open: Watchlist "add any SEC company".
 5. Research pages: the cross-company guidance record (g1.2), the full insider list (i1.1), option chains, the scenario
    lab, handbooks and wiki as documents.
 6. Retire the classic view: redirects, desk sign-in; then the old pipelines (`docs/PROJECT_REVIEW_2026-11-22.md`

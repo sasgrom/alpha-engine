@@ -36,7 +36,8 @@ export const DEV_NOTES = {
   },
   screener: {
     missing: [
-      "Columns from our own filings data (growth, margins, free cash flow): the snapshot carries Schwab's ratios only.",
+      "Market value, yield and beta from our own data: they are Schwab's. Share counts of companies with several share classes and the dividends after April 2024 have gaps in the standards.",
+      "Per-share figures for about twenty companies (several share classes, a changed registrant): Schwab's stand in, shown grey.",
       "Saved screens and column choice.",
       "Valuation that is right on past dates (task K08).",
     ],
