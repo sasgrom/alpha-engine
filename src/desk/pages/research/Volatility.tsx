@@ -146,7 +146,7 @@ export default function Volatility() {
               <div className="desk-stat"><span>One expected move over a month, on that exposure</span><strong>{exposure === null || selected.move1m === null ? "—" : `±${fmtPrice(exposure * selected.move1m)}`}</strong></div>
             </div>
             <p className="desk-muted" style={{ margin: 0, fontSize: 12 }}>
-              share = target ÷ forecast, kept between 25% and 100%. The expected move is a scenario size, not a maximum loss. The historical replay is in the <Link className="desk-link" to="/analytics/risk-lab">risk lab</Link>, the method in the <Link className="desk-link" to="/desk/research/library/volatility-handbook">handbook</Link>.
+              share = target ÷ forecast, kept between 25% and 100%. The expected move is a scenario size, not a maximum loss. The method is in the <Link className="desk-link" to="/desk/research/library/volatility-handbook">handbook</Link>.
             </p>
           </div>
         </Card>

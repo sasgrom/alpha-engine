@@ -3,7 +3,6 @@
  * Membership is the per-user universe of the classic view (the same rows), so both views always agree.
  */
 import { useMemo, useState } from "react";
-import { Link } from "react-router";
 import { Plus, X } from "lucide-react";
 import { Sparkline } from "../charts/Sparkline";
 import { IntradaySpark } from "../charts/IntradayChart";
@@ -85,7 +84,7 @@ export default function Watchlist() {
                         {company ? (
                           <CompanyLink company={company} className="company-cell"><span className="desk-ticker">{company.ticker}</span><span>{company.name}</span></CompanyLink>
                         ) : (
-                          <Link to={`/company/${encodeURIComponent(row.ticker)}`} className="company-cell"><span className="desk-ticker">{row.ticker}</span><span>{row.name ?? "outside the index · classic page"}</span></Link>
+                          <span className="company-cell" title="Outside the companies the desk covers: it has no page here"><span className="desk-ticker">{row.ticker}</span><span>{row.name ?? "outside the covered companies"}</span></span>
                         )}
                       </td>
                       <td className="num">{fmtPrice(company?.close ?? null)}</td>

@@ -88,8 +88,8 @@ describe("desk owner tools", () => {
     await waitUntil(() => desk!.calls.includes("admin.resetReviewerFirstIp"));
     await click(host, "Reset NDA");
     await waitUntil(() => desk!.calls.includes("admin.resetReviewerNda"));
-    await click(host, "Reset tour");
-    await waitUntil(() => desk!.calls.includes("admin.resetReviewerTour"));
+    // the guided tour went with the classic view: no tour column and no reset for it
+    expect(host.textContent).not.toContain("Reset tour");
     vi.spyOn(window, "confirm").mockReturnValue(true);
     await click(host, "Delete");
     await waitUntil(() => desk!.calls.includes("admin.deleteUser"));

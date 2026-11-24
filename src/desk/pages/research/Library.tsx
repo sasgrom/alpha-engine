@@ -1,29 +1,21 @@
 import { Link } from "react-router";
-import { Activity, ArrowUpRight, BookOpen, Database, FileSearch, Gauge, LineChart, MessageSquare, Network, ShieldCheck, Sparkles, Users, Workflow } from "lucide-react";
+import { Activity, ArrowUpRight, BookOpen, MessageSquare, ShieldCheck } from "lucide-react";
 import { useDesk, useDocumentTitle } from "../../context";
-import { classicDestinations } from "../../destinations";
+import { libraryDestinations } from "../../destinations";
 import { DevNotes } from "../../DevNotes";
 import { ResearchFrame } from "../../ResearchParts";
 
-/** What each classic page still holds that its desk counterpart does not. */
-const DETAILS: Record<string, { icon: typeof Activity; text: string; desk?: string }> = {
-  "/expectations": { icon: FileSearch, text: "The full guidance record: every statement read from 26,000 documents, with its quote, period and revision.", desk: "Guidance shows every change of the last year in the release's words and each company's record; a company's page shows its full history." },
-  "/insider-activity": { icon: Users, text: "All Form 4 transactions with the excluded codes, per-company filters and the cluster detail.", desk: "Ownership shows the purchases, the multi-insider windows and the dry-run benchmark." },
+/** What each page of the Library holds. */
+const DETAILS: Record<string, { icon: typeof Activity; text: string }> = {
   "/desk/research/library/volatility-handbook": { icon: BookOpen, text: "The volatility handbook: notation, expected move, the paired tests and their tables." },
-  "/analytics/risk-lab": { icon: Gauge, text: "A historical replay of one company's implied and realized expected move against the actual outcome.", desk: "Volatility has the sizing calculator on today's readings." },
-  "/analytics": { icon: Network, text: "The weekly evidence review: the map of what is built, partial and unproven, and the option hypothesis ledger.", desk: "Signals is the ledger of measured results." },
-  "/market-data": { icon: LineChart, text: "Coverage and provenance of the Schwab chains, quotes and intraday context.", desk: "Operations shows capture health." },
-  "/project-state": { icon: Workflow, text: "Where code, collection, evidence and delivery each stand." },
   "/desk/messages": { icon: MessageSquare, text: "Conversations with the team, with member-safe contacts and the owner's user intel." },
   "/desk/research/library/factors": { icon: BookOpen, text: "Definitions of the factors and measures, searchable and linked to the measured evidence." },
   "/desk/admin": { icon: ShieldCheck, text: "People, reviewers, structured manuals, job logs and delivery monitors." },
   "/desk/operations?tab=jobs": { icon: Activity, text: "Every job with its switch, schedule, Run and Stop; the runs and their logs; what follows what." },
-  "/database": { icon: Database, text: "Browse stored tables, filings and concept series." },
-  "/lab": { icon: Sparkles, text: "Sentiment scoring of filing sections." },
 };
 
 const GROUP_TEXT: Record<string, string> = {
-  "Research tools": "The classic research pages. Each still holds detail its desk tool does not show yet.",
+  "Research tools": "The methods behind the research pages.",
   Workspace: "Your messages and the reference pages of the desk.",
   "Owner tools": "Administration and the controls of the data pipeline.",
 };
@@ -31,7 +23,7 @@ const GROUP_TEXT: Record<string, string> = {
 export default function Library() {
   useDocumentTitle("Library");
   const { isAdmin, isPresentation, audienceReady } = useDesk();
-  const destinations = classicDestinations(isAdmin, isPresentation);
+  const destinations = libraryDestinations(isAdmin, isPresentation);
   const groups = ["Research tools", "Workspace", "Owner tools"].map((group) => ({ group, items: destinations.filter((destination) => destination.group === group) })).filter((entry) => entry.items.length);
   const content = (
     <>
@@ -39,7 +31,7 @@ export default function Library() {
         <div>
           <span className="desk-eyebrow">Research · methods, full records and tools</span>
           <h1>Library</h1>
-          <p className="desk-lede">The detailed records behind the desk tools. New desk destinations open in place; the remaining classic tools are marked.</p>
+          <p className="desk-lede">The methods and reference pages behind the desk tools.</p>
         </div>
       </div>
       {groups.map(({ group, items }) => (
@@ -55,8 +47,7 @@ export default function Library() {
                   <span className="desk-tool-icon"><Icon size={19} aria-hidden="true" /></span>
                   <h3>{item.label}</h3>
                   <p>{detail?.text ?? ""}</p>
-                  {detail?.desk && <p className="desk-muted" style={{ fontSize: 12.5 }}>In the desk: {detail.desk}</p>}
-                  <span className="desk-link desk-nowrap">{item.classic ? "Open in the classic view" : "Open in desk"} <ArrowUpRight size={13} aria-hidden="true" /></span>
+                  <span className="desk-link desk-nowrap">Open <ArrowUpRight size={13} aria-hidden="true" /></span>
                 </Link>
               );
             })}

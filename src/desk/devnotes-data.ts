@@ -48,7 +48,7 @@ export const DEV_NOTES = {
   },
   company: {
     missing: [
-      "Valuation and sentiment: left in the classic company page on purpose (the old factor engine never passed an out-of-sample test).",
+      "Valuation, probability and sentiment panels: not carried from the old company page on purpose (the old factor engine never passed an out-of-sample test).",
       "Filings: 10-K, 10-Q and 8-K only, to the release calendar's last run (November 12, 2026); the calendar is rebuilt by hand, not on a schedule. Proxy statements, prospectuses and insider forms are not listed.",
       "The reader shows earnings releases only, as plain text (tables as rows of cells). Annual and quarterly reports open at the SEC.",
       "Statements: 197 filed share counts and per-share figures of the last ten years are out of scale (a filing gave millions or thousands) and are named, not shown; their years have no per-share figure (McDonald's since 2023). The standard fundamentals could repair them.",
@@ -80,7 +80,7 @@ export const DEV_NOTES = {
   },
   earnings: {
     missing: [
-      "Guidance per company (raised, lowered, kept): the classic Expectations report is 26 MB; a slim per-company summary is not built.",
+      "Guidance raised or lowered beside each report here: it is on the Guidance page and each company's page, not joined to this list.",
       "Reaction measured against the move the options had priced.",
       "Report time of day, so the reaction window is exact instead of two sessions.",
       "Surprise against consensus: there is no estimates feed.",
@@ -161,7 +161,7 @@ export const DEV_NOTES = {
   },
   library: {
     missing: [
-      "Scenario evidence drill-down, the full Expectations report, the risk replay and the weekly evidence review are not rebuilt in the desk; they open in the classic view.",
+      "The old statement-by-statement Expectations report, the single-company risk replay and the weekly evidence review were not carried over when the classic view was removed.",
     ],
     better: [["One search across definitions, methods and evidence", "the manuals moved into structured content"]],
   },

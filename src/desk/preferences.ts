@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 
 /**
- * Per-viewer conveniences of the desk view, kept in browser storage: the theme choice, which view the site opens
- * in, and recently opened companies. Storage can be unavailable (private windows, blocked site data), so every
+ * Per-viewer conveniences of the desk view, kept in browser storage: the theme choice and recently opened companies. Storage can be unavailable (private windows, blocked site data), so every
  * access is guarded and the defaults always work.
  */
 const THEME_KEY = "alpha.desk.theme";
-const VIEW_KEY = "alpha.view";
 const RECENT_KEY = "alpha.desk.recent";
 
 function read(key: string): string | null {
@@ -51,17 +49,6 @@ export function useDeskTheme(): { choice: ThemeChoice; resolved: ResolvedTheme; 
     write(THEME_KEY, next === "system" ? null : next);
   };
   return { choice, resolved: choice === "system" ? (systemDark ? "dark" : "light") : choice, choose };
-}
-
-export type ViewChoice = "desk" | "classic";
-
-/** The view "/" opens in: the desk unless the viewer switched to the classic view last. */
-export function preferredView(): ViewChoice {
-  return read(VIEW_KEY) === "classic" ? "classic" : "desk";
-}
-
-export function rememberView(view: ViewChoice): void {
-  write(VIEW_KEY, view);
 }
 
 export function recentTickers(): string[] {

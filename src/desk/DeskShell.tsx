@@ -6,16 +6,16 @@
  */
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
-import { AlertTriangle, Eye, LogOut, MessageSquare, Search, Undo2 } from "lucide-react";
+import { AlertTriangle, Eye, LogOut, MessageSquare, Search } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useReviewer } from "@/hooks/useReviewer";
 import { trpc, VIEW_AS_KEY } from "@/providers/trpc";
 import { CHART_PALETTE } from "./charts/color";
 import { CommandPalette } from "./CommandPalette";
 import { DeskContext, type DeskContextValue } from "./context";
-import { classicDestinations, type PaletteDestination } from "./destinations";
+import { libraryDestinations, type PaletteDestination } from "./destinations";
 import { fmtClock, fmtDate, initials } from "./format";
-import { rememberView, useDeskTheme, type ThemeChoice } from "./preferences";
+import { useDeskTheme, type ThemeChoice } from "./preferences";
 import "./desk.css";
 
 const NAV = [
@@ -170,14 +170,14 @@ export default function DeskShell({ children }: { children: ReactNode }) {
             { label: "Volatility", path: "/desk/research/volatility", group: "Desk" as const, keywords: "options implied realized expected move sizing risk" },
             { label: "Macro", path: "/desk/research/macro", group: "Desk" as const, keywords: "rates credit oil dollar exposure scenario" },
             { label: "Ownership", path: "/desk/research/ownership", group: "Desk" as const, keywords: "insiders 13f institutions short interest" },
-            { label: "Library", path: "/desk/research/library", group: "Desk" as const, keywords: "methods handbook glossary classic tools" },
+            { label: "Library", path: "/desk/research/library", group: "Desk" as const, keywords: "methods handbook glossary reference tools" },
           ]
         : []),
       ...(flowsOpen ? [{ label: "Fund flows", path: "/desk/flows", group: "Desk" as const, keywords: "13f institutions funds money rotation sectors bought sold hall library of capital" }] : []),
       ...(isAdmin ? [{ label: "Engine", path: "/desk/engine", group: "Desk" as const, keywords: "prediction engine model regression bayes probability factors step by step flow" }] : []),
       ...(isAdmin ? [{ label: "Operations", path: "/desk/operations", group: "Desk" as const, keywords: "health scheduler jobs checks" }] : []),
       ...(isAdmin ? [{ label: "Owner tools", path: "/desk/admin", group: "Desk" as const, keywords: "admin people reviewers manuals logs monitors" }] : []),
-      ...classicDestinations(isAdmin, isPresentation),
+      ...libraryDestinations(isAdmin, isPresentation),
     ],
     [isAdmin, isPresentation, flowsOpen],
   );
@@ -207,10 +207,6 @@ export default function DeskShell({ children }: { children: ReactNode }) {
   const unreadCount = unread.data?.count ?? 0;
   const roleLabel = isAdmin ? "Owner" : isReviewer ? "Reviewer" : "Member";
   const chooseTheme = (choice: ThemeChoice) => theme.choose(choice);
-  const toClassic = () => {
-    rememberView("classic");
-    navigate("/terminal");
-  };
 
   return (
     <DeskContext.Provider value={context}>
@@ -259,9 +255,6 @@ export default function DeskShell({ children }: { children: ReactNode }) {
                         {unreadCount > 0 && <span className="desk-badge accent" style={{ marginLeft: "auto" }}>{unreadCount} new</span>}
                       </Link>
                     )}
-                    <button type="button" role="menuitem" onClick={toClassic}>
-                      <Undo2 size={15} aria-hidden="true" /> Switch to the classic view
-                    </button>
                     <button type="button" role="menuitem" onClick={logout}>
                       <LogOut size={15} aria-hidden="true" /> Sign out
                     </button>
@@ -303,9 +296,6 @@ export default function DeskShell({ children }: { children: ReactNode }) {
           )}
           <span className="spacer" />
           <span>Press {isMac ? "⌘K" : "Ctrl K"} to search</span>
-          <button type="button" onClick={toClassic} style={{ border: "none", background: "transparent", color: "var(--d-ink-2)", font: "inherit", cursor: "pointer", padding: 0 }}>
-            Classic view
-          </button>
         </footer>
         {searchOpen && (
           <CommandPalette

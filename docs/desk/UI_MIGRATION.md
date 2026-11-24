@@ -200,6 +200,13 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 
 ## 7. Status on 2026-11-23 (evening): what has moved, what has not
 
+> **The classic view was removed on 2026-11-24 (handoff 236), on the owner's word.** Every classic address redirects
+> to the desk page that took it over (`src/App.tsx`); the classic pages, their layout, the reviewers' guided tour and
+> the components and data only they used are deleted (80 files). What each remaining page held, and what was carried
+> from it, is in handoff 235. The table below is the record of the move as it stood the evening before; the old
+> pipelines and tables behind the classic pages are the next, separate step
+> (`docs/PROJECT_REVIEW_2026-11-22.md` section 6.4).
+
 Checked against the code: the routes in `src/App.tsx` and `src/desk/DeskApp.tsx`, and the server procedures each side
 calls. 18 classic routes are still live; only `/messages` and `/admin` redirect to the desk.
 
@@ -264,5 +271,5 @@ Volatility research, the intraday ranges.
 5. Research pages: ~~the cross-company guidance record (g1.2), the full insider list (i1.1)~~ (done, handoffs 227 and
    228), ~~option chains~~ (done, handoff 229), ~~the scenario lab~~ (done, handoff 233), ~~handbooks and wiki as
    documents~~ (done by Kimi, K25).
-6. Retire the classic view: redirects, desk sign-in; then the old pipelines (`docs/PROJECT_REVIEW_2026-11-22.md`
+6. ~~Retire the classic view: redirects, desk sign-in~~ (done, handoffs 234 and 236); then the old pipelines (`docs/PROJECT_REVIEW_2026-11-22.md`
    section 6.4).

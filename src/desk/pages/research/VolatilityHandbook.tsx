@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router";
-import { ArrowLeft, ArrowRight, BookOpen, ShieldCheck } from "lucide-react";
+import { ArrowLeft, BookOpen, ShieldCheck } from "lucide-react";
 import { useDocumentTitle } from "../../context";
 import { DevNotes } from "../../DevNotes";
 import { ResearchFrame } from "../../ResearchParts";
@@ -183,7 +183,6 @@ export default function VolatilityHandbook() {
               </div>
             </div>
             <p>The example illustrates the intended ticker profile: implied expected move, trailing baseline, realized move and confidence bands. ATM IV produced a wider but still serviceable range than RV20; the actual move finished inside the ATM band and slightly above the RV20 band. It is evidence of calibration, not a trade recommendation.</p>
-            <Link to="/analytics/risk-lab" className="desk-link">Open interactive AAPL risk replay <ArrowRight size={14} /></Link>
           </Section>
 
           <Section id="references" title="08 · Academic sources">

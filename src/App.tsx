@@ -1,49 +1,35 @@
-import { lazy, Suspense, type ReactNode } from "react";
-import { Routes, Route, Link, Navigate, useLocation } from "react-router";
-import { ShieldAlert } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
-import NotFound from "./pages/NotFound";
+import { lazy, Suspense } from "react";
+import { Routes, Route, Navigate, useLocation, useParams } from "react-router";
 import ReviewerGate from "./components/ReviewerGate";
-import PresentationOnly from "./components/PresentationOnly";
-import { preferredView } from "./desk/preferences";
 
 const Desk = lazy(() => import("./desk/DeskApp"));
 const SignIn = lazy(() => import("./desk/pages/SignIn"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Terminal = lazy(() => import("./pages/Terminal"));
-const Company = lazy(() => import("./pages/Company"));
-const Screener = lazy(() => import("./pages/Screener"));
-const DatabasePage = lazy(() => import("./pages/Database"));
-const Lab = lazy(() => import("./pages/Lab"));
-const Analytics = lazy(() => import("./pages/Analytics"));
-const VolatilityRiskLab = lazy(() => import("./pages/VolatilityRiskLab"));
-const Expectations = lazy(() => import("./pages/Expectations"));
-const InsiderActivity = lazy(() => import("./pages/InsiderActivity"));
-const MarketData = lazy(() => import("./pages/MarketData"));
-const ProjectState = lazy(() => import("./pages/ProjectState"));
 
-/** Direct URLs cannot bypass the owner-page guard; procedures also enforce the role on the server. */
-function AdminOnly({ children }: { children: ReactNode }) {
-  const { user, isLoading } = useAuth({ redirectOnUnauthenticated: true })
-  if (isLoading || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="radar" />
-      </div>
-    )
-  }
-  if (user.role !== "admin") {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-3">
-        <ShieldAlert size={20} className="text-crit-red" />
-        <div className="t-mono text-[12px] text-crit-red">OWNER-ONLY INSTRUMENT — insufficient role</div>
-        <Link to="/" className="t-mono text-[11px] text-muted-foreground hover:text-live-cyan underline underline-offset-4">
-          back to dashboard
-        </Link>
-      </div>
-    )
-  }
-  return <>{children}</>
+/** The classic view is gone (2026-11-24). Its addresses stay alive as redirects to the desk page that took each over. */
+const MOVED: Record<string, string> = {
+  "/terminal": "/desk",
+  "/dashboard": "/desk",
+  "/screener": "/desk/screener",
+  "/universe": "/desk/watchlist",
+  "/messages": "/desk/messages",
+  "/admin": "/desk/admin",
+  "/workers": "/desk/operations?tab=jobs",
+  "/jobs": "/desk/operations?tab=runs",
+  "/project-state": "/desk/operations",
+  "/database": "/desk/operations",
+  "/lab": "/desk/research",
+  "/analytics": "/desk/research",
+  "/analytics/methodology": "/desk/research/library/volatility-handbook",
+  "/analytics/risk-lab": "/desk/research/volatility",
+  "/market-data": "/desk/research/volatility",
+  "/scenario-lab": "/desk/research/macro?view=scenarios",
+  "/expectations": "/desk/research/guidance",
+  "/insider-activity": "/desk/research/ownership",
+};
+
+function CompanyRedirect() {
+  const { ticker } = useParams();
+  return <Navigate to={`/desk/company/${encodeURIComponent(ticker ?? "")}`} replace />;
 }
 
 function FactorWikiRedirect() {
@@ -53,35 +39,18 @@ function FactorWikiRedirect() {
 
 export default function App() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="radar" /></div>}>
+    <Suspense fallback={<div style={{ minHeight: "100vh" }} aria-hidden="true" />}>
       <ReviewerGate><Routes>
-      {/* "/" opens the view the viewer used last: the new desk by default, the classic terminal after a switch back */}
-      <Route path="/" element={<Navigate to={preferredView() === "classic" ? "/terminal" : "/desk"} replace />} />
+      <Route path="/" element={<Navigate to="/desk" replace />} />
       <Route path="/desk/*" element={<Desk />} />
-      <Route path="/terminal" element={<Terminal />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/universe" element={<Navigate to="/desk/watchlist" replace />} />
-      <Route path="/screener" element={<Screener />} />
-      <Route path="/company/:ticker" element={<Company />} />
-      <Route path="/jobs" element={<AdminOnly><Navigate to="/desk/operations?tab=runs" replace /></AdminOnly>} />
-      <Route path="/messages" element={<Navigate to="/desk/messages" replace />} />
-      <Route path="/wiki" element={<FactorWikiRedirect />} />
-      <Route path="/database" element={<AdminOnly><DatabasePage /></AdminOnly>} />
-      <Route path="/lab" element={<AdminOnly><Lab /></AdminOnly>} />
-      <Route path="/admin" element={<AdminOnly><Navigate to="/desk/admin" replace /></AdminOnly>} />
-      <Route path="/workers" element={<AdminOnly><Navigate to="/desk/operations?tab=jobs" replace /></AdminOnly>} />
-      <Route path="/project-state" element={<PresentationOnly><ProjectState /></PresentationOnly>} />
-      <Route path="/analytics" element={<PresentationOnly><Analytics /></PresentationOnly>} />
-      <Route path="/analytics/methodology" element={<PresentationOnly><Navigate to="/desk/research/library/volatility-handbook" replace /></PresentationOnly>} />
-      <Route path="/analytics/risk-lab" element={<PresentationOnly><VolatilityRiskLab /></PresentationOnly>} />
-      <Route path="/scenario-lab" element={<Navigate to="/desk/research/macro?view=scenarios" replace />} />
-      <Route path="/expectations" element={<PresentationOnly><Expectations /></PresentationOnly>} />
-      <Route path="/insider-activity" element={<PresentationOnly><InsiderActivity /></PresentationOnly>} />
-      <Route path="/market-data" element={<PresentationOnly><MarketData /></PresentationOnly>} />
       <Route path="/login" element={<SignIn mode="signin" />} />
       <Route path="/signup" element={<SignIn mode="signup" />} />
-      <Route path="*" element={<NotFound />} />
+      {Object.entries(MOVED).map(([from, to]) => <Route key={from} path={from} element={<Navigate to={to} replace />} />)}
+      <Route path="/company/:ticker" element={<CompanyRedirect />} />
+      <Route path="/wiki" element={<FactorWikiRedirect />} />
+      {/* any other address opens the desk; a wrong page inside the desk says so itself */}
+      <Route path="*" element={<Navigate to="/desk" replace />} />
       </Routes></ReviewerGate>
     </Suspense>
-  )
+  );
 }

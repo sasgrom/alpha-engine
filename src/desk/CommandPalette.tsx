@@ -5,13 +5,13 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 import { Command } from "cmdk";
-import { ArrowRight, Building2, Compass, LayoutGrid, Monitor, Moon, Search, Sun, Undo2 } from "lucide-react";
+import { ArrowRight, Building2, Compass, LayoutGrid, Monitor, Moon, Search, Sun } from "lucide-react";
 import type { DeskCompany } from "@contracts/desk-snapshot";
 import { Delta } from "./components";
 import { searchCompanies } from "./data";
 import { fmtPrice } from "./format";
 import type { PaletteDestination } from "./destinations";
-import { recentTickers, rememberTicker, rememberView, type ThemeChoice } from "./preferences";
+import { recentTickers, rememberTicker, type ThemeChoice } from "./preferences";
 
 export function CommandPalette({
   companies,
@@ -36,7 +36,6 @@ export function CommandPalette({
   }, [companies, query, q]);
   const pageMatches = destinations.filter((destination) => !q || `${destination.label} ${destination.keywords ?? ""}`.toLowerCase().includes(q)).slice(0, q ? 8 : 6);
   const actions: { label: string; icon: ReactNode; run: () => void; keywords: string }[] = [
-    { label: "Switch to the classic view", icon: <Undo2 size={16} />, keywords: "classic legacy old terminal", run: () => { rememberView("classic"); navigate("/terminal"); } },
     { label: "Light theme", icon: <Sun size={16} />, keywords: "theme light day", run: () => onTheme("light") },
     { label: "Dark theme", icon: <Moon size={16} />, keywords: "theme dark night", run: () => onTheme("dark") },
     { label: "Theme follows the system", icon: <Monitor size={16} />, keywords: "theme system auto", run: () => onTheme("system") },
@@ -96,7 +95,7 @@ export function CommandPalette({
                 <Command.Item key={destination.path} value={`page:${destination.path}`} onSelect={() => go(() => navigate(destination.path))}>
                   {destination.group === "Desk" ? <LayoutGrid size={16} color="var(--d-muted)" aria-hidden="true" /> : <Compass size={16} color="var(--d-muted)" aria-hidden="true" />}
                   <span>{destination.label}</span>
-                  <span className="meta">{destination.classic ? "Classic view" : destination.group}</span>
+                  <span className="meta">{destination.group}</span>
                 </Command.Item>
               ))}
             </Command.Group>

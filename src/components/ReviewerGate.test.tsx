@@ -56,11 +56,13 @@ describe("Reviewer access gate", () => {
     expect(host!.textContent).not.toContain("Confidential research preview");
   });
 
-  it("keeps the tour for a reviewer with not_started tracks", async () => {
+  it("opens the content for a reviewer who agreed, with the restrictions and without a tour", async () => {
+    // the guided tour went with the classic view: tracks never started change nothing
     mocks.status.data = { isReviewer: true, ndaAccepted: true, tours: defaultTours };
     await act(async () => { root!.render(<MemoryRouter><ReviewerGate><div>Secret research</div></ReviewerGate></MemoryRouter>); });
     expect(host!.textContent).toContain("Secret research");
-    expect(host!.textContent).toContain("Two ways to explore");
-    expect(host!.querySelector(".reviewer-tour-backdrop")).not.toBeNull();
+    expect(host!.textContent).not.toContain("Two ways to explore");
+    expect(host!.querySelector(".reviewer-tour-backdrop")).toBeNull();
+    expect(host!.querySelector(".reviewer-watermark")).not.toBeNull();
   });
 });

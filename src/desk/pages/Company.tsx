@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router";
-import { ArrowUpRight, Check, Download, Plus, Search } from "lucide-react";
+import { useParams } from "react-router";
+import { Check, Download, Plus, Search } from "lucide-react";
 import { trpc } from "@/providers/trpc";
 import { DESK_PERIODS, type DeskCompany } from "@contracts/desk-snapshot";
 import { PriceChart, type ImpliedCone } from "../charts/PriceChart";
@@ -325,12 +325,6 @@ export default function CompanyPage() {
         <CompanyFilings cik={cik} />
       </div>
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", marginTop: 22 }}>
-        <Link className="desk-button" to={`/company/${encodeURIComponent(company.registryTicker)}`}>
-          Full analysis in the classic view <ArrowUpRight size={14} aria-hidden="true" />
-        </Link>
-        <span className="desk-muted" style={{ fontSize: 12.5 }}>Valuation and sentiment are in the classic company page.</span>
-      </div>
       <DevNotes page="company" />
     </div>
   );

@@ -12,7 +12,7 @@ import { trpc } from "@/providers/trpc";
 import { Card, Kpi, Notice, Segmented, Shimmer, StatusLabel } from "../components";
 import { useDesk, useDocumentTitle } from "../context";
 import { useDeskSnapshot } from "../data";
-import { classicDestinations } from "../destinations";
+import { libraryDestinations } from "../destinations";
 import { DevNotes } from "../DevNotes";
 import { fmtDateTime, readable, statusKind } from "../format";
 import { consoleJobs, type ConsoleConfig, type ConsoleState } from "../operations/console-data";
@@ -211,13 +211,13 @@ export default function Operations() {
       </div>
       <h2 className="desk-section-title">Owner tools</h2>
       <div className="desk-grid">
-        {classicDestinations(true, true)
+        {libraryDestinations(true, true)
           .filter((destination) => destination.group === "Owner tools" && !destination.path.startsWith("/desk/operations"))
           .map((destination) => (
             <Link key={destination.path} to={destination.path} className="desk-card desk-span-3" style={{ display: "grid", gap: 6 }}>
               <strong style={{ fontWeight: 620 }}>{destination.label}</strong>
               <span className="desk-ink-2" style={{ fontSize: 13 }}>{OWNER_TOOL_TEXT[destination.path] ?? ""}</span>
-              <span className="desk-link desk-nowrap" style={{ fontSize: 12.5 }}>{destination.classic ? "Classic view" : "Open in desk"} <ArrowUpRight size={13} aria-hidden="true" /></span>
+              <span className="desk-link desk-nowrap" style={{ fontSize: 12.5 }}>Open <ArrowUpRight size={13} aria-hidden="true" /></span>
             </Link>
           ))}
       </div>

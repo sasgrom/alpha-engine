@@ -2,16 +2,13 @@ import type { ReactNode } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useReviewer } from "@/hooks/useReviewer";
 import ReviewerNdaGate from "./ReviewerNdaGate";
-import ReviewerTour from "./ReviewerTour";
 import ReviewerRestrictions from "./ReviewerRestrictions";
-import ReviewerGuideLayer from "./ReviewerGuideLayer";
-import { ReviewerGuideProvider } from "@/hooks/useReviewerGuide";
 
 export default function ReviewerGate({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const { status } = useReviewer();
   if (!user) return <>{children}</>;
-  if (status.isLoading) return <div className="min-h-screen flex items-center justify-center"><div className="radar" /></div>;
+  if (status.isLoading) return <div style={{ minHeight: "100vh" }} aria-hidden="true" />;
   if (status.isError) return (
     <div className="reviewer-modal-backdrop" role="alert">
       <section className="reviewer-nda-panel">
@@ -24,5 +21,6 @@ export default function ReviewerGate({ children }: { children: ReactNode }) {
   );
   if (!status.data?.isReviewer) return <>{children}</>;
   if (!status.data.ndaAccepted) return <ReviewerNdaGate />;
-  return <ReviewerGuideProvider userId={user.id}><ReviewerTour /><ReviewerRestrictions />{children}<ReviewerGuideLayer /></ReviewerGuideProvider>;
+  // the guided tour and page hints went with the classic view (owner, 2026-11-24): the agreement and the restrictions stay
+  return <><ReviewerRestrictions />{children}</>;
 }

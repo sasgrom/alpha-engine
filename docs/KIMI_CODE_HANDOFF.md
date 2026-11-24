@@ -4366,3 +4366,45 @@ delivered.
 - **Next:** remove the classic view in one commit: every classic route redirects into the desk, the pages, their
   tests, the classic layout and the data bundles only they use go; the old pipelines behind them are a later step
   (`docs/PROJECT_REVIEW_2026-11-22.md` section 6.4).
+
+## 236. Claude (Fable 5.2): the classic view is removed — 2026-11-24T08:02Z
+
+- **Owner:** "drop the tour, go ahead and delete the classic view".
+- **Addresses.** `src/App.tsx` now holds the desk, sign-in, account creation, and redirects: each classic address
+  opens the desk page that took it over (`/terminal` and `/dashboard` Today, `/screener`, `/company/<ticker>` the
+  desk company page, `/expectations` Guidance, `/insider-activity` Ownership, `/market-data` and the risk lab
+  Volatility, `/analytics` and `/lab` Research, `/project-state` and `/database` Operations, with the redirects made
+  earlier for `/universe`, `/jobs`, `/workers`, `/admin`, `/messages`, `/wiki`, `/scenario-lab`). Any other address
+  opens the desk. "/" always opens the desk: the stored view choice is no longer read.
+- **Removed, 80 files and 10,476 lines:** the thirteen classic pages left (Terminal, Dashboard, Screener, Company,
+  Analytics, Risk lab, Expectations, Insider activity, Market data, Project state, Lab, Database, the classic
+  not-found page) with their tests; the classic layout `AppLayout` and fourteen other components only those pages
+  used; ten components of the classic kit (`src/components/ui`); `src/terminal/`; `src/content/reviewer-guide.ts`,
+  `ReviewerTour`, `ReviewerGuideLayer`, `ReviewerInfoHint` and `useReviewerGuide`; six static data modules under
+  `src/data/`; `src/lib/format.ts`, `job-toast.tsx`, `insider-form4*.ts`; `App.css`; the global toast viewport.
+  - How the list was made: every file under `src/` not reachable from `src/main.tsx` through static or dynamic
+    imports, and every test that imports one of them (scratch tool `src-reach.mjs`; after the removal it reports
+    nothing unused but the two files below, and no missing import).
+  - **Kept on purpose:** `src/data/analytics-snapshot.ts` and `src/data/expectations-report.ts`. Nothing imports
+    them now, so they are no longer in the client bundle (the 27 MB report no longer ships), but the scheduled jobs
+    `analytics-snapshot` and `expectations-report` still write them, and `ui-production-build` follows the first.
+    They go when those jobs are retired.
+- **Reviewers.** `ReviewerGate` keeps the agreement (`ReviewerNdaGate`), the failed-check screen and the
+  restrictions with the watermark (`ReviewerRestrictions`); the guided tour and the page hints are gone, as decided.
+  The owner's reviewer page has no tour column and no "Reset tour" (the server procedure `admin.resetReviewerTour`
+  and the tour rows in the database are untouched).
+- **Desk.** No "Classic view" switch in the account menu, the footer or the command palette; the Library lists the
+  desk's own reference pages only; links that led to classic pages are repointed or removed (Volatility, the
+  handbook, Earnings, the company page's "full analysis in the classic view", the Watchlist's rows of companies
+  outside the covered list, which are plain text now).
+- **Not touched:** every server procedure, the old pipelines and jobs, the database tables, `src/index.css` (it
+  still carries the classic styles; the reviewer agreement uses some of them).
+- Tests: `src/App.redirects.test.tsx` (eight old addresses for the owner) and `App.redirects.member.test.tsx` (a
+  member behind `/admin` and `/messages`; its own file because the harness keeps the signed-in role between the
+  tests of one file), `ReviewerGate.test.tsx` (no tour), `DeskAdmin.test.tsx` (no tour reset).
+- Gates: `npm run check`, 264 files / 1,609 tests (it was 285 / 1,668 before the 22 classic test files went and one
+  was added), `npm run build`, `git diff --check`. Checked on the running server: `/terminal` opens Today, and
+  the footer has no switch. No server code changed, so no restart.
+- **Next (each needs a look before doing, none started):** retire the jobs that only fed classic pages
+  (`analytics-snapshot`, `expectations-report`, the old factor and sentiment jobs) and then the two data files;
+  the unused server procedures and tables behind the removed pages; the classic styles in `src/index.css`.

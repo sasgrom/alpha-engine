@@ -172,7 +172,7 @@ export default function Earnings() {
       </div>
 
       <p className="desk-muted" style={{ fontSize: 12.5, marginTop: 12 }}>
-        What management guided to, and how it changed, is in <Link className="desk-link" to="/expectations">Expectations</Link> (classic view) until a per-company summary is built for the desk.
+        What management guided to, and how it changed, is under <Link className="desk-link" to="/desk/research/guidance">Guidance</Link>, and for one company on its page.
       </p>
       <DevNotes page="earnings" />
     </ResearchFrame>
