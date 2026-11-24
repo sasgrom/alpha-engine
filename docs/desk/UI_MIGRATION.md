@@ -182,9 +182,11 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
     exhibit. The classic documents tab (the app's `documents` table, 51 companies) is not used by the desk.
   - [x] Guidance history (2026-11-22, `c958388`): each guided quarter and fiscal year from the guidance standard g1.2 final,
     release after release, beside the figure first filed; owner and NDA reviewers only. 349 companies have guidance.
-  - [x] Adjusted (non-GAAP) earnings, first version (2026-11-23, handoffs 217 and 218): read from the releases'
-    reconciliation tables by `scripts/build-adjusted-eps.mts` (a2); 890 of 1,672 adjusted quarterly guidance periods
-    on the page have the reported figure. More table layouts and the fiscal-year figures are the next version.
+  - [x] Adjusted (non-GAAP) earnings (2026-11-23, handoffs 217, 218 and 224): read from the releases'
+    reconciliation tables by `scripts/build-adjusted-eps.mts`, on the page from reader a8 (a2 until handoff 224; a3 to
+    a7 were read in full and not used). 1,002 of 1,793 adjusted quarterly guidance periods and 317 of 1,482 fiscal
+    years on the page have the reported figure. Fiscal years are still read through the headers only, and must agree
+    with the sum of their quarters.
     Background: the figure was **not in any data we had** (checked 2026-11-22, handoff 215): the K12.1 release tables hold GAAP lines only (34 adjusted
     per-share rows in 31,258 releases; the K12 spec left non-GAAP out), and the guidance standard has a reported
     adjusted figure for 259 of 9,722 adjusted-guided periods. It needs a new reading of the releases'
@@ -245,7 +247,7 @@ Volatility research, the intraday ranges.
   Engine page shows engine v1 only.
 - **Moved as displays:** first-session reaction and drift (Earnings), implied and realized volatility with the sizing
   calculator (Volatility), rate and credit exposure (Macro), corporate actions and the split watch (company page), the
-  adjusted-earnings reader (company page; a2 on the page, a8 being read).
+  adjusted-earnings reader (company page, a8).
 - **Not moved:** sentiment and tone scoring, LLM digests and the morning brief (Ollama stopped on the owner's word;
   tone measured nothing at the release).
 

@@ -3759,3 +3759,180 @@ delivered.
   reader a8 was in the tree during the tests and is not part of this commit; its full read is running.
 - Next: a8 onto the company page; then the insider cards on the insider standard, the Operations console, and the
   rest of the list in its order.
+
+## 224. Claude (Opus 5.5, then Fable 5.2): adjusted-earnings readers a4 to a7 checked and not used; a8 on the company page — 2026-11-24T02:20Z
+
+- **a4 full read** (05:03 to 06:45 local): usable quarter figures 12,652. It fixed every a3 misread and some a2 figures
+  (Hartford's 22 basic quarters now diluted; Pfizer's −448 and the like now 1.62, 1.78, 1.23, 0.67; Dell, AMD 0.15,
+  Coherent, Merck 2012). Not used: A. O. Smith and Rockwell (16 quarters) showed a pension-cost line ("non-operating"
+  matched "operating"), Merck Q4 2025 1.19 for 2.04, and 104 a2 figures were lost (PPL and Southern 30 quarters to the
+  period-block guard; Mettler-Toledo, Stanley, Trimble, Dollar Tree to the tie rule).
+- **a5 full read** (07:15 to 08:52 local; 494 companies, 39,201 releases): usable 12,832 (11,300 confirmed, 1,532 same
+  row); 76.9% of 1,500 sampled stated in the release's own words; against guidance 2,510 pairs, median +6.1%, 60.2%
+  within a tenth, 6.8% farther than half. Not used: against a4 it lost 97 figures and misread new ones, found release
+  by release (scratchpad replays):
+  1. it required the release's GAAP figure to match the filed one to the cent; releases print it a cent away (continuing
+     operations against all operations, another rounding: AEP 1.11 for 1.10, Morgan Stanley, FirstEnergy, HP, Quest,
+     Stanley, Air Products), and Kimberly-Clark's computed fourth quarter 1.050040283 looked filed at four decimals;
+  2. a header naming two periods was taken for a repeated column header, so "Nine months ended 2016 | Nine months ended
+     2015" no longer started a block: Sempra's nine months and years read for the quarter (Q4 2017 5.42 for 1.54);
+  3. the other-period rule rejected coincidences: PepsiCo's core 1.12 equals the year-ago GAAP 1.12, Tractor Supply;
+  4. a constant-currency last header lost Ralph Lauren's 8 quarters; a trend table running from the older quarter with
+     equal GAAP figures took the wrong column (Cadence, Intel); Raytheon's year-ago column printed this quarter's filed
+     figure (1.33 for 0.90); FirstEnergy's segment table gave a segment's 0.15 for 0.49;
+  5. the decision ranked diluted before anchored readings, so a diluted row placed by its header won (AMD 2010: 0.09
+     and 0.47 for 0.15 and 0.14, which the release text states).
+- **a6** (56 tests, 14 new, each failing on a5) fixed those:
+  - a printed GAAP figure a cent from the filed one places the period only where the row prints no figure of that period
+    to the cent, in a column whose year fits, and with a witness: another period placed right beside it, or a quarter
+    header vouching for the row's own (first) figure; the build marks computed anchors from the fundamentals' source;
+  - where a header names the years over the row, the newest period takes a column of the latest year; a header's full
+    date must be the period's end within ten days (Church & Dwight's forecast quarter); guidance and estimate cells and
+    titles longer than 60 characters name no period (Sherwin-Williams' 2021 guidance column, Pentair's title); the year
+    order runs from a header's first year to the first different one;
+  - a header row starts a new block unless it names a quarter beside a longer period; a row of one year alone starts a
+    block (IFF); a breakdown whose figures add up to its total places a period by the total only (FirstEnergy's
+    segments), and rows named "2Q 2014 …" pair within their year;
+  - an adjusted figure equal to another period's GAAP figure is a coincidence where the adjustments add up to it or the
+    row prints that GAAP figure itself; a side-by-side row under a constant-currency last header reads the header over
+    its own figure (Ralph Lauren); a row's own label says basic or diluted before its heading (Citizens);
+  - readings the GAAP line placed outrank header readings in a release (agreeOn); the company decision keeps a5's
+    trusted-row rule, and the release's running text (`stated` figures per release, from `htmlToParagraphs`) breaks a
+    tie only where the rows' figure was placed by a header or the rows give none; it never overrules a GAAP-placed
+    figure (PepsiCo Q1 2010, ADP fiscal Q4 2013: the text also states the year's figure).
+- **a6 full read** (10:48 to 12:29 local; 494 companies, 39,201 releases): usable 13,026 (11,480 confirmed, 1,546 same
+  row); 77.5% of 1,500 sampled stated in the release's own words; against guidance 2,554 pairs, median +6.0%, 60.6%
+  within a tenth, 6.7% farther than half. Release by release against a5: kept 12,776, changed 47, new 203, lost 9.
+  - The 47 changed against the release text: it states the a6 figure in 23 and the a5 one in 1 (Charles River's
+    year-ago 0.70), both in 6, neither in 17; checked in the tables, a6 is right in all but Regeneron and Mid-America
+    below (Citizens, Charles River and ServiceNow now diluted, not basic; F5 FY13: a5 had read the next quarter's
+    guidance table, its low GAAP figure 0.80 equal to this quarter's; Southern Q2 2010 0.62: a5 had taken the year-ago
+    column, the release prints basic figures a cent above the filed diluted ones; Sempra 1.54; AMD 0.15; Coherent).
+  - The 203 new: 175 stated in the text; the 28 silent spot-checked in their tables (Abbott, Clorox, LyondellBasell,
+    Air Products, Quest, Vertiv, Intel). General Electric Q4 2016 0.43 is GE's own "Operating EPS (Non-GAAP)" placed by
+    the GAAP line to the cent; GE's headline that quarter was "Industrial operating + Verticals" 0.46.
+  - Not used, release by release: (1) the breakdown rule took rows of periods for segments: Marvell's −0.20 | −0.02 |
+    −0.20 (the quarter and the year-ago quarter with the same GAAP figure) and Autodesk's QTR 1 | QTR 2 | YTD (0.12,
+    0.13, 0.26) lost their quarters; (2) Cadence Q2 2018: its trend tables print GAAP on the former revenue standard,
+    0.26 for the quarter filed as 0.27, and the cent-away placement made 0.44 stand against 0.45; (3) the text
+    tie-break made Regeneron Q4 2012 basic (1.79 for 1.47; a line break cut "$1.47 per diluted / share") and
+    Mid-America's 2021 quarters Core AFFO (its Core FFO sits in a box of highlights as "Core FFO per Share - diluted",
+    "$", "1.64").
+  - Rightly lost: FIS Q2 2019 1.30 (its text: $1.78), Booking Q3 2016 29.69 (text: $31.18), FirstEnergy Q2 2017
+    (a5's only confirmation was the "2Q 2018" row's 0.62), Vulcan Q3 2017 2.28 (the nine months; the quarter is 1.04),
+    Revvity Q2 2016 (recast in 2017), Salesforce (below).
+- **a7** (`worker/lib/adjusted-eps.ts`, `scripts/build-adjusted-eps.mts`; 62 tests, 6 new, each failing on a6):
+  - a breakdown adds up within half a cent per printed figure, and a row under a header that names different periods
+    over its figures (years, dates, "QTR 1 | QTR 2 | YTD") is none; "QTR" names a quarter; a header that names the
+    quarter beside segment names (FirstEnergy) still makes a breakdown;
+  - a GAAP figure a cent away places no quarter in a column a longer period heads (Autodesk's half year);
+  - readings carry `near` where a cent-away GAAP figure placed them; readings placed to the cent outrank them in a
+    release and in the trusted-row tie (Cadence 0.45);
+  - the running text is read across a line break that cuts a sentence (an open end and a lower-case start, or an open
+    word such as "per"), a box label gives its first figure, each exhibit is read on its own; the text never makes a
+    basic figure of a release that prints a diluted one.
+  - Replayed before the full read: FirstEnergy 0.49 and 0.39, Autodesk 0.35, Marvell 0.31, Cadence 0.45 and 2.11, AEP
+    1.10, Morgan Stanley 0.71, HP 0.86, Raytheon 0.90, Sempra 1.54; Regeneron's text now states 1.47, Mid-America's
+    1.64 (and 1.78 for Q3 2021), Charles River's 0.69.
+- **a7 full read** (12:57 to 14:48 local; 494 companies, 39,201 releases, reader 786e8c829820d92a): usable 13,011
+  (11,469 confirmed, 1,542 same row); 79.3% of 1,500 sampled stated in the release's own words; against guidance
+  2,555 pairs, median +6%, 60.5% within a tenth, 6.7% farther than half. Against a6: kept 13,000, changed 7, new 4,
+  lost 19. It brought back what it was built for (Marvell 0.31, Autodesk 0.35, Cadence 0.45, Regeneron 1.47,
+  Mid-America's four 2021 quarters on Core FFO). Not used, release by release:
+  1. the box rule read tables that the text splitter cuts into a paragraph per cell: a label followed by "$" and a
+     figure is as often the year-ago quarter's or the nine months' reconciliation as a box of highlights (Norfolk
+     Southern's "$ 3.25", NextEra's "$ 3.98", Zimmer's 4.78, Assurant's second measure, CMS's basic block). With both
+     candidates "stated", the text broke no tie: 19 a6 figures lost, all decided by the text in a6 and all confirmed
+     by later releases (Aflac, Assurant 3, Avery, CMS 2, Ecolab, GE 2, Mondelez, NextEra 6, Norfolk Southern, Zimmer);
+  2. the same cells gave GE's 2015 releases stated figures (none in a6) that moved its trusted "Industrial operating +
+     Verticals" row onto other measures: Q2 0.31 to 0.26, Q4 0.52 to 0.31 (GE's table prints 0.52), Q3 lost;
+  3. Mid-America came back by the box rule by luck as well: its "box" is a table split into paragraphs too ("$ 1.64",
+     "$ 1.62"), and its sentences state only the Core AFFO (1.54).
+  - Correction to the a6 note above: Ralph Lauren's reading of the "As Adjusted (Reported $)" column was right (2.34,
+    4.17), but the decision's label filter took "Reported" for the GAAP line and dropped it; a5, a6 and a7 have none
+    of its 2023–24 quarters.
+- **a8** (`worker/lib/adjusted-eps.ts`, `scripts/build-adjusted-eps.mts`; 69 tests, the 7 new or changed ones of the
+  read each failing on a7):
+  - the running text is its sentences: the box rule is gone, the figures are stored in the order the text states
+    them (no rule uses the order);
+  - a figure the release prints for a longer period ending the same day, in any of its stored rows, is never the
+    quarter's (Zimmer's nine months; GE's years under a "per share" label);
+  - the text moves the trusted row's figure only onto a figure the GAAP line placed, never onto another trusted
+    measure (Mid-America's Core FFO stands; Regeneron's diluted 1.47 stands without the basic rule);
+  - "As Adjusted (Reported $)" is adjusted (Ralph Lauren: 8 quarters back);
+  - a footnote mark in a cell of its own after a row's last figure is no figure: Cencora's "$ 3.73 | 2" was read as
+    2.00 and its whole 2023–26 series (2.92, 3.28, 3.80, 3.73, 4.42, 4.00, 4.75) as 2 or 3, since a2;
+  - a fiscal year's figure must agree with the sum of its four usable quarters known up to its release, within a
+    tenth of the quarters' sizes (the grades lean on later releases, as the trusted rows do; the value stays the
+    release's). On the simulated decision: of 1,846 usable years, 1,816 kept, 28 dropped (Assurant 2025 4.79 and
+    Capital One 2025 5.95, Zebra 3.88: a quarter a header took for the year; Mastercard 2019 6.49: the year before;
+    KLA's 3.76 for a year of about 35; mid-year releases with a "year"), 2 changed (Kimberly-Clark 2025 6.12 to 7.53,
+    the headline measure of its quarters, 1.93 + 1.92 + 1.82 + 1.86; Illumina 2024 4.16 to 2.45, see residuals), 5
+    new (Aptiv 2023 4.86 and 2024 6.26, Avery 2011, M&T 2014, Regeneron 2025). Before the check, a2's years were 37
+    and a7's 34 farther than 10% from their quarters;
+  - tried and dropped before the read: "of several stated candidates, the one the text states first". Simulated on
+    a7's readings with the sentences of every release (`scratch-a8-text.jsonl`), it took 53 quarters, nearly all
+    right, but a fourth quarter's release states the year first (Emerson FY2017: 2.64 for 0.83) and releases state the
+    GAAP figure first, which the unsigned figures confuse (GE Q3 2020: "$(0.13)" for the adjusted 0.06): both would
+    have been usable figures. Where the text states more than one candidate, it decides nothing.
+  - Simulated decision on a7's readings (the final code, identical output to the working tree's decideCompany): usable
+    13,041; against a7 kept 13,008, changed 3 (GE Q2 and Q4 2015 back to 0.31 and 0.52; Assurant Q4 2025 5.75 to
+    5.61, its trusted plain adjusted row like all its other quarters 2022–26), new 30, lost 0; against a6 kept
+    13,019, changed 6 (Mid-America 4, Regeneron, Assurant), new 16, lost 1 (Aflac Q2 2009: its sentences state the
+    quarter's 1.20 and the six months' 2.42 both, and both columns were read for the quarter).
+- **a8 full read** (15:59 to 17:51 local): 494 companies, 39,201 releases, reader 95473340260703c7, 6,729 s; usable quarters 13,045 (11,492 confirmed, 1,553 same row), usable fiscal years 1,836 (1,507 confirmed, 329 same row) after the year check. The run decided with the code of its start; its figures are kept as `figures.before-year-check.jsonl`, and `figures.jsonl` is the re-decision from the stored readings (8 s).
+  - checks: 78.8% of 1,500 sampled stated in the release's own words; against guidance 2,557 pairs, median +6.0%, 60.5% within a tenth, 6.7% farther than half; no new quarter far from guidance against a7;
+  - release by release against a7: kept 12,999, changed 10 (Cencora 7, GE 2015 Q2 and Q4, Assurant Q4 2025), new 36 (Ralph Lauren 8, NextEra 6, Cencora 5, GE 4, Assurant 3, CMS 2 and eight single ones), lost 2 (Keurig Dr Pepper, below); against a6: kept 13,010, changed 13, new 22, lost 3 (Aflac Q2 2009 and the two Keurig Dr Pepper quarters); against a2 (the page until now): kept 11,659, changed 86, new 1,300, lost 51. Of the changed, the release's sentences state a8's figure in 54, both in 9 (basic against diluted), neither in 17, a2's alone in none (counted on the simulated decision's 80). Of the lost, 18 are the same value now graded restated, 10 the same value unchecked, and the rest mostly a2's own misreads (PPG's guidance range of 5 April 2012 taken for the quarter; Starbucks, Twilio, CSX and Bloom year-ago columns; NextEra's 0.01; Booking; International Paper's tax line) or refusals on principle (the same GAAP figure in both years: EOG, Republic Services, Emerson, Williams-Sonoma; GAAP a cent away without a witness: Vulcan, Stanley). By quarter: 48 of a2's 11,714 usable quarters have no a8 figure;
+  - the 66 figures checked by hand in the releases' own sentences or tables this session: 61 right; 5 not usable and none wrong (Morgan Stanley and Booking unchecked, FIS and Vulcan restated, Aflac Q2 2009 open).
+- **After the read, in the decision only (no re-read):** the year check puts the earlier quarters on the share basis of
+  the release that prints the year (McCormick's two-for-one of November 2020: FY2020 2.83 came back). 69 tests.
+- **The real read against the simulation:** identical but for the footnote rule: Cencora right in twelve quarters and
+  usable in three more, Marriott Q1 2025 new (2.32), and **two Keurig Dr Pepper quarters lost** (2013-06-30 0.84,
+  2017-06-30 1.25): its row ends "$ 1.31 | 5", a percent change in a headed column, which the rule also drops, so the
+  row no longer matches its GAAP row. Next reader version: a trailing digit is a footnote mark only where no header
+  stands over its column. Neither quarter is in the page's six years.
+- **Found on the way, not fixed:** Carrier's Q3 2024 (0.06) and FY2024 (0.34) are read from its reconciliation of
+  discontinued operations, whose per-share row is labelled "Adjusted diluted earnings per share" like the main one
+  (the row above it, "Adjusted Discontinued operations, net of tax", says what it is). a2 graded both unchecked; since
+  the newer versions trust the row they are usable. The page shows a figure that far from guidance as another measure.
+  A scan of the 1,420 figures new or changed against a2 found no other such table. Cencora guides by fiscal year
+  only, so its corrected quarters do not show on its page; its year figures are still not read.
+- Also in this block: `docs/desk/UI_MIGRATION.md` section 7 (the migration list), task notes K24 and K25 for Kimi
+  (`84ee3f8`, mailbox message sent; they wait for the owner's word), the `baseUrl` removal (`a2500ff`).
+- **Known residuals:** Raytheon Q2 2020 (its six-month 2019 column prints UTC's filed Q2 2019 figure; a check of the
+  period length named over each column is the next step); Stanley Q1 2014 (1.05 printed against a later version 1.04;
+  later versions are left out of the one-cent match because Stanley's are year-shifted); Revvity Q1 2021 (two adjusted
+  measures, both stated); Expedia 2019 (the ex-trivago variant); Vulcan Q3 2017 (its own release prints the quarter's
+  GAAP figure a cent and the year-ago one three cents from the filed ones, with no witness: graded restated, not
+  used); General Electric 2016 (three non-GAAP measures; the reader takes the one the GAAP line places);
+  Kimberly-Clark's 2025 quarters are the headline "attributable to Kimberly-Clark" figures (1.92, 1.82, 1.86), which
+  include the business held for sale; the continuing-operations row prints 1.63, 1.45, 1.43. New on the a7 read:
+  CMS prints basic and diluted blocks under sub-headings the reader does not take as the rows' basis (Q3 2018 basic
+  0.60, diluted 0.59; decided by the text, whose 0.59 is the GAAP figure, equal to the adjusted one); Aflac Q2 2009,
+  Emerson FY2017 Q4 and GE Q3 2020 stay open (above); the stated figures carry no sign; a measure the company leads
+  with in its text can differ from the trusted row (Assurant's "excluding reportable catastrophes": the page keeps
+  the trusted series). Constellation Brands' FY2023 quarters are read from "EPS - comparable basis, Canopy EIE"
+  (-0.24, -0.16, -0.18: the Canopy component, not the comparable EPS; on the page since a2), so its right year 11.40
+  no longer agrees with them and is dropped; Illumina's Q4 2024 release prints two series, its text the new one (0.95,
+  year 4.16), the GAAP-placed table the series of its earlier quarters (0.86, year 2.45), which the page keeps.
+- **Input findings (open, owner's call):**
+  - guidance standard g1.2: 67 of 48,351 releases were accepted more than 120 days after their period end (23
+    companies). Some are late filers (Super Micro 2018–19, United Rentals 2006); some carry a wrong period end
+    (Salesforce's Q2 FY21 and Q1 FY22 releases both 2020-04-30; Baker Hughes 2018 as 2017-03-31). The reader refuses a
+    year-ago figure attached to such a release; a g1.3 with period ends from the release's own text would fix it.
+  - fundamentals: some annual reports tag quarterly figures with dates a year early (Stanley's FY2019 10-K gives Q1
+    2018 revenue under Q1 2017's dates; Trimble, AT&T the same). SEC's data carries it as filed and the standard keeps
+    it as a later version of the wrong quarter. Page and research use first reports, so their figures are right; the
+    page's "restated" notes show it: 478 of 44,459 notes, 183 companies. Proposal: v3.3.
+- **Company page:** `scripts/build-desk-company.mts` defaults to `adjusted-eps/a8` (it was a2; the change is in the
+  next commit, section 225, with the Ownership page's file the builder also writes), and a missing adjusted read
+  stops the build. Rebuilt (content hash `bdd86fb66fa7`; the files before are kept at
+  `D:/research/alpha-engine/engine/desk-company-before/4e5729c6e27f`): adjusted quarterly guidance periods with the
+  reported figure 888 → 1,002 of 1,793 (114 appeared, 7 changed: Coherent's diluted figures, none vanished); fiscal
+  years 315 → 317 of 1,482 (Illumina, Aptiv and Sysco appeared; Constellation Brands' 11.40 vanished, see residuals).
+- Scratch outputs on D: `engine/adjusted-eps/scratch-a6-*` and their logs (draft runs, subsets);
+  `scratch-a8-text.jsonl` (every release's stated figures with their kind and order, a7's logic), the simulated
+  decisions `scratch-a8-sim-*`, and the two a8 runs stopped to change the reader (`scratch-a8-stopped-20261123`, 166
+  companies, and `scratch-a8-stopped2-20261123`, 23 companies, with their logs); mine, kept until the owner says they
+  can go. a3 to a7 are kept for comparison.
+- Gates: `npm run check`, 275 files / 1,626 tests, `npm run build`, `git diff --check`.

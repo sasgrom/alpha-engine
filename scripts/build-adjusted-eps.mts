@@ -10,8 +10,10 @@
  *
  * Output (default D:/research/alpha-engine/engine/adjusted-eps/<reader version>):
  *   readings/<cik>.jsonl  step 1, the slow one: per release, every adjusted per-share row its tables print, for every
- *                         period column. Written atomically per company and reused while the code hash is the same
- *                         (--force rereads), so a stopped run resumes.
+ *                         period column (`near` where a GAAP figure a cent from the filed one placed the period), and
+ *                         the adjusted per-share figures its running text states (cents, in the order stated). Written
+ *                         atomically per company and reused while the code hash is the same (--force rereads), so a
+ *                         stopped run resumes.
  *   figures.jsonl         step 2: per release the quarter's and the fiscal year's figure with its grade (confirmed by
  *                         a later release, same row as confirmed quarters, restated, unchecked) and where it was read
  *   summary.json          counts by grade, and the restated and ambiguous cases
@@ -21,7 +23,8 @@ import { createHash } from "node:crypto";
 import { createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { createInterface } from "node:readline";
-import { ADJUSTED_EPS_VERSION, adjustedEpsFromExhibits, decideCompany, type DecidedRelease, type EpsAnchor, type StoredRelease } from "../worker/lib/adjusted-eps";
+import { ADJUSTED_EPS_VERSION, adjustedEpsFromExhibits, decideCompany, statedAdjustedFigures, type DecidedRelease, type EpsAnchor, type StoredRelease } from "../worker/lib/adjusted-eps";
+import { htmlToParagraphs } from "../worker/lib/desk-company";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
@@ -39,8 +42,14 @@ if (!existsSync(releasesFile)) throw new Error(`Release list not found at ${rele
 if (!existsSync(cache)) throw new Error(`Exhibit cache not found at ${cache}; nothing was changed`);
 if (!existsSync(pricesDir)) throw new Error(`Standard prices not found at ${pricesDir}; nothing was changed`);
 if (!existsSync(path.join(fundamentalsDir, "company"))) throw new Error(`Standard fundamentals not found at ${fundamentalsDir}; nothing was changed`);
-// the reading depends on the table parser too; the deciding rules are cheap and rerun every time
-const readerHash = createHash("sha256").update(path.basename(fundamentalsDir)).update(readFileSync("worker/lib/flash-html.ts")).update(readFileSync("worker/lib/adjusted-eps.ts", "utf8").split("// --- deciding per company")[0]).digest("hex").slice(0, 16);
+// the reading depends on the table parser too, and the figures a release's text states on the paragraph splitter of
+// desk-company.ts (that function and its entity table only); the deciding rules are cheap and rerun every time
+const deskSource = readFileSync("worker/lib/desk-company.ts", "utf8");
+const paragraphsAt = deskSource.indexOf("const ENTITIES"), functionAt = deskSource.indexOf("export function htmlToParagraphs");
+const closing = functionAt < 0 ? null : /\r?\n\}\r?\n/.exec(deskSource.slice(functionAt));
+if (paragraphsAt < 0 || !closing) throw new Error("htmlToParagraphs or its entity table not found in worker/lib/desk-company.ts; nothing was changed");
+const paragraphsSource = deskSource.slice(paragraphsAt, functionAt + closing.index + closing[0].length);
+const readerHash = createHash("sha256").update(path.basename(fundamentalsDir)).update(readFileSync("worker/lib/flash-html.ts")).update(readFileSync("worker/lib/adjusted-eps.ts", "utf8").split("// --- deciding per company")[0]).update(paragraphsSource).digest("hex").slice(0, 16);
 
 interface Release { cik: number; ticker: string; accessionNo: string; acceptedEt: string; fiscalPeriodEnd: string | null }
 interface StoredLine extends StoredRelease { readerHash: string; cik: number; ticker: string; exhibits: number }
@@ -64,14 +73,17 @@ function splitsOf(cik: number): Array<{ date: string; ratio: number }> {
 
 const DAY = 86_400_000;
 /**
- * The GAAP earnings per diluted share known for a release's quarter and for the quarter a year before: every figure
- * the filed statements carry for that quarter (first report and later versions), and the first report moved across
- * the splits up to the release (a release prints the year-ago quarter on its own share basis).
+ * The GAAP earnings per diluted share known for a release's quarter and for the quarter a year before: the first
+ * report, and the same moved across the splits up to the release (a release prints the year-ago quarter on its own
+ * share basis), as `gaap`; the figures later filings gave for the quarter as `later` (restatements, but also versions
+ * from a later 10-K that repeat the next year's quarter: Mettler-Toledo's Q1 2011, Stanley Black & Decker's Q1 2017).
+ * `computed` when the first report's source is no filed tag ("t:...") but computed (d0: a fourth quarter from the
+ * year), whatever its decimals: Kimberly-Clark's fourth quarter of 2021 is 1.050040283, 1.05 at four decimals.
  */
 function anchorsOf(cik: number, splits: Array<{ date: string; ratio: number }>): (periodEnd: string, acceptedEt: string) => EpsAnchor[] {
   const file = path.join(fundamentalsDir, "company", `${cik}.json`);
   if (!existsSync(file)) return () => [];
-  const doc = JSON.parse(readFileSync(file, "utf8")) as { quarters: Array<{ end: string }>; fields: Record<string, Array<[number, Array<[string, number]>]>> };
+  const doc = JSON.parse(readFileSync(file, "utf8")) as { quarters: Array<{ end: string }>; sources?: string[]; fields: Record<string, Array<[number, Array<[string, number, number?]>]>> };
   const versions = new Map((doc.fields.epsDil ?? []).map(([index, list]) => [index, [...list].sort((a, b) => a[0].localeCompare(b[0]))]));
   const nearest = (end: string) => {
     let best = -1;
@@ -86,8 +98,11 @@ function anchorsOf(cik: number, splits: Array<{ date: string; ratio: number }>):
       if (index < 0) continue;
       const list = versions.get(index)!;
       const factor = splits.filter((split) => split.date > list[0][0] && split.date <= acceptedEt.slice(0, 10)).reduce((product, split) => product * split.ratio, 1);
-      const gaap = [...new Set([...list.map((version) => version[1]), list[0][1] / factor].filter((value) => Number.isFinite(value) && Math.abs(value) < 500).map((value) => Math.round(value * 1e4) / 1e4))];
-      if (gaap.length) anchors.push({ months: 3, periodEnd: end === periodEnd ? periodEnd : doc.quarters[index].end, gaap });
+      const usable = (values: number[]) => [...new Set(values.filter((value) => Number.isFinite(value) && Math.abs(value) < 500).map((value) => Math.round(value * 1e4) / 1e4))];
+      const gaap = usable([list[0][1], list[0][1] / factor]);
+      const later = usable(list.slice(1).map((version) => version[1])).filter((value) => !gaap.includes(value));
+      const source = list[0][2] === undefined ? "t:" : doc.sources?.[list[0][2]] ?? "t:";
+      if (gaap.length || later.length) anchors.push({ months: 3, periodEnd: end === periodEnd ? periodEnd : doc.quarters[index].end, gaap, later, ...(source.startsWith("t:") ? {} : { computed: true }) });
     }
     return anchors;
   };
@@ -118,9 +133,15 @@ for (const [cik, list] of [...byCompany].sort((a, b) => a[0] - b[0])) {
         return { file: name, sha256: createHash("sha256").update(html).digest("hex"), html };
       });
       const result = adjustedEpsFromExhibits(exhibits, release.fiscalPeriodEnd!, anchors(release.fiscalPeriodEnd!, release.acceptedEt));
+      // the adjusted per-share figures the release's running text states, in the order it first states them, which
+      // choose between rows that disagree (each exhibit read on its own, so that no sentence runs on from one exhibit
+      // into the next; the exhibits in the order of their names, the press release before its supplements)
+      const unique = [...new Map(exhibits.map((exhibit) => [exhibit.sha256, exhibit])).values()];
+      const stated = [...new Set(unique.flatMap((exhibit) => statedAdjustedFigures(htmlToParagraphs(exhibit.html, 4000).paragraphs)))];
       stored.push({
         readerHash, cik, ticker: release.ticker, accession: release.accessionNo, acceptedEt: release.acceptedEt, fiscalPeriodEnd: release.fiscalPeriodEnd!, exhibits: exhibits.length,
-        readings: result.readings.map((reading) => ({ months: reading.months, periodEnd: reading.periodEnd, value: reading.value, diluted: reading.diluted, basic: reading.basic, label: reading.label, file: reading.file, tableIndex: reading.tableIndex, rowIndex: reading.rowIndex, how: reading.how })),
+        readings: result.readings.map((reading) => ({ months: reading.months, periodEnd: reading.periodEnd, value: reading.value, diluted: reading.diluted, basic: reading.basic, label: reading.label, file: reading.file, tableIndex: reading.tableIndex, rowIndex: reading.rowIndex, how: reading.how, ...(reading.near ? { near: true as const } : {}) })),
+        stated,
       });
     }
     const temporary = `${file}.${process.pid}.tmp`;
