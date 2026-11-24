@@ -4693,3 +4693,20 @@ Continuation of section 243 (owner: "lets put everything we can to automatic pro
 - Gates: `npm run check`, 268 files / 1,636 tests, `npm run build`, `git diff --check`.
 - **Pending tonight on the schedule:** `std-fundamentals-refresh` 03:12 (first publish), `std-insiders-refresh`
   03:35 (first real run: fetch 2026-11-16 to 2026-11-23, build, load, final), `finra-short-interest` 06:25.
+
+## 246. Claude (Fable 5.2): the desk is reachable over Tailscale — 2026-11-24
+
+Owner: "lets set up the the local server to web, not a separate hosting ... i had tailscale installed before, but just
+had it removed, reinstall whats needed, lets make it work".
+
+- Tailscale 1.104.7 installed with winget (the owner approved the Windows prompt), service running, machine name
+  `alpha-desk`, signed in by the owner in his browser. He enabled Serve for the network.
+- `tailscale serve --bg 3000`: **https://alpha-desk.tail4e6355.ts.net** proxies to `http://127.0.0.1:3000`, reachable
+  only inside his Tailscale network (not Funnel, nothing public). The setting persists across restarts.
+- Checked from this machine: the desk page answers 200 and `ping` answers through that address. The sign-in cookie is
+  `SameSite=None; Secure` for any host that is not localhost (`api/lib/cookies.ts`, not modified), which HTTPS
+  satisfies. A sign-in through the address was not tested by me (no credentials are mine to use).
+- No code changed. To turn it off: `tailscale serve --https=443 off`.
+- Plans given to the owner, nothing built: an online display-only server fed by pushes from home (reverses the
+  2026-11-13 decision, so it needs his explicit word and an AGENTS.md change), a 128k second pass for the nightly
+  guidance run, and an iPhone app.
