@@ -157,7 +157,9 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
 - **Order from here** (classic pages stay untouched until their replacement is in the desk; then they redirect and are
   removed together with the pipelines behind them):
   1. Company page, piece by piece on the standard data (below).
-  2. Operations console (K17b).
+  2. Operations console (K17b). **Built 2026-11-23 (handoff 225):** tabs Health, Jobs, Runs, Coverage, Reference;
+     `/workers` redirects and the classic page is removed. Open from K17b: its server part (task note K24, waiting
+     for the owner's word) and `/jobs`, which stays until the Watchlist takes "add any SEC company".
   3. Research pages on the standards: guidance record (g1.2), insiders (i1.1), option chains, scenario lab, handbooks.
   4. Retire the classic view, then prune the old pipelines listed in `docs/PROJECT_REVIEW_2026-11-22.md` section 6.4.
 - **How the desk reads the standards:** a builder turns a standard's own files on D: into compact per-company files
@@ -211,9 +213,10 @@ calls. 18 classic routes are still live; only `/messages` and `/admin` redirect 
 | Dashboard | Today (filings, FRED values, watchlist, coming up, just reported); Flows and Ownership for sector flows | Morning brief (paused by the owner); launch buttons (go to Operations) |
 | Screener | Price, 12−1 momentum, market value, P/E, yield, beta, volatility, 52-week range, trend, next report | EPS TTM, FCF margin, 3-month volume, revision rate ("sentiment (prototype)" is to be dropped) |
 | Universe | Watchlist follows and unfollows index companies | Add any SEC company (starts an ingest), hide, scope presets, GICS re-enrichment, S&P bootstrap |
-| Workers, Jobs | Operations: health only | Run and stop, cron edit, logs, coverage, runbook: K17b, specified, not built |
+| Workers | **Moved** (handoff 225): Operations → Jobs (switch, schedule edit with the next runs, Run and Stop after a confirmation that names the chain), Runs (running, waiting, last run of each job, logs), Coverage, Reference (what follows what); `/workers` redirects, the classic page is removed | Owner-only reports and the honest macro status on the server (K24) |
+| Jobs | — | The classic `/jobs` page stays until the Watchlist can add a company (its only use: five `universe-add` rows) |
 | Expectations | Each company's guidance history on its page (g1.2 final) | The cross-company record with quotes and revisions; the classic page still bundles the old 27 MB report |
-| Insider activity | Ownership: purchases, multi-insider windows, dry-run benchmark; insiders card per company (i1.1) | Full Form 4 list with the excluded codes and filters |
+| Insider activity | Ownership, on the insider standard i1.1 for all 500 companies (handoff 225): 90-day totals, open-market purchases, windows with several insiders buying, the companies with the largest net selling and buying; insiders card per company | Full Form 4 list with the excluded codes and filters |
 | Scenario Lab | Macro: rate and credit exposure ranking | Custom shocks, presets, evidence inspector, export |
 | Market data | Volatility (features, implied against realized, sizing); Operations (capture health) | Option chain browser, provenance |
 | Analytics | Signals ledger | Tone reaction chart; build network (to Operations) |
@@ -236,9 +239,9 @@ Volatility research, the intraday ranges.
   technical sensing, short interest, insiders.
 - **Fixed 2026-11-23 (handoff 223):** the research Ownership page's sector table and headline figures read the fund
   books behind Flows (`desk.flowsOverview`), no longer the app's `fund_holdings` table, which keeps half the money
-  (one row per security); the dry-run insider benchmark is gone from the page. **Still old:** its two insider cards
-  read the old Form 4 export of the 50 research companies (`insider-form4.json`), not the insider standard i1.1; a
-  cross-company file from the company-page builder is the next step.
+  (one row per security); the dry-run insider benchmark is gone from the page. **Fixed 2026-11-23 (handoff 225):** its insider cards
+  read `insiders-market.json`, which the company-page builder writes from the insider standard i1.1 for all 500
+  companies (`desk.insiderMarket`); the old Form 4 export of the 50 research companies is no longer read by the desk.
 - **The app's old factor engine** (`company.factors`, `company.probability`, `company.value`; nightly
   `research-series` and `research-factors`) is not moved, by the owner's decision: it never passed an out-of-sample
   test. Only its factor-IC monitor sits in Owner tools → Monitors. The nightly jobs still run, and the classic company
@@ -254,8 +257,8 @@ Volatility research, the intraday ranges.
 ### 7.3 Suggested order
 
 1. ~~Correct the Signals ledger from the research record.~~ Done.
-2. ~~Ownership's sector flows from the 13F standard.~~ Done; the insider cards on the insider standard are open.
-3. Operations console (K17b) — it retires `/workers` and `/jobs`.
+2. ~~Ownership's sector flows from the 13F standard; its insider cards from the insider standard.~~ Done.
+3. ~~Operations console (K17b).~~ Done; `/workers` is retired, `/jobs` follows with the Watchlist's "add a company".
 4. Screener columns from the standard fundamentals; Watchlist "add any SEC company".
 5. Research pages: the cross-company guidance record (g1.2), the full insider list (i1.1), option chains, the scenario
    lab, handbooks and wiki as documents.

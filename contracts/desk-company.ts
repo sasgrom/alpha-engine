@@ -279,6 +279,71 @@ export interface DeskCompanyInsiders {
   year: { bought: number; sold: number; buyers: number; sellers: number; soldUnderPlan: number };
 }
 
+/** One open-market purchase with a usable dollar value, for the view across companies. */
+export interface DeskInsiderMarketTrade {
+  cik: number;
+  ticker: string;
+  date: string;
+  filed: string;
+  /** The Form 4's accession number, for the link to the SEC's copy. */
+  accession: string;
+  owner: string;
+  more: number;
+  role: string | null;
+  shares: number | null;
+  price: number | null;
+  valueUsd: number;
+}
+
+/** Several insiders of one company buying in the open market within a few days of each other. */
+export interface DeskInsiderWindow {
+  cik: number;
+  ticker: string;
+  /** First and last purchase date of the window. */
+  start: string;
+  end: string;
+  insiders: number;
+  valueUsd: number;
+  /** The distinct roles among the buyers ("Chief Executive Officer", "Director"), at most four. */
+  roles: string[];
+}
+
+/** One company's open-market purchases and sales in the recent period, in dollars. */
+export interface DeskInsiderCompanyNet {
+  cik: number;
+  ticker: string;
+  bought: number;
+  sold: number;
+  buyers: number;
+  sellers: number;
+  /** Dollars sold under Rule 10b5-1 trading plans. */
+  soldUnderPlan: number;
+}
+
+/**
+ * Insider trading across all companies of the insider standard, for the Ownership page: the same lines and rules as
+ * the company files (original reports, each trade once, no derivative lines, no flagged dollar values).
+ */
+export interface DeskInsiderMarket {
+  schemaVersion: typeof DESK_COMPANY_SCHEMA_VERSION;
+  version: string;
+  /** The last filing date the standard holds for any company: every window ends there. */
+  asOf: string;
+  builtAt: string;
+  companies: number;
+  /** Length of the recent period in days. */
+  days: number;
+  /** Open-market purchases and sales (codes P and S) of the recent period. */
+  totals: { bought: number; sold: number; buyers: number; sellers: number; buyingCompanies: number; sellingCompanies: number; soldUnderPlan: number };
+  /** Open-market purchases of twice the recent period, newest first (at most 60). */
+  purchases: DeskInsiderMarketTrade[];
+  /** Windows of ten days with two or more buying insiders, from the last year, newest first (at most 40). */
+  windows: DeskInsiderWindow[];
+  /** The companies with the most dollars bought less sold in the recent period, and the most sold less bought (ten each). */
+  netBuyers: DeskInsiderCompanyNet[];
+  netSellers: DeskInsiderCompanyNet[];
+}
+
 /** One periodic or current report of the company, from the engine's release calendar. */
 export interface DeskCompanyFiling {
   accession: string;

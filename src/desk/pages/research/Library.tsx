@@ -20,7 +20,7 @@ const DETAILS: Record<string, { icon: typeof Activity; text: string; desk?: stri
   "/jobs": { icon: ListChecks, text: "Data jobs and their logs." },
   "/wiki": { icon: BookOpen, text: "Definitions of the factors and measures." },
   "/desk/admin": { icon: ShieldCheck, text: "People, reviewers, structured manuals, job logs and delivery monitors." },
-  "/workers": { icon: Activity, text: "Run and stop collectors, the scheduler, logs and the runbook.", desk: "Operations is the read-only health view." },
+  "/desk/operations?tab=jobs": { icon: Activity, text: "Every job with its switch, schedule, Run and Stop; the runs and their logs; what follows what." },
   "/database": { icon: Database, text: "Browse stored tables, filings and concept series." },
   "/lab": { icon: Sparkles, text: "Sentiment scoring of filing sections." },
 };

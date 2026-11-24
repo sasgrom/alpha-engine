@@ -29,7 +29,7 @@ export function classicDestinations(isAdmin: boolean, isPresentation: boolean): 
   const owner: PaletteDestination[] = isAdmin
     ? [
         { label: "Owner tools", path: "/desk/admin", group: "Owner tools", keywords: "admin users reviewers manuals logs monitors" },
-        { label: "Operations console", path: "/workers", group: "Owner tools", classic: true, keywords: "workers scheduler collectors" },
+        { label: "Operations console", path: "/desk/operations?tab=jobs", group: "Owner tools", keywords: "workers scheduler collectors jobs runs logs cron" },
         { label: "Database browser", path: "/database", group: "Owner tools", classic: true, keywords: "tables sql" },
         { label: "Sentiment lab", path: "/lab", group: "Owner tools", classic: true, keywords: "sentiment scores" },
       ]

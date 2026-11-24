@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildDeskCompanyHolders, buildDeskCompanyInsiders, type InsiderFilingDoc, type ThirteenFCompanyQuarter } from "./desk-company";
+import { buildDeskCompanyHolders, buildDeskCompanyInsiders, buildDeskInsiderMarket, type InsiderFilingDoc, type ThirteenFCompanyQuarter } from "./desk-company";
 
 const quarter = (over: Partial<ThirteenFCompanyQuarter>): ThirteenFCompanyQuarter => ({
   cik: 5, period: "2026-06-30", knownAt: "2026-08-17", rowKind: "deadline", holders: 260, valueHeldUsd: 2.4e12, percentOfSharesOutstanding: 57.2, percentAbove100: false,
@@ -31,7 +31,7 @@ describe("desk company holders", () => {
 
 const owner = (ownerName: string, groupId: string, over: Partial<InsiderFilingDoc["owners"][number]> = {}) => ({ ownerName, groupId, director: false, officer: false, officerTitle: null, tenPercentOwner: false, ...over });
 const line = (over: Partial<InsiderFilingDoc["transactions"][number]>): InsiderFilingDoc["transactions"][number] => ({
-  groupId: "g:ceo", derivative: false, transactionDate: "2026-10-01", code: "S", shares: 1000, price: 200, valueUsd: 200_000, plan10b5: false, duplicateOf: null, flags: [], ...over,
+  groupId: "g:ceo", derivative: false, transactionDate: "2026-10-01", code: "S", shares: 1000, price: 200, valueUsd: 200_000, plan10b5: false, duplicateOf: null, flags: [], directOrIndirect: "D", ...over,
 });
 const filing = (filingDate: string, owners: InsiderFilingDoc["owners"], transactions: InsiderFilingDoc["transactions"], form = "4"): InsiderFilingDoc => ({
   filing: { accessionNo: `a-${filingDate}-${transactions.length}`, form, filingDate, buildVersion: "i-test" }, owners, transactions,
@@ -76,6 +76,27 @@ describe("desk company insiders", () => {
     expect(out.year.sold).toBe(200_000);
   });
 
+  it("counts a trade once when a related owner reports it again as held indirectly, and two people's own equal trades twice", () => {
+    const HOLDING = owner("LOR INC", "g:lor", { tenPercentOwner: true }), TRUST = owner("ROLLINS VOTING TRUST", "g:trust", { tenPercentOwner: true });
+    const bought = { transactionDate: "2026-10-29", code: "P", shares: 1_444_402, price: 34.5864, valueUsd: 49_956_665 };
+    // the company bought; the trust that holds through it reports the same purchase in a report of its own
+    const same = [filing("2026-11-02", [HOLDING], [line({ ...bought, groupId: "g:lor" })]), filing("2026-11-02", [TRUST], [line({ ...bought, groupId: "g:trust", directOrIndirect: "I" })])];
+    const market = buildDeskInsiderMarket({
+      asOf: "2026-11-13", builtAt: "",
+      companies: [
+        { cik: 5, ticker: "SAME", filings: same },
+        // two officers each sold their own 3,000 shares at the day's price
+        { cik: 6, ticker: "BOTH", filings: [filing("2026-10-16", [CEO], [line({ shares: 3000, price: 156.22, valueUsd: 468_660 })]), filing("2026-10-16", [DIRECTOR], [line({ groupId: "g:dir", shares: 3000, price: 156.22, valueUsd: 468_660 })])] },
+      ],
+    })!;
+    expect(market.totals).toMatchObject({ bought: 49_956_665, buyers: 1, sold: 937_320, sellers: 2 });
+    expect(market.purchases.map((row) => row.owner)).toEqual(["LOR INC"]);
+    // one buyer makes no window of several insiders
+    expect(market.windows).toEqual([]);
+    // the company's own page counts it the same way
+    expect(build(same)).toMatchObject({ tradeCount: 1, year: { bought: 49_956_665, buyers: 1 } });
+  });
+
   it("keeps a line the standard flags, without a dollar value, and names joint reporters once", () => {
     const out = build([
       filing("2026-09-02", [owner("SEQUOIA CAPITAL FUND", "g:vc", { tenPercentOwner: true }), owner("SEQUOIA PARTNERS", "g:vc", { tenPercentOwner: true }), DIRECTOR],
@@ -83,6 +104,40 @@ describe("desk company insiders", () => {
     ]);
     expect(out.trades[0]).toMatchObject({ owner: "SEQUOIA CAPITAL FUND", more: 1, role: "10% owner", valueUsd: null });
     expect(out.year).toEqual({ bought: 0, sold: 0, buyers: 0, sellers: 0, soldUnderPlan: 0 });
+  });
+
+  it("reads insider trading across companies: recent totals, purchases, buying windows and the largest net buyers and sellers", () => {
+    const CFO = owner("MAESTRI LUCA", "g:cfo", { officer: true, officerTitle: "Chief Financial Officer" });
+    const buy = (date: string, groupId: string, valueUsd: number) => line({ groupId, transactionDate: date, code: "P", shares: valueUsd / 100, price: 100, valueUsd });
+    const market = buildDeskInsiderMarket({
+      asOf: "2026-11-13", builtAt: "",
+      companies: [
+        { cik: 5, ticker: "BUYS", filings: [
+          filing("2026-11-03", [CEO], [buy("2026-11-02", "g:ceo", 500_000)]),
+          filing("2026-11-10", [DIRECTOR], [buy("2026-11-09", "g:dir", 100_000)]),
+          // the same insider again within the ten days: one more purchase of the same window
+          filing("2026-11-12", [CEO], [buy("2026-11-12", "g:ceo", 50_000), line({ transactionDate: "2026-11-12", code: "F", valueUsd: 9_000 })]),
+          // five months ago: listed among the purchases, outside the recent period; an amended copy and a flagged line count nowhere
+          filing("2026-06-12", [CFO], [buy("2026-06-10", "g:cfo", 70_000), line({ groupId: "g:cfo", transactionDate: "2026-06-10", code: "P", valueUsd: 9e15, flags: ["price_outlier"] })]),
+          filing("2026-06-20", [CFO], [buy("2026-06-10", "g:cfo", 70_000)], "4/A"),
+        ] },
+        { cik: 6, ticker: "SELL", filings: [filing("2026-10-03", [CEO], [line({ valueUsd: 900_000, plan10b5: true }), line({ transactionDate: "2026-10-02", valueUsd: 100_000 })])] },
+        { cik: 7, ticker: "NONE", filings: [] },
+      ],
+    })!;
+    expect(market).toMatchObject({ version: "i-test", asOf: "2026-11-13", companies: 2, days: 90 });
+    expect(market.totals).toEqual({ bought: 650_000, sold: 1_000_000, buyers: 2, sellers: 1, buyingCompanies: 1, sellingCompanies: 1, soldUnderPlan: 900_000 });
+    expect(market.purchases.map((row) => [row.ticker, row.date, row.owner, row.role, row.valueUsd])).toEqual([
+      ["BUYS", "2026-11-12", "COOK TIMOTHY D", "Chief Executive Officer", 50_000],
+      ["BUYS", "2026-11-09", "LEVINSON ARTHUR D", "Director", 100_000],
+      ["BUYS", "2026-11-02", "COOK TIMOTHY D", "Chief Executive Officer", 500_000],
+      ["BUYS", "2026-06-10", "MAESTRI LUCA", "Chief Financial Officer", 70_000],
+    ]);
+    // the chief executive twice and a director within ten days: one window of two insiders; June's lone buyer makes none
+    expect(market.windows).toEqual([{ cik: 5, ticker: "BUYS", start: "2026-11-02", end: "2026-11-12", insiders: 2, valueUsd: 650_000, roles: ["Chief Executive Officer", "Director"] }]);
+    expect(market.netBuyers.map((row) => [row.ticker, row.bought, row.sold, row.buyers])).toEqual([["BUYS", 650_000, 0, 2]]);
+    expect(market.netSellers.map((row) => [row.ticker, row.sold, row.soldUnderPlan, row.sellers])).toEqual([["SELL", 1_000_000, 900_000, 1]]);
+    expect(buildDeskInsiderMarket({ companies: [{ cik: 7, ticker: "NONE", filings: [] }], asOf: "2026-11-13", builtAt: "" })).toBeNull();
   });
 
   it("leaves old filings out of the list but inside the quarters, and returns nothing without filings", () => {

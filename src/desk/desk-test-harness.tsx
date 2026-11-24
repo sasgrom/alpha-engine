@@ -109,6 +109,15 @@ const REPORTS: Record<string, unknown> = {
     checks: [],
     jobs: [],
   },
+  "weekly-coverage.json": {
+    generatedAt: "2026-11-10T05:53:29.933Z", baselineGeneratedAt: "2026-11-03T05:50:00.000Z", status: "ready",
+    summary: { tables: 3, tablesPresent: 2, tablesMissing: 1, tablesWithRowIncrease: 1, tablesWithRowDecrease: 0, tablesWithHashDrift: 1, rows: 84_825, baselineRows: 84_789, deltaRows: 36 },
+    tables: [
+      { table: "companies", present: true, baselinePresent: true, rows: 496, baselineRows: 496, deltaRows: 0, hashChanged: false, maxDate: null },
+      { table: "signals", present: true, baselinePresent: true, rows: 84_329, baselineRows: 84_293, deltaRows: 36, hashChanged: true, maxDate: "2026-11-10" },
+      { table: "option_chains", present: false, baselinePresent: false, rows: null, baselineRows: null, deltaRows: null, hashChanged: false, maxDate: null },
+    ],
+  },
   "data-health.json": {
     generatedAt: "2026-11-12T00:00:00.000Z",
     status: "complete",
@@ -124,22 +133,27 @@ const REPORTS: Record<string, unknown> = {
     generatedAt: "2026-11-11T20:13:38.854Z",
     scenarios: [{ channel: "rates", shock: 0.01, baseline: { seriesId: "DGS10", value: 4.84, scenarioValue: 5.84, unit: "Percent", observationPeriod: "2026-11-05" }, impacts: [{ ticker: "AAPL", status: "computable", metrics: [] }, { ticker: "NVDA", status: "historical_only", metrics: [] }] }],
   },
-  "insider-form4.json": {
-    generatedAt: "2026-11-10T22:43:58.592Z",
-    universe: 50,
-    kpi: { openMarketBuyCount: 1238, openMarketBuyUsd: 2_943_972_302, uniqueInsidersBuying: 294 },
-    transactions: [
-      { accessionNo: "0000050863-26-000195", ticker: "NVDA", eventTs: "2026-11-02", transactionCode: "P", shares: 150_000, pricePerShare: 64.73, valueUsd: 9_709_680, rptOwnerName: "TAN LIP BU", isDirector: true, isOfficer: true, isTenPercentOwner: false, officerTitle: "CEO", sourceUrl: "https://www.sec.gov/Archives/edgar/data/50863/000005086326000195/form4.xml" },
-      { accessionNo: "0001596532-26-000260", ticker: "AAPL", eventTs: "2026-11-05", transactionCode: "S", shares: 8775, pricePerShare: 159.1, valueUsd: 1_396_161, rptOwnerName: "SELLER SAM", isDirector: false, isOfficer: false, isTenPercentOwner: true, officerTitle: null, sourceUrl: null },
-    ],
-    clusters: [{ clusterId: "c1", ticker: "MSFT", windowStart: "2026-08-10", windowEnd: "2026-08-12", uniqueInsidersExcludingMultiOwner: 3, aggregatePurchaseUsd: 1_500_000, hasCeo: true, hasCfo: false, hasDirector: true, flipAfterSell90d: false }],
-    benchmarkRuns: [{ methodologyStatus: "canonical", horizons: { forward5d: { hitRate: 0.556, medianExcess: 0.00378, counts: { computed: 534 } }, forward20d: { hitRate: 0.513, medianExcess: 0.00291, counts: { computed: 519 } } } }],
-  },
 };
 
 /** What desk.opsHealth answers (no alerts unless a test sets some). */
 export const OPS_HEALTH: { alerts: { level: "error" | "warning"; code: string; text: string }[] } = { alerts: [] };
 export const DESK_DATA = { empty: false, unread: 0, noStatements: false };
+/** The local worker console as the server reports it: its switch, and the scheduler's state and job switches. */
+export const OPS_CONSOLE = { enabled: true };
+const OPS_RUN = (jobId: string, over: Record<string, unknown> = {}) => ({ runId: `r-${jobId}`, jobId, status: "done", trigger: "cron", startedAt: "2026-11-12T00:45:00.000Z", endedAt: "2026-11-12T00:52:00.000Z", exitCode: 0, logFile: "x.log", error: null, ...over });
+const OPS_STATE = {
+  schemaVersion: 1, schedulerStartedAt: "2026-11-11T08:00:00.000Z", heartbeatAt: "2026-11-12T00:59:45.000Z",
+  current: OPS_RUN("edgar-fetch-daily", { status: "running", endedAt: null, exitCode: null, startedAt: "2026-11-12T00:55:00.000Z" }),
+  queue: [{ jobId: "edgar-exhibits-daily", trigger: "cron" }],
+  nextRuns: { "schwab-fetch-daily": "2026-11-13T00:45:00.000Z", "facts-fetch-daily": "2026-11-12T11:00:00.000Z" },
+  configuredCrons: {}, commandOffset: 0,
+  lastRuns: {
+    "schwab-fetch-daily": OPS_RUN("schwab-fetch-daily"),
+    "schwab-snapshot": OPS_RUN("schwab-snapshot", { trigger: "dependency", startedAt: "2026-11-12T00:52:10.000Z", endedAt: "2026-11-12T00:52:40.000Z" }),
+    "facts-fetch-daily": OPS_RUN("facts-fetch-daily", { status: "error", exitCode: 1, error: "The local web server on port 3000 did not answer", startedAt: "2026-11-11T11:00:00.000Z", endedAt: "2026-11-11T11:00:20.000Z" }),
+    "edgar-fetch-daily": OPS_RUN("edgar-fetch-daily", { status: "running", endedAt: null, exitCode: null, startedAt: "2026-11-12T00:55:00.000Z" }),
+  },
+};
 
 const CONTACTS = [
   { id: 2, username: "member", name: "Member One", role: "user", lastSignInAt: "2026-11-12", unread: 2, lastMsgAt: "2026-11-13T10:00:00", lastActivityAt: "2026-11-13T11:00:00" },
@@ -221,6 +235,18 @@ const COMPANY_HOLDERS = {
     { period: "2026-06-30", knownAt: "2026-08-31", holders: 270, fundsFiled: 307, fundsInBook: 307, valueUsd: 2.425e12, shareOfStock: 0.5747, entries: 6, exits: 5, continuing: 294, breadthChange: 0.0034, sharesBought: 309.2e6, sharesSold: 124.3e6, top10Share: 0.5548 },
   ],
 };
+const INSIDER_MARKET = {
+  schemaVersion: 2, version: "i-test", asOf: "2026-11-13", builtAt: "2026-11-23T00:00:00Z", companies: 500, days: 90,
+  totals: { bought: 12_400_000, sold: 2_100_000_000, buyers: 14, sellers: 610, buyingCompanies: 9, sellingCompanies: 302, soldUnderPlan: 1_470_000_000 },
+  purchases: [
+    { cik: 1045810, ticker: "NVDA", date: "2026-11-02", filed: "2026-11-04", accession: "0000050863-26-000195", owner: "TAN LIP BU", more: 0, role: "Chief Executive Officer", shares: 150_000, price: 64.73, valueUsd: 9_709_500 },
+    { cik: 320193, ticker: "AAPL", date: "2026-10-20", filed: "2026-10-22", accession: "0001596532-26-000260", owner: "LEVINSON ARTHUR D", more: 1, role: "Director", shares: 1000, price: 250, valueUsd: 250_000 },
+  ],
+  windows: [{ cik: 789019, ticker: "MSFT", start: "2026-08-10", end: "2026-08-12", insiders: 3, valueUsd: 1_500_000, roles: ["Chief Executive Officer", "Director"] }],
+  netBuyers: [{ cik: 1045810, ticker: "NVDA", bought: 9_709_500, sold: 0, buyers: 1, sellers: 0, soldUnderPlan: 0 }],
+  netSellers: [{ cik: 320193, ticker: "AAPL", bought: 250_000, sold: 126_000_000, buyers: 1, sellers: 11, soldUnderPlan: 126_000_000 }],
+};
+
 const COMPANY_INSIDERS = {
   schemaVersion: 2, cik: 320193, ticker: "AAPL", version: "i1.1.20261116", asOf: "2026-11-13", builtAt: "2026-11-22T00:00:00.000Z",
   trades: [
@@ -271,6 +297,12 @@ function answer(procedure: string, role: string): unknown {
     case "desk.companyFilings": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_FILINGS;
     case "desk.companyDocument": return DESK_DATA.empty ? null : { accession: "0000320193-26-000099", file: "000032019326000099.ex-a8kex991.htm", paragraphs: ["Apple reports fourth quarter results", "Revenue | $114.5 billion"], truncated: false };
     case "desk.companyHolders": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_HOLDERS;
+    case "workersLocal.enabled": return { enabled: OPS_CONSOLE.enabled };
+    case "workersLocal.operations": return { config: { "stocktwits-hourly": { enabled: false, cron: "30 * * * *" } }, state: OPS_STATE };
+    case "workersLocal.setOperation": case "workersLocal.killOperation": return { ok: true };
+    case "workersLocal.runOperation": return { id: "1-schwab-snapshot", chain: ["schwab-fetch-daily", "schwab-snapshot"] };
+    case "workersLocal.operationLog": return { lines: ["[edgar] 412 of 503 companies", "[edgar] waiting 0.2 s"] };
+    case "desk.insiderMarket": return DESK_DATA.empty ? null : INSIDER_MARKET;
     case "desk.companyInsiders": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_INSIDERS;
     case "desk.engineIndex": return ENGINE_INDEX;
     case "desk.engineCompany": return ENGINE_COMPANY;
@@ -324,7 +356,7 @@ export async function mountDesk(role: "admin" | "user", path = "/desk", ready = 
   await Promise.all([
     import("./pages/Today"), import("./pages/Watchlist"), import("./pages/research/Signals"), import("./pages/research/Earnings"),
     import("./pages/research/Volatility"), import("./pages/research/Macro"), import("./pages/research/Ownership"), import("./pages/research/Library"),
-    import("./flows/FlowsPage"), import("./pages/Messages"), import("./pages/Admin"),
+    import("./flows/FlowsPage"), import("./pages/Messages"), import("./pages/Admin"), import("./pages/Operations"),
   ]);
   const Application = application ? (await import("@/App")).default : null;
   // jsdom has neither; the palette (cmdk) needs both to mount

@@ -10,6 +10,8 @@
  *                          standard's company quarters
  *   insiders/<cik>.json    three years of insider stock transactions and 20 quarters of open-market purchases and
  *                          sales, from the insider standard's per-company files
+ *   insiders-market.json   the same lines across companies: the last 90 days' totals, recent purchases, windows of
+ *                          several buying insiders, the largest net buyers and sellers
  *   filings/<cik>.json     five years of 10-K, 10-Q and 8-K filings with the cached exhibits of the earnings releases,
  *                          from the release calendar (D:\research\alpha-engine\engine\events, --calendar)
  *
@@ -23,7 +25,7 @@
  * docs/engine/STANDARD_FUNDAMENTALS.md section 10), D:\research\alpha-engine\guidance\std\20261123T033803Z (g1.2 final),
  * D:\research\alpha-engine\prices\std\daily, D:\research\alpha-engine\fund-books\std-k16.6 (k16.6 with the September
  * 2026 quarter; files only, the research database keeps the final k16.5), D:\research\alpha-engine\insiders\std\20261116T223552Z
- * (i1.1 final), D:\research\alpha-engine\engine\events, worker/cache/edgar and D:\research\alpha-engine\engine\adjusted-eps\a2.
+ * (i1.1 final), D:\research\alpha-engine\engine\events, worker/cache/edgar and D:\research\alpha-engine\engine\adjusted-eps\a8.
  * Output: worker/.runs/desk-company, written atomically, with index.json. A missing or unreadable source stops the build and leaves the previous files in place (AGENTS.md
  * section 3.1: a missing D: is never an empty archive).
  */
@@ -33,7 +35,7 @@ import path from "node:path";
 import { createInterface } from "node:readline";
 import { DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyIndex, type DeskCompanyInsiders } from "../contracts/desk-company";
 import {
-  buildDeskCompanyActions, buildDeskCompanyFilings, buildDeskCompanyGuidance, buildDeskCompanyHolders, buildDeskCompanyInsiders, buildDeskCompanyStatements, isGuidanceRow,
+  buildDeskCompanyActions, buildDeskCompanyFilings, buildDeskCompanyGuidance, buildDeskCompanyHolders, buildDeskCompanyInsiders, buildDeskCompanyStatements, buildDeskInsiderMarket, isGuidanceRow,
   type AdjustedEpsActual, type CalendarFilingRow, type GuidanceStatementRow, type InsiderFilingDoc, type StandardCompanyDoc, type StandardField, type StandardPriceRow, type ThirteenFCompanyQuarter,
 } from "../worker/lib/desk-company";
 import { writeJsonAtomic } from "../worker/lib/json-file";
@@ -45,9 +47,9 @@ const pricesDir = path.resolve(arg("--prices") ?? "D:/research/alpha-engine/pric
 const holdersDir = path.resolve(arg("--holders") ?? "D:/research/alpha-engine/fund-books/std-k16.6");
 const insidersDir = path.resolve(arg("--insiders") ?? "D:/research/alpha-engine/insiders/std/20261116T223552Z");
 const calendarDir = path.resolve(arg("--calendar") ?? "D:/research/alpha-engine/engine/events");
-// The adjusted earnings per share the releases print (scripts/build-adjusted-eps.mts). Optional: without the folder the
-// guidance history simply has no reported figure for adjusted guidance.
-const adjustedDir = path.resolve(arg("--adjusted") ?? "D:/research/alpha-engine/engine/adjusted-eps/a2");
+// The adjusted earnings per share the releases print (scripts/build-adjusted-eps.mts), beside the adjusted guidance;
+// a read that is missing stops the build (below).
+const adjustedDir = path.resolve(arg("--adjusted") ?? "D:/research/alpha-engine/engine/adjusted-eps/a8");
 const out = path.resolve(arg("--out") ?? "worker/.runs/desk-company");
 const quarters = Number(arg("--quarters") ?? 40);
 const dryRun = process.argv.includes("--dry-run");
@@ -159,7 +161,7 @@ async function insiderFilings(cik: number): Promise<InsiderFilingDoc[] | null> {
       owners: doc.owners.map((owner) => ({ ownerName: owner.ownerName, groupId: owner.groupId, director: owner.director, officer: owner.officer, officerTitle: owner.officerTitle, tenPercentOwner: owner.tenPercentOwner })),
       transactions: doc.transactions.filter((line) => !line.derivative).map((line) => ({
         groupId: line.groupId, derivative: line.derivative, transactionDate: line.transactionDate, code: line.code, shares: line.shares, price: line.price,
-        valueUsd: line.valueUsd, plan10b5: line.plan10b5, duplicateOf: line.duplicateOf, flags: line.flags,
+        valueUsd: line.valueUsd, plan10b5: line.plan10b5, duplicateOf: line.duplicateOf, flags: line.flags, directOrIndirect: line.directOrIndirect ?? null,
       })),
     });
   }
@@ -167,19 +169,18 @@ async function insiderFilings(cik: number): Promise<InsiderFilingDoc[] | null> {
 }
 
 const adjustedActuals = new Map<number, AdjustedEpsActual[]>();
-let adjustedVersion: string | undefined;
-if (existsSync(path.join(adjustedDir, "figures.jsonl")) && existsSync(path.join(adjustedDir, "summary.json"))) {
-  adjustedVersion = (JSON.parse(readFileSync(path.join(adjustedDir, "summary.json"), "utf8")) as { version: string }).version;
-  for await (const line of createInterface({ input: createReadStream(path.join(adjustedDir, "figures.jsonl"), "utf8"), crlfDelay: Infinity })) {
-    if (!line) continue;
-    const row = JSON.parse(line) as { cik: number; acceptedEt: string; fiscalPeriodEnd: string; quarter: { value: number; grade: string } | null; year: { value: number; grade: string } | null };
-    const usable = (figure: { value: number; grade: string } | null) => figure !== null && (figure.grade === "confirmed" || figure.grade === "same_row");
-    const list = adjustedActuals.get(row.cik) ?? adjustedActuals.set(row.cik, []).get(row.cik)!;
-    // a release accepted after the close counts from the next day, like the guidance standard's availability
-    const released = row.acceptedEt.slice(11, 16) >= "16:00" ? new Date(Date.parse(`${row.acceptedEt.slice(0, 10)}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10) : row.acceptedEt.slice(0, 10);
-    if (usable(row.quarter)) list.push({ kind: "Q", periodEnd: row.fiscalPeriodEnd, value: row.quarter!.value, released });
-    if (usable(row.year)) list.push({ kind: "FY", periodEnd: row.fiscalPeriodEnd, value: row.year!.value, released });
-  }
+// the adjusted figures are part of the page: a read that is missing is never an empty one (AGENTS.md section 3.1)
+if (!existsSync(path.join(adjustedDir, "figures.jsonl")) || !existsSync(path.join(adjustedDir, "summary.json"))) throw new Error(`Adjusted-earnings read not found at ${adjustedDir} (figures.jsonl, summary.json); nothing was changed`);
+const adjustedVersion = (JSON.parse(readFileSync(path.join(adjustedDir, "summary.json"), "utf8")) as { version: string }).version;
+for await (const line of createInterface({ input: createReadStream(path.join(adjustedDir, "figures.jsonl"), "utf8"), crlfDelay: Infinity })) {
+  if (!line) continue;
+  const row = JSON.parse(line) as { cik: number; acceptedEt: string; fiscalPeriodEnd: string; quarter: { value: number; grade: string } | null; year: { value: number; grade: string } | null };
+  const usable = (figure: { value: number; grade: string } | null) => figure !== null && (figure.grade === "confirmed" || figure.grade === "same_row");
+  const list = adjustedActuals.get(row.cik) ?? adjustedActuals.set(row.cik, []).get(row.cik)!;
+  // a release accepted after the close counts from the next day, like the guidance standard's availability
+  const released = row.acceptedEt.slice(11, 16) >= "16:00" ? new Date(Date.parse(`${row.acceptedEt.slice(0, 10)}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10) : row.acceptedEt.slice(0, 10);
+  if (usable(row.quarter)) list.push({ kind: "Q", periodEnd: row.fiscalPeriodEnd, value: row.quarter!.value, released });
+  if (usable(row.year)) list.push({ kind: "FY", periodEnd: row.fiscalPeriodEnd, value: row.year!.value, released });
 }
 
 if (!existsSync(pricesDir)) throw new Error(`Standard prices not found at ${pricesDir}; nothing was changed`);
@@ -249,6 +250,10 @@ for (const input of insiderInputs) {
   companies[input.at].insiderTrades = insiders.tradeCount;
   if (!dryRun) writeJsonAtomic(path.join(out, "insiders", `${input.cik}.json`), insiders);
 }
+// The same lines across companies, for the Ownership page: recent totals, purchases, buying windows, net buyers and sellers.
+const insiderMarket = insidersAsOf ? buildDeskInsiderMarket({ companies: insiderInputs, asOf: insidersAsOf, builtAt }) : null;
+hash.update(`insiders-market|${insiderMarket ? stable(insiderMarket) : "null"}|`);
+if (insiderMarket && !dryRun) writeJsonAtomic(path.join(out, "insiders-market.json"), insiderMarket);
 const summary: DeskCompanyIndex = {
   schemaVersion: DESK_COMPANY_SCHEMA_VERSION, standard, standardGeneratedAt: index.generatedAt, guidanceVersion: guidanceBuild.guidanceVersion, pricesAsOf,
   holdersVersion: holdersBuild.buildVersion, holdersPeriod, insidersVersion: insidersFinal.buildVersion, insidersAsOf, filingsAsOf, builtAt,

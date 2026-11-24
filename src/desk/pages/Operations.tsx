@@ -1,17 +1,34 @@
 /**
- * Owner-only health view of the home pipeline, read from the daily operations report the scheduler already
- * writes (public/reports/daily-operations.json). Read-only: the controls stay in the classic operations console.
+ * The owner's operations console for the home pipeline. Health is read from the daily operations report the scheduler
+ * writes (public/reports/daily-operations.json); Jobs and Runs read the scheduler's own state and switches through the
+ * local worker procedures and send it requests (switch, schedule, Run, Stop); Coverage reads the weekly coverage
+ * report; Reference draws the flow from the job registry.
  */
 import { useMemo, useState } from "react";
-import { Link, Navigate } from "react-router";
+import { Link, Navigate, useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowUpRight, RefreshCw } from "lucide-react";
+import { Activity, ArrowUpRight, BookOpen, HeartPulse, ListChecks, RefreshCw, Table2 } from "lucide-react";
+import { trpc } from "@/providers/trpc";
 import { Card, Kpi, Notice, Segmented, Shimmer, StatusLabel } from "../components";
 import { useDesk, useDocumentTitle } from "../context";
 import { useDeskSnapshot } from "../data";
 import { classicDestinations } from "../destinations";
 import { DevNotes } from "../DevNotes";
 import { fmtDateTime, readable, statusKind } from "../format";
+import { consoleJobs, type ConsoleConfig, type ConsoleState } from "../operations/console-data";
+import { Coverage } from "../operations/Coverage";
+import { Jobs } from "../operations/Jobs";
+import { Reference } from "../operations/Reference";
+import { Runs } from "../operations/Runs";
+
+type OpsTab = "health" | "jobs" | "runs" | "coverage" | "reference";
+const TABS: { id: OpsTab; label: string; icon: typeof Activity }[] = [
+  { id: "health", label: "Health", icon: HeartPulse },
+  { id: "jobs", label: "Jobs", icon: ListChecks },
+  { id: "runs", label: "Runs", icon: Activity },
+  { id: "coverage", label: "Coverage", icon: Table2 },
+  { id: "reference", label: "Reference", icon: BookOpen },
+];
 
 interface OpsCheck {
   id: string;
@@ -22,17 +39,6 @@ interface OpsCheck {
   action: string | null;
 }
 
-interface OpsJob {
-  jobId: string;
-  name: string;
-  group: string;
-  mode: string;
-  enabled: boolean;
-  cron: string | null;
-  nextRunAt: string | null;
-  lastRun: { status: string; startedAt: string | null; endedAt: string | null; exitCode: number | null; error: string | null } | null;
-}
-
 interface OpsReport {
   generatedAt: string;
   date: string;
@@ -41,7 +47,6 @@ interface OpsReport {
   schwab: { status: string; tickersExpected: number; tickersCompleted: number; tickersCapturedToday: number; manifestErrors: number; latestCapture: string | null };
   summary: { checksOk: number; checksWarning: number; checksError: number; checksPending: number; jobsDoneToday: number; jobsFailedToday: number; jobsEnabled: number };
   checks: OpsCheck[];
-  jobs: OpsJob[];
 }
 
 interface DataHealthReport {
@@ -67,25 +72,36 @@ async function fetchDataHealth(): Promise<DataHealthReport | null> {
 
 const OWNER_TOOL_TEXT: Record<string, string> = {
   "/desk/admin": "People, reviewers, manuals, logs and monitors.",
-  "/workers": "Run and stop collectors, logs, the runbook.",
   "/database": "Stored tables, filings and concept series.",
   "/lab": "Sentiment scoring of filing sections.",
 };
 
 const ORDER: Record<string, number> = { critical: 0, error: 0, warning: 1, pending: 2, unknown: 3, ok: 4 };
 
-function duration(start: string | null, end: string | null): string {
-  if (!start || !end) return "—";
-  const seconds = Math.max(0, (new Date(end).getTime() - new Date(start).getTime()) / 1000);
-  if (seconds < 90) return `${Math.round(seconds)} s`;
-  if (seconds < 5400) return `${Math.round(seconds / 60)} min`;
-  return `${(seconds / 3600).toFixed(1)} h`;
-}
-
 export default function Operations() {
   useDocumentTitle("Operations");
   const { isAdmin } = useDesk();
+  const [params, setParams] = useSearchParams();
+  const requested = params.get("tab");
+  const tab: OpsTab = TABS.some((item) => item.id === requested) ? (requested as OpsTab) : "health";
   const [filter, setFilter] = useState<"attention" | "all">("attention");
+  const [logJob, setLogJob] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  // the scheduler's switches and state: asked for only by the owner, faster while a job runs, never while hidden
+  const local = trpc.workersLocal.enabled.useQuery(undefined, { enabled: isAdmin, staleTime: 5 * 60_000, retry: false });
+  const canAct = local.data?.enabled === true;
+  const operations = trpc.workersLocal.operations.useQuery(undefined, {
+    enabled: isAdmin && canAct,
+    refetchInterval: (query) => ((query.state.data as { state?: ConsoleState } | undefined)?.state?.current ? 10_000 : 60_000),
+  });
+  const rows = useMemo(() => consoleJobs(operations.data?.config as ConsoleConfig | undefined, operations.data?.state as ConsoleState | undefined), [operations.data]);
+  const utils = trpc.useUtils();
+  const after = (text: string) => { setMessage(text); void utils.workersLocal.operations.invalidate(); };
+  const failed = (error: { message: string }) => setMessage(`The scheduler refused: ${error.message}`);
+  const setOperation = trpc.workersLocal.setOperation.useMutation({ onSuccess: () => after("Saved. The scheduler reads it at its next tick."), onError: failed });
+  const runOperation = trpc.workersLocal.runOperation.useMutation({ onSuccess: (result) => after(`Queued: ${result.chain.join(" → ")}`), onError: failed });
+  const killOperation = trpc.workersLocal.killOperation.useMutation({ onSuccess: () => after("Stop requested."), onError: failed });
+  const openLog = (jobId: string | null) => { setLogJob(jobId); if (jobId && tab !== "runs") setParams({ tab: "runs" }); };
   const report = useQuery({ queryKey: ["desk", "daily-operations"], queryFn: fetchReport, enabled: isAdmin, refetchInterval: 60_000 });
   const health = useQuery({ queryKey: ["desk", "data-health"], queryFn: fetchDataHealth, enabled: isAdmin, refetchInterval: 60_000 });
   const snapshot = useDeskSnapshot();
@@ -93,7 +109,6 @@ export default function Operations() {
     const rows = [...(report.data?.checks ?? [])].sort((a, b) => (ORDER[statusKind(a.status)] ?? 3) - (ORDER[statusKind(b.status)] ?? 3));
     return filter === "attention" ? rows.filter((row) => statusKind(row.status) !== "ok") : rows;
   }, [report.data, filter]);
-  const jobs = useMemo(() => [...(report.data?.jobs ?? [])].filter((job) => job.enabled).sort((a, b) => (ORDER[statusKind(a.lastRun?.status)] ?? 3) - (ORDER[statusKind(b.lastRun?.status)] ?? 3) || a.name.localeCompare(b.name)), [report.data]);
 
   if (!isAdmin) return <Navigate to="/desk" replace />;
   if (report.isLoading) return <Shimmer height={480} />;
@@ -107,15 +122,26 @@ export default function Operations() {
         <div>
           <span className="desk-eyebrow">Home pipeline · report of {fmtDateTime(data.generatedAt)}</span>
           <h1>Operations</h1>
-          <p className="desk-lede">Health of the scheduler, the collectors and the data they deliver. Read-only here; run or stop jobs from the operations console.</p>
+          <p className="desk-lede">Health of the scheduler, the collectors and the data they deliver; every job with its switch, schedule, Run and Stop; the runs and their logs.</p>
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-          <button type="button" className="desk-button" onClick={() => void report.refetch()}>
+          <button type="button" className="desk-button" onClick={() => { void report.refetch(); void operations.refetch(); }}>
             <RefreshCw size={14} aria-hidden="true" /> Reload
           </button>
-          <Link className="desk-button primary" to="/workers">Operations console <ArrowUpRight size={14} aria-hidden="true" /></Link>
         </div>
       </div>
+
+      <div className="desk-tabs" role="tablist" aria-label="Operations">
+        {TABS.map(({ id, label, icon: Icon }) => (
+          <button key={id} type="button" role="tab" aria-selected={tab === id} onClick={() => setParams(id === "health" ? {} : { tab: id })}><Icon size={14} aria-hidden="true" /> {label}</button>
+        ))}
+      </div>
+
+      {tab === "jobs" && <Jobs rows={rows} message={message} actions={{ canAct, busy: setOperation.isPending || runOperation.isPending || killOperation.isPending, setJob: (jobId, enabled, cron) => setOperation.mutate({ jobId, enabled, cron }), run: (jobId) => runOperation.mutate({ jobId }), stop: (jobId) => killOperation.mutate({ jobId }), openLog }} />}
+      {tab === "runs" && <Runs rows={rows} state={operations.data?.state as ConsoleState | undefined} canAct={canAct} logJob={logJob} openLog={openLog} />}
+      {tab === "coverage" && <Coverage />}
+      {tab === "reference" && <Reference rows={rows} />}
+      {tab === "health" && (<>
 
       <div className="desk-kpis">
         <Kpi label="Overall" value={<StatusLabel status={data.status} label={data.status === "ok" ? "Healthy" : data.status[0].toUpperCase() + data.status.slice(1)} />} note={`${data.summary.checksError} errors · ${data.summary.checksWarning} warnings`} />
@@ -182,42 +208,11 @@ export default function Operations() {
           )}
         </Card>
 
-        <Card className="desk-span-12" flush title="Scheduled jobs" subtitle="Enabled jobs, problems first">
-          <div className="desk-table-wrap">
-            <table className="desk-table" style={{ fontSize: 12.5 }}>
-              <thead>
-                <tr>
-                  <th>Job</th>
-                  <th>Group</th>
-                  <th>Last run</th>
-                  <th>Ended</th>
-                  <th className="num">Took</th>
-                  <th>Next run</th>
-                </tr>
-              </thead>
-              <tbody>
-                {jobs.map((job) => (
-                  <tr key={job.jobId} style={{ cursor: "default" }}>
-                    <td>
-                      <span style={{ fontWeight: 560 }}>{job.name}</span>
-                      {job.lastRun?.error && <span className="desk-muted" style={{ display: "block", whiteSpace: "normal", maxWidth: 420 }}>{readable(job.lastRun.error).slice(0, 160)}</span>}
-                    </td>
-                    <td className="desk-ink-2">{job.group}</td>
-                    <td>{job.lastRun ? <StatusLabel status={job.lastRun.status} label={job.lastRun.status} /> : <span className="desk-muted">not run yet</span>}</td>
-                    <td className="desk-ink-2">{fmtDateTime(job.lastRun?.endedAt ?? null)}</td>
-                    <td className="num desk-ink-2">{duration(job.lastRun?.startedAt ?? null, job.lastRun?.endedAt ?? null)}</td>
-                    <td className="desk-ink-2">{job.mode === "scheduled" ? fmtDateTime(job.nextRunAt) : job.mode}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
       </div>
       <h2 className="desk-section-title">Owner tools</h2>
       <div className="desk-grid">
         {classicDestinations(true, true)
-          .filter((destination) => destination.group === "Owner tools")
+          .filter((destination) => destination.group === "Owner tools" && !destination.path.startsWith("/desk/operations"))
           .map((destination) => (
             <Link key={destination.path} to={destination.path} className="desk-card desk-span-3" style={{ display: "grid", gap: 6 }}>
               <strong style={{ fontWeight: 620 }}>{destination.label}</strong>
@@ -226,6 +221,7 @@ export default function Operations() {
             </Link>
           ))}
       </div>
+      </>)}
       <DevNotes page="operations" />
     </div>
   );

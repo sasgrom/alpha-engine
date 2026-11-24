@@ -18,7 +18,6 @@ const Jobs = lazy(() => import("./pages/Jobs"));
 const Screener = lazy(() => import("./pages/Screener"));
 const DatabasePage = lazy(() => import("./pages/Database"));
 const Lab = lazy(() => import("./pages/Lab"));
-const Workers = lazy(() => import("./pages/Workers"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const Methodology = lazy(() => import("./pages/Methodology"));
 const VolatilityRiskLab = lazy(() => import("./pages/VolatilityRiskLab"));
@@ -71,7 +70,7 @@ export default function App() {
       <Route path="/database" element={<AdminOnly><DatabasePage /></AdminOnly>} />
       <Route path="/lab" element={<AdminOnly><Lab /></AdminOnly>} />
       <Route path="/admin" element={<AdminOnly><Navigate to="/desk/admin" replace /></AdminOnly>} />
-      <Route path="/workers" element={<AdminOnly><Workers /></AdminOnly>} />
+      <Route path="/workers" element={<AdminOnly><Navigate to="/desk/operations?tab=jobs" replace /></AdminOnly>} />
       <Route path="/project-state" element={<PresentationOnly><ProjectState /></PresentationOnly>} />
       <Route path="/analytics" element={<PresentationOnly><Analytics /></PresentationOnly>} />
       <Route path="/analytics/methodology" element={<PresentationOnly><Methodology /></PresentationOnly>} />

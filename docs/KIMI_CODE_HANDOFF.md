@@ -3936,3 +3936,63 @@ delivered.
   companies, and `scratch-a8-stopped2-20261123`, 23 companies, with their logs); mine, kept until the owner says they
   can go. a3 to a7 are kept for comparison.
 - Gates: `npm run check`, 275 files / 1,626 tests, `npm run build`, `git diff --check`.
+
+## 225. Claude (Fable 5.2): Ownership's insider cards on the insider standard; the operations console in the desk; `/workers` retired — 2026-11-24T02:30Z
+
+- **Ownership, insiders** (`src/desk/pages/research/Ownership.tsx`): the cards read `insiders-market.json`, which
+  `scripts/build-desk-company.mts` now writes from the insider standard i1.1 for all 500 companies
+  (`buildDeskInsiderMarket` in `worker/lib/desk-company.ts`, contract `DeskInsiderMarket`, procedure
+  `desk.insiderMarket`). It holds the last 90 days' totals, the open-market purchases of 180 days (60 newest), ten-day
+  windows in which two or more owner groups bought (a year, 40 newest), and the ten largest net buyers and sellers.
+  The page shows them with links to the SEC filings and a Net sellers / Net buyers switch. The old Form 4 export of
+  the 50 research companies (`insider-form4.json`) is no longer read by the desk.
+  - Built file, filings to 2026-11-13: bought $1.97 bn by 90 owner groups at 67 companies; sold $11.77 bn by 989 at
+    334, of it $4.26 bn under trading plans. Largest net buyers: Republic Services ($1,162 m, one owner group), Lennar
+    ($595 m, Berkshire Hathaway), MGM, Rollins. Largest net sellers: Diamondback, Dell, Nvidia.
+- **One trade reported by two related owners** (found on the built file, fixed before delivery): the standard links
+  copies of a trade within one owner group, and groups are owners who sign a report together. Related owners who
+  never do report the same trade twice: Rollins' purchase of 29 October 2026 (1,444,402 shares at 34.5864) by LOR,
+  Inc. and again by the R. Randall Rollins Voting Trust "held indirectly through LOR, Inc."; LS Power and its founder
+  (NRG, $2.65 bn sold on 4 March 2026); Zelnick and Slatoff "by ZMC Advisors" (Take-Two); Charles Liang "by spouse"
+  (Super Micro). Counted over the year to 2026-11-13: 40 pairs of open-market lines with the same company, day,
+  shares and price in different groups. In 15 at least one side holds indirectly (the same trade); in 25 both hold
+  directly (two people's own equal trades: Gilead's officers 3,000 shares each on plan days, Equinix's small plan
+  sales, three Monolithic Power officers). Rule in `insiderStockLines` (company page and market file): such a line is
+  the same trade again where either side holds indirectly; two direct lines stay two. The builder passes
+  `directOrIndirect` through.
+  - Effect (files before: `D:/research/alpha-engine/engine/desk-company-before/bdd86fb66fa7`): 20 companies' insider
+    files, the market file and the index changed, nothing else. NRG's year sold $5,326 m → $2,681 m; Rollins bought
+    $99.9 m → $50.0 m, one buyer, and its "two insiders" window is gone; Take-Two sold $165.0 m → $117.5 m; Super
+    Micro $27.9 m → $15.7 m. 90-day totals: bought $2,019 m → $1,969 m, sold $11,780 m → $11,768 m. Desk files now
+    hash `a3715b5b7420` (section 224 names the hash before this rule).
+  - Proposal for the standard's next version (i1.2, Kimi's or the owner's call): link such copies across owner groups
+    in the standard itself, so every consumer gets it. Research that sums i1.1 dollars by owner group over-counts
+    these (5.0% of the year's open-market sales, 1.0% of purchases, nearly all of it the one LS Power sale).
+- **Operations console** (`src/desk/pages/Operations.tsx`, `src/desk/operations/`): tabs Health (as before), Jobs,
+  Runs, Coverage, Reference; the tab is in the address (`?tab=`).
+  - Jobs: every job of the registry, failed ones first under "Needs a look", then by group; schedule, last run, how
+    long it took, next run, its switch; on demand what it is for, what it reads and writes, what runs first and what
+    follows, the command; the schedule editor shows the next three runs before Save and refuses a bad expression
+    (`croner`, the scheduler's own parser); Run and Stop ask first, and the Run dialog names the chain in order.
+  - Runs: the running job, what waits, the last run of each job with a filter for failed ones, the log viewer
+    (follows the running job).
+  - Coverage: the weekly coverage report, gaps first, with its age. Reference: what follows what, from the registry.
+  - It uses the existing owner-only procedures `workersLocal.enabled / operations / setOperation / runOperation /
+    killOperation / operationLog`; no server code changed. Where the server keeps the worker controls off, everything
+    is shown and nothing can be changed. The scheduler stays the only thing that starts a job.
+  - Classic `/workers` redirects to `/desk/operations?tab=jobs`; `src/pages/Workers.tsx` and its test are removed.
+    The Library and the command palette point to the console.
+  - Open from K17b: its server part (owner-only reports, honest macro status) is task note K24, sent to Kimi's
+    mailbox with K25; both wait for the owner's approval by name. `/jobs` stays until the Watchlist can add a company.
+- **Web server** restarted once at 2026-11-24T02:06Z for the new procedure, after proving one listener on port 3000
+  and an idle scheduler (heartbeat current, nothing running); `desk.insiderMarket` answers 401 without a session.
+  The desk files are read by modification time, so the rebuild above needed no second restart.
+- Tests: `worker/lib/desk-company-owners.test.ts` (8), `src/desk/pages/Operations.console.test.tsx` (11),
+  `Operations.readonly.test.tsx`, `DeskResearch.test.tsx`; the harness answers the console's procedures.
+- Gates on the delivered state: `npm run check`, 275 files / 1,627 tests, `npm run build`, `git diff --check`.
+- Not mine, left uncommitted in the tree: `public/reports/*`, `research/engine/*.json`,
+  `src/data/analytics-snapshot.ts`, `.vscode/`.
+- **Next:** Screener columns from the standard fundamentals; the Watchlist's "add any SEC company" (then `/jobs`
+  goes); the research pages (`docs/desk/UI_MIGRATION.md` section 7.3). For the owner: the Schwab refresh token
+  ends on Wednesday 25 November about 15:28 local (login of 18 November); `npx tsx worker/schwab-callback.mts`
+  before then.

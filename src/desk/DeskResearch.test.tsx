@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it } from "vitest";
-import { mountDesk, type MountedDesk } from "./desk-test-harness";
+import { mountDesk, waitUntil, type MountedDesk } from "./desk-test-harness";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -34,13 +34,22 @@ describe("desk research tools and the watchlist, for the owner", () => {
     expect(desk.calls).toContain("report:company-exposures.json");
   });
 
-  it("shows insider purchases, multi-insider windows, the funds' sectors and short interest", async () => {
+  it("shows insider trading across all companies from the insider standard, the funds' sectors and short interest", async () => {
     desk = await mountDesk("admin", "/desk/research/ownership", "Bought less sold");
+    await waitUntil(() => (desk!.host.textContent ?? "").includes("Lip Bu Tan"));
     const text = desk.host.textContent ?? "";
-    expect(text).toContain("Lip Bu Tan");
-    expect(text).not.toContain("SELLER SAM");
-    expect(text).toContain("$9.71M");
-    expect(text).toContain("CEO, director");
+    // the headline figures of the 90 days, with the share sold under trading plans
+    expect(text).toContain("Insiders bought, 90 days$12.40M14 insiders at 9 companies");
+    expect(text).toContain("Insiders sold, 90 days$2.10B610 insiders at 302 companies · 70% under trading plans");
+    expect(text).toContain("Insider filings to Nov 13, 2026, 500 companies.");
+    // purchases with who bought, joint reporters counted, and the SEC's copy of the filing
+    expect(text).toContain("Lip Bu Tan · Chief Executive Officer");
+    expect(text).toContain("Arthur D Levinson +1 · Director");
+    expect(desk.host.querySelector('a[href="https://www.sec.gov/Archives/edgar/data/1045810/000005086326000195/"]')).not.toBeNull();
+    // several insiders buying together, and the largest net sellers first
+    expect(text).toContain("Chief Executive Officer, Director");
+    expect(text).toContain("Where insiders sold most");
+    expect(text).toContain("AAPL$126M11100%$250K1−$126M");
     expect(text).not.toContain("Dry-run excess");
     expect(text).toContain("+$40.00B");
     expect(text).toContain("131.6M");

@@ -112,12 +112,12 @@ export const DEV_NOTES = {
   },
   ownership: {
     missing: [
-      "Insider filings beyond the 50 research companies.",
+      "Insider filings after the insider standard's last build: the page says to which day it reads.",
       "Ranking companies by institutional accumulation.",
       "Short-interest history and readings for the whole index.",
     ],
     better: [
-      ["Insider purchases and windows from the insider standard for every company", "a cross-company file from the company-page builder (the cards still read the old Form 4 export of the 50)"],
+      ["Insider filings of this week", "a scheduled rebuild of the insider standard (it is built by hand)"],
     ],
   },
   flows: {
@@ -164,11 +164,15 @@ export const DEV_NOTES = {
   },
   operations: {
     missing: [
-      "Run and stop controls: kept in the classic operations console.",
-      "History of job durations and failures.",
+      "History of runs: the scheduler keeps only the last run of each job, so durations and failures over time are not shown.",
+      "Owner-only reports: the daily operations, coverage and data-health reports still open for any reviewer who accepted the NDA (task K24).",
+      "A weekly coverage report that is current: the job last wrote one on 10 November.",
       "The registry check lives in the snapshot build, not in the daily report.",
     ],
-    better: [["One health view per data source with freshness and coverage", "task K09 (data health), waiting for approval"]],
+    better: [
+      ["One health view per data source with freshness and coverage", "task K09 (data health), waiting for approval"],
+      ["A status that is not CRITICAL most of the day", "the macro lineage check compares run times, not content (task K24)"],
+    ],
   },
   messages: {
     missing: [
@@ -188,7 +192,6 @@ export const DEV_NOTES = {
     ],
     better: [
       ["Filtering and saved views for long logs", "a bounded server-side log query rather than loading the first 2,000 lines"],
-      ["Scheduler and job controls beside the monitors", "the next operations-console phase"],
     ],
   },
 } satisfies Record<string, PageNotes>;

@@ -14,6 +14,7 @@
 import {
   DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyActions, type DeskCompanyFilings, type DeskCompanyGuidance, type DeskCompanyHolders, type DeskCompanyInsiders,
   type DeskCompanyStatements,
+  type DeskInsiderCompanyNet, type DeskInsiderMarket, type DeskInsiderMarketTrade, type DeskInsiderWindow,
   type DeskGuidancePeriod, type DeskGuidanceUpdate,
   type DeskStatementCell, type DeskStatementKind, type DeskStatementName, type DeskStatementQuarter, type DeskStatementRow, type DeskStatementSum,
   type DeskStatementSumRow, type DeskStatementYear,
@@ -621,6 +622,8 @@ export interface InsiderFilingDoc {
   transactions: Array<{
     groupId: string; derivative: boolean; transactionDate: string | null; code: string | null; shares: number | null; price: number | null;
     valueUsd: number | null; plan10b5: boolean; duplicateOf: string | null; flags: string[];
+    /** "D" held by the reporting person, "I" held through someone else (a company, a fund, a trust, a spouse). */
+    directOrIndirect: string | null;
   }>;
 }
 
@@ -630,6 +633,109 @@ const quarterEnd = (date: string): string => {
   const year = Number(date.slice(0, 4)), quarter = Math.ceil(Number(date.slice(5, 7)) / 3);
   return `${year}-${String(quarter * 3).padStart(2, "0")}-${quarter === 1 || quarter === 4 ? 31 : 30}`;
 };
+
+/**
+ * The stock lines of a company's original insider reports up to `asOf`, each economic trade once: no amended report
+ * (separate evidence, not a second trade), no duplicate copy (the standard's links), no derivative line. `usable` says
+ * the line has a dollar value the standard does not flag.
+ *
+ * The standard links copies within one owner group. Related owners who never sign a report together report the same
+ * trade in two (a trust "through LOR, Inc." beside LOR itself, two partners "by" their fund, a husband "by spouse"):
+ * an open-market line that another group already reported with the same day, shares and price is that trade again
+ * where either of the two holds indirectly. Two people's own equal trades (both direct) stay two.
+ */
+function* insiderStockLines(filings: InsiderFilingDoc[], asOf: string) {
+  const reported = new Map<string, Array<{ groupId: string; indirect: boolean }>>();
+  for (const { filing, owners, transactions } of filings) {
+    if (filing.form.endsWith("/A") || filing.filingDate > asOf) continue;
+    for (const line of transactions) {
+      if (line.derivative || line.duplicateOf || !line.transactionDate || !line.code) continue;
+      if ((line.code === "P" || line.code === "S") && line.shares !== null && line.price !== null) {
+        const key = `${line.transactionDate}|${line.code}|${line.shares}|${line.price}`;
+        const indirect = line.directOrIndirect === "I";
+        const before = reported.get(key) ?? reported.set(key, []).get(key)!;
+        if (before.some((other) => other.groupId !== line.groupId && (indirect || other.indirect))) continue;
+        before.push({ groupId: line.groupId, indirect });
+      }
+      const usable = line.valueUsd !== null && line.valueUsd > 0 && line.price !== null && line.price > 0 && !line.flags.some((flag) => NO_DOLLARS.has(flag));
+      yield { filing, owners, line, date: line.transactionDate, code: line.code, usable };
+    }
+  }
+}
+
+/** Who reported a line: the first reporting person of its group, how many reported it jointly, and the role. */
+function insiderNamed(owners: InsiderFilingDoc["owners"], groupId: string): { owner: string; more: number; role: string | null } | null {
+  const group = owners.filter((owner) => owner.groupId === groupId);
+  const named = group[0] ?? owners[0];
+  if (!named) return null;
+  return { owner: named.ownerName, more: Math.max(0, group.length - 1), role: named.officerTitle?.trim() || (named.director ? "Director" : named.tenPercentOwner ? "10% owner" : named.officer ? "Officer" : null) };
+}
+
+/**
+ * Insider trading across companies, from the same lines as the company files: the open-market purchases and sales
+ * (codes P and S) with a usable dollar value. `days` is the recent period (totals, the largest net buyers and
+ * sellers); purchases are listed for twice that, and buying windows for a year. A window starts at a purchase and
+ * takes every purchase of the next ten days; it counts when two or more different reporting groups bought in it, and
+ * the next window starts after it.
+ */
+export function buildDeskInsiderMarket(params: { companies: Array<{ cik: number; ticker: string; filings: InsiderFilingDoc[] }>; asOf: string; builtAt: string; days?: number }): DeskInsiderMarket | null {
+  const { asOf } = params, days = params.days ?? 90;
+  const back = (count: number) => new Date(Date.parse(asOf) - count * DAY).toISOString().slice(0, 10);
+  const recent = back(days), listed = back(2 * days), yearAgo = back(365);
+  const cents = (value: number) => Math.round(value * 100) / 100;
+  const purchases: DeskInsiderMarketTrade[] = [];
+  const windows: DeskInsiderWindow[] = [];
+  const nets: DeskInsiderCompanyNet[] = [];
+  const buyers = new Set<string>(), sellers = new Set<string>();
+  let version = "", counted = 0;
+  for (const company of params.companies) {
+    if (!company.filings.length) continue;
+    version ||= company.filings[0].filing.buildVersion;
+    counted++;
+    const net = { bought: 0, sold: 0, buyers: new Set<string>(), sellers: new Set<string>(), soldUnderPlan: 0 };
+    const bought: Array<{ date: string; group: string; value: number; role: string | null }> = [];
+    for (const { filing, owners, line, date, code, usable } of insiderStockLines(company.filings, asOf)) {
+      if (!usable || (code !== "P" && code !== "S") || date > asOf || date <= yearAgo) continue;
+      const who = insiderNamed(owners, line.groupId);
+      if (code === "P") {
+        bought.push({ date, group: line.groupId, value: line.valueUsd!, role: who?.role ?? null });
+        if (date > listed && who) purchases.push({ cik: company.cik, ticker: company.ticker, date, filed: filing.filingDate, accession: filing.accessionNo, owner: who.owner, more: who.more, role: who.role, shares: line.shares, price: line.price, valueUsd: cents(line.valueUsd!) });
+      }
+      if (date <= recent) continue;
+      const key = `${company.cik}:${line.groupId}`;
+      if (code === "P") { net.bought += line.valueUsd!; net.buyers.add(line.groupId); buyers.add(key); }
+      else { net.sold += line.valueUsd!; net.sellers.add(line.groupId); sellers.add(key); if (line.plan10b5) net.soldUnderPlan += line.valueUsd!; }
+    }
+    if (net.bought > 0 || net.sold > 0) nets.push({ cik: company.cik, ticker: company.ticker, bought: cents(net.bought), sold: cents(net.sold), buyers: net.buyers.size, sellers: net.sellers.size, soldUnderPlan: cents(net.soldUnderPlan) });
+    bought.sort((a, b) => a.date.localeCompare(b.date));
+    for (let at = 0; at < bought.length;) {
+      const until = new Date(Date.parse(bought[at].date) + 10 * DAY).toISOString().slice(0, 10);
+      let end = at;
+      while (end + 1 < bought.length && bought[end + 1].date <= until) end++;
+      const inside = bought.slice(at, end + 1), groups = new Set(inside.map((item) => item.group));
+      if (groups.size >= 2) {
+        windows.push({
+          cik: company.cik, ticker: company.ticker, start: inside[0].date, end: inside[inside.length - 1].date, insiders: groups.size,
+          valueUsd: cents(inside.reduce((sum, item) => sum + item.value, 0)), roles: [...new Set(inside.map((item) => item.role).filter((role): role is string => role !== null))].slice(0, 4),
+        });
+      }
+      at = end + 1;
+    }
+  }
+  if (!version) return null;
+  purchases.sort((a, b) => b.date.localeCompare(a.date) || b.valueUsd - a.valueUsd || a.ticker.localeCompare(b.ticker));
+  windows.sort((a, b) => b.end.localeCompare(a.end) || b.valueUsd - a.valueUsd || a.ticker.localeCompare(b.ticker));
+  const byNet = [...nets].sort((a, b) => (b.bought - b.sold) - (a.bought - a.sold) || a.ticker.localeCompare(b.ticker));
+  return {
+    schemaVersion: DESK_COMPANY_SCHEMA_VERSION, version, asOf, builtAt: params.builtAt, companies: counted, days,
+    totals: {
+      bought: cents(nets.reduce((sum, row) => sum + row.bought, 0)), sold: cents(nets.reduce((sum, row) => sum + row.sold, 0)), buyers: buyers.size, sellers: sellers.size,
+      buyingCompanies: nets.filter((row) => row.bought > 0).length, sellingCompanies: nets.filter((row) => row.sold > 0).length, soldUnderPlan: cents(nets.reduce((sum, row) => sum + row.soldUnderPlan, 0)),
+    },
+    purchases: purchases.slice(0, 60), windows: windows.slice(0, 40),
+    netBuyers: byNet.filter((row) => row.bought > row.sold).slice(0, 10), netSellers: byNet.filter((row) => row.sold > row.bought).reverse().slice(0, 10),
+  };
+}
 
 /**
  * A company's insider transactions for the page: the stock lines of original reports (an amended report is separate
@@ -647,33 +753,22 @@ export function buildDeskCompanyInsiders(params: { cik: number; ticker: string; 
   const quarters = new Map(ends.map((end) => [end, { bought: 0, sold: 0, buyers: new Set<string>(), sellers: new Set<string>() }]));
   const year = { bought: 0, sold: 0, buyers: new Set<string>(), sellers: new Set<string>(), soldUnderPlan: 0 };
   const trades: DeskCompanyInsiders["trades"] = [];
-  let version = "";
-  for (const { filing, owners, transactions } of params.filings) {
-    version ||= filing.buildVersion;
-    if (filing.form.endsWith("/A") || filing.filingDate > asOf) continue;
-    for (const line of transactions) {
-      if (line.derivative || line.duplicateOf || !line.transactionDate || !line.code) continue;
-      const usable = line.valueUsd !== null && line.valueUsd > 0 && line.price !== null && line.price > 0 && !line.flags.some((flag) => NO_DOLLARS.has(flag));
-      if (usable && (line.code === "P" || line.code === "S")) {
-        const quarter = quarters.get(quarterEnd(line.transactionDate));
-        const side = line.code === "P" ? "bought" : "sold";
-        if (quarter) { quarter[side] += line.valueUsd!; quarter[line.code === "P" ? "buyers" : "sellers"].add(line.groupId); }
-        if (line.transactionDate > yearAgo && line.transactionDate <= asOf) {
-          year[side] += line.valueUsd!;
-          year[line.code === "P" ? "buyers" : "sellers"].add(line.groupId);
-          if (line.code === "S" && line.plan10b5) year.soldUnderPlan += line.valueUsd!;
-        }
+  const version = params.filings[0]?.filing.buildVersion ?? "";
+  for (const { filing, owners, line, date, code, usable } of insiderStockLines(params.filings, asOf)) {
+    if (usable && (code === "P" || code === "S")) {
+      const quarter = quarters.get(quarterEnd(date));
+      const side = code === "P" ? "bought" : "sold";
+      if (quarter) { quarter[side] += line.valueUsd!; quarter[code === "P" ? "buyers" : "sellers"].add(line.groupId); }
+      if (date > yearAgo && date <= asOf) {
+        year[side] += line.valueUsd!;
+        year[code === "P" ? "buyers" : "sellers"].add(line.groupId);
+        if (code === "S" && line.plan10b5) year.soldUnderPlan += line.valueUsd!;
       }
-      if (filing.filingDate < since) continue;
-      const group = owners.filter((owner) => owner.groupId === line.groupId);
-      const named = group[0] ?? owners[0];
-      if (!named) continue;
-      trades.push({
-        date: line.transactionDate, filed: filing.filingDate, owner: named.ownerName, more: Math.max(0, group.length - 1),
-        role: named.officerTitle?.trim() || (named.director ? "Director" : named.tenPercentOwner ? "10% owner" : named.officer ? "Officer" : null),
-        code: line.code, shares: line.shares, price: line.price, valueUsd: usable ? line.valueUsd : null, plan: line.plan10b5,
-      });
     }
+    if (filing.filingDate < since) continue;
+    const who = insiderNamed(owners, line.groupId);
+    if (!who) continue;
+    trades.push({ date, filed: filing.filingDate, owner: who.owner, more: who.more, role: who.role, code, shares: line.shares, price: line.price, valueUsd: usable ? line.valueUsd : null, plan: line.plan10b5 });
   }
   if (!version) return null;
   trades.sort((a, b) => b.date.localeCompare(a.date) || b.filed.localeCompare(a.filed) || (b.valueUsd ?? 0) - (a.valueUsd ?? 0));
