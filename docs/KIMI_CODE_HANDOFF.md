@@ -4661,3 +4661,35 @@ Continuation of section 243 (owner: "lets put everything we can to automatic pro
   adjusted actual until it is rebuilt), the 13F standard and the desk's fund-flow files (quarterly source), the
   standard prices stay weekly. SEC's quarterly bulk sets (insider forms, financial statement data sets) are still
   downloaded by hand once a quarter.
+
+## 245. Claude (Fable 5.2): first refresh runs; a Sources table on the Operations page — 2026-11-24T10:46Z
+
+- **Guidance refresh, first run by hand (10:18Z to 10:28Z, 605 s): complete.** Addendum 31 quarters and 33 releases;
+  the model read all 33 in 6.6 minutes (28 calls, 14 s each: 22 with statements, 6 without, 5 with no candidate
+  text); build 157 s, gates pass; regression pass (33 release exhibits and 146 statements added, none lost).
+  Published `D:/research/alpha-engine/guidance/std/20261124T102519Z` as g1.2.20261124; the desk files were rebuilt on
+  it (guidance market: 1,799 changes, newest Intuit, issued 2026-11-20). Ollama was started by the run (pid 8160) and
+  stopped again; nothing answers on 11434.
+  - Releases accepted on Monday 2026-11-23 are in the standard but not on the desk yet: their availability day is
+    Tuesday's session, which the app completes this evening.
+- **Fundamentals refresh, test run by hand with `--no-publish` (10:11Z to 10:23Z, 736 s): pass.** Build 359 s, checks
+  287 s; comparison with v3.2: 0 removed, 0 broken; 2 companies with a newer quarter, 30,767 company-quarters (+2).
+  The folder `standard/v3.2-20261124T101052Z` stays unpublished; tonight's scheduled run (03:12) builds and publishes.
+- **Lab `30b0b5a`:** the fundamentals and guidance refreshes fingerprint their code by the last commit that touched
+  their own paths, so an unrelated lab commit is not "new inputs".
+- **Adjusted earnings per share (a8): my mistake, repaired.** To check that a rerun changes nothing I ran
+  `scripts/build-adjusted-eps.mts` with `--fundamentals .../v3.2`. The reader's reuse key includes the fundamentals
+  folder name and a8 was built with the default (v3.1), so the run began rereading every company. I stopped it after
+  34 companies. `figures.jsonl` and `summary.json` were never touched (hashes equal to the copies I had saved as
+  `*.before-refresh-20261124.*`). The 34 readings files were reread with the original settings (`--ciks ...`,
+  default fundamentals) and the two saved files copied back, because a `--ciks` run writes `figures.jsonl` for the
+  subset only. **a8 is not automated:** its reuse key must first become each company's own anchor data instead of
+  the folder name, or every refreshed fundamentals build would cost a 1.9-hour reread.
+- **Operations page, Health tab: "Sources" table** (`desk.sourceFreshness`, owner only;
+  `api/services/source-freshness.ts`, `worker/lib/source-freshness.ts`). Ten sources, each with the newest day in its
+  own data, its age, the state (current, late, refresh failed, unknown) and the last run of its refresh job; worst
+  first. The allowance per source covers weekends, a holiday and the source's publication delay (filings 4 days,
+  insiders 5, guidance 7, macro 6, short interest 30, 13F 140, prediction markets 2).
+- Gates: `npm run check`, 268 files / 1,636 tests, `npm run build`, `git diff --check`.
+- **Pending tonight on the schedule:** `std-fundamentals-refresh` 03:12 (first publish), `std-insiders-refresh`
+  03:35 (first real run: fetch 2026-11-16 to 2026-11-23, build, load, final), `finra-short-interest` 06:25.

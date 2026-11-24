@@ -138,6 +138,13 @@ export const REPORTS: Record<string, unknown> = {
 
 /** What desk.opsHealth answers (no alerts unless a test sets some). */
 export const OPS_HEALTH: { alerts: { level: "error" | "warning"; code: string; text: string }[] } = { alerts: [] };
+/** The Operations page's sources table: one current source, one late, one whose refresh failed. */
+export const SOURCES = [
+  { id: "insiders", label: "Insider forms (3, 4, 5)", newest: "2026-11-13", what: "newest form in the standard", arrives: "nightly 03:35, gated refresh", maxAgeDays: 5, run: { status: "failed", endedAt: "2026-11-24T11:50:00.000Z", error: "Regression check refused the load" }, detail: "i1.1.20261116", ageDays: 11, state: "failed" },
+  { id: "short-interest", label: "Short interest (FINRA)", newest: "2026-10-15", what: "newest settlement", arrives: "twice a month", maxAgeDays: 30, run: null, detail: null, ageDays: 40, state: "late" },
+  { id: "filings", label: "SEC filings (10-K, 10-Q, 8-K)", newest: "2026-11-23", what: "newest filing on the desk", arrives: "nightly 02:00, then the desk files", maxAgeDays: 4, run: { status: "done", endedAt: "2026-11-24T10:06:42.000Z", error: null }, detail: null, ageDays: 1, state: "current" },
+];
+
 export const DESK_DATA = { empty: false, unread: 0, noStatements: false };
 /** Procedures that answer with an error until removed, as the server would: { "auth.login": { code: "UNAUTHORIZED", httpStatus: 401, message: "..." } }. */
 export const FAILURES: Record<string, { code: string; httpStatus: number; message: string }> = {};
@@ -313,6 +320,7 @@ const COMPANY_INSIDERS = {
 function answer(procedure: string, role: string, input?: unknown): unknown {
   const owner = role === "admin";
   switch (procedure) {
+    case "desk.sourceFreshness": return { checkedAt: "2026-11-24T12:00:00.000Z", sources: SOURCES };
     case "desk.opsHealth": return { checkedAt: "2026-11-12T20:00:00.000Z", heartbeatAt: "2026-11-12T20:00:00.000Z", alerts: OPS_HEALTH.alerts };
     case "auth.me": return { id: 1, username: "owner", name: "Ada Owner", role };
     case "auth.captcha": return { id: "sum-1", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40"><text x="10" y="26">3 + 4</text></svg>' };

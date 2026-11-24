@@ -14,7 +14,7 @@ import { useDesk, useDocumentTitle } from "../context";
 import { useDeskSnapshot } from "../data";
 import { libraryDestinations } from "../destinations";
 import { DevNotes } from "../DevNotes";
-import { fmtDateTime, readable, statusKind } from "../format";
+import { fmtDate, fmtDateTime, readable, statusKind } from "../format";
 import { consoleJobs, type ConsoleConfig, type ConsoleState } from "../operations/console-data";
 import { Coverage } from "../operations/Coverage";
 import { Jobs } from "../operations/Jobs";
@@ -78,6 +78,9 @@ const OWNER_TOOL_TEXT: Record<string, string> = {
 
 const ORDER: Record<string, number> = { critical: 0, error: 0, warning: 1, pending: 2, unknown: 3, ok: 4 };
 
+const SOURCE_STATUS = { current: "ok", late: "warning", failed: "error", unknown: "warning" } as const;
+const SOURCE_LABEL = { current: "Current", late: "Late", failed: "Refresh failed", unknown: "Unknown" } as const;
+
 export default function Operations() {
   useDocumentTitle("Operations");
   const { isAdmin } = useDesk();
@@ -105,6 +108,7 @@ export default function Operations() {
   const report = useQuery({ queryKey: ["desk", "daily-operations"], queryFn: fetchReport, enabled: isAdmin, refetchInterval: 60_000 });
   const health = useQuery({ queryKey: ["desk", "data-health"], queryFn: fetchDataHealth, enabled: isAdmin, refetchInterval: 60_000 });
   const snapshot = useDeskSnapshot();
+  const sources = trpc.desk.sourceFreshness.useQuery(undefined, { enabled: isAdmin, refetchInterval: 5 * 60_000, staleTime: 60_000 });
   const checks = useMemo(() => {
     const rows = [...(report.data?.checks ?? [])].sort((a, b) => (ORDER[statusKind(a.status)] ?? 3) - (ORDER[statusKind(b.status)] ?? 3));
     return filter === "attention" ? rows.filter((row) => statusKind(row.status) !== "ok") : rows;
@@ -181,6 +185,30 @@ export default function Operations() {
       )}
 
       <div className="desk-grid">
+        <Card className="desk-span-12" title="Sources" subtitle="How current each source is, by the newest day in its own data. A refresh that ran is not the same as data that moved.">
+          {sources.isLoading ? <Shimmer height={220} /> : sources.data?.sources.length ? (
+            <div className="desk-table-wrap">
+              <table className="desk-table">
+                <thead><tr><th>Source</th><th>Newest data</th><th className="num">Age</th><th>State</th><th>Arrives</th><th>Last refresh</th></tr></thead>
+                <tbody>
+                  {sources.data.sources.map((source) => (
+                    <tr key={source.id}>
+                      <td>{source.label}{source.detail ? <span className="desk-muted"> · {source.detail}</span> : null}</td>
+                      <td>{source.newest ? <>{fmtDate(source.newest, "short")} <span className="desk-muted">· {source.what}</span></> : <span className="desk-muted">not readable</span>}</td>
+                      <td className="num">{source.ageDays === null ? "—" : source.ageDays === 0 ? "today" : `${source.ageDays} d`}</td>
+                      <td><StatusLabel status={SOURCE_STATUS[source.state]} label={SOURCE_LABEL[source.state]} /></td>
+                      <td className="desk-ink-2">{source.arrives}</td>
+                      <td className="desk-ink-2">{source.run ? <>{source.run.status ?? "—"}{source.run.endedAt ? ` · ${fmtDateTime(source.run.endedAt)}` : ""}{source.state === "failed" && source.run.error ? <span style={{ display: "block", whiteSpace: "normal", fontSize: 12 }}>{source.run.error}</span> : null}</> : <span className="desk-muted">no job</span>}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="desk-empty">The sources could not be read.</div>
+          )}
+        </Card>
+
         <Card
           className="desk-span-12"
           title="Checks"

@@ -20,6 +20,7 @@ import type { DeskCompanyActions, DeskCompanyFilings, DeskCompanyGuidance, DeskC
 import type { EngineFlowCompany, EngineFlowIndex } from "@contracts/engine-flow";
 import type { FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
 import { operationsHealth } from "../../worker/lib/operations-health";
+import { readSourceFreshness } from "../services/source-freshness";
 import { loadOperationsState } from "../../worker/lib/operations-scheduler";
 import { adminQuery, createRouter, authedQuery } from "../middleware";
 import { readDeskCompanyFile } from "../services/desk-company-files";
@@ -69,4 +70,6 @@ export const deskRouter = createRouter({
   engineIndex: adminQuery.query(() => readEngineFlowFile<EngineFlowIndex>("index.json")),
   engineCompany: adminQuery.input(entity).query(({ input }) => readEngineFlowFile<EngineFlowCompany>(`company/${input.cik}.json`)),
   opsHealth: adminQuery.query(() => operationsHealth(loadOperationsState(), new Date())),
+  // how current each data source is, by the newest day in its own data (the Operations page's Sources table)
+  sourceFreshness: adminQuery.query(() => readSourceFreshness()),
 });
