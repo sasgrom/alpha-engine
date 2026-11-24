@@ -44,10 +44,20 @@ export async function verifyPassword(password: string, stored: string | null | u
   }
 }
 
-/** Public-signup policy (D33): min 8 chars, at least one letter and one digit. */
-export function passwordPolicyError(pw: string): string | null {
-  if (pw.length < 8) return "password must be at least 8 characters";
+/** The most common passwords and patterns: refused whatever their length. */
+const COMMON = /^(?:password|passw0rd|qwerty|letmein|welcome|admin|iloveyou|monkey|dragon|football|baseball|abc123|123456|111111|000000)+[0-9!@#$%^&*]*$/i;
+
+/**
+ * Policy for every new password (sign-up, the owner creating an account, a reset), since 2026-11-24: at least 12
+ * characters with a letter and a digit, not one character repeated, not a common password, not the username.
+ * Length is what resists guessing; existing passwords keep working until they are changed.
+ */
+export function passwordPolicyError(pw: string, username?: string): string | null {
+  if (pw.length < 12) return "password must be at least 12 characters";
   if (!/[a-zA-Z]/.test(pw) || !/[0-9]/.test(pw)) return "password needs at least one letter and one digit";
+  if (new Set(pw.toLowerCase()).size < 5) return "password repeats too few different characters";
+  if (COMMON.test(pw)) return "password is too common";
+  if (username && pw.toLowerCase().includes(username.toLowerCase())) return "password must not contain the username";
   return null;
 }
 

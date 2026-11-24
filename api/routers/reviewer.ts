@@ -1,13 +1,13 @@
 import { z } from "zod";
 import { createRouter, authedQuery } from "../middleware";
-import { clientIp } from "../services/activity";
+import { trustedClientIp } from "../services/perimeter";
 import { acceptReviewerNda, applyTourAction, reviewerStatus } from "../services/reviewer-access";
 
 export const reviewerRouter = createRouter({
   status: authedQuery.query(({ ctx }) => reviewerStatus(ctx.user.id)),
 
   acceptNda: authedQuery.mutation(async ({ ctx }) => {
-    return acceptReviewerNda(ctx.user.id, clientIp(ctx.req.headers), ctx.req.headers.get("user-agent") ?? "", ctx.user.unionId);
+    return acceptReviewerNda(ctx.user.id, trustedClientIp(ctx.req.headers), ctx.req.headers.get("user-agent") ?? "", ctx.user.unionId);
   }),
 
   tourAction: authedQuery

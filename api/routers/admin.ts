@@ -28,7 +28,7 @@ import { jobs, jobLogs, users } from "@db/schema";
 import { sql } from "drizzle-orm";
 import { MANUALS_BUNDLED, MANUALS_BUNDLED_AT } from "../services/manuals-content";
 import { activitySummary, recentActivity } from "../services/activity";
-import { hashPassword, usernamePolicyError } from "../services/passwords";
+import { hashPassword, passwordPolicyError, usernamePolicyError } from "../services/passwords";
 import {
   createLocalUser,
   deleteUserCascade,
@@ -161,7 +161,7 @@ export const adminRouter = createRouter({
   /** All accounts with universe sizes (no hashes, no secrets). */
   usersList: adminQuery.query(() => listUsersWithStats()),
 
-  /** Create a local account. Admin-chosen passwords skip the public policy. */
+  /** Create a local account. Since 2026-11-24 the owner's passwords meet the same policy as everyone's: the server is reachable from outside the house. */
   createUser: adminQuery
     .input(
       z.object({
@@ -174,6 +174,8 @@ export const adminRouter = createRouter({
     .mutation(async ({ input }) => {
       const uErr = usernamePolicyError(input.username);
       if (uErr) throw new TRPCError({ code: "BAD_REQUEST", message: uErr });
+      const pErr = passwordPolicyError(input.password, input.username);
+      if (pErr) throw new TRPCError({ code: "BAD_REQUEST", message: pErr });
       const existing = await findUserByUsername(input.username);
       if (existing) throw new TRPCError({ code: "CONFLICT", message: "username is taken" });
       const user = await createLocalUser({
@@ -196,10 +198,12 @@ export const adminRouter = createRouter({
       return { ok: true };
     }),
 
-  /** Reset a user's password (admin-chosen, no policy — owner's prerogative). */
+  /** Reset a user's password (the owner chooses it; it must meet the password policy). */
   resetPassword: adminQuery
     .input(z.object({ userId: z.number(), password: z.string().min(1).max(200) }))
     .mutation(async ({ input }) => {
+      const pErr = passwordPolicyError(input.password);
+      if (pErr) throw new TRPCError({ code: "BAD_REQUEST", message: pErr });
       await setUserPassword(input.userId, await hashPassword(input.password));
       return { ok: true };
     }),
@@ -223,6 +227,8 @@ export const adminRouter = createRouter({
     .mutation(async ({ input }) => {
       const uErr = usernamePolicyError(input.username);
       if (uErr) throw new TRPCError({ code: "BAD_REQUEST", message: uErr });
+      const pErr = passwordPolicyError(input.password, input.username);
+      if (pErr) throw new TRPCError({ code: "BAD_REQUEST", message: pErr });
       return createReviewerAccount(input);
     }),
 

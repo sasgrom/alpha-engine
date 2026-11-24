@@ -6,13 +6,14 @@
  */
 import { z } from "zod";
 import { createRouter, authedQuery } from "../middleware";
-import { clientIp, recordEvent } from "../services/activity";
+import { recordEvent } from "../services/activity";
+import { trustedClientIp } from "../services/perimeter";
 
 export const activityRouter = createRouter({
   track: authedQuery
     .input(z.object({ path: z.string().min(1).max(255) }))
     .mutation(async ({ input, ctx }) => {
-      await recordEvent(ctx.user.id, "page", { path: input.path, ip: clientIp(ctx.req.headers) });
+      await recordEvent(ctx.user.id, "page", { path: input.path, ip: trustedClientIp(ctx.req.headers) });
       return { ok: true };
     }),
 });

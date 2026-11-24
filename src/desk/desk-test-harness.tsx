@@ -138,6 +138,9 @@ export const REPORTS: Record<string, unknown> = {
 
 /** What desk.opsHealth answers (no alerts unless a test sets some). */
 export const OPS_HEALTH: { alerts: { level: "error" | "warning"; code: string; text: string }[] } = { alerts: [] };
+/** Whether the server offers sign-up (closed in production unless the owner opened it); a test may close it. */
+export const SIGNUP = { open: true };
+
 /** The Operations page's sources table: one current source, one late, one whose refresh failed. */
 export const SOURCES = [
   { id: "insiders", label: "Insider forms (3, 4, 5)", newest: "2026-11-13", what: "newest form in the standard", arrives: "nightly 03:35, gated refresh", maxAgeDays: 5, run: { status: "failed", endedAt: "2026-11-24T11:50:00.000Z", error: "Regression check refused the load" }, detail: "i1.1.20261116", ageDays: 11, state: "failed" },
@@ -324,6 +327,7 @@ function answer(procedure: string, role: string, input?: unknown): unknown {
     case "desk.opsHealth": return { checkedAt: "2026-11-12T20:00:00.000Z", heartbeatAt: "2026-11-12T20:00:00.000Z", alerts: OPS_HEALTH.alerts };
     case "auth.me": return { id: 1, username: "owner", name: "Ada Owner", role };
     case "auth.captcha": return { id: "sum-1", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40"><text x="10" y="26">3 + 4</text></svg>' };
+    case "auth.signupOpen": return { open: SIGNUP.open };
     case "auth.login": case "auth.signup": return { ok: true, role, name: "Ada Owner" };
     case "reviewer.status": return { isReviewer: false, ndaAccepted: false, ndaVersion: null, ndaTextHash: null, firstIpBound: false, tours: [] };
     case "desk.snapshot": return SNAPSHOT;

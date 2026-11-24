@@ -22,11 +22,17 @@ describe("passwords (scrypt)", () => {
 });
 
 describe("policies", () => {
-  it("password policy: min 8 + letter + digit", () => {
+  it("password policy: 12 characters with a letter and a digit, not common, not repetitive, not the username", () => {
     expect(passwordPolicyError("short1")).toBeTruthy();
-    expect(passwordPolicyError("onlyletters")).toBeTruthy();
-    expect(passwordPolicyError("12345678")).toBeTruthy();
-    expect(passwordPolicyError("goodpass1")).toBeNull();
+    expect(passwordPolicyError("goodpass1")).toMatch(/12 characters/);
+    expect(passwordPolicyError("onlyletterslong")).toMatch(/letter and one digit/);
+    expect(passwordPolicyError("123456789012")).toMatch(/letter and one digit/);
+    expect(passwordPolicyError("aaaaaaaaaaa1")).toMatch(/too few different/);
+    expect(passwordPolicyError("passwordpassword1")).toMatch(/too common/);
+    expect(passwordPolicyError("Qwerty123456!")).toMatch(/too common/);
+    expect(passwordPolicyError("river-stone-owner_1-lamp", "owner_1")).toMatch(/username/);
+    expect(passwordPolicyError("river-stone-42-lamp")).toBeNull();
+    expect(passwordPolicyError("river-stone-42-lamp", "owner_1")).toBeNull();
   });
   it("username policy: 3–32 [a-zA-Z0-9_]", () => {
     expect(usernamePolicyError("ab")).toBeTruthy();

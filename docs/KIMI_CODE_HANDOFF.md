@@ -4710,3 +4710,46 @@ had it removed, reinstall whats needed, lets make it work".
 - Plans given to the owner, nothing built: an online display-only server fed by pushes from home (reverses the
   2026-11-13 decision, so it needs his explicit word and an AGENTS.md change), a 128k second pass for the nightly
   guidance run, and an iPhone app.
+
+## 247. Claude (Fable 5.2): security hardening of the server — 2026-11-24T11:46Z
+
+Owner: "lets put our defences up ... do high end best sequrity guards for our platform". The desk is reachable through
+Tailscale serve (section 246), so the server was reviewed as if exposed.
+
+**What the review found (before):** scrypt hashing, generic errors, captcha and a lockout existed. Gaps: the lockout
+keyed on the first `X-Forwarded-For` entry, which the visitor sets, so it could be bypassed; sign-up was open to
+anyone; port 3000 answered on every interface (the home network over plain HTTP); the worker ingest, the old price
+import and the old OAuth callback were reachable from outside; no content-security policy, no origin check, and a
+session cookie with `SameSite=None` kept for a year; passwords the owner set skipped the policy.
+
+**Done (`api/services/perimeter.ts`, first middleware in `api/boot.ts`; `api/lib` and `api/kimi` untouched):**
+- **Local connections only:** a socket that is not this machine is refused (403). Tailscale serve connects from
+  127.0.0.1. Verified: the LAN address answers 403.
+- **Machine routes** (`/api/worker/*`, `/api/prices-import/*`, `/api/oauth/*`) answer only to a direct local call;
+  through the proxy they are 404. Verified both ways.
+- **Same-origin writes:** a state-changing request whose Origin (or, through the proxy, Referer) names another site is
+  refused (403). Verified.
+- **Headers:** Content-Security-Policy (`default-src 'self'`, no inline script, no framing, no plugins),
+  Strict-Transport-Security through the proxy, beside the existing nosniff / frame / referrer headers. Six pages
+  including the 3D hall load with no console error under the policy.
+- **Client address:** `trustedClientIp` takes the entry the proxy wrote (the last one); used by the login guard, the
+  activity log and the reviewer NDA record.
+- **Login guard (`api/services/login-guard.ts`):** three counters: address+name (captcha at 3, lock at 5), name from
+  any address (captcha at 3, lock at 10 for remote addresses; the home machine is never locked by it), address over
+  any names (lock at 20, 30 minutes). A wrong password costs 600 ms. Verified live: six wrong sign-ins each claiming
+  another address were counted as one address and met the captcha from the fourth.
+- **Sign-up closed** unless the server is started with `SIGNUP_OPEN=1`; `auth.signupOpen` tells the page, which then
+  offers no account creation and redirects `/signup` to sign in. Accounts are made by the owner (People page).
+- **Session cookie:** `SameSite=Lax`, `HttpOnly`, `Secure` off localhost, kept 30 days (set in `api/auth-router.ts`;
+  the shared default in `api/lib/cookies.ts` is unchanged and still applies to the unused OAuth path, which is now
+  unreachable through the proxy).
+- **Passwords:** at least 12 characters with a letter and a digit, not repetitive, not a common password, not the
+  username; now also for accounts the owner creates, resets and for reviewers. Existing passwords keep working.
+- **Event log:** refusals, failed and locked sign-ins and refused sign-ups go to
+  `worker/.runs/security-events.jsonl` (time, kind, address, path; never a password, cookie or token).
+- Gates: `npm run check`, 271 files / 1,653 tests, `npm run build`, `git diff --check`. Web server restarted once.
+
+**Not done; proposed to the owner:** a second factor (TOTP) for the owner's account and a table of sessions so a
+session can be revoked (both need a schema change, which is his decision); an outer gate before the app if it is ever
+published beyond Tailscale (Cloudflare Access); showing the event log on the Operations page; the unstable test
+`DeskApp.member.test.tsx` (guidance redirect, about one run in four) still to fix.

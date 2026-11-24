@@ -9,21 +9,29 @@ import { signSessionToken } from "./kimi/session";
 import { createLocalUser, findUserByUsername, touchSignIn } from "./queries/users";
 import { hashPassword, passwordPolicyError, usernamePolicyError, verifyPassword } from "./services/passwords";
 import { issueCaptcha, verifyCaptcha } from "./services/captcha";
-import { loginFailed, loginGate, loginSucceeded, signupAllowed } from "./services/login-guard";
-import { clientIp, recordEvent } from "./services/activity";
+import { loginFailed, loginGate, loginSucceeded, signupAllowed, signupOpen } from "./services/login-guard";
+import { recordEvent } from "./services/activity";
+import { recordSecurityEvent, trustedClientIp } from "./services/perimeter";
 import { bindReviewerIp } from "./services/reviewer-access";
 
-/** Serialize the session cookie exactly like the OAuth callback does. */
+/** How long the browser keeps the session cookie. */
+const SESSION_COOKIE_DAYS = 30;
+/** A wrong password costs this long, so guesses cannot be made faster than the counters fill. */
+const FAILURE_DELAY_MS = 600;
+
+/** Serialize the session cookie (the same signed token the OAuth callback issues, with stricter cookie attributes). */
 function sessionCookie(ctx: { req: Request; resHeaders: Headers }, unionId: string, token: string) {
   const opts = getSessionCookieOptions(ctx.req.headers);
   ctx.resHeaders.append(
     "set-cookie",
+    // SameSite=Lax: the browser does not send the session on a request another site makes (the shared default for a
+    // host that is not localhost is None, which would). The browser keeps it for 30 days.
     cookie.serialize(Session.cookieName, token, {
-      httpOnly: opts.httpOnly,
+      httpOnly: true,
       path: opts.path,
-      sameSite: opts.sameSite?.toLowerCase() as "lax" | "none",
+      sameSite: "lax",
       secure: opts.secure,
-      maxAge: Session.maxAgeMs / 1000,
+      maxAge: SESSION_COOKIE_DAYS * 86_400,
     }),
   );
   return { ok: true as const, unionId };
@@ -42,9 +50,9 @@ export const authRouter = createRouter({
     ctx.resHeaders.append(
       "set-cookie",
       cookie.serialize(Session.cookieName, "", {
-        httpOnly: opts.httpOnly,
+        httpOnly: true,
         path: opts.path,
-        sameSite: opts.sameSite?.toLowerCase() as "lax" | "none",
+        sameSite: "lax",
         secure: opts.secure,
         maxAge: 0,
       }),
@@ -58,6 +66,9 @@ export const authRouter = createRouter({
    * the client then shows the captcha block).
    */
   captcha: publicQuery.query(() => issueCaptcha()),
+
+  /** Whether the sign-in page may offer "create an account" (closed unless the owner opened it). */
+  signupOpen: publicQuery.query(() => ({ open: signupOpen() })),
 
   /**
    * Local username/password login (4d, D33) — replaces Kimi OAuth as the
@@ -77,9 +88,10 @@ export const authRouter = createRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const ip = clientIp(ctx.req.headers);
+      const ip = trustedClientIp(ctx.req.headers);
       const gate = loginGate(ip, input.username);
       if (gate.locked) {
+        recordSecurityEvent({ kind: "login_locked", ip, detail: `retry in ${gate.retryAfterSec}s` });
         throw new TRPCError({
           code: "TOO_MANY_REQUESTS",
           message: `Too many failed attempts — retry in ${gate.retryAfterSec}s`,
@@ -92,6 +104,8 @@ export const authRouter = createRouter({
       const ok = user?.passwordHash ? await verifyPassword(input.password, user.passwordHash) : false;
       if (!ok || !user) {
         loginFailed(ip, input.username);
+        recordSecurityEvent({ kind: "login_failed", ip, detail: `name of ${input.username.length} characters` });
+        await new Promise((resolve) => setTimeout(resolve, FAILURE_DELAY_MS));
         throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid username or password" });
       }
       loginSucceeded(ip, input.username);
@@ -118,7 +132,11 @@ export const authRouter = createRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const ip = clientIp(ctx.req.headers);
+      const ip = trustedClientIp(ctx.req.headers);
+      if (!signupOpen()) {
+        recordSecurityEvent({ kind: "signup_refused", ip, detail: "sign-up is closed" });
+        throw new TRPCError({ code: "FORBIDDEN", message: "Accounts are created by the owner" });
+      }
       if (!signupAllowed(ip)) {
         throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "Too many signups from this address — try later" });
       }
@@ -127,7 +145,7 @@ export const authRouter = createRouter({
       }
       const uErr = usernamePolicyError(input.username);
       if (uErr) throw new TRPCError({ code: "BAD_REQUEST", message: uErr });
-      const pErr = passwordPolicyError(input.password);
+      const pErr = passwordPolicyError(input.password, input.username);
       if (pErr) throw new TRPCError({ code: "BAD_REQUEST", message: pErr });
       const existing = await findUserByUsername(input.username);
       if (existing) throw new TRPCError({ code: "CONFLICT", message: "username is taken" });

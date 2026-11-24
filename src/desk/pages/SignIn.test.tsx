@@ -82,7 +82,7 @@ describe("creating an account in the desk", () => {
     await type(field("password"), "short");
     await type(field("confirm"), "other");
     expect([...desk.host.querySelectorAll(".desk-signin-hint[data-bad=true]")].map((hint) => hint.textContent)).toEqual([
-      "3 to 32 letters, digits or underscores.", "At least 8 characters, with a letter and a digit.", "The two passwords differ.",
+      "3 to 32 letters, digits or underscores.", "At least 12 characters, with a letter and a digit.", "The two passwords differ.",
     ]);
     expect(submitButton().disabled).toBe(true);
     await type(field("name"), "ada_2");

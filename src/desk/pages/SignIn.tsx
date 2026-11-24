@@ -4,7 +4,7 @@
  * account, a lock after too many failures, the username and password policy, and a new account is always a member.
  */
 import { useEffect, useState, type FormEvent } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router";
 import { trpc } from "@/providers/trpc";
 import { useDeskTheme } from "../preferences";
 import "../desk.css";
@@ -38,6 +38,9 @@ export default function SignIn({ mode }: { mode: Mode }) {
   // signing in asks for the sum only after the server says so; creating an account always does
   const [sumNeeded, setSumNeeded] = useState(mode === "signup");
   const captcha = trpc.auth.captcha.useQuery(undefined, { enabled: sumNeeded, retry: false, refetchOnWindowFocus: false, staleTime: Infinity });
+  // accounts are created by the owner unless he opened sign-up; until the server says it is open the page does not offer it
+  const signupState = trpc.auth.signupOpen.useQuery(undefined, { retry: false, refetchOnWindowFocus: false, staleTime: 5 * 60_000 });
+  const signupIsOpen = signupState.data?.open === true;
 
   useEffect(() => {
     document.title = mode === "signin" ? "Sign in · Alpha Engine" : "Create an account · Alpha Engine";
@@ -67,7 +70,7 @@ export default function SignIn({ mode }: { mode: Mode }) {
 
   const name = username.trim();
   const nameOk = /^[a-zA-Z0-9_]{3,32}$/.test(name);
-  const passwordOk = password.length >= 8 && /[a-zA-Z]/.test(password) && /[0-9]/.test(password);
+  const passwordOk = password.length >= 12 && /[a-zA-Z]/.test(password) && /[0-9]/.test(password);
   const mismatch = confirm.length > 0 && confirm !== password;
   const ready = mode === "signin"
     ? name.length > 0 && password.length > 0 && (!sumNeeded || answer.trim().length > 0)
@@ -83,6 +86,8 @@ export default function SignIn({ mode }: { mode: Mode }) {
   };
   const other = mode === "signin" ? "/signup" : "/login";
   const query = params.get("next") ? `?next=${encodeURIComponent(next)}` : "";
+
+  if (mode === "signup" && signupState.data && !signupIsOpen) return <Navigate to={`/login${query}`} replace />;
 
   return (
     <div className="desk-root desk-signin" data-theme={theme.resolved}>
@@ -104,7 +109,7 @@ export default function SignIn({ mode }: { mode: Mode }) {
 
           <label htmlFor="desk-signin-password">Password</label>
           <input id="desk-signin-password" className="desk-input" type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={mode === "signin" ? "current-password" : "new-password"} />
-          {mode === "signup" && <p className="desk-signin-hint" data-bad={password.length > 0 && !passwordOk ? "true" : undefined}>At least 8 characters, with a letter and a digit.</p>}
+          {mode === "signup" && <p className="desk-signin-hint" data-bad={password.length > 0 && !passwordOk ? "true" : undefined}>At least 12 characters, with a letter and a digit.</p>}
 
           {mode === "signup" && (
             <>
@@ -130,10 +135,14 @@ export default function SignIn({ mode }: { mode: Mode }) {
             {mode === "signin" ? (login.isPending ? "Signing in" : "Sign in") : signup.isPending ? "Creating the account" : "Create the account"}
           </button>
         </form>
-        <p className="desk-muted" style={{ margin: "16px 0 0", fontSize: 13, textAlign: "center" }}>
-          {mode === "signin" ? "No account yet? " : "Already have an account? "}
-          <Link className="desk-link" to={`${other}${query}`}>{mode === "signin" ? "Create one" : "Sign in"}</Link>
-        </p>
+        {mode === "signup" || signupIsOpen ? (
+          <p className="desk-muted" style={{ margin: "16px 0 0", fontSize: 13, textAlign: "center" }}>
+            {mode === "signin" ? "No account yet? " : "Already have an account? "}
+            <Link className="desk-link" to={`${other}${query}`}>{mode === "signin" ? "Create one" : "Sign in"}</Link>
+          </p>
+        ) : (
+          <p className="desk-muted" style={{ margin: "16px 0 0", fontSize: 13, textAlign: "center" }}>Accounts are created by the owner.</p>
+        )}
       </main>
       <p className="desk-muted desk-signin-foot">Research data, not investment advice.</p>
     </div>

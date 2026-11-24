@@ -8,9 +8,12 @@ import { env } from "./lib/env";
 import { createOAuthCallbackHandler } from "./kimi/auth";
 import { Paths } from "@contracts/constants";
 import { reviewerReportAccess, reviewerSecurityHeaders } from "./services/reviewer-http";
+import { perimeter } from "./services/perimeter";
 
 const app = new Hono<{ Bindings: HttpBindings }>();
 
+// first of all: local connections only, machine routes not through the proxy, same-origin writes, security headers
+app.use("*", perimeter);
 app.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
 app.use("*", reviewerSecurityHeaders);
 app.use("/reports/*", reviewerReportAccess);
