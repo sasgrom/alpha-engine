@@ -4817,3 +4817,24 @@ Owner: "implement 1,2,3 and fix One unstable older test".
 - Lab insider tests: 12 files / 110. Main gates: `npm run check`, 276 files / 1,669 tests, `npm run build`.
 - **Proposed, not done:** read a form from its raw `.txt` submission when its folder is not published yet, which
   would bring forms in the next morning instead of the second (a change to the reviewed fetcher).
+
+## 250. Claude (Fable 5.2): insider standard i1.1.20261124 published; one-time clean-up of the working folders — 2026-11-24T16:05Z
+
+- **The resumed load finished outside the scheduler** (14:42Z to 15:55Z): `--resume-partial` reused 2,512,214 staged
+  rows, the five tables swapped, the old ones were dropped. `verify-insiders-load.mts`: 2,000 rows, 0 differences, 0
+  availability or weekend violations, no temporary tables. `finalize-insiders.mts`: the stored build is **final**
+  (761,359 filings, 780,855 owners, 2,046,987 transactions, 24,857 persons; code `a6fc880`). Pointer
+  `D:/research/alpha-engine/insiders/std/current.json` names `20261124T124754Z` (i1.1.20261124, forms through
+  2026-11-20). Desk files rebuilt at 15:59Z: insiders to 2026-11-20, fundamentals "v3.2 of 2026-11-24", guidance
+  g1.2.20261124 (350 companies), filings to 2026-11-23; hash `29fe86ab5643`.
+- **Fundamentals, scheduled run (11:18Z): complete in 417 s**, published `standard/v3.2-20261124T...`, 0 removed, 0
+  broken.
+- **One-time clean-up (owner: "lets do it once today"; no nightly step yet):** `raw\` and `raw-companies\` deleted
+  from the two final insider builds (`20261116T223552Z`, `20261124T124754Z`), 6.78 GB freed; each build is now
+  4.82 GB. Checked first: only the builder writes those two folders, into its own output; nothing reads them after a
+  build (the desk reads `companies\`, the regression `filings.jsonl`). The SEC archive the builds are made from
+  (`insiders/edgar`, `insiders/sec-345`) was not touched. Desk dry run afterwards: unchanged.
+- **Scheduler:** still on the 71-job registry (it was working through the morning backlog); it needs one restart at
+  an idle moment to learn `std-insiders-db-load` (Sundays). Tonight's nightly insider run is files-only already.
+- **For the owner's review in the morning:** how the nightly chain behaved (Operations, Sources table), whether to
+  keep the last 7 insider builds, and the incremental build.
