@@ -784,7 +784,7 @@ export function buildDeskInsiderMarket(params: { companies: Array<{ cik: number;
  * Dollar sums count open-market purchases and sales only (codes P and S) and leave out lines the standard flags.
  * `asOf` is the last filing date the standard holds for any company: the windows end there.
  */
-export function buildDeskCompanyInsiders(params: { cik: number; ticker: string; filings: InsiderFilingDoc[]; asOf: string; builtAt: string; years?: number; limit?: number }): DeskCompanyInsiders | null {
+export function buildDeskCompanyInsiders(params: { cik: number; ticker: string; filings: InsiderFilingDoc[]; asOf: string; builtAt: string; years?: number; marketLimit?: number; otherLimit?: number }): DeskCompanyInsiders | null {
   const { asOf } = params;
   const back = (days: number) => new Date(Date.parse(asOf) - days * DAY).toISOString().slice(0, 10);
   const since = back((params.years ?? 3) * 365.25), yearAgo = back(365);
@@ -812,11 +812,17 @@ export function buildDeskCompanyInsiders(params: { cik: number; ticker: string; 
     trades.push({ date, filed: filing.filingDate, owner: who.owner, more: who.more, role: who.role, code, shares: line.shares, price: line.price, valueUsd: usable ? line.valueUsd : null, plan: line.plan10b5 });
   }
   if (!version) return null;
-  trades.sort((a, b) => b.date.localeCompare(a.date) || b.filed.localeCompare(a.filed) || (b.valueUsd ?? 0) - (a.valueUsd ?? 0));
+  const newestFirst = (a: DeskCompanyInsiders["trades"][number], b: DeskCompanyInsiders["trades"][number]) => b.date.localeCompare(a.date) || b.filed.localeCompare(a.filed) || (b.valueUsd ?? 0) - (a.valueUsd ?? 0);
+  trades.sort(newestFirst);
+  // Grants and tax lines outnumber the trades that say something: the open-market ones are kept first, so a
+  // purchase of two years ago is not pushed out of the file by this year's vesting lines.
+  const market = trades.filter((trade) => trade.code === "P" || trade.code === "S");
+  const other = trades.filter((trade) => trade.code !== "P" && trade.code !== "S");
+  const kept = [...market.slice(0, params.marketLimit ?? 300), ...other.slice(0, params.otherLimit ?? 150)].sort(newestFirst);
   const cents = (value: number) => Math.round(value * 100) / 100;
   return {
     schemaVersion: DESK_COMPANY_SCHEMA_VERSION, cik: params.cik, ticker: params.ticker, version, asOf, builtAt: params.builtAt,
-    trades: trades.slice(0, params.limit ?? 80), tradeCount: trades.length,
+    trades: kept, tradeCount: trades.length, marketCount: market.length,
     quarters: ends.map((end) => { const q = quarters.get(end)!; return { quarter: end, bought: cents(q.bought), sold: cents(q.sold), buyers: q.buyers.size, sellers: q.sellers.size }; }),
     year: { bought: cents(year.bought), sold: cents(year.sold), buyers: year.buyers.size, sellers: year.sellers.size, soldUnderPlan: cents(year.soldUnderPlan) },
   };

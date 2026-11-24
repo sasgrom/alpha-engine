@@ -2,7 +2,7 @@ import { useState } from "react";
 import { trpc } from "@/providers/trpc";
 import type { DeskCompanyInsiders, DeskInsiderQuarter } from "@contracts/desk-company";
 import { PeriodBars } from "../../charts/PeriodBars";
-import { Card, Shimmer } from "../../components";
+import { Card, Segmented, Shimmer } from "../../components";
 import { useDesk } from "../../context";
 import { fmtCap, fmtCompact, fmtDate, fmtPct, personName } from "../../format";
 
@@ -19,6 +19,8 @@ const CODES: Record<string, string> = {
   J: "Other",
 };
 const SHOWN = 10;
+type Shown = "all" | "market";
+const isMarket = (code: string) => code === "P" || code === "S";
 
 const dollars = (value: number) => `${value < 0 ? "−" : ""}$${fmtCompact(Math.abs(value))}`;
 const people = (count: number) => `${count} insider${count === 1 ? "" : "s"}`;
@@ -43,9 +45,12 @@ function quarterBar(row: DeskInsiderQuarter) {
 export function CompanyInsiders({ cik }: { cik: number }) {
   const { palette } = useDesk();
   const [all, setAll] = useState(false);
+  const [shown, setShown] = useState<Shown>("all");
   const query = trpc.desk.companyInsiders.useQuery({ cik }, { enabled: cik > 0, staleTime: 30 * 60_000 });
   const data = query.data;
-  const rows = data ? (all ? data.trades : data.trades.slice(0, SHOWN)) : [];
+  const listed = data ? (shown === "market" ? data.trades.filter((trade) => isMarket(trade.code)) : data.trades) : [];
+  const total = data ? (shown === "market" ? data.marketCount : data.tradeCount) : 0;
+  const rows = all ? listed : listed.slice(0, SHOWN);
   return (
     <Card
       className="desk-span-7"
@@ -69,8 +74,13 @@ export function CompanyInsiders({ cik }: { cik: number }) {
               <PeriodBars bars={data.quarters.map(quarterBar)} format={dollars} yearSteps={4} name="Insider open-market purchases less sales, by calendar quarter" height={120} palette={palette} />
             </div>
           )}
+          {data.marketCount > 0 && data.marketCount < data.tradeCount && (
+            <div style={{ marginBottom: 8 }}>
+              <Segmented<Shown> label="Transactions shown" options={[{ value: "all", label: `All (${data.tradeCount})` }, { value: "market", label: `Bought and sold in the market (${data.marketCount})` }]} value={shown} onChange={setShown} />
+            </div>
+          )}
           {rows.length ? (
-            <div className="desk-table-wrap">
+            <div className={all && rows.length > 40 ? "desk-table-wrap scroll" : "desk-table-wrap"} style={all && rows.length > 40 ? { maxHeight: 560 } : undefined}>
               <table className="desk-table" style={{ fontSize: 12.5 }}>
                 <thead>
                   <tr>
@@ -106,13 +116,13 @@ export function CompanyInsiders({ cik }: { cik: number }) {
           ) : (
             <div className="desk-empty">No stock transactions were reported in the last three years.</div>
           )}
-          {data.trades.length > SHOWN && (
+          {listed.length > SHOWN && (
             <button type="button" className="desk-link" style={{ border: "none", background: "transparent", padding: 0, marginTop: 8, font: "inherit", fontSize: 12.5, cursor: "pointer" }} onClick={() => setAll((open) => !open)}>
-              {all ? `Show the latest ${SHOWN}` : data.tradeCount > data.trades.length ? `Show the latest ${data.trades.length} of ${data.tradeCount}` : `Show all ${data.trades.length}`}
+              {all ? `Show the latest ${SHOWN}` : total > listed.length ? `Show the latest ${listed.length} of ${total}` : `Show all ${listed.length}`}
             </button>
           )}
           <p className="desk-muted" style={{ fontSize: 12, margin: "10px 0 0" }}>
-            Stock transactions of the last three years, each trade once; amended reports and option lines are left out. The sums count open-market purchases and sales only.
+            Stock transactions of the last three years, each trade once: amended reports and option lines are left out, and a trade that a related holder reports again as held through the first counts once. The sums count open-market purchases and sales only.
           </p>
         </>
       )}

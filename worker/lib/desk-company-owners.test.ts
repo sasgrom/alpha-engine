@@ -66,6 +66,22 @@ describe("desk company insiders", () => {
     expect(out.year).toEqual({ bought: 95_000, sold: 500_000, buyers: 1, sellers: 1, soldUnderPlan: 300_000 });
   });
 
+  it("keeps the open-market trades ahead of the grants and tax lines when the list is cut", () => {
+    const grants = Array.from({ length: 5 }, (_, index) => line({ transactionDate: `2026-10-0${index + 1}`, code: "A", price: null, valueUsd: null, shares: 100 + index }));
+    const out = buildDeskCompanyInsiders({
+      cik: 5, ticker: "INSD", asOf: "2026-11-13", builtAt: "", marketLimit: 2, otherLimit: 3,
+      filings: [
+        filing("2026-10-06", [CEO], grants),
+        // older than every grant: it stays in the file all the same
+        filing("2025-02-12", [DIRECTOR], [line({ groupId: "g:dir", transactionDate: "2025-02-10", code: "P", shares: 500, price: 190, valueUsd: 95_000 })]),
+        filing("2024-06-12", [CEO], [line({ transactionDate: "2024-06-10" }), line({ transactionDate: "2024-06-11", valueUsd: 210_000 })]),
+      ],
+    })!;
+    expect(out).toMatchObject({ tradeCount: 8, marketCount: 3 });
+    // the three newest grants, then the two newest market trades of the three
+    expect(out.trades.map((trade) => [trade.date, trade.code])).toEqual([["2026-10-05", "A"], ["2026-10-04", "A"], ["2026-10-03", "A"], ["2025-02-10", "P"], ["2024-06-11", "S"]]);
+  });
+
   it("counts each trade once: no amended reports, no duplicate copies, no derivative lines", () => {
     const out = build([
       filing("2026-10-03", [CEO], [line({})]),

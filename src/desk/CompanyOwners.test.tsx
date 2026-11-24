@@ -54,6 +54,11 @@ describe("desk company holders and insiders, from the standards", () => {
     const more = [...insiders.querySelectorAll("button")].find(button => button.textContent === "Show all 13")!;
     act(() => more.dispatchEvent(new MouseEvent("click", { bubbles: true })));
     await waitUntil(() => rows().length === 13);
+    // the trades made in the market alone, without the grants and the tax lines
+    const market = [...insiders.querySelectorAll(".desk-seg button")].find(button => button.textContent === "Bought and sold in the market (3)")!;
+    act(() => market.dispatchEvent(new MouseEvent("click", { bubbles: true })));
+    await waitUntil(() => rows().length === 3);
+    expect(rows().map(row => row[2])).toEqual(["SalePlan", "Purchase", "Sale"]);
   });
 
   it("says so when the standards hold nothing for the company", async () => {

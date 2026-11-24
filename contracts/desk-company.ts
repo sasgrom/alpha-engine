@@ -269,10 +269,14 @@ export interface DeskCompanyInsiders {
   version: string;
   asOf: string;
   builtAt: string;
-  /** Stock transactions of the last three years, newest first (at most 80). */
+  /**
+   * Stock transactions of the last three years, newest first: the open-market purchases and sales (codes P and S, at
+   * most 300) and the newest other lines (grants, exercises, tax withholding, gifts; at most 150).
+   */
   trades: DeskInsiderTrade[];
-  /** How many such lines the three years hold in all. */
+  /** How many such lines the three years hold in all, and how many of them are open-market purchases and sales. */
   tradeCount: number;
+  marketCount: number;
   /** The last 20 calendar quarters, oldest first. */
   quarters: DeskInsiderQuarter[];
   /** Open-market purchases and sales of the 365 days to `asOf`. */

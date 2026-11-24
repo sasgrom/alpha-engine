@@ -265,7 +265,7 @@ const COMPANY_INSIDERS = {
     { date: "2026-05-04", filed: "2026-05-05", owner: "SEQUOIA CAPITAL FUND", more: 0, role: "10% owner", code: "S", shares: 10_000, price: 900, valueUsd: null, plan: false },
     ...Array.from({ length: 9 }, (_, index) => ({ date: `2026-03-${String(20 - index).padStart(2, "0")}`, filed: "2026-03-21", owner: "MAESTRI LUCA", more: 0, role: "Chief Financial Officer", code: "A", shares: 1_000 + index, price: null, valueUsd: null, plan: false })),
   ],
-  tradeCount: 13,
+  tradeCount: 13, marketCount: 3,
   quarters: [
     ...["2022-03-31", "2022-06-30", "2022-09-30", "2022-12-31", "2023-03-31", "2023-06-30", "2023-09-30", "2023-12-31", "2024-03-31", "2024-06-30", "2024-09-30", "2024-12-31", "2025-03-31", "2025-06-30", "2025-09-30", "2025-12-31", "2026-03-31"]
       .map((quarter) => ({ quarter, bought: 0, sold: 0, buyers: 0, sellers: 0 })),
