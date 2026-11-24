@@ -197,8 +197,8 @@ export default function Operations() {
                       <td>{source.newest ? <>{fmtDate(source.newest, "short")} <span className="desk-muted">· {source.what}</span></> : <span className="desk-muted">not readable</span>}</td>
                       <td className="num">{source.ageDays === null ? "—" : source.ageDays === 0 ? "today" : `${source.ageDays} d`}</td>
                       <td><StatusLabel status={SOURCE_STATUS[source.state]} label={SOURCE_LABEL[source.state]} /></td>
-                      <td className="desk-ink-2">{source.arrives}</td>
-                      <td className="desk-ink-2">{source.run ? <>{source.run.status ?? "—"}{source.run.endedAt ? ` · ${fmtDateTime(source.run.endedAt)}` : ""}{source.state === "failed" && source.run.error ? <span style={{ display: "block", whiteSpace: "normal", fontSize: 12 }}>{source.run.error}</span> : null}</> : <span className="desk-muted">no job</span>}</td>
+                      <td className="desk-ink-2" style={{ whiteSpace: "normal", minWidth: 180 }}>{source.arrives}</td>
+                      <td className="desk-ink-2" style={{ whiteSpace: "normal", minWidth: 150 }}>{source.run ? <>{source.run.status ?? "—"}{source.run.endedAt ? ` · ${fmtDateTime(source.run.endedAt)}` : ""}{source.state === "failed" && source.run.error ? <span style={{ display: "block", whiteSpace: "normal", fontSize: 12 }}>{source.run.error}</span> : null}</> : <span className="desk-muted">not run yet</span>}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -23,7 +23,7 @@ describe("desk operations sources", () => {
     const short = rows.find((row) => row.includes("Short interest"))!;
     expect(short).toContain("40 d");
     expect(short).toContain("Late");
-    expect(short).toContain("no job");
+    expect(short).toContain("not run yet");
     const filings = rows.find((row) => row.includes("SEC filings"))!;
     expect(filings).toContain("Current");
     expect(filings).toContain("1 d");
