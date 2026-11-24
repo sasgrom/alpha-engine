@@ -3347,3 +3347,12 @@ tr.desk-ops-open > td {
 .desk-signin-sum { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .desk-signin-svg { display: inline-flex; border: 1px solid var(--d-border); border-radius: var(--d-radius-sm); overflow: hidden; background: #fff; }
 .desk-signin-foot { font-size: 12px; margin: 0; }
+
+/* --- a period's guidance history on the company page ------------------------------------------------------------------ */
+.desk-guidance-toggle { display: inline-flex; align-items: center; gap: 4px; padding: 0; border: none; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.desk-guidance-toggle:hover span { text-decoration: underline; }
+.desk-guidance-history td { background: var(--d-hover); white-space: normal; }
+.desk-guidance-history ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.desk-guidance-history li { display: grid; grid-template-columns: 110px 190px 1fr; gap: 12px; align-items: baseline; font-size: 12.5px; }
+.desk-guidance-history p { margin: 8px 0 0; font-size: 12.5px; }
+@media (max-width: 760px) { .desk-guidance-history li { grid-template-columns: 1fr; gap: 2px; } }

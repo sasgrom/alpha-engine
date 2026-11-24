@@ -42,6 +42,15 @@ describe("desk company guidance, splits and dividends", () => {
     expect(cells[0].getAttribute("title")).toBe("Jan 30, 2025: about $400.0B · Jul 31, 2025: about $410.0B · Repeated unchanged in 1 later release");
     expect(cells[2].getAttribute("title")).toContain("the sum of the year's four quarters");
     expect(cells[3].textContent).toBe("−1.2% · below");
+    // the period opens to what each release said, newest first, in the release's own words where they are kept
+    expect(table.querySelector(".desk-guidance-history")).toBeNull();
+    act(() => (cells[0].querySelector("button") as HTMLButtonElement).click());
+    const history = [...table.querySelectorAll(".desk-guidance-history li")].map(item => [...item.children].map(part => part.textContent));
+    expect(history).toEqual([
+      ["Jul 31, 2025", "about $410.0B", "“We now expect revenue of about $410 billion for the year”"],
+      ["Jan 30, 2025", "about $400.0B", "The release's words are not kept for this figure."],
+    ]);
+    expect(table.querySelector(".desk-guidance-history p")?.textContent).toBe("Repeated unchanged in 1 later release.");
   });
 
   it("says that adjusted earnings have nothing filed to compare with", async () => {

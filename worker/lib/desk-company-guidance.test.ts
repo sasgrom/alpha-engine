@@ -52,6 +52,27 @@ describe("desk company guidance", () => {
     expect(period.updates).toEqual([{ issued: "2026-02-11", low: 9.5, high: null, mid: 9.5 }]);
   });
 
+  it("keeps the release's own words with an update: those of the statement the figure is from", () => {
+    const eps = { metric: "eps", basis: "non_gaap", unit: "usd_per_share", periodKind: "FY", periodEnd: "2026-12-31" };
+    const [period] = build([
+      row({ ...eps, low: null, high: null, mid: 2.1, quote: "midpoint of $2.10 per share, an 8% increase" }),
+      // the statement of the range is preferred to a bare figure, extra spaces are closed
+      row({ ...eps, low: 2.06, high: 2.14, mid: 2.1, quote: "Provides 2027 earnings forecast   range of $2.06 to $2.14 per share" }),
+      // another figure of the same release is not this figure's words
+      row({ ...eps, low: null, high: null, mid: 2, quote: "up from $2.00" }),
+      // a later release repeats the figures in other words: counted as a repeat, the first words stay
+      row({ ...eps, low: 2.06, high: 2.14, mid: 2.1, availableFrom: "2026-03-20", acceptedEt: "2026-03-19T16:05:00", quote: "reaffirms $2.06 to $2.14" }),
+    ]).periods;
+    expect(period.updates).toEqual([{ issued: "2026-02-11", low: 2.06, high: 2.14, mid: 2.1, quote: "Provides 2027 earnings forecast range of $2.06 to $2.14 per share" }]);
+    expect(period.reaffirmed).toBe(1);
+    // without a range statement, the first in the release; long words are cut at 180 characters
+    expect(build([row({ ...eps, low: 9.5, high: null, mid: 9.5, quote: "at least $9.50" }), row({ ...eps, low: 9.5, high: null, mid: 9.5, quote: "Raises guidance to 'at least $9.50'" })]).periods[0].updates[0].quote).toBe("at least $9.50");
+    expect(build([row({ quote: "x".repeat(400) })]).periods[0].updates[0].quote).toHaveLength(180);
+    // two measures a little apart: the figure shown is between them, the words are those of the nearer (the first on a tie)
+    const between = build([row({ low: 2698, high: 2718, mid: 2708, quote: "GAAP revenue 2,698 to 2,718" }), row({ low: 2667, high: 2687, mid: 2677, quote: "Adjusted revenue 2,667 to 2,687" })]).periods[0].updates[0];
+    expect(between).toMatchObject({ mid: 2692.5e6, quote: "GAAP revenue 2,698 to 2,718" });
+  });
+
   it("treats revenue as one series whatever basis the release was labelled with, and earnings per share by basis", () => {
     const out = build([
       row({ basis: "gaap" }),

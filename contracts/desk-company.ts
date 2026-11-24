@@ -136,6 +136,8 @@ export interface DeskGuidanceUpdate {
   low: number | null;
   high: number | null;
   mid: number;
+  /** The release's own words for the figure (the statement the midpoint is from), at most 180 characters. */
+  quote?: string;
 }
 
 export type DeskGuidanceNote = "not_reported_yet" | "adjusted_basis" | "not_in_standard" | "other_meaning";

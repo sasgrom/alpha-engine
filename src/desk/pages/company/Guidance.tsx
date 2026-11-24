@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import { trpc } from "@/providers/trpc";
 import type { DeskCompanyGuidance, DeskGuidancePeriod, DeskGuidanceUpdate } from "@contracts/desk-company";
 import { Card, Delta, Segmented, Shimmer } from "../../components";
@@ -63,6 +64,8 @@ export function GuidanceTable({ data, metric, limit }: { data: DeskCompanyGuidan
   if (!all.length) return <div className="desk-empty">The company gave no {metric === "revenue" ? "revenue" : "per-share earnings"} guidance with a figure in its releases of the last six years.</div>;
   const rows = all.slice(0, limit);
   const habit = guidanceHabit(all);
+  // one period at a time shows what each release said about it
+  const [open, setOpen] = useState<string | null>(null);
   return (
     <>
       <div className="desk-table-wrap">
@@ -81,14 +84,20 @@ export function GuidanceTable({ data, metric, limit }: { data: DeskCompanyGuidan
               const last = period.updates.at(-1)!;
               const against = againstGuidance(period);
               const changes = period.updates.length - 1;
+              const key = `${period.kind}|${period.basis}|${period.periodEnd}`;
+              const expanded = open === key;
               return (
-                <tr key={`${period.kind}|${period.basis}|${period.periodEnd}`}>
+                <Fragment key={key}>
+                <tr>
                   <th scope="row" style={{ fontWeight: 500, textAlign: "left" }} title={`Period ending ${fmtDate(period.periodEnd, "medium")}`}>
                     {guidancePeriodLabel(period)}
                     {metric === "eps" && <span className="desk-muted"> · {BASIS[period.basis]}</span>}
                   </th>
                   <td title={updatesTitle(period)}>
-                    {guidedText(last, metric)}
+                    <button type="button" className="desk-guidance-toggle" aria-expanded={expanded} aria-label={`${guidancePeriodLabel(period)}: what each release said`} onClick={() => setOpen(expanded ? null : key)}>
+                      {expanded ? <ChevronDown size={13} aria-hidden="true" /> : <ChevronRight size={13} aria-hidden="true" />}
+                      <span>{guidedText(last, metric)}</span>
+                    </button>
                     {changes > 0 && <span className="desk-muted"> · changed {changes === 1 ? "once" : `${changes} times`}</span>}
                   </td>
                   <td>{fmtDate(period.updates[0].issued, "medium")}</td>
@@ -110,6 +119,23 @@ export function GuidanceTable({ data, metric, limit }: { data: DeskCompanyGuidan
                     )}
                   </td>
                 </tr>
+                {expanded && (
+                  <tr className="desk-guidance-history">
+                    <td colSpan={5}>
+                      <ol>
+                        {[...period.updates].reverse().map((update) => (
+                          <li key={update.issued}>
+                            <span className="desk-ink-2">{fmtDate(update.issued, "medium")}</span>
+                            <strong>{guidedText(update, metric)}</strong>
+                            <span className="desk-muted">{update.quote ? `“${update.quote}”` : "The release's words are not kept for this figure."}</span>
+                          </li>
+                        ))}
+                      </ol>
+                      {period.reaffirmed > 0 && <p className="desk-muted">Repeated unchanged in {period.reaffirmed} later release{period.reaffirmed === 1 ? "" : "s"}.</p>}
+                    </td>
+                  </tr>
+                )}
+                </Fragment>
               );
             })}
           </tbody>

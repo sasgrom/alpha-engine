@@ -207,7 +207,7 @@ const companies: DeskCompanyIndex["companies"] = [];
 let bytes = 0, withGuidance = 0, withActions = 0, withHolders = 0, withFilings = 0, outOfScale = 0, pricesAsOf: string | null = null;
 const insiderInputs: Array<{ cik: number; ticker: string; filings: InsiderFilingDoc[]; at: number }> = [];
 const screen: DeskScreenCompany[] = [];
-const guided: Array<{ guidance: DeskCompanyGuidance; rows: GuidanceStatementRow[] }> = [];
+const guided: Array<{ guidance: DeskCompanyGuidance }> = [];
 let insidersAsOf: string | null = null;
 for (const name of files) {
   const doc = JSON.parse(readFileSync(path.join(companyDir, name), "utf8")) as StandardCompanyDoc;
@@ -218,7 +218,7 @@ for (const name of files) {
   const screened = buildDeskScreenCompany({ statements, prices });
   if (screened) screen.push(screened);
   const guidance = buildDeskCompanyGuidance({ doc, rows: guidanceRows.get(doc.cik) ?? [], guidanceVersion: guidanceBuild.guidanceVersion, standard, builtAt, adjusted: adjustedActuals.get(doc.cik), adjustedVersion });
-  if (guidance.periods.length) guided.push({ guidance, rows: guidanceRows.get(doc.cik) ?? [] });
+  if (guidance.periods.length) guided.push({ guidance });
   const holders = buildDeskCompanyHolders({ cik: doc.cik, ticker: doc.ticker, rows: holderRows.get(doc.cik) ?? [], builtAt });
   const filings = await insiderFilings(doc.cik);
   if (filings) {

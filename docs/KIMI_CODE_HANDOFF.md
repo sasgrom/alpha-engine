@@ -4325,3 +4325,44 @@ delivered.
   messages and the sum, account creation with its rules).
 - Gates: `npm run check`, 285 files / 1,667 tests, `npm run build`, `git diff --check`. No server code changed.
 - An inventory of the remaining classic pages against the desk was made (read only) for the next step.
+
+## 235. Claude (Fable 5.2): what the remaining classic pages hold; the release's words on the company guidance card — 2026-11-24T07:00Z
+
+- **Inventory of the classic pages still routed** (read against the desk, page by page):
+  - Terminal: the classic landing page, one dashboard around a chosen company. Everything on it is in the desk
+    except a sector donut by number of companies and a JSON export of the focus data. Not carried (owner: not needed).
+  - Analytics: a status map, six count tiles and a 23-row option hypothesis list, hard-coded and dated 2026-10-29,
+    mostly "blocked"; a tone chart (tone measured nothing). The desk's Signals ledger replaces it. Not carried.
+  - Risk lab: one hard-coded Apple replay of 2024-01-02 ("replay, not live"). The handbook has its tables. Not carried.
+  - Expectations: the raw statement browser with coverage tiles, on a 27.5 MB bundled report. Carried: the release's
+    words with each guidance figure (below). The rest is not.
+  - Insider activity: the old Form 4 export of 50 companies, excluded codes, a dry-run benchmark. The desk's company
+    card lists every line with its code; the benchmark was removed on purpose. Not carried.
+  - Market data: the Feature Lab is the desk's Volatility page; the chain is on the company page; file hashes and
+    quote checks stay in the collector's manifest. Not carried.
+  - Project state, Lab, the classic Dashboard, Screener and Company page: hard-coded status text, the sentiment
+    prototype, or pages the desk replaced. Not carried.
+  - Database browser (owner: move if easy, else delete): about 260 lines on the classic component kit, four
+    owner-only procedures over the app's old filings and facts tables. A port is a rewrite of about half a day for
+    tables that go with the old pipelines, and the desk company page charts every statement line and lists the
+    filings. Decision: deleted with the classic view.
+  - Desk links that still lead to classic pages, to repoint when the classic view goes: `Volatility.tsx` and
+    `VolatilityHandbook.tsx` (to the risk lab), `Company.tsx` (sentiment), `Watchlist.tsx` (classic company page of a
+    followed company outside the index), the Library's classic list, the "Classic view" switch (`DeskShell.tsx`,
+    `CommandPalette.tsx`) and the "/" redirect.
+- **Company guidance card: what each release said, in its own words.** Each update in the company guidance files
+  carries `quote` (at most 180 characters): the words of the statement the figure is from; of several, a statement of
+  the range before a bare figure, then the first in the release; where no statement gives the midpoint itself, the
+  nearest. On the card a period opens to its history, newest first, with the words and the count of unchanged
+  repeats. The cross-company file takes its quotes from the same place now.
+  - Built (desk files hash `1a381a21bce0`, 130.5 MB): all 11,206 updates carry words. Against the cross-company
+    file before (`D:/research/alpha-engine/engine/desk-company-before/guidance-market-8a5e5c9d1b9f.json`): 1,763 of
+    1,784 changes have the same words, 21 other ones: range statements instead of a sentence about the midpoint
+    (PPL, Carrier, KLA), and the words of the period's own basis where the old matching took the GAAP statement for
+    an adjusted period (Teradyne, Vertiv).
+- Tests: `worker/lib/desk-company-guidance.test.ts` (the words rule), `desk-company-guidance-market.test.ts`,
+  `src/desk/CompanyGuidance.test.tsx` (the history opens).
+- Gates: `npm run check`, 285 files / 1,668 tests, `npm run build`, `git diff --check`. No server code changed.
+- **Next:** remove the classic view in one commit: every classic route redirects into the desk, the pages, their
+  tests, the classic layout and the data bundles only they use go; the old pipelines behind them are a later step
+  (`docs/PROJECT_REVIEW_2026-11-22.md` section 6.4).

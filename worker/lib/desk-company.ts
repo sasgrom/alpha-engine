@@ -495,7 +495,13 @@ export function buildDeskCompanyGuidance(params: {
       const ranged = defining.length ? defining : rows;
       const lows = ranged.filter((row) => row.low !== null).map((row) => row.low! * GUIDANCE_SCALE[row.unit]);
       const highs = ranged.filter((row) => row.high !== null).map((row) => row.high! * GUIDANCE_SCALE[row.unit]);
-      const update: DeskGuidanceUpdate = { issued: release.slice(0, 10), low: lows.length ? Math.min(...lows) : null, high: highs.length ? Math.max(...highs) : null, mid };
+      // The words of the statement the figure is from. Of several, a statement of the range before a bare figure,
+      // then the first in the release (its headline). Where no statement gives the midpoint itself (two measures
+      // half a percent apart), the one nearest it.
+      const nearest = Math.min(...rows.map((row) => Math.abs(row.mid * GUIDANCE_SCALE[row.unit] - mid)));
+      const spoken = (defining.length ? defining : rows.filter((row) => Math.abs(row.mid * GUIDANCE_SCALE[row.unit] - mid) === nearest)).filter((row) => (row.quote ?? "").trim());
+      const words = (spoken.find((row) => row.low !== null && row.high !== null) ?? spoken[0])?.quote?.replace(/\s+/g, " ").trim();
+      const update: DeskGuidanceUpdate = { issued: release.slice(0, 10), low: lows.length ? Math.min(...lows) : null, high: highs.length ? Math.max(...highs) : null, mid, ...(words ? { quote: words.slice(0, 180) } : {}) };
       const previous = updates.at(-1);
       if (previous && previous.mid === update.mid && previous.low === update.low && previous.high === update.high) reaffirmed++;
       else updates.push(update);
@@ -553,11 +559,10 @@ function guidanceMiss(period: DeskGuidancePeriod): number | null {
 /**
  * Guidance across companies, from the company guidance files of the same build: every change of the last year (a
  * release that gave other figures for a period than stood before, or the first figures for it), and each company's
- * record against its own guidance. The quote is the standard's statement of that release for that measure and period
- * whose midpoint is nearest the figure shown.
+ * record against its own guidance. The quote is the one the company file carries with the update.
  */
 export function buildDeskGuidanceMarket(params: {
-  companies: Array<{ guidance: DeskCompanyGuidance; rows: GuidanceStatementRow[] }>;
+  companies: Array<{ guidance: DeskCompanyGuidance }>;
   standard: string;
   builtAt: string;
   days?: number;
@@ -571,7 +576,7 @@ export function buildDeskGuidanceMarket(params: {
   const records: DeskGuidanceRecord[] = [];
   const all: Record<"revenue" | "eps", number[]> = { revenue: [], eps: [] };
   const rounded = (value: number) => Math.round(value * 1e4) / 1e4;
-  for (const { guidance, rows } of guided) {
+  for (const { guidance } of guided) {
     const misses: Record<"revenue" | "eps", number[]> = { revenue: [], eps: [] };
     for (const period of guidance.periods) {
       const miss = guidanceMiss(period);
@@ -583,14 +588,11 @@ export function buildDeskGuidanceMarket(params: {
         if (now.issued <= since) return;
         const before = index ? period.updates[index - 1] : null;
         const change = before && before.mid !== 0 ? (now.mid - before.mid) / Math.abs(before.mid) : null;
-        const stated = rows
-          .filter((row) => row.quote && row.availableFrom === now.issued && row.metric === period.metric && row.periodKind === period.kind && row.periodEnd && daysApart(row.periodEnd, period.periodEnd) <= 10 && row.unit in GUIDANCE_SCALE)
-          .sort((a, b) => Math.abs(a.mid * GUIDANCE_SCALE[a.unit] - now.mid) - Math.abs(b.mid * GUIDANCE_SCALE[b.unit] - now.mid))[0];
         changes.push({
           cik: guidance.cik, ticker: guidance.ticker, metric: period.metric, basis: period.basis, kind: period.kind, periodEnd: period.periodEnd, fy: period.fy, fq: period.fq,
           issued: now.issued, what: !before ? "first" : now.mid > before.mid ? "raised" : now.mid < before.mid ? "cut" : "range",
           before: before ? { low: before.low, high: before.high, mid: before.mid } : null, now: { low: now.low, high: now.high, mid: now.mid },
-          change: change === null ? null : rounded(change), quote: stated?.quote ? stated.quote.replace(/\s+/g, " ").trim().slice(0, 180) : null,
+          change: change === null ? null : rounded(change), quote: now.quote ?? null,
         });
       });
     }
