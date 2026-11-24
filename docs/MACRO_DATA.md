@@ -289,7 +289,7 @@ Daily Operations reads artifact evidence in addition to scheduler status:
 - FRED must cover every registered series and be no more than eight days old;
 - OFAC must be no more than 36 hours old and contain parsed events;
 - QA must not fail or predate current inputs;
-- scenarios, calibration and event study must not predate QA;
+- scenarios, calibration, event study and Atlas record SHA256 hashes of their report inputs; Daily Operations compares those hashes with current content, so a QA rerun over unchanged inputs does not make a derived report stale, while changed or unavailable input content does;
 - `partial` or `insufficient_events` remains visible as a research coverage warning, not a false healthy completion.
 
 Manual chain:

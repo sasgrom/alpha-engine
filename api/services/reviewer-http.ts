@@ -1,4 +1,5 @@
 import type { Context, Next } from "hono";
+import { REPORT_FILE_POLICY } from "@contracts/report-files";
 import { authenticateRequest } from "../kimi/auth";
 import { getReviewerAccess } from "./reviewer-access";
 
@@ -9,6 +10,8 @@ export async function reviewerReportAccess(c: Context, next: Next) {
   if (user.role !== "admin") {
     const access = await getReviewerAccess(user.id);
     if (!access?.acceptedAt) return c.json({ error: "NDA required" }, 403);
+    const name = c.req.path.startsWith("/reports/") ? c.req.path.slice("/reports/".length) : "";
+    if (REPORT_FILE_POLICY[name]?.access === "owner") return c.json({ error: "Owner access required" }, 403);
   }
   return next();
 }

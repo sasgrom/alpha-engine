@@ -55,7 +55,7 @@ Tour state (`not_started`, `in_progress`, `completed`, `dismissed_forever`) and 
 
 ## Presentation security and limitations
 
-- `/reports/*` requires admin or an NDA-accepted reviewer.
+- `/reports/*` requires admin or an NDA-accepted reviewer. Reports marked `owner` in `REPORT_FILE_POLICY` remain admin-only after NDA acceptance; reviewer-level reports are limited to artifacts read by pages available to that audience.
 - tRPC content requires NDA acceptance. Other mutations remain read-only.
 - Security headers include `X-Robots-Tag: noindex,nofollow,noarchive,nosnippet,noimageindex`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, `Cross-Origin-Opener-Policy: same-origin`, `Cross-Origin-Resource-Policy: same-origin` and `Cache-Control: private, no-store` for API/report routes.
 - `/robots.txt` disallows crawling.

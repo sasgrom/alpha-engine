@@ -7,6 +7,7 @@ import { sha256Text, type SchwabMarketSnapshot } from "../worker/lib/schwab-norm
 import type { SchwabFeatureReport } from "../worker/lib/schwab-features";
 import type { SchwabContextReport } from "../worker/lib/schwab-context";
 import type { MacroOperationsArtifacts } from "../worker/lib/macro-operations-health";
+import { currentMacroInputHashes } from "../worker/lib/macro-input-lineage";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 import { loadEdgarUniverse } from "../worker/lib/edgar";
 import { summarizeFactsManifest } from "../worker/lib/facts-incremental";
@@ -26,6 +27,17 @@ const snapshot = readJson<SchwabMarketSnapshot>(path.resolve("public/reports/sch
 const features = readJson<SchwabFeatureReport>(path.resolve("public/reports/schwab-features.json"), (value) => value?.schemaVersion === 1 && typeof value.sourceSnapshotSha256 === "string" && !!value.coverage);
 const context = readJson<SchwabContextReport>(path.resolve("public/reports/schwab-context.json"), (value) => value?.schemaVersion === 1 && !!value.coverage);
 const macroRoot = path.resolve(arg("--macro-root") ?? (process.platform === "win32" ? "D:\\research\\alpha-engine\\macro" : "worker/cache/macro"));
+const historySummary = readJson<{ historyFile: string }>(path.resolve("research/engine/exposure-history.summary.json"), (value) => typeof value?.historyFile === "string");
+const lineageFiles: Record<string, string> = {
+  ...Object.fromEntries(["DGS10", "DCOILWTICO", "DTWEXBGS", "BAMLH0A0HYM2"].map((seriesId) => [`fred:${seriesId}`, path.join(macroRoot, "normalized", "fred", `${seriesId}.json`)])),
+  "ofac:events": path.join(macroRoot, "normalized", "ofac-events.json"),
+  "report:pilot-exposure-evidence": path.resolve("public/reports/pilot-exposure-evidence.json"),
+  "report:company-exposures": path.resolve("public/reports/company-exposures.json"),
+  "report:exposure-latest": path.resolve("public/reports/exposure-latest.json"),
+  "report:macro-event-study": path.resolve("public/reports/macro-event-study.json"),
+  "report:macro-transmission-atlas": path.resolve("public/reports/macro-transmission-atlas.json"),
+};
+if (historySummary) lineageFiles["exposure-history:content"] = path.resolve(historySummary.historyFile);
 const macro: MacroOperationsArtifacts = {
   fred: readJson<MacroOperationsArtifacts["fred"]>(path.join(macroRoot, "manifest-fred.json"), (value) => value?.schemaVersion === 1 && Array.isArray(value.entries)),
   events: readJson<MacroOperationsArtifacts["events"]>(path.join(macroRoot, "manifest-events.json"), (value) => value?.schemaVersion === 1 && Array.isArray(value.pages)),
@@ -34,6 +46,7 @@ const macro: MacroOperationsArtifacts = {
   calibration: readJson<MacroOperationsArtifacts["calibration"]>(path.resolve("public/reports/shock-calibration.json"), (value) => value?.schemaVersion === 1 && Array.isArray(value.calibrations)),
   eventStudy: readJson<MacroOperationsArtifacts["eventStudy"]>(path.resolve("public/reports/macro-event-study.json"), (value) => value?.schemaVersion === 1 && !!value.events),
   atlas: readJson<MacroOperationsArtifacts["atlas"]>(path.resolve("public/reports/macro-transmission-atlas.json"), (value) => value?.schemaVersion === 1 && !!value.coverage),
+  currentInputs: currentMacroInputHashes(lineageFiles),
 };
 const facts = { sp500: summarizeFactsManifest(path.resolve("worker/cache/companyfacts"), loadEdgarUniverse("edgar-universe.json")) };
 const report = buildDailyOperationsReport({

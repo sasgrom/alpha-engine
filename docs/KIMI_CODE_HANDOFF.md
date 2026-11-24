@@ -4173,3 +4173,19 @@ delivered.
   three failures, all in `worker/lib/daily-operations-report.test.ts`, which tests the files being edited by the
   other session. My commit holds only my own paths.
 - **Next:** I pause full test runs, builds and restarts while the other session works. Then the scenario lab.
+
+## 229. Kimi Code: K24 owner-only reports and content-based macro lineage — 2026-11-24T05:16Z
+
+- **Report access:** every `REPORT_FILE_POLICY` entry now declares `owner` or `reviewer`. `reviewerReportAccess` keeps the NDA gate and returns 403 to a non-admin opening an owner report. Owner artifacts are:
+  - `daily-operations.json` / `.md` — Operations → Health;
+  - `weekly-coverage.json` / `.md` — Operations → Coverage;
+  - `data-health.json` / `.md` — Operations → Health;
+  - `universe-coverage-50.json` — owner coverage artifact, no current reviewer page;
+  - `project-strength-review.md` — Analytics review, explicitly owner-only by K24;
+  - `daily-prices-schwab.json` — operational transport artifact, no page reads it directly;
+  - `expectations-report.json` — source artifact for the bundled Expectations page, no direct page request.
+- **Reviewer artifacts and the pages that read them:** `schwab-context.json` and `schwab-market-data.json` — Market Data; `insider-form4.json` — Insider Activity; `prediction-markets.json` — Market Expectations; `company-exposures.json`, `macro-scenarios.json`, `exposure-latest.json`, `macro-transmission-atlas.json`, `pilot-exposure-evidence.json` and `shock-calibration.json` — Scenario Lab; `schwab-features.json` — Feature Lab; `weekly-metrics.json` — Analytics.
+- **Macro status:** derived reports no longer compare their build time with the latest QA run. Builders record SHA256 input hashes; Daily Operations hashes the current inputs and fails closed on changed, missing or unrecorded lineage. A QA rerun over unchanged content leaves scenarios, calibration, event study and Atlas current; failed QA remains an independent error. FRED, OFAC and direct report inputs are covered; existing scheduler dependencies still govern database-backed Atlas inputs.
+- **Real rebuild:** with the scheduler idle and no builder active, ran shock calibration → event study → Atlas → scenarios → Daily Operations. Calibration 4/4 ready; event study ready with 53/55 eligible events having outcomes; Atlas partial with 8,451 records; four scenarios built. Daily Operations is **DEGRADED**, not CRITICAL: 24 OK / 3 warnings / 0 errors, `derivedCurrent=true`; all four lineage checks match current input content. Atlas remains a coverage warning, not a hidden healthy completion.
+- **Verification:** focused access, lineage, Daily Operations and desk Operations tests pass. Full combined K24/K25 gates: `npm run check`; **284 files / 1,659 tests**; `npm run build`; `git diff --check`. No schema, production write, scheduler restart or web restart.
+- **Left alone:** pre-existing generated report/research changes, `.vscode/` and other unrelated untracked artifacts are not part of the source commit. Next safe action: deliver K25 separately, then send the report list and resulting health status through Alpha Bridge.

@@ -12,6 +12,7 @@ import type { FundamentalSeriesRow } from "../api/services/fundamental-integrity
 import { loadEdgarUniverse } from "../worker/lib/edgar";
 import { parseExposureHistory } from "../worker/lib/exposure-history";
 import { writeJsonAtomic } from "../worker/lib/json-file";
+import { hashMacroInputs } from "../worker/lib/macro-input-lineage";
 import { startProgress } from "../worker/lib/progress";
 
 const arg = (name: string) => { const index = process.argv.indexOf(name); return index > -1 ? process.argv[index + 1] : null; };
@@ -59,15 +60,22 @@ const historyText = readFileSync(path.resolve(historySummary.historyFile), "utf8
 const { createHash } = await import("node:crypto");
 if (createHash("sha256").update(historyText).digest("hex") !== historySummary.sha256) throw new Error("Exposure history hash differs from its reviewed summary");
 const exposureHistory = parseExposureHistory(historyText);
-const report = buildMacroTransmissionAtlas({
-  macroObservations: eventStudy.observations,
-  companies,
-  spyBars,
-  exposureHistory,
-  asOf: eventStudy.asOf,
-  generatedAt: new Date().toISOString(),
-  dataMode: eventStudy.dataMode,
+const inputHashes = hashMacroInputs({
+  "report:macro-event-study": eventStudyPath,
+  "exposure-history:content": path.resolve(historySummary.historyFile),
 });
+const report = {
+  ...buildMacroTransmissionAtlas({
+    macroObservations: eventStudy.observations,
+    companies,
+    spyBars,
+    exposureHistory,
+    asOf: eventStudy.asOf,
+    generatedAt: new Date().toISOString(),
+    dataMode: eventStudy.dataMode,
+  }),
+  inputHashes,
+};
 const jsonPath = path.resolve(arg("--out") ?? "public/reports/macro-transmission-atlas.json");
 const markdownPath = jsonPath.replace(/\.json$/i, ".md");
 writeJsonAtomic(jsonPath, report, true);

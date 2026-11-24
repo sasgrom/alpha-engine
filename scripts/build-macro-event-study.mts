@@ -6,6 +6,7 @@ import type { CalibrationChannel } from "../api/services/shock-calibration";
 import type { NormalizedMacroPoint } from "../worker/lib/fred";
 import type { PoliticalEvent } from "../worker/lib/political-events";
 import { writeJsonAtomic } from "../worker/lib/json-file";
+import { hashMacroInputs } from "../worker/lib/macro-input-lineage";
 import { startProgress } from "../worker/lib/progress";
 
 const arg = (name: string) => { const index = process.argv.indexOf(name); return index > -1 ? process.argv[index + 1] : null; };
@@ -27,8 +28,12 @@ const series = definitions.map((definition) => {
 const eventsPath = path.join(macroRoot, "normalized", "ofac-events.json");
 if (!existsSync(eventsPath)) throw new Error(`Missing OFAC events at ${eventsPath}`);
 const events = JSON.parse(readFileSync(eventsPath, "utf8")) as PoliticalEvent[];
+const inputHashes = hashMacroInputs({
+  ...Object.fromEntries(definitions.map((definition) => [`fred:${definition.seriesId}`, path.join(macroRoot, "normalized", "fred", `${definition.seriesId}.json`)])),
+  "ofac:events": eventsPath,
+});
 const prog = startProgress("macro-event-study", `${events.length} events · ${series.length} series · first-release vintages`);
-const report = buildMacroEventStudyReport({ events, series, asOf, generatedAt, dataMode: process.argv.includes("--fixture") ? "fixture" : "live" });
+const report = { ...buildMacroEventStudyReport({ events, series, asOf, generatedAt, dataMode: process.argv.includes("--fixture") ? "fixture" : "live" }), inputHashes };
 const jsonPath = path.resolve("public/reports/macro-event-study.json");
 const markdownPath = path.resolve("public/reports/macro-event-study.md");
 writeJsonAtomic(jsonPath, report, true);

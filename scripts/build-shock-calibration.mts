@@ -4,6 +4,7 @@ import path from "node:path";
 import { buildShockCalibrationReport, type CalibrationChannel } from "../api/services/shock-calibration";
 import type { NormalizedMacroPoint } from "../worker/lib/fred";
 import { writeJsonAtomic } from "../worker/lib/json-file";
+import { hashMacroInputs } from "../worker/lib/macro-input-lineage";
 import { startProgress } from "../worker/lib/progress";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
@@ -21,8 +22,9 @@ const series = definitions.map((definition) => {
   if (!existsSync(file)) throw new Error(`Missing FRED series ${definition.seriesId} at ${file}`);
   return { ...definition, rows: JSON.parse(readFileSync(file, "utf8")) as NormalizedMacroPoint[] };
 });
+const inputHashes = hashMacroInputs(Object.fromEntries(definitions.map((definition) => [`fred:${definition.seriesId}`, path.join(macroRoot, "normalized", "fred", `${definition.seriesId}.json`)])));
 const prog = startProgress("shock-calibration", `${series.length} series · moving-block bootstrap`);
-const report = buildShockCalibrationReport(series, asOf, new Date().toISOString());
+const report = { ...buildShockCalibrationReport(series, asOf, new Date().toISOString()), inputHashes };
 const jsonPath = path.resolve("public/reports/shock-calibration.json");
 writeJsonAtomic(jsonPath, report, true);
 const distDir = path.resolve("dist/public/reports");

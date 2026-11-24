@@ -12,6 +12,7 @@ import type { PilotEvidenceReport } from "../api/services/pilot-exposure-evidenc
 import type { CompanyExposureReport } from "../api/services/company-exposure";
 import { endOfUtcDay, fredSeriesUrl, sha256Text, type NormalizedMacroPoint } from "../worker/lib/fred";
 import { writeJsonAtomic } from "../worker/lib/json-file";
+import { hashMacroInputs } from "../worker/lib/macro-input-lineage";
 import { startProgress } from "../worker/lib/progress";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
@@ -123,7 +124,14 @@ if (macroSource === "file") {
 const prog = startProgress("macro-scenarios", `${definitions.length} scenarios · ${pilotReport.companies.length} companies · availability anchored`);
 const previousPath = path.resolve("public/reports/macro-scenarios.json");
 const previous = existsSync(previousPath) ? JSON.parse(readFileSync(previousPath, "utf8")) as MacroScenarioReport : null;
-const report = buildMacroScenarioReport({ dataMode: process.argv.includes("--fixture") ? "fixture" : "live", asOf, definitions, macroSeries, pilot: pilotReport.companies, exposures: exposureReport.companies, exposureHistory, atlasRecords: atlas.records, atlasAsOf: atlas.asOf });
+const inputHashes = hashMacroInputs({
+  ...(macroSource === "file" ? Object.fromEntries(seriesIds.map((seriesId) => [`fred:${seriesId}`, path.join(macroRoot, "normalized", "fred", `${seriesId}.json`)])) : {}),
+  "report:pilot-exposure-evidence": pilotPath,
+  "report:company-exposures": exposurePath,
+  "report:exposure-latest": exposureHistoryPath,
+  "report:macro-transmission-atlas": atlasPath,
+});
+const report = { ...buildMacroScenarioReport({ dataMode: process.argv.includes("--fixture") ? "fixture" : "live", asOf, definitions, macroSeries, pilot: pilotReport.companies, exposures: exposureReport.companies, exposureHistory, atlasRecords: atlas.records, atlasAsOf: atlas.asOf }), inputHashes };
 const jsonPath = path.resolve(arg("--out") ?? "public/reports/macro-scenarios.json");
 const markdownPath = jsonPath.replace(/\.json$/i, ".md");
 writeJsonAtomic(jsonPath, report, true);

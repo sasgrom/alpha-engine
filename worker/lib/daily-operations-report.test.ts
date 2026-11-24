@@ -54,10 +54,11 @@ const input = (): DailyOperationsInput => ({
     fred: { generatedAt: "2026-11-03T05:30:00.000Z", entries: MACRO_SERIES.map((series) => ({ seriesId: series.seriesId, status: "complete" })) },
     events: { generatedAt: "2026-11-03T05:40:00.000Z", events: 47 },
     qa: { generatedAt: "2026-11-03T05:55:00.000Z", status: "pass", errors: 0, warnings: 0 },
-    scenarios: { generatedAt: "2026-11-03T06:10:00.000Z" },
-    calibration: { generatedAt: "2026-11-03T06:11:00.000Z", calibrations: [{ status: "ready" }] },
-    eventStudy: { generatedAt: "2026-11-03T06:12:00.000Z", status: "ready", events: { eligible: 47, withAnyObservation: 40 } },
-    atlas: { generatedAt: "2026-11-03T06:13:00.000Z", status: "estimated", coverage: { records: 3840 } },
+    scenarios: { generatedAt: "2026-11-03T06:10:00.000Z", inputHashes: { input: "hash" } },
+    calibration: { generatedAt: "2026-11-03T06:11:00.000Z", inputHashes: { input: "hash" }, calibrations: [{ status: "ready" }] },
+    eventStudy: { generatedAt: "2026-11-03T06:12:00.000Z", inputHashes: { input: "hash" }, status: "ready", events: { eligible: 47, withAnyObservation: 40 } },
+    atlas: { generatedAt: "2026-11-03T06:13:00.000Z", inputHashes: { input: "hash" }, status: "estimated", coverage: { records: 3840 } },
+    currentInputs: { input: "hash" },
   },
 });
 

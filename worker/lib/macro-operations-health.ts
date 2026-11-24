@@ -1,13 +1,20 @@
 import { MACRO_SERIES } from "./macro-sources";
+import type { CurrentMacroInputHashes, MacroInputHashes } from "./macro-input-lineage";
+
+interface DerivedMacroArtifact {
+  generatedAt: string;
+  inputHashes?: MacroInputHashes;
+}
 
 export interface MacroOperationsArtifacts {
   fred: { generatedAt: string; entries: { seriesId: string; status: string }[] } | null;
   events: { generatedAt: string; events: number } | null;
   qa: { generatedAt: string; status: "pass" | "warn" | "fail"; errors: number; warnings: number } | null;
-  scenarios: { generatedAt: string } | null;
-  calibration: { generatedAt: string; calibrations: { status: string }[] } | null;
-  eventStudy: { generatedAt: string; status: string; events: { eligible: number; withAnyObservation: number } } | null;
-  atlas?: { generatedAt: string; status: string; coverage: { records: number } } | null;
+  scenarios: DerivedMacroArtifact | null;
+  calibration: (DerivedMacroArtifact & { calibrations: { status: string }[] }) | null;
+  eventStudy: (DerivedMacroArtifact & { status: string; events: { eligible: number; withAnyObservation: number } }) | null;
+  atlas?: (DerivedMacroArtifact & { status: string; coverage: { records: number } }) | null;
+  currentInputs?: CurrentMacroInputHashes;
 }
 export interface MacroHealthCheck {
   id: string;
@@ -59,8 +66,13 @@ function qaCheck(artifacts: MacroOperationsArtifacts): MacroHealthCheck {
   return check("macro-qa-evidence", "Macro manifest QA", status, qa.generatedAt, `${qa.status} · ${qa.errors} errors · ${qa.warnings} warnings${stale ? " · report predates current inputs" : ""}.`, status === "ok" ? null : "npx tsx worker/macro-manifest-qa.mts", "macro-manifest-qa");
 }
 
+function changedInputs(value: DerivedMacroArtifact, current: CurrentMacroInputHashes | undefined): string[] | null {
+  const recorded = value.inputHashes;
+  if (!recorded || !Object.keys(recorded).length || !current) return null;
+  return Object.entries(recorded).filter(([key, hash]) => current[key] !== hash).map(([key]) => key);
+}
+
 function derivedCheck(artifacts: MacroOperationsArtifacts, kind: "scenarios" | "calibration" | "eventStudy" | "atlas"): MacroHealthCheck {
-  const qaAt = artifacts.qa?.generatedAt ?? null;
   const value = artifacts[kind];
   const metadata = kind === "scenarios"
     ? { id: "macro-scenario-lineage", label: "Macro scenario lineage", command: "npx tsx scripts/build-macro-scenarios.mts", jobId: "macro-scenarios" }
@@ -70,8 +82,13 @@ function derivedCheck(artifacts: MacroOperationsArtifacts, kind: "scenarios" | "
         ? { id: "macro-event-study-lineage", label: "Macro event study lineage", command: "npx tsx scripts/build-macro-event-study.mts", jobId: "macro-event-study" }
         : { id: "macro-atlas-lineage", label: "Macro Transmission Atlas lineage", command: "npx tsx scripts/build-macro-transmission-atlas.mts", jobId: "macro-transmission-atlas" };
   if (!value) return check(metadata.id, metadata.label, "error", null, "Derived report is missing.", metadata.command, metadata.jobId);
-  const stale = !!qaAt && time(value.generatedAt) < time(qaAt);
-  let detail = stale ? "Derived report predates the current macro QA gate." : "Derived report is current with macro QA.";
+  const changed = changedInputs(value, artifacts.currentInputs);
+  const stale = changed === null || changed.length > 0;
+  let detail = changed?.length
+    ? `Derived inputs changed or are unavailable: ${changed.join(", ")}.`
+    : changed === null
+      ? "Derived report has no verifiable input hashes; rebuild it before treating it as current."
+      : "Derived report matches the current content of its recorded inputs.";
   let status: MacroHealthCheck["status"] = stale ? "error" : "ok";
   if (kind === "calibration") {
     const ready = artifacts.calibration!.calibrations.filter((item) => item.status === "ready").length;
@@ -94,15 +111,17 @@ function derivedCheck(artifacts: MacroOperationsArtifacts, kind: "scenarios" | "
 /** Build artifact-level macro health independently from scheduler run status. */
 export function buildMacroHealth(artifacts: MacroOperationsArtifacts, nowMs: number): { checks: MacroHealthCheck[]; summary: MacroHealthSummary } {
   const checks = [fredCheck(artifacts, nowMs), eventsCheck(artifacts, nowMs), qaCheck(artifacts), derivedCheck(artifacts, "scenarios"), derivedCheck(artifacts, "calibration"), derivedCheck(artifacts, "eventStudy"), derivedCheck(artifacts, "atlas")];
-  const qaAt = artifacts.qa?.generatedAt ?? null;
-  const current = (value: { generatedAt: string } | null) => !!value && (!qaAt || time(value.generatedAt) >= time(qaAt));
+  const current = (value: DerivedMacroArtifact | null | undefined) => {
+    const changed = value ? changedInputs(value, artifacts.currentInputs) : null;
+    return !!value && changed !== null && changed.length === 0;
+  };
   return {
     checks,
     summary: {
       fredGeneratedAt: artifacts.fred?.generatedAt ?? null,
       ofacGeneratedAt: artifacts.events?.generatedAt ?? null,
       qaStatus: artifacts.qa?.status ?? null,
-      derivedCurrent: current(artifacts.scenarios) && current(artifacts.calibration) && current(artifacts.eventStudy) && current(artifacts.atlas ?? null),
+      derivedCurrent: current(artifacts.scenarios) && current(artifacts.calibration) && current(artifacts.eventStudy) && current(artifacts.atlas),
     },
   };
 }
