@@ -3722,3 +3722,16 @@ delivered.
 - The company page stays on a2 until a4 is read and checked. The full a4 read started 05:03 local into
   `D:/research/alpha-engine/engine/adjusted-eps/a4` (log `a4-run-20261123.log`); a3 is kept for comparison.
 - Gates: `npm run check`, 274 files / 1,577 tests, `npm run build`, `git diff --check`.
+
+## 222. Claude (Fable 5.2): Flows hall, the reading view's button labelled again — 2026-11-24T00:44Z
+
+- Owner (2026-11-23): "library flow, we had reding view, which was pretty nice, where did it go?" The reading view
+  (`/desk/flows?view=reading`) was unchanged. The hall pass of handoff 219 (`74fd897`) had taken the labelled
+  "Library | Reading view" switch out of the hall and left an open-book icon among five icons.
+- `src/desk/flows/FlowsPage.tsx`: a labelled "Reading view" button in the hall's control strip instead of the icon;
+  the reading view keeps its "Library | Reading view" switch.
+- Looked at on the running server after `npm run build` (no restart): the hall's bar, and the reading view after a
+  click (playwright, scratchpad `hall/shots.mjs`).
+- Gates: `npm run check`, 274 files / 1,614 tests, `npm run build`, `git diff --check`. The tests ran with the
+  uncommitted adjusted-earnings reader a8 in the working tree; it is not part of this commit (its full read is
+  running, handoff to follow).

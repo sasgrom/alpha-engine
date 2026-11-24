@@ -353,15 +353,17 @@ export default function FlowsPage() {
                   <Route size={14} aria-hidden="true" style={{ marginRight: 5, verticalAlign: "-2px" }} />Walk me through
                 </button>
               </div>
+              <div className="desk-seg" role="group" aria-label="The other view of these figures">
+                <button type="button" onClick={() => set({ view: "reading" })} title="The same figures as charts and tables">
+                  <BookOpen size={14} aria-hidden="true" style={{ marginRight: 5, verticalAlign: "-2px" }} />Reading view
+                </button>
+              </div>
               <div className="desk-lib-icons">
                 <button type="button" className="desk-icon-button" aria-pressed={displayOpen} aria-expanded={displayOpen} onClick={() => { setHelpOpen(false); setDisplayOpen((open) => !open); }} aria-label="What the hall shows" title="What the hall shows: who stands in it, which ribbons">
                   <SlidersHorizontal size={16} aria-hidden="true" />
                 </button>
                 <button type="button" className="desk-icon-button" aria-pressed={helpOpen} aria-expanded={helpOpen} onClick={() => { setDisplayOpen(false); setHelpOpen((open) => !open); }} aria-label="How to read the hall" title="How to read the hall">
                   <Info size={16} aria-hidden="true" />
-                </button>
-                <button type="button" className="desk-icon-button" onClick={() => set({ view: "reading" })} aria-label="Reading view: the same figures as charts and tables" title="Reading view: the same figures as charts and tables">
-                  <BookOpen size={16} aria-hidden="true" />
                 </button>
                 <button type="button" className="desk-icon-button" aria-pressed={panelOpen} onClick={togglePanel} aria-label={panelOpen ? "Hide the details" : "Show the details"} title={panelOpen ? "Hide the details" : "Details of the quarter and of what is selected"}>
                   {panelOpen ? <PanelRightClose size={16} aria-hidden="true" /> : <PanelRightOpen size={16} aria-hidden="true" />}
