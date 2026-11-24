@@ -4451,3 +4451,17 @@ delivered.
   `src/desk/DeskAdmin.test.tsx` (no factor monitor, no request for it).
 - Gates: `npm run check`, 263 files / 1,608 tests, `npm run build`, `git diff --check`.
 - **Scheduler restart:** needed for the running scheduler to drop the nine jobs; recorded in the next section.
+
+## 238. Claude (Fable 5.2): scheduler restarted on the shorter registry — 2026-11-24T08:53Z
+
+- Before: idle (no current job, empty queue, heartbeat 08:50:43Z), one process chain under one command window, lock
+  held by pid 7920 since 2026-11-23T02:23Z; the next cron job was 19 minutes away.
+- Stopped that chain, confirmed no scheduler process was left, started the `AlphaEngine-Operations-Scheduler` task.
+- After: "scheduler started · 76 registered jobs · one execution lane", lock pid 17096 since 08:51:04Z, heartbeat
+  current, one chain. None of the nine retired jobs has a next run; `daily-digest` has none either (off in the
+  registry and in the machine's settings).
+- `worker/.runs/operations-config.json` still holds switches for the six retired page-data jobs; the scheduler
+  ignores entries without a registry job. The state file keeps their last runs as history.
+- **Next (owner's go needed for tables):** the server procedures and services nothing calls any more, with the
+  tables behind them (`factor_points` and the old probability, sentiment and digest data); the classic styles in
+  `src/index.css`; the manual and paused jobs of the old pipelines (tone, cohorts, CBOE options).
