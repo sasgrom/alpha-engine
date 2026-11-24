@@ -19,12 +19,12 @@ const BASIS: Record<DeskGuidancePeriod["basis"], string> = { gaap: "GAAP", non_g
 
 const money = (value: number, metric: Metric) => (metric === "eps" ? `$${fmtNum(value, 2)}` : `$${fmtCompact(value)}`);
 
-export function guidancePeriodLabel(period: DeskGuidancePeriod): string {
+export function guidancePeriodLabel(period: Pick<DeskGuidancePeriod, "kind" | "fy" | "fq" | "periodEnd">): string {
   if (period.kind === "FY") return period.fy != null ? `FY ${period.fy}` : `Year to ${fmtDate(period.periodEnd, "medium")}`;
   return period.fq != null && period.fy != null ? `Q${period.fq} FY${String(period.fy).slice(-2)}` : `Quarter to ${fmtDate(period.periodEnd, "medium")}`;
 }
 
-export function guidedText(update: DeskGuidanceUpdate, metric: Metric): string {
+export function guidedText(update: Pick<DeskGuidanceUpdate, "low" | "high" | "mid">, metric: Metric): string {
   if (update.low !== null && update.high !== null && update.low !== update.high) return `${money(update.low, metric)} to ${money(update.high, metric)}`;
   if (update.low !== null && update.high === null) return `at least ${money(update.low, metric)}`;
   if (update.high !== null && update.low === null) return `up to ${money(update.high, metric)}`;

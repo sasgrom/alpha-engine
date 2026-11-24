@@ -45,6 +45,13 @@ describe("desk company guidance", () => {
     expect(period.actual).toEqual({ value: 460e6, filed: "2026-02-10", how: "four_quarters" });
   });
 
+  it("takes the range from the statement the midpoint is from, not from the figure the release says it replaces", () => {
+    const eps = { metric: "eps", basis: "non_gaap", unit: "usd_per_share", periodKind: "FY", periodEnd: "2026-12-31", high: null };
+    // "at least $9.50" in the headline and in the outlook, "up from at least $9.00" beside it
+    const [period] = build([row({ ...eps, low: 9.5, mid: 9.5 }), row({ ...eps, low: 9.5, mid: 9.5 }), row({ ...eps, low: 9, mid: 9 })]).periods;
+    expect(period.updates).toEqual([{ issued: "2026-02-11", low: 9.5, high: null, mid: 9.5 }]);
+  });
+
   it("treats revenue as one series whatever basis the release was labelled with, and earnings per share by basis", () => {
     const out = build([
       row({ basis: "gaap" }),

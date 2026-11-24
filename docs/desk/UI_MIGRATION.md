@@ -215,7 +215,7 @@ calls. 18 classic routes are still live; only `/messages` and `/admin` redirect 
 | Universe | Watchlist follows and unfollows index companies | Add any SEC company (starts an ingest), hide, scope presets, GICS re-enrichment, S&P bootstrap |
 | Workers | **Moved** (handoff 225): Operations → Jobs (switch, schedule edit with the next runs, Run and Stop after a confirmation that names the chain), Runs (running, waiting, last run of each job, logs), Coverage, Reference (what follows what); `/workers` redirects, the classic page is removed | Owner-only reports and the honest macro status on the server (K24) |
 | Jobs | — | The classic `/jobs` page stays until the Watchlist can add a company (its only use: five `universe-add` rows) |
-| Expectations | Each company's guidance history on its page (g1.2 final) | The cross-company record with quotes and revisions; the classic page still bundles the old 27 MB report |
+| Expectations | **Moved** (handoff 228): Research → Guidance shows every change of the last year across companies with what stood before and the release's own words, and each company's record against its own guidance; a company's full history is on its page (g1.2) | Measures other than revenue and EPS; the classic page (with the old 27 MB report) stays until the classic view retires |
 | Insider activity | Ownership, on the insider standard i1.1 for all 500 companies (handoff 225): 90-day totals, open-market purchases, windows with several insiders buying, the companies with the largest net selling and buying; insiders card per company with every open-market trade of three years and a switch between all lines and the market trades (handoff 227) | A list across companies with filters by code and role; the lines older than three years |
 | Scenario Lab | Macro: rate and credit exposure ranking | Custom shocks, presets, evidence inspector, export |
 | Market data | Volatility (features, implied against realized, sizing); Operations (capture health) | Option chain browser, provenance |
@@ -260,7 +260,7 @@ Volatility research, the intraday ranges.
 2. ~~Ownership's sector flows from the 13F standard; its insider cards from the insider standard.~~ Done.
 3. ~~Operations console (K17b).~~ Done; `/workers` is retired, `/jobs` follows with the Watchlist's "add a company".
 4. ~~Screener columns from the standard fundamentals.~~ Done (handoff 226). Open: Watchlist "add any SEC company".
-5. Research pages: the cross-company guidance record (g1.2), the full insider list (i1.1), option chains, the scenario
-   lab, handbooks and wiki as documents.
+5. Research pages: ~~the cross-company guidance record (g1.2), the full insider list (i1.1)~~ (done, handoffs 227 and
+   228), option chains, the scenario lab, handbooks and wiki as documents.
 6. Retire the classic view: redirects, desk sign-in; then the old pipelines (`docs/PROJECT_REVIEW_2026-11-22.md`
    section 6.4).

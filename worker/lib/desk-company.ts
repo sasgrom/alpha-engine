@@ -14,6 +14,7 @@
 import {
   DESK_COMPANY_SCHEMA_VERSION, type DeskCompanyActions, type DeskCompanyFilings, type DeskCompanyGuidance, type DeskCompanyHolders, type DeskCompanyInsiders,
   type DeskCompanyStatements, type DeskScreenCompany,
+  type DeskGuidanceChange, type DeskGuidanceMarket, type DeskGuidanceRecord,
   type DeskInsiderCompanyNet, type DeskInsiderMarket, type DeskInsiderMarketTrade, type DeskInsiderWindow,
   type DeskGuidancePeriod, type DeskGuidanceUpdate,
   type DeskStatementCell, type DeskStatementKind, type DeskStatementName, type DeskStatementQuarter, type DeskStatementRow, type DeskStatementSum,
@@ -411,6 +412,8 @@ export interface GuidanceStatementRow {
   high: number | null;
   mid: number;
   unit: string;
+  /** The release's own words for the figure. */
+  quote?: string | null;
 }
 
 const GUIDANCE_SCALE: Record<string, number> = { usd_millions: 1e6, usd_billions: 1e9, usd_per_share: 1 };
@@ -486,8 +489,12 @@ export function buildDeskCompanyGuidance(params: {
       if ((highest - lowest) / Math.abs(lowest) > AMBIGUOUS) continue;
       const sorted = [...mids].sort((a, b) => a - b);
       const mid = sorted.length % 2 ? sorted[(sorted.length - 1) / 2] : (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2;
-      const lows = rows.filter((row) => row.low !== null).map((row) => row.low! * GUIDANCE_SCALE[row.unit]);
-      const highs = rows.filter((row) => row.high !== null).map((row) => row.high! * GUIDANCE_SCALE[row.unit]);
+      // The range belongs to the statement the midpoint is from: a release that says "at least $9.50, up from at
+      // least $9.00" gives two statements for the period, and the earlier one's bound is not this figure's.
+      const defining = rows.filter((row) => row.mid * GUIDANCE_SCALE[row.unit] === mid);
+      const ranged = defining.length ? defining : rows;
+      const lows = ranged.filter((row) => row.low !== null).map((row) => row.low! * GUIDANCE_SCALE[row.unit]);
+      const highs = ranged.filter((row) => row.high !== null).map((row) => row.high! * GUIDANCE_SCALE[row.unit]);
       const update: DeskGuidanceUpdate = { issued: release.slice(0, 10), low: lows.length ? Math.min(...lows) : null, high: highs.length ? Math.max(...highs) : null, mid };
       const previous = updates.at(-1);
       if (previous && previous.mid === update.mid && previous.low === update.low && previous.high === update.high) reaffirmed++;
@@ -532,6 +539,71 @@ export function buildDeskCompanyGuidance(params: {
   return {
     schemaVersion: DESK_COMPANY_SCHEMA_VERSION, cik: doc.cik, ticker: doc.ticker, guidanceVersion, standard,
     ...(params.adjustedVersion && periods.some((period) => period.actual?.how === "release") ? { adjustedVersion: params.adjustedVersion } : {}), builtAt, periods,
+  };
+}
+
+const medianOrNull = (values: number[]): number | null => (values.length ? median(values) : null);
+
+/** (reported - last guided midpoint) / |midpoint|, for a period with a reported figure. */
+function guidanceMiss(period: DeskGuidancePeriod): number | null {
+  const last = period.updates.at(-1);
+  return period.actual && last && last.mid !== 0 ? (period.actual.value - last.mid) / Math.abs(last.mid) : null;
+}
+
+/**
+ * Guidance across companies, from the company guidance files of the same build: every change of the last year (a
+ * release that gave other figures for a period than stood before, or the first figures for it), and each company's
+ * record against its own guidance. The quote is the standard's statement of that release for that measure and period
+ * whose midpoint is nearest the figure shown.
+ */
+export function buildDeskGuidanceMarket(params: {
+  companies: Array<{ guidance: DeskCompanyGuidance; rows: GuidanceStatementRow[] }>;
+  standard: string;
+  builtAt: string;
+  days?: number;
+}): DeskGuidanceMarket | null {
+  const guided = params.companies.filter((company) => company.guidance.periods.length);
+  if (!guided.length) return null;
+  const asOf = guided.flatMap((company) => company.guidance.periods.map((period) => period.updates.at(-1)!.issued)).reduce((latest, day) => (day > latest ? day : latest));
+  const back = (days: number) => new Date(Date.parse(asOf) - days * DAY).toISOString().slice(0, 10);
+  const since = back(params.days ?? 365), threeYears = back(3 * 365.25);
+  const changes: DeskGuidanceChange[] = [];
+  const records: DeskGuidanceRecord[] = [];
+  const all: Record<"revenue" | "eps", number[]> = { revenue: [], eps: [] };
+  const rounded = (value: number) => Math.round(value * 1e4) / 1e4;
+  for (const { guidance, rows } of guided) {
+    const misses: Record<"revenue" | "eps", number[]> = { revenue: [], eps: [] };
+    for (const period of guidance.periods) {
+      const miss = guidanceMiss(period);
+      if (miss !== null) {
+        misses[period.metric].push(miss);
+        if (period.periodEnd > threeYears) all[period.metric].push(miss);
+      }
+      period.updates.forEach((now, index) => {
+        if (now.issued <= since) return;
+        const before = index ? period.updates[index - 1] : null;
+        const change = before && before.mid !== 0 ? (now.mid - before.mid) / Math.abs(before.mid) : null;
+        const stated = rows
+          .filter((row) => row.quote && row.availableFrom === now.issued && row.metric === period.metric && row.periodKind === period.kind && row.periodEnd && daysApart(row.periodEnd, period.periodEnd) <= 10 && row.unit in GUIDANCE_SCALE)
+          .sort((a, b) => Math.abs(a.mid * GUIDANCE_SCALE[a.unit] - now.mid) - Math.abs(b.mid * GUIDANCE_SCALE[b.unit] - now.mid))[0];
+        changes.push({
+          cik: guidance.cik, ticker: guidance.ticker, metric: period.metric, basis: period.basis, kind: period.kind, periodEnd: period.periodEnd, fy: period.fy, fq: period.fq,
+          issued: now.issued, what: !before ? "first" : now.mid > before.mid ? "raised" : now.mid < before.mid ? "cut" : "range",
+          before: before ? { low: before.low, high: before.high, mid: before.mid } : null, now: { low: now.low, high: now.high, mid: now.mid },
+          change: change === null ? null : rounded(change), quote: stated?.quote ? stated.quote.replace(/\s+/g, " ").trim().slice(0, 180) : null,
+        });
+      });
+    }
+    for (const metric of ["revenue", "eps"] as const) {
+      if (misses[metric].length >= 4) records.push({ cik: guidance.cik, ticker: guidance.ticker, metric, compared: misses[metric].length, above: misses[metric].filter((miss) => miss > 0).length, median: rounded(median(misses[metric])) });
+    }
+  }
+  changes.sort((a, b) => b.issued.localeCompare(a.issued) || a.ticker.localeCompare(b.ticker) || b.periodEnd.localeCompare(a.periodEnd) || a.metric.localeCompare(b.metric) || a.kind.localeCompare(b.kind) || a.basis.localeCompare(b.basis));
+  records.sort((a, b) => a.ticker.localeCompare(b.ticker) || a.metric.localeCompare(b.metric));
+  const habit = (metric: "revenue" | "eps") => { const mid = medianOrNull(all[metric]); return { compared: all[metric].length, above: all[metric].filter((miss) => miss > 0).length, median: mid === null ? null : rounded(mid) }; };
+  return {
+    schemaVersion: DESK_COMPANY_SCHEMA_VERSION, guidanceVersion: guided[0].guidance.guidanceVersion, standard: params.standard, asOf, builtAt: params.builtAt,
+    companies: guided.length, changes, records, habit: { revenue: habit("revenue"), eps: habit("eps") },
   };
 }
 

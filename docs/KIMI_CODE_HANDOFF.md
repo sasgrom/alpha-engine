@@ -4090,3 +4090,51 @@ delivered.
 - Gates on this state: `npm run check`, 278 files / 1,636 tests, `npm run build`, `git diff --check`.
 - **Next:** the cross-company guidance record, the option chain browser, the scenario lab
   (`docs/desk/UI_MIGRATION.md` section 7.3).
+
+## 228. Claude (Fable 5.2): the guidance record across companies in the desk — 2026-11-24T04:40Z
+
+- **Research → Guidance** (`/desk/research/guidance`, `src/desk/pages/research/Guidance.tsx`; a tab between Earnings
+  and Volatility, in the command palette, and the ledger's guidance entry links to it):
+  - Changes of guidance: every release of the last year that gave other figures for a period than stood before, or
+    the first figures for it, with the range before and now, the change of the midpoint and the release's own words.
+    Filters: 30 days, 90 days or a year; raised and cut, first figures, or all; revenue, EPS or both; ticker.
+  - Record against their own guidance: per company the periods compared, how many came in above the last guided
+    midpoint, and the median difference; revenue or EPS; three orders.
+  - Four figures on top: raised and cut in the chosen period, and how often all companies together report above
+    their own midpoint.
+  - Access as for the company page's guidance card: the owner and reviewers who accepted the agreement
+    (`desk.guidanceMarket`); a member is sent to Today and the file is not requested.
+- **The file** `guidance-market.json` (`buildDeskGuidanceMarket` in `worker/lib/desk-company.ts`, contract
+  `DeskGuidanceMarket`, written by `scripts/build-desk-company.mts` from the company guidance files of the same
+  build). The quote is the standard's statement of that release for that measure and period whose midpoint is
+  nearest the figure shown.
+  - Built (g1.2.20261122, releases to 2026-11-10, 349 companies): 1,784 changes in the year, every one with its
+    quote. In the last 90 days 439: 174 raised, 39 cut, 207 first figures, 7 with only the range moved.
+  - All companies, periods of three years: revenue reported above the guided midpoint in 903 of 1,064 periods
+    (85%), median +1.5%; EPS in 802 of 977 (82%), median +4.5%. 250 company records with four or more periods.
+- **Large "changes" are mostly misreads of the guidance standard, and the page marks them.** 42 changes of the year
+  move the midpoint by more than 25% (13 in the last 90 days). Read one by one at the top of the list: Iron
+  Mountain's revenue $7.98 bn to $7,985 bn (a units slip); Equifax "raised" from $25 m, which was the size of a
+  reduction; Carrier, Motorola, Bristol-Myers and Oracle from a figure that is not the company's revenue; Amphenol's
+  quarter for its year; Charles River's columns of two years. Some are real (Waters after its merger, Gilead's
+  charge, Trimble's loss). The page shows them with a "check" mark and the quote, leaves them out of the raised and
+  cut counts, and never ranks by size. A g1.3 that tests a figure against the company's own scale would remove most.
+- **Range rule in the company guidance files** (`buildDeskCompanyGuidance`): the range now comes from the statement
+  the midpoint is from. A release that says "at least $9.50, up from at least $9.00" (Humana, 6 November 2026) gave
+  the period two statements, and the page showed "at least $9.00" beside a midpoint of $9.50. Against the files
+  before (`D:/research/alpha-engine/engine/desk-company-before/guidance-2b4d378c72a2`): 56 of 11,186 updates have a
+  narrower range, 9 periods a different count of updates or repeats; no midpoint and no reported figure changed.
+- Desk files rebuilt: hash `30733cd75f06`, 129.4 MB.
+- **Web server** restarted once at 2026-11-24T04:32Z for `desk.guidanceMarket`, through the
+  `AlphaEngine-Home-Server` task: scheduler idle (the hourly Stocktwits job had ended), one listener before (pid
+  17928) and after (pid 1512), 401 without a session. The page was checked by screenshot on the running server with
+  the real file (before the range rule; the rule was checked on the files).
+- The classic `/expectations` page is left as it is: it holds the old report of every statement and goes with the
+  classic view.
+- Tests: `worker/lib/desk-company-guidance-market.test.ts` (2), `desk-company-guidance.test.ts` (range rule),
+  `src/desk/pages/research/Guidance.test.tsx` (3), a member case in `DeskApp.member.test.tsx`.
+- Gates: `npm run check`, 280 files / 1,643 tests, `npm run build`, `git diff --check`. One full run in between
+  showed `api/services/worker-expectations.test.ts` over its five-second limit (5.6 s) while everything ran at
+  once; alone and in the two full runs after it passes.
+- **Next:** the option chain browser, the scenario lab. Open for the owner: the prices revision for the 608
+  dividends (section 227); dropping "add any SEC company"; K24 and K25 for Kimi.

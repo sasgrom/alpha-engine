@@ -244,6 +244,26 @@ const SCREEN = {
   ],
 };
 
+/** Guidance across companies: a raise and a cut inside 90 days, a misread "raise", a first figure, an older change. */
+const GUIDANCE_CHANGE = { cik: 320193, ticker: "AAPL", metric: "revenue", basis: "unclear", kind: "FY", periodEnd: "2026-12-26", fy: 2026, fq: null, issued: "2026-11-05", what: "raised", before: { low: 400e9, high: 410e9, mid: 405e9 }, now: { low: 410e9, high: 420e9, mid: 415e9 }, change: 0.0247, quote: "We now expect revenue of $410 billion to $420 billion" };
+const GUIDANCE_MARKET = {
+  schemaVersion: 2, guidanceVersion: "g1.2.20261122", standard: "v3.2", asOf: "2026-11-10", builtAt: "2026-11-23T00:00:00.000Z", companies: 349,
+  changes: [
+    GUIDANCE_CHANGE,
+    { ...GUIDANCE_CHANGE, cik: 1045810, ticker: "NVDA", metric: "eps", basis: "non_gaap", issued: "2026-11-04", what: "cut", before: { low: 4.9, high: 5.1, mid: 5 }, now: { low: 4.4, high: 4.6, mid: 4.5 }, change: -0.1, quote: "Adjusted EPS is now expected between $4.40 and $4.60" },
+    { ...GUIDANCE_CHANGE, cik: 789019, ticker: "MSFT", issued: "2026-10-28", before: { low: null, high: null, mid: 25e6 }, now: { low: null, high: null, mid: 6.661e9 }, change: 265.44, quote: "reducing our full year revenue guidance at the midpoint to $6.661 billion" },
+    { ...GUIDANCE_CHANGE, cik: 789019, ticker: "MSFT", metric: "eps", basis: "gaap", kind: "Q", periodEnd: "2026-12-31", fq: 2, issued: "2026-10-28", what: "first", before: null, now: { low: 3.1, high: 3.2, mid: 3.15 }, change: null, quote: "second-quarter diluted EPS of $3.10 to $3.20" },
+    { ...GUIDANCE_CHANGE, issued: "2026-05-02", before: { low: 390e9, high: 400e9, mid: 395e9 }, now: { low: 400e9, high: 410e9, mid: 405e9 }, change: 0.0253, quote: "revenue of $400 billion to $410 billion" },
+  ],
+  records: [
+    { cik: 320193, ticker: "AAPL", metric: "revenue", compared: 16, above: 14, median: 0.021 },
+    { cik: 1045810, ticker: "NVDA", metric: "revenue", compared: 12, above: 12, median: 0.034 },
+    { cik: 789019, ticker: "MSFT", metric: "revenue", compared: 8, above: 3, median: -0.004 },
+    { cik: 320193, ticker: "AAPL", metric: "eps", compared: 6, above: 5, median: 0.05 },
+  ],
+  habit: { revenue: { compared: 1064, above: 903, median: 0.015 }, eps: { compared: 977, above: 802, median: 0.045 } },
+};
+
 const INSIDER_MARKET = {
   schemaVersion: 2, version: "i-test", asOf: "2026-11-13", builtAt: "2026-11-23T00:00:00Z", companies: 500, days: 90,
   totals: { bought: 12_400_000, sold: 2_100_000_000, buyers: 14, sellers: 610, buyingCompanies: 9, sellingCompanies: 302, soldUnderPlan: 1_470_000_000 },
@@ -313,6 +333,7 @@ function answer(procedure: string, role: string): unknown {
     case "workersLocal.operationLog": return { lines: ["[edgar] 412 of 503 companies", "[edgar] waiting 0.2 s"] };
     case "desk.insiderMarket": return DESK_DATA.empty ? null : INSIDER_MARKET;
     case "desk.screen": return DESK_DATA.empty ? null : SCREEN;
+    case "desk.guidanceMarket": return DESK_DATA.empty || !owner ? null : GUIDANCE_MARKET;
     case "desk.companyInsiders": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_INSIDERS;
     case "desk.engineIndex": return ENGINE_INDEX;
     case "desk.engineCompany": return ENGINE_COMPANY;

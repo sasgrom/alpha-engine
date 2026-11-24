@@ -15,7 +15,7 @@
  *   owner only: the desk shows it as a banner, so a stopped collection is never silent.
  */
 import { z } from "zod";
-import type { DeskCompanyActions, DeskCompanyFilings, DeskCompanyGuidance, DeskCompanyHolders, DeskCompanyInsiders, DeskCompanyStatements, DeskInsiderMarket, DeskScreen } from "@contracts/desk-company";
+import type { DeskCompanyActions, DeskCompanyFilings, DeskCompanyGuidance, DeskCompanyHolders, DeskCompanyInsiders, DeskCompanyStatements, DeskGuidanceMarket, DeskInsiderMarket, DeskScreen } from "@contracts/desk-company";
 import type { EngineFlowCompany, EngineFlowIndex } from "@contracts/engine-flow";
 import type { FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
 import { operationsHealth } from "../../worker/lib/operations-health";
@@ -58,6 +58,8 @@ export const deskRouter = createRouter({
   // guidance is our own reading of the releases (a research product): the owner and NDA-accepted reviewers only, like the option fields
   companyGuidance: authedQuery.input(entity).query(({ ctx, input }) =>
     ctx.user.role === "admin" || ctx.reviewerAccess?.acceptedAt ? readDeskCompanyFile<DeskCompanyGuidance>(`guidance/${input.cik}.json`) : null),
+  guidanceMarket: authedQuery.query(({ ctx }) =>
+    ctx.user.role === "admin" || ctx.reviewerAccess?.acceptedAt ? readDeskCompanyFile<DeskGuidanceMarket>("guidance-market.json") : null),
   engineIndex: adminQuery.query(() => readEngineFlowFile<EngineFlowIndex>("index.json")),
   engineCompany: adminQuery.input(entity).query(({ input }) => readEngineFlowFile<EngineFlowCompany>(`company/${input.cik}.json`)),
   opsHealth: adminQuery.query(() => operationsHealth(loadOperationsState(), new Date())),

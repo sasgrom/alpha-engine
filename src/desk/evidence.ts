@@ -71,7 +71,7 @@ export const SIGNAL_FAMILIES: SignalFamily[] = [
       "It is priced on the day: raised guidance +0.9% and lowered −1.5% in the release session, and no reliable drift after it (raised minus lowered +0.4% over 21 sessions, t 1.0). Guidance does sharpen our estimate of the next quarter's figures, but the price moves on the miss against it, and the part of the miss we can forecast (rank correlation 0.41 for revenue) has no link with the return after the release (−0.05 to +0.03).",
     testedOn: "Guidance standard g1.2: 48,351 releases, 176,459 statements; 150 companies with guided quarters, 2015 to 2026",
     next: "Settled for guidance alone. It stays an input to the estimate of the next quarter.",
-    tool: { label: "Earnings", path: "/desk/research/earnings" },
+    tool: { label: "Guidance", path: "/desk/research/guidance" },
   },
   {
     id: "fundamentals",

@@ -47,6 +47,13 @@ describe("desk view for a member", () => {
     expect(desk.calls).not.toContain("desk.companyGuidance");
   });
 
+  it("sends a member who opens the guidance record to the Today page, without asking the server for it", async () => {
+    desk = await mountDesk("user", "/desk/research/guidance");
+    expect(desk.host.querySelector("[data-guidance-changes]")).toBeNull();
+    expect(desk.host.textContent).not.toContain("Changes of guidance");
+    expect(desk.calls).not.toContain("desk.guidanceMarket");
+  });
+
   it("opens the fund-flow page for a member, without the owner's build notes", async () => {
     desk = await mountDesk("user", "/desk/flows?view=reading", "Most bought");
     expect(desk.calls).toContain("desk.flowsOverview");

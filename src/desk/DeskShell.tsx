@@ -164,7 +164,8 @@ export default function DeskShell({ children }: { children: ReactNode }) {
       ...(isPresentation
         ? [
             { label: "Signals", path: "/desk/research", group: "Desk" as const, keywords: "research evidence alpha ledger" },
-            { label: "Earnings", path: "/desk/research/earnings", group: "Desk" as const, keywords: "reports reactions drift calendar guidance" },
+            { label: "Earnings", path: "/desk/research/earnings", group: "Desk" as const, keywords: "reports reactions drift calendar" },
+            { label: "Guidance", path: "/desk/research/guidance", group: "Desk" as const, keywords: "expectations outlook raised cut forecast revisions record" },
             { label: "Volatility", path: "/desk/research/volatility", group: "Desk" as const, keywords: "options implied realized expected move sizing risk" },
             { label: "Macro", path: "/desk/research/macro", group: "Desk" as const, keywords: "rates credit oil dollar exposure scenario" },
             { label: "Ownership", path: "/desk/research/ownership", group: "Desk" as const, keywords: "insiders 13f institutions short interest" },

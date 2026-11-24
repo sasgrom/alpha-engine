@@ -111,6 +111,17 @@ export const DEV_NOTES = {
       ["Macro tiles with trend and release calendar", "a history endpoint and the release dates of each series"],
     ],
   },
+  guidance: {
+    missing: [
+      "Measures other than revenue and earnings per share (margins, cash flow, capital spending): the standard holds them, the page does not show them.",
+      "A link from a change to the release itself.",
+      "Releases after the guidance standard's last build: it is built by hand, and the page says to which day it reads.",
+    ],
+    better: [
+      ["Fewer misread figures among the large changes", "a guidance standard that checks a figure against the company's own scale before accepting it"],
+      ["The record split by quarters and fiscal years", "time only: the periods carry their kind"],
+    ],
+  },
   ownership: {
     missing: [
       "Insider filings after the insider standard's last build: the page says to which day it reads.",

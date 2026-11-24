@@ -7,6 +7,7 @@ import { EVIDENCE_LABEL, SIGNAL_FAMILIES, type EvidenceStatus } from "./evidence
 const TABS = [
   { label: "Signals", path: "/desk/research" },
   { label: "Earnings", path: "/desk/research/earnings" },
+  { label: "Guidance", path: "/desk/research/guidance" },
   { label: "Volatility", path: "/desk/research/volatility" },
   { label: "Macro", path: "/desk/research/macro" },
   { label: "Ownership", path: "/desk/research/ownership" },

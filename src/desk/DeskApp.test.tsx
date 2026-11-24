@@ -56,7 +56,7 @@ describe("desk view for the owner", () => {
   it("shows the signal ledger with its evidence status and today's readings", async () => {
     desk = await mountDesk("admin", "/desk/research", "First reaction to an earnings release");
     const text = desk.host.textContent ?? "";
-    expect([...desk.host.querySelectorAll(".desk-subnav a")].map((link) => link.textContent)).toEqual(["Signals", "Earnings", "Volatility", "Macro", "Ownership", "Library"]);
+    expect([...desk.host.querySelectorAll(".desk-subnav a")].map((link) => link.textContent)).toEqual(["Signals", "Earnings", "Guidance", "Volatility", "Macro", "Ownership", "Library"]);
     expect(text).toContain("Candidate, not yet confirmed");
     expect(text).toContain("Measured: nothing beyond noise");
     expect(text).toContain("Highest 12-month return skipping the last month");

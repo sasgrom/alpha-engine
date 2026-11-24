@@ -10,6 +10,7 @@ const Screener = lazy(() => import("./pages/Screener"));
 const CompanyPage = lazy(() => import("./pages/Company"));
 const Signals = lazy(() => import("./pages/research/Signals"));
 const Earnings = lazy(() => import("./pages/research/Earnings"));
+const Guidance = lazy(() => import("./pages/research/Guidance"));
 const Volatility = lazy(() => import("./pages/research/Volatility"));
 const Macro = lazy(() => import("./pages/research/Macro"));
 const Ownership = lazy(() => import("./pages/research/Ownership"));
@@ -40,6 +41,7 @@ export default function DeskApp() {
           <Route path="company/:ticker" element={<CompanyPage />} />
           <Route path="research" element={<Signals />} />
           <Route path="research/earnings" element={<Earnings />} />
+          <Route path="research/guidance" element={<Guidance />} />
           <Route path="research/volatility" element={<Volatility />} />
           <Route path="research/macro" element={<Macro />} />
           <Route path="research/ownership" element={<Ownership />} />

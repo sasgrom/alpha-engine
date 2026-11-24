@@ -176,6 +176,57 @@ export interface DeskCompanyGuidance {
   periods: DeskGuidancePeriod[];
 }
 
+/** One change of a company's guidance for a period: what a release said, against what stood before it. */
+export interface DeskGuidanceChange {
+  cik: number;
+  ticker: string;
+  metric: "revenue" | "eps";
+  basis: "gaap" | "non_gaap" | "unclear";
+  kind: "Q" | "FY";
+  periodEnd: string;
+  fy: number | null;
+  fq: number | null;
+  /** First session the release could be acted on. */
+  issued: string;
+  /** "first": the first figures given for the period; "range": the midpoint stayed and the range moved. */
+  what: "first" | "raised" | "cut" | "range";
+  before: { low: number | null; high: number | null; mid: number } | null;
+  now: { low: number | null; high: number | null; mid: number };
+  /** (now.mid - before.mid) / |before.mid|; null for a first statement. */
+  change: number | null;
+  /** The release's own words for the figure, where the statement behind it is known. */
+  quote: string | null;
+}
+
+/** How a company's reported figures fell against its own last guidance, over the periods of its guidance file. */
+export interface DeskGuidanceRecord {
+  cik: number;
+  ticker: string;
+  metric: "revenue" | "eps";
+  /** Periods with a reported figure to compare, how many of them came in above the guided midpoint, and the median of (reported - midpoint) / |midpoint|. */
+  compared: number;
+  above: number;
+  median: number;
+}
+
+/** Guidance across companies, for the research page: the changes of the last year and each company's record. */
+export interface DeskGuidanceMarket {
+  schemaVersion: typeof DESK_COMPANY_SCHEMA_VERSION;
+  guidanceVersion: string;
+  standard: string;
+  /** The last day a release of the guidance standard could be acted on: the year of changes ends there. */
+  asOf: string;
+  builtAt: string;
+  /** Companies with guidance in the standard. */
+  companies: number;
+  /** Changes of the 365 days to `asOf`, newest first. */
+  changes: DeskGuidanceChange[];
+  /** Companies with at least four comparable periods of a measure. */
+  records: DeskGuidanceRecord[];
+  /** All companies together, periods ending in the three years to `asOf`. */
+  habit: Record<"revenue" | "eps", { compared: number; above: number; median: number | null }>;
+}
+
 /** Splits, dividends and other distributions from the standard prices, in as-traded amounts. */
 export interface DeskCompanyActions {
   schemaVersion: typeof DESK_COMPANY_SCHEMA_VERSION;
