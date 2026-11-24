@@ -1,5 +1,5 @@
 import { Link, Navigate, useLocation } from "react-router";
-import { AlertTriangle, CircleDashed, FlaskConical, MinusCircle, ShieldCheck } from "lucide-react";
+import { AlertTriangle, CircleDashed, FlaskConical, MinusCircle, Ruler, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 import { useDesk } from "./context";
 import { EVIDENCE_LABEL, SIGNAL_FAMILIES, type EvidenceStatus } from "./evidence";
@@ -19,6 +19,7 @@ const ICON: Record<EvidenceStatus, typeof FlaskConical> = {
   none: MinusCircle,
   invalid: AlertTriangle,
   untested: CircleDashed,
+  reference: Ruler,
 };
 
 /** Evidence status as an icon and a phrase (never colour alone). */

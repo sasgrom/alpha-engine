@@ -3735,3 +3735,27 @@ delivered.
 - Gates: `npm run check`, 274 files / 1,614 tests, `npm run build`, `git diff --check`. The tests ran with the
   uncommitted adjusted-earnings reader a8 in the working tree; it is not part of this commit (its full read is
   running, handoff to follow).
+
+## 223. Claude (Fable 5.2): the desk's Signals ledger corrected; Ownership on the fund books; the migration list — 2026-11-24T01:16Z
+
+- Owner (2026-11-23): "did you transfer old era pages or logic, algo to the new view? prepare the list", then "go
+  ahead, fix the ledger and ownership after a8, lets do the complete move one by one, you choose the style and if you
+  can improve functionality and ui". The list is `docs/desk/UI_MIGRATION.md` section 7 (`606dca5`): pages, logic and
+  algorithms, checked against the routes and the procedures each side calls, and the order from here.
+- **Signals ledger** (`src/desk/evidence.ts`): it was last changed on 2026-11-11 and still called the release
+  reaction and engine v1 "candidate" after the test of 2026-11-12 refuted both, and "not tested" for 13F, momentum
+  and short interest, which the lab tested on 2026-11-16. Rewritten from the research record (lab
+  `src/engine/README.md`, the findings documents, `src/research/fable1/NOTES.md`): 15 families, one candidate (the low
+  share of short sales in volume), two risk measures, eleven with nothing beyond noise, and the foresight ceiling as
+  a yardstick (new status `reference`). The Signals page shows the day the ledger was set against the record
+  (`LEDGER_REVIEWED`). The Library's stale guidance sentence is corrected.
+- **Ownership page** (`src/desk/pages/research/Ownership.tsx`): the sector table and two headline figures read the
+  fund books behind Flows (`desk.flowsOverview`, the 13F standard's reports with every row of a position), not
+  `dashboard.sectorFlowsDetailed` (the app's `fund_holdings`, one row per security). The dry-run insider figures are
+  removed: the run had no interval and no controls. The two insider cards still read the old Form 4 export of the 50.
+- Looked at on the running server after `npm run build` (no restart): both pages, full length, with the real files
+  (playwright, scratchpad `hall/research-shots.mjs`).
+- Gates: `npm run check`, 274 files / 1,615 tests, `npm run build`, `git diff --check`. The uncommitted adjusted-earnings
+  reader a8 was in the tree during the tests and is not part of this commit; its full read is running.
+- Next: a8 onto the company page; then the insider cards on the insider standard, the Operations console, and the
+  rest of the list in its order.

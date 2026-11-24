@@ -34,14 +34,15 @@ describe("desk research tools and the watchlist, for the owner", () => {
     expect(desk.calls).toContain("report:company-exposures.json");
   });
 
-  it("shows insider purchases, multi-insider windows, 13F flows and short interest", async () => {
-    desk = await mountDesk("admin", "/desk/research/ownership", "Held now");
+  it("shows insider purchases, multi-insider windows, the funds' sectors and short interest", async () => {
+    desk = await mountDesk("admin", "/desk/research/ownership", "Bought less sold");
     const text = desk.host.textContent ?? "";
     expect(text).toContain("Lip Bu Tan");
     expect(text).not.toContain("SELLER SAM");
     expect(text).toContain("$9.71M");
     expect(text).toContain("CEO, director");
-    expect(text).toContain("+0.38%");
+    expect(text).not.toContain("Dry-run excess");
+    expect(text).toContain("+$40.00B");
     expect(text).toContain("131.6M");
   });
 

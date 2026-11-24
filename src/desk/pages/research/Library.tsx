@@ -8,7 +8,7 @@ import { ResearchFrame } from "../../ResearchParts";
 /** What each classic page still holds that its desk counterpart does not. */
 const DETAILS: Record<string, { icon: typeof Activity; text: string; desk?: string }> = {
   "/scenario-lab": { icon: SlidersHorizontal, text: "Every shock channel with the filing evidence behind each company's number, custom shock sizes and the JSON export.", desk: "Macro shows the rate ranking and what is computable." },
-  "/expectations": { icon: FileSearch, text: "The full guidance record: every statement read from 26,000 documents, with its quote, period and revision.", desk: "Earnings shows reactions and dates; guidance is not in the desk yet." },
+  "/expectations": { icon: FileSearch, text: "The full guidance record: every statement read from 26,000 documents, with its quote, period and revision.", desk: "Each company's page shows its guidance history beside the reported figures; Earnings shows reactions and dates." },
   "/insider-activity": { icon: Users, text: "All Form 4 transactions with the excluded codes, per-company filters and the cluster detail.", desk: "Ownership shows the purchases, the multi-insider windows and the dry-run benchmark." },
   "/analytics/methodology": { icon: BookOpen, text: "The volatility handbook: notation, expected move, the paired tests and their tables.", desk: "Volatility quotes its headline results." },
   "/analytics/risk-lab": { icon: Gauge, text: "A historical replay of one company's implied and realized expected move against the actual outcome.", desk: "Volatility has the sizing calculator on today's readings." },

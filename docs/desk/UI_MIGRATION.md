@@ -225,15 +225,18 @@ Volatility research, the intraday ranges.
 
 ### 7.2 Logic and algorithms
 
-- **Wrong now, fix first:** the Signals ledger (`src/desk/evidence.ts`, last changed 2026-11-11) predates the decisive
-  test of 2026-11-12. The release-reaction effect did not repeat on 440 other companies, and engine v1 has no edge on
+- **Fixed 2026-11-23 (handoff 223):** the Signals ledger is set against the research record again (15 families: one
+  candidate, the low share of short sales; two risk measures; eleven with nothing beyond noise; the foresight ceiling
+  as the yardstick) and shows the day it was reviewed. What was wrong: the ledger (`src/desk/evidence.ts`, last
+  changed 2026-11-11) predated the decisive test of 2026-11-12. The release-reaction effect did not repeat on 440 other companies, and engine v1 has no edge on
   the S&P 500, but both still read "candidate". Later results are missing: guidance g1.2 reruns (every verdict
   unchanged), the pooled engine and its ceilings, the miss forecaster ("the predictable part of the beat is priced"),
   technical sensing, short interest, insiders.
-- **Old data source, fix next:** the research Ownership page's sector flows still read the app's `fund_holdings` table
-  (`dashboard.sectorFlowsDetailed`), which keeps half the money (one row per security). The company page and Flows
-  read the 13F standard. Its dry-run insider benchmark comes from the old Form 4 report, while the company page reads
-  the insider standard i1.1.
+- **Fixed 2026-11-23 (handoff 223):** the research Ownership page's sector table and headline figures read the fund
+  books behind Flows (`desk.flowsOverview`), no longer the app's `fund_holdings` table, which keeps half the money
+  (one row per security); the dry-run insider benchmark is gone from the page. **Still old:** its two insider cards
+  read the old Form 4 export of the 50 research companies (`insider-form4.json`), not the insider standard i1.1; a
+  cross-company file from the company-page builder is the next step.
 - **The app's old factor engine** (`company.factors`, `company.probability`, `company.value`; nightly
   `research-series` and `research-factors`) is not moved, by the owner's decision: it never passed an out-of-sample
   test. Only its factor-IC monitor sits in Owner tools → Monitors. The nightly jobs still run, and the classic company
@@ -245,12 +248,11 @@ Volatility research, the intraday ranges.
   adjusted-earnings reader (company page; a2 on the page, a8 being read).
 - **Not moved:** sentiment and tone scoring, LLM digests and the morning brief (Ollama stopped on the owner's word;
   tone measured nothing at the release).
-- **Stale texts in the desk:** Library says "guidance is not in the desk yet" (per-company guidance is).
 
 ### 7.3 Suggested order
 
-1. Correct the Signals ledger from the research record (text only).
-2. Ownership's sector flows from the 13F standard (the Flows overview files).
+1. ~~Correct the Signals ledger from the research record.~~ Done.
+2. ~~Ownership's sector flows from the 13F standard.~~ Done; the insider cards on the insider standard are open.
 3. Operations console (K17b) — it retires `/workers` and `/jobs`.
 4. Screener columns from the standard fundamentals; Watchlist "add any SEC company".
 5. Research pages: the cross-company guidance record (g1.2), the full insider list (i1.1), option chains, the scenario

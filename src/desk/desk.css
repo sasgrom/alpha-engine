@@ -1594,6 +1594,7 @@ button.desk-list-row {
 .desk-evidence[data-status="candidate"] { border-color: color-mix(in srgb, var(--d-accent) 45%, transparent); background: var(--d-accent-wash); }
 .desk-evidence[data-status="risk"] { border-color: color-mix(in srgb, var(--d-good) 45%, transparent); background: color-mix(in srgb, var(--d-good) 10%, transparent); }
 .desk-evidence[data-status="none"],
+.desk-evidence[data-status="reference"],
 .desk-evidence[data-status="untested"] { color: var(--d-ink-2); }
 .desk-evidence[data-status="invalid"] { border-color: color-mix(in srgb, var(--d-critical) 45%, transparent); background: color-mix(in srgb, var(--d-critical) 8%, transparent); }
 

@@ -67,13 +67,13 @@ export const DEV_NOTES = {
   },
   signals: {
     missing: [
-      "The engine's probabilities: held back until the 446-company test.",
-      "Whole-index readings for most families: guidance, insiders and options exist for the 50 research companies.",
+      "A view of the later engines (per-company, pooled, the ceilings, the miss forecaster): the Engine page shows version 1 only.",
+      "Analysts' consensus, the one input not yet tested: no data.",
       "An evidence history: the ledger is written by hand from the research record, it is not generated from test runs.",
     ],
     better: [
       ["A hit-rate per family that updates nightly", "the engine running inside this repository (it lives in the research repository)"],
-      ["Momentum, 13F and short-interest tests", "time only for momentum (closes since 2005 are stored); history for short interest"],
+      ["The less-shorted tilt followed forward as a paper portfolio", "a scheduled build of the FINRA short-sale files"],
     ],
   },
   earnings: {
@@ -113,14 +113,11 @@ export const DEV_NOTES = {
   ownership: {
     missing: [
       "Insider filings beyond the 50 research companies.",
-      "A controlled test of insider buying: the benchmark shown is a dry run without intervals.",
       "Ranking companies by institutional accumulation.",
       "Short-interest history and readings for the whole index.",
-      "Correct 13F positions: the stored table keeps one filed row per security and misses 119 of the 496 companies, so every 13F figure on this page is too low for managers that file many rows (BlackRock, Fidelity, the banks). The Flows page reads the filed reports directly and does not have this defect.",
     ],
     better: [
-      ["The 13F panel built on the rebuilt books", "a decision on re-loading the stored table from the cached filings (it changes about two million rows)"],
-      ["The 13F panel appearing at once", "K07's precomputed sector flows (in progress)"],
+      ["Insider purchases and windows from the insider standard for every company", "a cross-company file from the company-page builder (the cards still read the old Form 4 export of the 50)"],
     ],
   },
   flows: {

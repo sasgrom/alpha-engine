@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { Link } from "react-router";
 import { ArrowUpRight } from "lucide-react";
-import { trpc } from "@/providers/trpc";
-import { Card, CompanyLink, Delta, Kpi, Shimmer } from "../../components";
+import { Card, CompanyLink, Kpi, Shimmer } from "../../components";
 import { useDocumentTitle } from "../../context";
 import { findCompany, useDeskSnapshot, useReport } from "../../data";
 import { DevNotes } from "../../DevNotes";
-import { fmtCap, fmtCompact, fmtDate, fmtNum, fmtPct, fmtPrice, personName } from "../../format";
+import { quarterLabel, useFlowsOverview } from "../../flows/data";
+import { fmtCap, fmtCompact, fmtDate, fmtNum, fmtPrice, personName } from "../../format";
 import { EvidenceNote, ResearchFrame } from "../../ResearchParts";
 
 interface InsiderTransaction {
@@ -44,7 +44,6 @@ interface InsiderReport {
   kpi: { openMarketBuyCount: number; openMarketBuyUsd: number; uniqueInsidersBuying: number };
   transactions: InsiderTransaction[];
   clusters: InsiderCluster[];
-  benchmarkRuns: { methodologyStatus: string; horizons: Record<string, { hitRate: number | null; medianExcess: number | null; counts: { computed: number } }> }[];
 }
 
 function role(row: InsiderTransaction): string {
@@ -56,15 +55,16 @@ export default function Ownership() {
   useDocumentTitle("Ownership");
   const snapshot = useDeskSnapshot();
   const insiders = useReport<InsiderReport>("insider-form4.json");
-  // the 13F aggregation is the slow read of this page; it loads on its own and never holds the rest back
-  const flows = trpc.dashboard.sectorFlowsDetailed.useQuery(undefined, { staleTime: 30 * 60_000, enabled: !insiders.isLoading });
+  // the funds' quarter from the fund books behind Flows (their filed 13F reports, every row of a position counted)
+  const flows = useFlowsOverview();
+  const quarter = flows.data?.quarters.at(-1) ?? null;
   const data = snapshot.data;
 
   const purchases = useMemo(() => (insiders.data?.transactions ?? []).filter((row) => row.transactionCode === "P").sort((a, b) => b.eventTs.localeCompare(a.eventTs)).slice(0, 15), [insiders.data]);
   const clusters = useMemo(() => (insiders.data?.clusters ?? []).filter((row) => row.uniqueInsidersExcludingMultiOwner >= 2).sort((a, b) => b.windowEnd.localeCompare(a.windowEnd)).slice(0, 10), [insiders.data]);
-  const benchmark = insiders.data?.benchmarkRuns.filter((run) => run.methodologyStatus === "canonical").at(-1) ?? null;
   const shorts = useMemo(() => (data?.companies ?? []).filter((company) => company.shortInterest?.shares).sort((a, b) => (b.shortInterest!.daysToCover ?? 0) - (a.shortInterest!.daysToCover ?? 0)).slice(0, 12), [data]);
-  const flowRows = useMemo(() => [...(flows.data?.rows ?? [])].sort((a, b) => (b.deltaWeightPp ?? -Infinity) - (a.deltaWeightPp ?? -Infinity)), [flows.data]);
+  const flowRows = useMemo(() => [...(quarter?.sectors ?? [])].sort((a, b) => b.net - a.net), [quarter]);
+  const signed = (value: number) => <span className={`desk-num desk-${value > 0 ? "up" : value < 0 ? "down" : "flat"}`}>{value < 0 ? "−" : "+"}{fmtCap(Math.abs(value)).replace("—", "$0")}</span>;
   const companyLink = (ticker: string) => {
     const company = findCompany(data, ticker);
     return company ? <CompanyLink company={company} className="desk-ticker">{ticker}</CompanyLink> : <span className="desk-ticker">{ticker}</span>;
@@ -85,8 +85,8 @@ export default function Ownership() {
       <div className="desk-kpis four">
         <Kpi label="Open-market purchases on file" value={insiders.data ? insiders.data.kpi.openMarketBuyCount.toLocaleString("en-US") : "—"} note={insiders.data ? `${fmtCap(insiders.data.kpi.openMarketBuyUsd)} by ${insiders.data.kpi.uniqueInsidersBuying} insiders · ${insiders.data.universe} companies` : "loading"} />
         <Kpi label="Windows with 3+ insiders" value={insiders.data ? String(insiders.data.clusters.filter((row) => row.uniqueInsidersExcludingMultiOwner >= 3).length) : "—"} note={insiders.data ? `of ${insiders.data.clusters.length} purchase windows of 10 days` : ""} />
-        <Kpi label="Dry-run excess, 5 sessions" value={<Delta value={benchmark?.horizons.forward5d?.medianExcess ?? null} digits={2} />} note={benchmark ? `hit rate ${fmtPct(benchmark.horizons.forward5d?.hitRate ?? null, 1, false)} · ${benchmark.horizons.forward5d?.counts.computed ?? 0} windows · no interval` : "no valid run"} />
-        <Kpi label="Dry-run excess, 20 sessions" value={<Delta value={benchmark?.horizons.forward20d?.medianExcess ?? null} digits={2} />} note={benchmark ? `hit rate ${fmtPct(benchmark.horizons.forward20d?.hitRate ?? null, 1, false)}` : ""} />
+        <Kpi label={quarter ? `Funds bought less sold, ${quarterLabel(quarter.quarter)}` : "Funds bought less sold"} value={quarter ? signed(quarter.net) : "—"} note={quarter ? `bought ${fmtCap(quarter.bought)} · sold ${fmtCap(quarter.sold)} · ${quarter.funds} funds` : flows.isError ? "the fund books could not be read" : "loading"} />
+        <Kpi label="Most bought sector, net" value={flowRows.length ? flowRows[0].sector : "—"} note={flowRows.length ? <>{signed(flowRows[0].net)} · most sold {flowRows[flowRows.length - 1].sector} {signed(flowRows[flowRows.length - 1].net)}</> : ""} />
       </div>
 
       <div className="desk-grid">
@@ -147,31 +147,32 @@ export default function Ownership() {
           )}
         </Card>
 
-        <Card className="desk-span-7" flush title="Institutions by sector" subtitle={flows.data?.guard ? "Quarter-on-quarter change across the funds that filed in both quarters" : "Quarter-on-quarter change in 13F holdings"}>
+        <Card className="desk-span-7" flush title="Institutions by sector" subtitle={quarter ? `${quarterLabel(quarter.quarter)} against ${quarterLabel(quarter.previous)}: what ${quarter.funds} funds bought and sold, from their 13F reports` : "What the funds bought and sold in the latest quarter, from their 13F reports"} action={<Link className="desk-link desk-nowrap" to="/desk/flows?view=reading" style={{ fontSize: 12.5 }}>Every quarter, fund and company <ArrowUpRight size={13} aria-hidden="true" /></Link>}>
           {flows.isPending ? (
-            <div style={{ padding: 20, display: "grid", gap: 8 }}><Shimmer height={18} /><Shimmer height={18} width="70%" /><span className="desk-muted" style={{ fontSize: 12 }}>Reading the 13F holdings…</span></div>
+            <div style={{ padding: 20, display: "grid", gap: 8 }}><Shimmer height={18} /><Shimmer height={18} width="70%" /><span className="desk-muted" style={{ fontSize: 12 }}>Reading the fund books…</span></div>
           ) : flows.isError ? (
-            <div className="desk-empty" style={{ padding: 20 }}>The 13F flows could not be read right now.</div>
+            <div className="desk-empty" style={{ padding: 20 }}>The fund books could not be read right now.</div>
           ) : flowRows.length ? (
             <div className="desk-table-wrap">
               <table className="desk-table">
                 <thead>
-                  <tr><th>Sector</th><th className="num">Held now</th><th className="num">Change in value</th><th className="num">Change in weight</th></tr>
+                  <tr><th>Sector</th><th className="num">Held</th><th className="num">Bought</th><th className="num">Sold</th><th className="num">Bought less sold</th></tr>
                 </thead>
                 <tbody>
                   {flowRows.map((row) => (
                     <tr key={row.sector} style={{ cursor: "default" }}>
                       <td style={{ fontWeight: 560 }}>{row.sector}</td>
-                      <td className="num">{fmtCap(row.curUsd)}</td>
-                      <td className="num"><span className={`desk-num desk-${row.deltaUsd > 0 ? "up" : row.deltaUsd < 0 ? "down" : "flat"}`}>{row.deltaUsd < 0 ? "−" : "+"}{fmtCap(Math.abs(row.deltaUsd)).replace("—", "$0")}</span></td>
-                      <td className="num">{row.deltaWeightPp === null ? "—" : <span className={`desk-num desk-${row.deltaWeightPp > 0 ? "up" : row.deltaWeightPp < 0 ? "down" : "flat"}`}>{fmtNum(row.deltaWeightPp, 2)} pts</span>}</td>
+                      <td className="num">{fmtCap(row.held)}</td>
+                      <td className="num desk-ink-2">{fmtCap(row.bought)}</td>
+                      <td className="num desk-ink-2">{fmtCap(row.sold)}</td>
+                      <td className="num">{signed(row.net)}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           ) : (
-            <div className="desk-empty" style={{ padding: 20 }}>No comparable pair of 13F quarters is stored.</div>
+            <div className="desk-empty" style={{ padding: 20 }}>The fund books hold no quarter yet.</div>
           )}
         </Card>
 

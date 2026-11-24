@@ -6,8 +6,8 @@ import { CompanyLink, Notice, Segmented, Shimmer } from "../../components";
 import { useDocumentTitle } from "../../context";
 import { earningsRadar, useDeskSnapshot } from "../../data";
 import { DevNotes } from "../../DevNotes";
-import { SIGNAL_FAMILIES, type EvidenceStatus } from "../../evidence";
-import { fmtNum, fmtPct } from "../../format";
+import { LEDGER_REVIEWED, SIGNAL_FAMILIES, type EvidenceStatus } from "../../evidence";
+import { fmtDate, fmtNum, fmtPct } from "../../format";
 import { EvidenceChip, ResearchFrame } from "../../ResearchParts";
 
 type Filter = "all" | "candidate" | "risk" | "none" | "open";
@@ -39,11 +39,11 @@ function ivSpread(company: DeskCompany): number | null {
 function liveReadings(snapshot: DeskSnapshot): Record<string, { caption: string; rows: Reading[] }> {
   const companies = snapshot.companies;
   const top = <T,>(rows: T[], count: number) => rows.slice(0, count);
-  const reported = earningsRadar(snapshot, 7, 0).reported.filter((company) => company.lastEarningsReaction !== null && company.sector !== "Financials");
+  const reported = earningsRadar(snapshot, 7, 0).reported.filter((company) => company.lastEarningsReaction !== null);
   const spreads = companies.map((company) => ({ company, spread: ivSpread(company) })).filter((row): row is { company: DeskCompany; spread: number } => row.spread !== null).sort((a, b) => b.spread - a.spread);
   return {
     reaction: {
-      caption: "Largest reactions of the last 7 days (banks and insurers left out)",
+      caption: "Largest reactions of the last 7 days",
       rows: top([...reported].sort((a, b) => Math.abs(b.lastEarningsReaction!) - Math.abs(a.lastEarningsReaction!)), 5).map((company) => ({ company, text: fmtPct(company.lastEarningsReaction, 1) })),
     },
     "iv-rv": {
@@ -86,8 +86,8 @@ export default function Signals() {
           <h1>Signals</h1>
           <p className="desk-lede">
             Every family of readings the platform holds, the question it would answer, and the measured result so far:
-            {" "}{counts.candidate} candidates, {counts.risk} that measure risk, {counts.none} with nothing beyond noise and {counts.open} still open.
-            The readings under a card are today's values, not forecasts.
+            {" "}{counts.candidate} {counts.candidate === 1 ? "candidate" : "candidates"}, {counts.risk} that measure risk, {counts.none} with nothing beyond noise and {counts.open} still open.
+            The readings under a card are today's values, not forecasts. Set against the research record on {fmtDate(LEDGER_REVIEWED)}.
           </p>
         </div>
         <Segmented label="Evidence status" options={FILTERS} value={filter} onChange={setFilter} />

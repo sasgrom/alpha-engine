@@ -63,6 +63,17 @@ describe("desk view for the owner", () => {
     expect(desk.host.querySelectorAll(".desk-signal").length).toBeGreaterThanOrEqual(12);
   });
 
+  it("shows what the funds bought and sold by sector from the fund books, not the old 13F table", async () => {
+    desk = await mountDesk("admin", "/desk/research/ownership", "Institutions by sector");
+    await waitUntil(() => (desk!.host.textContent ?? "").includes("Bought less sold"));
+    const rows = [...desk.host.querySelectorAll("section, .desk-card")].find((node) => node.querySelector("h2, h3")?.textContent === "Institutions by sector")?.querySelectorAll("tbody tr") ?? [];
+    expect([...rows].map((row) => [...row.querySelectorAll("td")].map((cell) => cell.textContent))).toEqual([
+      ["Information Technology", "$3.00T", "$70.00B", "$30.00B", "+$40.00B"],
+      ["Energy", "$1.00T", "$20.00B", "$40.00B", "−$20.00B"],
+    ]);
+    expect(desk.host.textContent).not.toContain("Dry-run excess");
+  });
+
   it("lists reports with the reaction and the move since", async () => {
     desk = await mountDesk("admin", "/desk/research/earnings", "Rose on the report");
     const text = desk.host.textContent ?? "";
