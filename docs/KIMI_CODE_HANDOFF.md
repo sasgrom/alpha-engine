@@ -4054,3 +4054,39 @@ delivered.
 - Gates: `npm run check`, 278 files / 1,635 tests, `npm run build`, `git diff --check`.
 - **Next:** the bounded Yahoo read and a list of the missing dividends (read-only preparation for the prices
   revision); the Watchlist's "add any SEC company".
+
+## 227. Claude (Fable 5.2): the missing dividends listed; the company page's insider list — 2026-11-24T04:22Z
+
+- **Bounded Yahoo read** (lab `b291721`: `src/prices/yahoo-actions-fetch.py` takes `YAHOO_SINCE=YYYY-MM-DD` and then
+  asks for that day to now at monthly bars). Run once, 2026-11-24T04:04Z to 04:20Z, one request every 1.5 s, tickers
+  only: the 515 tickers of the 2026-11-13 read since 2024-01-01, 514 answered (the 515th "ticker" is the old
+  folder's manifest file, not found). Output `D:\research\alpha-engine\prices\yahoo\2026-11-23-since-2024` (answers
+  and `manifest.jsonl`); a three-ticker probe before it in `...\yahoo\probe-since-2024-20261123`. Nothing in the
+  standard prices or the events table was changed.
+- **The gap list** (lab `src/prices/yahoo-dividend-gaps.py`, output
+  `D:\research\alpha-engine\prices\yahoo\2026-11-23-since-2024-dividend-gaps.json`): Yahoo's dividends since
+  2024-01-01 against the dividends the desk company files carry from the standard prices, 499 companies (Rivian has
+  no dividend list). A Yahoo amount is put back on the as-traded basis with the standard's own splits and spin-off
+  factors; a dividend is present when the standard has one within five days.
+  - Yahoo lists 4,519 dividends; the standard has 3,911 of them and lacks **608, in 91 companies** (147 of 2024, 247
+    of 2025, 214 of 2026). For every dividend present the two amounts agree, and the standard has none that Yahoo
+    lacks, so the amounts in the standard are sound and only the list is short.
+  - Size: the missing dividends add up to a median 3.9% of a company's last close; the largest are Pfizer 15.6%, Ford
+    14.8%, Altria 12.4%, Edison International 12.1%, Weyerhaeuser and Bristol-Myers 9.5%. That is how much the
+    standard's total return understates these companies since 2024.
+  - Six of the missing fall before Tiingo's last day (Rockwell, L3Harris, Northrop, Schlumberger, Williams, Smurfit
+    Westrock: February to April 2024).
+  - Next step, the owner's call: add the 608 to the events table and rebuild the standard prices as a new version
+    (total return and the desk's dividend lists change for 91 companies; closes and splits do not).
+- **Company page, insider card** (`b27574c`): the insiders file keeps every open-market purchase and sale of three
+  years first (up to 300) and the newest 150 other lines, with the count of market trades; the card switches between
+  all lines and the market trades, and a long list scrolls inside the card. Before, the newest 80 lines of any kind
+  were kept, so vesting and tax lines pushed purchases out. Desk files rebuilt: hash `8d92b6f3a633`, 129.4 MB (the
+  insider files 7.6 → 19.6 MB). Checked on the running server (Rollins: one purchase of $49.96 m by LOR, Inc.; 46
+  market trades of 208 lines). No server restart was needed.
+- **Watchlist "add any SEC company": not built, the owner's decision.** `universe.add` starts the old ingest job for
+  a company outside the registry; the desk reads the standards, which cover the 500 companies, so such a company
+  would have no page, prices or statements in the desk. Recommended: drop it and retire `/universe` and `/jobs`.
+- Gates on this state: `npm run check`, 278 files / 1,636 tests, `npm run build`, `git diff --check`.
+- **Next:** the cross-company guidance record, the option chain browser, the scenario lab
+  (`docs/desk/UI_MIGRATION.md` section 7.3).
