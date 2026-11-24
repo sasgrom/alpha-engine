@@ -219,7 +219,8 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Desk macro card | scheduled | after macro-fred-weekly | Local file read by dashboard.macro; no production write and no database write. |
 | Guidance standard daily gated refresh | scheduled | 25 2 * * * | Local D: artifacts only; no production write and no database write. |
 | Standard fundamentals daily gated refresh | scheduled | 12 3 * * * | Local D: artifacts only; no production write, no database write (the research database keeps v3.1). |
-| Insider standard daily gated refresh | scheduled | 35 3 * * * | Local D: artifacts and alpha_research only; no production write and no alpha_engine mutation. |
+| Insider standard daily gated refresh | scheduled | 35 3 * * * | Local D: artifacts only; no production write, no database write. |
+| Insider standard weekly database load | scheduled | 10 4 * * 0 | Local D: artifacts and alpha_research only; no production write and no alpha_engine mutation. |
 | FINRA short interest | scheduled | 25 6 * * * | Local D: archive and a local file read by company.shortInterest and the desk snapshot; no production write and no database write. |
 | Desk company files | scheduled | after edgar-fetch-daily | Local files read by the desk procedures; no production write. |
 | OFAC daily event refresh | scheduled | 40 5 * * * | Local macro archive only; no production write. |
@@ -588,6 +589,7 @@ npx tsx ../alpha-engine-lab/src/prices/std-prices-refresh.mts
 - **ID:** `std-insiders-refresh` · **Cron:** 35 3 * * * · **Requirements:** network, mysql, driveD
 - **Command:** `npx tsx ../alpha-engine-lab/src/insiders/std-insiders-refresh.mts` (`--force` rebuilds on an unchanged day, `--no-desk` skips the desk rebuild)
 - **Chain:** form fetch through the last completed session (`edgar-insiders.mts`), build with the calendar extended by the app's SPY sessions since the weekly price refresh, the three acceptance commands, regression against the published build (no filing lost, no table smaller, a plausible number of new filings), staged load and swap (`--supersede-final` names the stored final build), independent live check, final status (`finalize-insiders.mts`), pointer `D:/research/alpha-engine/insiders/std/current.json`, desk company files.
+- **Since the first runs (2026-11-24):** the nightly job publishes FILES only (about 25 minutes). The research database is loaded by `std-insiders-db-load` (the same script with `--load`, Sundays 04:10): the staged load of 3.6 million rows took about two and a half hours and would hold the lane through the start of live prices. Forms are read through the completed session before the last one, because the SEC publishes a filing's folder up to a day after its index lists it.
 - **Operational note:** a run with no new session and an unchanged price calendar ends as "unchanged". A failed step stops the chain; before the swap the stored build is untouched, and the pointer names the previous build until the new one is final. Each build folder is about 8 GB and nothing is pruned: free space on D: is checked (40 GiB) and retention is the owner's decision. Summary: `worker/.runs/local-generated/std-insiders-refresh.json`.
 
 ### 22d. FINRA short interest (added 2026-11-24, owner's go)

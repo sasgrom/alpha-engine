@@ -4786,3 +4786,34 @@ Owner: "implement 1,2,3 and fix One unstable older test".
 - Gates: `npm run check`, 276 files / 1,669 tests, `npm run build`, `git diff --check`. Web server restarted.
 - **For the owner to do:** sign in again, open Security and turn the second factor on; a password under 12
   characters should be changed on the People page.
+
+## 249. Claude (Fable 5.2): the insider refresh's first runs — three stops, their causes, and the nightly job made files-only — 2026-11-24T14:50Z
+
+- **Run 1 (scheduled, 11:35Z): failed at `fetch-forms` after 67 minutes; nothing built or changed.** The SEC's daily
+  index listed 556 forms for 2026-11-23, but only 16 had their filing folder (`index.json`) published by the next
+  morning; 540 answered 404 (one checked by hand: folder 404, raw `.txt` submission 200). Days through 2026-11-20
+  fetched completely (708 new forms). Behind it sat a second defect: the fetch recorded such 404s as missing for
+  good and would never have asked again.
+  - Fix (lab `8230ae6`): forms are read through the completed session BEFORE the last one (`refreshUntil`, lag 1);
+    a 404 on a filing younger than five days is retried (`missingForGood`); a run that ends earlier than the stored
+    manifest ignores the stored entries beyond its own end.
+- **Run 2 (queued, 12:46Z): stopped in preflight in one second.** The standard-price calendar (refreshed that night
+  through 2026-11-23) ended after the day read through (2026-11-20) and the builder needs both to end together.
+  Fix (lab `a6fc880`): `cutSessions`, the builder cuts its calendar at the day read through and records what it
+  dropped.
+- **Run 3 (queued, 12:47Z): fetch 177 s, build 968 s, acceptance 147 s, gates pass, regression pass** (692 filings
+  added, none lost; 761,359 filings, 2,046,987 transactions, forms through 2026-11-20). **Then the staged load ran
+  for about 90 minutes and was 46% through the transactions table at 14:40Z (06:40 local), holding the scheduler's
+  lane with eight jobs queued and live prices due.** I stopped the job through the scheduler's own Stop (state
+  `killed`, 14:41:12Z); the queue ran at once. The swap had not happened: the stored tables were untouched.
+  - The load was resumed OUTSIDE the scheduler (`load-insiders.mts ... --replace --supersede-final i1.1.20261116
+    --resume-partial`), to be followed by `verify-insiders-load.mts`, `finalize-insiders.mts`, the pointer (scratch
+    `publish-insiders.mts`) and the desk build. Its result is in the next section.
+- **Design change (lab `d868ede`, main registry 72 jobs):** `std-insiders-refresh` (daily 03:35) publishes FILES only:
+  gates, regression, a files-scope `finalization.json`, pointer, desk; about 25 minutes. The research database is
+  loaded by `std-insiders-db-load` (the same script with `--load`, Sundays 04:10), which also compares the new build
+  with the stored build's own folder, since the database may be behind the published files.
+- **My estimate was wrong:** I had assumed the load would take 15 to 20 minutes. It takes about two and a half hours.
+- Lab insider tests: 12 files / 110. Main gates: `npm run check`, 276 files / 1,669 tests, `npm run build`.
+- **Proposed, not done:** read a form from its raw `.txt` submission when its folder is not published yet, which
+  would bring forms in the next morning instead of the second (a change to the reviewed fetcher).
