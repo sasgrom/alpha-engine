@@ -4228,3 +4228,43 @@ delivered.
   section.
 - **Web server not restarted yet**: it waits for the refresh to end. The restart will also load K24's server code
   (Kimi left the restart to me).
+
+## 232. Claude (Fable 5.2): standard prices p1.20261124 with the missing dividends; the gap is closed — 2026-11-24T06:02Z
+
+- **Refresh** `std-prices-refresh`, run `20261124T050411Z`, by the scheduler at my request (owner: "go on with the
+  dividends fix"): 05:04:09Z to 05:57:10Z, exit 0. Steps: Yahoo's events for 516 tickers with the corrected
+  collector (lab `f192698`; all at monthly bars, none at the event limit, none failed), reconciliation, app export,
+  build, gates, regression, staged load and swap, publish.
+- **Gates of the new build against the loaded one:** sessions whose total return differs from Stooq's 6,257 of
+  2,739,136 (0.228%; it was 0.252%), option spot 505 of 510 companies as before, splits 441 of 441 move right, 18
+  unexplained steps as before, 5,443 empty sessions as before, 516 companies. The regression check passed with no
+  failure.
+- **Loaded:** `p1.20261124`, provisional like the builds before it: 2,897,505 bars, 516 companies (507 ok, 9 for
+  review), 2,000 staged read-backs with no mismatch, tables swapped. Sessions to 2026-11-23. Published to
+  `D:\research\alpha-engine\prices\std`; the build before is kept at `...\prices\std-backup-20261124T050411Z`, and
+  its run folder `refresh-20261122T100533Z` is untouched.
+- **Events against the build before** (`refresh-20261122T100533Z/events/events.json`): dividends 54,833 → 55,460
+  in 98 companies. New dividend dates by year: 141 of 2024, 247 of 2025, 219 of 2026; International Flavors' 16 of
+  2017 to 2020 (Tiingo has none for those years and the cut list had hidden them); four older ones (two of 1984, one of 1994,
+  one of 2020). "Tiingo only" rows 6,684 → 4,938 and "agree" 24,604 → 26,347: the years Tiingo alone covered for long
+  payers now have a second source. Amounts that differ between the two 305 → 308. Distributions unchanged; splits
+  unchanged but one added for Texas Pacific Land on 1980-03-12 (before the price history). Dividends listed twice a
+  few days apart: 4 before and 4 after.
+- **The gap list again** (`...\yahoo\2026-11-23-since-2024-dividend-gaps-after-p1.20261124.json`, the bounded read
+  of section 227 against the rebuilt desk files): 4,523 of 4,524 dividends present, every amount agrees, none in
+  the standard that Yahoo lacks. The one left is Smurfit Westrock's of 2024-04-11, three months before the company's
+  first session (2024-07-10): it belongs to the predecessor and is rightly absent. Before: 608 missing in 91
+  companies.
+- **Desk files rebuilt** (hash `8a5e5c9d1b9f`, prices to 2026-11-23; the actions files before are kept at
+  `D:/research/alpha-engine/engine/desk-company-before/actions-30733cd75f06`): the company pages' dividend lists and
+  "dividends, last 12 months" are complete (Coca-Cola: $2.10, four dividends; it showed one).
+- **What changes for research:** total returns of 91 companies since April 2024 rise by their missed dividends.
+  Results computed on standard total returns of builds up to p1.20261122 understate those companies over that
+  stretch; closes, splits and spin-off factors are the same. Builds that pin a prices build (13F k16.6, options)
+  keep theirs until rebuilt.
+- `docs/engine/STANDARD_PRICES.md` records the Yahoo behaviour and the fix.
+- **Web server** restarted once at 2026-11-24T05:59Z (scheduler idle, one listener before and after): it now runs the build
+  with the dropped "add a company" (`cacfb1b`) and K24's and K25's code.
+- **Next:** the scenario lab, then desk sign-in and switching the classic view off. Open for the owner: a guidance
+  version g1.3 (misread figures, section 228), fundamentals v3.3 (L3Harris' quarter, Exxon's missing quarters,
+  multi-class per-share figures, section 226).

@@ -79,6 +79,14 @@ This document is the process. With it, the build can be repeated and the mistake
 - **The same dividend can be listed twice** a few sessions apart with a rounded or converted amount (CRH 2022: $1.006 and
   $0.98 six days apart); one is kept. **A spin-off can be listed twice,** as a factor and as a cash dividend of its value
   (HP 2015: Yahoo's 2.202 and Tiingo's $14.72); the dividend goes.
+- **Yahoo's "all history" answer cuts long dividend lists** (found 2026-11-23, fixed in build p1.20261124). Asked
+  with `range=max`, the chart answer comes back at three-month bars and carries only as many dividend events as bars,
+  the oldest first, plus the latest one: Coca-Cola's list ran 1962 to March 2004 and then September 2026. Tiingo
+  covers 2000 to 2024-04-22, so every long payer lost its dividends from there to its latest one: 608 dividends of
+  91 companies in the builds up to p1.20261122, and their total return with them (a median 3.9% of the last close;
+  Pfizer 15.6%). The collector now asks for an explicit window (1900 to now, monthly bars), which returns the whole
+  list, and records `dividendsAtLimit` in its manifest when an answer carries as many dividend events as bars.
+  `yahoo-dividend-gaps.py` lists what a bounded read has that a build lacks.
 - **Tiingo's bad bars:** the calendar-day fill copies Friday onto the weekend (left out); a flat bar at the previous close
   is no quote (Nucor 2004-10-18, the split's ex-date); a single bar Stooq contradicts by more than 10% that reverses the
   next day is a bad print (Comcast 2004-08-02); a split can show a session after Yahoo's date (West 2004-09-30).
