@@ -3313,3 +3313,10 @@ tr.desk-ops-open > td {
     gap: 2px;
   }
 }
+
+/* --- the option chain dialog --------------------------------------------------------------------------------------- */
+.desk-modal.wide { width: min(1080px, 100%); }
+.desk-chain th, .desk-chain td { padding-left: 8px; padding-right: 8px; }
+.desk-chain-sides { display: grid; grid-template-columns: 1fr 1fr; gap: 90px; margin-bottom: 4px; font-size: 12px; font-weight: 600; color: var(--d-muted); text-align: center; }
+.desk-chain td:nth-child(7), .desk-chain thead th:nth-child(7) { background: var(--d-hover); text-align: center; }
+.desk-chain tr.desk-chain-money td { border-top: 2px solid var(--d-accent); border-bottom: 2px solid var(--d-accent); }

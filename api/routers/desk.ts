@@ -15,6 +15,7 @@
  *   owner only: the desk shows it as a banner, so a stopped collection is never silent.
  */
 import { z } from "zod";
+import { readDeskOptionChain } from "../services/desk-option-chain";
 import type { DeskCompanyActions, DeskCompanyFilings, DeskCompanyGuidance, DeskCompanyHolders, DeskCompanyInsiders, DeskCompanyStatements, DeskGuidanceMarket, DeskInsiderMarket, DeskScreen } from "@contracts/desk-company";
 import type { EngineFlowCompany, EngineFlowIndex } from "@contracts/engine-flow";
 import type { FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
@@ -58,6 +59,11 @@ export const deskRouter = createRouter({
   // guidance is our own reading of the releases (a research product): the owner and NDA-accepted reviewers only, like the option fields
   companyGuidance: authedQuery.input(entity).query(({ ctx, input }) =>
     ctx.user.role === "admin" || ctx.reviewerAccess?.acceptedAt ? readDeskCompanyFile<DeskCompanyGuidance>(`guidance/${input.cik}.json`) : null),
+  // the latest option chain of a company, read from the raw Schwab archive on request; option data is for the owner and
+  // NDA-accepted reviewers, like the option fields of the snapshot
+  companyOptionChain: authedQuery
+    .input(z.object({ ticker: z.string().regex(/^[A-Z][A-Z0-9.\-/]{0,9}$/), expiration: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional() }))
+    .query(({ ctx, input }) => (ctx.user.role === "admin" || ctx.reviewerAccess?.acceptedAt ? readDeskOptionChain(input) : null)),
   guidanceMarket: authedQuery.query(({ ctx }) =>
     ctx.user.role === "admin" || ctx.reviewerAccess?.acceptedAt ? readDeskCompanyFile<DeskGuidanceMarket>("guidance-market.json") : null),
   engineIndex: adminQuery.query(() => readEngineFlowFile<EngineFlowIndex>("index.json")),

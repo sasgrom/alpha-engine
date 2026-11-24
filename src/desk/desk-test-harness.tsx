@@ -264,6 +264,17 @@ const GUIDANCE_MARKET = {
   habit: { revenue: { compared: 1064, above: 903, median: 0.015 }, eps: { compared: 977, above: 802, median: 0.045 } },
 };
 
+/** An option chain of two expirations; the December one has strikes from 250 to 450, the price is 349.48. */
+const optionQuote = (bid: number, delta: number) => ({ bid, ask: bid + 0.4, last: bid + 0.1, volume: 120, openInterest: 3400, iv: 0.266, delta });
+function optionChain(expiration?: string) {
+  const expirations = [{ date: "2026-11-27", dte: 3, contracts: 2 }, { date: "2026-12-18", dte: 24, contracts: 10 }];
+  const shown = expiration === "2026-11-27" ? "2026-11-27" : "2026-12-18";
+  const strikes = shown === "2026-11-27"
+    ? [{ strike: 350, call: optionQuote(3.1, 0.48), put: optionQuote(3.6, -0.52) }]
+    : [250, 345, 350, 355, 450].map((strike) => ({ strike, call: strike === 450 ? null : optionQuote(Math.max(0.5, 356 - strike), strike < 350 ? 0.63 : 0.45), put: optionQuote(Math.max(0.4, strike - 345), strike > 350 ? -0.6 : -0.37) }));
+  return { ticker: "AAPL", capturedAt: "2026-11-24T00:47:45.258Z", underlyingPrice: 349.48, delayed: false, expirations, expiration: shown, strikes };
+}
+
 const INSIDER_MARKET = {
   schemaVersion: 2, version: "i-test", asOf: "2026-11-13", builtAt: "2026-11-23T00:00:00Z", companies: 500, days: 90,
   totals: { bought: 12_400_000, sold: 2_100_000_000, buyers: 14, sellers: 610, buyingCompanies: 9, sellingCompanies: 302, soldUnderPlan: 1_470_000_000 },
@@ -296,7 +307,7 @@ const COMPANY_INSIDERS = {
   year: { bought: 460_000, sold: 34_000_000, buyers: 1, sellers: 2, soldUnderPlan: 25_000_000 },
 };
 
-function answer(procedure: string, role: string): unknown {
+function answer(procedure: string, role: string, input?: unknown): unknown {
   const owner = role === "admin";
   switch (procedure) {
     case "desk.opsHealth": return { checkedAt: "2026-11-12T20:00:00.000Z", heartbeatAt: "2026-11-12T20:00:00.000Z", alerts: OPS_HEALTH.alerts };
@@ -333,6 +344,7 @@ function answer(procedure: string, role: string): unknown {
     case "workersLocal.operationLog": return { lines: ["[edgar] 412 of 503 companies", "[edgar] waiting 0.2 s"] };
     case "desk.insiderMarket": return DESK_DATA.empty ? null : INSIDER_MARKET;
     case "desk.screen": return DESK_DATA.empty ? null : SCREEN;
+    case "desk.companyOptionChain": return DESK_DATA.empty || !owner ? null : optionChain((input as { expiration?: string } | undefined)?.expiration);
     case "desk.guidanceMarket": return DESK_DATA.empty || !owner ? null : GUIDANCE_MARKET;
     case "desk.companyInsiders": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_INSIDERS;
     case "desk.engineIndex": return ENGINE_INDEX;
@@ -410,7 +422,10 @@ export async function mountDesk(role: "admin" | "user", path = "/desk", ready = 
     }
     const procedures = decodeURIComponent(url.pathname.replace("/api/trpc/", "")).split(",");
     calls.push(...procedures);
-    return { ok: true, status: 200, json: async () => procedures.map((procedure) => ({ result: { data: { json: answer(procedure, role) } } })) } as Response;
+    // a query's inputs travel in the address, one entry per procedure of the batch
+    let inputs: Record<string, { json?: unknown }> = {};
+    try { inputs = JSON.parse(url.searchParams.get("input") ?? "{}") as typeof inputs; } catch { /* a mutation carries its input in the body: not needed here */ }
+    return { ok: true, status: 200, json: async () => procedures.map((procedure, index) => ({ result: { data: { json: answer(procedure, role, inputs[index]?.json) } } })) } as Response;
   };
   const host = document.createElement("div");
   document.body.appendChild(host);

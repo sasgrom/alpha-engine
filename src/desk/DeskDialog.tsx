@@ -1,7 +1,7 @@
 import { useEffect, type ReactNode } from "react";
 import { X } from "lucide-react";
 
-export function DeskDialog({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
+export function DeskDialog({ title, onClose, children, wide = false }: { title: string; onClose: () => void; children: ReactNode; wide?: boolean }) {
   useEffect(() => {
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -17,7 +17,7 @@ export function DeskDialog({ title, onClose, children }: { title: string; onClos
 
   return (
     <div className="desk-modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <section className="desk-modal" role="dialog" aria-modal="true" aria-label={title}>
+      <section className={wide ? "desk-modal wide" : "desk-modal"} role="dialog" aria-modal="true" aria-label={title}>
         <header>
           <h2>{title}</h2>
           <button type="button" className="desk-icon-button" aria-label="Close dialog" onClick={onClose}><X size={16} /></button>

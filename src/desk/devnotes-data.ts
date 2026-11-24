@@ -63,6 +63,7 @@ export const DEV_NOTES = {
       ["Option panels for every company", "features built on the S&P 500 chains"],
       ["Fund holdings over time (holders, share of the stock, entries and exits by quarter)", "time only: twenty quarters are already in the company file"],
       ["An insider's own record: every company, role and trade of one person", "a per-person file from the insider standard's persons table"],
+      ["Option chains of earlier days and for all 500 companies", "the daily collector keeps the chains of the 50 research companies; the page reads the latest only"],
       ["Implied-volatility history and rank", "a per-company IV series in the snapshot (the option history 2019–2026 is on D:)"],
     ],
   },

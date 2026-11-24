@@ -4138,3 +4138,38 @@ delivered.
   once; alone and in the two full runs after it passes.
 - **Next:** the option chain browser, the scenario lab. Open for the owner: the prices revision for the 608
   dividends (section 227); dropping "add any SEC company"; K24 and K25 for Kimi.
+
+## 229. Claude (Fable 5.2): the option chain on the company page; another session is working on K24 in this tree — 2026-11-24T04:55Z
+
+- **Option chain** (company page, Options card, "Open the option chain"; owner and reviewers under the agreement,
+  like the option fields):
+  - `api/services/desk-option-chain.ts` reads the newest complete capture the collector's manifest names for the
+    ticker from the raw Schwab archive, normalizes it with the collector's own reader, checks it against the
+    manifest's hash, and returns one expiration at a time (`desk.companyOptionChain`, contract
+    `contracts/desk-option-chain.ts`). It opens the manifest and the chain file only, never follows a manifest path
+    outside the archive, and says so when the archive (the external drive) cannot be read. The last four chains stay
+    in memory.
+  - The dialog (`src/desk/pages/company/OptionChain.tsx`, a wide `DeskDialog`): expiration picker with days to
+    expiry, calls on the left and puts on the right of each strike (open interest, volume, implied volatility,
+    delta, bid, ask), strikes within 15% of the price or all of them, opened at the strike nearest the share price.
+  - The classic page loaded one 74 MB file of 123,811 contracts into the browser; this reads about 10 to 20 KB per
+    expiration (Apple: 24 expirations, 47 strikes in the nearest monthly, 0.2 s on the real archive).
+  - Covers the 50 research companies the daily collector keeps chains for.
+- `api/services/worker-expectations.test.ts`: the test that hashes the whole reviewed package has a 30-second limit
+  now. It took 5.0 to 5.6 seconds when the full suite ran beside it and failed two of five full runs on its default
+  five-second limit; alone it passes in under a second of test time.
+- **Web server** restarted once at 2026-11-24T04:46Z for the new procedure (scheduler idle; one listener before, pid
+  1512, and after, pid 3052; 401 without a session). The dialog was checked by screenshot against the running
+  server with Apple's real chain.
+- **Another agent session began editing this tree at about 04:46Z** (20:46 local): `api/services/reviewer-http.ts`
+  and its test, `contracts/report-files.ts`, `scripts/build-daily-operations-report.mts`, the four macro report
+  builders, `worker/lib/macro-operations-health.ts` and its test, and a new `worker/lib/macro-input-lineage.ts`.
+  These are the files of task K24, so the owner has started Kimi on it; no message is in the mailbox yet. I have
+  not touched or committed any of them, and I left a note in Kimi's mailbox about my restart and my paths.
+- **Gates for this commit, stated exactly:** the full run at 04:45Z, before those edits began, passed (`npm run
+  check`, 282 files / 1,647 tests, `npm run build`, `git diff --check`) with everything of this commit except two
+  later changes to the dialog (it opens at the money; the Calls and Puts labels moved above the table). After those
+  two: `npm run check` and `npm run build` pass, the dialog's and the desk's tests pass, and the full run shows
+  three failures, all in `worker/lib/daily-operations-report.test.ts`, which tests the files being edited by the
+  other session. My commit holds only my own paths.
+- **Next:** I pause full test runs, builds and restarts while the other session works. Then the scenario lab.

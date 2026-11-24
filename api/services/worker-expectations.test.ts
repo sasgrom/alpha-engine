@@ -136,7 +136,7 @@ describe("worker Expectations backup/apply channel", () => {
     };
     const response = await applyExpectationsReviewed(input(), { db, identityHash });
     expect(() => assertExpectationsPostCheck(response, reviewed)).not.toThrow();
-  });
+  }, 30_000); // hashes the whole reviewed package: about five seconds when the full suite runs beside it
 
   it("rolls back the transaction when a middle result batch fails", async () => {
     let rolledBack = false;

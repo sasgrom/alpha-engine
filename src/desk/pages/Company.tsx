@@ -16,6 +16,7 @@ import { CompanyFilings } from "./company/Filings";
 import { CompanyGuidance } from "./company/Guidance";
 import { CompanyHolders } from "./company/Holders";
 import { CompanyInsiders } from "./company/Insiders";
+import { OptionChainDialog } from "./company/OptionChain";
 import { CompanyRisk } from "./company/Risk";
 import { CompanyStatements } from "./company/Statements";
 
@@ -72,6 +73,7 @@ export default function CompanyPage() {
   const company = findCompany(snapshot.data, ticker);
   useDocumentTitle(company ? `${company.ticker} · ${company.name}` : ticker.toUpperCase() || "Company");
   const [range, setRange] = useState<Range>("1Y");
+  const [chainOpen, setChainOpen] = useState(false);
   const watch = useWatchlist();
   const cik = company?.cik ?? 0;
   // 1D and 5D are the same chart drawn from the 5-minute session snapshots; longer ranges use the daily closes
@@ -291,6 +293,8 @@ export default function CompanyPage() {
                 {company.options.ivRvSpread !== null && (company.options.ivRvSpread > 0 ? ": options price more movement than the stock has delivered lately." : ": options price less movement than the stock has delivered lately.")}
               </p>
             )}
+            <button type="button" className="desk-button" style={{ marginTop: 12 }} onClick={() => setChainOpen(true)}>Open the option chain</button>
+            {chainOpen && <OptionChainDialog ticker={company.ticker} onClose={() => setChainOpen(false)} />}
           </Card>
         ) : (
           <Card className="desk-span-4" title="Peers" subtitle={`${company.industry ?? company.sector} · largest first`}>
