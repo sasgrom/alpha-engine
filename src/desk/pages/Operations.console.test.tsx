@@ -136,9 +136,14 @@ describe("the operations console, for the owner", () => {
   });
 });
 
-describe("the classic operations page", () => {
+describe("the classic operations and jobs pages", () => {
   it("sends the owner to the console's jobs", async () => {
     desk = await mountDesk("admin", "/workers", "Needs a look", true);
     expect(desk.host.querySelector(".desk-tabs [aria-selected=true]")?.textContent?.trim()).toBe("Jobs");
+  });
+
+  it("sends the owner from the old jobs page to the console's runs", async () => {
+    desk = await mountDesk("admin", "/jobs", "Last run of each job", true);
+    expect(desk.host.querySelector(".desk-tabs [aria-selected=true]")?.textContent?.trim()).toBe("Runs");
   });
 });

@@ -130,10 +130,9 @@ export const universeRouter = createRouter({
   /**
    * Add a ticker to MY universe (4c, D30/D31). Re-adding a removed company is
    * the same upsert — a fresh ACTIVE row, exactly like a brand-new one
-   * (owner directive). When the company is missing from the shared registry,
-   * a light auto-ingest (single-ticker bootstrap, startedBy = the user) is
-   * queued server-side: users cannot launch ingestion themselves (D31), this
-   * sanctioned exception is limited to one ticker per call.
+   * (owner directive). Only companies of the shared registry can be added:
+   * the auto-ingest of a company outside it was dropped on 2026-11-23 (the
+   * desk reads the research standards, which cover the registry).
    */
   add: authedQuery
     .input(z.object({ ticker: z.string().min(1).max(20) }))
@@ -144,27 +143,23 @@ export const universeRouter = createRouter({
       if (!dir) {
         throw new TRPCError({ code: "NOT_FOUND", message: `${t} not found in the SEC filer directory` });
       }
+      // A company outside the registry is not added (owner, 2026-11-23): the desk reads the research standards,
+      // which cover the registry's companies, and adding another one only started the old ingest job.
+      if (!(await companyInDb(dir.cik))) {
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: `${dir.ticker} is not among the companies covered here` });
+      }
       const db = getDb();
       await db
         .insert(userUniverse)
         .values({ userId: ctx.user.id, cik: dir.cik, ticker: dir.ticker, name: dir.name, active: true })
         .onDuplicateKeyUpdate({ set: { active: true, ticker: dir.ticker, name: dir.name } });
-      const ingesting = !(await companyInDb(dir.cik));
-      let ingestJobId: number | null = null;
-      if (ingesting) {
-        ingestJobId = await createJob(
-          "bootstrap",
-          { tickers: dir.ticker, exclude: "", forms: "10-K,10-Q,8-K", withFacts: true },
-          ctx.user.id
-        );
-      }
       const jobId = await recordUniverseAction(
         "universe-add",
         { cik: dir.cik, ticker: dir.ticker, name: dir.name },
         ctx.user
       );
       await invalidateScreenerCache(ctx.user.id);
-      return { ok: true, cik: dir.cik, ticker: dir.ticker, ingesting, ingestJobId, jobId };
+      return { ok: true, cik: dir.cik, ticker: dir.ticker, ingesting: false, ingestJobId: null as number | null, jobId };
     }),
 
   /**

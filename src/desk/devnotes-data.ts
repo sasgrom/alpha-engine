@@ -180,7 +180,7 @@ export const DEV_NOTES = {
   watchlist: {
     missing: [
       "More than one list, notes per company, and alerts.",
-      "Companies outside the index can be followed only from the classic manager: adding one starts a data job, and it has no desk page until the snapshot covers it.",
+      "Companies outside the index and the research list cannot be followed: adding one was dropped (it started the old ingest job, and the company had no desk page).",
     ],
     better: [
       ["Alerts on reports, insider purchases and large moves", "a notification channel: none exists"],

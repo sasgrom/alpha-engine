@@ -14,7 +14,6 @@ import { useMemo, useState } from "react";
 import { trpc } from "@/providers/trpc";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertTriangle, ChevronDown, ChevronRight, FlaskConical } from "lucide-react";
-import { Link } from "react-router";
 
 type UnitScale = "auto" | "B" | "M" | "K";
 
@@ -165,8 +164,8 @@ export default function Statements({ cik }: { cik: number }) {
             No series built for this company yet
           </div>
           <div className="text-[11px] text-muted-foreground">
-            Statements are resolved from the canonical series layer. Run a <span className="t-mono">series</span> job from the{" "}
-            <Link to="/jobs" className="text-[hsl(var(--live))] hover:underline">Jobs</Link> page first.
+            Statements are resolved from the canonical series layer, which holds no series for this company. The desk's
+            company page reads the filed statements directly.
           </div>
         </div>
       )}

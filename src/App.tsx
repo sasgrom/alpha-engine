@@ -12,9 +12,7 @@ import { preferredView } from "./desk/preferences";
 const Desk = lazy(() => import("./desk/DeskApp"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Terminal = lazy(() => import("./pages/Terminal"));
-const Universe = lazy(() => import("./pages/Universe"));
 const Company = lazy(() => import("./pages/Company"));
-const Jobs = lazy(() => import("./pages/Jobs"));
 const Screener = lazy(() => import("./pages/Screener"));
 const DatabasePage = lazy(() => import("./pages/Database"));
 const Lab = lazy(() => import("./pages/Lab"));
@@ -64,10 +62,10 @@ export default function App() {
       <Route path="/desk/*" element={<Desk />} />
       <Route path="/terminal" element={<Terminal />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/universe" element={<Universe />} />
+      <Route path="/universe" element={<Navigate to="/desk/watchlist" replace />} />
       <Route path="/screener" element={<Screener />} />
       <Route path="/company/:ticker" element={<Company />} />
-      <Route path="/jobs" element={<Jobs />} />
+      <Route path="/jobs" element={<AdminOnly><Navigate to="/desk/operations?tab=runs" replace /></AdminOnly>} />
       <Route path="/messages" element={<Navigate to="/desk/messages" replace />} />
       <Route path="/wiki" element={<FactorWikiRedirect />} />
       <Route path="/database" element={<AdminOnly><DatabasePage /></AdminOnly>} />

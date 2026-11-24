@@ -212,9 +212,9 @@ calls. 18 classic routes are still live; only `/messages` and `/admin` redirect 
 | Terminal | Its three charts (Risk and returns card) | The route stays live and is still the landing page for users who chose the classic view |
 | Dashboard | Today (filings, FRED values, watchlist, coming up, just reported); Flows and Ownership for sector flows | Morning brief (paused by the owner); launch buttons (go to Operations) |
 | Screener | **Moved** (handoff 226): two views. Performance: price, returns, 12−1 momentum, market value, beta, volatility, 52-week range, trend, next report. Fundamentals, from the standard fundamentals and prices: P/E, diluted EPS, revenue and its growth, net margin, FCF margin (last four reported quarters), three-month dollar volume; yield and market value are Schwab's | Revision rate (belongs to the guidance record); "sentiment (prototype)" is dropped. Market value and yield from our own data wait for share counts of multi-class companies and for the dividend gaps in the standard prices |
-| Universe | Watchlist follows and unfollows index companies | Add any SEC company (starts an ingest), hide, scope presets, GICS re-enrichment, S&P bootstrap |
+| Universe | **Retired** (handoff 231): the Watchlist follows and unfollows the companies the desk covers; `/universe` redirects to it and the classic page is removed. **Dropped by the owner (2026-11-23):** adding a company outside the registry; the server refuses one now | Hide, scope presets, GICS re-enrichment, S&P bootstrap: not moved, no use for them in the desk |
 | Workers | **Moved** (handoff 225): Operations → Jobs (switch, schedule edit with the next runs, Run and Stop after a confirmation that names the chain), Runs (running, waiting, last run of each job, logs), Coverage, Reference (what follows what); `/workers` redirects, the classic page is removed | Owner-only reports and the honest macro status on the server (K24) |
-| Jobs | — | The classic `/jobs` page stays until the Watchlist can add a company (its only use: five `universe-add` rows) |
+| Jobs | **Retired** (handoff 231): `/jobs` redirects the owner to Operations → Runs and the classic page is removed; its launcher went with "add a company" | — |
 | Expectations | **Moved** (handoff 228): Research → Guidance shows every change of the last year across companies with what stood before and the release's own words, and each company's record against its own guidance; a company's full history is on its page (g1.2) | Measures other than revenue and EPS; the classic page (with the old 27 MB report) stays until the classic view retires |
 | Insider activity | Ownership, on the insider standard i1.1 for all 500 companies (handoff 225): 90-day totals, open-market purchases, windows with several insiders buying, the companies with the largest net selling and buying; insiders card per company with every open-market trade of three years and a switch between all lines and the market trades (handoff 227) | A list across companies with filters by code and role; the lines older than three years |
 | Scenario Lab | Macro: rate and credit exposure ranking | Custom shocks, presets, evidence inspector, export |
@@ -259,7 +259,8 @@ Volatility research, the intraday ranges.
 1. ~~Correct the Signals ledger from the research record.~~ Done.
 2. ~~Ownership's sector flows from the 13F standard; its insider cards from the insider standard.~~ Done.
 3. ~~Operations console (K17b).~~ Done; `/workers` is retired, `/jobs` follows with the Watchlist's "add a company".
-4. ~~Screener columns from the standard fundamentals.~~ Done (handoff 226). Open: Watchlist "add any SEC company".
+4. ~~Screener columns from the standard fundamentals.~~ Done (handoff 226). "Add any SEC company" was dropped by the
+   owner; `/universe` and `/jobs` are retired (handoff 231).
 5. Research pages: ~~the cross-company guidance record (g1.2), the full insider list (i1.1)~~ (done, handoffs 227 and
    228), ~~option chains~~ (done, handoff 229), the scenario lab, handbooks and wiki as documents.
 6. Retire the classic view: redirects, desk sign-in; then the old pipelines (`docs/PROJECT_REVIEW_2026-11-22.md`

@@ -21,9 +21,7 @@ export function classicDestinations(isAdmin: boolean, isPresentation: boolean): 
       ]
     : [];
   const workspace: PaletteDestination[] = [
-    { label: "Watchlist manager", path: "/universe", group: "Workspace", classic: true, keywords: "universe watchlist add remove" },
     { label: "Messages", path: "/desk/messages", group: "Workspace", keywords: "chat support inbox" },
-    { label: "Jobs", path: "/jobs", group: "Workspace", classic: true, keywords: "jobs logs runs" },
     { label: "Factor wiki", path: "/desk/research/library/factors", group: "Workspace", keywords: "definitions glossary factors" },
   ];
   const owner: PaletteDestination[] = isAdmin

@@ -114,7 +114,7 @@ export default function Watchlist() {
         )}
       </Card>
       <p className="desk-muted" style={{ fontSize: 12.5, marginTop: 10 }}>
-        Companies outside the index are added in the <Link className="desk-link" to="/universe">classic manager</Link>, because adding one starts a data job.
+        The watchlist takes the companies the desk covers: the index and the research list.
       </p>
       <p className="desk-muted" style={{ fontSize: 12.5, marginTop: 6 }}>
         {intraday.data ? `Today's line: 5-minute prices · ${intraday.data.marketOpen ? "open session" : `last session ${fmtDate(intraday.data.session, "short")}`} · as of ${fmtClock(intraday.data.asOf)}.` : "No 5-minute prices are stored yet."}

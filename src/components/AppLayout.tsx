@@ -2,7 +2,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { trpc } from "@/providers/trpc";
 import {
   LayoutDashboard,
-  ListChecks,
   Globe2,
   LogOut,
   Activity,
@@ -49,10 +48,9 @@ import { Switch } from "@/components/ui/switch";
  */
 const NAV = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
-  { icon: Globe2, label: "Universe", path: "/universe" },
+  { icon: Globe2, label: "Watchlist", path: "/desk/watchlist" },
   // 4a (D28): the daily working surface — universe-wide metrics table
   { icon: Table2, label: "Screener", path: "/screener" },
-  { icon: ListChecks, label: "Jobs", path: "/jobs" },
   // 4c (D32): admin ↔ user chat (support threads)
   { icon: MessageSquare, label: "Messages", path: "/messages" },
 ];

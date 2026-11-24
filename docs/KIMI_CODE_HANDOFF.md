@@ -4198,3 +4198,33 @@ delivered.
 - **Removed:** `src/pages/Methodology.tsx`, `Methodology.test.tsx` and `Wiki.tsx`. Before removal, searched all TypeScript/TSX imports: App held the only page imports and the old Methodology test imported its own page; remaining references were ordinary links to routes that now redirect. The Volatility page's handbook link now opens the desk document.
 - **Verification:** seven new owner/member document tests cover rendering, formulas, tables, search, anchors, both guards, Library cards and both classic redirects. Full combined K24/K25 gates: `npm run check`; **284 files / 1,659 tests**; `npm run build`; `git diff --check`. No scheduler or web restart, production action, schema change or new dependency.
 - **Left alone:** unrelated generated reports/research artifacts and `.vscode/` remain outside the commit. Next safe action: Claude reviews the built pages and performs any server restart after review; none was done here.
+
+## 231. Claude (Fable 5.2): "add any SEC company" dropped; `/universe` and `/jobs` retired; the dividend fix is running — 2026-11-24T05:36Z
+
+- **Owner, 2026-11-23:** "go on with the dividends fix, drop the add company, kimi is working".
+- **Dropped: adding a company outside the registry.** `universe.add` (`api/routers/engine.ts`) refuses a company that
+  is not in the registry ("... is not among the companies covered here") and starts no ingest job; following a
+  company of the registry works as before. The membership rows of the five companies added earlier stay.
+- **Retired pages:** `/universe` redirects to `/desk/watchlist`, `/jobs` (owner) to `/desk/operations?tab=runs`;
+  `src/pages/Universe.tsx` and `src/pages/Jobs.tsx` are removed. Their links went with them: the classic navigation
+  (Universe is now a link to the Watchlist, Jobs is gone), the Terminal's "Legacy" links (to the classic dashboard)
+  and "Manage the watchlist", the classic dashboard's "New job" button, the statements panel's hint, the desk's
+  command palette and Library entries, and the Watchlist's note. The hide switch, scope presets, GICS re-enrichment
+  and S&P bootstrap of the old page are not moved: the desk has no use for them.
+- Not touched: the server's `jobs.*` procedures (the desk's admin monitors read job logs) and
+  `src/content/reviewer-guide.ts`, whose entries for the two old paths are now unused text.
+- Done after Kimi's K24 and K25 commits (`8f4e288`, `c52f49f`, `e260769`), on a clean tree; nothing of this was
+  edited while those files were open in the other session.
+- Tests: redirects in `src/desk/pages/Operations.console.test.tsx` and `src/desk/DeskResearch.test.tsx`.
+- Gates: `npm run check`, 284 files / 1,661 tests, `npm run build`, `git diff --check`.
+- **Dividend fix, in progress:** lab `f192698` makes `yahoo-actions-fetch.py` ask for an explicit window (1900 to
+  now, monthly bars) and record `dividendsAtLimit` when an answer carries as many dividend events as bars. Probe of
+  seven tickers (`D:/research/alpha-engine/prices/yahoo/probe-full-window-20261124`): every year complete
+  (Coca-Cola 258 dividends, 2024 to 2026: 4, 4, 3; Realty Income 384 monthly ones), none at the limit; reconciled
+  against the loaded build's events, Coca-Cola's 2024 to 2026 go from 1, 0, 1 to 4, 4, 3, "Tiingo only" rows become
+  "agree", splits and distributions are unchanged and no dividend is listed twice. The scheduler has been running
+  `std-prices-refresh` since 05:04Z at my request (run `20261124T050411Z`; the same command the operations console
+  writes). It replaces the loaded build only after its gates and the regression check pass. Result in the next
+  section.
+- **Web server not restarted yet**: it waits for the refresh to end. The restart will also load K24's server code
+  (Kimi left the restart to me).

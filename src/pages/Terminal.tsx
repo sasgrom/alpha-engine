@@ -139,7 +139,7 @@ export default function Terminal() {
         <Link to="/terminal" className="terminal-brand"><span className="terminal-brand-mark"><Activity size={18} /></span><span><strong>ALPHA</strong><small>RESEARCH TERMINAL</small></span></Link>
         <nav className="terminal-mode-nav" aria-label="Experience">
           <span className="active"><Sparkles size={14} /> Terminal</span>
-          <Link to="/universe"><Layers size={14} /> Legacy</Link>
+          <Link to="/dashboard"><Layers size={14} /> Legacy</Link>
           <Link to="/desk" onClick={() => rememberView("desk")}><LayoutGrid size={14} /> New view</Link>
         </nav>
         <div className="terminal-header-actions">
@@ -194,7 +194,7 @@ export default function Terminal() {
           <Reveal className="terminal-card span-4" index={3}>
             <CardHeading eyebrow="UNIVERSE COMPOSITION" title="Sectors, not just symbols" subtitle="Composition by company count · a research universe, not capital allocation" aside={<InfoNote>This is a count of companies in your research universe, not capital allocation or a recommended portfolio.</InfoNote>} />
             <SectorDonut rows={sectorRows} reducedMotion={reducedMotion} />
-            <div className="terminal-source-line"><span>{companies.length} active memberships</span><Link to="/universe">Manage in Legacy <ArrowUpRight size={12} /></Link></div>
+            <div className="terminal-source-line"><span>{companies.length} active memberships</span><Link to="/desk/watchlist">Manage the watchlist <ArrowUpRight size={12} /></Link></div>
           </Reveal>
 
           <Reveal className="terminal-card span-4" index={4}>
@@ -232,7 +232,7 @@ export default function Terminal() {
           </Reveal>
         </div>
 
-        <footer className="terminal-footer"><span><Command size={13} /> ALPHA RESEARCH TERMINAL</span><p>Retail-friendly presentation of research evidence. Prices are end-of-day and scenarios are conditional, never guaranteed outcomes.</p><Link to="/universe">Switch to Legacy <ArrowUpRight size={12} /></Link></footer>
+        <footer className="terminal-footer"><span><Command size={13} /> ALPHA RESEARCH TERMINAL</span><p>Retail-friendly presentation of research evidence. Prices are end-of-day and scenarios are conditional, never guaranteed outcomes.</p><Link to="/dashboard">Switch to Legacy <ArrowUpRight size={12} /></Link></footer>
       </main>
     </div>
   );

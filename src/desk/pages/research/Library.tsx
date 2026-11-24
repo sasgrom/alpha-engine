@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Activity, ArrowUpRight, BookOpen, Database, FileSearch, Gauge, LineChart, ListChecks, MessageSquare, Network, ShieldCheck, SlidersHorizontal, Sparkles, Users, Workflow } from "lucide-react";
+import { Activity, ArrowUpRight, BookOpen, Database, FileSearch, Gauge, LineChart, MessageSquare, Network, ShieldCheck, SlidersHorizontal, Sparkles, Users, Workflow } from "lucide-react";
 import { useDesk, useDocumentTitle } from "../../context";
 import { classicDestinations } from "../../destinations";
 import { DevNotes } from "../../DevNotes";
@@ -15,9 +15,7 @@ const DETAILS: Record<string, { icon: typeof Activity; text: string; desk?: stri
   "/analytics": { icon: Network, text: "The weekly evidence review: the map of what is built, partial and unproven, and the option hypothesis ledger.", desk: "Signals is the ledger of measured results." },
   "/market-data": { icon: LineChart, text: "Coverage and provenance of the Schwab chains, quotes and intraday context.", desk: "Operations shows capture health." },
   "/project-state": { icon: Workflow, text: "Where code, collection, evidence and delivery each stand." },
-  "/universe": { icon: ListChecks, text: "Add companies outside the index (starts a data job), groups and presets.", desk: "Watchlist follows and unfollows index companies." },
   "/desk/messages": { icon: MessageSquare, text: "Conversations with the team, with member-safe contacts and the owner's user intel." },
-  "/jobs": { icon: ListChecks, text: "Data jobs and their logs." },
   "/desk/research/library/factors": { icon: BookOpen, text: "Definitions of the factors and measures, searchable and linked to the measured evidence." },
   "/desk/admin": { icon: ShieldCheck, text: "People, reviewers, structured manuals, job logs and delivery monitors." },
   "/desk/operations?tab=jobs": { icon: Activity, text: "Every job with its switch, schedule, Run and Stop; the runs and their logs; what follows what." },
@@ -27,7 +25,7 @@ const DETAILS: Record<string, { icon: typeof Activity; text: string; desk?: stri
 
 const GROUP_TEXT: Record<string, string> = {
   "Research tools": "The classic research pages. Each still holds detail its desk tool does not show yet.",
-  Workspace: "Your lists, messages and jobs across the desk and the remaining classic pages.",
+  Workspace: "Your messages and the reference pages of the desk.",
   "Owner tools": "Administration and the controls of the data pipeline.",
 };
 

@@ -55,6 +55,14 @@ describe("desk research tools and the watchlist, for the owner", () => {
     expect(text).toContain("131.6M");
   });
 
+  it("opens the watchlist where the classic universe page was, with no way to add a company outside the list", async () => {
+    desk = await mountDesk("admin", "/universe", "1 followed", true);
+    const text = desk.host.textContent ?? "";
+    expect(text).toContain("The watchlist takes the companies the desk covers");
+    expect(text).not.toContain("classic manager");
+    expect(desk.host.querySelector('a[href="/universe"], a[href="/jobs"]')).toBeNull();
+  });
+
   it("lists the watchlist with the follow box", async () => {
     desk = await mountDesk("admin", "/desk/watchlist", "1 followed");
     const text = desk.host.textContent ?? "";

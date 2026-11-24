@@ -5,7 +5,7 @@ import { trpc } from "@/providers/trpc";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
-import { Play, RefreshCw, Radio, ArrowRight } from "lucide-react";
+import { RefreshCw, Radio, ArrowRight } from "lucide-react";
 
 function fmtNum(n?: number) {
   if (n === undefined || n === null) return "—";
@@ -100,11 +100,6 @@ export default function Dashboard() {
         >
           <Radio size={13} /> Run one stream cycle
         </Button>
-        <Link to="/jobs">
-          <Button size="sm" variant="outline" className="t-mono text-[11px] uppercase tracking-[0.12em] gap-2">
-            <Play size={13} /> New job
-          </Button>
-        </Link>
       </div>
       )}
 
