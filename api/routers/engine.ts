@@ -8,7 +8,7 @@ import { companies, userUniverse } from "@db/schema";
 import { latestWatchlistFilings, readDeskCompanyFile } from "../services/desk-company-files";
 import { recordUniverseAction } from "../services/runner";
 import { companyInDb, invalidateScreenerCache } from "../services/membership";
-import { latestMacro } from "../services/macro";
+import { readDeskMacro } from "../services/desk-macro";
 import * as edgar from "../services/edgar";
 
 // ---------------------------------------------------------------------------
@@ -33,8 +33,8 @@ export const dashboardRouter = createRouter({
     return latestWatchlistFilings(readDeskCompanyFile<DeskLatestFilings>("filings-latest.json"), myCiks.map((row) => row.cik), input.limit);
   }),
 
-  /** 4m (D46): the FRED regime pack's latest values — the Stage 4 seed card. */
-  macro: authedQuery.query(() => latestMacro()),
+  /** The newest published values of the card's FRED series, from the macro archive's own file (scripts/build-desk-macro.mts). */
+  macro: authedQuery.query(() => readDeskMacro()),
 });
 
 // ---------------------------------------------------------------------------

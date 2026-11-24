@@ -143,10 +143,16 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local D: artifacts and alpha_research only; no production write and no alpha_engine production mutation.", requirements: ["network", "driveD"], notes: "Runs about 70 minutes. A failed step stops the chain with an honest error and no swap. Old run folders and the previous loaded build are preserved until the staged swap; no data is pruned. RIVN and ENLT receive a one-time 20-year Schwab backfill before export. The loader stages std_*_next, checks 2,000 rows, then swaps atomically; a failed read-back leaves the old tables in place. The orchestrator also refuses to start when any lab file it runs has uncommitted changes.",
   }),
   job({
-    id: "macro-fred-weekly", name: "FRED and ALFRED weekly vintage refresh", group: "research", mode: "scheduled", cron: "30 5 * * 0", defaultEnabled: true, dependsOn: [],
+    id: "macro-fred-weekly", name: "FRED and ALFRED vintage refresh", group: "research", mode: "scheduled", cron: "30 5 * * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/macro-fred-fetch.mts", ["--group", "all"]), purpose: "Refresh all registered FRED series with raw yearly chunks, vintage availability and resumable manifests.",
     input: "FRED/ALFRED API, existing D:-only macro archive and the configured server-side API key.", output: "Raw hashes, normalized first-to-current vintage rows and manifest-fred.json from 2000 onward.",
-    destination: "Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local.", requirements: ["network", "driveD"], notes: "Weekly full-vintage refresh preserves sourceHash and realtimeStart/End. Conflicting vintages are rejected with reasons rather than overwritten. Request spacing remains capped at 100 requests per minute.",
+    destination: "Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local.", requirements: ["network", "driveD"], notes: "Daily since 2026-11-24 (it ran on Sundays only, so yields, VIX and credit spreads were up to a week old); the job keeps its old id. The full-vintage refresh preserves sourceHash and realtimeStart/End. Conflicting vintages are rejected with reasons rather than overwritten. Request spacing remains capped at 100 requests per minute.",
+  }),
+  job({
+    id: "desk-macro", name: "Desk macro card", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["macro-fred-weekly"],
+    ...npx("scripts/build-desk-macro.mts"), purpose: "Write the Today page's macro card from the macro archive: the newest published value of each of its eight FRED series.",
+    input: "On D:, manifest-fred.json and the normalized vintage files of the card's series.", output: "worker/.runs/desk-macro.json.",
+    destination: "Local file read by dashboard.macro; no production write and no database write.", requirements: ["driveD"], notes: "Runs after every FRED refresh. A series that is not complete in the manifest, or whose newest value in force is not for the manifest's last observation, stops the build and leaves the previous file in place. --dry-run measures without writing.",
   }),
   job({
     id: "macro-events-daily", name: "OFAC daily event refresh", group: "research", mode: "scheduled", cron: "40 5 * * *", defaultEnabled: true, dependsOn: [],

@@ -4548,3 +4548,27 @@ reported since 2026-11-10 (local model on the GPU: needs the owner's go). Not fe
 estimates, a forward earnings-date calendar, S&P index-change announcements, Polymarket company markets.
 **Owner action:** the Schwab login ends Wed 25 Nov about 15:28 local (`npx tsx worker/schwab-callback.mts`).
 **Still open from section 239:** the classic styles in `src/index.css`; the table list for the owner.
+
+## 241. Claude (Fable 5.2): classic styles trimmed; Today macro card on the FRED archive; FRED daily; no table to drop yet — 2026-11-24T09:40Z
+
+- **Styles (`6d9cb91`):** `src/index.css` 1,334 lines to 172. Scratch tool `trim-css.mjs` (PostCSS) removed 898
+  rules whose selector needs a class no source file names, and five keyframes nothing animates; classes built from
+  a template prefix count as used. Seven desk pages (Today, Screener, Guidance, Operations, sign-in, Ownership,
+  a company) render pixel-identical before and after.
+- **Tables:** scratch tool `table-use.mjs` lists, for each of the schema's 34 tables, the files that name it. Every
+  table is still named by code the server reaches (mostly `api/services/runner.ts`, `manuals-content.ts`,
+  `documents.ts`, `sentiment/score.ts`, `sections.ts`, `metric-history.ts`); only `fund_jobs` is named by a script
+  alone. **So no table can be dropped yet**; the old service code has to go first (the careful `runner.ts` pass of
+  section 239). No table was touched.
+- **Today "Macro backdrop":** `dashboard.macro` now reads `worker/.runs/desk-macro.json`, written by the new
+  `scripts/build-desk-macro.mts` from the macro archive's normalized vintage files (newest value in force per
+  series; it stops when a series is not complete or disagrees with the manifest's last observation). First file:
+  10-year 5.04 and 2-year 4.76 (2026-11-19), spread 0.29 (11-20), VIX 28.44, high-yield spread 3.52 (11-19); the
+  monthly series are October. The `macro_points` table is no longer read by a page.
+- **Registry (67 jobs):** `macro-fred-weekly` runs daily at 05:30 (id kept; it ran on Sundays only); new job
+  `desk-macro` follows it. `docs/OPERATIONS.md` edited by hand (the table rows and section 23).
+- Web server and scheduler restarted once each at 2026-11-24T09:32Z for section 240 (scheduler pid 3032, 66 jobs
+  then; one listener on 3000); a second restart for this section is recorded below if it happened.
+- Gates: `npm run check`, 261 files / 1,603 tests, `npm run build`, `git diff --check`.
+- **Still open:** insider forms since 2026-11-13 (next), short interest from the FINRA archive, the company page's
+  earnings markers (still the `events` table), guidance since 2026-11-10 (owner's go for the GPU).

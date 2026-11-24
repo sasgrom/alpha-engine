@@ -215,7 +215,9 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Desk snapshot with live prices | scheduled | after schwab-intraday | Local static UI artifact read by desk.snapshot; no production write. |
 | Prediction-market expectations daily | scheduled | 15 16 * * * | Local D: archive and local UI artifact only; no production writes or automatic reportFile push. |
 | Standard prices weekly gated refresh | scheduled | 0 2 * * 0 | Local D: artifacts and alpha_research only; no production write and no alpha_engine production mutation. |
-| FRED and ALFRED weekly vintage refresh | scheduled | 30 5 * * 0 | Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local. |
+| FRED and ALFRED vintage refresh | scheduled | 30 5 * * * | Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local. |
+| Desk macro card | scheduled | after macro-fred-weekly | Local file read by dashboard.macro; no production write and no database write. |
+| Desk company files | scheduled | after edgar-fetch-daily | Local files read by the desk procedures; no production write. |
 | OFAC daily event refresh | scheduled | 40 5 * * * | Local macro archive only; no production write. |
 | Macro manifest and availability QA | scheduled | 55 5 * * * | Local fail-closed QA gate only. |
 | Company macro exposure evidence | scheduled | after research-series | Local static evidence only; no production write. |
@@ -563,18 +565,18 @@ npx tsx worker/prediction-markets-daily.mts --scheduled-style
 npx tsx ../alpha-engine-lab/src/prices/std-prices-refresh.mts
 ```
 
-### 23. FRED and ALFRED weekly vintage refresh
+### 23. FRED and ALFRED vintage refresh
 
 - **ID:** `macro-fred-weekly`
 - **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** 30 5 * * 0
+- **Cron:** 30 5 * * *
 - **Dependencies:** none
 - **Purpose:** Refresh all registered FRED series with raw yearly chunks, vintage availability and resumable manifests.
 - **Input:** FRED/ALFRED API, existing D:-only macro archive and the configured server-side API key.
 - **Output:** Raw hashes, normalized first-to-current vintage rows and manifest-fred.json from 2000 onward.
 - **Destination:** Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local.
 - **Requirements:** network, driveD
-- **Operational note:** Weekly full-vintage refresh preserves sourceHash and realtimeStart/End. Conflicting vintages are rejected with reasons rather than overwritten. Request spacing remains capped at 100 requests per minute.
+- **Operational note:** Daily since 2026-11-24 (it ran on Sundays only, so yields, VIX and credit spreads were up to a week old); the job keeps its old id. Its dependent `desk-macro` (`npx tsx scripts/build-desk-macro.mts`) then writes the Today page's macro card, `worker/.runs/desk-macro.json`. The full-vintage refresh preserves sourceHash and realtimeStart/End. Conflicting vintages are rejected with reasons rather than overwritten. Request spacing remains capped at 100 requests per minute.
 
 ```powershell
 npx tsx worker/macro-fred-fetch.mts --group all
