@@ -274,7 +274,7 @@ The operations registry automates the existing local macro pipeline without addi
 | `macro-fred-weekly` | Sunday 05:30 | Refresh all FRED/ALFRED vintages and raw yearly chunks |
 | `macro-events-daily` | Daily 05:40 | Merge the latest OFAC Recent Actions page |
 | `macro-manifest-qa` | Daily 05:55 | Audit hashes, rows, required coverage and availability |
-| `company-exposure-evidence` | After `research-factors` | Rebuild aligned company exposure evidence |
+| `company-exposure-evidence` | After `research-series` | Rebuild aligned company exposure evidence |
 | `pilot-exposure-evidence` | Daily 06:05 | Refresh five pilots from SEC companyfacts |
 | `exposure-history` (manual cache-only prerequisite) | After new cached SEC filings | Rebuild immutable filing-anchored exposure history; no collection or scheduler entry |
 | `macro-scenarios` | After QA + both evidence reports + complete history and atlas | Recompute Scenario Lab baselines and impacts |

@@ -4408,3 +4408,46 @@ delivered.
 - **Next (each needs a look before doing, none started):** retire the jobs that only fed classic pages
   (`analytics-snapshot`, `expectations-report`, the old factor and sentiment jobs) and then the two data files;
   the unused server procedures and tables behind the removed pages; the classic styles in `src/index.css`.
+
+## 237. Claude (Fable 5.2): the scheduled jobs that only fed the classic view are retired — 2026-11-24T08:55Z
+
+- **Owner:** "yes, go ahead with step 1" (retire the jobs that only fed the old pages, then delete the two data files).
+- **Who reads what, checked before anything was removed:** the procedures the client still calls (64, all listed from
+  `src/`), the readers of `factor_points`, the callers of the precomputed page data, and where the server reads report
+  files from.
+- **Retired: nine registry entries** (`contracts/operations.ts`, 85 jobs to 76):
+  - `analytics-snapshot` and `expectations-report`: they wrote `src/data/analytics-snapshot.ts`,
+    `src/data/expectations-report.ts` (27 MB) and reports only the classic Analytics and Expectations pages read.
+    Removed with them: `scripts/build-analytics-snapshot.mts`, `worker/build-expectations-report.mts` and the two
+    data files (`src/data/` is empty now). `worker/lib/expectations-report.ts` stays: the reviewed-export scripts
+    use it.
+  - `page-data-dashboard`, `page-data-13f`, `page-data-fundamentals`, `page-data-prices`, `page-data-macro`,
+    `page-data-tone`: precomputed answers for `dashboard.stats`, `dashboard.sectorFlows`, `company.institutional`
+    and `company.probability`, which only classic pages called. Removed with them:
+    `scripts/build-precomputed-page-data.mts`, `scripts/verify-precomputed-page-data.mts` and the registry test of
+    those jobs. `worker/lib/precomputed-page-data.ts` stays (the server imports it).
+  - `research-factors`: the nightly materialization of the old factor engine. Its readers were the classic company
+    panels, the page-data jobs above and the owner's factor IC monitor. The monitor card is removed from Owner tools
+    → Monitors (it would show a table that no longer moves). `scripts/materialize-research-factors.mts`, the
+    `factor_points` table and `admin.factorIc` stay until the factor tables are decided.
+- **Re-parented, same timing:** `company-exposure-evidence` and `macro-transmission-atlas` now follow
+  `research-series` (their builders read the canonical series, not the factor points; they listed
+  `research-factors` only to run after it). `ui-production-build` follows `schwab-daily-bars` and
+  `schwab-feature-lab` (it followed `analytics-snapshot`, which followed `schwab-daily-bars`).
+- **Kept: `ui-production-build`.** No generated TypeScript is compiled into the client any more, but the production
+  server reads report files from `dist/public/reports`, and the build is what copies `public/` there for the
+  builders that write only to `public/reports`.
+- **Kept: `research-series`** (the Macro page's exposure figures are built from it) and every manual or paused job.
+- **Paused, not removed: `daily-digest`** (the morning brief): the owner paused the brief and the local model is
+  stopped, so the job failed every morning; its only reader was the classic dashboard.
+- `docs/OPERATIONS.md` edited by hand, not regenerated: the nine sections and table rows removed (the other section
+  numbers are unchanged, with a note at the top of section 5), the dependency lines of the three re-parented jobs
+  and the morning brief's mode corrected. `docs/MACRO_DATA.md`: one dependency line.
+- Not touched: the server procedures and services behind the removed pages, the database tables, the precomputed
+  artifacts already on disk (`worker/.runs/precomputed-page-data`), the old report files in `public/reports`
+  (`expectations-report.json`, `weekly-metrics.json`, `project-strength-review.md`) and their entries in the
+  report whitelist.
+- Tests: `worker/lib/facts-incremental.test.ts` (the research chain without the factor job),
+  `src/desk/DeskAdmin.test.tsx` (no factor monitor, no request for it).
+- Gates: `npm run check`, 263 files / 1,608 tests, `npm run build`, `git diff --check`.
+- **Scheduler restart:** needed for the running scheduler to drop the nine jobs; recorded in the next section.

@@ -118,9 +118,11 @@ describe("desk owner tools", () => {
   });
 
   it("shows compact monitors and preserves the worker note and SEC source", async () => {
-    desk = await mountDesk("admin", "/desk/admin?tab=monitors", "assetGrowth");
+    desk = await mountDesk("admin", "/desk/admin?tab=monitors", "stocktwits");
     const host = desk.host;
-    expect(host.textContent).toContain("assetGrowth");
+    // the factor IC monitor went with the old factor engine's nightly job: no card and no request for it
+    expect(host.textContent).not.toContain("Factor IC");
+    expect(desk.calls).not.toContain("admin.factorIc");
     expect(host.textContent).toContain("stocktwits");
     await click(host, "Open note");
     await waitUntil(() => (host.textContent ?? "").includes("Full worker note evidence."));
@@ -138,7 +140,6 @@ describe("desk owner tools", () => {
     await click(host, "Logs");
     await waitUntil(() => (host.textContent ?? "").includes("No jobs yet."));
     await click(host, "Monitors");
-    await waitUntil(() => (host.textContent ?? "").includes("No factor-IC observations."));
-    expect(host.textContent).toContain("No worker data received yet.");
+    await waitUntil(() => (host.textContent ?? "").includes("No worker data received yet."));
   });
 });

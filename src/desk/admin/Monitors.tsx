@@ -26,43 +26,16 @@ function filingUrl(payloadKey: string): string | null {
 const timeText = (value: unknown) => value ? String(value).slice(0, 19).replace("T", " ") : "—";
 
 export default function Monitors() {
-  const factorQuery = trpc.admin.factorIc.useQuery(undefined, { retry: false, refetchInterval: 300_000, refetchIntervalInBackground: false });
+  // The factor IC monitor went with the nightly factor materialization (2026-11-24): the old factor engine never
+  // passed an out-of-sample test, and its table is no longer refreshed.
   const intake = trpc.workersMonitor.intake.useQuery(undefined, { retry: false, refetchInterval: 60_000, refetchIntervalInBackground: false });
   const [note, setNote] = useState<WorkerNote | null>(null);
-  const rows = (factorQuery.data ?? []).filter((row) => row.horizon === 63);
-  const grouped = new Map<string, typeof rows>();
-  for (const row of rows) {
-    if (!grouped.has(row.factor)) grouped.set(row.factor, []);
-    grouped.get(row.factor)!.push(row);
-  }
-  const factors = [...grouped.entries()].map(([factor, values]) => {
-    const sorted = [...values].sort((a, b) => a.quarter.localeCompare(b.quarter));
-    const usable = sorted.filter((row) => row.n >= 3 && row.spearman !== null);
-    return {
-      factor,
-      quarters: usable.length,
-      mean: usable.length ? usable.reduce((sum, row) => sum + (row.spearman ?? 0), 0) / usable.length : null,
-      lastQuarter: sorted.at(-1)?.quarter ?? "—",
-      latest: sorted.at(-1)?.spearman ?? null,
-    };
-  }).sort((a, b) => (b.mean ?? -2) - (a.mean ?? -2));
   const perSource = intake.data?.perSource ?? [];
   const keys = intake.data?.keys ?? [];
   const recent = (intake.data?.recent ?? []) as unknown as WorkerNote[];
 
   return (
     <>
-      <Card flush title="Factor IC monitor" subtitle="Cross-sectional rank correlation with the next 63 trading days. Evaluation evidence, not a trading signal.">
-        <div className="desk-table-wrap">
-          <table className="desk-table">
-            <thead><tr><th>Factor</th><th className="num">Mean Spearman ρ</th><th className="num">Quarters</th><th>Last quarter</th><th className="num">Latest ρ</th></tr></thead>
-            <tbody>{factors.map((row) => <tr key={row.factor}><td>{row.factor}</td><td className="num">{row.mean?.toFixed(3) ?? "—"}</td><td className="num">{row.quarters}</td><td>{row.lastQuarter}</td><td className="num">{row.latest?.toFixed(3) ?? "—"}</td></tr>)}</tbody>
-          </table>
-          {factorQuery.isLoading && <Shimmer height={100} />}
-          {!factorQuery.isLoading && factors.length === 0 && <div className="desk-empty">No factor-IC observations.</div>}
-          {factorQuery.error && <Notice title="Factor IC could not be loaded">{factorQuery.error.message}</Notice>}
-        </div>
-      </Card>
       <Card flush title="Workers intake" subtitle="What the home workers delivered. Event time is upstream publication; received time is delivery into the signals table.">
         {intake.isLoading && <Shimmer height={180} />}
         {intake.error && <Notice title="Worker intake could not be loaded">{intake.error.message}</Notice>}

@@ -203,13 +203,6 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Companyfacts local snapshot | scheduled | 0 3 * * * | Local MySQL through the local factsSnapshot ingest route; no production write. |
 | S&P 500 incremental companyfacts | scheduled | 30 23 * * * | Local MySQL and the D:-only raw cache; no production write and no research-universe expansion. |
 | Canonical research series | scheduled | after facts-fetch-daily | Local MySQL. |
-| Research factor materialization | scheduled | after research-series | Local MySQL. |
-| Precomputed dashboard and institutional data | scheduled | after facts-fetch-daily + sp500-facts-daily + edgar-fetch-daily | Local precomputed page-data artifacts only; no production write or push lane. |
-| Precomputed 13F page data | scheduled | after 13f-refresh | Local precomputed page-data artifacts only; no production write or push lane. |
-| Precomputed probability after research factors | scheduled | after research-factors | Local precomputed page-data artifacts only; no production write or model promotion. |
-| Precomputed probability after daily prices | scheduled | after schwab-daily-bars | Local precomputed page-data artifacts only; no production write or model promotion. |
-| Precomputed probability after macro vintages | scheduled | after macro-fred-weekly | Local precomputed page-data artifacts only; no production write or model promotion. |
-| Precomputed probability after EDGAR tone | scheduled | after edgar-tone-nightly | Local precomputed page-data artifacts only; no production write or model promotion. |
 | Schwab REST daily snapshot | scheduled | 45 16 * * 1-5; 0 4 * * * | Raw chains remain local; successful scheduled runs automatically push QA-passed daily OHLCV and daily-prices-schwab.json through /api/worker/ingest. |
 | Schwab normalized UI snapshot | scheduled | after schwab-fetch-daily | Normalized snapshot automatically pushed as schwab-market-data.json after exit-ok; raw chains and the local gzip stay local. |
 | Schwab Feature Lab materialization | scheduled | after schwab-snapshot | Local Feature Lab UI only; no production factor promotion. |
@@ -220,21 +213,19 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Desk market snapshot | scheduled | after schwab-daily-bars | Local static UI artifact read by desk.snapshot; no production write and no push lane. |
 | Schwab live prices every 5 minutes | scheduled | 40,45,50,55 6 * * 1-5; */5 7-12 * * 1-5; 0,5,10,15,20 13 * * 1-5 | Local only: no production push and no write to the daily price history. |
 | Desk snapshot with live prices | scheduled | after schwab-intraday | Local static UI artifact read by desk.snapshot; no production write. |
-| Analytics and weekly evidence snapshot | scheduled | after schwab-daily-bars | Local static UI artifacts; no production write. |
-| Expectations static report | scheduled | 0 6 * * * | Local static UI artifacts; partial results remain explicitly unreviewed. |
 | Prediction-market expectations daily | scheduled | 15 16 * * * | Local D: archive and local UI artifact only; no production writes or automatic reportFile push. |
 | Standard prices weekly gated refresh | scheduled | 0 2 * * 0 | Local D: artifacts and alpha_research only; no production write and no alpha_engine production mutation. |
 | FRED and ALFRED weekly vintage refresh | scheduled | 30 5 * * 0 | Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local. |
 | OFAC daily event refresh | scheduled | 40 5 * * * | Local macro archive only; no production write. |
 | Macro manifest and availability QA | scheduled | 55 5 * * * | Local fail-closed QA gate only. |
-| Company macro exposure evidence | scheduled | after research-factors | Local static evidence only; no production write. |
+| Company macro exposure evidence | scheduled | after research-series | Local static evidence only; no production write. |
 | Pilot SEC exposure evidence refresh | scheduled | 5 6 * * * | Local static evidence only; no production write. |
 | Availability-anchored macro scenarios | scheduled | after macro-manifest-qa + company-exposure-evidence + pilot-exposure-evidence | Local Scenario Lab only; no production write. |
 | Historical macro shock calibration | scheduled | after macro-manifest-qa | Local Scenario Lab only; no production write. |
 | OFAC first-release macro event study | scheduled | after macro-manifest-qa | Local research artifact only; no production write or probability promotion. |
-| Macro Transmission Atlas | scheduled | after macro-event-study + research-factors | Local research artifact only; no production write or probability promotion. |
-| Production UI rebuild | scheduled | after analytics-snapshot + schwab-feature-lab | Local production server files only; no cloud deployment. |
-| Local morning brief | scheduled | 15 7 * * * | Local probation when INGEST_URL is set; no automatic reviewed production promotion is added by the scheduler. |
+| Macro Transmission Atlas | scheduled | after macro-event-study + research-series | Local research artifact only; no production write or probability promotion. |
+| Production UI rebuild | scheduled | after schwab-daily-bars + schwab-feature-lab | Local production server files only; no cloud deployment. |
+| Local morning brief | paused | 15 7 * * * | Local probation when INGEST_URL is set; no automatic reviewed production promotion is added by the scheduler. |
 | Daily operations health report | scheduled | 20 7 * * * | daily-operations.json and .md automatically pushed through reportFile after exit-ok and served from the fresher of DB/static. |
 | Data health and quarantine | scheduled | after research-series + schwab-daily-bars + edgar-exhibits-daily + schwab-feature-lab | Local read-only QA artifacts; no production write, schema change or retroactive data removal. |
 | Weekly coverage and drift report | scheduled | 45 7 * * 1 | weekly-coverage.json and .md automatically pushed through reportFile after exit-ok and exposed in Workers → Weekly coverage. |
@@ -282,6 +273,12 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | GDELT collector and backfill | frozen | manual | None. |
 
 ## 5. Complete job documentation
+
+> **Retired on 2026-11-24 (handoff 237), with the classic view they fed:** the research factor materialization, the
+> six precomputed page-data jobs, the analytics and weekly evidence snapshot and the expectations static report
+> (sections 7 to 13, 21 and 22 of this list; the numbers of the other sections are unchanged). Their registry
+> entries and scripts are removed, except `scripts/materialize-research-factors.mts`, which stays until the factor
+> tables themselves are decided. The morning brief is paused, not removed.
 
 ### 1. Stocktwits hourly pulse
 
@@ -383,125 +380,6 @@ npx tsx worker/facts-fetch.mts --universe edgar-universe.json
 
 ```powershell
 npx tsx scripts/build-research-series.mts --universe research-universe-50.json
-```
-
-### 7. Research factor materialization
-
-- **ID:** `research-factors`
-- **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** none
-- **Dependencies:** `research-series`
-- **Purpose:** Materialize point-in-time factor points from the new canonical series and available prices.
-- **Input:** Local series_points and existing research price history.
-- **Output:** Idempotent factor_points per company.
-- **Destination:** Local MySQL.
-- **Requirements:** mysql
-- **Operational note:** Does not claim new predictive evidence; evaluation remains a separate research job.
-
-```powershell
-npx tsx scripts/materialize-research-factors.mts --universe research-universe-50.json
-```
-
-### 8. Precomputed dashboard and institutional data
-
-- **ID:** `page-data-dashboard`
-- **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** none
-- **Dependencies:** `facts-fetch-daily`, `sp500-facts-daily`, `edgar-fetch-daily`
-- **Purpose:** Precompute global dashboard counts and institutional ownership after SEC fact and filing inputs change.
-- **Input:** Local companies, filings, facts and 13F holdings for the research universe.
-- **Output:** dashboard-stats.json and per-company institutional artifacts with generation time, input evidence and code version.
-- **Destination:** Local precomputed page-data artifacts only; no production write or push lane.
-- **Requirements:** mysql, review
-- **Operational note:** Live user membership and job counters remain on request. Stale artifacts remain visible with an as-of time and stale mark; missing artifacts use the original computation.
-
-```powershell
-npx tsx scripts/build-precomputed-page-data.mts --group stats
-```
-
-### 9. Precomputed 13F page data
-
-- **ID:** `page-data-13f`
-- **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** none
-- **Dependencies:** `13f-refresh`
-- **Purpose:** Precompute institutional ownership, guarded sector flows and 13F-dependent probability results after holdings change.
-- **Input:** Local fund_holdings, fund_quarters and current guarded quarter pair.
-- **Output:** Per-company institutional/probability artifacts and sector-flows.json with input lineage.
-- **Destination:** Local precomputed page-data artifacts only; no production write or push lane.
-- **Requirements:** mysql, review
-- **Operational note:** The original guarded aggregation runs unchanged. Missing artifacts fall back to on-request computation.
-
-```powershell
-npx tsx scripts/build-precomputed-page-data.mts --group institutional
-```
-
-### 10. Precomputed probability after research factors
-
-- **ID:** `page-data-fundamentals`
-- **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** none
-- **Dependencies:** `research-factors`
-- **Purpose:** Recompute per-company probability artifacts after point-in-time factor materialization changes.
-- **Input:** Local factor_points and the existing availability-anchored probability inputs.
-- **Output:** One probability artifact per research-universe company with generation time, input evidence and code version.
-- **Destination:** Local precomputed page-data artifacts only; no production write or model promotion.
-- **Requirements:** mysql, review
-- **Operational note:** Point-in-time evaluation is unchanged; this is serving precomputation, not a new model or factor.
-
-```powershell
-npx tsx scripts/build-precomputed-page-data.mts --group probability
-```
-
-### 11. Precomputed probability after daily prices
-
-- **ID:** `page-data-prices`
-- **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** none
-- **Dependencies:** `schwab-daily-bars`
-- **Purpose:** Recompute probability artifacts after the local daily price history changes.
-- **Input:** Local company and SPY daily bars with existing source and availability rules.
-- **Output:** Per-company probability artifacts with input lineage.
-- **Destination:** Local precomputed page-data artifacts only; no production write or model promotion.
-- **Requirements:** mysql, review
-- **Operational note:** Prices keep their existing source selection and availability discipline.
-
-```powershell
-npx tsx scripts/build-precomputed-page-data.mts --group probability
-```
-
-### 12. Precomputed probability after macro vintages
-
-- **ID:** `page-data-macro`
-- **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** none
-- **Dependencies:** `macro-fred-weekly`
-- **Purpose:** Recompute probability artifacts after eligible macro vintages change.
-- **Input:** Local VIX, high-yield spread and yield-curve vintages.
-- **Output:** Per-company probability artifacts with macro input evidence.
-- **Destination:** Local precomputed page-data artifacts only; no production write or model promotion.
-- **Requirements:** mysql, review
-- **Operational note:** The existing macro prior and availability windows are unchanged.
-
-```powershell
-npx tsx scripts/build-precomputed-page-data.mts --group probability
-```
-
-### 13. Precomputed probability after EDGAR tone
-
-- **ID:** `page-data-tone`
-- **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** none
-- **Dependencies:** `edgar-tone-nightly`
-- **Purpose:** Refresh probability artifacts if the paused EDGAR tone lane is enabled and produces new inputs.
-- **Input:** Local EDGAR tone signal rows and existing probability inputs.
-- **Output:** Per-company probability artifacts with input lineage.
-- **Destination:** Local precomputed page-data artifacts only; no production write or model promotion.
-- **Requirements:** mysql, review
-- **Operational note:** No model call occurs in this builder. The parent tone lane remains paused until separately enabled.
-
-```powershell
-npx tsx scripts/build-precomputed-page-data.mts --group probability
 ```
 
 ### 14. Schwab REST daily snapshot
@@ -657,40 +535,6 @@ npx tsx worker/schwab-intraday.mts
 npx tsx scripts/build-desk-snapshot.mts
 ```
 
-### 21. Analytics and weekly evidence snapshot
-
-- **ID:** `analytics-snapshot`
-- **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** none
-- **Dependencies:** `schwab-daily-bars`. It runs after the day's closes are stored, every weekday evening and after the 04:30 catch-up. Before 2026-11-13 it followed the nightly `research-factors`, which ran before the evening prices, so the app lagged a session or two. The nightly factors are picked up by the next run.
-- **Purpose:** Refresh Analytics metrics and weekly evidence from the current DB and option manifests.
-- **Input:** Local fundamentals, factors, tone, prices, 13F and option feature manifests.
-- **Output:** Generated analytics JSON/TypeScript and the English project-strength review.
-- **Destination:** Local static UI artifacts; no production write.
-- **Requirements:** mysql, review
-- **Operational note:** Preserves prior weekly snapshots and does not invent missing history.
-
-```powershell
-npx tsx scripts/build-analytics-snapshot.mts
-```
-
-### 22. Expectations static report
-
-- **ID:** `expectations-report`
-- **Mode:** scheduled; **enabled by default:** yes
-- **Cron:** 0 6 * * *
-- **Dependencies:** none
-- **Purpose:** Publish the current local extraction and factual fallback notes to the owner-only UI without raw LLM responses.
-- **Input:** Current cohort extraction results, benchmark result when present, and research-universe-50.json.
-- **Output:** Credential-free expectations JSON and TypeScript with evidence, coverage and data-quality notes.
-- **Destination:** Local static UI artifacts; partial results remain explicitly unreviewed.
-- **Requirements:** review
-- **Operational note:** Safe even while extraction is paused: it reports the actual partial state instead of fabricating completion.
-
-```powershell
-npx tsx worker/build-expectations-report.mts --cohorts --scope full-history
-```
-
 ### 22a. Prediction-market expectations daily
 
 - **ID:** `prediction-markets-daily`
@@ -781,7 +625,7 @@ npx tsx worker/macro-manifest-qa.mts
 - **ID:** `company-exposure-evidence`
 - **Mode:** scheduled; **enabled by default:** yes
 - **Cron:** none
-- **Dependencies:** `research-factors`
+- **Dependencies:** `research-series` (it was `research-factors` until that job was retired on 2026-11-24; the builder reads the canonical series, not the factor points)
 - **Purpose:** Materialize debt, interest, fuel, oil and geography exposure only from aligned canonical SEC evidence.
 - **Input:** Local canonical series and the 50-name research universe.
 - **Output:** company-exposures.json and .md with availability, period alignment, missing and stale flags.
@@ -868,7 +712,7 @@ npx tsx scripts/build-macro-event-study.mts
 - **ID:** `macro-transmission-atlas`
 - **Mode:** scheduled; **enabled by default:** yes
 - **Cron:** none
-- **Dependencies:** `macro-event-study`, `research-factors`; additionally, the local complete exposure-history summary is required and its hash is verified.
+- **Dependencies:** `macro-event-study`, `research-series` (in place of the retired `research-factors`); additionally, the local complete exposure-history summary is required and its hash is verified.
 - **Purpose:** Estimate company-level macro transmission with point-in-time SEC exposure, market-model returns and frozen discovery-only OOS evaluation.
 - **Input:** First-release macro event observations, canonical series, daily company and SPY prices, and filing-anchored inline-XBRL exposure history.
 - **Output:** macro-transmission-atlas.json and .md with sector FE interactions, event-bootstrap CI95 and OOS metrics.
@@ -886,7 +730,7 @@ npx tsx scripts/build-macro-transmission-atlas.mts
 - **ID:** `ui-production-build`
 - **Mode:** scheduled; **enabled by default:** yes
 - **Cron:** none
-- **Dependencies:** `analytics-snapshot`, `schwab-feature-lab`. A child runs only after all of its parents have run since its last run. With `expectations-report` (06:00) as a third parent, every build waited until morning; the next build now compiles that report. The 20-minute live prices need no build: the desk re-reads `desk-snapshot.json` whenever it changes.
+- **Dependencies:** `schwab-daily-bars`, `schwab-feature-lab`. A child runs only after all of its parents have run since its last run. Until 2026-11-24 the first parent was `analytics-snapshot` (itself after `schwab-daily-bars`); that job and `expectations-report` were retired with the classic view, and no generated TypeScript is compiled into the client any more. The build still copies `public/` into `dist/public`, which the production server reads the report files from. The live prices need no build: the desk re-reads `desk-snapshot.json` whenever it changes.
 - **Purpose:** Compile newly generated static snapshots and the server into dist for normal production-mode operation.
 - **Input:** Current source and freshly generated report artifacts.
 - **Output:** dist/public and dist/boot.js.
@@ -901,7 +745,7 @@ npm run build
 ### 33. Local morning brief
 
 - **ID:** `daily-digest`
-- **Mode:** scheduled; **enabled by default:** yes
+- **Mode:** paused; **enabled by default:** no (paused on 2026-11-24: the owner paused the morning brief and the local model is stopped, so the job failed every morning; its only reader, the classic dashboard, is gone)
 - **Cron:** 15 7 * * *
 - **Dependencies:** none
 - **Purpose:** Summarize the last 36 hours of actual local signals into a short owner brief.
@@ -1368,7 +1212,7 @@ npx tsx worker/dolthub-vol-target.mts
 - **Output:** Upserted daily bars with missing-ticker reporting.
 - **Destination:** Local MySQL; no browser storage credential required.
 - **Requirements:** mysql, driveD, review
-- **Operational note:** Not UI-runnable because the operator must supply and review a real file path. Run research-factors afterward.
+- **Operational note:** Not UI-runnable because the operator must supply and review a real file path. The factor materialization that used to follow it was retired on 2026-11-24.
 
 ```powershell
 npx tsx scripts/import-research-prices-file.mts --file D:\path\to\prices.zip

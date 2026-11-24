@@ -62,48 +62,6 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local MySQL.", requirements: ["mysql"], notes: "Dependency-triggered after a successful facts refresh; no SEC request and no arbitrary delay guess.",
   }),
   job({
-    id: "research-factors", name: "Research factor materialization", group: "fundamentals", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-series"],
-    ...npx("scripts/materialize-research-factors.mts", ["--universe", "research-universe-50.json"]), purpose: "Materialize point-in-time factor points from the new canonical series and available prices.",
-    input: "Local series_points and existing research price history.", output: "Idempotent factor_points per company.",
-    destination: "Local MySQL.", requirements: ["mysql"], notes: "Does not claim new predictive evidence; evaluation remains a separate research job.",
-  }),
-  job({
-    id: "page-data-dashboard", name: "Precomputed dashboard and institutional data", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["facts-fetch-daily", "sp500-facts-daily", "edgar-fetch-daily"],
-    ...npx("scripts/build-precomputed-page-data.mts", ["--group", "stats"]), purpose: "Precompute global dashboard counts and institutional ownership after SEC fact and filing inputs change.",
-    input: "Local companies, filings, facts and 13F holdings for the research universe.", output: "dashboard-stats.json and per-company institutional artifacts with generation time, input evidence and code version.",
-    destination: "Local precomputed page-data artifacts only; no production write or push lane.", requirements: ["mysql", "review"], notes: "Live user membership and job counters remain on request. Stale artifacts remain visible with an as-of time and stale mark; missing artifacts use the original computation.",
-  }),
-  job({
-    id: "page-data-13f", name: "Precomputed 13F page data", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["13f-refresh"],
-    ...npx("scripts/build-precomputed-page-data.mts", ["--group", "institutional"]), purpose: "Precompute institutional ownership, guarded sector flows and 13F-dependent probability results after holdings change.",
-    input: "Local fund_holdings, fund_quarters and current guarded quarter pair.", output: "Per-company institutional/probability artifacts and sector-flows.json with input lineage.",
-    destination: "Local precomputed page-data artifacts only; no production write or push lane.", requirements: ["mysql", "review"], notes: "The original guarded aggregation runs unchanged. Missing artifacts fall back to on-request computation.",
-  }),
-  job({
-    id: "page-data-fundamentals", name: "Precomputed probability after research factors", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-factors"],
-    ...npx("scripts/build-precomputed-page-data.mts", ["--group", "probability"]), purpose: "Recompute per-company probability artifacts after point-in-time factor materialization changes.",
-    input: "Local factor_points and the existing availability-anchored probability inputs.", output: "One probability artifact per research-universe company with generation time, input evidence and code version.",
-    destination: "Local precomputed page-data artifacts only; no production write or model promotion.", requirements: ["mysql", "review"], notes: "Point-in-time evaluation is unchanged; this is serving precomputation, not a new model or factor.",
-  }),
-  job({
-    id: "page-data-prices", name: "Precomputed probability after daily prices", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-daily-bars"],
-    ...npx("scripts/build-precomputed-page-data.mts", ["--group", "probability"]), purpose: "Recompute probability artifacts after the local daily price history changes.",
-    input: "Local company and SPY daily bars with existing source and availability rules.", output: "Per-company probability artifacts with input lineage.",
-    destination: "Local precomputed page-data artifacts only; no production write or model promotion.", requirements: ["mysql", "review"], notes: "Prices keep their existing source selection and availability discipline.",
-  }),
-  job({
-    id: "page-data-macro", name: "Precomputed probability after macro vintages", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["macro-fred-weekly"],
-    ...npx("scripts/build-precomputed-page-data.mts", ["--group", "probability"]), purpose: "Recompute probability artifacts after eligible macro vintages change.",
-    input: "Local VIX, high-yield spread and yield-curve vintages.", output: "Per-company probability artifacts with macro input evidence.",
-    destination: "Local precomputed page-data artifacts only; no production write or model promotion.", requirements: ["mysql", "review"], notes: "The existing macro prior and availability windows are unchanged.",
-  }),
-  job({
-    id: "page-data-tone", name: "Precomputed probability after EDGAR tone", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["edgar-tone-nightly"],
-    ...npx("scripts/build-precomputed-page-data.mts", ["--group", "probability"]), purpose: "Refresh probability artifacts if the paused EDGAR tone lane is enabled and produces new inputs.",
-    input: "Local EDGAR tone signal rows and existing probability inputs.", output: "Per-company probability artifacts with input lineage.",
-    destination: "Local precomputed page-data artifacts only; no production write or model promotion.", requirements: ["mysql", "review"], notes: "No model call occurs in this builder. The parent tone lane remains paused until separately enabled.",
-  }),
-  job({
     // after each weekday close (the session counts as complete at 16:00 Pacific; the S&P 500 lane runs first, at 16:10),
     // and at 04:00 as a catch-up: a capture of the same UTC date resumes, so the morning run only completes what the
     // evening run missed
@@ -173,20 +131,6 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local static UI artifacts read by desk.snapshot and desk.intradayMarket; no production write.", requirements: ["mysql", "driveD"], notes: "Live prices count only for a session newer than the stored closes: once the evening run stores the session's official closes, desk-snapshot replaces the provisional ones. The market summary is still rebuilt from the latest session bars, so closed-market views retain the named last session. Nothing enters the daily price history.",
   }),
   job({
-    // after the day's closes are stored (not after the nightly factors, which ran before the evening prices and left
-    // the app a session or two behind); the nightly factors are picked up by the next run, at the latest the 04:30 one
-    id: "analytics-snapshot", name: "Analytics and weekly evidence snapshot", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-daily-bars"],
-    ...npx("scripts/build-analytics-snapshot.mts"), purpose: "Refresh Analytics metrics and weekly evidence from the current DB and option manifests.",
-    input: "Local fundamentals, factors, tone, prices, 13F and option feature manifests.", output: "Generated analytics JSON/TypeScript and the English project-strength review.",
-    destination: "Local static UI artifacts; no production write.", requirements: ["mysql", "review"], notes: "Preserves prior weekly snapshots and does not invent missing history.",
-  }),
-  job({
-    id: "expectations-report", name: "Expectations static report", group: "expectations", mode: "scheduled", cron: "0 6 * * *", defaultEnabled: true, dependsOn: [],
-    ...npx("worker/build-expectations-report.mts", ["--cohorts", "--scope", "full-history"]), purpose: "Publish the current local extraction and factual fallback notes to the owner-only UI without raw LLM responses.",
-    input: "Current cohort extraction results, benchmark result when present, and research-universe-50.json.", output: "Credential-free expectations JSON and TypeScript with evidence, coverage and data-quality notes.",
-    destination: "Local static UI artifacts; partial results remain explicitly unreviewed.", requirements: ["review"], notes: "Safe even while extraction is paused: it reports the actual partial state instead of fabricating completion.",
-  }),
-  job({
     id: "prediction-markets-daily", name: "Prediction-market expectations daily", group: "research", mode: "scheduled", cron: "15 16 * * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/prediction-markets-daily.mts", ["--scheduled-style"]), purpose: "Capture public Fed, CPI and recession probabilities and every mapped company KPI contract, with settlement histories and point-in-time daily expectations.",
     input: "The reviewed series/company mapping on D:, the local company registry and keyless public market-data endpoints.", output: "D:/research/alpha-engine/predmarkets/daily/<date> venue JSONL, per-run manifests, mapping.json, daily-state.jsonl and the local prediction-markets.json desk artifact.",
@@ -217,7 +161,7 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local fail-closed QA gate only.", requirements: ["driveD"], notes: "Independent of the weekly FRED parent so daily OFAC changes are audited daily and a failed collector cannot suppress QA.",
   }),
   job({
-    id: "company-exposure-evidence", name: "Company macro exposure evidence", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-factors"],
+    id: "company-exposure-evidence", name: "Company macro exposure evidence", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["research-series"],
     ...npx("scripts/build-company-exposure.mts", ["--universe", "research-universe-50.json"]), purpose: "Materialize debt, interest, fuel, oil and geography exposure only from aligned canonical SEC evidence.",
     input: "Local canonical series and the 50-name research universe.", output: "company-exposures.json and .md with availability, period alignment, missing and stale flags.",
     destination: "Local static evidence only; no production write.", requirements: ["mysql", "review"], notes: "Runs after current research factors so scenario inputs cannot silently use an older fundamental snapshot.",
@@ -247,7 +191,7 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local research artifact only; no production write or probability promotion.", requirements: ["driveD", "review"], notes: "Baseline must be known at event eligibility and outcomes start on the next observation day. No directional forecast is inferred.",
   }),
   job({
-    id: "macro-transmission-atlas", name: "Macro Transmission Atlas", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["macro-event-study", "research-factors"],
+    id: "macro-transmission-atlas", name: "Macro Transmission Atlas", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["macro-event-study", "research-series"],
     ...npx("scripts/build-macro-transmission-atlas.mts"), purpose: "Estimate company-level macro transmission with point-in-time SEC exposure, market-model returns and frozen discovery-only OOS evaluation.",
     input: "First-release macro event observations, canonical series, daily company and SPY prices.", output: "macro-transmission-atlas.json and .md with sector FE interactions, event-bootstrap CI95 and OOS metrics.",
     destination: "Local research artifact only; no production write or probability promotion.", requirements: ["mysql", "driveD", "review"], notes: "Exposure must be available and non-stale at event eligibility. Debt burden is a proxy, not a floating-rate share. OOS coefficients are never refit.",
@@ -255,16 +199,16 @@ export const OPERATION_JOBS: OperationJob[] = [
   job({
     // after both evening chains (prices → analytics, chains → feature lab), so the app shows the day's close the same
     // evening; the 06:00 expectations report is compiled by the next build instead of holding every build until 06:00
-    id: "ui-production-build", name: "Production UI rebuild", group: "delivery", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["analytics-snapshot", "schwab-feature-lab"],
+    id: "ui-production-build", name: "Production UI rebuild", group: "delivery", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-daily-bars", "schwab-feature-lab"],
     executable: "npm", args: ["run", "build"], command: "npm run build", purpose: "Compile newly generated static snapshots and the server into dist for normal production-mode operation.",
     input: "Current source and freshly generated report artifacts.", output: "dist/public and dist/boot.js.",
     destination: "Local production server files only; no cloud deployment.", requirements: ["review"], notes: "Required for application code or generated TypeScript changes, not for a Schwab-only JSON refresh. Not required for npm run dev; restart production only when server behavior changes.",
   }),
   job({
-    id: "daily-digest", name: "Local morning brief", group: "live", mode: "scheduled", cron: "15 7 * * *", defaultEnabled: true, dependsOn: [],
+    id: "daily-digest", name: "Local morning brief", group: "live", mode: "paused", cron: "15 7 * * *", defaultEnabled: false, dependsOn: [],
     ...npx("scripts/daily-digest.mts", ["--hours", "36"]), purpose: "Summarize the last 36 hours of actual local signals into a short owner brief.",
     input: "Local signals, local Ollama and the currently configured model.", output: "One morning digest with model and window metadata.",
-    destination: "Local probation when INGEST_URL is set; no automatic reviewed production promotion is added by the scheduler.", requirements: ["server", "gpu", "mysql"], notes: "SEC facts and crowd comments stay separate. An empty signal window exits successfully without generating filler.",
+    destination: "Local probation when INGEST_URL is set; no automatic reviewed production promotion is added by the scheduler.", requirements: ["server", "gpu", "mysql"], notes: "Paused on 2026-11-24: the owner paused the morning brief and the local model is stopped, so the job failed every morning; its only reader, the classic dashboard, is gone. SEC facts and crowd comments stay separate. An empty signal window exits successfully without generating filler.",
   }),
   job({
     id: "daily-operations-report", name: "Daily operations health report", group: "maintenance", mode: "scheduled", cron: "20 7 * * *", defaultEnabled: true, dependsOn: [],

@@ -220,7 +220,8 @@ describe("incremental companyfacts collection", () => {
 
   it("keeps an S&P failure outside the research-50 dependency chain", () => {
     expect(OPERATION_JOB_MAP["sp500-facts-daily"].dependsOn).toEqual([]);
-    expect(operationChain("research-factors").map((job) => job.id)).toEqual(["facts-fetch-daily", "research-series", "research-factors"]);
+    // the factor materialization was retired on 2026-11-24; the exposure evidence follows the canonical series directly
+    expect(operationChain("company-exposure-evidence").map((job) => job.id)).toEqual(["facts-fetch-daily", "research-series", "company-exposure-evidence"]);
   });
 
   it("rejects a production ingest URL before collection", () => {
