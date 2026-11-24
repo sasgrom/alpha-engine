@@ -217,6 +217,8 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Standard prices weekly gated refresh | scheduled | 0 2 * * 0 | Local D: artifacts and alpha_research only; no production write and no alpha_engine production mutation. |
 | FRED and ALFRED vintage refresh | scheduled | 30 5 * * * | Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local. |
 | Desk macro card | scheduled | after macro-fred-weekly | Local file read by dashboard.macro; no production write and no database write. |
+| Guidance standard daily gated refresh | scheduled | 25 2 * * * | Local D: artifacts only; no production write and no database write. |
+| Standard fundamentals daily gated refresh | scheduled | 12 3 * * * | Local D: artifacts only; no production write, no database write (the research database keeps v3.1). |
 | Insider standard daily gated refresh | scheduled | 35 3 * * * | Local D: artifacts and alpha_research only; no production write and no alpha_engine mutation. |
 | FINRA short interest | scheduled | 25 6 * * * | Local D: archive and a local file read by company.shortInterest and the desk snapshot; no production write and no database write. |
 | Desk company files | scheduled | after edgar-fetch-daily | Local files read by the desk procedures; no production write. |
@@ -566,6 +568,20 @@ npx tsx worker/prediction-markets-daily.mts --scheduled-style
 ```powershell
 npx tsx ../alpha-engine-lab/src/prices/std-prices-refresh.mts
 ```
+
+### 22b1. Guidance standard daily gated refresh (added 2026-11-24, owner's go)
+
+- **ID:** `std-guidance-refresh` · **Cron:** 25 2 * * * · **Requirements:** network, mysql, driveD (it starts the local model server itself)
+- **Command:** `npx tsx ../alpha-engine-lab/src/research/guidance/std-guidance-refresh.mts` (`--limit N` releases a run, `--force`, `--no-publish`, `--no-desk`)
+- **Chain:** `npx tsx scripts/build-calendar-addendum.mts` (the quarters and releases since the pinned calendar: paired with their 10-Q or 10-K by the calendar's own rule, or placed one quarter after the last known period end until the report is filed), `guidance-pass2.py queue` and `run` into `guidance-pass2-new` (the local model; Ollama started and stopped for the run), `build_guidance_std.py` with `GUIDANCE_EXTRA`, `GUIDANCE_EXTRA_SESSIONS` and `GUIDANCE_VERSION`, the builder's gates, regression against the published build (no published statement missing, no count lower), pointer `D:/research/alpha-engine/guidance/std/current.json`, desk company files.
+- **Operational note:** the original extractions and the g1.2 rules are pinned; only releases are added. To stop a model run cleanly create an empty file `STOP` in `D:/research/alpha-engine/engine/lab/data/engine/guidance-pass2-new/`. Summary: `worker/.runs/local-generated/std-guidance-refresh.json`.
+
+### 22b2. Standard fundamentals daily gated refresh (added 2026-11-24, owner's go)
+
+- **ID:** `std-fundamentals-refresh` · **Cron:** 12 3 * * * · **Requirements:** network, mysql, driveD
+- **Command:** `npx tsx ../alpha-engine-lab/src/fundamentals/std-fundamentals-refresh.mts` (`--force` builds on unchanged inputs, `--no-publish` builds and compares only, `--no-desk` skips the desk rebuild)
+- **Chain:** the newest filings' own XBRL (`edgar-filings-fetch.mts`, `edgar-filings-parse.py`), an inputs fingerprint (facts table extent, fetched filings, data-set quarters, code, overrides), build into `standard/<rules>-<run id>`, `qa.mts`, `checks.py`, `compare.py` against the published build, regression (same companies, no fewer company-quarters, no last quarter stepping back, nothing removed or broken), pointer `D:/research/alpha-engine/fundamentals/standard/current.json`, desk company files.
+- **Operational note:** the rules stay those of the published build (v3.2); a rules change is a reviewed build by hand, after which the pointer is moved. Summary: `worker/.runs/local-generated/std-fundamentals-refresh.json`.
 
 ### 22c. Insider standard daily gated refresh (added 2026-11-24, owner's go)
 

@@ -48,8 +48,10 @@ import { writeJsonAtomic } from "../worker/lib/json-file";
 import { publishedStandardDir } from "../worker/lib/published-standard";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
-const source = path.resolve(arg("--source") ?? "D:/research/alpha-engine/fundamentals/standard/v3.2");
-const guidanceDir = path.resolve(arg("--guidance") ?? "D:/research/alpha-engine/guidance/std/20261123T033803Z");
+// the standard fundamentals are refreshed on a schedule (lab std-fundamentals-refresh.mts); its pointer names the published build
+const source = path.resolve(arg("--source") ?? publishedStandardDir("D:/research/alpha-engine/fundamentals/standard/current.json", "D:/research/alpha-engine/fundamentals/standard/v3.2"));
+// the guidance standard is refreshed on a schedule (lab std-guidance-refresh.mts); its pointer names the published build
+const guidanceDir = path.resolve(arg("--guidance") ?? publishedStandardDir("D:/research/alpha-engine/guidance/std/current.json", "D:/research/alpha-engine/guidance/std/20261123T033803Z"));
 const pricesDir = path.resolve(arg("--prices") ?? "D:/research/alpha-engine/prices/std/daily");
 const holdersDir = path.resolve(arg("--holders") ?? "D:/research/alpha-engine/fund-books/std-k16.6");
 // the insider standard is refreshed on a schedule (lab std-insiders-refresh.mts); its pointer names the published build
@@ -219,7 +221,8 @@ function priceRows(cik: number): StandardPriceRow[] | null {
   return lines.map((line) => { const cells = line.split(","); return { date: cells[date], close: cells[close], dividend: cells[dividend], splitRatio: cells[splitRatio], distribution: cells[distribution], volume: cells[volume] }; });
 }
 
-const standard = path.basename(source);
+// a refreshed build's folder is <rules>-<run time>: the pages show the rules and the day
+const standard = path.basename(source).replace(/-(\d{4})(\d{2})(\d{2})T\d{6}Z$/, " of $1-$2-$3");
 const builtAt = new Date().toISOString();
 const hash = createHash("sha256");
 // The hash covers what the page shows, not the build time, so unchanged standards give an unchanged hash.

@@ -4621,3 +4621,43 @@ automatic processing of the fetched data".
 - **No page reads `filings`, `events`, `insider_trades`, `macro_points` or `short_interest` any more.**
 - Registry 69 jobs. `docs/OPERATIONS.md` edited by hand (two rows, sections 22c and 22d).
 - Gates: `npm run check`, 264 files / 1,619 tests, `npm run build`, `git diff --check`.
+
+## 244. Claude (Fable 5.2): fundamentals and guidance as nightly gated refreshes; the release calendar's addendum — 2026-11-24T10:20Z
+
+Continuation of section 243 (owner: "lets put everything we can to automatic processing of the fetched data").
+
+- **Release calendar addendum (`scripts/build-calendar-addendum.mts`, `worker/lib/calendar-addendum.ts`):** the pinned
+  calendar is read only; the quarters and releases since come from the nightly cache's manifests, in the calendar's
+  own shape, under `D:/research/alpha-engine/engine/events/addendum` (`filings-new.jsonl`, `quarters-new.jsonl`,
+  `manifest.json`). A new 10-Q or 10-K is paired with its releases by the calendar's own `buildQuarters`. A release
+  whose report is not filed yet is placed one quarter after the last known period end (`nextPeriodEnd`) and is
+  replaced by the paired row once the report arrives. First build: 238 filings, 31 quarters (20 paired, 11 inferred),
+  33 releases, 2 unplaced (two Expeditors 8-Ks with item 2.02 that are not quarterly results). The rule measured on
+  the calendar's own 38,111 consecutive quarters: exact 94.9%, within a week 99.96% (the guidance builder labels a
+  release by the nearest fiscal quarter, so a few days do not matter).
+- **Fundamentals refresh (lab `ce975bb` + `a018400`, job `std-fundamentals-refresh`, daily 03:12):**
+  `src/fundamentals/std-fundamentals-refresh.mts`: the newest filings' own XBRL, an inputs fingerprint (newest facts
+  row id, fetched filings, data-set quarters, code, overrides), build into `standard/v3.2-<run id>`, `qa.mts`,
+  `checks.py`, `compare.py` against the published build, regression (same companies, no fewer company-quarters, no
+  last quarter stepping back, nothing removed or broken), pointer `fundamentals/standard/current.json`, desk files.
+  The research database is not loaded (it keeps v3.1).
+- **Guidance refresh (lab `a018400`, job `std-guidance-refresh`, daily 02:25):**
+  `src/research/guidance/std-guidance-refresh.mts`: the addendum, `guidance-pass2.py queue`/`run` into
+  `guidance-pass2-new` (same extraction version `guidance-pass2-v1.4f465bc0ac` as the original first pass),
+  `build_guidance_std.py` with `GUIDANCE_EXTRA`, `GUIDANCE_EXTRA_SESSIONS` (the app's SPY sessions since the weekly
+  price refresh: the desk drops a guidance row without an availability date) and `GUIDANCE_VERSION`, the builder's
+  gates, regression (no published statement missing, no count lower), pointer `guidance/std/current.json`, desk
+  files. **GPU:** Ollama is started for the run when it is not running and stopped again when the run started it; the
+  job does not list the `gpu` requirement because the scheduler's preflight for it needs Ollama already up. At most
+  60 releases a night. The research database is not loaded (its guidance tables are keyed by version).
+- `scripts/build-desk-company.mts` follows the three pointers (fundamentals, guidance, insiders) through
+  `worker/lib/published-standard.ts`; the fundamentals label on the pages is "v3.2 of <day>" for a refreshed build.
+- Registry 71 jobs; `docs/OPERATIONS.md` edited by hand (rows, sections 22b1 and 22b2).
+- Gates: `npm run check`, 265 files / 1,628 tests, `npm run build`, `git diff --check`. Lab: insider 11 files / 105
+  tests, refresh libraries 14 tests.
+- **First runs** (results in the next section): fundamentals `--no-publish` from 10:11Z, guidance from 10:18Z by
+  hand (33 releases, Ollama started by the run), insiders by its own schedule at 11:35Z.
+- **Still by hand:** adjusted earnings per share (a8, `scripts/build-adjusted-eps.mts`: the new releases have no
+  adjusted actual until it is rebuilt), the 13F standard and the desk's fund-flow files (quarterly source), the
+  standard prices stay weekly. SEC's quarterly bulk sets (insider forms, financial statement data sets) are still
+  downloaded by hand once a quarter.
