@@ -1,5 +1,5 @@
 import { lazy, Suspense, type ReactNode } from "react";
-import { Routes, Route, Link, Navigate } from "react-router";
+import { Routes, Route, Link, Navigate, useLocation } from "react-router";
 import { ShieldAlert } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import Login from "./pages/Login";
@@ -19,13 +19,11 @@ const Screener = lazy(() => import("./pages/Screener"));
 const DatabasePage = lazy(() => import("./pages/Database"));
 const Lab = lazy(() => import("./pages/Lab"));
 const Analytics = lazy(() => import("./pages/Analytics"));
-const Methodology = lazy(() => import("./pages/Methodology"));
 const VolatilityRiskLab = lazy(() => import("./pages/VolatilityRiskLab"));
 const MacroScenarioLab = lazy(() => import("./pages/MacroScenarioLab"));
 const Expectations = lazy(() => import("./pages/Expectations"));
 const InsiderActivity = lazy(() => import("./pages/InsiderActivity"));
 const MarketData = lazy(() => import("./pages/MarketData"));
-const Wiki = lazy(() => import("./pages/Wiki"));
 const ProjectState = lazy(() => import("./pages/ProjectState"));
 
 /** Direct URLs cannot bypass the owner-page guard; procedures also enforce the role on the server. */
@@ -52,6 +50,11 @@ function AdminOnly({ children }: { children: ReactNode }) {
   return <>{children}</>
 }
 
+function FactorWikiRedirect() {
+  const { hash } = useLocation();
+  return <Navigate to={{ pathname: "/desk/research/library/factors", hash }} replace />;
+}
+
 export default function App() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="radar" /></div>}>
@@ -66,14 +69,14 @@ export default function App() {
       <Route path="/company/:ticker" element={<Company />} />
       <Route path="/jobs" element={<Jobs />} />
       <Route path="/messages" element={<Navigate to="/desk/messages" replace />} />
-      <Route path="/wiki" element={<Wiki />} />
+      <Route path="/wiki" element={<FactorWikiRedirect />} />
       <Route path="/database" element={<AdminOnly><DatabasePage /></AdminOnly>} />
       <Route path="/lab" element={<AdminOnly><Lab /></AdminOnly>} />
       <Route path="/admin" element={<AdminOnly><Navigate to="/desk/admin" replace /></AdminOnly>} />
       <Route path="/workers" element={<AdminOnly><Navigate to="/desk/operations?tab=jobs" replace /></AdminOnly>} />
       <Route path="/project-state" element={<PresentationOnly><ProjectState /></PresentationOnly>} />
       <Route path="/analytics" element={<PresentationOnly><Analytics /></PresentationOnly>} />
-      <Route path="/analytics/methodology" element={<PresentationOnly><Methodology /></PresentationOnly>} />
+      <Route path="/analytics/methodology" element={<PresentationOnly><Navigate to="/desk/research/library/volatility-handbook" replace /></PresentationOnly>} />
       <Route path="/analytics/risk-lab" element={<PresentationOnly><VolatilityRiskLab /></PresentationOnly>} />
       <Route path="/scenario-lab" element={<PresentationOnly><MacroScenarioLab /></PresentationOnly>} />
       <Route path="/expectations" element={<PresentationOnly><Expectations /></PresentationOnly>} />

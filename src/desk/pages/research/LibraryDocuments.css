@@ -1,0 +1,396 @@
+.desk-library-document {
+  max-width: 105ch;
+  padding: 28px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.desk-library-document p,
+.desk-library-document li {
+  color: var(--d-ink-2);
+}
+
+.desk-library-document code,
+.desk-factor-entry code {
+  padding: 2px 5px;
+  border-radius: 5px;
+  background: var(--d-accent-wash);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+}
+
+.desk-handbook-layout {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.desk-handbook-toc {
+  position: sticky;
+  top: 82px;
+  padding: 18px;
+}
+
+.desk-handbook-toc > span,
+.desk-handbook-toc > p {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.desk-handbook-toc nav {
+  display: grid;
+  gap: 3px;
+  margin: 14px 0;
+}
+
+.desk-handbook-toc nav a {
+  padding: 7px 9px;
+  border-radius: 7px;
+  color: var(--d-ink-2);
+  font-size: 12px;
+}
+
+.desk-handbook-toc nav a:hover,
+.desk-handbook-toc nav a.active {
+  color: var(--d-accent-ink);
+  background: var(--d-accent-wash);
+}
+
+.desk-handbook-toc > p {
+  margin: 0;
+  color: var(--d-muted);
+  font-size: 11px;
+}
+
+.desk-handbook-section {
+  scroll-margin-top: 84px;
+  margin-bottom: 38px;
+}
+
+.desk-handbook-section:last-child {
+  margin-bottom: 0;
+}
+
+.desk-handbook-section > h2 {
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--d-border);
+  font-size: 21px;
+}
+
+.desk-handbook-section > h3 {
+  margin: 24px 0 10px;
+}
+
+.desk-handbook-callout {
+  margin: 18px 0;
+  padding: 13px 15px;
+  border-left: 3px solid var(--d-accent);
+  border-radius: 0 8px 8px 0;
+  background: var(--d-accent-wash);
+  color: var(--d-ink-2);
+}
+
+.desk-handbook-symbols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+  color: var(--d-ink-2);
+}
+
+.desk-formula-card {
+  margin: 18px 0;
+  padding: 16px;
+  border: 1px solid var(--d-border);
+  border-radius: 10px;
+  background: var(--d-page);
+}
+
+.desk-formula-card figcaption {
+  margin-bottom: 9px;
+  color: var(--d-muted);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.desk-formula {
+  color: var(--d-ink);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 15px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.desk-formula sub,
+.desk-formula sup {
+  font-size: 0.72em;
+}
+
+.desk-formula-radical > span {
+  border-top: 1px solid currentColor;
+  padding-top: 1px;
+}
+
+.desk-formula-note {
+  margin: 8px 0 0;
+  color: var(--d-muted);
+  font-size: 12px;
+}
+
+.desk-handbook-formula-grid,
+.desk-handbook-usecases {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.desk-handbook-formula-grid .desk-formula-card {
+  margin: 0;
+}
+
+.desk-handbook-usecase {
+  padding: 16px;
+  border: 1px solid var(--d-border);
+  border-radius: 10px;
+  background: var(--d-page);
+}
+
+.desk-handbook-usecase h3 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.desk-handbook-usecase p {
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+.desk-handbook-table td {
+  white-space: normal;
+  vertical-align: top;
+}
+
+.desk-handbook-table small {
+  display: block;
+  margin-top: 4px;
+  color: var(--d-muted);
+}
+
+.desk-handbook-case {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(180px, 1fr);
+  gap: 16px;
+  align-items: center;
+}
+
+.desk-risk-chart {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.desk-risk-band-ok { fill: var(--d-accent-wash); }
+.desk-risk-band-accent { fill: var(--d-accent-wash); }
+.desk-risk-band-warning { fill: var(--d-warning); opacity: 0.08; }
+.desk-risk-band-critical { fill: var(--d-critical); opacity: 0.07; }
+.desk-risk-axis { stroke: var(--d-border-strong); }
+.desk-risk-axis-text { fill: var(--d-muted); font-size: 12px; }
+.desk-risk-muted line { stroke: var(--d-muted); stroke-width: 2; }
+.desk-risk-muted text { fill: var(--d-muted); font-size: 12px; }
+.desk-risk-accent line { stroke: var(--d-accent); stroke-width: 2; }
+.desk-risk-accent text { fill: var(--d-accent-ink); font-size: 12px; }
+.desk-risk-warning line { stroke: var(--d-warning); stroke-width: 2; }
+.desk-risk-warning text { fill: var(--d-warning); font-size: 12px; }
+.desk-risk-actual-line { stroke: var(--d-up); stroke-width: 5; }
+.desk-risk-actual-dot { fill: var(--d-up); }
+.desk-risk-actual-text { fill: var(--d-up); font-size: 13px; font-weight: 600; }
+
+.desk-handbook-case-metrics {
+  display: grid;
+  gap: 8px;
+}
+
+.desk-handbook-case-metrics > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--d-border);
+}
+
+.desk-handbook-case-metrics span {
+  color: var(--d-muted);
+}
+
+.desk-handbook-references {
+  padding-left: 20px;
+}
+
+.desk-handbook-references li {
+  margin-bottom: 9px;
+}
+
+.desk-factor-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 0 14px;
+  border: 1px solid var(--d-border);
+  border-radius: 10px;
+  background: var(--d-surface);
+  color: var(--d-muted);
+}
+
+.desk-factor-search:focus-within {
+  border-color: var(--d-accent);
+  outline: 2px solid var(--d-accent-wash);
+}
+
+.desk-factor-search input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--d-ink);
+  font: inherit;
+}
+
+.desk-factor-search > span:last-child {
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.desk-factor-list {
+  display: grid;
+  gap: 16px;
+}
+
+.desk-factor-entry {
+  scroll-margin-top: 82px;
+  padding: 24px;
+  line-height: 1.65;
+}
+
+.desk-factor-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.desk-factor-title h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.desk-factor-title a {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  color: var(--d-muted);
+}
+
+.desk-factor-title a:hover {
+  color: var(--d-accent-ink);
+  background: var(--d-accent-wash);
+}
+
+.desk-factor-reading {
+  margin: 7px 0 18px;
+  color: var(--d-muted);
+  font-size: 12px;
+}
+
+.desk-factor-reading a {
+  color: var(--d-accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.desk-factor-description {
+  color: var(--d-ink);
+  font-weight: 550;
+}
+
+.desk-factor-entry > p:not(.desk-factor-reading, .desk-factor-description) {
+  color: var(--d-ink-2);
+}
+
+.desk-factor-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.desk-factor-details > div {
+  padding: 13px;
+  border-radius: 9px;
+  background: var(--d-page);
+}
+
+.desk-factor-details > div:last-child {
+  grid-column: 1 / -1;
+}
+
+.desk-factor-details h3 {
+  margin: 0 0 7px;
+  color: var(--d-muted);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.desk-factor-details p {
+  margin: 0;
+  color: var(--d-ink-2);
+}
+
+.desk-factor-sources {
+  display: grid;
+  gap: 7px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--d-border);
+}
+
+.desk-factor-sources a {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  color: var(--d-accent-ink);
+  font-size: 12px;
+}
+
+.desk-factor-sources svg {
+  flex: none;
+  margin-top: 3px;
+}
+
+@media (max-width: 900px) {
+  .desk-handbook-layout { grid-template-columns: 1fr; }
+  .desk-handbook-toc { position: static; }
+  .desk-handbook-toc nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .desk-handbook-formula-grid,
+  .desk-handbook-usecases { grid-template-columns: 1fr; }
+  .desk-handbook-case { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .desk-library-document,
+  .desk-factor-entry { padding: 18px; }
+  .desk-handbook-symbols,
+  .desk-factor-details { grid-template-columns: 1fr; }
+  .desk-factor-details > div:last-child { grid-column: auto; }
+  .desk-factor-search > span:last-child { display: none; }
+}

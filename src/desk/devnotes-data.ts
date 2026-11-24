@@ -161,9 +161,21 @@ export const DEV_NOTES = {
   library: {
     missing: [
       "Scenario evidence drill-down, the full Expectations report, the risk replay and the weekly evidence review are not rebuilt in the desk; they open in the classic view.",
-      "The factor wiki as searchable desk content.",
     ],
-    better: [["One search across definitions, methods and evidence", "the manuals and the wiki moved into structured content"]],
+    better: [["One search across definitions, methods and evidence", "the manuals moved into structured content"]],
+  },
+  volatilityHandbook: {
+    missing: [
+      "The worked AAPL example is fixed to 2 January 2024; it is not linked to a current company reading.",
+      "The evidence tables are the recorded results, not a live report generated from the latest research run.",
+    ],
+    better: [["A reader can choose a company and replay the example", "the risk replay linked into the handbook with a shared company route"]],
+  },
+  factorWiki: {
+    missing: [
+      "The entries describe the factor registry only; they do not include every derived measure on the company pages.",
+    ],
+    better: [["Measured evidence beside each definition", "a generated join between the factor registry and the research ledger"]],
   },
   watchlist: {
     missing: [

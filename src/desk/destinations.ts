@@ -13,7 +13,7 @@ export function classicDestinations(isAdmin: boolean, isPresentation: boolean): 
         { label: "Scenario Lab", path: "/scenario-lab", group: "Research tools", classic: true, keywords: "macro rates oil dollar credit shock exposure" },
         { label: "Expectations", path: "/expectations", group: "Research tools", classic: true, keywords: "guidance outlook earnings release" },
         { label: "Insider buys", path: "/insider-activity", group: "Research tools", classic: true, keywords: "form 4 insider purchase" },
-        { label: "Volatility handbook", path: "/analytics/methodology", group: "Research tools", classic: true, keywords: "implied volatility iv rv methodology" },
+        { label: "Volatility handbook", path: "/desk/research/library/volatility-handbook", group: "Research tools", keywords: "implied volatility iv rv methodology" },
         { label: "Risk lab", path: "/analytics/risk-lab", group: "Research tools", classic: true, keywords: "risk expected move options" },
         { label: "Analytics", path: "/analytics", group: "Research tools", classic: true, keywords: "factors network" },
         { label: "Market data", path: "/market-data", group: "Research tools", classic: true, keywords: "schwab options chains quotes coverage" },
@@ -24,7 +24,7 @@ export function classicDestinations(isAdmin: boolean, isPresentation: boolean): 
     { label: "Watchlist manager", path: "/universe", group: "Workspace", classic: true, keywords: "universe watchlist add remove" },
     { label: "Messages", path: "/desk/messages", group: "Workspace", keywords: "chat support inbox" },
     { label: "Jobs", path: "/jobs", group: "Workspace", classic: true, keywords: "jobs logs runs" },
-    { label: "Factor wiki", path: "/wiki", group: "Workspace", classic: true, keywords: "definitions glossary factors" },
+    { label: "Factor wiki", path: "/desk/research/library/factors", group: "Workspace", keywords: "definitions glossary factors" },
   ];
   const owner: PaletteDestination[] = isAdmin
     ? [

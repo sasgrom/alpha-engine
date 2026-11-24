@@ -10,7 +10,7 @@ const DETAILS: Record<string, { icon: typeof Activity; text: string; desk?: stri
   "/scenario-lab": { icon: SlidersHorizontal, text: "Every shock channel with the filing evidence behind each company's number, custom shock sizes and the JSON export.", desk: "Macro shows the rate ranking and what is computable." },
   "/expectations": { icon: FileSearch, text: "The full guidance record: every statement read from 26,000 documents, with its quote, period and revision.", desk: "Guidance shows every change of the last year in the release's words and each company's record; a company's page shows its full history." },
   "/insider-activity": { icon: Users, text: "All Form 4 transactions with the excluded codes, per-company filters and the cluster detail.", desk: "Ownership shows the purchases, the multi-insider windows and the dry-run benchmark." },
-  "/analytics/methodology": { icon: BookOpen, text: "The volatility handbook: notation, expected move, the paired tests and their tables.", desk: "Volatility quotes its headline results." },
+  "/desk/research/library/volatility-handbook": { icon: BookOpen, text: "The volatility handbook: notation, expected move, the paired tests and their tables." },
   "/analytics/risk-lab": { icon: Gauge, text: "A historical replay of one company's implied and realized expected move against the actual outcome.", desk: "Volatility has the sizing calculator on today's readings." },
   "/analytics": { icon: Network, text: "The weekly evidence review: the map of what is built, partial and unproven, and the option hypothesis ledger.", desk: "Signals is the ledger of measured results." },
   "/market-data": { icon: LineChart, text: "Coverage and provenance of the Schwab chains, quotes and intraday context.", desk: "Operations shows capture health." },
@@ -18,7 +18,7 @@ const DETAILS: Record<string, { icon: typeof Activity; text: string; desk?: stri
   "/universe": { icon: ListChecks, text: "Add companies outside the index (starts a data job), groups and presets.", desk: "Watchlist follows and unfollows index companies." },
   "/desk/messages": { icon: MessageSquare, text: "Conversations with the team, with member-safe contacts and the owner's user intel." },
   "/jobs": { icon: ListChecks, text: "Data jobs and their logs." },
-  "/wiki": { icon: BookOpen, text: "Definitions of the factors and measures." },
+  "/desk/research/library/factors": { icon: BookOpen, text: "Definitions of the factors and measures, searchable and linked to the measured evidence." },
   "/desk/admin": { icon: ShieldCheck, text: "People, reviewers, structured manuals, job logs and delivery monitors." },
   "/desk/operations?tab=jobs": { icon: Activity, text: "Every job with its switch, schedule, Run and Stop; the runs and their logs; what follows what." },
   "/database": { icon: Database, text: "Browse stored tables, filings and concept series." },
@@ -33,11 +33,11 @@ const GROUP_TEXT: Record<string, string> = {
 
 export default function Library() {
   useDocumentTitle("Library");
-  const { isAdmin, isPresentation } = useDesk();
+  const { isAdmin, isPresentation, audienceReady } = useDesk();
   const destinations = classicDestinations(isAdmin, isPresentation);
   const groups = ["Research tools", "Workspace", "Owner tools"].map((group) => ({ group, items: destinations.filter((destination) => destination.group === group) })).filter((entry) => entry.items.length);
-  return (
-    <ResearchFrame>
+  const content = (
+    <>
       <div className="desk-page-head">
         <div>
           <span className="desk-eyebrow">Research · methods, full records and tools</span>
@@ -67,6 +67,8 @@ export default function Library() {
         </section>
       ))}
       <DevNotes page="library" />
-    </ResearchFrame>
+    </>
   );
+  if (!audienceReady) return <ResearchFrame><div /></ResearchFrame>;
+  return isPresentation ? <ResearchFrame>{content}</ResearchFrame> : <div>{content}</div>;
 }
