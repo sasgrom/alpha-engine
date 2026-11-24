@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import type { DeskGuidanceChange, DeskGuidanceRecord } from "@contracts/desk-company";
 import { trpc } from "@/providers/trpc";
 import { Card, CompanyLink, Delta, Kpi, Segmented, Shimmer } from "../../components";
-import { useDocumentTitle } from "../../context";
+import { useDesk, useDocumentTitle } from "../../context";
 import { findCompany, useDeskSnapshot } from "../../data";
 import { DevNotes } from "../../DevNotes";
 import { fmtDate, fmtPct } from "../../format";
@@ -29,7 +29,9 @@ const WHAT: Record<DeskGuidanceChange["what"], string> = { first: "First figures
 export default function Guidance() {
   useDocumentTitle("Guidance");
   const snapshot = useDeskSnapshot();
-  const query = trpc.desk.guidanceMarket.useQuery(undefined, { staleTime: 30 * 60_000, refetchOnWindowFocus: false });
+  // the record is for the owner and reviewers who accepted the agreement: nobody else's browser asks the server for it
+  const { isPresentation, audienceReady } = useDesk();
+  const query = trpc.desk.guidanceMarket.useQuery(undefined, { enabled: audienceReady && isPresentation, staleTime: 30 * 60_000, refetchOnWindowFocus: false });
   const data = query.data ?? null;
   const [days, setDays] = useState<Days>("90");
   const [what, setWhat] = useState<What>("revised");
