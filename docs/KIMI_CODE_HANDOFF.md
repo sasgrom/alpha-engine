@@ -4586,3 +4586,38 @@ estimates, a forward earnings-date calendar, S&P index-change announcements, Pol
 - Gates: `npm run check`, 261 files / 1,603 tests, `npm run build`, `git diff --check`.
 - The desk still reads one old table: `short_interest` (50 companies, 2026-10-15). Its fix needs FINRA's
   twice-monthly files fetched on a schedule, which is a new scheduled collector: waiting for the owner's go.
+
+## 243. Claude (Fable 5.2): insider standard as a daily gated refresh; FINRA short interest scheduled; snapshot off the old tables — 2026-11-24T10:06Z
+
+Owner, 2026-11-24: "go ahead with insiders daily, guidance and short interest ... lets put everything we can to
+automatic processing of the fetched data".
+
+- **Insider refresh (lab `d3acb69`, job `std-insiders-refresh`, daily 03:35):**
+  `src/insiders/std-insiders-refresh.mts` runs fetch, build, the three acceptance commands, a regression against the
+  published build, staged load and swap, the independent live check, final status and the pointer
+  `D:/research/alpha-engine/insiders/std/current.json`, then rebuilds the desk company files.
+  - The build requires form coverage to end on the calendar's last session, and the standard-price calendar is
+    weekly. `build-insiders.mts --extend-sessions-until <day>` adds the later sessions from the app's completed SPY
+    bars (recorded in `build.json` as `inputs.sessionExtension`); prices stay weekly. Transactions after the last
+    standard price have no price check until the weekly refresh; the next daily build then has it.
+  - The loader refused to replace a final build. It still does, except for the refresh: `--supersede-final <version>`
+    with a passed `refresh-regression.json` for exactly that pair of builds (`supersededFinalAllowed`).
+  - `finalize-insiders.mts` generalises the one-off `worker/.runs/k20-finalize.mts`.
+  - `scripts/build-desk-company.mts` follows the pointer (`worker/lib/published-standard.ts`); before the first
+    refresh it reads the build accepted by hand.
+  - Lab tests: 11 insider files / 105 tests. **Not yet run for real when this was written**; the first run and its
+    result are in the next section.
+  - **Disk:** a build folder is 8.3 GB and nothing is pruned; D: had 486 GB free. Retention needs the owner's rule.
+- **FINRA short interest (job `finra-short-interest`, daily 06:25):** `worker/finra-short-interest.mts` fetches the
+  settlement files the archive lacks and writes `worker/.runs/desk-short-interest.json` (24 settlements, 501 of 502
+  registry companies). First run: the 2026-11-13 settlement is not out yet (2 requests), newest is 2026-10-30.
+  `company.shortInterest` and the desk snapshot read the file; FINRA gives no float, so "share of float" is no
+  longer shown.
+- **Desk snapshot (`scripts/build-desk-snapshot.mts`):** earnings dates and the insider summary now come from the
+  desk company files, not the `events` and `insider_trades` tables. Coverage: insider summary 451 companies (48
+  before), last earnings 499 (50), projected next earnings 495, short interest 499.
+  - I ran the snapshot builder once by mistake (`--help` is not an option) before the FINRA file existed; the
+    snapshot was without short interest for about two minutes and was rebuilt.
+- **No page reads `filings`, `events`, `insider_trades`, `macro_points` or `short_interest` any more.**
+- Registry 69 jobs. `docs/OPERATIONS.md` edited by hand (two rows, sections 22c and 22d).
+- Gates: `npm run check`, 264 files / 1,619 tests, `npm run build`, `git diff --check`.

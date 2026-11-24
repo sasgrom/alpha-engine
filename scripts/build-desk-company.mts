@@ -45,13 +45,15 @@ import {
   type AdjustedEpsActual, type CachedFilingEntry, type CalendarFilingRow, type GuidanceStatementRow, type InsiderFilingDoc, type StandardCompanyDoc, type StandardField, type StandardPriceRow, type ThirteenFCompanyQuarter,
 } from "../worker/lib/desk-company";
 import { writeJsonAtomic } from "../worker/lib/json-file";
+import { publishedStandardDir } from "../worker/lib/published-standard";
 
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const source = path.resolve(arg("--source") ?? "D:/research/alpha-engine/fundamentals/standard/v3.2");
 const guidanceDir = path.resolve(arg("--guidance") ?? "D:/research/alpha-engine/guidance/std/20261123T033803Z");
 const pricesDir = path.resolve(arg("--prices") ?? "D:/research/alpha-engine/prices/std/daily");
 const holdersDir = path.resolve(arg("--holders") ?? "D:/research/alpha-engine/fund-books/std-k16.6");
-const insidersDir = path.resolve(arg("--insiders") ?? "D:/research/alpha-engine/insiders/std/20261116T223552Z");
+// the insider standard is refreshed on a schedule (lab std-insiders-refresh.mts); its pointer names the published build
+const insidersDir = path.resolve(arg("--insiders") ?? publishedStandardDir("D:/research/alpha-engine/insiders/std/current.json", "D:/research/alpha-engine/insiders/std/20261116T223552Z"));
 const calendarDir = path.resolve(arg("--calendar") ?? "D:/research/alpha-engine/engine/events");
 // The adjusted earnings per share the releases print (scripts/build-adjusted-eps.mts), beside the adjusted guidance;
 // a read that is missing stops the build (below).

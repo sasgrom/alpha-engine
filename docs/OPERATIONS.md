@@ -217,6 +217,8 @@ Cloud cannot spawn jobs. Every mutation requires the owner admin role and `LOCAL
 | Standard prices weekly gated refresh | scheduled | 0 2 * * 0 | Local D: artifacts and alpha_research only; no production write and no alpha_engine production mutation. |
 | FRED and ALFRED vintage refresh | scheduled | 30 5 * * * | Normalized vintage rows automatically pushed through macroPoints after exit-ok; raw FRED chunks stay local. |
 | Desk macro card | scheduled | after macro-fred-weekly | Local file read by dashboard.macro; no production write and no database write. |
+| Insider standard daily gated refresh | scheduled | 35 3 * * * | Local D: artifacts and alpha_research only; no production write and no alpha_engine mutation. |
+| FINRA short interest | scheduled | 25 6 * * * | Local D: archive and a local file read by company.shortInterest and the desk snapshot; no production write and no database write. |
 | Desk company files | scheduled | after edgar-fetch-daily | Local files read by the desk procedures; no production write. |
 | OFAC daily event refresh | scheduled | 40 5 * * * | Local macro archive only; no production write. |
 | Macro manifest and availability QA | scheduled | 55 5 * * * | Local fail-closed QA gate only. |
@@ -564,6 +566,19 @@ npx tsx worker/prediction-markets-daily.mts --scheduled-style
 ```powershell
 npx tsx ../alpha-engine-lab/src/prices/std-prices-refresh.mts
 ```
+
+### 22c. Insider standard daily gated refresh (added 2026-11-24, owner's go)
+
+- **ID:** `std-insiders-refresh` · **Cron:** 35 3 * * * · **Requirements:** network, mysql, driveD
+- **Command:** `npx tsx ../alpha-engine-lab/src/insiders/std-insiders-refresh.mts` (`--force` rebuilds on an unchanged day, `--no-desk` skips the desk rebuild)
+- **Chain:** form fetch through the last completed session (`edgar-insiders.mts`), build with the calendar extended by the app's SPY sessions since the weekly price refresh, the three acceptance commands, regression against the published build (no filing lost, no table smaller, a plausible number of new filings), staged load and swap (`--supersede-final` names the stored final build), independent live check, final status (`finalize-insiders.mts`), pointer `D:/research/alpha-engine/insiders/std/current.json`, desk company files.
+- **Operational note:** a run with no new session and an unchanged price calendar ends as "unchanged". A failed step stops the chain; before the swap the stored build is untouched, and the pointer names the previous build until the new one is final. Each build folder is about 8 GB and nothing is pruned: free space on D: is checked (40 GiB) and retention is the owner's decision. Summary: `worker/.runs/local-generated/std-insiders-refresh.json`.
+
+### 22d. FINRA short interest (added 2026-11-24, owner's go)
+
+- **ID:** `finra-short-interest` · **Cron:** 25 6 * * * · **Requirements:** network, mysql, driveD
+- **Command:** `npx tsx worker/finra-short-interest.mts` (`--no-fetch` rebuilds the desk file only, `--dry-run` writes nothing)
+- **Operational note:** asks only for settlement files the archive lacks (the 15th and the last business day of a month, published about seven business days later); a date not out yet is asked again the next day. Stored files are never rewritten and are checked against the manifest hash when read. Output `worker/.runs/desk-short-interest.json` feeds `company.shortInterest` and `scripts/build-desk-snapshot.mts`.
 
 ### 23. FRED and ALFRED vintage refresh
 

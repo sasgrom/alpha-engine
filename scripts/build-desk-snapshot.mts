@@ -24,6 +24,7 @@ import { registryCorrections } from "../api/services/canonical-ticker";
 import { buildDeskSnapshot, deskOptions, normalizeTicker, schwabFundamentals, shortInterestSummary, spliceCloses, withLiveClose, type DeskFundamentals, type InsiderTradeRow, type ShortInterestRow, type StoredCloseRow } from "../worker/lib/desk-snapshot";
 import { buildIntradayMarket } from "../worker/lib/intraday-views";
 import { defaultIntradayRoot, listIntradaySessions, readStoredIntradaySession } from "../worker/lib/intraday-storage";
+import type { DeskShortInterestFile } from "../worker/lib/finra-short-interest";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 import type { LivePrices } from "../worker/lib/schwab-intraday";
 import type { DeskLive, DeskOptions } from "../contracts/desk-snapshot";
@@ -121,13 +122,29 @@ const priceRows = await select<{ cik: number; ticker: string; date: string; clos
   "SELECT cik, ticker, DATE_FORMAT(date, '%Y-%m-%d') AS date, close, source FROM prices WHERE date >= ? AND source IN ('stooq', 'schwab')",
   [since],
 );
-const eventRows = await select<{ cik: number; date: string }>("SELECT cik, DATE_FORMAT(eventDate, '%Y-%m-%d') AS date FROM events");
-const shortRows = await select<ShortInterestRow & { cik: number }>(
-  "SELECT cik, DATE_FORMAT(settlementDate, '%Y-%m-%d') AS date, sharesShort AS shares, shortRatio AS daysToCover, shortPercentOfFloat AS pctFloat FROM short_interest WHERE settlementDate >= DATE_SUB(CURDATE(), INTERVAL 150 DAY)",
-);
-const insiderTradeRows = await select<{ cik: number; date: string; code: string; insider: string | null; shares: number | null; price: number | null; plan: number }>(
-  "SELECT cik, DATE_FORMAT(COALESCE(tradeDate, filingDate), '%Y-%m-%d') AS date, code, insiderName AS insider, shares, price, is10b5 AS plan FROM insider_trades WHERE filingDate >= DATE_SUB(CURDATE(), INTERVAL 150 DAY)",
-);
+// Earnings dates and insider trades come from the desk's company files (scripts/build-desk-company.mts), which cover
+// every company and follow the nightly SEC cache and the insider standard. The app's events and insider_trades tables
+// are not read: they held about 50 companies and ended on 2026-11-05. A company without a file has neither.
+const deskCompanyDir = path.resolve("worker/.runs/desk-company");
+const deskCompanyFile = <T,>(kind: string, cik: number): T | null => {
+  const file = path.join(deskCompanyDir, kind, `${cik}.json`);
+  return existsSync(file) ? (JSON.parse(readFileSync(file, "utf8")) as T) : null;
+};
+const eventRows = companyRows.flatMap((company) =>
+  (deskCompanyFile<{ filings: { earnings: boolean; period: string | null; filed: string }[] }>("filings", Number(company.cik))?.filings ?? [])
+    .filter((filing) => filing.earnings).map((filing) => ({ cik: Number(company.cik), date: filing.period ?? filing.filed })));
+// Short interest: FINRA's settlement files for every company (worker/finra-short-interest.mts). The app's
+// short_interest table is not read: it held 50 companies and ended on 2026-10-15. A missing file leaves the field empty.
+const shortFile = path.resolve("worker/.runs/desk-short-interest.json");
+const shortSince = new Date(Date.now() - 150 * 86_400_000).toISOString().slice(0, 10);
+const shortRows: Array<ShortInterestRow & { cik: number }> = existsSync(shortFile)
+  ? Object.entries((JSON.parse(readFileSync(shortFile, "utf8")) as DeskShortInterestFile).companies).flatMap(([cik, points]) =>
+      points.filter((point) => point.date >= shortSince).map((point) => ({ cik: Number(cik), date: point.date, shares: point.shares, pctFloat: null, daysToCover: point.daysToCover })))
+  : [];
+const insiderSince = new Date(Date.now() - 150 * 86_400_000).toISOString().slice(0, 10);
+const insiderTradeRows = companyRows.flatMap((company) =>
+  (deskCompanyFile<{ trades: { date: string | null; filed: string; owner: string | null; code: string; shares: number | null; price: number | null; plan: boolean }[] }>("insiders", Number(company.cik))?.trades ?? [])
+    .filter((trade) => trade.filed >= insiderSince).map((trade) => ({ cik: Number(company.cik), date: trade.date ?? trade.filed, code: trade.code, insider: trade.owner, shares: trade.shares, price: trade.price, plan: trade.plan })));
 const group = <T extends { cik: number }>(rows: T[]) => {
   const map = new Map<number, T[]>();
   for (const row of rows) map.set(Number(row.cik), [...(map.get(Number(row.cik)) ?? []), row]);
