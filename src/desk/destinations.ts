@@ -10,7 +10,6 @@ export interface PaletteDestination {
 export function classicDestinations(isAdmin: boolean, isPresentation: boolean): PaletteDestination[] {
   const research: PaletteDestination[] = isPresentation
     ? [
-        { label: "Scenario Lab", path: "/scenario-lab", group: "Research tools", classic: true, keywords: "macro rates oil dollar credit shock exposure" },
         { label: "Expectations", path: "/expectations", group: "Research tools", classic: true, keywords: "guidance outlook earnings release" },
         { label: "Insider buys", path: "/insider-activity", group: "Research tools", classic: true, keywords: "form 4 insider purchase" },
         { label: "Volatility handbook", path: "/desk/research/library/volatility-handbook", group: "Research tools", keywords: "implied volatility iv rv methodology" },

@@ -3320,3 +3320,17 @@ tr.desk-ops-open > td {
 .desk-chain-sides { display: grid; grid-template-columns: 1fr 1fr; gap: 90px; margin-bottom: 4px; font-size: 12px; font-weight: 600; color: var(--d-muted); text-align: center; }
 .desk-chain td:nth-child(7), .desk-chain thead th:nth-child(7) { background: var(--d-hover); text-align: center; }
 .desk-chain tr.desk-chain-money td { border-top: 2px solid var(--d-accent); border-bottom: 2px solid var(--d-accent); }
+
+/* --- the scenario view of the Macro page ---------------------------------------------------------------------------- */
+.desk-scenario-presets { display: flex; flex-wrap: wrap; gap: 8px; }
+.desk-scenario-presets .desk-button[aria-pressed="true"] { border-color: var(--d-accent); color: var(--d-accent-ink); background: var(--d-accent-wash); }
+.desk-scenario-evidence { display: grid; gap: 16px; }
+.desk-scenario-evidence h3 { margin: 0; font-size: 14px; }
+.desk-scenario-evidence section { padding-top: 14px; border-top: 1px solid var(--d-border); }
+.desk-scenario-evidence dl { display: grid; gap: 4px; margin: 0; font-size: 12.5px; }
+.desk-scenario-evidence dl > div { display: grid; grid-template-columns: 130px 1fr; gap: 10px; }
+.desk-scenario-evidence dt { color: var(--d-muted); }
+.desk-scenario-evidence dd { margin: 0; overflow-wrap: anywhere; }
+.desk-scenario-evidence details { margin: 4px 0 0; font-size: 12.5px; }
+.desk-scenario-evidence summary { cursor: pointer; color: var(--d-muted); }
+.desk-scenario-evidence pre { margin: 6px 0 0; padding: 10px; border-radius: var(--d-radius-sm); background: var(--d-hover); white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; }

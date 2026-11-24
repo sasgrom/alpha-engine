@@ -4268,3 +4268,40 @@ delivered.
 - **Next:** the scenario lab, then desk sign-in and switching the classic view off. Open for the owner: a guidance
   version g1.3 (misread figures, section 228), fundamentals v3.3 (L3Harris' quarter, Exxon's missing quarters,
   multi-class per-share figures, section 226).
+
+## 233. Claude (Fable 5.2): the scenario lab in the desk Macro page — 2026-11-24T06:25Z
+
+- **Owner:** "go on with the scenario lab".
+- **Macro → Scenarios** (`/desk/research/macro?view=scenarios`, `src/desk/pages/research/MacroScenarios.tsx`, loaded
+  only when the view is opened). It reads the same six reports as the classic page (`macro-scenarios`,
+  `pilot-exposure-evidence`, `company-exposures`, `shock-calibration`, `exposure-latest`,
+  `macro-transmission-atlas`) and recomputes with the same engine (`buildMacroScenarioReport` of
+  `api/services/macro-scenarios.ts`), so a custom shock cannot disagree with the built report.
+  - The shock: rates, oil, the dollar or credit spreads; the size in basis points or percent (the classic page took
+    decimals); round sizes and the sizes of the series' own days (median, one day in ten, one in a hundred) from
+    the calibration; the baseline value before and after.
+  - By company: status in plain words (computed, old evidence only, not applicable, no figure), what is measured,
+    the effect of the move, its share of operating income or revenue, the period of the figures, a status filter.
+  - Evidence dialog per company: every metric with its formula, period, day it was known and filed concepts; the
+    reasons; the filings with links to the SEC and the tagged facts with their excerpts.
+  - Past share reaction: the engine's median reaction per unit of the move, shown scaled to the chosen size and
+    labelled as that. The classic page printed the per-unit figure as a percentage (−2,452% for Royal Caribbean and
+    rates). Past moves were far smaller than a round shock, and the page says the scaling describes, not forecasts.
+  - JSON export of the recomputed report.
+- Live reports of 2026-11-24, +100 bp in rates: 40 of 50 companies computed, 2 on old evidence, 8 without a figure
+  (4 where interest is the business), 16 with a past share reaction. Checked by screenshot on the running server.
+- **Retired:** `/scenario-lab` redirects to the view; `src/pages/MacroScenarioLab.tsx` and its test are removed; the
+  classic navigation entry, the command palette entry and the Library card are gone. The Macro page's backdrop view
+  links to the scenarios in place.
+- `api/services/report-files.test.ts`: the guard that every report a page reads is on the server's list read only
+  literal `/reports/<name>` strings, which the classic page had and the desk does not; it now also reads the desk's
+  `useReport("<name>")` calls. All of them are on the list.
+- Tests: `src/desk/pages/research/MacroScenarios.test.tsx` (5: recomputation, sizes, evidence, the other channels
+  and the status filter, the redirect), on the engine's own fixtures and the two built evidence reports, as the
+  classic test did.
+- Gates: `npm run check`, 284 files / 1,663 tests, `npm run build`, `git diff --check`. No server code changed and
+  no restart was needed.
+- **Left of the classic view:** Terminal (still its landing page), the classic dashboard, screener and company
+  page, Analytics (tone reaction chart), Market data (provenance table), Expectations (the old statement record),
+  Insider activity, Database browser, Risk lab, Lab, Project state, Login and Signup. Next: desk sign-in, then
+  switching the classic view off (`docs/desk/UI_MIGRATION.md` section 7).

@@ -13,7 +13,6 @@ import {
   Menu,
   FileSearch,
   DatabaseZap,
-  SlidersHorizontal,
   Workflow,
   BookOpen,
   Sparkles,
@@ -64,7 +63,6 @@ const ADMIN_NAV = { icon: ShieldCheck, label: "Admin", path: "/admin" };
 const PROJECT_STATE_NAV = { icon: Workflow, label: "Project State", path: "/project-state" };
 const WORKERS_NAV = { icon: Activity, label: "Operations", path: "/workers" };
 const ANALYTICS_NAV = { icon: Activity, label: "Analytics", path: "/analytics" };
-const SCENARIO_NAV = { icon: SlidersHorizontal, label: "Scenario Lab", path: "/scenario-lab" };
 const EXPECTATIONS_NAV = { icon: FileSearch, label: "Expectations", path: "/expectations" };
 const INSIDER_NAV = { icon: Users, label: "Insider buys", path: "/insider-activity" };
 const MARKET_DATA_NAV = { icon: DatabaseZap, label: "Market data", path: "/market-data" };
@@ -314,7 +312,7 @@ export default function AppLayout({ children, title }: { children: ReactNode; ti
 
   /** Nav items shared by the desktop sidebar and the mobile drawer. */
   const renderNavItems = (onNavigate?: () => void) =>
-    [...NAV, ...(isPresentationReviewer ? [PROJECT_STATE_NAV, ...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, SCENARIO_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, INSIDER_NAV, ...(isAdmin ? [ADMIN_NAV] : [])] : [])].map((item) => {
+    [...NAV, ...(isPresentationReviewer ? [PROJECT_STATE_NAV, ...(workersUi.data?.enabled ? [WORKERS_NAV] : []), ANALYTICS_NAV, MARKET_DATA_NAV, EXPECTATIONS_NAV, INSIDER_NAV, ...(isAdmin ? [ADMIN_NAV] : [])] : [])].map((item) => {
       const active = location.pathname === item.path;
       return (
         <div key={item.path} className="reviewer-nav-item" data-guide-block>

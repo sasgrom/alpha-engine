@@ -4,7 +4,10 @@ import { describe, expect, it } from "vitest";
 import { REPORT_FILE_POLICY } from "@contracts/report-files";
 import { reportFileResponse } from "./report-files";
 
-/** Every /reports/<name> the pages fetch or link to, read from the source so a new page cannot miss the whitelist. */
+/**
+ * Every report the pages fetch or link to, read from the source so a new page cannot miss the whitelist: a literal
+ * "/reports/<name>", and the desk's useReport("<name>").
+ */
 function reportsReferencedByPages(): string[] {
   const names = new Set<string>();
   const walk = (dir: string) => {
@@ -12,7 +15,9 @@ function reportsReferencedByPages(): string[] {
       const file = path.join(dir, entry.name);
       if (entry.isDirectory()) walk(file);
       else if (/\.(tsx?|jsx?)$/.test(entry.name) && !/\.test\./.test(entry.name)) {
-        for (const match of readFileSync(file, "utf8").matchAll(/["'`]\/reports\/([A-Za-z0-9._-]+)["'`]/g)) names.add(match[1]);
+        const source = readFileSync(file, "utf8");
+        for (const match of source.matchAll(/["'`]\/reports\/([A-Za-z0-9._-]+)["'`]/g)) names.add(match[1]);
+        for (const match of source.matchAll(/useReport[^(\n]*\(\s*["'`]([A-Za-z0-9._-]+\.(?:json|md))["'`]/g)) names.add(match[1]);
       }
     }
   };

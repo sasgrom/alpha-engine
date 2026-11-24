@@ -217,7 +217,7 @@ calls. 18 classic routes are still live; only `/messages` and `/admin` redirect 
 | Jobs | **Retired** (handoff 231): `/jobs` redirects the owner to Operations → Runs and the classic page is removed; its launcher went with "add a company" | — |
 | Expectations | **Moved** (handoff 228): Research → Guidance shows every change of the last year across companies with what stood before and the release's own words, and each company's record against its own guidance; a company's full history is on its page (g1.2) | Measures other than revenue and EPS; the classic page (with the old 27 MB report) stays until the classic view retires |
 | Insider activity | Ownership, on the insider standard i1.1 for all 500 companies (handoff 225): 90-day totals, open-market purchases, windows with several insiders buying, the companies with the largest net selling and buying; insiders card per company with every open-market trade of three years and a switch between all lines and the market trades (handoff 227) | A list across companies with filters by code and role; the lines older than three years |
-| Scenario Lab | Macro: rate and credit exposure ranking | Custom shocks, presets, evidence inspector, export |
+| Scenario Lab | **Moved** (handoff 233): Macro → Scenarios, with the same engine: a move of any size in rates, oil, the dollar or credit spreads, round sizes and the sizes of the series' own days, every company's figure with its status, the evidence dialog (formula, reasons, filings and tagged facts, past share reaction) and the JSON export; `/scenario-lab` redirects, the classic page is removed | The 450 companies outside the research list: no exposure evidence is built for them |
 | Market data | Volatility (features, implied against realized, sizing); Operations (capture health); the option chain on the company page (handoff 229): the latest capture, one expiration at a time, calls and puts around each strike | The raw captures' file hashes (provenance table); chains of earlier days |
 | Analytics | Signals ledger | Tone reaction chart; build network (to Operations) |
 | Methodology handbook, Wiki | Linked from Library | As documents in Library, with LaTeX rendered |
@@ -262,6 +262,7 @@ Volatility research, the intraday ranges.
 4. ~~Screener columns from the standard fundamentals.~~ Done (handoff 226). "Add any SEC company" was dropped by the
    owner; `/universe` and `/jobs` are retired (handoff 231).
 5. Research pages: ~~the cross-company guidance record (g1.2), the full insider list (i1.1)~~ (done, handoffs 227 and
-   228), ~~option chains~~ (done, handoff 229), the scenario lab, handbooks and wiki as documents.
+   228), ~~option chains~~ (done, handoff 229), ~~the scenario lab~~ (done, handoff 233), ~~handbooks and wiki as
+   documents~~ (done by Kimi, K25).
 6. Retire the classic view: redirects, desk sign-in; then the old pipelines (`docs/PROJECT_REVIEW_2026-11-22.md`
    section 6.4).

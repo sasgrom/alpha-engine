@@ -98,7 +98,8 @@ export const INTRADAY_MARKET: DeskIntradayMarket = {
 const evidence = (value: number | null) => ({ value, periodEnd: "2026-09-26", quality: value === null ? "missing" : "available", stale: false });
 
 /** Minimal copies of the classic report files the research tools read. */
-const REPORTS: Record<string, unknown> = {
+/** Report files the harness serves; a test may put its own file under a name before mounting. */
+export const REPORTS: Record<string, unknown> = {
   "daily-operations.json": {
     generatedAt: "2026-11-12T00:00:00.000Z",
     date: "2026-11-12",

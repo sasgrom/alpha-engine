@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Link } from "react-router";
+import { lazy, Suspense, useMemo, useState } from "react";
+import { useSearchParams } from "react-router";
 import { trpc } from "@/providers/trpc";
 import { Card, CompanyLink, Kpi, Segmented, Shimmer } from "../../components";
 import { useDocumentTitle } from "../../context";
@@ -55,6 +55,9 @@ const MACRO_LABELS: Record<string, string> = {
 
 const CHANNEL_LABEL: Record<string, string> = { rates: "Rates", oil: "Oil", usd: "Dollar", credit: "Credit spreads" };
 type Shock = "0.005" | "0.01" | "0.02";
+type View = "backdrop" | "scenarios";
+// the scenario engine and its evidence files are loaded only when the view is opened
+const MacroScenarios = lazy(() => import("./MacroScenarios"));
 
 export default function Macro() {
   useDocumentTitle("Macro");
@@ -64,6 +67,14 @@ export default function Macro() {
   const scenarios = useReport<ScenarioReport>("macro-scenarios.json");
   const [shock, setShock] = useState<Shock>("0.01");
   const size = Number(shock);
+  const [params, setParams] = useSearchParams();
+  const view: View = params.get("view") === "scenarios" ? "scenarios" : "backdrop";
+  const setView = (next: View) => {
+    const updated = new URLSearchParams(params);
+    if (next === "backdrop") updated.delete("view");
+    else updated.set("view", next);
+    setParams(updated, { replace: true });
+  };
 
   const rows = useMemo(
     () =>
@@ -92,12 +103,18 @@ export default function Macro() {
         <div>
           <span className="desk-eyebrow">Research · rates, credit, oil and the dollar against company balance sheets</span>
           <h1>Macro</h1>
-          <p className="desk-lede">The latest macro readings, and what a move in rates would cost each company at most, taken from the debt and operating income in its own filings.</p>
+          <p className="desk-lede">The latest macro readings, and what a move in rates, oil, the dollar or credit spreads would cost each company at most, taken from its own filings.</p>
         </div>
+        <Segmented<View> label="Macro view" options={[{ value: "backdrop", label: "Backdrop and rates" }, { value: "scenarios", label: "Scenarios" }]} value={view} onChange={setView} />
       </div>
 
       <EvidenceNote family="macro" />
 
+      {view === "scenarios" ? (
+        <div className="desk-grid">
+          <Suspense fallback={<Shimmer height={420} />}><MacroScenarios /></Suspense>
+        </div>
+      ) : (
       <div className="desk-grid">
         <MarketExpectationsCard />
         <Card className="desk-span-4" title="Backdrop" subtitle="Latest published values (FRED)">
@@ -138,7 +155,7 @@ export default function Macro() {
             <div className="desk-empty">The scenario report has not been built.</div>
           )}
           <p className="desk-muted" style={{ fontSize: 12.5, margin: "12px 0 0" }}>
-            Oil and dollar exposure sit in segment and geography disclosures that are not read yet, so only rates and credit cover most of the list. The full evidence per company is in the <Link className="desk-link" to="/scenario-lab">Scenario Lab</Link> (classic view).
+            Oil exposure is tagged by few companies, so rates, credit and the dollar cover most of the list. Every company's figure with its evidence, for a move of your own size, is under <button type="button" className="desk-link" style={{ border: "none", background: "transparent", padding: 0, font: "inherit", cursor: "pointer" }} onClick={() => setView("scenarios")}>Scenarios</button>.
           </p>
         </Card>
 
@@ -198,6 +215,7 @@ export default function Macro() {
           )}
         </Card>
       </div>
+      )}
       <DevNotes page="macro" />
     </ResearchFrame>
   );

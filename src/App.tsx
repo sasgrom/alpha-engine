@@ -18,7 +18,6 @@ const DatabasePage = lazy(() => import("./pages/Database"));
 const Lab = lazy(() => import("./pages/Lab"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const VolatilityRiskLab = lazy(() => import("./pages/VolatilityRiskLab"));
-const MacroScenarioLab = lazy(() => import("./pages/MacroScenarioLab"));
 const Expectations = lazy(() => import("./pages/Expectations"));
 const InsiderActivity = lazy(() => import("./pages/InsiderActivity"));
 const MarketData = lazy(() => import("./pages/MarketData"));
@@ -76,7 +75,7 @@ export default function App() {
       <Route path="/analytics" element={<PresentationOnly><Analytics /></PresentationOnly>} />
       <Route path="/analytics/methodology" element={<PresentationOnly><Navigate to="/desk/research/library/volatility-handbook" replace /></PresentationOnly>} />
       <Route path="/analytics/risk-lab" element={<PresentationOnly><VolatilityRiskLab /></PresentationOnly>} />
-      <Route path="/scenario-lab" element={<PresentationOnly><MacroScenarioLab /></PresentationOnly>} />
+      <Route path="/scenario-lab" element={<Navigate to="/desk/research/macro?view=scenarios" replace />} />
       <Route path="/expectations" element={<PresentationOnly><Expectations /></PresentationOnly>} />
       <Route path="/insider-activity" element={<PresentationOnly><InsiderActivity /></PresentationOnly>} />
       <Route path="/market-data" element={<PresentationOnly><MarketData /></PresentationOnly>} />

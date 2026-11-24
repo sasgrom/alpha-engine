@@ -103,7 +103,8 @@ export const DEV_NOTES = {
   },
   macro: {
     missing: [
-      "Oil, dollar and foreign-revenue exposure: computable for one or two companies only, because dimensional XBRL is not read yet (task K10).",
+      "Oil exposure: a handful of companies tag fuel cost or oil revenue; the dollar's figure is revenue translation only, not profit or hedges.",
+      "Scenarios cover the 50 research companies: the exposure evidence is not built for the rest of the index.",
       "Exposure as known on past dates (needed for any test).",
       "Fixed against floating debt and hedges: every figure here is an upper bound.",
     ],
