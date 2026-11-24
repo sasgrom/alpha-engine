@@ -133,7 +133,7 @@ const inputs: Record<string, unknown> = {
 };
 
 /** Owner procedures removed with the classic view on 2026-11-24: the launchers of the old pipelines and the first console. */
-const REMOVED = ["browse.filingsList", "browse.concepts", "browse.conceptSeries", "browse.filingDocument", "sentiment.labStats", "sentiment.tickersWithScores", "admin.factorIc", "jobs.logs", "admin.resetReviewerTour", "workersLocal.runs", "workersLocal.run", "workersLocal.kill", "workersLocal.logTail", "workersLocal.scheduler", "workersLocal.probe", "jobs.startBootstrap", "jobs.startFilingRefresh", "jobs.startStream", "pipeline.startHarvest", "pipeline.startSeriesBuild", "pipeline.startSectionParse", "sentiment.startScore", "prices.startPrices", "prices.startImport", "screener.refresh", "scope.enrichClassification"];
+const REMOVED = ["events.byCompany", "browse.filingsList", "browse.concepts", "browse.conceptSeries", "browse.filingDocument", "sentiment.labStats", "sentiment.tickersWithScores", "admin.factorIc", "jobs.logs", "admin.resetReviewerTour", "workersLocal.runs", "workersLocal.run", "workersLocal.kill", "workersLocal.logTail", "workersLocal.scheduler", "workersLocal.probe", "jobs.startBootstrap", "jobs.startFilingRefresh", "jobs.startStream", "pipeline.startHarvest", "pipeline.startSeriesBuild", "pipeline.startSectionParse", "sentiment.startScore", "prices.startPrices", "prices.startImport", "screener.refresh", "scope.enrichClassification"];
 
 function caller(role: "admin" | "user") {
   return appRouter.createCaller({

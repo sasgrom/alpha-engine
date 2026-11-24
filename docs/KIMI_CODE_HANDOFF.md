@@ -4572,3 +4572,17 @@ estimates, a forward earnings-date calendar, S&P index-change announcements, Pol
 - Gates: `npm run check`, 261 files / 1,603 tests, `npm run build`, `git diff --check`.
 - **Still open:** insider forms since 2026-11-13 (next), short interest from the FINRA archive, the company page's
   earnings markers (still the `events` table), guidance since 2026-11-10 (owner's go for the GPU).
+
+## 242. Claude (Fable 5.2): the company chart's earnings markers come from the filings list — 2026-11-24T09:45Z
+
+- `src/desk/pages/Company.tsx` read `events.byCompany` (app table `events`: the 50 research companies, newest
+  2026-11-05) for the chart's earnings markers. It now takes the earnings releases of `desk.companyFilings` (the
+  query the Filings card already makes): every company, five years, current with the nightly SEC cache. The marker
+  date is the 8-K's report date, else its filing date, as before.
+- `events.byCompany` and `api/routers/screener.ts` removed; the guard test lists the procedure as gone. The server
+  bundle still serves the old procedure until its next restart (harmless; no page calls it).
+- Second restart of section 241 happened: scheduler pid 19288 at 2026-11-24T09:39:52Z (67 jobs), web server with
+  one listener on 3000.
+- Gates: `npm run check`, 261 files / 1,603 tests, `npm run build`, `git diff --check`.
+- The desk still reads one old table: `short_interest` (50 companies, 2026-10-15). Its fix needs FINRA's
+  twice-monthly files fetched on a schedule, which is a new scheduled collector: waiting for the owner's go.

@@ -4,7 +4,6 @@ import { dashboardRouter, universeRouter } from "./routers/engine";
 import { companyRouter } from "./routers/iteration2";
 import { adminRouter } from "./routers/admin";
 import { pricesRouter } from "./routers/prices";
-import { eventsRouter } from "./routers/screener";
 import { messagesRouter } from "./routers/messages";
 import { activityRouter } from "./routers/activity";
 import { workersLocalRouter } from "./routers/workers-local";
@@ -19,7 +18,6 @@ export const appRouter = createRouter({
   universe: universeRouter,
   company: companyRouter,
   prices: pricesRouter,
-  events: eventsRouter,
   messages: messagesRouter,
   activity: activityRouter,
   admin: adminRouter,

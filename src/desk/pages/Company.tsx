@@ -80,7 +80,8 @@ export default function CompanyPage() {
   const isIntraday = range === "1D" || range === "5D";
   const history = trpc.prices.history.useQuery({ cik, range: isIntraday ? "1M" : (range as DailyRange) }, { enabled: cik > 0 && !isIntraday, staleTime: 5 * 60_000, placeholderData: (previous) => previous });
   const intraday = useDeskIntraday(company?.ticker ?? "", range === "5D" ? 5 : 1, isIntraday && cik > 0);
-  const events = trpc.events.byCompany.useQuery({ cik }, { enabled: cik > 0 && !!company?.research, staleTime: 10 * 60_000 });
+  // the chart's earnings markers: the company's earnings releases in its filings list (the same query the Filings card makes)
+  const filings = trpc.desk.companyFilings.useQuery({ cik }, { enabled: cik > 0, staleTime: 30 * 60_000 });
   const shortInterest = trpc.company.shortInterest.useQuery({ cik }, { enabled: cik > 0, staleTime: 10 * 60_000 });
 
   useEffect(() => {
@@ -106,10 +107,10 @@ export default function CompanyPage() {
   }, [intraday.data, range]);
   const lastEarnings = company?.lastEarnings ?? null;
   const eventDates = useMemo(() => {
-    const dates = new Set<string>((events.data ?? []).map((event) => String(event.eventDate).slice(0, 10)));
+    const dates = new Set<string>((filings.data?.filings ?? []).filter((filing) => filing.earnings).map((filing) => filing.period ?? filing.filed));
     if (lastEarnings) dates.add(lastEarnings);
     return [...dates];
-  }, [events.data, lastEarnings]);
+  }, [filings.data, lastEarnings]);
   const cone = useMemo<ImpliedCone | null>(() => {
     const buckets = (company?.options?.buckets ?? []).filter((bucket) => bucket.expectedMovePct !== null && bucket.days > 0 && bucket.days <= 60);
     return buckets.length ? { points: buckets.map((bucket) => ({ days: bucket.days, pct: bucket.expectedMovePct! })), label: "Options-implied range" } : null;
