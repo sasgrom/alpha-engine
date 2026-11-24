@@ -2,14 +2,13 @@ import { lazy, Suspense, type ReactNode } from "react";
 import { Routes, Route, Link, Navigate, useLocation } from "react-router";
 import { ShieldAlert } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 import ReviewerGate from "./components/ReviewerGate";
 import PresentationOnly from "./components/PresentationOnly";
 import { preferredView } from "./desk/preferences";
 
 const Desk = lazy(() => import("./desk/DeskApp"));
+const SignIn = lazy(() => import("./desk/pages/SignIn"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Terminal = lazy(() => import("./pages/Terminal"));
 const Company = lazy(() => import("./pages/Company"));
@@ -79,8 +78,8 @@ export default function App() {
       <Route path="/expectations" element={<PresentationOnly><Expectations /></PresentationOnly>} />
       <Route path="/insider-activity" element={<PresentationOnly><InsiderActivity /></PresentationOnly>} />
       <Route path="/market-data" element={<PresentationOnly><MarketData /></PresentationOnly>} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route path="/login" element={<SignIn mode="signin" />} />
+      <Route path="/signup" element={<SignIn mode="signup" />} />
       <Route path="*" element={<NotFound />} />
       </Routes></ReviewerGate>
     </Suspense>

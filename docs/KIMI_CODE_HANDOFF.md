@@ -4305,3 +4305,23 @@ delivered.
   page, Analytics (tone reaction chart), Market data (provenance table), Expectations (the old statement record),
   Insider activity, Database browser, Risk lab, Lab, Project state, Login and Signup. Next: desk sign-in, then
   switching the classic view off (`docs/desk/UI_MIGRATION.md` section 7).
+
+## 234. Claude (Fable 5.2): sign-in and account creation in the desk's look — 2026-11-24T06:52Z
+
+- **Owner, 2026-11-23 evening:** the old views will all be deleted once the move is final; the Terminal is not
+  needed; from the old research pages take what is promising, combined or redesigned; the Database browser moves
+  only if that is easy, otherwise it goes; "login and signup, lets move it".
+- **Sign-in and account creation** (`src/desk/pages/SignIn.tsx`, at the same addresses `/login` and `/signup`): the
+  desk's card, light and dark with the viewer's theme; errors as sentences in the page (no toast). The server rules
+  are untouched (`api/auth-router.ts`): the sum appears after the server asks for it on sign-in and always for a new
+  account, the lock after repeated failures, the username and password policy, a new account is always a member.
+  - A visitor without a session is now sent to `/login?next=<the page asked for>` and returns there after signing
+    in (`DeskShell.tsx`); the return path is accepted only when it is a path of this site (`returnPath`).
+  - The sum's id and answer are sent only when a sum was asked for.
+  - `src/pages/Login.tsx` and `src/pages/Signup.tsx` are removed.
+- Test harness: `FAILURES` (a procedure answers with a server error), `SIGNED_OUT`, and `posted` (the inputs of the
+  mutations a page sent).
+- Tests: `src/desk/pages/SignIn.test.tsx` (4: the return path, sign-in with return to the asked page, the failure
+  messages and the sum, account creation with its rules).
+- Gates: `npm run check`, 285 files / 1,667 tests, `npm run build`, `git diff --check`. No server code changed.
+- An inventory of the remaining classic pages against the desk was made (read only) for the next step.

@@ -35,8 +35,9 @@ function BrandGlyph() {
 const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform ?? "");
 
 export default function DeskShell({ children }: { children: ReactNode }) {
-  const { user, isLoading, logout } = useAuth({ redirectOnUnauthenticated: true });
   const location = useLocation();
+  // a visitor without a session is sent to sign in, and comes back to the page they asked for
+  const { user, isLoading, logout } = useAuth({ redirectOnUnauthenticated: true, redirectPath: `/login?next=${encodeURIComponent(`${location.pathname}${location.search}`)}` });
   const navigate = useNavigate();
   const theme = useDeskTheme();
   const reviewer = useReviewer();

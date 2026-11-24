@@ -139,6 +139,8 @@ export const REPORTS: Record<string, unknown> = {
 /** What desk.opsHealth answers (no alerts unless a test sets some). */
 export const OPS_HEALTH: { alerts: { level: "error" | "warning"; code: string; text: string }[] } = { alerts: [] };
 export const DESK_DATA = { empty: false, unread: 0, noStatements: false };
+/** Procedures that answer with an error until removed, as the server would: { "auth.login": { code: "UNAUTHORIZED", httpStatus: 401, message: "..." } }. */
+export const FAILURES: Record<string, { code: string; httpStatus: number; message: string }> = {};
 /** The local worker console as the server reports it: its switch, and the scheduler's state and job switches. */
 export const OPS_CONSOLE = { enabled: true };
 const OPS_RUN = (jobId: string, over: Record<string, unknown> = {}) => ({ runId: `r-${jobId}`, jobId, status: "done", trigger: "cron", startedAt: "2026-11-12T00:45:00.000Z", endedAt: "2026-11-12T00:52:00.000Z", exitCode: 0, logFile: "x.log", error: null, ...over });
@@ -313,6 +315,8 @@ function answer(procedure: string, role: string, input?: unknown): unknown {
   switch (procedure) {
     case "desk.opsHealth": return { checkedAt: "2026-11-12T20:00:00.000Z", heartbeatAt: "2026-11-12T20:00:00.000Z", alerts: OPS_HEALTH.alerts };
     case "auth.me": return { id: 1, username: "owner", name: "Ada Owner", role };
+    case "auth.captcha": return { id: "sum-1", svg: '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40"><text x="10" y="26">3 + 4</text></svg>' };
+    case "auth.login": case "auth.signup": return { ok: true, role, name: "Ada Owner" };
     case "reviewer.status": return { isReviewer: false, ndaAccepted: false, ndaVersion: null, ndaTextHash: null, firstIpBound: false, tours: [] };
     case "desk.snapshot": return SNAPSHOT;
     case "desk.intraday": return DESK_DATA.empty ? null : INTRADAY_COMPANY;
@@ -392,8 +396,13 @@ export async function waitUntil(condition: () => boolean, timeout = 4000): Promi
 export interface MountedDesk {
   host: HTMLDivElement;
   calls: string[];
+  /** The inputs of the mutations the page sent, in order. */
+  posted: Array<{ procedure: string; input: unknown }>;
   unmount: () => void;
 }
+
+/** A signed-out visitor: `auth.me` answers 401, as the server does without a session. */
+export const SIGNED_OUT = { code: "UNAUTHORIZED", httpStatus: 401, message: "Please login (10001)" };
 
 export async function mountDesk(role: "admin" | "user", path = "/desk", ready = "S&P 500 companies closed higher", application = false): Promise<MountedDesk> {
   // load the lazy pages up front so the test waits on data, not on the module loader
@@ -413,8 +422,9 @@ export async function mountDesk(role: "admin" | "user", path = "/desk", ready = 
     } as unknown as typeof ResizeObserver;
   }
   const calls: string[] = [];
+  const posted: Array<{ procedure: string; input: unknown }> = [];
   const originalFetch = globalThis.fetch;
-  globalThis.fetch = async (input) => {
+  globalThis.fetch = async (input, init) => {
     const url = new URL(input instanceof Request ? input.url : String(input), "http://localhost");
     if (url.pathname.startsWith("/reports/")) {
       const name = url.pathname.replace("/reports/", "");
@@ -425,8 +435,22 @@ export async function mountDesk(role: "admin" | "user", path = "/desk", ready = 
     calls.push(...procedures);
     // a query's inputs travel in the address, one entry per procedure of the batch
     let inputs: Record<string, { json?: unknown }> = {};
-    try { inputs = JSON.parse(url.searchParams.get("input") ?? "{}") as typeof inputs; } catch { /* a mutation carries its input in the body: not needed here */ }
-    return { ok: true, status: 200, json: async () => procedures.map((procedure, index) => ({ result: { data: { json: answer(procedure, role, inputs[index]?.json) } } })) } as Response;
+    try { inputs = JSON.parse(url.searchParams.get("input") ?? "{}") as typeof inputs; } catch { /* no input in the address */ }
+    // a mutation carries its inputs in the body
+    if (typeof init?.body === "string") {
+      try {
+        const body = JSON.parse(init.body) as typeof inputs;
+        procedures.forEach((procedure, index) => posted.push({ procedure, input: body[index]?.json }));
+      } catch { /* not JSON */ }
+    }
+    const failed = procedures.map((procedure) => FAILURES[procedure]);
+    const allFailed = failed.every(Boolean);
+    return {
+      ok: !allFailed, status: allFailed ? failed[0]!.httpStatus : failed.some(Boolean) ? 207 : 200,
+      json: async () => procedures.map((procedure, index) => failed[index]
+        ? { error: { json: { message: failed[index]!.message, code: -32000, data: { code: failed[index]!.code, httpStatus: failed[index]!.httpStatus, path: procedure } } } }
+        : { result: { data: { json: answer(procedure, role, inputs[index]?.json) } } }),
+    } as Response;
   };
   const host = document.createElement("div");
   document.body.appendChild(host);
@@ -445,6 +469,7 @@ export async function mountDesk(role: "admin" | "user", path = "/desk", ready = 
   return {
     host,
     calls,
+    posted,
     unmount: () => {
       act(() => root?.unmount());
       host.remove();
