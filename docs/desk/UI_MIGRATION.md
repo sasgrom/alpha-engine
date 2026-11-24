@@ -193,3 +193,67 @@ Inventory source: a read-only sweep of every classic page on 2026-11-13. Its fin
     left out of the desk. They come from the app's old factor engine, which never passed an out-of-sample test.
 - [ ] Design notes per phase: page sketches, data each view reads, DevNotes text.
 - [ ] Keep this file current after each phase: what moved, what was dropped and why.
+
+## 7. Status on 2026-11-23 (evening): what has moved, what has not
+
+Checked against the code: the routes in `src/App.tsx` and `src/desk/DeskApp.tsx`, and the server procedures each side
+calls. 18 classic routes are still live; only `/messages` and `/admin` redirect to the desk.
+
+### 7.1 Pages
+
+| Classic page | In the desk | Not moved yet |
+|---|---|---|
+| Messages, Admin | **Moved** (`/desk/messages`, `/desk/admin`); classic routes redirect | — |
+| Company `/company/:ticker` | **Mostly moved, on the standards:** statements (v3.2, quarter, year, trailing year, a chart per line), guidance and the reported figure (g1.2, adjusted EPS), splits and dividends, holders (13F k16.6), insiders (i1.1), short interest, filings with a release reader (500 companies instead of the old documents tab's 51), risk and returns (Terminal's charts), price, options, peers, reactions | Any-concept series explorer, data-health tab, signal stream, LLM briefs. **Dropped by the owner (2026-11-22):** valuation, probability, factor IC and sentiment panels |
+| Terminal | Its three charts (Risk and returns card) | The route stays live and is still the landing page for users who chose the classic view |
+| Dashboard | Today (filings, FRED values, watchlist, coming up, just reported); Flows and Ownership for sector flows | Morning brief (paused by the owner); launch buttons (go to Operations) |
+| Screener | Price, 12−1 momentum, market value, P/E, yield, beta, volatility, 52-week range, trend, next report | EPS TTM, FCF margin, 3-month volume, revision rate ("sentiment (prototype)" is to be dropped) |
+| Universe | Watchlist follows and unfollows index companies | Add any SEC company (starts an ingest), hide, scope presets, GICS re-enrichment, S&P bootstrap |
+| Workers, Jobs | Operations: health only | Run and stop, cron edit, logs, coverage, runbook: K17b, specified, not built |
+| Expectations | Each company's guidance history on its page (g1.2 final) | The cross-company record with quotes and revisions; the classic page still bundles the old 27 MB report |
+| Insider activity | Ownership: purchases, multi-insider windows, dry-run benchmark; insiders card per company (i1.1) | Full Form 4 list with the excluded codes and filters |
+| Scenario Lab | Macro: rate and credit exposure ranking | Custom shocks, presets, evidence inspector, export |
+| Market data | Volatility (features, implied against realized, sizing); Operations (capture health) | Option chain browser, provenance |
+| Analytics | Signals ledger | Tone reaction chart; build network (to Operations) |
+| Methodology handbook, Wiki | Linked from Library | As documents in Library, with LaTeX rendered |
+| Database browser | — | Owner "raw facts" explorer in Operations |
+| Risk lab, Lab, Project state | — | To be dropped (section 2) |
+| Login, Signup | — | Desk sign-in, password reset, invitations (K17e) |
+
+New in the desk, no classic page: Markets, Flows (hall and reading view), Engine (engine v1, traced), Earnings and
+Volatility research, the intraday ranges.
+
+### 7.2 Logic and algorithms
+
+- **Wrong now, fix first:** the Signals ledger (`src/desk/evidence.ts`, last changed 2026-11-11) predates the decisive
+  test of 2026-11-12. The release-reaction effect did not repeat on 440 other companies, and engine v1 has no edge on
+  the S&P 500, but both still read "candidate". Later results are missing: guidance g1.2 reruns (every verdict
+  unchanged), the pooled engine and its ceilings, the miss forecaster ("the predictable part of the beat is priced"),
+  technical sensing, short interest, insiders.
+- **Old data source, fix next:** the research Ownership page's sector flows still read the app's `fund_holdings` table
+  (`dashboard.sectorFlowsDetailed`), which keeps half the money (one row per security). The company page and Flows
+  read the 13F standard. Its dry-run insider benchmark comes from the old Form 4 report, while the company page reads
+  the insider standard i1.1.
+- **The app's old factor engine** (`company.factors`, `company.probability`, `company.value`; nightly
+  `research-series` and `research-factors`) is not moved, by the owner's decision: it never passed an out-of-sample
+  test. Only its factor-IC monitor sits in Owner tools → Monitors. The nightly jobs still run, and the classic company
+  page still shows its output as if it were a signal.
+- **Lab work without a view:** the per-company and pooled engines, the nowcasts, the ceilings, the miss forecaster. The
+  Engine page shows engine v1 only.
+- **Moved as displays:** first-session reaction and drift (Earnings), implied and realized volatility with the sizing
+  calculator (Volatility), rate and credit exposure (Macro), corporate actions and the split watch (company page), the
+  adjusted-earnings reader (company page; a2 on the page, a8 being read).
+- **Not moved:** sentiment and tone scoring, LLM digests and the morning brief (Ollama stopped on the owner's word;
+  tone measured nothing at the release).
+- **Stale texts in the desk:** Library says "guidance is not in the desk yet" (per-company guidance is).
+
+### 7.3 Suggested order
+
+1. Correct the Signals ledger from the research record (text only).
+2. Ownership's sector flows from the 13F standard (the Flows overview files).
+3. Operations console (K17b) — it retires `/workers` and `/jobs`.
+4. Screener columns from the standard fundamentals; Watchlist "add any SEC company".
+5. Research pages: the cross-company guidance record (g1.2), the full insider list (i1.1), option chains, the scenario
+   lab, handbooks and wiki as documents.
+6. Retire the classic view: redirects, desk sign-in; then the old pipelines (`docs/PROJECT_REVIEW_2026-11-22.md`
+   section 6.4).
