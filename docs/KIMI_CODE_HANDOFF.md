@@ -4860,3 +4860,14 @@ availability QA, Schwab daily bars into local prices. The market run of 2026-11-
 - Gates: `npm run check`, 276 files / 1,672 tests, `npm run build`, `git diff --check`.
 - Rerun queued in the scheduler after a restart (72-job registry): `schwab-daily-bars` (then desk snapshot, UI build),
   `macro-fred-weekly` (then desk macro), `macro-manifest-qa` (then the macro reports). Results in the next section.
+
+## 252. Claude (Opus 5.5): the rerun of 2026-11-25T02:28Z — all done, banner clear
+
+- Scheduler restarted at 02:27Z on the 72-job registry (`std-insiders-db-load` now known). Queued through its own
+  command file: `schwab-daily-bars` (chain with both fetches, which resumed the day's completed tickers in seconds),
+  `macro-fred-weekly`, `macro-manifest-qa`.
+- Results (all `done`): daily bars 02:28:53Z (0 conflicts, Costco recorded as a declared distribution), desk
+  snapshot 02:40Z (session 2026-11-24), UI build 02:40Z, FRED 02:39Z (22 series, no error), macro QA 02:39Z, desk
+  macro 02:42Z (T10Y2Y to 2026-11-24, daily series to 11-23), then macro scenarios, shock calibration, event study,
+  transmission atlas and the feature lab.
+- `operationsHealth` now: no alerts.
