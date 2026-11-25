@@ -5154,6 +5154,8 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   become "ConocoPhillips is evaluating…"); results stories between reports = commentary (Chevron's Q3 shown as news).
   Picking rules `p2` stored as `pickVersion`; today's p1 briefs redone with `--redo-morning`, both versions kept.
   First scheduled run 22:17Z: 51 morning briefs in 51 s, 0 failed checks; after p2: 20 with news, 1 failed part.
+  First update run 22:28Z: 3 updates (Broadcom, Lockheed, Chevron); Chevron's came from a Fool comparison piece read as
+  "Chevron pays a bigger dividend today" → rules `p3` (comparison headlines = commentary), Chevron redone.
 - **Known limits (on the page):** headlines and feed summaries only (Google News gives the headline, Seeking Alpha
   nothing); misattribution (an SA contributor's "(Rating Upgrade)" as "analysts upgraded Intel"); two true items
   joined wrongly (Costco's special dividend + a $30 membership offer) — the check catches neither.

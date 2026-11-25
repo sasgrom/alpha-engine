@@ -14,10 +14,11 @@ export const MATERIAL_FOLLOWUP = new Set(["earnings_results", "guidance_outlook"
 
 export type SkipReason = "old" | "not about it" | "noise" | "commentary" | "holdings" | "follow-up" | "unread";
 /** The picking rules' version, stored with every brief (p2, 2026-11-25: holdings, question headlines, numbered lists
- * and results stories between reports left out). */
-export const PICK_VERSION = "p2";
-/** A headline that asks is an opinion piece ("Can It Boost Shareholder Returns?"); a numbered list is commentary. */
-const OPINION_TITLE = /\?\s*["”’']?\s*$|\b(top|best) \d+\b|^\d+ (stocks|reasons|things|ways)\b/i;
+ * and results stories between reports left out; p3: comparison pieces too). */
+export const PICK_VERSION = "p3";
+/** Commentary by its headline: a question ("Can It Boost Shareholder Returns?"), a numbered list, a comparison
+ * ("Chevron Pays a Bigger Dividend, but Exxon May Be the Better Retirement Stock", "Airbnb vs. Shopify"). */
+const OPINION_TITLE = /\?\s*["”’']?\s*$|\b(top|best) \d+\b|^\d+ (stocks|reasons|things|ways)\b|\b(may|might|could) be the better\b|\bbetter (buy|stock)\b|\bvs\.?\s/i;
 /** A story the outlet published this long before the window opened is not news for the brief, even when we first saw it later. */
 export const OLD_MARGIN_HOURS = 6;
 export interface Picked { picked: DeskNewsStory[]; skipped: Record<SkipReason, number>; unread: DeskNewsStory[] }

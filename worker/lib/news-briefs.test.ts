@@ -26,10 +26,12 @@ describe("news briefs", () => {
       { ...story("question", [[1, ["subject"]]], read("mna_deal", "new")), title: "Acme's $4.4B Asset Sale: Can It Boost Shareholder Returns?" },
       { ...story("list", [[1, ["subject"]]], read("capital_return", "new")), title: "How Buffett Makes Billions from Dividends: Top 5 Stocks" },
       { ...story("asks mid-title", [[1, ["subject"]]], read("analyst_action", "new")), title: "104% Upside for Acme? Bernstein Thinks So" },
+      { ...story("comparison", [[1, ["subject"]]], read("capital_return", "new")), title: "Acme Pays a Bigger Dividend, but Globex May Be the Better Retirement Stock" },
+      { ...story("versus", [[1, ["subject"]]], read("product_business", "new")), title: "Acme vs. Globex: Which Stock Is a Better Buy for 2027" },
     ];
     const result = pickStories(stories, 1);
     expect(result.picked.map(item => item.id)).toEqual(["filing", "new", "call", "tagged", "asks mid-title"]);
-    expect(result.skipped).toEqual({ old: 0, "not about it": 2, noise: 1, commentary: 3, holdings: 1, "follow-up": 1, unread: 1 });
+    expect(result.skipped).toEqual({ old: 0, "not about it": 2, noise: 1, commentary: 5, holdings: 1, "follow-up": 1, unread: 1 });
   });
 
   it("leaves out a results story between reports, not around one", () => {
