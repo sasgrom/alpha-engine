@@ -5021,3 +5021,31 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - **Next:** K27, in approved order, beginning with part A and the required 20-company release/exhibit pilot and size
   projection. K27 must use existing collectors at their pace; no `alpha_research` writes, nightly-universe changes,
   standard builds, model calls or production actions.
+
+
+## 258. Claude (Opus 5.5): news-model bake-off result; company-name lookup; K27 part A and B pilot accepted — 2026-11-25T15:30Z
+
+- **Section numbers:** agreed with Kimi (`to-kimi/20261125-153000-claude-handoff-numbers.md`): nobody reserves numbers
+  ahead; each writer takes the highest section number in the file + 1 at the moment of writing.
+- **Bake-off (owner's go; candidates limited by the owner to phi4:14b, qwen3.5:4b and gemma4:12b besides qwen3.5:9b):**
+  300 stratified news items (`D:/research/alpha-engine/news/bakeoff/sample-300.jsonl`), reference labels by Claude
+  (one labeller). Prompt v2 asks for company names only, without the feed's query ticker; code resolves the names
+  through `worker/lib/news-companies.ts`. Result (subject / event / direction / novelty / all four / seconds per item):
+  gemma4:12b 93.3 / 79.3 / 79.7 / 81.7 / 51.3% / 0.85; qwen3.5:9b 91.0 / 78.0 / 76.7 / 77.0 / 45.0% / 1.16; phi4:14b
+  86.7 / 72.3 / 80.3 / 77.3 / 43.7% / 1.14; qwen3.5:4b 57.7 / 79.0 / 83.0 / 72.0 / 26.0% / 0.72. Paired McNemar:
+  gemma beats phi4 on subject (p=0.002) and event (p=0.009); against qwen3.5:9b all four p=0.056 (borderline). Names
+  instead of tickers raised qwen3.5:9b's subject from 82.3% to 91.0% (p=0.001) but direction fell 80.7% to 76.7%
+  (p=0.017). FinBERT (ProsusAI/finbert, venv on D:) direction 71.5% vs 78.4% for qwen3.5:9b on the 291 non-mixed
+  items, 8.5 ms per item. Chosen: gemma4:12b as the extractor (it runs on the installed Ollama 0.40.8), FinBERT as the
+  cheap tone pass for the history. Runs, resolved files and labels are in the bake-off folder.
+- **Not yet approved:** a scheduled GPU extraction job (AGENTS.md section 6, paused GPU lane; the owner keeps Ollama
+  off since 11-22) and removing phi4:14b and qwen3.5:4b from C: (12.4 GB). Ollama models stay on C:.
+- **Committed:** `worker/lib/news-companies.ts` (+ 5 tests): `CompanyIndex` resolves a company name to CIK and tickers
+  (ticker, alias, exact name, word set, prefix; ties refused). Targeted tests 13/13 and `npm run check` pass; no full
+  suite, because Kimi's K27 collector and its code changes are in the tree.
+- **K27:** part A accepted (909 companies, 906 refreshed, 16,323,273 facts rows; OZK is an FDIC filer, GLOB's
+  over-long concept left failed, CIK200411 to be identified). B pilot accepted (`research/engine/event-calendar-r1000.summary.json`:
+  pass, 7,761 filings, all with acceptance times, no duplicate company periods); the full B run (one
+  `build-release-calendar-rest.mts --addendum r1000` process) is projected at about 54 GB and 55 hours.
+- **Next:** the GPU extraction job once approved; cross-language dedupe on the extracted fact; desk news views; FNSPID
+  download resume; Kimi's K27 progress reports.
