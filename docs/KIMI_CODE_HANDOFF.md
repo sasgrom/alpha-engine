@@ -5049,3 +5049,29 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   `build-release-calendar-rest.mts --addendum r1000` process) is projected at about 54 GB and 55 hours.
 - **Next:** the GPU extraction job once approved; cross-language dedupe on the extracted fact; desk news views; FNSPID
   download resume; Kimi's K27 progress reports.
+
+
+## 259. Claude (Opus 5.5): the news reader as a scheduled GPU job — 2026-11-25T18:50Z
+
+- **Owner, 2026-11-25:** "yes to both, run gemma as scheduled job and delete those two". phi4:14b and qwen3.5:4b were
+  removed with `ollama rm` (C: 65.9 GB free); Ollama keeps gemma4:12b and qwen3.5:9b on C:. The owner updated Ollama
+  himself to 0.40.18 (server restart 10:32 Pacific).
+- **Built:** `worker/news-extract.mts` + `worker/lib/news-extract.ts` (+ 5 tests; the prompt is the bake-off's v2 text,
+  its SHA-256 equal to the Python prompt's, pinned as `PROMPT_VERSION` b0f0bc360b718996) and
+  `worker/news-company-index.mts`. Jobs `news-extract` (`4-59/10 * * * *`, `--minutes 3`, requirements gpu and driveD;
+  the first default-enabled GPU job, which the scheduler test now names) and `news-company-index` (Sundays 05:50).
+  OPERATIONS 22g.
+- **Output:** `D:/research/alpha-engine/news/extract/<first-seen UTC date>.jsonl`, one row per item read with the label,
+  the names resolved to CIK and tickers, model digest, Ollama version, prompt version, index build time and our
+  extraction time. Availability for research stays the item's `firstSeenAt`.
+- **Runs:** manual trial 109 items in 2 minutes, all valid, 50 subjects resolved; the first scheduled run 18:34–18:37 UTC
+  done, 54 items (the first took 137 s: a cold load after the owner's Ollama update; then a median of 0.79 s). 166 rows,
+  all valid, no errors. About 16,500 stories of 2026-11-25 wait; newest first.
+- **Scheduler:** restarted idle at 18:31 UTC after notice to Kimi (`to-kimi/20261125-183500-claude-scheduler-restart.md`);
+  77 jobs, one root process.
+- **Gates:** `npm run check` and the targeted tests (scheduler, news-extract, news-companies, news-feeds: 38) pass; no
+  full suite, because Kimi's K27 builder changes are in the tree and his collector runs.
+- **Watch:** Ollama has no autostart, so after a reboot `news-extract` fails at preflight until Ollama is started;
+  `stocktwits-hourly` uses qwen3.5:9b whenever Ollama runs, and Ollama may swap the two models.
+- **Next:** rerun the 300-item bake-off for gemma on Ollama 0.40.18 to confirm the measured accuracy holds; then the
+  cross-language dedupe on the extracted fact and the desk news views.
