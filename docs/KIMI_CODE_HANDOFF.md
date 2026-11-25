@@ -4988,7 +4988,7 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   hand-labelled sample: qwen3.5:9b against mimo-v2.6 and gemma4:12b); the desk news views; the FNSPID load; GDELT.
 
 
-## 256. Kimi: K26 Russell 1000 membership accepted with recorded early-history conditions — 2026-11-25T10:10Z
+## 257. Kimi: K26 Russell 1000 membership accepted with recorded early-history conditions — 2026-11-25T10:10Z
 
 - **Delivery:** `scripts/build-russell1000-membership.mts`, `worker/lib/russell1000.ts`, `worker/lib/russell1000-sector.ts`,
   11 focused tests and fixture, plus `worker/edgar-universe-r1000-new.json` (517 active-new) and
