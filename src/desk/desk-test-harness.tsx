@@ -351,6 +351,24 @@ export const NEWS_STORIES = [
   NEWS_STORY("b", { title: "Why tech stocks fell today", publisher: "Yahoo Finance", feed: "yahoo-headlines", copies: 0, sources: [], publishedAt: "2026-11-21T10:00:00.000Z", firstSeenAt: "2026-11-25T09:00:00.000Z",
     companies: [{ cik: 320193, ticker: "AAPL", name: "Apple Inc.", ties: ["asked"], registry: true }], reading: { subject: "-", eventType: "stock_move_recap", direction: "negative", novelty: "followup", fact: "Tech stocks fell on rate worries." } }),
 ];
+const BRIEF_SOURCE = { id: "a", title: "Apple raises its dividend", publisher: "GlobeNewswire", url: "https://example.com/a", at: "2026-11-25T13:00:00.000Z" };
+export const NEWS_BRIEF = {
+  schemaVersion: 1, kind: "update", cik: 320193, ticker: "AAPL", name: "Apple", edition: "2026-11-25", from: "2026-11-24T21:00:00.000Z", to: "2026-11-25T17:00:00.000Z", generatedAt: "2026-11-25T17:00:00.000Z",
+  topLine: { text: "Apple raises its quarterly dividend by 4%.", checked: true, changedAt: "2026-11-25T13:45:00.000Z" },
+  points: [
+    { thread: "a", title: "Dividend raised", text: "Apple lifts its quarterly dividend by 4%.", sources: [BRIEF_SOURCE], since: "2026-11-25T13:00:00.000Z", continues: false, checked: true },
+    { thread: "c", title: "Apple faces a supplier probe in Europe", text: "", sources: [{ ...BRIEF_SOURCE, id: "c", title: "Apple faces a supplier probe in Europe", publisher: "Nasdaq" }], since: "2026-11-25T12:00:00.000Z", continues: false, checked: false, problems: ["number 7 not in the sources"] },
+  ],
+  updates: [{ at: "2026-11-25T17:00:00.000Z", thread: "a", title: "Dividend raised", text: "The board set the record date for December 8.", sources: [{ ...BRIEF_SOURCE, id: "d" }], continues: true, checked: true }],
+  price: "Closed at $271.49 on Nov 25, +0.4% on the day.",
+  counts: { stories: 40, picked: 4, given: 4, skipped: { old: 20, "not about it": 10, noise: 2, commentary: 3, "follow-up": 1, unread: 0 }, unread: 0 },
+  others: [{ ...BRIEF_SOURCE, id: "e", title: "Apple schedules its annual meeting" }], inputs: ["a", "c", "d", "e"],
+  model: "gemma4:12b", modelDigest: "x", ollamaVersion: "0.40.18", promptVersion: "test",
+};
+export const BRIEF_LINES = [
+  { cik: 320193, ticker: "AAPL", name: "Apple", edition: "2026-11-25", topLine: "Apple raises its quarterly dividend by 4%.", checked: true, points: 2, updates: 1, changedAt: "2026-11-25T17:00:00.000Z", lastUpdate: { at: "2026-11-25T17:00:00.000Z", text: "The board set the record date for December 8." } },
+  { cik: 789019, ticker: "MSFT", name: "Microsoft", edition: "2026-11-25", topLine: "No news of note since the close.", checked: true, points: 0, updates: 0, changedAt: "2026-11-25T13:45:00.000Z", lastUpdate: null },
+];
 const stripReading = (stories: typeof NEWS_STORIES, owner: boolean) => (owner ? stories : stories.map((story) => ({ ...story, reading: null })));
 
 function answer(procedure: string, role: string, input?: unknown): unknown {
@@ -401,6 +419,9 @@ function answer(procedure: string, role: string, input?: unknown): unknown {
       companies: [{ cik: 320193, ticker: "AAPL", name: "Apple Inc.", stories: 2, positive: owner ? 1 : 0, negative: 0 }], readings: owner,
     };
     case "desk.companyNews": return DESK_DATA.empty || DESK_DATA.noStatements ? null : { schemaVersion: 1, cik: 320193, builtAt: "2026-11-25T14:30:00.000Z", days: ["2026-11-25"], stories: stripReading(NEWS_STORIES, owner) };
+    // the briefs are the model's writing: the owner only here (the server also serves NDA reviewers)
+    case "desk.companyBrief": return owner && !DESK_DATA.empty && !DESK_DATA.noStatements ? NEWS_BRIEF : null;
+    case "desk.briefs": return owner ? (DESK_DATA.empty ? [] : BRIEF_LINES) : null;
     case "workersLocal.enabled": return { enabled: OPS_CONSOLE.enabled };
     case "workersLocal.operations": return { config: { "stocktwits-hourly": { enabled: false, cron: "30 * * * *" } }, state: OPS_STATE };
     case "workersLocal.setOperation": case "workersLocal.killOperation": return { ok: true };

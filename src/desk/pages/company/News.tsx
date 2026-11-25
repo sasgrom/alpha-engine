@@ -4,6 +4,7 @@ import type { DeskNewsStory } from "@contracts/desk-news";
 import { Card, Segmented, Shimmer } from "../../components";
 import { useDeskSnapshot } from "../../data";
 import { fmtDate } from "../../format";
+import { BriefView } from "../../news/Brief";
 import { StoryList } from "../../news/StoryList";
 
 type View = "about" | "all";
@@ -18,6 +19,7 @@ export function CompanyNews({ cik }: { cik: number }) {
   const [chosen, setView] = useState<View | null>(null);
   const [all, setAll] = useState(false);
   const query = trpc.desk.companyNews.useQuery({ cik }, { enabled: cik > 0, staleTime: 5 * 60_000 });
+  const brief = trpc.desk.companyBrief.useQuery({ cik }, { enabled: cik > 0, staleTime: 2 * 60_000 });
   const snapshot = useDeskSnapshot();
   const known = useMemo(() => new Map((snapshot.data?.companies ?? []).map((company) => [company.cik, { ticker: company.ticker, cik: company.cik }])), [snapshot.data]);
   const data = query.data;
@@ -43,6 +45,7 @@ export function CompanyNews({ cik }: { cik: number }) {
         <div className="desk-empty">No news is built for this company yet.</div>
       ) : (
         <>
+          {brief.data && <BriefView brief={brief.data} />}
           <StoryList stories={rows} known={known} focus={cik} empty={view === "about" ? "No story about this company in the covered days; “Every mention” also lists stories that only name it." : "No story names this company in the covered days."} />
           {matching.length > SHOWN && (
             <button type="button" className="desk-link" style={{ border: "none", background: "transparent", padding: 0, marginTop: 8, font: "inherit", fontSize: 12.5, cursor: "pointer" }} onClick={() => setAll((open) => !open)}>

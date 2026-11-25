@@ -5130,3 +5130,33 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   registry companies with news now).
 - **Next:** English rewrites of one story by different outlets stay separate stories (clustering on the model's fact,
   company and time is the way, if wanted); Today page stories for the watchlist.
+
+## 262. Claude (Opus 5.5): news briefs for followed companies — 2026-11-25T22:30Z
+
+- **Owner, 2026-11-25:** briefs for the followed companies instead of reading every article: a morning brief of the
+  late-night and early-morning news, updates when the story moves, short-lived (2–3 days); "plan first, criticise and
+  improve", then "go ahead" on the improved plan (pick first, then write; checked text; updates by event, not by the
+  hour; threads that close 72 hours after their last news; files kept).
+- **Built:** `worker/news-briefs.mts` + `worker/lib/news-briefs.ts` (8 tests), `worker/lib/news-followed.ts`,
+  `contracts/news-briefs.ts`; job `news-briefs` (`dependsOn: desk-news`, gpu + driveD; scheduler restarted 14:11
+  Pacific, 79 jobs). Followed = active watchlists of the owner and NDA reviewers (51 companies; read only from
+  alpha_engine, written to `news/lookup/followed.json`). The reader now reads followed companies' items first
+  (`pickItems` priority, `tiedCiks`; 2 tests) and `news-feeds-company` asks every followed company on each pass plus 70
+  in rotation (it had not reached META, NFLX, RCL, PLD yet). Desk: `desk.companyBrief` and `desk.briefs` (owner and NDA
+  reviewers only), the brief at the top of a company's News card (`src/desk/news/Brief.tsx`), the Today card
+  "News briefs | Filings" (web restarted twice). OPERATIONS 22h, dev notes.
+- **Checks:** every number and capitalised word of a model part must stand in the cited stories (plurals, possessives,
+  EU/UK/US and small number words allowed; ordinary words learned from the day's summaries); a failed part shows its
+  headline, marked. Trial 2 (before the rule fixes): 53 parts, 3 failed, all correct expansions now allowed.
+- **Measured and fixed on the first runs (all lines read against their sources):** old items first seen today
+  (published > 6 h before the window) left out; holdings / insider-trade bot stories (DoorDash had 15 picked) left
+  out; question headlines and numbered lists = commentary (ConocoPhillips "Can It Boost Shareholder Returns?" had
+  become "ConocoPhillips is evaluating…"); results stories between reports = commentary (Chevron's Q3 shown as news).
+  Picking rules `p2` stored as `pickVersion`; today's p1 briefs redone with `--redo-morning`, both versions kept.
+  First scheduled run 22:17Z: 51 morning briefs in 51 s, 0 failed checks; after p2: 20 with news, 1 failed part.
+- **Known limits (on the page):** headlines and feed summaries only (Google News gives the headline, Seeking Alpha
+  nothing); misattribution (an SA contributor's "(Rating Upgrade)" as "analysts upgraded Intel"); two true items
+  joined wrongly (Costco's special dividend + a $30 membership offer) — the check catches neither.
+- **Gates:** `npm run check`; full suite 289 files / 1,738 tests before the last fixes, rerun before the commit; build.
+- **Next:** article text for picked stories (measure fetch success first: 42% of followed stories are Google News
+  redirects); the 08:45 New York brief of 2026-11-26 is the first real morning edition.

@@ -3,7 +3,8 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { DESK_NEWS_SCHEMA_VERSION, type DeskNewsStory } from "@contracts/desk-news";
-import { companyNews, newsPage } from "./desk-news";
+import { NEWS_BRIEF_SCHEMA_VERSION } from "@contracts/news-briefs";
+import { briefLines, companyNews, newsPage, readBrief } from "./desk-news";
 
 const story = (id: string, publishedAt: string, over: Partial<DeskNewsStory> = {}): DeskNewsStory => ({
   id, title: `Story ${id}`, url: `https://x/${id}`, publisher: "GlobeNewswire", feed: "globenewswire-public", publishedAt, firstSeenAt: publishedAt,
@@ -53,5 +54,24 @@ describe("desk news service", () => {
     expect(companyNews(1, false, dir)?.stories[0].reading).toBeNull();
     expect(companyNews(1, true, dir)?.stories[0].reading?.direction).toBe("positive");
     expect(companyNews(2, true, dir)).toBeNull();
+  });
+
+  it("serves a brief for three days and lists the companies with news first", () => {
+    const dir = root();
+    mkdirSync(path.join(dir, "briefs"));
+    const brief = (cik: number, to: string, points: number, changedAt: string) => ({
+      schemaVersion: NEWS_BRIEF_SCHEMA_VERSION, kind: "morning", cik, ticker: `T${cik}`, name: `Co ${cik}`, edition: to.slice(0, 10), from: "2026-11-24T21:00:00.000Z", to, generatedAt: to,
+      topLine: { text: points ? "Something happened." : "No news of note since the close.", checked: true, changedAt },
+      points: Array.from({ length: points }, (_, i) => ({ thread: `p${i}`, title: "t", text: "x", sources: [], since: to, continues: false, checked: true })),
+      updates: [], price: null, counts: { stories: 0, picked: 0, given: 0, skipped: {}, unread: 0 }, others: [], inputs: [], model: "m", modelDigest: null, ollamaVersion: null, promptVersion: "v",
+    });
+    writeFileSync(path.join(dir, "briefs", "1.json"), JSON.stringify(brief(1, "2026-11-25T13:45:00.000Z", 0, "2026-11-25T13:45:00.000Z")));
+    writeFileSync(path.join(dir, "briefs", "2.json"), JSON.stringify(brief(2, "2026-11-25T11:00:00.000Z", 2, "2026-11-25T11:00:00.000Z")));
+    writeFileSync(path.join(dir, "briefs", "3.json"), JSON.stringify(brief(3, "2026-11-21T13:45:00.000Z", 2, "2026-11-21T13:45:00.000Z")));
+    const later = new Date("2026-11-25T15:00:00Z");
+    expect(readBrief(2, later, dir)?.points).toHaveLength(2);
+    expect(readBrief(3, later, dir)).toBeNull();   // older than three days
+    expect(readBrief(4, later, dir)).toBeNull();
+    expect(briefLines([1, 2, 3, 4, 2], later, dir).map(line => [line.cik, line.points])).toEqual([[2, 2], [1, 0]]);
   });
 });

@@ -16,6 +16,7 @@ export const DEV_NOTES = {
       "Confirmed report dates. “Coming up” is projected from each company's own calendar (same quarter last year + 52 weeks, else + 13 weeks).",
       "Guidance changes and the engine's reading for companies that just reported.",
       "“Latest filings” covers watchlist companies with stored filings only (the 50 research companies).",
+      "News briefs (since 25 November 2026, owner and NDA reviewers only): written by the local model from headlines and feed summaries, not the articles; every number and name is checked against the cited stories, and a part that fails shows its headline. The model can still misread who said something (a Seeking Alpha contributor's “rating upgrade” read as analysts') or join two true items wrongly (Costco's special dividend and a $30 membership offer); the check cannot catch either.",
     ],
     better: [
       ["True interval highs and lows and streaming quotes", "tick or streaming data; the current highs and lows are approximations from snapshots"],
@@ -40,9 +41,10 @@ export const DEV_NOTES = {
       "Business Wire, Accesswire, Reddit and Investing.com: their feeds answer empty, refuse us or carry wrong times. GDELT is not attempted yet.",
       "English only (owner, 25 November 2026): items in other languages are not stored (about 0.5% of the first day, mostly press-wire translations). A short foreign headline (under four real words) can slip through; an English rewrite of a story by another outlet with other words stays a separate story.",
       "A copy seen two or more days after its story is not joined to it.",
-      "Company feeds cover the registry companies in turn (70 every three hours), so a company's news can be up to a day late from those feeds; the wires and the SEC are read every five minutes.",
+      "Company feeds ask every followed company each pass (every three hours) and the other registry companies in turn (70 a pass), so a company nobody follows can be up to a day late from those feeds; the wires and the SEC are read every five minutes.",
     ],
     better: [
+      ["Briefs from the articles themselves, not their headlines", "fetching the picked stories' pages: Google News links are redirects and Seeking Alpha is mostly closed, so first a measured sample"],
       ["Joining rewrites of one story by different outlets", "clustering on the model's one-line fact, the company and the time"],
       ["Whether news moves prices: reaction after the story, abnormal news volume, slow diffusion to smaller companies", "weeks of collected news, then the factor test protocol"],
       ["The model reading every story within minutes", "GPU time: it reads about 200 stories every ten minutes, newest first, so a backlog clears slowly"],
@@ -72,7 +74,7 @@ export const DEV_NOTES = {
       "The engine's reading for this company.",
       "Exact times for 8-Ks absent from the release calendar: those markers are explicitly filing-date only; calendar releases carry their exact ET publication time.",
       "Analyst consensus: Alpha Vantage's EPS estimates are collected since 25 November 2026 (25 companies a day, all within about three weeks), not shown here yet.",
-      "News: the last 30 days of stories since collection began on 25 November 2026; “About it” needs the model's reading, the company's own SEC filing or a wire's ticker tag, so a story not yet read shows only under “Every mention” when its company feed returned it.",
+      "News: the last 30 days of stories since collection began on 25 November 2026; “About it” needs the model's reading, the company's own SEC filing or a wire's ticker tag, so a story not yet read shows only under “Every mention” when its company feed returned it. A followed company's News card opens with its brief (owner and NDA reviewers): the morning brief since the previous close and the day's updates, shown for three days.",
     ],
     better: [
       ["Option panels for every company", "features built on the S&P 500 chains"],

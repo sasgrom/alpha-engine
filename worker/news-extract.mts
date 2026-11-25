@@ -6,6 +6,7 @@
  * Reads items/<UTC date>.jsonl of the last --days days (today included), skips copies of a story already stored, and
  * asks gemma4:12b for subject, other companies, event type, direction, novelty and a one-line fact, newest items first,
  * until the time budget ends (the scheduler has one lane; a run never holds it longer than the budget plus one item).
+ * Items tied to a followed company (lookup/followed.json, written by worker/news-briefs.mts) are read first.
  * Every answer is appended at once to extract/<the item's first-seen UTC date>.jsonl, so an interrupted run loses at
  * most the item it was reading; a damaged last line is ignored and that item is asked again.
  * Each row carries the model, its digest, the prompt version and our extraction time. For research the item's
@@ -17,7 +18,7 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, realpathSync } fro
 import path from "node:path";
 import { CompanyIndex } from "./lib/news-companies";
 import { newsLanguage } from "./lib/news-language";
-import { EXTRACT_MODEL, EXTRACT_SCHEMA, EXTRACT_SYSTEM, itemText, parseAnswer, pickItems, PROMPT_VERSION, resolveName, userMessage, type NewsItemRow } from "./lib/news-extract";
+import { EXTRACT_MODEL, EXTRACT_SCHEMA, EXTRACT_SYSTEM, itemText, parseAnswer, pickItems, PROMPT_VERSION, resolveName, tiedCiks, userMessage, type NewsItemRow, type TieInputs } from "./lib/news-extract";
 
 const arg = (name: string) => { const index = process.argv.indexOf(name); return index > -1 ? process.argv[index + 1] : null; };
 const root = path.resolve(arg("--root") ?? "D:/research/alpha-engine/news");
@@ -47,9 +48,28 @@ for (const date of dates) {
     if (row.valid || tries >= 2) done.add(row.id);
   }
 }
+const indexFile = path.join(root, "lookup", "company-index.json");
+if (!existsSync(indexFile)) throw new Error(`No company index at ${indexFile}; run worker/news-company-index.mts first`);
+const indexDoc = JSON.parse(readFileSync(indexFile, "utf8")) as { builtAt: string; entries: ConstructorParameters<typeof CompanyIndex>[0] };
+const index = new CompanyIndex(indexDoc.entries);
+
+// followed companies are read first (the briefs need them); the list is written by worker/news-briefs.mts, and
+// without it every item simply waits its turn
+const followedFile = path.join(root, "lookup", "followed.json");
+const followed = new Set<number>(existsSync(followedFile) ? (JSON.parse(readFileSync(followedFile, "utf8")) as { ciks: number[] }).ciks : []);
+const tickerToCik = new Map<string, number>();
+for (const entry of indexDoc.entries) for (const ticker of entry.tickers) if (!tickerToCik.has(ticker)) tickerToCik.set(ticker, entry.cik);
+const askedFor = new Map<string, number[]>();
+if (followed.size) for (const date of dates) for (const line of readLines(path.join(root, "mentions", `${date}.jsonl`))) {
+  const row = parseLine<{ id: string; cik?: number }>(line);
+  if (row?.id && row.cik) askedFor.set(row.id, [...(askedFor.get(row.id) ?? []), row.cik]);
+}
+const isFollowed = (row: NewsItemRow) => followed.size > 0 && tiedCiks(row as TieInputs, tickerToCik, askedFor.get(row.id)).some(cik => followed.has(cik));
+
 // English only (owner, 2026-11-25): items stored before the collector dropped other languages are not read
-const todo = pickItems(items.filter(row => newsLanguage(row).english), done, limit);
-console.log(JSON.stringify({ days: dates, items: items.length, stories: items.filter(row => !row.copyOfEarlierStory).length, alreadyRead: done.size, toRead: todo.length, model: EXTRACT_MODEL, promptVersion: PROMPT_VERSION, minutes }));
+const todo = pickItems(items.filter(row => newsLanguage(row).english), done, limit, isFollowed);
+const followedToRead = todo.filter(isFollowed).length;
+console.log(JSON.stringify({ days: dates, items: items.length, stories: items.filter(row => !row.copyOfEarlierStory).length, alreadyRead: done.size, toRead: todo.length, followed: followed.size, followedToRead, model: EXTRACT_MODEL, promptVersion: PROMPT_VERSION, minutes }));
 if (dryRun || !todo.length) process.exit(0);
 
 const tags = await fetch(`${OLLAMA}/api/tags`, { signal: AbortSignal.timeout(5000) }).then(response => response.ok ? response.json() as Promise<{ models: { name: string; digest: string }[] }> : null).catch(() => null);
@@ -58,11 +78,6 @@ const digest = tags.models.find(model => model.name === EXTRACT_MODEL)?.digest;
 if (!digest) throw new Error(`${EXTRACT_MODEL} is not installed in Ollama; nothing was read`);
 // the runtime can change answers too (an update arrived on 2026-11-25), so its version is kept with the digest
 const ollamaVersion = await fetch(`${OLLAMA}/api/version`, { signal: AbortSignal.timeout(5000) }).then(response => response.json() as Promise<{ version: string }>).then(body => body.version).catch(() => null);
-const indexFile = path.join(root, "lookup", "company-index.json");
-if (!existsSync(indexFile)) throw new Error(`No company index at ${indexFile}; run worker/news-company-index.mts first`);
-const indexDoc = JSON.parse(readFileSync(indexFile, "utf8")) as { builtAt: string; entries: ConstructorParameters<typeof CompanyIndex>[0] };
-const index = new CompanyIndex(indexDoc.entries);
-
 async function ask(item: NewsItemRow) {
   const response = await fetch(`${OLLAMA}/api/chat`, {
     method: "POST", headers: { "content-type": "application/json" }, signal: AbortSignal.timeout(180_000),

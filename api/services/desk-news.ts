@@ -7,6 +7,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { DESK_NEWS_SCHEMA_VERSION, type DeskNewsCompany, type DeskNewsDay, type DeskNewsPage, type DeskNewsQuery, type DeskNewsStory } from "@contracts/desk-news";
+import { NEWS_BRIEF_SCHEMA_VERSION, type DeskBriefLine, type NewsBrief } from "@contracts/news-briefs";
 
 const MAX_DAYS_CACHED = 5;
 const dayCache = new Map<string, { mtimeMs: number; size: number; value: DeskNewsDay }>();
@@ -83,6 +84,32 @@ export function newsPage(query: DeskNewsQuery, readings: boolean, now = new Date
     companies: [...companies.values()].sort((a, b) => b.stories - a.stories || a.cik - b.cik).slice(0, 15),
     readings,
   };
+}
+
+/** A brief is shown while its latest version is at most this old (the owner: short-lived, 2–3 days at most). */
+export const BRIEF_SHOWN_HOURS = 72;
+
+/** A followed company's latest news brief (worker/news-briefs.mts); null when there is none or it is older than three days. */
+export function readBrief(cik: number, now = new Date(), root = deskNewsRoot()): NewsBrief | null {
+  const file = path.join(root, "briefs", `${cik}.json`);
+  if (!existsSync(file)) return null;
+  const value = JSON.parse(readFileSync(file, "utf8")) as NewsBrief;
+  if (value.schemaVersion !== NEWS_BRIEF_SCHEMA_VERSION) throw new Error(`News brief schema ${String(value.schemaVersion)} is not the expected ${NEWS_BRIEF_SCHEMA_VERSION}; rebuild it`);
+  return Date.parse(value.to) >= now.getTime() - BRIEF_SHOWN_HOURS * 3_600_000 ? value : null;
+}
+
+/** The Today page's lines: the latest brief of each given company that has one, newest change first. */
+export function briefLines(ciks: number[], now = new Date(), root = deskNewsRoot()): DeskBriefLine[] {
+  const lines: DeskBriefLine[] = [];
+  for (const cik of new Set(ciks)) {
+    const brief = readBrief(cik, now, root);
+    if (!brief) continue;
+    const lastUpdate = brief.updates.at(-1) ?? null;
+    lines.push({ cik, ticker: brief.ticker, name: brief.name, edition: brief.edition, topLine: brief.topLine.text, checked: brief.topLine.checked,
+      points: brief.points.length, updates: brief.updates.length,
+      changedAt: lastUpdate && lastUpdate.at > brief.topLine.changedAt ? lastUpdate.at : brief.topLine.changedAt, lastUpdate: lastUpdate ? { at: lastUpdate.at, text: lastUpdate.text || lastUpdate.title } : null });
+  }
+  return lines.sort((a, b) => Number(b.points + b.updates > 0) - Number(a.points + a.updates > 0) || b.changedAt.localeCompare(a.changedAt) || b.points + b.updates - (a.points + a.updates) || a.cik - b.cik);
 }
 
 /** One registry company's stories of the covered days; null when the file is not built. */

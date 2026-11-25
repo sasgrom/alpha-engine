@@ -20,4 +20,14 @@ describe("desk news for a member", () => {
     expect(desk.host.textContent).not.toContain("read by the model");
     expect(desk.host.textContent).not.toContain("What kind of news");
   });
+
+  it("shows no news brief: not on the company page, not on Today", async () => {
+    desk?.unmount();
+    desk = await mountDesk("user", "/desk/company/AAPL", "Apple raises its dividend a");
+    expect(desk.host.querySelector(".desk-brief")).toBeNull();
+    desk.unmount();
+    desk = await mountDesk("user", "/desk", "Latest filings");
+    expect(desk.host.textContent).not.toContain("News briefs");
+    expect(desk.host.querySelector(".desk-brief-line")).toBeNull();
+  });
 });

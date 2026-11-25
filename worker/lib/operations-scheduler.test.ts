@@ -72,9 +72,9 @@ describe("operations registry", () => {
     // the paused GPU lanes of the old tone and cohort pipelines left the registry on 2026-11-24: they cannot be queued
     expect(OPERATION_JOB_MAP["edgar-tone-nightly"]).toBeUndefined();
     expect(OPERATION_JOB_MAP["expectations-extract"]).toBeUndefined();
-    // a job that needs the local model stays off unless the owner switches it on: the news reader is the one he
-    // switched on (2026-11-25, "run gemma as scheduled job")
-    expect(OPERATION_JOBS.filter((job) => job.requirements.includes("gpu") && job.defaultEnabled).map((job) => job.id)).toEqual(["news-extract"]);
+    // a job that needs the local model stays off unless the owner switches it on: the news reader (2026-11-25, "run
+    // gemma as scheduled job") and the news briefs (2026-11-25, "go ahead" on the brief plan)
+    expect(OPERATION_JOBS.filter((job) => job.requirements.includes("gpu") && job.defaultEnabled).map((job) => job.id)).toEqual(["news-extract", "news-briefs"]);
   });
 
   it("orders every parent before its child in a run chain", () => {

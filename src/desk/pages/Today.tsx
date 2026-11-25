@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import { trpc } from "@/providers/trpc";
 import { DESK_PERIODS, type DeskCompany, type DeskPeriod } from "@contracts/desk-snapshot";
+import type { DeskBriefLine } from "@contracts/news-briefs";
 import { MarketMap, DivergingLegend } from "../charts/MarketMap";
 import { SectorBars } from "../charts/SectorBars";
 import { Sparkline } from "../charts/Sparkline";
@@ -40,6 +41,46 @@ const FORM_LABELS: Record<string, string> = {
   "6-K": "Foreign issuer report",
   "20-F": "Foreign annual report",
 };
+
+const FEEDS: { value: "briefs" | "filings"; label: string }[] = [{ value: "briefs", label: "Briefs" }, { value: "filings", label: "Filings" }];
+
+/** "10:42 AM" today, "Nov 24, 4:10 PM" before. */
+const briefTime = (iso: string) => (new Date(iso).toDateString() === new Date().toDateString() ? fmtClock(iso) : `${fmtDate(iso.slice(0, 10), "short")}, ${fmtClock(iso)}`);
+
+/** One line per followed company with news: its top line, the newest update; the quiet ones are counted. */
+function BriefLines({ lines }: { lines: DeskBriefLine[] }) {
+  const [all, setAll] = useState(false);
+  const active = lines.filter((line) => line.points + line.updates > 0);
+  const shown = all ? active : active.slice(0, 10);
+  const quiet = lines.length - active.length;
+  if (!active.length) return <div className="desk-empty">{lines.length ? `No news of note for the ${lines.length} companies you follow since the previous close.` : "No brief yet: the first is written at 8:45 New York time on a weekday."}</div>;
+  return (
+    <div>
+      {shown.map((line) => (
+        <CompanyLink key={line.cik} company={{ ticker: line.ticker ?? String(line.cik), cik: line.cik }} className="desk-list-row desk-brief-line">
+          <span className="desk-list-main">
+            <span className="desk-ticker" style={{ minWidth: 52 }}>{line.ticker}</span>
+            <span className="desk-brief-line-text">
+              {line.topLine}
+              {line.lastUpdate && <span className="desk-muted"> · update: {line.lastUpdate.text}</span>}
+            </span>
+          </span>
+          <span className="desk-list-side desk-muted" style={{ fontSize: 12.5, whiteSpace: "nowrap" }}>
+            {briefTime(line.changedAt)}{line.updates ? ` · ${line.updates} ${line.updates === 1 ? "update" : "updates"}` : ""}
+          </span>
+        </CompanyLink>
+      ))}
+      {(active.length > 10 || quiet > 0) && (
+        <div className="desk-muted" style={{ fontSize: 12.5, padding: "8px 0 0" }}>
+          {active.length > 10 && (
+            <><button type="button" className="desk-news-more" onClick={() => setAll((open) => !open)}>{all ? "Show the first 10" : `Show ${active.length - 10} more with news`}</button>. </>
+          )}
+          {quiet > 0 ? `${quiet} followed ${quiet === 1 ? "company had" : "companies had"} no news of note.` : ""}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function greeting(name: string): string {
   const hour = new Date().getHours();
@@ -82,6 +123,10 @@ export default function Today() {
   const watch = useWatchlist();
   const intraday = useDeskIntradayMarket();
   const filings = trpc.dashboard.latestFilings.useQuery({ limit: 8 }, { staleTime: 60_000 });
+  // the news briefs of the followed companies: null for viewers who may not see the model's writing
+  const briefs = trpc.desk.briefs.useQuery({ ciks: [...watch.ciks] }, { enabled: watch.ciks.size > 0, staleTime: 60_000 });
+  const [feed, setFeed] = useState<"briefs" | "filings" | null>(null);
+  const view = feed ?? (briefs.data?.some((line) => line.points + line.updates > 0) ? "briefs" : "filings");
   const macro = trpc.dashboard.macro.useQuery(undefined, { staleTime: 10 * 60_000 });
 
   const data = snapshot.data;
@@ -267,8 +312,15 @@ export default function Today() {
           )}
         </Card>
 
-        <Card className="desk-span-7" title="Latest filings" subtitle="Newest SEC documents from your watchlist companies">
-          {filings.isLoading ? (
+        <Card
+          className="desk-span-7"
+          title={view === "briefs" ? "News briefs" : "Latest filings"}
+          subtitle={view === "briefs" ? "Since the previous close, with the day's updates · written by the local model, numbers and names checked" : "Newest SEC documents from your watchlist companies"}
+          action={briefs.data ? <Segmented label="Show" options={FEEDS} value={view} onChange={setFeed} /> : undefined}
+        >
+          {view === "briefs" ? (
+            <BriefLines lines={briefs.data ?? []} />
+          ) : filings.isLoading ? (
             <Shimmer height={160} />
           ) : filings.data?.length ? (
             <div>

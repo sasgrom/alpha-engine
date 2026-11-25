@@ -2,8 +2,9 @@
  * News collector (owner's go of 2026-11-25). Research input; nothing reaches production.
  *
  *   npx tsx worker/news-feeds.mts --set fast            wires, SEC current 8-Ks, market news (every few minutes)
- *   npx tsx worker/news-feeds.mts --set company [--batch 130]   per-company feeds for the registry tickers asked
- *                                                       longest ago, plus the macro feeds
+ *   npx tsx worker/news-feeds.mts --set company [--batch 130]   per-company feeds for the followed companies
+ *                                                       (lookup/followed.json) and the --batch other registry
+ *                                                       tickers asked longest ago, plus the macro feeds
  *   [--dry-run] lists what would be asked; [--init] creates the empty archive once
  *
  * Archive D:\research\alpha-engine\news:
@@ -61,7 +62,11 @@ if (set === "company") {
   const [rows] = await client.query("SELECT cik, ticker, name FROM companies WHERE cik > 0 AND ticker IS NOT NULL AND ticker <> ''") as [Array<{ cik: number; ticker: string; name: string | null }>, unknown];
   await client.end();
   const registry = rows.map(row => ({ cik: Number(row.cik), ticker: String(row.ticker).trim().toUpperCase(), name: cleanName(String(row.name ?? row.ticker)) }));
-  picked = registry.sort((a, b) => (rotation[a.ticker] ?? "").localeCompare(rotation[b.ticker] ?? "") || a.ticker.localeCompare(b.ticker)).slice(0, batch);
+  // followed companies (lookup/followed.json, the news briefs' list) are asked on every pass; --batch others rotate
+  const followedFile = path.join(root, "lookup", "followed.json");
+  const followed = new Set<number>(existsSync(followedFile) ? (JSON.parse(readFileSync(followedFile, "utf8")) as { ciks: number[] }).ciks : []);
+  const byRotation = (a: { ticker: string }, b: { ticker: string }) => (rotation[a.ticker] ?? "").localeCompare(rotation[b.ticker] ?? "") || a.ticker.localeCompare(b.ticker);
+  picked = [...registry.filter(company => followed.has(company.cik)).sort(byRotation), ...registry.filter(company => !followed.has(company.cik)).sort(byRotation).slice(0, batch)];
   // interleave the hosts so that each is asked at most once every few seconds
   for (const feed of COMPANY_FEEDS) for (const [i, company] of picked.entries()) requests.push({ feedId: feed.id, publisher: feed.publisher, url: feed.url(company.ticker, company.name), ticker: company.ticker, cik: company.cik, order: i } as Request & { order: number });
   requests.sort((a: any, b: any) => a.order - b.order);

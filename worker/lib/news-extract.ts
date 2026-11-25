@@ -67,10 +67,23 @@ export function parseAnswer(content: string): Label | null {
     eventType: value.eventType, direction: value.direction, novelty: value.novelty, fact: value.fact.trim() };
 }
 
-/** Items still to read: one per story (copies are skipped, the first copy carries the story), newest first. */
-export function pickItems(rows: NewsItemRow[], done: Set<string>, limit: number): NewsItemRow[] {
-  return rows.filter(row => !row.copyOfEarlierStory && !done.has(row.id))
-    .sort((a, b) => b.firstSeenAt.localeCompare(a.firstSeenAt) || a.id.localeCompare(b.id)).slice(0, limit);
+/** Items still to read: one per story (copies are skipped, the first copy carries the story), newest first; items
+ * for which `first` holds (tied to a followed company) come before all others. */
+export function pickItems(rows: NewsItemRow[], done: Set<string>, limit: number, first: (row: NewsItemRow) => boolean = () => false): NewsItemRow[] {
+  const rank = new Map<string, number>();
+  const todo = rows.filter(row => !row.copyOfEarlierStory && !done.has(row.id));
+  for (const row of todo) rank.set(row.id, first(row) ? 0 : 1);
+  return todo.sort((a, b) => rank.get(a.id)! - rank.get(b.id)! || b.firstSeenAt.localeCompare(a.firstSeenAt) || a.id.localeCompare(b.id)).slice(0, limit);
+}
+
+/** The ties an item has before the model reads it: the SEC filer, tickers the wire tagged, the company a per-company
+ * feed was asked about (also when that feed returned an item stored earlier, from the mentions file). */
+export interface TieInputs { query?: { cik?: number } | null; ciks?: number[]; tickers?: string[] }
+export function tiedCiks(item: TieInputs, tickerToCik: Map<string, number>, mentioned: number[] = []): number[] {
+  const ciks = new Set<number>([...(item.ciks ?? []), ...mentioned]);
+  if (item.query?.cik) ciks.add(item.query.cik);
+  for (const ticker of item.tickers ?? []) { const cik = tickerToCik.get(ticker.toUpperCase().replace("-", ".")); if (cik) ciks.add(cik); }
+  return [...ciks];
 }
 
 /** A name to an SEC identity: a clear match by name, else a ticker the text states whose company shares a word with the name. */

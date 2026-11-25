@@ -28,7 +28,7 @@ import { loadOperationsState } from "../../worker/lib/operations-scheduler";
 import { adminQuery, createRouter, authedQuery } from "../middleware";
 import { readDeskCompanyFile } from "../services/desk-company-files";
 import { readDeskDocumentText } from "../services/desk-documents";
-import { companyNews, newsPage } from "../services/desk-news";
+import { briefLines, companyNews, newsPage, readBrief } from "../services/desk-news";
 import { deskSnapshotFor, readDeskSnapshot } from "../services/desk-snapshot";
 import { intradayForCompany, readIntradayMarketReport } from "../services/intraday";
 import { readEngineFlowFile } from "../services/engine-flow-files";
@@ -87,6 +87,10 @@ export const deskRouter = createRouter({
     }))
     .query(({ ctx, input }) => newsPage(input, ctx.user.role === "admin" || Boolean(ctx.reviewerAccess?.acceptedAt))),
   companyNews: authedQuery.input(entity).query(({ ctx, input }) => companyNews(input.cik, ctx.user.role === "admin" || Boolean(ctx.reviewerAccess?.acceptedAt))),
+  // the news briefs are the local model's writing (a research product): the owner and NDA reviewers only
+  companyBrief: authedQuery.input(entity).query(({ ctx, input }) => (ctx.user.role === "admin" || ctx.reviewerAccess?.acceptedAt ? readBrief(input.cik) : null)),
+  briefs: authedQuery.input(z.object({ ciks: z.array(z.number().int().positive()).max(500) }))
+    .query(({ ctx, input }) => (ctx.user.role === "admin" || ctx.reviewerAccess?.acceptedAt ? briefLines(input.ciks) : null)),
   engineIndex: adminQuery.query(() => readEngineFlowFile<EngineFlowIndex>("index.json")),
   engineCompany: adminQuery.input(entity).query(({ input }) => readEngineFlowFile<EngineFlowCompany>(`company/${input.cik}.json`)),
   opsHealth: adminQuery.query(() => {
