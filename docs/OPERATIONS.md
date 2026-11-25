@@ -600,6 +600,14 @@ npx tsx ../alpha-engine-lab/src/prices/std-prices-refresh.mts
 - **Command:** `npx tsx worker/finra-short-interest.mts` (`--no-fetch` rebuilds the desk file only, `--dry-run` writes nothing)
 - **Operational note:** asks only for settlement files the archive lacks (the 15th and the last business day of a month, published about seven business days later); a date not out yet is asked again the next day. Stored files are never rewritten and are checked against the manifest hash when read. Output `worker/.runs/desk-short-interest.json` feeds `company.shortInterest` and `scripts/build-desk-snapshot.mts`.
 
+### 22e. Alpha Vantage analysts' EPS estimates (added 2026-11-25, owner's go)
+
+- **ID:** `alpha-vantage-earnings` · **Cron:** 40 6 * * * · **Requirements:** network, mysql, driveD
+- **Command:** `npx tsx worker/alpha-vantage-earnings.mts` (`--limit N` at most 25, `--dry-run` lists today's tickers without a request; `--init` created the empty archive once)
+- **Source:** Alpha Vantage `EARNINGS` with the owner's free key `ALPHAVANTAGE_API_KEY` in `.env` (never printed or logged; errors never carry the URL). Per reported quarter: consensus EPS (`estimatedEPS`), reported EPS, surprise, report date and time of day; one request returns the whole history (IBM back to 1996). EPS only: no revenue estimates and no history of revisions.
+- **Limits:** 25 requests a day on the free key ([alphavantage.co/premium](https://www.alphavantage.co/premium/), [support](https://www.alphavantage.co/support/)); the collector waits 15 seconds between requests. The first pass over the 502 registry tickers takes 21 days (25 fetched by hand on 2026-11-25); after it, the oldest copies are asked again 25 a day.
+- **Operational note:** archive `D:/research/alpha-engine/estimates/alphavantage/earnings` (`raw/<TICKER>/<date>.json` as received, never rewritten; `manifest.json` with hashes and one line per run). A rate-limit notice stops the run without marking anything; a premium-only notice is an error; a ticker empty under both class separators (BRK.B / BRK-B) is asked again after 30 days; a CIK that no longer matches the stored one stops the run. Research input only; every use is checked first against our own reported EPS and release calendar.
+
 ### 23. FRED and ALFRED vintage refresh
 
 - **ID:** `macro-fred-weekly`

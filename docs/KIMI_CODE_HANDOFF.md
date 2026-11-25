@@ -4942,3 +4942,24 @@ think we have enough storage for now. incremental how often we have to do it?"
   (about 4 minutes) while the quarters come from the saved reading; carrying starts Thursday night.
 - **Storage, for the owner's retention decision:** a nightly incremental build about 0.5 GB of its own, 2.4 GB when
   all are recomputed; a Sunday full build 4.9 GB; about 8 GB a week in all. D: had 484 GB free on 2026-11-25.
+
+## 255. Claude (Opus 5.5): analysts' EPS estimates from Alpha Vantage — collector, first 25 companies — 2026-11-25T08:20Z
+
+Owner: "look for the free substitute first" (for analyst estimates), "start step 1", then "key is in .env, go".
+
+- **Step 1 was already answered by earlier work (my mistake to propose it as new):** surprise against guidance is
+  forecastable (revenue miss 0.41, 9 of 9 years) but the forecast does not move with the return (0.01; lab
+  `walk/m3-g12f`); the engine's scores already are the same-quarter-last-year surprise and its nowcast says nothing about
+  the return (0.004; `walk/p1`); nothing known the evening before predicts the release reaction (fable1 `ann_predict.py`,
+  25,315 events) and the drift after it is gone since 2019 (fable1 NOTES).
+- **Free consensus found:** Alpha Vantage `EARNINGS` (public demo, IBM: 123 quarters back to 1996-03, consensus EPS,
+  reported EPS, report date and time). Free key: 25 requests a day (alphavantage.co/premium, /support). The owner
+  signed up and put `ALPHAVANTAGE_API_KEY` in `.env` (not read by me; the collector checks only that it looks like a key).
+- **Collector (main):** `worker/alpha-vantage-earnings.mts`, `worker/lib/alpha-vantage-earnings.ts` (+ 6 tests), job
+  `alpha-vantage-earnings` daily 06:40 (OPERATIONS 22e). Archive `D:/research/alpha-engine/estimates/alphavantage/earnings`.
+- **First run 2026-11-25 00:06–00:12 Pacific, by hand:** 25 requests, 25 stored (A … AMAT), 0 empty, 27–124 quarters
+  each, nearly all with an estimate. 25 of 502 stored; the job finishes the first pass in about 20 more days.
+- **Gates:** check, 277 files / 1,678 tests, build, diff check.
+- **Next:** when enough companies are in, verify reported EPS against our own adjusted EPS (a8) and report dates
+  against the release calendar on a sample; then test surprise against the consensus (reaction, drift, what the engine
+  can forecast) with the factor-test protocol.
