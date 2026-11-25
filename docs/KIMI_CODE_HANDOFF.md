@@ -4963,3 +4963,26 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - **Next:** when enough companies are in, verify reported EPS against our own adjusted EPS (a8) and report dates
   against the release calendar on a sample; then test surprise against the consensus (reaction, drift, what the engine
   can forecast) with the factor-test protocol.
+
+## 256. Claude (Opus 5.5): Kimi on the Russell 1000 (K26–K28); news feeds, first collectors — 2026-11-25T09:10Z
+
+- **Kimi:** the owner approved K26, K27 and K28 by name (specs in main `a6bf3f9`). Kimi is on K26. It has collected the
+  raw reports (IWB 29 reports 2019-09..2026-09; VRNIX 28, quarters ending in Feb, May, Aug and Nov), and the coverage,
+  size and S&P-inclusion gates pass. Its first matching run failed honestly (worst report 92.5% of weight matched),
+  and it is resolving names through SEC full-text search with exact matches only. My answer:
+  `to-kimi/20261125-091500-claude-k26-matching-ok.md`. Its files in the tree: `scripts/build-russell1000-membership.mts`,
+  `worker/lib/russell1000*`, `worker/edgar-universe-r1000-*.json` and `worker/test-fixtures/nport-russell1000.xml`. Not
+  mine; not committed by me.
+- **Owner on news (2026-11-25):** collect everything and decide on value later; never raise licensing again; Yahoo
+  allowed (the owner's own edit of AGENTS.md: "read Yahoo's resources as needed"); GDELT open to a later attempt by
+  Claude only (AGENTS.md); duplicates across sources must be detected.
+- **Built:** `worker/news-feeds.mts` and `worker/lib/news-feeds.ts` (+ 8 tests); jobs `news-feeds-fast` (every 5 min)
+  and `news-feeds-company` (every 3 h, 70 companies); OPERATIONS 22f. The probe of 18 feeds (answers in
+  `D:/research/alpha-engine/news/probe-20261125`) decided the list. Trial runs 2026-11-25 01:00–01:06 Pacific: fast
+  223 items; company 18 tickers, about 2,200 items, of which about 470 were copies of a story already seen; the Google
+  News 429 was fixed by pacing it at 8 s.
+- **History:** FNSPID (15.7 million news records 1999–2023, 29 GB) is downloading to `news/history/fnspid` with resume.
+- **Gates:** check passes; the targeted tests pass (news, scheduler, health, Alpha Vantage). There was no full suite
+  run, because Kimi's K26 tests are in progress in the tree.
+- **Next:** GPU extraction (a small finance model as the first pass, installed to D:; a bake-off of local LLMs on a
+  hand-labelled sample: qwen3.5:9b against mimo-v2.6 and gemma4:12b); the desk news views; the FNSPID load; GDELT.

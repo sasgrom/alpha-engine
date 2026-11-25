@@ -600,6 +600,16 @@ npx tsx ../alpha-engine-lab/src/prices/std-prices-refresh.mts
 - **Command:** `npx tsx worker/finra-short-interest.mts` (`--no-fetch` rebuilds the desk file only, `--dry-run` writes nothing)
 - **Operational note:** asks only for settlement files the archive lacks (the 15th and the last business day of a month, published about seven business days later); a date not out yet is asked again the next day. Stored files are never rewritten and are checked against the manifest hash when read. Output `worker/.runs/desk-short-interest.json` feeds `company.shortInterest` and `scripts/build-desk-snapshot.mts`.
 
+### 22f. News feeds (added 2026-11-25, owner's go: "lets get everything we can, decide later based on value")
+
+- **IDs:** `news-feeds-fast` · **Cron:** 2-59/5 * * * * · **Requirements:** network, driveD; `news-feeds-company` · **Cron:** 10 */3 * * * · **Requirements:** network, mysql, driveD
+- **Command:** `npx tsx worker/news-feeds.mts --set fast` / `--set company --batch 70` (`--dry-run` lists the requests; `--init` created the archive once)
+- **Fast set:** SEC current 8-Ks (through `secGet`), GlobeNewswire, PR Newswire, Seeking Alpha market currents, MarketWatch, Benzinga, CNBC, Nasdaq earnings. **Company set:** Google News, Nasdaq, Seeking Alpha and Yahoo Finance per registry ticker (70 a run, all 502 a day), plus the Fed, BLS and BEA feeds.
+- **Archive** `D:/research/alpha-engine/news`: `raw/<feed>/<UTC date>/` every answer gzipped as received; `items/<UTC date>.jsonl` one row per new item with `firstSeenAt` (when the news was available to us; use it, not `publishedAt`, for point-in-time work), tags (GlobeNewswire tickers and ISINs, SEC filer CIK and 8-K items, the company a per-company feed was asked for) and `storyId`; `mentions/` when a company feed returns an item already stored; `state/` (seen items 45 days, stories 7 days, company rotation, gaps).
+- **Duplicates** (owner: "everybody copies everyone"): an item joins an earlier story when it has the same canonical address, the same normalized title, or the same words apart from filler words (`sameStory`, at least 5 words, 80% shared). Strict on purpose: a missed copy costs a row, a false merge would hide news. SimHash was tried and rejected: on short titles it put two companies' identical headlines closer than true copies.
+- **Gaps:** a fast feed whose whole answer is new after an earlier fetch, and a company feed whose oldest item is newer than our previous ask for that company, are counted in `state/feeds.json` (`gaps`, `gapTickers`). Google News is paced at one request in 8 seconds (it answered 429 faster) and left alone for the rest of a run after a 429; Yahoo one in 3 seconds.
+- **Not yet:** Business Wire (its main feed answered empty), Accesswire and Reddit (403), Investing.com (its times are off by hours), the FNSPID history (downloading to `news/history/fnspid`), GPU extraction, the desk views, GDELT (Claude's later attempt, AGENTS.md).
+
 ### 22e. Alpha Vantage analysts' EPS estimates (added 2026-11-25, owner's go)
 
 - **ID:** `alpha-vantage-earnings` · **Cron:** 40 6 * * * · **Requirements:** network, mysql, driveD

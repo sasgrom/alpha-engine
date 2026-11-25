@@ -17,7 +17,7 @@ Without additional per-step approval, you are authorized to:
 - fix bugs, add regression tests, update source documentation and improve existing UI;
 - run formatters, TypeScript checks, tests and production builds;
 - run existing local collectors and builders, including Schwab market data, EDGAR/companyfacts, Stocktwits, FRED and OFAC, when their prerequisites are already configured;
-- read Yahoo's split and dividend events and its split calendar for corporate actions only (owner's go, 2026-11-13: "lets get it from whoever we can"; daily watch "yes"). Polite, one request at a time, tickers and dates only; never prices for the app or anything for production;
+- read Yahoo's resources as needed
 - start or restart the existing home server and operations scheduler only after proving that no duplicate process or collector is active;
 - run dependency chains sequentially and resume existing checkpoints;
 - make bounded, evidence-based retries: at most two attempts for the same failing step, followed by diagnosis instead of another blind retry;
@@ -37,7 +37,7 @@ Progress messages should be short status updates, not questions. Ask the owner o
 - Keep raw archives on the large external D: drive with the existing realpath-aware guards. MySQL remains on C: until backup and restore testing is complete.
 - LLM keys and provider credentials never enter the browser, logs, chat, fixtures or committed files.
 - Schwab access is market-data only: no orders, accounts, balances, positions or account activity. Do not print or transmit tokens, client secrets, authorization codes or brokerage credentials.
-- GDELT is frozen, including manual browser access. Do not send any GDELT requests.
+- GDELT is frozen, including manual browser access. Do not send any GDELT requests. One exception (owner, 2026-11-25): Claude may make a new attempt at GDELT once the other news sources are running ("you can take your stab at it, once you are done with the rest"); the earlier collector lost API calls for a reason never found. The freeze stays for every other agent.
 - Code comments, UI strings and test names are English. The Russian manual is the existing sanctioned Russian project artifact.
 
 ## 3.1 D:-drive interruption and resume protocol
