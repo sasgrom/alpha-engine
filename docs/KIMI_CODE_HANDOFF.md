@@ -4871,3 +4871,35 @@ availability QA, Schwab daily bars into local prices. The market run of 2026-11-
   macro 02:42Z (T10Y2Y to 2026-11-24, daily series to 11-23), then macro scenarios, shock calibration, event study,
   transmission atlas and the feature lab.
 - `operationsHealth` now: no alerts.
+
+## 253. Claude (Opus 5.5): the incremental insider build — design, tests and a live equivalence trial — 2026-11-25T03:45Z
+
+Owner: "go on with the incremental insider build" (after the one-time clean-up of section 250).
+
+- **Design (lab `b29e3aa`, `src/insiders/insider-incremental.mts`):** a company's normalized rows depend only on its
+  own raw filings with their evidence fields, its owner groups (the union-find is per issuer), its standard prices,
+  the sessions up to the first after its latest filing or acceptance day, and the normalizing code. Their hash is the
+  company's fingerprint (`fingerprints.json`). Equal to the previous build's: `companies/<cik>.jsonl` and
+  `company-stats/<cik>.json` are hard links to the previous build's files (D: is NTFS; same bytes, no new space);
+  carried rows keep the version that computed them (`build.incremental.rowsVersions`, and `rowsVersions` in a
+  files-scope `finalization.json`; the desk builder accepts those versions, main `8b97cc0`). Five carried companies
+  are recomputed every run (`--verify-carry 5`) and must equal the carried rows apart from `buildVersion`, or the
+  build stops. An incremental build writes no table files and no persons (the weekly `--load` full build does) and
+  lists its filings in `accessions.jsonl` (read by the acceptance checks and the regression). `--drop-work` removes
+  the run's own `raw\` and `raw-companies\` once `build.json` is written.
+- **Nightly (`std-insiders-refresh`):** builds `--incremental-from <published build> --verify-carry 5 --drop-work`.
+  The Sunday `--load` run builds full (tables for the database) with `--drop-work`. Tonight the published build
+  (`20261124T124754Z`) has no fingerprints, so every company is recomputed once (about 2.4 GB written); carrying
+  starts the night after.
+- **Tests:** lab insider 12 files / 114 (carry-over as the same inode, change detection by prices and sessions, a
+  tampered carried file caught by the check, comparison with an accession list); main 276 files / 1,672.
+- **Live trial in `D:/research/alpha-engine/tmp/insider-incremental-trial` (removed afterwards):** A full build to
+  2026-11-20 (12.7 min); B form fetch to 2026-11-23 (540 forms, 8.7 min; the shared EDGAR archive now reaches
+  11-23, which tonight's run reads anyway); C incremental build to 11-23 from A (7.2 min: 432 carried, 69
+  recomputed, 4 verified); D full build to 11-23 (10.6 min); E comparison of C with D: **equivalent** — 761,474
+  filings of 501 companies equal apart from the version field, counts, accession list and summary checks equal (the
+  amendment examples in the point-in-time check quote the original filing with its version; equal without it).
+  Disk: C wrote 0.57 GB of its own (the 69 recomputed companies, among them large filers, plus the accession list);
+  a full build is 4.75 GB.
+- **Not done:** the 9 minutes of re-reading the 83 quarterly SEC sets every night (a saved reading would cut a
+  nightly run to about 3 minutes); retention of old builds is still the owner's decision.
