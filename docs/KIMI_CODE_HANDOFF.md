@@ -4903,3 +4903,42 @@ Owner: "go on with the incremental insider build" (after the one-time clean-up o
   a full build is 4.75 GB.
 - **Not done:** the 9 minutes of re-reading the 83 quarterly SEC sets every night (a saved reading would cut a
   nightly run to about 3 minutes); retention of old builds is still the owner's decision.
+
+## 254. Claude (Opus 5.5): a saved reading of the quarterly SEC insider sets; the nightly run Monday to Saturday — 2026-11-25T06:45Z
+
+Owner: "go ahead with the saved reading of the quarterly sets, i dont understand why do we have to rebuild it often? i
+think we have enough storage for now. incremental how often we have to do it?"
+
+- **Measured first (read-only and a scratch build, 2026-11-25 06:10–06:20Z):** the "9 minutes of re-reading" in
+  section 253 was a wrong attribution. A whole build (every company recomputed) took 9 minutes: 4.7 for the quarterly
+  phase, 2.75 for the companies, 0.9 for the checks and the clean-up. Inside the quarterly phase, reading the 83 sets
+  and enriching them from the old XML cache took about one minute (hashes 7 s, reading 6.5 s, enrichment 45 s). The
+  rest was writing two copies of the 757,376 filings (`raw/<quarter>/`, which nothing read, and `raw-companies/`) and
+  deleting them again.
+- **Change (lab `e607a9b`, `src/insiders/insider-reading.mts`):** the quarterly sets are read once into
+  `D:/research/alpha-engine/insiders/sec-345/reading/<key>/`: `companies/<cik>.jsonl` (each company's filings from the
+  sets, enriched and mapped, first copy of each accession), `index/<quarter>.jsonl` (the accession index's input in
+  reading order, with the extra XML sources) and `reading.json` (key, inputs, every file's hash, counts, the old cache's
+  enrichment report; written last, then the staging folder is renamed). The key hashes the quarters' normalized files,
+  the old cache's manifests and each file's size and time, the issuer map, the registry and the reading code
+  (`READING_FILES`, including the main repo's `worker/lib/form4-xml.ts` and `form4-core.ts`). A build replays the index
+  in order (`InsiderRawIndex.addSummary`), restores the enrichment report (`LegacyInsiderSource.restore`) and checks every
+  file's hash first; a damaged reading, or a key folder without `reading.json`, stops the build. The dead `raw/` spool
+  is gone. `--no-saved-reading` reads as before. The old cache (`worker/cache/edgar-form4`) is frozen: no job writes it,
+  no manifest changed since 2026-11-17.
+- **Tests:** lab insider 12 files / 118 (reading written once and replayed, equal to a build without it including the
+  tables and the enrichment report; a fresh key for a touched cache file, a new filed CIK and a changed quarter, old
+  readings kept; a damaged file and an interrupted folder stop the build).
+- **Live trial (scratch builds in `D:/research/alpha-engine/tmp/insider-profile`, removed afterwards, 4.89 GB freed):**
+  reference = the old code's incremental build from the published build to 2026-11-23 (all recomputed, 9.0 min).
+  A = new code, same inputs: wrote the reading `08caf9f5ff3777cea13ab294` (2.13 GB, 757,376 filings, 501 companies),
+  6.0 min. B = incremental from A, replaying the reading: quarters in 7 s, 501 carried, 5 verified, **1.6 min**. A and B
+  each compared with the reference: **equivalent** (761,474 filings equal apart from the version field; counts,
+  accession list, summary checks and the enrichment report equal). The reading stays where tonight's run finds it.
+- **Schedule (main):** `std-insiders-refresh` now runs Monday to Saturday (`35 3 * * 1-6`): on Sundays
+  `std-insiders-db-load` (04:10) runs the same refresh with a full build, and the 03:35 run before it recomputed every
+  company (the standard prices refresh at 02:00) for nothing. Notes and OPERATIONS 22c updated with the measured times.
+- **Tonight (Wednesday 03:35):** the published build has no fingerprints yet, so every company is recomputed once
+  (about 4 minutes) while the quarters come from the saved reading; carrying starts Thursday night.
+- **Storage, for the owner's retention decision:** a nightly incremental build about 0.5 GB of its own, 2.4 GB when
+  all are recomputed; a Sunday full build 4.9 GB; about 8 GB a week in all. D: had 484 GB free on 2026-11-25.
