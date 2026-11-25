@@ -15,6 +15,7 @@ import path from "node:path";
 import { DESK_NEWS_SCHEMA_VERSION, type DeskNewsCompany, type DeskNewsDay, type DeskNewsStory } from "../contracts/desk-news";
 import { buildStories, companyStories, type ArchiveItem, type ArchiveMention, type ArchiveReading } from "../worker/lib/desk-news";
 import { writeJsonAtomic } from "../worker/lib/json-file";
+import { newsLanguage } from "../worker/lib/news-language";
 import type { CompanyEntry } from "../worker/lib/news-companies";
 
 const arg = (name: string) => { const index = process.argv.indexOf(name); return index > -1 ? process.argv[index + 1] : null; };
@@ -45,7 +46,8 @@ for (const [i, date] of dates.entries()) {
   if (!existsSync(path.join(news, "items", `${date}.jsonl`))) continue;
   const next = new Date(Date.parse(`${date}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
   const items: ArchiveItem[] = [];
-  for (const day of [date, next]) for (const line of lines(path.join(news, "items", `${day}.jsonl`))) { const row = parse<ArchiveItem>(line); if (row) items.push(row); }
+  // English only (owner, 2026-11-25): items stored before the collector dropped other languages are left out here
+  for (const day of [date, next]) for (const line of lines(path.join(news, "items", `${day}.jsonl`))) { const row = parse<ArchiveItem>(line); if (row && newsLanguage(row).english) items.push(row); }
   const readings = new Map<string, ArchiveReading>();
   for (const line of lines(path.join(news, "extract", `${date}.jsonl`))) {
     const row = parse<ArchiveReading>(line);

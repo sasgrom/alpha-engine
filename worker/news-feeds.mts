@@ -14,6 +14,8 @@
  *   mentions/<UTC date>.jsonl                         a per-company feed returning an item already stored (ticker, id)
  *   state/feeds.json, state/stories.json, state/rotation.json   seen items, recent stories, company pass order
  * A gap is recorded when a feed's whole answer is new after an earlier fetch: items may have scrolled out unseen.
+ * English only (owner, 2026-11-25): an item in another language (worker/lib/news-language.ts) stays in the raw answer,
+ * is counted per feed as notEnglish in state/feeds.json, and is not stored as an item.
  * A missing archive (the D: drive may be away) stops the run and creates nothing.
  */
 import "dotenv/config";
@@ -24,6 +26,7 @@ import { getDb } from "../api/queries/connection";
 import { secGet } from "./lib/edgar";
 import { writeJsonAtomic } from "./lib/json-file";
 import { canonicalUrl, COMPANY_FEEDS, companyGap, FAST_FEEDS, feedTags, itemId, MACRO_FEEDS, normalizeTitle, parseFeed, StoryIndex, type FeedItem, type StoryKey } from "./lib/news-feeds";
+import { newsLanguage } from "./lib/news-language";
 import { startProgress } from "./lib/progress";
 
 const arg = (name: string) => { const index = process.argv.indexOf(name); return index > -1 ? process.argv[index + 1] : null; };
@@ -38,7 +41,7 @@ if (process.argv.includes("--init") && !existsSync(path.join(root, "state"))) {
 for (const dir of ["raw", "items", "mentions", "state"]) if (!existsSync(path.join(root, dir))) throw new Error(`The news archive is not complete at ${root} (no ${dir}); nothing was fetched or created (first run: --init)`);
 if (!/^d:/i.test(realpathSync(root)) && !arg("--root")) throw new Error("The news archive must resolve to D:");
 
-interface FeedState { lastFetchAt: string | null; fetches: number; newItems: number; gaps: number; errors: number; lastError: string | null; seen: Record<string, string>; gapTickers?: Record<string, number> }
+interface FeedState { lastFetchAt: string | null; fetches: number; newItems: number; gaps: number; errors: number; lastError: string | null; seen: Record<string, string>; gapTickers?: Record<string, number>; notEnglish?: number }
 const readJson = <T>(file: string, fallback: T): T => existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) as T : fallback;
 const feedsFile = path.join(root, "state", "feeds.json"), storiesFile = path.join(root, "state", "stories.json"), rotationFile = path.join(root, "state", "rotation.json");
 const feeds = readJson<Record<string, FeedState>>(feedsFile, {});
@@ -74,7 +77,7 @@ if (dryRun) {
   process.exit(0);
 }
 
-const counts = { requests: 0, newItems: 0, mentions: 0, duplicates: 0, gaps: 0, errors: 0 };
+const counts = { requests: 0, newItems: 0, mentions: 0, duplicates: 0, gaps: 0, errors: 0, notEnglish: 0 };
 const itemsFile = path.join(root, "items", `${day}.jsonl`), mentionsFile = path.join(root, "mentions", `${day}.jsonl`);
 async function fetchText(request: Request): Promise<string> {
   const response = request.sec ? await secGet(request.url) : await fetch(request.url, { headers: { "User-Agent": "Mozilla/5.0 (research client)", Accept: "application/rss+xml, application/atom+xml, text/xml, */*" }, signal: AbortSignal.timeout(30_000) });
@@ -122,7 +125,14 @@ for (const request of requests) {
       continue;
     }
     state.seen[id] = nowIso;
-    const publisher = item.publisher ?? request.publisher, title = normalizeTitle(item.title, item.publisher), url = canonicalUrl(item.url);
+    const publisher = item.publisher ?? request.publisher;
+    // English only (owner, 2026-11-25): another language is counted and left in the raw answer, never stored as an item
+    if (!newsLanguage({ title: item.title, summary: item.summary, publisher, url: item.url }).english) {
+      state.notEnglish = (state.notEnglish ?? 0) + 1;
+      counts.notEnglish++;
+      continue;
+    }
+    const title = normalizeTitle(item.title, item.publisher), url = canonicalUrl(item.url);
     const story = storyIndex.match(title, url), tags = feedTags(request.feedId, item);
     let storyId: string;
     if (story) { storyId = story.storyId; counts.duplicates++; }
@@ -143,5 +153,5 @@ for (const state of Object.values(feeds)) for (const [id, at] of Object.entries(
 writeJsonAtomic(feedsFile, feeds);
 writeJsonAtomic(storiesFile, storyIndex.stories);
 if (set === "company") writeJsonAtomic(rotationFile, rotation);
-prog.done(`${counts.requests} requests · ${counts.newItems} new items (${counts.duplicates} copies of a story seen before) · ${counts.mentions} repeat mentions · gaps ${counts.gaps} · errors ${counts.errors}`);
+prog.done(`${counts.requests} requests · ${counts.newItems} new items (${counts.duplicates} copies of a story seen before) · ${counts.notEnglish} not in English, not stored · ${counts.mentions} repeat mentions · gaps ${counts.gaps} · errors ${counts.errors}`);
 process.exit(0);

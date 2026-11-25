@@ -16,6 +16,7 @@ import "dotenv/config";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
 import { CompanyIndex } from "./lib/news-companies";
+import { newsLanguage } from "./lib/news-language";
 import { EXTRACT_MODEL, EXTRACT_SCHEMA, EXTRACT_SYSTEM, itemText, parseAnswer, pickItems, PROMPT_VERSION, resolveName, userMessage, type NewsItemRow } from "./lib/news-extract";
 
 const arg = (name: string) => { const index = process.argv.indexOf(name); return index > -1 ? process.argv[index + 1] : null; };
@@ -46,7 +47,8 @@ for (const date of dates) {
     if (row.valid || tries >= 2) done.add(row.id);
   }
 }
-const todo = pickItems(items, done, limit);
+// English only (owner, 2026-11-25): items stored before the collector dropped other languages are not read
+const todo = pickItems(items.filter(row => newsLanguage(row).english), done, limit);
 console.log(JSON.stringify({ days: dates, items: items.length, stories: items.filter(row => !row.copyOfEarlierStory).length, alreadyRead: done.size, toRead: todo.length, model: EXTRACT_MODEL, promptVersion: PROMPT_VERSION, minutes }));
 if (dryRun || !todo.length) process.exit(0);
 

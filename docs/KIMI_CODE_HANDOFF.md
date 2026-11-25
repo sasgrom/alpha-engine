@@ -5107,3 +5107,26 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   run while Kimi's K27 changes are in the tree.
 - **Next:** cross-language duplicates on the extracted fact; Today page: the watchlist's latest stories (inside the
   existing filings card, not a new panel); news volume and reaction research once weeks are collected.
+
+
+## 261. Claude (Opus 5.5): news in English only — 2026-11-25T19:55Z
+
+- **Owner, 2026-11-25:** "go ahead with the cross-language, just english, drop other news, no other languages". This
+  replaces the cross-language dedupe: other languages are not kept.
+- **Built:** `worker/lib/news-language.ts` (+ 4 tests) on the `eld` detector, added to `package.json` pinned at 2.1.0
+  (August 2026; 8.7 MB, 0.7 s to load, 0.03 ms an item). GlobeNewswire's language code in the address decides when
+  present; else the title and summary without tickers, numbers, symbols and the outlet name; foreign only with four or
+  more real words, a lead over English of at least 0.09, and a common word of the language or a non-Latin script.
+  Rejected on the same day's items: tinyld (calls SEC filing titles Berber), a plain margin (short English headlines
+  read as Spanish; French releases led by only 0.08).
+- **Measured on the 22,016 items of 2026-11-25:** without the address code, 191 of 194 GlobeNewswire releases match
+  their own language code; the rule marks 105 items foreign (60 PR Newswire, 42 GlobeNewswire, 3 Google News), all
+  checked by hand, none English.
+- **Wired in:** `worker/news-feeds.mts` stores only English items (others stay in the raw answer and are counted as
+  `notEnglish` per feed in `state/feeds.json`; the run line says "N not in English, not stored"; first live run 11:47
+  Pacific: 2 stored, 1 dropped); `worker/news-extract.mts` and `scripts/build-desk-news.mts` skip the non-English items
+  stored earlier; the items file is not rewritten. Dev notes and OPERATIONS 22f updated.
+- **Gates:** `npm run check`; news tests (language, feeds, extract, desk-news: 22) pass; desk files rebuilt (321 of 499
+  registry companies with news now).
+- **Next:** English rewrites of one story by different outlets stay separate stories (clustering on the model's fact,
+  company and time is the way, if wanted); Today page stories for the watchlist.

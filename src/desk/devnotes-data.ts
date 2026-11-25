@@ -38,12 +38,12 @@ export const DEV_NOTES = {
     missing: [
       "History before 25 November 2026: collection started that day (the FNSPID archive of 1999–2023 is downloading for research, not for this page).",
       "Business Wire, Accesswire, Reddit and Investing.com: their feeds answer empty, refuse us or carry wrong times. GDELT is not attempted yet.",
-      "The same release in several languages counts as several stories: copies are joined by address and headline words only.",
+      "English only (owner, 25 November 2026): items in other languages are not stored (about 0.5% of the first day, mostly press-wire translations). A short foreign headline (under four real words) can slip through; an English rewrite of a story by another outlet with other words stays a separate story.",
       "A copy seen two or more days after its story is not joined to it.",
       "Company feeds cover the registry companies in turn (70 every three hours), so a company's news can be up to a day late from those feeds; the wires and the SEC are read every five minutes.",
     ],
     better: [
-      ["Joining copies across languages and rewrites", "clustering on the model's one-line fact, the company and the time"],
+      ["Joining rewrites of one story by different outlets", "clustering on the model's one-line fact, the company and the time"],
       ["Whether news moves prices: reaction after the story, abnormal news volume, slow diffusion to smaller companies", "weeks of collected news, then the factor test protocol"],
       ["The model reading every story within minutes", "GPU time: it reads about 200 stories every ten minutes, newest first, so a backlog clears slowly"],
     ],
