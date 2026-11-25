@@ -5075,3 +5075,35 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   `stocktwits-hourly` uses qwen3.5:9b whenever Ollama runs, and Ollama may swap the two models.
 - **Next:** rerun the 300-item bake-off for gemma on Ollama 0.40.18 to confirm the measured accuracy holds; then the
   cross-language dedupe on the extracted fact and the desk news views.
+
+
+## 260. Claude (Opus 5.5): desk News page and company news card — 2026-11-25T19:10Z
+
+- **Owner, 2026-11-25:** "go ahead with the desk news views".
+- **Bake-off check on Ollama 0.40.18:** gemma4:12b on the same 300 items: subject 93.7, event 79.7, direction 80.3,
+  novelty 82.7, all four 53.0% (was 93.3 / 79.3 / 79.7 / 81.7 / 51.3 on 0.40.8); paired McNemar shows no field
+  different (all four p=0.18). The measured accuracy holds.
+- **Built:** `contracts/desk-news.ts`; `worker/lib/desk-news.ts` (+ 5 tests: stories from items, copies joined, company
+  ties with their reason, the model's reading, publication time never after first sight);
+  `scripts/build-desk-news.mts` → `worker/.runs/desk-news/days/<date>.json` and `company/<cik>.json`;
+  `api/services/desk-news.ts` (+ 3 tests) with procedures `desk.news` and `desk.companyNews` in `api/routers/desk.ts`;
+  the page `src/desk/pages/News.tsx` (`/desk/news`, in the top navigation after Markets and in Ctrl+K), the shared list
+  `src/desk/news/StoryList.tsx`, the company card `src/desk/pages/company/News.tsx` (before Filings), styles at the end
+  of `desk.css`, dev notes for "news" and "company". Tests: `DeskNews.test.tsx` (owner), `.member.test.tsx`,
+  `.empty.test.tsx`; the harness now records query inputs (`queried`) and answers the two procedures; the two
+  navigation tests list News.
+- **Rules:** headlines, outlets and company ties for every signed-in user; the model's readings (kind, direction,
+  new or follow-up, the fact) and their filters only for the owner and NDA reviewers, stripped by the server. The
+  window selects by publication time (a story we first saw days later says "seen N days after publication"). The
+  company card opens on "About it" (the model's subject, the company's own filing, or a wire's ticker tag) when there
+  is such a story, else on "Every mention".
+- **Job:** `desk-news` (`dependsOn: news-extract`), about a second; OPERATIONS 22g. Scheduler restarted idle at 18:58
+  UTC on 78 jobs; web server restarted 18:56 UTC (one listener; `desk.news` answers 401 without a session, an
+  unknown procedure 404). Notices to Kimi before the build and both restarts.
+- **First build:** 16,700 stories of 2026-11-25, 1,827 with copies from other outlets, 15,684 tied to registry
+  companies, 246 of 499 registry companies with news so far (the company feeds go round 70 every three hours).
+  Screenshots checked (owner light, member dark, Amazon's card).
+- **Gates:** `npm run check`, `npm run build`, desk/router/service/builder/scheduler tests (143 files, 744 tests) pass; no full suite
+  run while Kimi's K27 changes are in the tree.
+- **Next:** cross-language duplicates on the extracted fact; Today page: the watchlist's latest stories (inside the
+  existing filings card, not a new panel); news volume and reaction research once weeks are collected.

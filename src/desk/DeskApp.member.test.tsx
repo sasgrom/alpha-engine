@@ -16,7 +16,7 @@ describe("desk view for a member", () => {
     desk = await mountDesk("user");
     const host = desk.host;
     // a member has no research section and never sees build notes, but the fund flows are open to everyone
-    expect([...host.querySelectorAll(".desk-nav a")].map((link) => link.textContent)).toEqual(["Today", "Markets", "Screener", "Flows", "Watchlist"]);
+    expect([...host.querySelectorAll(".desk-nav a")].map((link) => link.textContent)).toEqual(["Today", "Markets", "News", "Screener", "Flows", "Watchlist"]);
     expect(host.querySelector(".desk-devnotes")).toBeNull();
     act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }));

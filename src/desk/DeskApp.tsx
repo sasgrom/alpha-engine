@@ -8,6 +8,7 @@ const Today = lazy(() => import("./pages/Today"));
 const Security = lazy(() => import("./pages/Security"));
 const Markets = lazy(() => import("./pages/Markets"));
 const Screener = lazy(() => import("./pages/Screener"));
+const News = lazy(() => import("./pages/News"));
 const CompanyPage = lazy(() => import("./pages/Company"));
 const Signals = lazy(() => import("./pages/research/Signals"));
 const Earnings = lazy(() => import("./pages/research/Earnings"));
@@ -41,6 +42,7 @@ export default function DeskApp() {
           <Route index element={<Today />} />
           <Route path="markets" element={<Markets />} />
           <Route path="screener" element={<Screener />} />
+          <Route path="news" element={<News />} />
           <Route path="company/:ticker" element={<CompanyPage />} />
           <Route path="research" element={<Signals />} />
           <Route path="research/earnings" element={<Earnings />} />

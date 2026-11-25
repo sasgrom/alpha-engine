@@ -16,6 +16,7 @@ import { CompanyFilings } from "./company/Filings";
 import { CompanyGuidance } from "./company/Guidance";
 import { CompanyHolders } from "./company/Holders";
 import { CompanyInsiders } from "./company/Insiders";
+import { CompanyNews } from "./company/News";
 import { OptionChainDialog } from "./company/OptionChain";
 import { CompanyRisk } from "./company/Risk";
 import { CompanyStatements } from "./company/Statements";
@@ -323,6 +324,7 @@ export default function CompanyPage() {
         <CompanyStatements cik={cik} />
         {isPresentation && <CompanyGuidance cik={cik} />}
         <CompanyActions cik={cik} />
+        <CompanyNews cik={cik} />
         <CompanyFilings cik={cik} />
       </div>
 

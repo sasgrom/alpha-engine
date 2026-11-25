@@ -34,6 +34,20 @@ export const DEV_NOTES = {
       ["True interval extremes and a streaming live map", "tick or streaming data; the current map and day paths are built from snapshots"],
     ],
   },
+  news: {
+    missing: [
+      "History before 25 November 2026: collection started that day (the FNSPID archive of 1999–2023 is downloading for research, not for this page).",
+      "Business Wire, Accesswire, Reddit and Investing.com: their feeds answer empty, refuse us or carry wrong times. GDELT is not attempted yet.",
+      "The same release in several languages counts as several stories: copies are joined by address and headline words only.",
+      "A copy seen two or more days after its story is not joined to it.",
+      "Company feeds cover the registry companies in turn (70 every three hours), so a company's news can be up to a day late from those feeds; the wires and the SEC are read every five minutes.",
+    ],
+    better: [
+      ["Joining copies across languages and rewrites", "clustering on the model's one-line fact, the company and the time"],
+      ["Whether news moves prices: reaction after the story, abnormal news volume, slow diffusion to smaller companies", "weeks of collected news, then the factor test protocol"],
+      ["The model reading every story within minutes", "GPU time: it reads about 200 stories every ten minutes, newest first, so a backlog clears slowly"],
+    ],
+  },
   screener: {
     missing: [
       "Market value, yield and beta from our own data: they are Schwab's. Share counts of companies with several share classes and the dividends after April 2024 have gaps in the standards.",
@@ -57,7 +71,8 @@ export const DEV_NOTES = {
       "Fund holdings end at the June 2026 quarter: the September quarter's 13F reports (due November 16) are not in the fund books and the 13F standard yet.",
       "The engine's reading for this company.",
       "Exact times for 8-Ks absent from the release calendar: those markers are explicitly filing-date only; calendar releases carry their exact ET publication time.",
-      "Analyst consensus: no estimates feed is collected.",
+      "Analyst consensus: Alpha Vantage's EPS estimates are collected since 25 November 2026 (25 companies a day, all within about three weeks), not shown here yet.",
+      "News: the last 30 days of stories since collection began on 25 November 2026; “About it” needs the model's reading, the company's own SEC filing or a wire's ticker tag, so a story not yet read shows only under “Every mention” when its company feed returned it.",
     ],
     better: [
       ["Option panels for every company", "features built on the S&P 500 chains"],

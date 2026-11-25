@@ -339,6 +339,20 @@ const COMPANY_INSIDERS = {
   year: { bought: 460_000, sold: 34_000_000, buyers: 1, sellers: 2, soldUnderPlan: 25_000_000 },
 };
 
+const NEWS_STORY = (id: string, over: Record<string, unknown> = {}) => ({
+  id, title: `Apple raises its dividend ${id}`, url: `https://www.globenewswire.com/${id}`, publisher: "GlobeNewswire", feed: "globenewswire-public",
+  publishedAt: "2026-11-25T14:00:00.000Z", firstSeenAt: "2026-11-25T14:01:00.000Z",
+  sources: [{ publisher: "Benzinga", feed: "benzinga", url: `https://www.benzinga.com/${id}`, firstSeenAt: "2026-11-25T14:20:00.000Z" }], copies: 1,
+  companies: [{ cik: 320193, ticker: "AAPL", name: "Apple Inc.", ties: ["subject", "tagged"], registry: true }, { cik: 77, ticker: "PRIV", name: "Private Co", ties: ["mentioned"], registry: false }],
+  secItems: [], reading: { subject: "Apple", eventType: "capital_return", direction: "positive", novelty: "new", fact: "Apple lifts its quarterly dividend by 4%." }, ...over,
+});
+export const NEWS_STORIES = [
+  NEWS_STORY("a"),
+  NEWS_STORY("b", { title: "Why tech stocks fell today", publisher: "Yahoo Finance", feed: "yahoo-headlines", copies: 0, sources: [], publishedAt: "2026-11-21T10:00:00.000Z", firstSeenAt: "2026-11-25T09:00:00.000Z",
+    companies: [{ cik: 320193, ticker: "AAPL", name: "Apple Inc.", ties: ["asked"], registry: true }], reading: { subject: "-", eventType: "stock_move_recap", direction: "negative", novelty: "followup", fact: "Tech stocks fell on rate worries." } }),
+];
+const stripReading = (stories: typeof NEWS_STORIES, owner: boolean) => (owner ? stories : stories.map((story) => ({ ...story, reading: null })));
+
 function answer(procedure: string, role: string, input?: unknown): unknown {
   const owner = role === "admin";
   switch (procedure) {
@@ -380,6 +394,13 @@ function answer(procedure: string, role: string, input?: unknown): unknown {
     case "desk.companyFilings": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_FILINGS;
     case "desk.companyDocument": return DESK_DATA.empty ? null : { accession: "0000320193-26-000099", file: "000032019326000099.ex-a8kex991.htm", paragraphs: ["Apple reports fourth quarter results", "Revenue | $114.5 billion"], truncated: false };
     case "desk.companyHolders": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_HOLDERS;
+    case "desk.news": return DESK_DATA.empty ? { builtAt: null, hours: 24, total: 0, matching: 0, read: 0, copies: 0, stories: [], events: [], publishers: [], companies: [], readings: owner } : {
+      builtAt: "2026-11-25T14:30:00.000Z", hours: 24, total: 40, matching: 2, read: 2, copies: 1, stories: stripReading(NEWS_STORIES, owner),
+      events: owner ? [{ event: "capital_return", stories: 1 }, { event: "stock_move_recap", stories: 1 }] : [],
+      publishers: [{ publisher: "GlobeNewswire", stories: 1 }, { publisher: "Yahoo Finance", stories: 1 }],
+      companies: [{ cik: 320193, ticker: "AAPL", name: "Apple Inc.", stories: 2, positive: owner ? 1 : 0, negative: 0 }], readings: owner,
+    };
+    case "desk.companyNews": return DESK_DATA.empty || DESK_DATA.noStatements ? null : { schemaVersion: 1, cik: 320193, builtAt: "2026-11-25T14:30:00.000Z", days: ["2026-11-25"], stories: stripReading(NEWS_STORIES, owner) };
     case "workersLocal.enabled": return { enabled: OPS_CONSOLE.enabled };
     case "workersLocal.operations": return { config: { "stocktwits-hourly": { enabled: false, cron: "30 * * * *" } }, state: OPS_STATE };
     case "workersLocal.setOperation": case "workersLocal.killOperation": return { ok: true };
@@ -436,6 +457,8 @@ export interface MountedDesk {
   calls: string[];
   /** The inputs of the mutations the page sent, in order. */
   posted: Array<{ procedure: string; input: unknown }>;
+  /** The inputs of the queries the page asked, in order. */
+  queried: Array<{ procedure: string; input: unknown }>;
   unmount: () => void;
 }
 
@@ -461,6 +484,7 @@ export async function mountDesk(role: "admin" | "user", path = "/desk", ready = 
   }
   const calls: string[] = [];
   const posted: Array<{ procedure: string; input: unknown }> = [];
+  const queried: Array<{ procedure: string; input: unknown }> = [];
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (input, init) => {
     const url = new URL(input instanceof Request ? input.url : String(input), "http://localhost");
@@ -474,6 +498,7 @@ export async function mountDesk(role: "admin" | "user", path = "/desk", ready = 
     // a query's inputs travel in the address, one entry per procedure of the batch
     let inputs: Record<string, { json?: unknown }> = {};
     try { inputs = JSON.parse(url.searchParams.get("input") ?? "{}") as typeof inputs; } catch { /* no input in the address */ }
+    if (!init?.body) procedures.forEach((procedure, index) => queried.push({ procedure, input: inputs[index]?.json }));
     // a mutation carries its inputs in the body
     if (typeof init?.body === "string") {
       try {
@@ -508,6 +533,7 @@ export async function mountDesk(role: "admin" | "user", path = "/desk", ready = 
     host,
     calls,
     posted,
+    queried,
     unmount: () => {
       act(() => root?.unmount());
       host.remove();

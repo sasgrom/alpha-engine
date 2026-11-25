@@ -10,6 +10,8 @@
  *   releases for every signed-in user (what the companies, the funds and the insiders filed with the SEC, and public
  *   corporate actions); the guidance
  *   history, which is our own reading of the releases, only for the owner and NDA-accepted reviewers;
+ * - the news stories built from the news archive, for every signed-in user; the local model's reading of each story
+ *   only for the owner and NDA-accepted reviewers (services/desk-news.ts);
  * - the engine-flow files (the prediction engine's working, decision by decision), for the owner only;
  * - the home operations' health (scheduler, failed jobs, the evening market run, failed production pushes), for the
  *   owner only: the desk shows it as a banner, so a stopped collection is never silent.
@@ -26,6 +28,7 @@ import { loadOperationsState } from "../../worker/lib/operations-scheduler";
 import { adminQuery, createRouter, authedQuery } from "../middleware";
 import { readDeskCompanyFile } from "../services/desk-company-files";
 import { readDeskDocumentText } from "../services/desk-documents";
+import { companyNews, newsPage } from "../services/desk-news";
 import { deskSnapshotFor, readDeskSnapshot } from "../services/desk-snapshot";
 import { intradayForCompany, readIntradayMarketReport } from "../services/intraday";
 import { readEngineFlowFile } from "../services/engine-flow-files";
@@ -68,6 +71,22 @@ export const deskRouter = createRouter({
     .query(({ ctx, input }) => (ctx.user.role === "admin" || ctx.reviewerAccess?.acceptedAt ? readDeskOptionChain(input) : null)),
   guidanceMarket: authedQuery.query(({ ctx }) =>
     ctx.user.role === "admin" || ctx.reviewerAccess?.acceptedAt ? readDeskCompanyFile<DeskGuidanceMarket>("guidance-market.json") : null),
+  // the news: headlines, outlets and the companies tied to them for every signed-in user; the local model's readings
+  // (event, direction, novelty, the one-line fact) are our own research product, for the owner and NDA reviewers only
+  news: authedQuery
+    .input(z.object({
+      hours: z.number().int().min(1).max(72).default(24),
+      scope: z.enum(["all", "registry", "watchlist"]).default("all"),
+      ciks: z.array(z.number().int().positive()).max(500).optional(),
+      event: z.string().max(40).optional(),
+      direction: z.enum(["positive", "negative", "neutral", "mixed"]).optional(),
+      newOnly: z.boolean().optional(),
+      publisher: z.string().max(120).optional(),
+      search: z.string().max(80).optional(),
+      limit: z.number().int().min(1).max(200).default(80),
+    }))
+    .query(({ ctx, input }) => newsPage(input, ctx.user.role === "admin" || Boolean(ctx.reviewerAccess?.acceptedAt))),
+  companyNews: authedQuery.input(entity).query(({ ctx, input }) => companyNews(input.cik, ctx.user.role === "admin" || Boolean(ctx.reviewerAccess?.acceptedAt))),
   engineIndex: adminQuery.query(() => readEngineFlowFile<EngineFlowIndex>("index.json")),
   engineCompany: adminQuery.input(entity).query(({ input }) => readEngineFlowFile<EngineFlowCompany>(`company/${input.cik}.json`)),
   opsHealth: adminQuery.query(() => {

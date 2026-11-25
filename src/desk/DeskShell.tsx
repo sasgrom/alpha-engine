@@ -21,6 +21,7 @@ import "./desk.css";
 const NAV = [
   { label: "Today", path: "/desk" },
   { label: "Markets", path: "/desk/markets" },
+  { label: "News", path: "/desk/news" },
   { label: "Screener", path: "/desk/screener" },
 ];
 
@@ -160,6 +161,7 @@ export default function DeskShell({ children }: { children: ReactNode }) {
     () => [
       { label: "Today", path: "/desk", group: "Desk", keywords: "home overview brief" },
       { label: "Markets", path: "/desk/markets", group: "Desk", keywords: "map heatmap sectors treemap" },
+      { label: "News", path: "/desk/news", group: "Desk", keywords: "headlines press releases wires stories 8-k feeds sentiment" },
       { label: "Screener", path: "/desk/screener", group: "Desk", keywords: "table filter sort companies" },
       { label: "Watchlist", path: "/desk/watchlist", group: "Desk", keywords: "follow companies list" },
       ...(isPresentation

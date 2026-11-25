@@ -173,6 +173,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local D: only; no production write and no database write.", requirements: ["network", "mysql", "driveD"], notes: "Weekly, Sundays. A missing source or an index of fewer than 5,000 companies leaves the previous index in place.",
   }),
   job({
+    id: "desk-news", name: "Desk news files", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["news-extract"],
+    ...npx("scripts/build-desk-news.mts"), purpose: "Rebuild the stories behind the desk's News page and the company news cards after every reading run: copies joined, companies tied, the model's reading added.",
+    input: "items/, extract/ and mentions/ of the news archive on D:; news/lookup/company-index.json; the desk snapshot's companies as the registry.", output: "worker/.runs/desk-news: days/<first-seen UTC date>.json (today and yesterday rebuilt each run) and company/<cik>.json for every registry company (the last 30 days).",
+    destination: "Local static files read by desk.news and desk.companyNews; no production write and no database write.", requirements: ["driveD"], notes: "About a second a run. A copy seen two or more days after its story is not joined to it. The model's readings reach only the owner and NDA reviewers (the server strips them for members).",
+  }),
+  job({
     id: "alpha-vantage-earnings", name: "Alpha Vantage analysts' EPS estimates", group: "research", mode: "scheduled", cron: "40 6 * * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/alpha-vantage-earnings.mts"), purpose: "Fetch the analysts' consensus EPS per reported quarter (with the reported EPS, report date and time of day) for 25 registry companies a day: first every company without a stored answer, then the oldest copies again.",
     input: "Alpha Vantage's EARNINGS function with the owner's free key (ALPHAVANTAGE_API_KEY in .env, never printed), the company registry, and the archive's manifest on D:.", output: "Raw answers unchanged under D:/research/alpha-engine/estimates/alphavantage/earnings/raw/<TICKER>/<date>.json and manifest.json (symbol, SHA-256, bytes, quarters, quarters with an estimate, first and last quarter, and one line per run).",
