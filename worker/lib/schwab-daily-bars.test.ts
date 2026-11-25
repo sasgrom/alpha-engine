@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { basisChange, missingSessions, planSchwabBars, splitAtStooqEnd } from "./schwab-daily-bars";
+import { basisChange, declaredDistribution, distributionShift, missingSessions, planSchwabBars, splitAtStooqEnd } from "./schwab-daily-bars";
 import { schwabPriceSeries, schwabSymbol } from "./schwab-price-series";
 
 const bar = (date: string, close: number, volume: number | null = 1000, open: number | null = close) => ({ date, open, high: close + 1, low: close - 1, close, adjClose: null, volume });
@@ -104,5 +104,37 @@ describe("Schwab daily bars into local prices", () => {
     expect(schwabSymbol("BRK-B")).toBe("BRK/B");
     expect(schwabSymbol("BF.B")).toBe("BF/B");
     expect(schwabSymbol("AAPL")).toBe("AAPL");
+  });
+});
+
+
+describe("a special cash distribution Schwab took off the history", () => {
+  const bar = (date: string, close: number) => ({ date, open: close, high: close, low: close, close, adjClose: null, volume: 1 });
+  const stored = [bar("2026-11-18", 1096.62), bar("2026-11-19", 1093.83), bar("2026-11-20", 1102.15), bar("2026-11-23", 1097.91)];
+  const fetched = [bar("2026-11-18", 1066.62), bar("2026-11-19", 1063.83), bar("2026-11-20", 1072.15), bar("2026-11-23", 1097.91), bar("2026-11-24", 1091.71)];
+
+  it("is every earlier close lower by one amount, ending at the ex-date (Costco, $30, 2026-11-24)", () => {
+    expect(distributionShift(stored, fetched)).toEqual({ amount: 30, exDate: "2026-11-23", lastShifted: "2026-11-20", dates: 3 });
+    // with the agreeing session not yet stored, the first new session is the ex-date
+    expect(distributionShift(stored.slice(0, 3), fetched)).toEqual({ amount: 30, exDate: "2026-11-23", lastShifted: "2026-11-20", dates: 3 });
+  });
+
+  it("is not recognised for mixed amounts, fewer than three dates, a ratio, or no known ex-date", () => {
+    expect(distributionShift(stored, [bar("2026-11-18", 1066.62), bar("2026-11-19", 1060), bar("2026-11-20", 1072.15), bar("2026-11-23", 1097.91)])).toBeNull();
+    expect(distributionShift(stored, [bar("2026-11-19", 1063.83), bar("2026-11-20", 1072.15), bar("2026-11-23", 1097.91)])).toBeNull();
+    expect(distributionShift(stored, stored.map((item) => bar(item.date, item.close! / 2)))).toBeNull();
+    expect(distributionShift(stored.slice(0, 3), fetched.slice(0, 3))).toBeNull();
+    expect(distributionShift(stored, stored)).toBeNull();
+  });
+
+  it("counts as declared only when Schwab's own quote names the amount and an ex-date just after the shifted sessions", () => {
+    // as Schwab did it: shifted through Friday, Monday left as traded, ex-date Tuesday
+    const shift = { amount: 30, exDate: "2026-11-23", lastShifted: "2026-11-20", dates: 20 };
+    expect(declaredDistribution(shift, { divExDate: "2026-11-24T00:00:00Z", divPayAmount: 30.0, divAmount: 5.88 })).toBe(true);
+    expect(declaredDistribution({ ...shift, exDate: "2026-11-24", lastShifted: "2026-11-23" }, { divExDate: "2026-11-24T00:00:00Z", divPayAmount: 30.0 })).toBe(true);
+    expect(declaredDistribution(shift, { divExDate: "2026-11-24T00:00:00Z", divPayAmount: 1.47, divAmount: 5.88 })).toBe(false);
+    expect(declaredDistribution(shift, { divExDate: "2026-11-20T00:00:00Z", divPayAmount: 30.0 })).toBe(false);
+    expect(declaredDistribution(shift, { divExDate: "2026-11-30T00:00:00Z", divPayAmount: 30.0 })).toBe(false);
+    expect(declaredDistribution(shift, null)).toBe(false);
   });
 });

@@ -116,3 +116,51 @@ export function missingSessions(dates: string[], calendar: string[], from: strin
   const start = first > from ? first : from;
   return [...new Set(calendar)].sort().filter((date) => date >= start && date <= last && !own.has(date));
 }
+
+export interface DistributionShift {
+  /** stored close minus new candle on every shifted date: the cash amount Schwab took off the history */
+  amount: number;
+  /** the first session not shifted (Schwab may leave the last session before the ex-date unshifted, so the ex-date can be one session later) */
+  exDate: string;
+  /** the last shifted session */
+  lastShifted: string;
+  /** stored dates whose close moved by the amount */
+  dates: number;
+}
+
+/**
+ * Schwab takes a special cash distribution off the history before its ex-date by subtracting the amount from every
+ * close (Costco, $30 ex 2026-11-24: every close lower by exactly 30.00). The stored closes are the prices that traded
+ * and stay as they are. A shift is recognised only when every moved close moved by the same amount (within a cent),
+ * at least three dates, none agreeing before the last moved one, and the ex-date known (an agreeing or new session
+ * after the last moved date). Mixed amounts stay conflicts.
+ */
+export function distributionShift(stored: PriceBar[], candidates: PriceBar[]): DistributionShift | null {
+  const byDate = new Map(stored.map((bar) => [bar.date, bar]));
+  const pairs = candidates
+    .filter((bar) => bar.close && byDate.get(bar.date)?.close)
+    .map((bar) => ({ date: bar.date, amount: byDate.get(bar.date)!.close! - bar.close!, same: same(bar.close, byDate.get(bar.date)!.close) }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const moved = pairs.filter((pair) => !pair.same);
+  if (moved.length < 3) return null;
+  const amount = moved[0].amount;
+  if (Math.abs(amount) < 0.01 || moved.some((pair) => Math.abs(pair.amount - amount) > 0.01)) return null;
+  const lastMoved = moved.at(-1)!.date;
+  if (pairs.some((pair) => pair.same && pair.date < lastMoved)) return null;
+  const exDate = pairs.find((pair) => pair.same && pair.date > lastMoved)?.date
+    ?? candidates.map((bar) => bar.date).filter((date) => date > lastMoved && !byDate.has(date)).sort()[0];
+  if (!exDate) return null;
+  return { amount: Math.round(amount * 100) / 100, exDate, lastShifted: lastMoved, dates: moved.length };
+}
+
+/**
+ * Whether a shift is the distribution Schwab's own quote declares: the same cash amount, and an ex-date after the last
+ * shifted session and at most four days after the first unshifted one. Schwab left the last session before Costco's
+ * ex-date unshifted (2026-11-23 traded and kept at 1,097.91; ex-date 2026-11-24, previous close quoted 1,067.91).
+ */
+export function declaredDistribution(shift: DistributionShift, quote: { divExDate?: string | null; divPayAmount?: number | null; divAmount?: number | null } | null): boolean {
+  const exDate = quote?.divExDate ? String(quote.divExDate).slice(0, 10) : null;
+  const latest = new Date(Date.parse(`${shift.exDate}T00:00:00Z`) + 4 * 86_400_000).toISOString().slice(0, 10);
+  if (!exDate || exDate <= shift.lastShifted || exDate > latest) return false;
+  return [quote.divPayAmount, quote.divAmount].some((value) => typeof value === "number" && Math.abs(value - shift.amount) <= 0.01);
+}

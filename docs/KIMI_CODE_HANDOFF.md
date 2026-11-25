@@ -4838,3 +4838,25 @@ Owner: "implement 1,2,3 and fix One unstable older test".
   an idle moment to learn `std-insiders-db-load` (Sundays). Tonight's nightly insider run is files-only already.
 - **For the owner's review in the morning:** how the nightly chain behaved (Operations, Sources table), whether to
   keep the last 7 insider builds, and the incremental build.
+
+## 251. Claude (Fable 5.2 / Opus 5.5): three failed jobs of 2026-11-24 — Costco's special dividend and a FRED 502 — 2026-11-25T02:30Z
+
+The desk banner: "3 scheduled jobs failed in the last day: FRED and ALFRED vintage refresh, Macro manifest and
+availability QA, Schwab daily bars into local prices. The market run of 2026-11-24 has not completed."
+
+- **Schwab daily bars (exit 1, 00:50Z):** 20 close conflicts, all Costco, every stored close 2026-10-26..11-20 exactly
+  $30.00 above Schwab's new candle. Costco declared a $30 special dividend on 2026-11-10, ex-date 2026-11-24 (Schwab's
+  own quote: `divPayAmount 30.0`, `divExDate 2026-11-24`); Schwab subtracted it from the history. It left 11-23
+  unshifted (traded 1,097.91 in the live snapshot; 11-24's quote has previous close 1,067.91). The 11-24 bars of all
+  515 series had been inserted; the job's exit 1 held back `desk-snapshot` and the UI build.
+  - Fix: `distributionShift` + `declaredDistribution` (`worker/lib/schwab-daily-bars.ts`): every moved close lower by
+    one amount (within a cent), at least three dates, and Schwab's own archived quote declaring that amount with an
+    ex-date just after the shifted sessions -> the stored traded closes stay, the shifted candles are left out, the
+    event goes to `worker/.runs/price-adjustments.jsonl` (kind `distribution`) and the summary's `distributions`.
+    An undeclared shift stays a conflict. Dry run: 0 conflicts; the only change is Costco 11-23's final volume.
+- **FRED (exit 1, 14:56Z):** FRED answered HTTP 502 for one real-time chunk of T10Y2Y (2022); 21 of 22 series fine.
+  The normalized T10Y2Y file was kept (71,187 rows); the manifest entry says 0, so **macro QA failed on that
+  mismatch** ("manifest expects 0, normalized has 71187"). A transient server error: one retry.
+- Gates: `npm run check`, 276 files / 1,672 tests, `npm run build`, `git diff --check`.
+- Rerun queued in the scheduler after a restart (72-job registry): `schwab-daily-bars` (then desk snapshot, UI build),
+  `macro-fred-weekly` (then desk macro), `macro-manifest-qa` (then the macro reports). Results in the next section.

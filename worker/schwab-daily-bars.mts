@@ -20,7 +20,7 @@ import { sql } from "drizzle-orm";
 import { getDb } from "../api/queries/connection";
 import type { PriceBar } from "../api/services/prices";
 import { completeOfficialDailyBar, latestCompletedSchwabDailyDate, officialDailyBars } from "./lib/schwab-daily";
-import { basisChange, missingSessions, planSchwabBars, splitAtStooqEnd } from "./lib/schwab-daily-bars";
+import { basisChange, declaredDistribution, distributionShift, missingSessions, planSchwabBars, splitAtStooqEnd } from "./lib/schwab-daily-bars";
 import { schwabPriceSeries } from "./lib/schwab-price-series";
 import { writeJsonAtomic } from "./lib/json-file";
 
@@ -48,7 +48,24 @@ if (historyDir) {
 
 const db = getDb();
 const perSeries: any[] = [], skipped: { ticker: string; reason: string }[] = [], errors: { ticker: string; error: string }[] = [];
-const conflicts: any[] = [], differences: any[] = [], basisChanges: any[] = [], corrections: any[] = [];
+const conflicts: any[] = [], differences: any[] = [], basisChanges: any[] = [], corrections: any[] = [], distributions: any[] = [];
+
+/** The newest archived Schwab quote of a ticker (its dividend fields), from the quote folders beside the price histories. */
+function latestQuote(ticker: string): { divExDate?: string; divPayAmount?: number; divAmount?: number; file: string } | null {
+  for (const root of roots) {
+    const quotes = path.join(root, "quotes");
+    if (!existsSync(quotes)) continue;
+    for (const day of readdirSync(quotes).filter((name) => /^\d{4}-\d{2}-\d{2}$/.test(name)).sort().reverse()) {
+      const candidate = path.join(quotes, day, `${ticker}.json`);
+      if (!existsSync(candidate)) continue;
+      const raw = readFileSync(candidate, "utf8");
+      const field = (name: string) => raw.match(new RegExp(`"${name}":\\s*("([^"]*)"|-?[0-9.]+)`));
+      const exDate = field("divExDate"), pay = field("divPayAmount"), amount = field("divAmount");
+      return { divExDate: exDate?.[2], divPayAmount: pay ? Number(pay[1]) : undefined, divAmount: amount ? Number(amount[1]) : undefined, file: candidate };
+    }
+  }
+  return null;
+}
 let inserted = 0, insertedHistory = 0, enriched = 0;
 try {
   for (const { ticker, file } of files.sort((a, b) => a.ticker.localeCompare(b.ticker))) {
@@ -87,7 +104,27 @@ try {
         basisChanges.push(event);
         row.basisChange = event;
       }
-      for (const [source, part] of [["schwab-hist", parts.history], ["schwab", parts.current]] as const) {
+      // a special cash distribution Schwab took off the history (every earlier close lower by the same amount): when its
+      // own quote declares that amount with that ex-date, the stored closes (the prices that traded) stay, the shifted
+      // candles are left out, and the event is recorded; an unexplained shift stays a conflict
+      let shiftedBefore: string | null = null;
+      if (!change) {
+        const shift = distributionShift(already, bars);
+        if (shift) {
+          const quote = latestQuote(ticker);
+          const declared = declaredDistribution(shift, quote);
+          const event = { kind: "distribution", ticker, priceKey: entry.priceKey, ...shift, declared, quote: quote ? { divExDate: quote.divExDate, divPayAmount: quote.divPayAmount, divAmount: quote.divAmount } : null, storedKept: declared, detectedAt: generatedAt, dryRun };
+          if (declared) {
+            shiftedBefore = shift.exDate;
+            if (!dryRun) appendFileSync("worker/.runs/price-adjustments.jsonl", JSON.stringify(event) + "\n");
+          }
+          distributions.push(event);
+          row.distribution = event;
+        }
+      }
+      for (const [source, whole] of [["schwab-hist", parts.history], ["schwab", parts.current]] as const) {
+        // candles before a declared distribution's ex-date are Schwab's adjusted values for dates already stored
+        const part = shiftedBefore ? whole.filter((bar) => bar.date >= shiftedBefore!) : whole;
         if (!part.length) continue;
         const stored = await storedOf(source, part[0].date);
         // the newest five candles of the series' own Schwab rows may be finalised by this fetch (provisional evening closes)
@@ -149,6 +186,7 @@ try {
     insertedHistory,
     enriched,
     closeConflicts: conflicts,
+    distributions: { rule: "a special cash distribution Schwab took off the history is recognised when every earlier close moved by one amount that Schwab's own quote declares with that ex-date; the stored (traded) closes stay", list: distributions },
     corrections: { rule: "a later Schwab fetch finalises the newest five Schwab candles of a series when the close moved by at most 0.5% and no older close moved", count: corrections.length, list: corrections },
     basisChanges,
     fieldDifferences: { count: differences.length, first: differences.slice(0, 50) },
@@ -161,7 +199,7 @@ try {
   };
   writeJsonAtomic(`worker/.runs/local-generated/schwab-daily-bars${historyDir ? ".backfill" : ""}.json`, summary, true);
   for (const event of basisChanges) console.log(`basis change: ${event.ticker} ×${event.ratio} before ${event.firstNewBasisDate} (${event.dates} stored dates moved)${event.dryRun ? " — dry run, nothing re-based" : `; re-based ${JSON.stringify(event.rebased)}`}`);
-  console.log(JSON.stringify({ files: files.length, series: perSeries.length, inserted, insertedHistory, enriched, corrected: corrections.length, closeConflicts: conflicts.length, basisChanges: basisChanges.length, fieldDifferences: differences.length, seriesWithHoles: holes.length, skipped: skipped.length, errors: errors.length, latestCompletedDate: latestDate, dryRun }, null, 2));
+  console.log(JSON.stringify({ files: files.length, series: perSeries.length, inserted, insertedHistory, enriched, corrected: corrections.length, closeConflicts: conflicts.length, distributions: distributions.map((event) => `${event.ticker} ${event.amount} ex ${event.exDate}${event.declared ? "" : " (not declared: conflicts)"}`), basisChanges: basisChanges.length, fieldDifferences: differences.length, seriesWithHoles: holes.length, skipped: skipped.length, errors: errors.length, latestCompletedDate: latestDate, dryRun }, null, 2));
   if (errors.length || conflicts.length) process.exitCode = 1;
 } finally {
   await db.$client.end();
