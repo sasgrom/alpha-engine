@@ -1,0 +1,1962 @@
+[
+  {
+    "cik": 4447,
+    "ticker": "CIK4447",
+    "name": "HESS CORP"
+  },
+  {
+    "cik": 6769,
+    "ticker": "CIK6769",
+    "name": "APACHE CORP"
+  },
+  {
+    "cik": 7332,
+    "ticker": "CIK7332",
+    "name": "SOUTHWESTERN ENERGY CO"
+  },
+  {
+    "cik": 7789,
+    "ticker": "ASB",
+    "name": "ASSOCIATED BANC-CORP"
+  },
+  {
+    "cik": 16040,
+    "ticker": "CBT",
+    "name": "CABOT CORP"
+  },
+  {
+    "cik": 18349,
+    "ticker": "CIK18349",
+    "name": "SYNOVUS FINANCIAL CORP"
+  },
+  {
+    "cik": 18926,
+    "ticker": "LUMN",
+    "name": "Lumen Technologies, Inc."
+  },
+  {
+    "cik": 19446,
+    "ticker": "CIK19446",
+    "name": "CANTEL MEDICAL LLC"
+  },
+  {
+    "cik": 20520,
+    "ticker": "CIK20520",
+    "name": "Frontier Communications Parent, Inc."
+  },
+  {
+    "cik": 25445,
+    "ticker": "CXT",
+    "name": "Crane NXT, Co."
+  },
+  {
+    "cik": 28412,
+    "ticker": "CIK28412",
+    "name": "COMERICA INC"
+  },
+  {
+    "cik": 30697,
+    "ticker": "WEN",
+    "name": "Wendy's Co"
+  },
+  {
+    "cik": 36047,
+    "ticker": "CIK36047",
+    "name": "CORELOGIC, INC."
+  },
+  {
+    "cik": 37785,
+    "ticker": "FMC",
+    "name": "FMC CORP"
+  },
+  {
+    "cik": 42582,
+    "ticker": "GT",
+    "name": "GOODYEAR TIRE & RUBBER CO /OH/"
+  },
+  {
+    "cik": 46195,
+    "ticker": "BOH",
+    "name": "BANK OF HAWAII CORP"
+  },
+  {
+    "cik": 46765,
+    "ticker": "HP",
+    "name": "Helmerich & Payne, Inc."
+  },
+  {
+    "cik": 47518,
+    "ticker": "CIK47518",
+    "name": "Hill-Rom Holdings, Inc."
+  },
+  {
+    "cik": 48039,
+    "ticker": "CIK48039",
+    "name": "HollyFrontier Corp"
+  },
+  {
+    "cik": 51644,
+    "ticker": "CIK51644",
+    "name": "INTERPUBLIC GROUP OF COMPANIES, INC."
+  },
+  {
+    "cik": 54480,
+    "ticker": "CIK54480",
+    "name": "KANSAS CITY SOUTHERN"
+  },
+  {
+    "cik": 55067,
+    "ticker": "CIK55067",
+    "name": "KELLANOVA"
+  },
+  {
+    "cik": 58492,
+    "ticker": "CIK58492",
+    "name": "LEGGETT & PLATT INC"
+  },
+  {
+    "cik": 64996,
+    "ticker": "MCY",
+    "name": "MERCURY GENERAL CORP"
+  },
+  {
+    "cik": 70866,
+    "ticker": "NCRRP",
+    "name": "NCR Voyix Corp"
+  },
+  {
+    "cik": 72207,
+    "ticker": "CIK72207",
+    "name": "NOBLE ENERGY INC"
+  },
+  {
+    "cik": 72333,
+    "ticker": "CIK72333",
+    "name": "NORDSTROM INC"
+  },
+  {
+    "cik": 77877,
+    "ticker": "CIK77877",
+    "name": "PDC ENERGY, INC."
+  },
+  {
+    "cik": 99780,
+    "ticker": "TRN",
+    "name": "TRINITY INDUSTRIES INC"
+  },
+  {
+    "cik": 101778,
+    "ticker": "CIK101778",
+    "name": "MARATHON OIL CORP"
+  },
+  {
+    "cik": 101830,
+    "ticker": "CIK101830",
+    "name": "SPRINT LLC"
+  },
+  {
+    "cik": 104889,
+    "ticker": "GHC",
+    "name": "Graham Holdings Co"
+  },
+  {
+    "cik": 107140,
+    "ticker": "WLY",
+    "name": "JOHN WILEY & SONS, INC."
+  },
+  {
+    "cik": 109177,
+    "ticker": "SPB",
+    "name": "Spectrum Brands Holdings, Inc."
+  },
+  {
+    "cik": 200411,
+    "ticker": "CIK200411",
+    "name": "KANSAS CITY SOUTHERN RAILWAY CO"
+  },
+  {
+    "cik": 203527,
+    "ticker": "CIK203527",
+    "name": "VARIAN MEDICAL SYSTEMS INC"
+  },
+  {
+    "cik": 313143,
+    "ticker": "HAE",
+    "name": "HAEMONETICS CORP"
+  },
+  {
+    "cik": 350797,
+    "ticker": "CIK350797",
+    "name": "Mirror Merger Sub 2, LLC"
+  },
+  {
+    "cik": 353569,
+    "ticker": "CIK353569",
+    "name": "QUIDEL CORP /DE/"
+  },
+  {
+    "cik": 354707,
+    "ticker": "HE",
+    "name": "HAWAIIAN ELECTRIC INDUSTRIES INC"
+  },
+  {
+    "cik": 354908,
+    "ticker": "CIK354908",
+    "name": "Teledyne FLIR, LLC"
+  },
+  {
+    "cik": 701374,
+    "ticker": "SIX",
+    "name": "Six Flags Entertainment Corp/OLD"
+  },
+  {
+    "cik": 704051,
+    "ticker": "CIK704051",
+    "name": "LEGG MASON, INC."
+  },
+  {
+    "cik": 712515,
+    "ticker": "CIK712515",
+    "name": "ELECTRONIC ARTS INC."
+  },
+  {
+    "cik": 717423,
+    "ticker": "MUR",
+    "name": "MURPHY OIL CORP"
+  },
+  {
+    "cik": 718877,
+    "ticker": "CIK718877",
+    "name": "Activision Blizzard, Inc."
+  },
+  {
+    "cik": 719739,
+    "ticker": "CIK719739",
+    "name": "SVB FINANCIAL GROUP"
+  },
+  {
+    "cik": 722830,
+    "ticker": "CIK722830",
+    "name": "IMMUNOMEDICS INC"
+  },
+  {
+    "cik": 732834,
+    "ticker": "CIK732834",
+    "name": "CONTINENTAL RESOURCES, INC"
+  },
+  {
+    "cik": 743316,
+    "ticker": "CIK743316",
+    "name": "MAXIM INTEGRATED PRODUCTS INC"
+  },
+  {
+    "cik": 743988,
+    "ticker": "CIK743988",
+    "name": "XILINX INC"
+  },
+  {
+    "cik": 750004,
+    "ticker": "LAWIL",
+    "name": "Light & Wonder, Inc."
+  },
+  {
+    "cik": 750556,
+    "ticker": "CIK750556",
+    "name": "SUNTRUST BANKS INC"
+  },
+  {
+    "cik": 775368,
+    "ticker": "CIK775368",
+    "name": "ALLEGHANY CORP /DE"
+  },
+  {
+    "cik": 783280,
+    "ticker": "CIK783280",
+    "name": "DUKE REALTY CORP"
+  },
+  {
+    "cik": 790816,
+    "ticker": "BDN",
+    "name": "BRANDYWINE REALTY TRUST"
+  },
+  {
+    "cik": 791915,
+    "ticker": "CIK791915",
+    "name": "CYPRESS SEMICONDUCTOR CORP /DE/"
+  },
+  {
+    "cik": 793952,
+    "ticker": "HOG",
+    "name": "HARLEY-DAVIDSON, INC."
+  },
+  {
+    "cik": 797721,
+    "ticker": "VSAT",
+    "name": "VIASAT INC"
+  },
+  {
+    "cik": 801337,
+    "ticker": "CIK801337",
+    "name": "WEBSTER FINANCIAL CORP"
+  },
+  {
+    "cik": 803649,
+    "ticker": "CIK803649",
+    "name": "EQC Liquidating Trust"
+  },
+  {
+    "cik": 804753,
+    "ticker": "CIK804753",
+    "name": "CERNER Corp"
+  },
+  {
+    "cik": 812074,
+    "ticker": "OI",
+    "name": "O-I Glass, Inc. /DE/"
+  },
+  {
+    "cik": 813828,
+    "ticker": "CIK813828",
+    "name": "Paramount Global"
+  },
+  {
+    "cik": 814453,
+    "ticker": "NWL",
+    "name": "NEWELL BRANDS INC."
+  },
+  {
+    "cik": 815094,
+    "ticker": "CIK815094",
+    "name": "ABIOMED INC"
+  },
+  {
+    "cik": 816284,
+    "ticker": "CIK816284",
+    "name": "CELGENE CORP /DE/"
+  },
+  {
+    "cik": 816761,
+    "ticker": "TDC",
+    "name": "TERADATA CORP /DE/"
+  },
+  {
+    "cik": 818479,
+    "ticker": "XRAY",
+    "name": "DENTSPLY SIRONA Inc."
+  },
+  {
+    "cik": 821130,
+    "ticker": "AD",
+    "name": "ARRAY DIGITAL INFRASTRUCTURE, INC."
+  },
+  {
+    "cik": 828916,
+    "ticker": "CIK828916",
+    "name": "WEINGARTEN REALTY INVESTORS /TX/"
+  },
+  {
+    "cik": 850209,
+    "ticker": "CIK850209",
+    "name": "FOOT LOCKER, INC."
+  },
+  {
+    "cik": 858339,
+    "ticker": "CIK858339",
+    "name": "CAESARS HOLDINGS, INC."
+  },
+  {
+    "cik": 858470,
+    "ticker": "CIK858470",
+    "name": "Coterra Energy Inc."
+  },
+  {
+    "cik": 859737,
+    "ticker": "CIK859737",
+    "name": "HOLOGIC INC"
+  },
+  {
+    "cik": 860546,
+    "ticker": "CDP",
+    "name": "COPT DEFENSE PROPERTIES"
+  },
+  {
+    "cik": 860748,
+    "ticker": "KMPB",
+    "name": "KEMPER Corp"
+  },
+  {
+    "cik": 861878,
+    "ticker": "CIK861878",
+    "name": "STERICYCLE INC"
+  },
+  {
+    "cik": 871763,
+    "ticker": "MAN",
+    "name": "ManpowerGroup Inc."
+  },
+  {
+    "cik": 873303,
+    "ticker": "SRPT",
+    "name": "Sarepta Therapeutics, Inc."
+  },
+  {
+    "cik": 877890,
+    "ticker": "CIK877890",
+    "name": "CITRIX SYSTEMS INC"
+  },
+  {
+    "cik": 883984,
+    "ticker": "ICUI",
+    "name": "ICU MEDICAL INC/DE"
+  },
+  {
+    "cik": 885639,
+    "ticker": "KSS",
+    "name": "KOHLS Corp"
+  },
+  {
+    "cik": 889900,
+    "ticker": "PTEN",
+    "name": "PATTERSON UTI ENERGY INC"
+  },
+  {
+    "cik": 890319,
+    "ticker": "CIK890319",
+    "name": "TAUBMAN CENTERS INC"
+  },
+  {
+    "cik": 892553,
+    "ticker": "CIK892553",
+    "name": "CHART INDUSTRIES INC"
+  },
+  {
+    "cik": 893949,
+    "ticker": "MD",
+    "name": "Pediatrix Medical Group, Inc."
+  },
+  {
+    "cik": 894315,
+    "ticker": "SITC",
+    "name": "SITE Centers Corp."
+  },
+  {
+    "cik": 895419,
+    "ticker": "WOLF",
+    "name": "WOLFSPEED, INC."
+  },
+  {
+    "cik": 896262,
+    "ticker": "CIK896262",
+    "name": "AMEDISYS INC"
+  },
+  {
+    "cik": 899866,
+    "ticker": "CIK899866",
+    "name": "ALEXION PHARMACEUTICALS, INC."
+  },
+  {
+    "cik": 904163,
+    "ticker": "CIK904163",
+    "name": "AMERICAN NATIONAL INSURANCE CO"
+  },
+  {
+    "cik": 906709,
+    "ticker": "NKTR",
+    "name": "NEKTAR THERAPEUTICS"
+  },
+  {
+    "cik": 910073,
+    "ticker": "FLG",
+    "name": "FLAGSTAR BANK, NATIONAL ASSOCIATION"
+  },
+  {
+    "cik": 910406,
+    "ticker": "HAIN",
+    "name": "HAIN CELESTIAL GROUP INC"
+  },
+  {
+    "cik": 912242,
+    "ticker": "MAC",
+    "name": "MACERICH CO"
+  },
+  {
+    "cik": 912615,
+    "ticker": "URBN",
+    "name": "URBAN OUTFITTERS INC"
+  },
+  {
+    "cik": 912752,
+    "ticker": "CIK912752",
+    "name": "Sinclair Broadcast Group, LLC"
+  },
+  {
+    "cik": 915912,
+    "ticker": "CIK915912",
+    "name": "AVALONBAY COMMUNITIES INC"
+  },
+  {
+    "cik": 917520,
+    "ticker": "IART",
+    "name": "INTEGRA LIFESCIENCES HOLDINGS CORP"
+  },
+  {
+    "cik": 921082,
+    "ticker": "HIW",
+    "name": "HIGHWOODS PROPERTIES, INC."
+  },
+  {
+    "cik": 921112,
+    "ticker": "CIK921112",
+    "name": "LIBERTY PROPERTY TRUST"
+  },
+  {
+    "cik": 921638,
+    "ticker": "SSRGF",
+    "name": "SSR MINING INC."
+  },
+  {
+    "cik": 921738,
+    "ticker": "PENN",
+    "name": "PENN Entertainment, Inc."
+  },
+  {
+    "cik": 922864,
+    "ticker": "AIV",
+    "name": "APARTMENT INVESTMENT & MANAGEMENT CO"
+  },
+  {
+    "cik": 929351,
+    "ticker": "STRZ",
+    "name": "STARZ ENTERTAINMENT CORP /CN/"
+  },
+  {
+    "cik": 931015,
+    "ticker": "PII",
+    "name": "Polaris Inc."
+  },
+  {
+    "cik": 931148,
+    "ticker": "EAF",
+    "name": "GRAFTECH INTERNATIONAL LTD"
+  },
+  {
+    "cik": 933136,
+    "ticker": "CIK933136",
+    "name": "Maverick Merger Sub 2, LLC"
+  },
+  {
+    "cik": 933974,
+    "ticker": "AZTA",
+    "name": "Azenta, Inc."
+  },
+  {
+    "cik": 935494,
+    "ticker": "CIK935494",
+    "name": "NATIONAL INSTRUMENTS CORP"
+  },
+  {
+    "cik": 937556,
+    "ticker": "CIK937556",
+    "name": "MASIMO CORP"
+  },
+  {
+    "cik": 945394,
+    "ticker": "SVC",
+    "name": "Service Properties Trust"
+  },
+  {
+    "cik": 949870,
+    "ticker": "SAM",
+    "name": "BOSTON BEER CO INC"
+  },
+  {
+    "cik": 1000694,
+    "ticker": "NVAX",
+    "name": "NOVAVAX INC"
+  },
+  {
+    "cik": 1001082,
+    "ticker": "CIK1001082",
+    "name": "DISH Network CORP"
+  },
+  {
+    "cik": 1002517,
+    "ticker": "CIK1002517",
+    "name": "Nuance Communications, Inc."
+  },
+  {
+    "cik": 1012100,
+    "ticker": "CIK1012100",
+    "name": "SEALED AIR CORP/DE"
+  },
+  {
+    "cik": 1012620,
+    "ticker": "CIK1012620",
+    "name": "GENESEE & WYOMING INC"
+  },
+  {
+    "cik": 1013462,
+    "ticker": "ANSS",
+    "name": "ANSYS INC"
+  },
+  {
+    "cik": 1015780,
+    "ticker": "CIK1015780",
+    "name": "E TRADE FINANCIAL CORP"
+  },
+  {
+    "cik": 1021561,
+    "ticker": "NUS",
+    "name": "NU SKIN ENTERPRISES, INC."
+  },
+  {
+    "cik": 1024305,
+    "ticker": "COTY",
+    "name": "COTY INC."
+  },
+  {
+    "cik": 1038357,
+    "ticker": "CIK1038357",
+    "name": "PIONEER NATURAL RESOURCES CO"
+  },
+  {
+    "cik": 1040971,
+    "ticker": "SLG",
+    "name": "SL GREEN REALTY CORP"
+  },
+  {
+    "cik": 1043604,
+    "ticker": "CIK1043604",
+    "name": "JUNIPER NETWORKS INC"
+  },
+  {
+    "cik": 1045309,
+    "ticker": "CIK1045309",
+    "name": "W R GRACE & CO"
+  },
+  {
+    "cik": 1047122,
+    "ticker": "CIK1047122",
+    "name": "RAYTHEON CO/"
+  },
+  {
+    "cik": 1049521,
+    "ticker": "MRCY",
+    "name": "MERCURY SYSTEMS INC"
+  },
+  {
+    "cik": 1051512,
+    "ticker": "TDS",
+    "name": "TELEPHONE & DATA SYSTEMS INC /DE/"
+  },
+  {
+    "cik": 1055160,
+    "ticker": "MFA",
+    "name": "MFA FINANCIAL, INC."
+  },
+  {
+    "cik": 1058057,
+    "ticker": "CIK1058057",
+    "name": "MARVELL TECHNOLOGY GROUP LTD"
+  },
+  {
+    "cik": 1060736,
+    "ticker": "CIK1060736",
+    "name": "Seagen Inc."
+  },
+  {
+    "cik": 1060822,
+    "ticker": "CRI",
+    "name": "CARTERS INC"
+  },
+  {
+    "cik": 1060955,
+    "ticker": "ICLR",
+    "name": "ICON PLC"
+  },
+  {
+    "cik": 1065837,
+    "ticker": "CIK1065837",
+    "name": "SKECHERS USA INC"
+  },
+  {
+    "cik": 1070494,
+    "ticker": "ACAD",
+    "name": "ACADIA PHARMACEUTICALS INC"
+  },
+  {
+    "cik": 1077428,
+    "ticker": "TCBI",
+    "name": "TEXAS CAPITAL BANCSHARES INC/TX"
+  },
+  {
+    "cik": 1077771,
+    "ticker": "CIK1077771",
+    "name": "UMPQUA HOLDINGS CORP"
+  },
+  {
+    "cik": 1093691,
+    "ticker": "PLUG",
+    "name": "PLUG POWER INC"
+  },
+  {
+    "cik": 1101215,
+    "ticker": "BFH",
+    "name": "BREAD FINANCIAL HOLDINGS, INC."
+  },
+  {
+    "cik": 1102112,
+    "ticker": "CIK1102112",
+    "name": "PACWEST BANCORP"
+  },
+  {
+    "cik": 1124140,
+    "ticker": "CIK1124140",
+    "name": "EXACT SCIENCES CORP"
+  },
+  {
+    "cik": 1124198,
+    "ticker": "FLR",
+    "name": "FLUOR CORP"
+  },
+  {
+    "cik": 1124610,
+    "ticker": "CIK1124610",
+    "name": "VMWARE LLC"
+  },
+  {
+    "cik": 1128928,
+    "ticker": "FLO",
+    "name": "FLOWERS FOODS INC"
+  },
+  {
+    "cik": 1144519,
+    "ticker": "CIK1144519",
+    "name": "BUNGELTD"
+  },
+  {
+    "cik": 1158449,
+    "ticker": "AAP",
+    "name": "ADVANCE AUTO PARTS INC"
+  },
+  {
+    "cik": 1158463,
+    "ticker": "JBLU",
+    "name": "JETBLUE AIRWAYS CORP"
+  },
+  {
+    "cik": 1160951,
+    "ticker": "CIK1160951",
+    "name": "DUCK CREEK TECHNOLOGIES, INC."
+  },
+  {
+    "cik": 1160958,
+    "ticker": "CIK1160958",
+    "name": "INPHI Corp"
+  },
+  {
+    "cik": 1163302,
+    "ticker": "CIK1163302",
+    "name": "UNITED STATES STEEL CORP"
+  },
+  {
+    "cik": 1168054,
+    "ticker": "CIK1168054",
+    "name": "CIMAREX ENERGY CO"
+  },
+  {
+    "cik": 1173431,
+    "ticker": "CIK1173431",
+    "name": "TD AMERITRADE HOLDING CORP"
+  },
+  {
+    "cik": 1180262,
+    "ticker": "HLF",
+    "name": "HERBALIFE LTD."
+  },
+  {
+    "cik": 1212458,
+    "ticker": "CIK1212458",
+    "name": "PROOFPOINT INC"
+  },
+  {
+    "cik": 1222840,
+    "ticker": "CIK1222840",
+    "name": "RETAIL PROPERTIES OF AMERICA, INC."
+  },
+  {
+    "cik": 1252849,
+    "ticker": "CIK1252849",
+    "name": "COLUMBIA PROPERTY TRUST, INC."
+  },
+  {
+    "cik": 1274173,
+    "ticker": "CIK1274173",
+    "name": "Janus Henderson Group Ltd."
+  },
+  {
+    "cik": 1279363,
+    "ticker": "CIK1279363",
+    "name": "WELLCARE HEALTH PLANS, INC."
+  },
+  {
+    "cik": 1280600,
+    "ticker": "CIK1280600",
+    "name": "ACCELERON PHARMA INC"
+  },
+  {
+    "cik": 1283630,
+    "ticker": "CIK1283630",
+    "name": "AMERICAN CAMPUS COMMUNITIES INC"
+  },
+  {
+    "cik": 1286139,
+    "ticker": "LZ",
+    "name": "LEGALZOOM.COM, INC."
+  },
+  {
+    "cik": 1286225,
+    "ticker": "CIK1286225",
+    "name": "RealPage, Inc."
+  },
+  {
+    "cik": 1288847,
+    "ticker": "FIVN",
+    "name": "Five9, Inc."
+  },
+  {
+    "cik": 1289790,
+    "ticker": "CIK1289790",
+    "name": "Macquarie Infrastructure Corp"
+  },
+  {
+    "cik": 1293971,
+    "ticker": "CIK1293971",
+    "name": "bluebird bio, Inc."
+  },
+  {
+    "cik": 1307954,
+    "ticker": "HUN",
+    "name": "Huntsman CORP"
+  },
+  {
+    "cik": 1320695,
+    "ticker": "CIK1320695",
+    "name": "TreeHouse Foods, Inc."
+  },
+  {
+    "cik": 1336917,
+    "ticker": "UA",
+    "name": "Under Armour, Inc."
+  },
+  {
+    "cik": 1345105,
+    "ticker": "CPA",
+    "name": "Copa Holdings, S.A."
+  },
+  {
+    "cik": 1348036,
+    "ticker": "CIK1348036",
+    "name": "AVALARA, INC."
+  },
+  {
+    "cik": 1353283,
+    "ticker": "CIK1353283",
+    "name": "SPLUNK INC"
+  },
+  {
+    "cik": 1355096,
+    "ticker": "CIK1355096",
+    "name": "Old QVC Group, Inc."
+  },
+  {
+    "cik": 1357204,
+    "ticker": "CIK1357204",
+    "name": "DUNKIN' BRANDS GROUP, INC."
+  },
+  {
+    "cik": 1358071,
+    "ticker": "CIK1358071",
+    "name": "CONCHO RESOURCES INC"
+  },
+  {
+    "cik": 1358762,
+    "ticker": "CIK1358762",
+    "name": "REATA PHARMACEUTICALS INC"
+  },
+  {
+    "cik": 1359841,
+    "ticker": "CIK1359841",
+    "name": "Hanesbrands Inc."
+  },
+  {
+    "cik": 1364250,
+    "ticker": "DEI",
+    "name": "Douglas Emmett Inc"
+  },
+  {
+    "cik": 1364954,
+    "ticker": "CHGG",
+    "name": "CHEGG, INC"
+  },
+  {
+    "cik": 1366561,
+    "ticker": "CIK1366561",
+    "name": "SMARTSHEET INC"
+  },
+  {
+    "cik": 1370880,
+    "ticker": "CIK1370880",
+    "name": "Mandiant, Inc."
+  },
+  {
+    "cik": 1378946,
+    "ticker": "CIK1378946",
+    "name": "People's United Financial, Inc."
+  },
+  {
+    "cik": 1378992,
+    "ticker": "CIK1378992",
+    "name": "BERRY GLOBAL GROUP, INC."
+  },
+  {
+    "cik": 1381531,
+    "ticker": "CIK1381531",
+    "name": "Domtar CORP"
+  },
+  {
+    "cik": 1385280,
+    "ticker": "CNK",
+    "name": "Cinemark Holdings, Inc."
+  },
+  {
+    "cik": 1385867,
+    "ticker": "CIK1385867",
+    "name": "Coupa Software Inc"
+  },
+  {
+    "cik": 1390844,
+    "ticker": "CIK1390844",
+    "name": "WABCO Holdings Inc."
+  },
+  {
+    "cik": 1393584,
+    "ticker": "AMWL",
+    "name": "American Well Corp"
+  },
+  {
+    "cik": 1393612,
+    "ticker": "CIK1393612",
+    "name": "Discover Financial Services"
+  },
+  {
+    "cik": 1395942,
+    "ticker": "OPLN",
+    "name": "OPENLANE, Inc."
+  },
+  {
+    "cik": 1409493,
+    "ticker": "CIM",
+    "name": "CHIMERA INVESTMENT CORP"
+  },
+  {
+    "cik": 1411579,
+    "ticker": "AMC",
+    "name": "AMC ENTERTAINMENT HOLDINGS, INC."
+  },
+  {
+    "cik": 1418091,
+    "ticker": "CIK1418091",
+    "name": "TWITTER, INC."
+  },
+  {
+    "cik": 1418121,
+    "ticker": "APLE",
+    "name": "Apple Hospitality REIT, Inc."
+  },
+  {
+    "cik": 1419612,
+    "ticker": "SEDG",
+    "name": "SOLAREDGE TECHNOLOGIES, INC."
+  },
+  {
+    "cik": 1420302,
+    "ticker": "CIK1420302",
+    "name": "LogMeIn, Inc."
+  },
+  {
+    "cik": 1420800,
+    "ticker": "ENOV",
+    "name": "Enovis CORP"
+  },
+  {
+    "cik": 1425205,
+    "ticker": "IOVA",
+    "name": "IOVANCE BIOTHERAPEUTICS, INC."
+  },
+  {
+    "cik": 1428875,
+    "ticker": "CIK1428875",
+    "name": "TERMINIX GLOBAL HOLDINGS INC"
+  },
+  {
+    "cik": 1434621,
+    "ticker": "TREE",
+    "name": "LendingTree, Inc."
+  },
+  {
+    "cik": 1437352,
+    "ticker": "CIK1437352",
+    "name": "EVERBRIDGE, INC."
+  },
+  {
+    "cik": 1438133,
+    "ticker": "TNDM",
+    "name": "TANDEM DIABETES CARE INC"
+  },
+  {
+    "cik": 1439222,
+    "ticker": "AGIO",
+    "name": "AGIOS PHARMACEUTICALS, INC."
+  },
+  {
+    "cik": 1439404,
+    "ticker": "CIK1439404",
+    "name": "ZYNGA INC"
+  },
+  {
+    "cik": 1448056,
+    "ticker": "CIK1448056",
+    "name": "NEW RELIC, INC."
+  },
+  {
+    "cik": 1451505,
+    "ticker": "RIG",
+    "name": "Transocean Ltd."
+  },
+  {
+    "cik": 1453814,
+    "ticker": "CIK1453814",
+    "name": "Medidata Solutions, Inc."
+  },
+  {
+    "cik": 1459417,
+    "ticker": "CIK1459417",
+    "name": "2U, LLC"
+  },
+  {
+    "cik": 1463172,
+    "ticker": "CIK1463172",
+    "name": "Zendesk, Inc."
+  },
+  {
+    "cik": 1465740,
+    "ticker": "TWOD",
+    "name": "TWO HARBORS INVESTMENT CORP."
+  },
+  {
+    "cik": 1469367,
+    "ticker": "RUN",
+    "name": "Sunrun Inc."
+  },
+  {
+    "cik": 1472595,
+    "ticker": "CIK1472595",
+    "name": "R1 RCM Holdco Inc."
+  },
+  {
+    "cik": 1477449,
+    "ticker": "TDOC",
+    "name": "Teladoc Health, Inc."
+  },
+  {
+    "cik": 1478320,
+    "ticker": "ADPT",
+    "name": "Adaptive Biotechnologies Corp"
+  },
+  {
+    "cik": 1482512,
+    "ticker": "HPP",
+    "name": "Hudson Pacific Properties, Inc."
+  },
+  {
+    "cik": 1487712,
+    "ticker": "CIK1487712",
+    "name": "SUMISHO AIR LEASE CORP"
+  },
+  {
+    "cik": 1490892,
+    "ticker": "CIK1490892",
+    "name": "CoreSite Realty Corp"
+  },
+  {
+    "cik": 1492422,
+    "ticker": "CIK1492422",
+    "name": "Apellis Pharmaceuticals, Inc."
+  },
+  {
+    "cik": 1492426,
+    "ticker": "CIK1492426",
+    "name": "Horizon Therapeutics Public Ltd Co"
+  },
+  {
+    "cik": 1492633,
+    "ticker": "CIK1492633",
+    "name": "Nielsen Holdings plc"
+  },
+  {
+    "cik": 1494319,
+    "ticker": "CIK1494319",
+    "name": "Univar Solutions Inc."
+  },
+  {
+    "cik": 1496048,
+    "ticker": "CIK1496048",
+    "name": "Brookfield Property REIT Inc."
+  },
+  {
+    "cik": 1498828,
+    "ticker": "CIK1498828",
+    "name": "Howard Hughes Corp"
+  },
+  {
+    "cik": 1504008,
+    "ticker": "BKU",
+    "name": "BankUnited, Inc."
+  },
+  {
+    "cik": 1507385,
+    "ticker": "CIK1507385",
+    "name": "VEREIT, Inc."
+  },
+  {
+    "cik": 1509589,
+    "ticker": "CIK1509589",
+    "name": "CIVITAS RESOURCES, INC."
+  },
+  {
+    "cik": 1509991,
+    "ticker": "KOS",
+    "name": "Kosmos Energy Ltd."
+  },
+  {
+    "cik": 1514991,
+    "ticker": "AMCX",
+    "name": "AMC Global Media Inc."
+  },
+  {
+    "cik": 1515673,
+    "ticker": "RARE",
+    "name": "Ultragenyx Pharmaceutical Inc."
+  },
+  {
+    "cik": 1517228,
+    "ticker": "VISN",
+    "name": "Vistance Networks, Inc."
+  },
+  {
+    "cik": 1517413,
+    "ticker": "FSLY",
+    "name": "Fastly, Inc."
+  },
+  {
+    "cik": 1518832,
+    "ticker": "CIK1518832",
+    "name": "WPX ENERGY, INC."
+  },
+  {
+    "cik": 1520262,
+    "ticker": "ALKS",
+    "name": "Alkermes plc."
+  },
+  {
+    "cik": 1520697,
+    "ticker": "ACHC",
+    "name": "Acadia Healthcare Company, Inc."
+  },
+  {
+    "cik": 1524358,
+    "ticker": "VAC",
+    "name": "MARRIOTT VACATIONS WORLDWIDE Corp"
+  },
+  {
+    "cik": 1526520,
+    "ticker": "TRIP",
+    "name": "TripAdvisor, Inc."
+  },
+  {
+    "cik": 1527469,
+    "ticker": "ATH-PA",
+    "name": "Athene Holding Ltd."
+  },
+  {
+    "cik": 1528849,
+    "ticker": "RH",
+    "name": "RH"
+  },
+  {
+    "cik": 1530721,
+    "ticker": "CPRI",
+    "name": "Capri Holdings Ltd"
+  },
+  {
+    "cik": 1534504,
+    "ticker": "PBF",
+    "name": "PBF Energy Inc."
+  },
+  {
+    "cik": 1538990,
+    "ticker": "CIK1538990",
+    "name": "STORE CAPITAL LLC"
+  },
+  {
+    "cik": 1540184,
+    "ticker": "CIK1540184",
+    "name": "Medallia, Inc."
+  },
+  {
+    "cik": 1540755,
+    "ticker": "CIK1540755",
+    "name": "Anaplan, Inc."
+  },
+  {
+    "cik": 1541401,
+    "ticker": "ESRT",
+    "name": "Empire State Realty Trust, Inc."
+  },
+  {
+    "cik": 1557860,
+    "ticker": "GLOB",
+    "name": "Globant S.A."
+  },
+  {
+    "cik": 1564406,
+    "ticker": "CIK1564406",
+    "name": "Oak Street Health, Inc."
+  },
+  {
+    "cik": 1567514,
+    "ticker": "CIK1567514",
+    "name": "Intra-Cellular Therapies, Inc."
+  },
+  {
+    "cik": 1568100,
+    "ticker": "PD",
+    "name": "PagerDuty, Inc."
+  },
+  {
+    "cik": 1573097,
+    "ticker": "CIK1573097",
+    "name": "HD Supply Holdings, Inc."
+  },
+  {
+    "cik": 1576263,
+    "ticker": "CIK1576263",
+    "name": "Mirati Therapeutics, Inc."
+  },
+  {
+    "cik": 1576789,
+    "ticker": "WIX",
+    "name": "Wix.com Ltd."
+  },
+  {
+    "cik": 1577526,
+    "ticker": "AI",
+    "name": "C3.ai, Inc."
+  },
+  {
+    "cik": 1577916,
+    "ticker": "CIK1577916",
+    "name": "Premier, Inc."
+  },
+  {
+    "cik": 1578845,
+    "ticker": "CIK1578845",
+    "name": "Allergan plc"
+  },
+  {
+    "cik": 1579877,
+    "ticker": "OUT",
+    "name": "OUTFRONT Media Inc."
+  },
+  {
+    "cik": 1580608,
+    "ticker": "CIK1580608",
+    "name": "Santander Consumer USA Holdings Inc."
+  },
+  {
+    "cik": 1580864,
+    "ticker": "VRM",
+    "name": "Vroom, Inc."
+  },
+  {
+    "cik": 1585364,
+    "ticker": "PRGO",
+    "name": "PERRIGO Co plc"
+  },
+  {
+    "cik": 1592057,
+    "ticker": "CIK1592057",
+    "name": "Enviva, LLC"
+  },
+  {
+    "cik": 1593538,
+    "ticker": "CIK1593538",
+    "name": "Navient LLC"
+  },
+  {
+    "cik": 1594109,
+    "ticker": "CIK1594109",
+    "name": "GrubHub Inc."
+  },
+  {
+    "cik": 1594466,
+    "ticker": "CIK1594466",
+    "name": "Pioneer PE Holding LLC"
+  },
+  {
+    "cik": 1596783,
+    "ticker": "CIK1596783",
+    "name": "Catalent, Inc."
+  },
+  {
+    "cik": 1597033,
+    "ticker": "SABR",
+    "name": "Sabre Corp"
+  },
+  {
+    "cik": 1597553,
+    "ticker": "CIK1597553",
+    "name": "Sage Therapeutics, Inc."
+  },
+  {
+    "cik": 1598014,
+    "ticker": "CIK1598014",
+    "name": "IHS Markit Ltd."
+  },
+  {
+    "cik": 1605607,
+    "ticker": "CIK1605607",
+    "name": "Paramount Group, Inc."
+  },
+  {
+    "cik": 1608249,
+    "ticker": "CIK1608249",
+    "name": "Zayo Group Holdings, Inc."
+  },
+  {
+    "cik": 1609550,
+    "ticker": "INSP",
+    "name": "Inspire Medical Systems, Inc."
+  },
+  {
+    "cik": 1609702,
+    "ticker": "CIK1609702",
+    "name": "CDK Global, Inc."
+  },
+  {
+    "cik": 1610950,
+    "ticker": "CIK1610950",
+    "name": "Syneos Health, Inc."
+  },
+  {
+    "cik": 1611983,
+    "ticker": "CIK1611983",
+    "name": "Liberty Broadband Corp"
+  },
+  {
+    "cik": 1613859,
+    "ticker": "CIK1613859",
+    "name": "PRA Health Sciences, Inc."
+  },
+  {
+    "cik": 1617406,
+    "ticker": "PK",
+    "name": "Park Hotels & Resorts Inc."
+  },
+  {
+    "cik": 1618563,
+    "ticker": "CIK1618563",
+    "name": "National Storage Affiliates Trust"
+  },
+  {
+    "cik": 1618921,
+    "ticker": "CIK1618921",
+    "name": "Walgreens Boots Alliance, Inc."
+  },
+  {
+    "cik": 1623613,
+    "ticker": "CIK1623613",
+    "name": "Mylan II B.V."
+  },
+  {
+    "cik": 1626450,
+    "ticker": "CMRC",
+    "name": "Commerce.com, Inc."
+  },
+  {
+    "cik": 1627223,
+    "ticker": "CC",
+    "name": "Chemours Co"
+  },
+  {
+    "cik": 1629137,
+    "ticker": "CIK1629137",
+    "name": "Global Blood Therapeutics, Inc."
+  },
+  {
+    "cik": 1632127,
+    "ticker": "CABO",
+    "name": "Cable One, Inc."
+  },
+  {
+    "cik": 1632790,
+    "ticker": "ENR",
+    "name": "ENERGIZER HOLDINGS, INC."
+  },
+  {
+    "cik": 1633931,
+    "ticker": "CIK1633931",
+    "name": "QXO Insulation, LLC"
+  },
+  {
+    "cik": 1634997,
+    "ticker": "CIK1634997",
+    "name": "Avangrid, Inc."
+  },
+  {
+    "cik": 1639225,
+    "ticker": "CIK1639225",
+    "name": "Livongo Health, Inc."
+  },
+  {
+    "cik": 1639825,
+    "ticker": "PTON",
+    "name": "PELOTON INTERACTIVE, INC."
+  },
+  {
+    "cik": 1642545,
+    "ticker": "CIK1642545",
+    "name": "Shockwave Medical, Inc."
+  },
+  {
+    "cik": 1645113,
+    "ticker": "NVCR",
+    "name": "NovoCure Ltd"
+  },
+  {
+    "cik": 1647639,
+    "ticker": "UPST",
+    "name": "Upstart Holdings, Inc."
+  },
+  {
+    "cik": 1655210,
+    "ticker": "BYND",
+    "name": "BEYOND MEAT, INC."
+  },
+  {
+    "cik": 1657853,
+    "ticker": "HTZ",
+    "name": "HERTZ GLOBAL HOLDINGS, INC"
+  },
+  {
+    "cik": 1660690,
+    "ticker": "CIK1660690",
+    "name": "Versum Materials, Inc."
+  },
+  {
+    "cik": 1673358,
+    "ticker": "YUMC",
+    "name": "Yum China Holdings, Inc."
+  },
+  {
+    "cik": 1674168,
+    "ticker": "HGV",
+    "name": "Hilton Grand Vacations Inc."
+  },
+  {
+    "cik": 1674862,
+    "ticker": "ASH",
+    "name": "ASHLAND INC."
+  },
+  {
+    "cik": 1688568,
+    "ticker": "DXC",
+    "name": "DXC Technology Co"
+  },
+  {
+    "cik": 1689657,
+    "ticker": "CIK1689657",
+    "name": "Bruker Cellular Analysis, Inc."
+  },
+  {
+    "cik": 1689662,
+    "ticker": "CIK1689662",
+    "name": "Ardagh Group S.A."
+  },
+  {
+    "cik": 1689796,
+    "ticker": "JBGS",
+    "name": "JBG SMITH Properties"
+  },
+  {
+    "cik": 1689923,
+    "ticker": "CIK1689923",
+    "name": "Alteryx, Inc."
+  },
+  {
+    "cik": 1691421,
+    "ticker": "LMND",
+    "name": "Lemonade, Inc."
+  },
+  {
+    "cik": 1699031,
+    "ticker": "GRAL",
+    "name": "GRAIL, Inc."
+  },
+  {
+    "cik": 1699838,
+    "ticker": "CIK1699838",
+    "name": "Confluent, Inc."
+  },
+  {
+    "cik": 1702780,
+    "ticker": "OPTU",
+    "name": "Optimum Communications, Inc."
+  },
+  {
+    "cik": 1706946,
+    "ticker": "SPCE",
+    "name": "Virgin Galactic Holdings, Inc"
+  },
+  {
+    "cik": 1710583,
+    "ticker": "CIK1710583",
+    "name": "Switch, Inc."
+  },
+  {
+    "cik": 1720671,
+    "ticker": "CIK1720671",
+    "name": "HashiCorp, Inc."
+  },
+  {
+    "cik": 1721947,
+    "ticker": "CIK1721947",
+    "name": "Jamf Holding Corp."
+  },
+  {
+    "cik": 1723089,
+    "ticker": "CIK1723089",
+    "name": "ChampionX Corp"
+  },
+  {
+    "cik": 1724570,
+    "ticker": "CIK1724570",
+    "name": "DATTO HOLDING CORP."
+  },
+  {
+    "cik": 1725057,
+    "ticker": "CIK1725057",
+    "name": "Dayforce, Inc."
+  },
+  {
+    "cik": 1725579,
+    "ticker": "CIK1725579",
+    "name": "Pluralsight, Inc."
+  },
+  {
+    "cik": 1727263,
+    "ticker": "FTDR",
+    "name": "Frontdoor, Inc."
+  },
+  {
+    "cik": 1739942,
+    "ticker": "CIK1739942",
+    "name": "SolarWinds Corp"
+  },
+  {
+    "cik": 1740332,
+    "ticker": "REZI",
+    "name": "RESIDEO TECHNOLOGIES, INC."
+  },
+  {
+    "cik": 1745041,
+    "ticker": "CIK1745041",
+    "name": "IAA, Inc."
+  },
+  {
+    "cik": 1745431,
+    "ticker": "STNE",
+    "name": "StoneCo Ltd."
+  },
+  {
+    "cik": 1747009,
+    "ticker": "CIK1747009",
+    "name": "Midstream Co LLC"
+  },
+  {
+    "cik": 1749723,
+    "ticker": "NFE",
+    "name": "New Fortress Energy Inc."
+  },
+  {
+    "cik": 1752836,
+    "ticker": "CIK1752836",
+    "name": "COVETRUS, INC."
+  },
+  {
+    "cik": 1756497,
+    "ticker": "CIK1756497",
+    "name": "Change Healthcare Inc."
+  },
+  {
+    "cik": 1764046,
+    "ticker": "CLVT",
+    "name": "CLARIVATE PLC"
+  },
+  {
+    "cik": 1764925,
+    "ticker": "CIK1764925",
+    "name": "Slack Technologies, Inc."
+  },
+  {
+    "cik": 1768267,
+    "ticker": "CRNC",
+    "name": "Cerence Inc."
+  },
+  {
+    "cik": 1770121,
+    "ticker": "SANA",
+    "name": "Sana Biotechnology, Inc."
+  },
+  {
+    "cik": 1770450,
+    "ticker": "XRX",
+    "name": "Xerox Holdings Corp"
+  },
+  {
+    "cik": 1770787,
+    "ticker": "TXG",
+    "name": "10x Genomics, Inc."
+  },
+  {
+    "cik": 1771515,
+    "ticker": "GO",
+    "name": "Grocery Outlet Holding Corp."
+  },
+  {
+    "cik": 1771917,
+    "ticker": "CIK1771917",
+    "name": "Karuna Therapeutics, Inc."
+  },
+  {
+    "cik": 1772016,
+    "ticker": "BRBR",
+    "name": "BELLRING BRANDS, INC."
+  },
+  {
+    "cik": 1777393,
+    "ticker": "CHPT",
+    "name": "ChargePoint Holdings, Inc."
+  },
+  {
+    "cik": 1782754,
+    "ticker": "CIK1782754",
+    "name": "AZEK Co Inc."
+  },
+  {
+    "cik": 1783317,
+    "ticker": "CIK1783317",
+    "name": "McAfee Corp."
+  },
+  {
+    "cik": 1793294,
+    "ticker": "CIK1793294",
+    "name": "PPD, Inc."
+  },
+  {
+    "cik": 1794515,
+    "ticker": "GTM",
+    "name": "ZoomInfo Technologies Inc."
+  },
+  {
+    "cik": 1795250,
+    "ticker": "SPHR",
+    "name": "Sphere Entertainment Co."
+  },
+  {
+    "cik": 1800667,
+    "ticker": "FROG",
+    "name": "JFrog Ltd"
+  },
+  {
+    "cik": 1801169,
+    "ticker": "OPEN",
+    "name": "Opendoor Technologies Inc."
+  },
+  {
+    "cik": 1801661,
+    "ticker": "FIRY",
+    "name": "Firy Inc."
+  },
+  {
+    "cik": 1803599,
+    "ticker": "CNXC",
+    "name": "Concentrix Corp"
+  },
+  {
+    "cik": 1803737,
+    "ticker": "CIK1803737",
+    "name": "Enhabit, Inc."
+  },
+  {
+    "cik": 1804745,
+    "ticker": "DRVN",
+    "name": "Driven Brands Holdings Inc."
+  },
+  {
+    "cik": 1808220,
+    "ticker": "CIK1808220",
+    "name": "GoHealth, Inc."
+  },
+  {
+    "cik": 1809122,
+    "ticker": "CIK1809122",
+    "name": "CureVac N.V."
+  },
+  {
+    "cik": 1811210,
+    "ticker": "LCID",
+    "name": "Lucid Group, Inc."
+  },
+  {
+    "cik": 1813756,
+    "ticker": "CIK1813756",
+    "name": "WeWork Inc."
+  },
+  {
+    "cik": 1819928,
+    "ticker": "DV",
+    "name": "DoubleVerify Holdings, Inc."
+  },
+  {
+    "cik": 1820721,
+    "ticker": "ARRY",
+    "name": "Array Technologies, Inc."
+  },
+  {
+    "cik": 1821806,
+    "ticker": "LESLQ",
+    "name": "Leslie's, Inc."
+  },
+  {
+    "cik": 1823239,
+    "ticker": "MRVI",
+    "name": "MARAVAI LIFESCIENCES HOLDINGS, INC."
+  },
+  {
+    "cik": 1823593,
+    "ticker": "TSPH",
+    "name": "TuSimple Holdings Inc."
+  },
+  {
+    "cik": 1826470,
+    "ticker": "WOOF",
+    "name": "Petco Health & Wellness Company, Inc."
+  },
+  {
+    "cik": 1827090,
+    "ticker": "CERT",
+    "name": "Certara, Inc."
+  },
+  {
+    "cik": 1828016,
+    "ticker": "PLTK",
+    "name": "Playtika Holding Corp."
+  },
+  {
+    "cik": 1828182,
+    "ticker": "CIK1828182",
+    "name": "Signify Health, Inc."
+  },
+  {
+    "cik": 1830214,
+    "ticker": "DNA",
+    "name": "Ginkgo Bioworks Holdings, Inc."
+  },
+  {
+    "cik": 1831097,
+    "ticker": "AGL",
+    "name": "agilon health, inc."
+  },
+  {
+    "cik": 1831617,
+    "ticker": "CIK1831617",
+    "name": "Diversey Holdings, Ltd."
+  },
+  {
+    "cik": 1831651,
+    "ticker": "SHLS",
+    "name": "Shoals Technologies Group, Inc."
+  },
+  {
+    "cik": 1833835,
+    "ticker": "PSFE",
+    "name": "Paysafe Ltd"
+  },
+  {
+    "cik": 1834488,
+    "ticker": "NABL",
+    "name": "N-able, Inc."
+  },
+  {
+    "cik": 1837686,
+    "ticker": "CIK1837686",
+    "name": "Vimeo, Inc."
+  },
+  {
+    "cik": 1839439,
+    "ticker": "CIK1839439",
+    "name": "PAYCOR HCM, INC."
+  },
+  {
+    "cik": 1845097,
+    "ticker": "AMBP",
+    "name": "Ardagh Metal Packaging S.A."
+  },
+  {
+    "cik": 1846576,
+    "ticker": "FIGS",
+    "name": "FIGS, Inc."
+  },
+  {
+    "cik": 1849635,
+    "ticker": "DJT",
+    "name": "Trump Media & Technology Group Corp."
+  },
+  {
+    "cik": 1853513,
+    "ticker": "CIK1853513",
+    "name": "Mister Car Wash, Inc."
+  },
+  {
+    "cik": 1856437,
+    "ticker": "VSXY",
+    "name": "Victoria's Secret & Co."
+  },
+  {
+    "cik": 1856485,
+    "ticker": "SLVM",
+    "name": "Sylvamo Corp"
+  },
+  {
+    "cik": 1861795,
+    "ticker": "DH",
+    "name": "Definitive Healthcare Corp."
+  },
+  {
+    "cik": 1866550,
+    "ticker": "CIK1866550",
+    "name": "Thoughtworks Holding, Inc."
+  },
+  {
+    "cik": 1868726,
+    "ticker": "CIK1868726",
+    "name": "OLAPLEX HOLDINGS, INC."
+  },
+  {
+    "cik": 1868778,
+    "ticker": "CIK1868778",
+    "name": "Informatica Inc."
+  },
+  {
+    "cik": 1868941,
+    "ticker": "FLNC",
+    "name": "Fluence Energy, Inc."
+  },
+  {
+    "cik": 1870997,
+    "ticker": "CIK1870997",
+    "name": "Loyalty Ventures Inc."
+  },
+  {
+    "cik": 1873923,
+    "ticker": "ONL",
+    "name": "Orion Properties Inc."
+  },
+  {
+    "cik": 1876588,
+    "ticker": "CIK1876588",
+    "name": "ZimVie Inc."
+  },
+  {
+    "cik": 1902733,
+    "ticker": "NCNO",
+    "name": "nCino, Inc."
+  },
+  {
+    "cik": 1906324,
+    "ticker": "QDEL",
+    "name": "QuidelOrtho Corp"
+  },
+  {
+    "cik": 1929561,
+    "ticker": "RXO",
+    "name": "RXO, Inc."
+  },
+  {
+    "cik": 1934850,
+    "ticker": "FG",
+    "name": "F&G Annuities & Life, Inc."
+  },
+  {
+    "cik": 1941365,
+    "ticker": "MBC",
+    "name": "MasterBrand, Inc."
+  },
+  {
+    "cik": 1944558,
+    "ticker": "VTS",
+    "name": "Vitesse Energy, Inc."
+  },
+  {
+    "cik": 1952976,
+    "ticker": "NLOP",
+    "name": "Net Lease Office Properties"
+  },
+  {
+    "cik": 1959348,
+    "ticker": "CIK1959348",
+    "name": "WK Kellogg Co"
+  },
+  {
+    "cik": 1965040,
+    "ticker": "FTRE",
+    "name": "Fortrea Holdings Inc."
+  },
+  {
+    "cik": 1967649,
+    "ticker": "VSTS",
+    "name": "Vestis Corp"
+  },
+  {
+    "cik": 1968915,
+    "ticker": "PHIN",
+    "name": "PHINIA INC."
+  },
+  {
+    "cik": 1974138,
+    "ticker": "NATL",
+    "name": "NCR Atleos Corp"
+  },
+  {
+    "cik": 2009684,
+    "ticker": "SEG",
+    "name": "Seaport Entertainment Group Inc."
+  },
+  {
+    "cik": 2057463,
+    "ticker": "GLIBA",
+    "name": "Liberty Capital Corp/NV"
+  }
+]

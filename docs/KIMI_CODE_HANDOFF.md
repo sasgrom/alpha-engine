@@ -4986,3 +4986,38 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   run, because Kimi's K26 tests are in progress in the tree.
 - **Next:** GPU extraction (a small finance model as the first pass, installed to D:; a bake-off of local LLMs on a
   hand-labelled sample: qwen3.5:9b against mimo-v2.6 and gemma4:12b); the desk news views; the FNSPID load; GDELT.
+
+
+## 256. Kimi: K26 Russell 1000 membership accepted with recorded early-history conditions — 2026-11-25T10:10Z
+
+- **Delivery:** `scripts/build-russell1000-membership.mts`, `worker/lib/russell1000.ts`, `worker/lib/russell1000-sector.ts`,
+  11 focused tests and fixture, plus `worker/edgar-universe-r1000-new.json` (517 active-new) and
+  `worker/edgar-universe-r1000-former.json` (392 former-new). The union contains 1,405 matched companies. Source
+  baseline was `4903c18`; the scoped delivery commit and ordinary fast-forward push are authoritative.
+- **SEC evidence:** IWB S000004347 has 29 reports covering every quarter 2019-09-30..2026-09-30; VRNIX S000030000 has
+  28 offset-month reports through 2026-08-31. Raw XML totals 52,810,977 bytes on D:. All 57 files independently match
+  manifest SHA-256 and byte counts. N-PORT parsing retains identifiers and exclusions, merges ordinary share classes by
+  CIK and preserves 354 tracking-stock lines with separate security keys and `trackingStock=true`.
+- **Identity:** CUSIP/ISIN, unique order-free date-valid SEC current/former names, active-only explicit tickers and
+  anonymous OpenFIGI fallbacks are deterministic and fail closed on ambiguity. SEC search used cleaned names and 100
+  results; 256/319 unresolved groups resolved, 63 remain unresolved and 30 are ambiguous with candidate CIKs listed.
+  OpenFIGI queried 93 unresolved CUSIPs in ten-item chunks at three-second spacing; six chunks fetched, four reused,
+  4,820 candidate rows preserved under the K26 D: output with an atomic manifest. No provider credential was read.
+- **Gates and acceptance:** coverage, size, S&P consistency (minimum 98.4962%) and known cases pass. Matching retains
+  the 99.5% threshold and fails only four early reports: 99.4106%, 99.4462%, 99.4162% and 99.4869%; 684 unmatched
+  lines remain fully listed. Claude accepted on condition that research using 2019-09..2020-02 membership reads
+  `unmatched.json` and reports unmatched weight. VRNIX is informational: 21 same-rebalance comparisons, two at
+  97.8724%/97.8958% below the retained 98% field, with directional shares and weight-sorted disagreements. SIC/GICS
+  agreement is 78.2258%, informational; new companies are marked `sectorSource="sic-map"`. Claude's acceptance message
+  is `20261125-101500-claude-k26-accepted.md`.
+- **Artifacts:** `D:/research/alpha-engine/index-membership/russell1000/` contains holdings, membership, companies,
+  unmatched, sector map, build gate/hash evidence, identity searches and OpenFIGI evidence. Raw reports are under
+  `D:/research/alpha-engine/index-membership/nport/`. Resume: `npx tsx scripts/build-russell1000-membership.mts`.
+  The builder exits nonzero while gates 1–6 fail and preserves review outputs.
+- **Verification:** `npm run check`, focused 2 files / 21 tests, full 279 files / 1,697 tests, `npm run build` and
+  `git diff --check` pass. Full runs were announced to Claude beforehand. Pre-existing generated-report modifications
+  and `.vscode/` are not part of this delivery. No database writes, production action, app registry/scheduler changes,
+  web restart or scheduler restart by Kimi occurred. Claude separately restarted the scheduler for his news jobs.
+- **Next:** K27, in approved order, beginning with part A and the required 20-company release/exhibit pilot and size
+  projection. K27 must use existing collectors at their pace; no `alpha_research` writes, nightly-universe changes,
+  standard builds, model calls or production actions.

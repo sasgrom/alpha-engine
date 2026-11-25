@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edgarSubmission xmlns="http://www.sec.gov/edgar/nport">
+  <headerData><submissionType>NPORT-P</submissionType></headerData>
+  <formData>
+    <genInfo><seriesName>ISHARES RUSSELL 1000 ETF</seriesName><seriesId>S000004347</seriesId><repPdEnd>2024-12-31</repPdEnd><repPdDate>2024-09-30</repPdDate></genInfo>
+    <invstOrSecs>
+      <invstOrSec>
+        <name>Example &amp; Co.</name><title>EXAMPLE CLASS A</title><cusip>000000001</cusip>
+        <identifiers><isin value="US0000000017"/><other value="other-id"/></identifiers>
+        <balance>10</balance><valUSD>100.50</valUSD><pctVal>0.25</pctVal><assetCat>EC</assetCat><issuerCat>CORP</issuerCat><invCountry>US</invCountry>
+      </invstOrSec>
+      <invstOrSec>
+        <name>Example and Company</name><title>EXAMPLE CLASS C</title><cusip>000000002</cusip>
+        <identifiers><isin value="US0000000025"/></identifiers>
+        <balance>20</balance><valUSD>200.50</valUSD><pctVal>0.50</pctVal><assetCat>EC</assetCat><issuerCat>CORP</issuerCat><invCountry>US</invCountry>
+      </invstOrSec>
+      <invstOrSec>
+        <name>Unmatched Issuer Ltd.</name><title>UNMATCHED</title><cusip>000000003</cusip>
+        <identifiers><isin value="US0000000033"/></identifiers>
+        <balance>1</balance><valUSD>1</valUSD><pctVal>0.01</pctVal><assetCat>EC</assetCat><issuerCat>CORP</issuerCat><invCountry>GB</invCountry>
+      </invstOrSec>
+      <invstOrSec>
+        <name>Money Market Fund</name><title>CASH</title><cusip>N/A</cusip>
+        <balance>1</balance><valUSD>1</valUSD><pctVal>0.01</pctVal><assetCat>STIF</assetCat><issuerCat>CORP</issuerCat><invCountry>US</invCountry>
+      </invstOrSec>
+      <invstOrSec>
+        <name>Index Future</name><title>FUTURE</title><cusip>N/A</cusip>
+        <balance>1</balance><valUSD>0</valUSD><pctVal>0</pctVal><assetCat>FE</assetCat><issuerCat>CORP</issuerCat><invCountry>US</invCountry>
+      </invstOrSec>
+    </invstOrSecs>
+  </formData>
+</edgarSubmission>

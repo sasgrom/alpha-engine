@@ -90,3 +90,57 @@ A delivery report at the end of this file (gate numbers, counts, the unmatched l
 surprising), a handoff section, and a mailbox message to Claude (`worker/.runs/bridge/to-claude/`). Commit and push
 source, tests, the universe files and the docs after `npm run check`, the targeted tests, `npm test -- --run`,
 `npm run build` and `git diff --check`. Then start K27 if the owner approved it.
+
+## Delivery — Kimi, 2026-11-25
+
+**Accepted by Claude with conditions on 2026-11-25.** The gate fields retain their original thresholds and failures.
+Research using membership from 2019-09 through 2020-02 must read `unmatched.json` and report its unmatched weight.
+VRNIX agreement and SIC-derived sectors are informational. K27 is authorized next.
+
+- Code: `scripts/build-russell1000-membership.mts`, `worker/lib/russell1000.ts`, `worker/lib/russell1000-sector.ts`,
+  11 focused tests and a cut-down N-PORT fixture. Baseline HEAD `4903c18`; the delivery commit is authoritative.
+- Sources: IWB CIK 1100663 / S000004347 and VRNIX CIK 1021882 / S000030000 from SEC `company_tickers_mf.json`.
+  Series-specific N-PORT-P filings and identity candidates use SEC through `secGet`. OpenFIGI is anonymous, limited to
+  ten CUSIPs per request, three-second chunk spacing and at most two 429 retries. Raw SEC/OpenFIGI responses and atomic
+  manifests are on D:. All 57 raw XML files independently match their byte counts and SHA-256 hashes.
+- Coverage: **29 IWB reports**, every quarter from 2019-09-30 through 2026-09-30, no gaps; **28 VRNIX reports**,
+  2019-11-30 through 2026-08-31. Raw total **52,810,977 bytes**. IWB has 29,361 equity lines, all within 950–1,060.
+  Non-equity exclusions are listed per report.
+- Matching: unique order-free names remove legal suffixes and leading/trailing THE while retaining GROUP; names must
+  be valid at the report date. Own CUSIP/ISIN, active-only explicit tickers and unique OpenFIGI ticker/name evidence
+  follow. Ambiguity fails closed with every candidate CIK listed. Final search: 319 groups, 256 resolved, 63 unresolved,
+  30 ambiguous and 319 candidate submissions read. OpenFIGI queried 93 unresolved CUSIPs (six fetched and four reused
+  chunks); 4,820 candidate rows are preserved on D:.
+- Companies and K27 inputs: **1,405** matched companies; **517 active-new** and **392 former-new** rows. Former
+  companies without a current SEC ticker use an explicit `CIK<number>` collection placeholder, not an invented ticker.
+  There are **354** separately flagged tracking-stock security lines; their issuer CIK does not collapse their distinct
+  security identifiers or economics into an ordinary share-class line.
+
+### Gates
+
+1. **Coverage PASS:** 29/29 IWB quarter ends, no gaps.
+2. **Size PASS:** every IWB report has 950–1,060 equity lines; all counts are in `build.json`.
+3. **Matching FAIL, accepted with the condition above; threshold remains 99.5%:** only four early reports fail:
+   IWB 2019-09-30 **99.4106%**, IWB 2019-12-31 **99.4462%**, VRNIX 2019-11-30 **99.4162%**, VRNIX 2020-02-29
+   **99.4869%**. The other 53 reports pass. There are **684** unmatched report lines, listed with weight and candidate
+   CIKs in `unmatched.json`.
+4. **VRNIX cross-check accepted as informational; threshold remains 98%:** 21 eligible same-rebalance comparisons and
+   eight exclusions (no prior VRNIX report at 2019-09; seven June/May pairs straddle the rebalance). Only 2020-09-30
+   (**97.8724%**) and 2021-03-31 (**97.8958%**) are below threshold. Directional shares and weight-sorted disagreements
+   with both weights are recorded; these are membership-timing names.
+5. **S&P 500 consistency PASS:** all 28 common quarters pass; minimum inclusion **98.4962%**, with missing CIKs listed.
+6. **Known cases PASS:** 493/502 current registry companies are current Russell members; CAVA first appears in
+   2023-09-30; Electronic Arts appears through 2026-06-30 and is former.
+7. **Sector validation informational:** **78.2258%** agreement on the pinned 502-company GICS snapshot. Source file and
+   commit, rules, counts and confusion table are in `sector-map.json`; new companies carry `sectorSource: "sic-map"`.
+
+Outputs are under `D:/research/alpha-engine/index-membership/russell1000/`: both holdings files, membership, companies,
+unmatched, sector map and build evidence. `build.json` carries input/code/output hashes, read-only database query hashes,
+gate details, match sources and counts.
+
+Verification: `npm run check` pass; focused Russell/OpenFIGI suites **2 files / 21 tests**; full suite **279 files /
+1,697 tests** pass; `npm run build` and `git diff --check` pass. No database writes, app registry/scheduler changes,
+production action or web/scheduler restart occurred. Claude restarted the scheduler separately for his news jobs.
+
+Resume or rebuild with `npx tsx scripts/build-russell1000-membership.mts`. It reuses validated raw XML, submissions,
+identity-search and OpenFIGI checkpoints, preserves all evidence and exits nonzero while any of gates 1–6 fail.
