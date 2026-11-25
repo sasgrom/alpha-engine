@@ -169,7 +169,9 @@ function withCachedExhibits(cik: number, rows: CalendarFilingRow[]): CalendarFil
 const insidersFinalFile = path.join(insidersDir, "finalization.json");
 const insidersCompanies = path.join(insidersDir, "companies");
 if (!existsSync(insidersFinalFile) || !existsSync(insidersCompanies)) throw new Error(`Insider standard not found at ${insidersDir}; nothing was changed`);
-const insidersFinal = JSON.parse(readFileSync(insidersFinalFile, "utf8")) as { status: string; buildVersion: string };
+const insidersFinal = JSON.parse(readFileSync(insidersFinalFile, "utf8")) as { status: string; buildVersion: string; rowsVersions?: string[] };
+// an incremental build carries unchanged companies over: their rows keep the version of the build that computed them
+const insiderRowVersions = new Set([insidersFinal.buildVersion, ...(insidersFinal.rowsVersions ?? [])]);
 if (insidersFinal.status !== "final") throw new Error(`Insider standard at ${insidersDir} is ${insidersFinal.status}, not final; nothing was changed`);
 /** Only the filings of the last years are kept, slimmed to what the page uses. */
 const INSIDER_YEARS = 6;
@@ -181,7 +183,7 @@ async function insiderFilings(cik: number): Promise<InsiderFilingDoc[] | null> {
   for await (const line of createInterface({ input: createReadStream(file, "utf8"), crlfDelay: Infinity })) {
     if (!line) continue;
     const doc = JSON.parse(line) as InsiderFilingDoc;
-    if (doc.filing.buildVersion !== insidersFinal.buildVersion) throw new Error(`${file} holds build ${doc.filing.buildVersion}, the standard is ${insidersFinal.buildVersion}`);
+    if (!insiderRowVersions.has(doc.filing.buildVersion)) throw new Error(`${file} holds build ${doc.filing.buildVersion}, the standard is ${insidersFinal.buildVersion} (rows of ${[...insiderRowVersions].join(", ")})`);
     if (doc.filing.filingDate < insiderSince) continue;
     filings.push({
       filing: { accessionNo: doc.filing.accessionNo, form: doc.filing.form, filingDate: doc.filing.filingDate, buildVersion: doc.filing.buildVersion },
