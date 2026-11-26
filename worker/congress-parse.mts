@@ -7,7 +7,7 @@ import { execFile } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { promisify } from "node:util";
-import { parseHousePdfText, parseSenateHtml, resolveCongressTrade, type ResolvedCongressTrade, type SenateSearchReport } from "./lib/congress";
+import { assetTypeWithOptionEvidence, parseHousePdfText, parseSenateHtml, resolveCongressTrade, type ResolvedCongressTrade, type SenateSearchReport } from "./lib/congress";
 import type { HouseFiling } from "./lib/congress-house";
 import { writeJsonAtomic } from "./lib/json-file";
 import { CompanyIndex, type CompanyEntry } from "./lib/news-companies";
@@ -45,6 +45,7 @@ interface SenateCheckpoint extends SenateSearchReport {
   firstSeenAt: string;
   html: { sha256: string; bytes: number } | null;
   pdf: { sha256: string; bytes: number } | null;
+  images?: unknown[];
 }
 interface SourceItem {
   chamber: "house" | "senate";
@@ -80,7 +81,7 @@ interface ParsedReport {
   error: string | null;
 }
 
-const parserVersion = (item: SourceItem) => item.chamber === "house" ? "house-text-v5-pdfplumber-0.11.11" : "senate-html-v1";
+const parserVersion = (item: SourceItem) => item.chamber === "house" ? "house-text-v7-pdfplumber-0.11.11" : "senate-html-v1";
 const files = [...readHouse(), ...readSenate()].filter(item => (!only || item.reportId === only) && (year === null || item.year === year) && (!chamber || item.chamber === chamber));
 
 function readHouse(): SourceItem[] {
@@ -114,7 +115,7 @@ function readSenate(): SourceItem[] {
     const extension = report.html ? "html" : "pdf";
     const file = path.join(senateRoot, "reports", `${report.reportId}.${extension}`);
     if (!existsSync(file)) continue;
-    out.push({ chamber: "senate", reportId: report.reportId, year: Number(report.filedDate.slice(0, 4)), member: report.member, state: null, district: null, filedDate: report.filedDate, sourceUrl: report.sourceUrl, sourceSha256: source.sha256, sourceBytes: source.bytes, firstSeenAt: report.firstSeenAt, file, parsedFile: path.join(senateRoot, "parsed", `${report.reportId}.json`), filing: null, scanned: !report.html || Boolean(report.pdf) });
+    out.push({ chamber: "senate", reportId: report.reportId, year: Number(report.filedDate.slice(0, 4)), member: report.member, state: null, district: null, filedDate: report.filedDate, sourceUrl: report.sourceUrl, sourceSha256: source.sha256, sourceBytes: source.bytes, firstSeenAt: report.firstSeenAt, file, parsedFile: path.join(senateRoot, "parsed", `${report.reportId}.json`), filing: null, scanned: !report.html || Boolean(report.pdf) || Boolean(report.images?.length) });
   }
   return out;
 }
@@ -123,6 +124,12 @@ let processed = 0;
 for (const [position, item] of files.entries()) {
   const previous: ParsedReport | null = existsSync(item.parsedFile) ? JSON.parse(readFileSync(item.parsedFile, "utf8")) : null;
   if (previous?.sourceSha256 === item.sourceSha256 && previous.parserVersion === parserVersion(item)) continue;
+  if (previous?.sourceSha256 === item.sourceSha256 && item.chamber === "house" && previous.parserVersion === "house-text-v5-pdfplumber-0.11.11") {
+    const migrated: ParsedReport = { ...previous, parserVersion: parserVersion(item), parsedAt: new Date().toISOString(), transactions: previous.transactions.map(trade => ({ ...trade, assetType: assetTypeWithOptionEvidence(trade.asset, trade.assetType) })) };
+    writeJsonAtomic(item.parsedFile, migrated, true);
+    prog.item(position + 1, files.length, `${item.reportId} migrated asset classes`);
+    continue;
+  }
   if (processed >= limit) break;
   processed++;
   const now = new Date().toISOString();

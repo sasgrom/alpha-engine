@@ -19,7 +19,7 @@ export function isCollectorInfrastructureError(error: unknown): boolean {
 
 export function isCollectorItemError(error: unknown): boolean {
   if (isCollectorInfrastructureError(error)) return false;
-  return /HTTP (?:404|5\d\d)\b|fetch failed|request (?:TypeError|TimeoutError)|ECONNRESET|ECONNREFUSED|ETIMEDOUT|UND_ERR|operation was aborted|neither an electronic transaction table|linked document is not a PDF|paper report is not a PDF|PTR response is not a PDF/i.test(String(error));
+  return /HTTP (?:404|5\d\d)\b|fetch failed|request (?:TypeError|TimeoutError)|ECONNRESET|ECONNREFUSED|ETIMEDOUT|UND_ERR|operation was aborted|neither an electronic transaction table|linked document is not a PDF|paper report is not a PDF|PTR response is not a PDF|scanned page is not a supported image/i.test(String(error));
 }
 
 const key = (item: CollectorTodoItem) => JSON.stringify([item.cik ?? null, item.ticker ?? null, item.accession ?? null, item.reportId ?? null, item.document, item.url]);

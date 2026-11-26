@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { amountRange, parseHousePdfText, parseSenateHtml, parseSenateSearchRows } from "./congress";
+import { amountRange, parseHousePdfText, parseSenateHtml, parseSenateSearchRows, senateScannedImageUrls } from "./congress";
 import type { HouseFiling } from "./congress-house";
 
 const house: HouseFiling = { docId: "20000077", year: 2014, member: "Robert E. Andrews", firstName: "Robert E.", lastName: "Andrews", state: "NJ", district: "01", filingType: "P", filedDate: "2014-01-13" };
@@ -19,11 +19,13 @@ describe("Congress transaction parsers", () => {
   });
 
   it("reassembles wrapped House assets and amount ranges without checkbox artifacts", () => {
-    const text = `Filing ID #20000077\n2000041538 SP Phillips 66 (PSX) [ST] S 07/30/2018 08/06/2018 $1,001 - gfedc\n$15,000\n2000041539 SP Royal Dutch Shell PLC Royal S 07/30/2018 08/06/2018 $1,001 - gfedcb\nDutch Shell PLC American $15,000\nDepositary Shares (RDS.B) [ST]`;
+    const text = `Filing ID #20000077\n2000041538 SP Phillips 66 (PSX) [ST] S 07/30/2018 08/06/2018 $1,001 - gfedc\n$15,000\n2000041539 SP Royal Dutch Shell PLC Royal S 07/30/2018 08/06/2018 $1,001 - gfedcb\nDutch Shell PLC American $15,000\nDepositary Shares (RDS.B) [ST]\nSP Morgan Stanley Finance [CS] P 03/26/2025 08/11/2025 $250,001 -\nID Owner Asset Transaction Date Notification Amount Cap.\nType Date Gains >\n$500,000\nJT gENoN ENERgY INC NTS B/E S 01/29/2016 02/01/2016 $1,001 - $15,000\n09.875% 101520\nFILINg STATUS: New`;
     const trades = parseHousePdfText(text, house, "abc");
-    expect(trades).toHaveLength(2);
+    expect(trades).toHaveLength(4);
     expect(trades[0]).toMatchObject({ asset: "Phillips 66 (PSX) [ST]", ticker: "PSX", assetType: "stock", amountLow: 1001, amountHigh: 15000, comment: "" });
     expect(trades[1]).toMatchObject({ asset: "Royal Dutch Shell PLC Royal Dutch Shell PLC American Depositary Shares (RDS.B) [ST]", ticker: "RDS.B", amountLow: 1001, amountHigh: 15000, comment: "" });
+    expect(trades[2]).toMatchObject({ asset: "Morgan Stanley Finance [CS]", amountLow: 250001, amountHigh: 500000, comment: "", assetType: "bond" });
+    expect(trades[3]).toMatchObject({ asset: "gENoN ENERgY INC NTS B/E 09.875% 101520", amountLow: 1001, amountHigh: 15000 });
   });
 
   it("parses a Senate HTML table including a partial sale", () => {
@@ -35,14 +37,19 @@ describe("Congress transaction parsers", () => {
   });
 
   it("uses source codes for bonds and option names for calls", () => {
-    const text = `Filing ID #20000077\nJT DISH DBS CoRP NTS B/E 05.875% 071522 [CS] S 05/21/2018 06/01/2018 $15,001 - $50,000\nJT NORTH TX TWY auTH REV RFdG SYS 1ST TIER SER B B/E [GS] S 04/16/2020 04/20/2020 $100,001 - $250,000`;
-    expect(parseHousePdfText(text, house, "abc").map(row => row.assetType)).toEqual(["bond", "bond"]);
+    const text = `Filing ID #20000077\nJT DISH DBS CoRP NTS B/E 05.875% 071522 [CS] S 05/21/2018 06/01/2018 $15,001 - $50,000\nJT NORTH TX TWY auTH REV RFdG SYS 1ST TIER SER B B/E [GS] S 04/16/2020 04/20/2020 $100,001 - $250,000\nSP Lennar Corp Note Call Make Whole [CS] S 11/24/2020 05/06/2021 $15,001 - $50,000`;
+    expect(parseHousePdfText(text, house, "abc").map(row => row.assetType)).toEqual(["bond", "bond", "bond"]);
     const html = `<table><thead><tr><th>Transaction Date</th><th>Owner</th><th>Ticker</th><th>Asset Name</th><th>Asset Type</th><th>Type</th><th>Amount</th><th>Comment</th></tr></thead><tbody><tr><td>01/27/2025</td><td>Self</td><td>--</td><td>NCLH CALL</td><td>Stock</td><td>Sale (Full)</td><td>$1,001 - $15,000</td><td>--</td></tr></tbody></table>`;
     expect(parseSenateHtml(html, { member: "Example", state: null, district: null, reportId: "opt", filedDate: "2025-02-01", sourceSha256: "x", sourceUrl: "https://efdsearch.senate.gov/opt" })[0].assetType).toBe("option");
   });
 
   it("parses official Senate search links and filing dates", () => {
     expect(parseSenateSearchRows([["Lamar", "Alexander", "Alexander, Lamar (Senator)", '<a href="/search/view/ptr/a5ea65ef-3943-4944-b192-988ab6adaa21/">Periodic Transaction Report</a>', "11/30/2017"]])).toEqual([{ firstName: "Lamar", lastName: "Alexander", member: "Alexander, Lamar", reportId: "a5ea65ef-3943-4944-b192-988ab6adaa21", filedDate: "2017-11-30", sourceUrl: "https://efdsearch.senate.gov/search/view/ptr/a5ea65ef-3943-4944-b192-988ab6adaa21/", sourceKind: "ptr" }]);
+  });
+
+  it("lists official scanned-page image URLs without parsing them as tables", () => {
+    expect(senateScannedImageUrls('<img class="filingImage" src="https://efd-media-public.senate.gov/media/2026/2/000/000/000000145.gif">')).toEqual(["https://efd-media-public.senate.gov/media/2026/2/000/000/000000145.gif"]);
+    expect(() => senateScannedImageUrls('<img class="filingImage" src="https://example.com/fake.gif">')).toThrow("official Senate host");
   });
 
   it("handles open-ended and absent amount ranges without guessing", () => {

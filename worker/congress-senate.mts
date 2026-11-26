@@ -1,12 +1,12 @@
 /**
- * Senate eFD public PTR archive. In-memory statutory agreement, 3-second pacing, resumable raw HTML/PDF checkpoints.
+ * Senate eFD public PTR archive. In-memory statutory agreement, 3-second pacing, resumable raw HTML/PDF/image checkpoints.
  * Usage: npx tsx worker/congress-senate.mts [--discover|--index-only] [--limit N]
  */
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, realpathSync, renameSync, rmSync, statfsSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { JSDOM } from "jsdom";
-import { parseSenateSearchRows, type SenateSearchReport } from "./lib/congress";
+import { parseSenateSearchRows, senateScannedImageUrls, type SenateSearchReport } from "./lib/congress";
 import { readCollectorTodo, withCollectorRetries } from "./lib/collector-todo";
 import { csrfToken, OfficialSiteClient } from "./lib/congress-http";
 import { writeJsonAtomic } from "./lib/json-file";
@@ -46,6 +46,9 @@ function stored(file: string, url: string, fetchedAt: string) {
 }
 function matches(file: string, hash: string | undefined): boolean {
   return existsSync(file) && statSync(file).size > 0 && (!hash || sha256(readFileSync(file)) === hash);
+}
+function imagesMatch(report: ReportCheckpoint): boolean {
+  return (report.images ?? []).every(image => matches(path.join(root, "images", report.reportId, image.file), image.sha256));
 }
 
 const homeUrl = "https://efdsearch.senate.gov/search/home/";
@@ -131,6 +134,7 @@ interface ReportCheckpoint extends SenateSearchReport {
   firstSeenAt: string;
   html: ReturnType<typeof stored> | null;
   pdf: ReturnType<typeof stored> | null;
+  images?: ReturnType<typeof stored>[];
   error: string | null;
 }
 type IndexedReport = SenateSearchReport & { firstSeenAt: string };
@@ -141,7 +145,7 @@ const oldById = new Map(previousReports.map(row => [row.reportId, row]));
 async function collectReport(report: IndexedReport, old?: ReportCheckpoint): Promise<ReportCheckpoint> {
   const htmlFile = path.join(root, "reports", `${report.reportId}.html`);
   const pdfFile = path.join(root, "reports", `${report.reportId}.pdf`);
-  const checkpoint: ReportCheckpoint = { ...report, status: "failed", firstSeenAt: old?.firstSeenAt ?? report.firstSeenAt, html: null, pdf: null, error: null };
+  const checkpoint: ReportCheckpoint = { ...report, status: "failed", firstSeenAt: old?.firstSeenAt ?? report.firstSeenAt, html: null, pdf: null, images: [], error: null };
   const body = existsSync(htmlFile) ? readFileSync(htmlFile) : existsSync(pdfFile) ? readFileSync(pdfFile) : await client.body(report.sourceUrl);
   if (body.subarray(0, 5).toString("ascii") === "%PDF-") {
     if (!existsSync(pdfFile)) writeRaw(pdfFile, body);
@@ -161,9 +165,25 @@ async function collectReport(report: IndexedReport, old?: ReportCheckpoint): Pro
     checkpoint.status = "electronic";
     return checkpoint;
   }
+  const imageUrls = senateScannedImageUrls(html);
+  if (imageUrls.length) {
+    const directory = path.join(root, "images", report.reportId);
+    mkdirSync(directory, { recursive: true });
+    for (const [index, url] of imageUrls.entries()) {
+      const extension = path.extname(new URL(url).pathname).toLowerCase();
+      const file = path.join(directory, `${String(index + 1).padStart(4, "0")}${extension || ".gif"}`);
+      const image = existsSync(file) ? readFileSync(file) : await client.body(url);
+      const valid = image.subarray(0, 4).toString("ascii") === "GIF8" || image.subarray(0, 4).toString("hex") === "89504e47" || image.subarray(0, 2).toString("hex") === "ffd8";
+      if (!valid) throw new Error("Senate scanned page is not a supported image");
+      if (!existsSync(file)) writeRaw(file, image);
+      checkpoint.images!.push(stored(file, url, new Date().toISOString()));
+    }
+    checkpoint.status = "scanned";
+    return checkpoint;
+  }
   const link = [...document.querySelectorAll("a[href],iframe[src]")].map(node => node.getAttribute("href") ?? node.getAttribute("src") ?? "").find(value => /\.pdf(?:\?|$)|\/paper\//i.test(value))
     ?? html.match(/["']([^"']*(?:\.pdf(?:\?|$)|\/paper\/)[^"']*)["']/i)?.[1];
-  if (!link) throw new Error("Senate report has neither an electronic transaction table nor a PDF link");
+  if (!link) throw new Error("Senate report has neither an electronic transaction table, scanned page images nor a PDF link");
   const pdfUrl = new URL(link.replaceAll("&amp;", "&"), report.sourceUrl).href;
   const pdf = existsSync(pdfFile) ? readFileSync(pdfFile) : await client.body(pdfUrl);
   if (pdf.subarray(0, 5).toString("ascii") !== "%PDF-") throw new Error("Senate linked document is not a PDF");
@@ -204,7 +224,7 @@ for (const [index, report] of reports.entries()) {
   const old = oldById.get(report.reportId);
   const htmlFile = path.join(root, "reports", `${report.reportId}.html`);
   const pdfFile = path.join(root, "reports", `${report.reportId}.pdf`);
-  if (old && ["electronic", "scanned", "resumed"].includes(old.status) && (old.sourceKind === "paper" ? matches(pdfFile, old.pdf?.sha256) : matches(htmlFile, old.html?.sha256) && (!old.pdf || matches(pdfFile, old.pdf.sha256)))) {
+  if (old && ["electronic", "scanned", "resumed"].includes(old.status) && ((old.sourceKind === "paper" && !old.html ? old.images?.length ? true : matches(pdfFile, old.pdf?.sha256) : matches(htmlFile, old.html?.sha256)) && imagesMatch(old) && (!old.pdf || matches(pdfFile, old.pdf.sha256)))) {
     checkpoints.push({ ...old, status: "resumed" });
   } else if (completedThisRun < limit && statfsSync(path.parse(root).root).bavail * statfsSync(path.parse(root).root).bsize >= 20 * 1024 ** 3) {
     const attempted = await collectWithRetries(report, old, 3);
@@ -245,8 +265,8 @@ const summary = {
   requests: client.requests,
   sessionRenewals,
   reports: reports.length,
-  electronic: checkpoints.filter(row => row.status === "electronic" || row.status === "resumed" && row.html && !row.pdf).length,
-  scanned: checkpoints.filter(row => row.status === "scanned" || row.status === "resumed" && row.pdf).length,
+  electronic: checkpoints.filter(row => row.status === "electronic" || row.status === "resumed" && row.html && !row.pdf && !row.images?.length).length,
+  scanned: checkpoints.filter(row => row.status === "scanned" || row.status === "resumed" && (row.pdf || row.images?.length)).length,
   pending: checkpoints.filter(row => row.status === "pending").length,
   failed: checkpoints.filter(row => row.status === "failed").length,
   completedThisRun,

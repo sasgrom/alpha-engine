@@ -48,13 +48,19 @@ export function transactionType(value: string): CongressTrade["type"] {
 
 const OWNER: Record<string, CongressTrade["filer"]> = { "": "member", SELF: "member", SP: "spouse", SPOUSE: "spouse", JT: "joint", JOINT: "joint", DC: "child", CHILD: "child", "DEPENDENT CHILD": "child" };
 const ASSET_TYPES: Record<string, string> = { ST: "stock", OP: "option", BO: "bond", MF: "fund", ET: "fund", CS: "bond", GS: "bond", PS: "stock", RE: "real estate", OT: "other" };
-const withOptionEvidence = (asset: string, assetType: string) => /\b(?:call|put)\b/i.test(asset) ? "option" : assetType;
+export function assetTypeWithOptionEvidence(asset: string, assetType: string): string {
+  if (assetType === "bond") return assetType;
+  return /\b(?:call|put)\b/i.test(asset) ? "option" : assetType;
+}
+const withOptionEvidence = assetTypeWithOptionEvidence;
 
 export function parseHousePdfText(text: string, filing: HouseFiling, sourceSha256: string): CongressTrade[] {
   if (!(new RegExp(`Filing\\s+ID\\s*#\\s*${filing.docId}(?!\\d)`, "i")).test(text)) throw new Error(`House PDF text does not identify report ${filing.docId}`);
   if (!filing.filedDate) throw new Error(`House PTR ${filing.docId} has no filing date`);
   const trades: CongressTrade[] = [];
-  const lines = text.split(/\r?\n/).map(raw => raw.replace(/\s+/g, " ").replace(/\b(?:gfedcb|gfedc|nmlkji|nmlkj|nmlk)\b/g, "").trim());
+  const lines = text.split(/\r?\n/).map(raw => raw.replace(/\0/g, "").replace(/\s+/g, " ").replace(/\b(?:gfedcb|gfedc|nmlkji|nmlkj|nmlk)\b/g, "").trim())
+    .filter(line => line && !/^(?:ID Owner Asset|Type Date Gains|\$200\?)/i.test(line));
+  const rowEnd = /^(?:FIL|SUB|LOC|DESCR|ASSET|INITIAL|CERTIF|DIGITALLY|\*|ID OWNER|TYPE DATE|[A-Z]:|[A-Z]\s+[A-Z]:)/i;
   for (let index = 0; index < lines.length; index++) {
     let line = lines[index];
     let continuation = "";
@@ -68,7 +74,7 @@ export function parseHousePdfText(text: string, filing: HouseFiling, sourceSha25
     }
     const match = line.match(/^(?:\d{7,}\s+)?(?:(SP|JT|DC|SELF)\s+)?(.+?)\s+(P|S(?:\s*\(partial\))?|E)\s+(\d{1,2}\/\d{1,2}\/\d{4})\s+(\d{1,2}\/\d{1,2}\/\d{4})\s+((?:Over\s+)?\$[\d,]+(?:\s*-\s*\$[\d,]+)?)(?:\s+(.*))?$/i);
     if (!match) continue;
-    if (lines[index + 1] && /\[[A-Z]{2}\]/i.test(lines[index + 1]) && !/\d{1,2}\/\d{1,2}\/\d{4}/.test(lines[index + 1])) {
+    while (lines[index + 1] && !/\d{1,2}\/\d{1,2}\/\d{4}/.test(lines[index + 1]) && !rowEnd.test(lines[index + 1])) {
       continuation = `${continuation} ${lines[index + 1]}`.trim();
       index++;
     }
@@ -156,6 +162,16 @@ const cell = (cells: string[], headers: string[], names: string[]) => {
   const index = headers.findIndex(header => names.includes(header));
   return index < 0 ? "" : cells[index] ?? "";
 };
+
+export function senateScannedImageUrls(html: string): string[] {
+  const document = new JSDOM(html).window.document;
+  return [...document.querySelectorAll("img.filingImage[src]")].map(node => {
+    const value = node.getAttribute("src")!;
+    const url = new URL(value, "https://efdsearch.senate.gov");
+    if (url.protocol !== "https:" || !/(?:^|\.)senate\.gov$/i.test(url.hostname)) throw new Error("Senate scanned image is not on an official Senate host");
+    return url.href;
+  });
+}
 
 export function parseSenateHtml(html: string, report: SenateReportMetadata): CongressTrade[] {
   const document = new JSDOM(html).window.document;
