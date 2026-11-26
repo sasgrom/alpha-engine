@@ -25,6 +25,9 @@ export interface SplitEvent { date: string; ratio: number }
 
 export interface EpsComparison {
   periodEnd: string;
+  ourPeriodEnd: string;
+  periodDistanceDays: number;
+  matchType: "exact" | "near";
   series: "adjusted" | "gaap";
   alphaVantage: number;
   ours: number;
@@ -47,10 +50,16 @@ export interface DateCheck {
   dateMatch: boolean;
   timeMatch: boolean | null;
   nearestRelease: ReleaseFiling | null;
+  nearestReleaseDate: string | null;
+  dateOffsetDays: number | null;
+  releaseTimeBand: "pre-market" | "market-hours" | "post-market" | null;
+  nextSessionPostCloseConvention: boolean;
+  alphaSource: AvQuarter["source"];
 }
 export interface OneSidedQuarter {
   periodEnd: string;
   side: "alphaVantage" | "ours";
+  reason: "av-before-ours" | "av-after-ours" | "ours-before-av" | "ours-after-av" | "true-gap";
   ourSources: string[];
   alphaSource?: AvQuarter["source"];
 }
@@ -58,10 +67,12 @@ export interface CompanyCheck {
   cik: number;
   ticker: string;
   comparisons: EpsComparison[];
+  exactComparisons: EpsComparison[];
   disagreements: EpsComparison[];
   dateChecks: DateCheck[];
   dateDisagreements: DateCheck[];
   oneSided: OneSidedQuarter[];
+  oneSidedExact: OneSidedQuarter[];
   basis: ReturnType<typeof inferBasis>;
 }
 
@@ -102,21 +113,31 @@ export function reportTimeAgrees(reportTime: string | null, acceptedEt: string |
   return acceptanceSession(acceptedEt) === reportTime;
 }
 
-function compareSeries(ticker: string, av: AvQuarter[], ours: Map<string, AdjustedFigure | GaapFigure>, series: "adjusted" | "gaap", splits: SplitEvent[]): EpsComparison[] {
-  const out: EpsComparison[] = [];
-  for (const quarter of av) {
-    if (quarter.reportedEPS === null) continue;
-    const figure = ours.get(quarter.periodEnd);
-    if (!figure) continue;
+function compareSeries(av: AvQuarter[], ours: Map<string, AdjustedFigure | GaapFigure>, series: "adjusted" | "gaap", splits: SplitEvent[]): EpsComparison[] {
+  const candidates = av.filter(quarter => quarter.reportedEPS !== null).flatMap(quarter => [...ours].map(([periodEnd, figure]) => ({
+    quarter,
+    periodEnd,
+    figure,
+    distance: Math.abs(Date.parse(`${quarter.periodEnd}T00:00:00Z`) - Date.parse(`${periodEnd}T00:00:00Z`)) / 86_400_000,
+  }))).filter(row => row.distance <= 10).sort((a, b) => a.distance - b.distance || a.quarter.periodEnd.localeCompare(b.periodEnd) || a.periodEnd.localeCompare(b.periodEnd));
+  const usedAv = new Set<string>(), usedOurs = new Set<string>(), out: EpsComparison[] = [];
+  for (const candidate of candidates) {
+    const { quarter, periodEnd, figure, distance } = candidate;
+    if (usedAv.has(quarter.periodEnd) || usedOurs.has(periodEnd)) continue;
+    usedAv.add(quarter.periodEnd);
+    usedOurs.add(periodEnd);
     const sourceDate = series === "adjusted" ? (figure as AdjustedFigure).acceptedEt : (figure as GaapFigure).filed;
     const factor = splitFactorAfter(sourceDate, splits);
     const restated = figure.value / factor;
-    const originalMatch = epsAgree(quarter.reportedEPS, figure.value);
-    const restatedMatch = epsAgree(quarter.reportedEPS, restated);
+    const originalMatch = epsAgree(quarter.reportedEPS!, figure.value);
+    const restatedMatch = epsAgree(quarter.reportedEPS!, restated);
     out.push({
       periodEnd: quarter.periodEnd,
+      ourPeriodEnd: periodEnd,
+      periodDistanceDays: distance,
+      matchType: distance === 0 ? "exact" : "near",
       series,
-      alphaVantage: quarter.reportedEPS,
+      alphaVantage: quarter.reportedEPS!,
       ours: figure.value,
       oursRestated: restated,
       splitFactor: factor,
@@ -128,7 +149,7 @@ function compareSeries(ticker: string, av: AvQuarter[], ours: Map<string, Adjust
       ...(series === "adjusted" ? { grade: (figure as AdjustedFigure).grade } : {}),
     });
   }
-  return out;
+  return out.sort((a, b) => a.periodEnd.localeCompare(b.periodEnd));
 }
 
 export function inferBasis(comparisons: EpsComparison[]) {
@@ -153,12 +174,15 @@ export function inferBasis(comparisons: EpsComparison[]) {
   return { inferred, basisSeries: adjusted.length ? "adjusted" : "gaap", splitAffected: summarize(affected), adjusted: summarize(comparisons.filter(row => row.series === "adjusted")), gaap: summarize(comparisons.filter(row => row.series === "gaap")) };
 }
 
-function checkDates(av: AvQuarter[], releases: ReleaseFiling[]): DateCheck[] {
+function checkDates(av: AvQuarter[], releases: ReleaseFiling[], sessions: string[]): DateCheck[] {
   return av.map(quarter => {
     const ordered = [...releases].sort((a, b) => a.acceptedEt.localeCompare(b.acceptedEt));
     const same = ordered.filter(row => newYorkDate(row.acceptedEt) === quarter.reportedDate);
     const nearest = same[0] ?? ordered.map(row => ({ row, days: Math.abs(Date.parse(`${newYorkDate(row.acceptedEt)}T00:00:00Z`) - Date.parse(`${quarter.reportedDate}T00:00:00Z`)) })).sort((a, b) => a.days - b.days || a.row.acceptedEt.localeCompare(b.row.acceptedEt))[0]?.row ?? null;
     const selected = same[0] ?? null;
+    const nearestDate = nearest ? newYorkDate(nearest.acceptedEt) : null;
+    const band = nearest ? acceptanceSession(nearest.acceptedEt) : null;
+    const nextSession = nearestDate ? sessions.find(date => date > nearestDate) ?? new Date(Date.parse(`${nearestDate}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10) : null;
     return {
       periodEnd: quarter.periodEnd,
       reportedDate: quarter.reportedDate,
@@ -169,8 +193,21 @@ function checkDates(av: AvQuarter[], releases: ReleaseFiling[]): DateCheck[] {
       dateMatch: Boolean(selected),
       timeMatch: reportTimeAgrees(quarter.reportTime, selected?.acceptedEt ?? null),
       nearestRelease: nearest,
+      nearestReleaseDate: nearestDate,
+      dateOffsetDays: nearestDate ? (Date.parse(`${quarter.reportedDate}T00:00:00Z`) - Date.parse(`${nearestDate}T00:00:00Z`)) / 86_400_000 : null,
+      releaseTimeBand: band,
+      nextSessionPostCloseConvention: !selected && band === "post-market" && quarter.reportedDate === nextSession,
+      alphaSource: quarter.source,
     };
   });
+}
+
+function oneSidedReason(side: OneSidedQuarter["side"], periodEnd: string, otherEnds: Set<string>): OneSidedQuarter["reason"] {
+  const ordered = [...otherEnds].sort();
+  if (!ordered.length) return "true-gap";
+  if (periodEnd < ordered[0]) return side === "alphaVantage" ? "av-before-ours" : "ours-before-av";
+  if (periodEnd > ordered.at(-1)!) return side === "alphaVantage" ? "av-after-ours" : "ours-after-av";
+  return "true-gap";
 }
 
 export function checkCompany(input: {
@@ -181,29 +218,36 @@ export function checkCompany(input: {
   gaap: GaapFigure[];
   releases: ReleaseFiling[];
   splits: SplitEvent[];
+  sessions?: string[];
 }): CompanyCheck {
   const av = [...input.alphaVantage].sort((a, b) => a.periodEnd.localeCompare(b.periodEnd));
   const adjusted = new Map<string, AdjustedFigure>();
   for (const row of [...input.adjusted].sort((a, b) => a.acceptedEt.localeCompare(b.acceptedEt))) if (!adjusted.has(row.source.periodEnd as string)) adjusted.set(row.source.periodEnd as string, row);
   const gaap = new Map(input.gaap.map(row => [row.source.periodEnd as string, row]));
-  const comparisons = [...compareSeries(input.ticker, av, adjusted, "adjusted", input.splits), ...compareSeries(input.ticker, av, gaap, "gaap", input.splits)];
-  const dateChecks = checkDates(av, input.releases);
+  const comparisons = [...compareSeries(av, adjusted, "adjusted", input.splits), ...compareSeries(av, gaap, "gaap", input.splits)];
+  const dateChecks = checkDates(av, input.releases, input.sessions ?? []);
   const avEnds = new Set(av.map(row => row.periodEnd));
   const ourEnds = new Map<string, string[]>();
   for (const end of adjusted.keys()) ourEnds.set(end, [...ourEnds.get(end) ?? [], "adjusted"]);
   for (const end of gaap.keys()) ourEnds.set(end, [...ourEnds.get(end) ?? [], "gaap"]);
-  const oneSided: OneSidedQuarter[] = [
-    ...av.filter(row => !ourEnds.has(row.periodEnd)).map(row => ({ periodEnd: row.periodEnd, side: "alphaVantage" as const, ourSources: [], alphaSource: row.source })),
-    ...[...ourEnds].filter(([end]) => !avEnds.has(end)).map(([periodEnd, ourSources]) => ({ periodEnd, side: "ours" as const, ourSources })),
+  const ourEndSet = new Set(ourEnds.keys());
+  const buildOneSided = (matchedAv: Set<string>, matchedOurs: Set<string>) => [
+    ...av.filter(row => !matchedAv.has(row.periodEnd)).map(row => ({ periodEnd: row.periodEnd, side: "alphaVantage" as const, reason: oneSidedReason("alphaVantage", row.periodEnd, ourEndSet), ourSources: [], alphaSource: row.source })),
+    ...[...ourEnds].filter(([end]) => !matchedOurs.has(end)).map(([periodEnd, ourSources]) => ({ periodEnd, side: "ours" as const, reason: oneSidedReason("ours", periodEnd, avEnds), ourSources })),
   ].sort((a, b) => a.periodEnd.localeCompare(b.periodEnd));
+  const exactRows = comparisons.filter(row => row.matchType === "exact");
+  const oneSidedExact = buildOneSided(new Set(exactRows.map(row => row.periodEnd)), new Set(exactRows.map(row => row.ourPeriodEnd)));
+  const oneSided = buildOneSided(new Set(comparisons.map(row => row.periodEnd)), new Set(comparisons.map(row => row.ourPeriodEnd)));
   return {
     cik: input.cik,
     ticker: input.ticker,
     comparisons,
+    exactComparisons: comparisons.filter(row => row.matchType === "exact"),
     disagreements: comparisons.filter(row => !row.bestMatch),
     dateChecks,
     dateDisagreements: dateChecks.filter(row => !row.dateMatch || row.timeMatch === false),
     oneSided,
+    oneSidedExact,
     basis: inferBasis(comparisons),
   };
 }

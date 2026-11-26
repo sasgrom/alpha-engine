@@ -55,3 +55,21 @@ at the end of this file, a handoff section and a mailbox message.
   not hidden by blending the two series.
 - Gates: new fixtures **4/4**, TypeScript, full suite **298 files / 1,776 tests**, build and `git diff --check` pass.
   No Alpha Vantage request, database write or production action.
+
+
+## Follow-up: near periods and date conventions — 2026-11-26
+
+- Added one-to-one nearest-first matches within ten calendar days per series, with exact counts retained separately;
+  no fiscal labels. Added one-sided reasons (before/after the other history or a true interior gap), the AV-minus-release
+  date-offset distribution by pre/market/post acceptance band, next-session post-close convention detection using the
+  standard sessions, and 20 disagreement examples carrying both sources.
+- Corrected an exact one-sided counter caught by the first follow-up run; the final report restores the original exact
+  totals instead of the erroneous zero. Current output is
+  `D:/research/alpha-engine/estimates/alphavantage/checks/20261126T055345Z.json` and `.md`.
+- Adjusted: **980 = 787 exact + 193 near**, 90.51% best overall and 90.85% exact-only. GAAP:
+  **1,708 = 1,453 exact + 255 near**, 23.89% best overall and 22.30% exact-only. One-sided exact AV/ours is
+  **1,247/271**; near-matched is **983/7** (926 AV before our history, four after, 55 true gaps; five ours before AV,
+  two after). Next-session post-close convention explains 17 date non-matches; 711/728 (97.66%) remain unexplained.
+  Full offset bands and examples are in the JSON.
+- Follow-up gates: fixtures 4/4, TypeScript, full **299 files / 1,779 tests**, build and `git diff --check` pass.
+  Still no AV request or database write.

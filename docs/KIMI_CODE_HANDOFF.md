@@ -5301,3 +5301,30 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   not disguise AV month-end versus actual fiscal-period-end differences.
 - Gates: fixtures 4/4, TypeScript, **298 files / 1,776 tests**, build and diff check pass. K32 source/report commit
   follows. K34 collectors and parser continue resumably on D:.
+
+
+## 269. Kimi: K32 follow-up and K33 inventory — 2026-11-26T06:05Z
+
+- **K32:** nearest-first one-to-one period matches within ten days now sit beside exact counts. Final report
+  `estimates/alphavantage/checks/20261126T055345Z.{json,md}` on D:: adjusted 787 exact + 193 near, 90.51% overall;
+  GAAP 1,453 exact + 255 near, 23.89%. One-sided exact 1,247 AV / 271 ours; near 983 / 7 with reasons. Date offsets
+  by acceptance band, 17 next-session post-close conventions, 711 unexplained non-matches and 20 sourced examples are
+  included. The erroneous zero exact-one-sided counter from the first follow-up run was fixed and regression-covered.
+- **K33:** full 79-procedure/eight-raw-route inventory is in the task file. Only `ping` and the two old browser
+  price-import routes lack callers. No tests-only procedures. No exclusive service/table for the route handlers;
+  `importPricesFromStorage` remains used by runner and is explicitly protected. Inventory sent to Claude; no removal.
+- **Gates:** K32 fixtures 4/4; full 299 files / 1,779 tests; TypeScript, build and diff check pass. These gates also
+  cover B's owner retry/partial/todo implementation and current K34 code. B and K34 collection remain resumable on D:.
+
+
+## 270. Kimi: K31 final Russell 1000 panel and invalid-date gate — 2026-11-26T06:10Z
+
+- Final panel `D:/research/alpha-engine/engine/r1000-panel/20261126T060023Z`, lab commit `a7b9770`: 9,292 sessions,
+  1,405 companies, 1,202 priced (496 unchanged fable1 + 706 Schwab/Yahoo), matching IDs/dates and verified hashes.
+  Overlap/membership pass; nine split disagreements, 18 Stooq outliers, 203 without prices and 4,042 large jumps remain
+  reported. Early-history use must report K26 unmatched weight.
+- Schwab invalid gate: 15 tickers / 17,481 excluded non-positive bars; 12,873 before 2019-07-01 and **4,608 on/after**.
+  All 4,608 are explicit `unusableDates`; 4,604 carry same-day Stooq close as check-only evidence. No filling or raw
+  rewrite. `schwabInvalidBars.pass=false` remains.
+- Fixtures 4/4; combined main suite 299/1,779, TypeScript/build/diff pass. Full delivery report is in the K31 task file.
+  No DB, fable1, scheduler or production change.

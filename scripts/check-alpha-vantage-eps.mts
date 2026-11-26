@@ -17,6 +17,8 @@ const adjustedFile = path.resolve(arg("--adjusted") ?? "D:/research/alpha-engine
 const fundamentalsRoot = path.resolve(arg("--fundamentals") ?? "D:/research/alpha-engine/fundamentals/standard/v3.1/company");
 const eventsRoot = path.resolve(arg("--events") ?? "D:/research/alpha-engine/engine/events");
 const pricesRoot = path.resolve(arg("--prices") ?? "D:/research/alpha-engine/prices/std/daily");
+const sessionsFile = path.resolve("D:/research/alpha-engine/prices/std/sessions.json");
+const sessions = (JSON.parse(readFileSync(sessionsFile, "utf8")) as { sessions: string[] }).sessions;
 const outputRoot = path.resolve(arg("--out") ?? "D:/research/alpha-engine/estimates/alphavantage/checks");
 for (const root of [earningsRoot, outputRoot]) if (!/^d:/i.test(realpathSync(path.parse(root).root))) throw new Error("Alpha Vantage inputs and outputs must resolve to D:");
 if (!existsSync(path.join(earningsRoot, "manifest.json"))) throw new Error("Stored Alpha Vantage manifest is missing");
@@ -89,6 +91,7 @@ const errors: { ticker: string; cik: number; error: string }[] = [];
 const inputs = new Map<string, ReturnType<typeof evidence>>();
 inputs.set(manifestFile, evidence(manifestFile));
 inputs.set(adjustedFile, evidence(adjustedFile));
+inputs.set(sessionsFile, evidence(sessionsFile));
 for (const name of eventFiles) inputs.set(path.join(eventsRoot, name), evidence(path.join(eventsRoot, name)));
 for (const entry of selected) {
   try {
@@ -103,7 +106,7 @@ for (const entry of selected) {
     if (gaap.input) inputs.set(gaap.input.file, gaap.input);
     if (split.input) inputs.set(split.input.file, split.input);
     inputs.set(file, evidence(file));
-    companies.push({ ...checkCompany({ cik: entry.cik, ticker: entry.ticker, alphaVantage: av, adjusted: adjusted.get(entry.cik) ?? [], gaap: gaap.figures, releases: releases.get(entry.cik) ?? [], splits: split.splits }), latestAlphaVantageFile: latest.file });
+    companies.push({ ...checkCompany({ cik: entry.cik, ticker: entry.ticker, alphaVantage: av, adjusted: adjusted.get(entry.cik) ?? [], gaap: gaap.figures, releases: releases.get(entry.cik) ?? [], splits: split.splits, sessions }), latestAlphaVantageFile: latest.file });
   } catch (error) {
     errors.push({ ticker: entry.ticker, cik: entry.cik, error: String(error).slice(0, 500) });
   }
@@ -112,23 +115,46 @@ for (const entry of selected) {
 const comparisons = companies.flatMap(company => company.comparisons);
 const dates = companies.flatMap(company => company.dateChecks);
 const series = (name: "adjusted" | "gaap") => {
-  const rows = comparisons.filter(row => row.series === name);
-  return { comparable: rows.length, originalAgreementShare: rows.length ? rows.filter(row => row.originalMatch).length / rows.length : null, restatedAgreementShare: rows.length ? rows.filter(row => row.restatedMatch).length / rows.length : null, bestBasisAgreementShare: rows.length ? rows.filter(row => row.bestMatch).length / rows.length : null, disagreements: rows.filter(row => !row.bestMatch).length };
+  const rows = comparisons.filter(row => row.series === name), exact = rows.filter(row => row.matchType === "exact");
+  const best = (items: typeof rows) => items.length ? items.filter(row => row.bestMatch).length / items.length : null;
+  return { comparable: rows.length, exactComparable: exact.length, nearComparable: rows.length - exact.length, exactBestBasisAgreementShare: best(exact), originalAgreementShare: rows.length ? rows.filter(row => row.originalMatch).length / rows.length : null, restatedAgreementShare: rows.length ? rows.filter(row => row.restatedMatch).length / rows.length : null, bestBasisAgreementShare: best(rows), disagreements: rows.filter(row => !row.bestMatch).length };
 };
+const oneSidedRows = companies.flatMap(company => company.oneSided), exactOneSidedRows = companies.flatMap(company => company.oneSidedExact);
+const oneSidedSummary = (rows: typeof oneSidedRows) => ({
+  alphaVantage: rows.filter(row => row.side === "alphaVantage").length,
+  ours: rows.filter(row => row.side === "ours").length,
+  reasons: Object.fromEntries([...new Set(rows.map(row => row.reason))].sort().map(reason => [reason, rows.filter(row => row.reason === reason).length])),
+});
+const dateBands = ["pre-market", "market-hours", "post-market", "no release"] as const;
+const offsetKey = (value: number | null) => value === null ? "no release" : [-2, -1, 0, 1, 2].includes(value) ? String(value) : "other";
+const dateOffsetDistribution = Object.fromEntries(dateBands.map(band => [band, Object.fromEntries(["-2", "-1", "0", "1", "2", "other", "no release"].map(offset => [offset, dates.filter(row => (row.releaseTimeBand ?? "no release") === band && offsetKey(row.dateOffsetDays) === offset).length]))]));
+const nonMatchingDates = dates.filter(row => !row.dateMatch), conventionalDates = nonMatchingDates.filter(row => row.nextSessionPostCloseConvention);
 const summary = {
   tickers: selected.length,
   checked: companies.length,
   errors: errors.length,
   adjusted: series("adjusted"),
   gaap: series("gaap"),
-  dates: { quarters: dates.length, sameNewYorkDateShare: dates.length ? dates.filter(row => row.dateMatch).length / dates.length : null, reportTimeGradable: dates.filter(row => row.timeMatch !== null).length, reportTimeAgreementShare: dates.some(row => row.timeMatch !== null) ? dates.filter(row => row.timeMatch === true).length / dates.filter(row => row.timeMatch !== null).length : null },
+  dates: {
+    quarters: dates.length,
+    sameNewYorkDateShare: dates.length ? dates.filter(row => row.dateMatch).length / dates.length : null,
+    reportTimeGradable: dates.filter(row => row.timeMatch !== null).length,
+    reportTimeAgreementShare: dates.some(row => row.timeMatch !== null) ? dates.filter(row => row.timeMatch === true).length / dates.filter(row => row.timeMatch !== null).length : null,
+    offsetDefinition: "AV reportedDate minus nearest our-release New York date, in calendar days; bands use acceptance time",
+    offsetDistribution: dateOffsetDistribution,
+    nextSessionPostCloseConvention: conventionalDates.length,
+    unexplainedNonMatchingDates: nonMatchingDates.length - conventionalDates.length,
+    unexplainedShareOfNonMatching: nonMatchingDates.length ? (nonMatchingDates.length - conventionalDates.length) / nonMatchingDates.length : null,
+  },
   disagreements: companies.reduce((sum, company) => sum + company.disagreements.length, 0),
-  oneSided: { alphaVantage: companies.flatMap(company => company.oneSided).filter(row => row.side === "alphaVantage").length, ours: companies.flatMap(company => company.oneSided).filter(row => row.side === "ours").length },
+  oneSided: oneSidedSummary(oneSidedRows),
+  oneSidedExact: oneSidedSummary(exactOneSidedRows),
   basis: Object.fromEntries([...new Set(companies.map(company => company.basis.inferred))].map(kind => [kind, companies.filter(company => company.basis.inferred === kind).length])),
 };
 const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
 mkdirSync(outputRoot, { recursive: true });
-const output = { schemaVersion: 1, generatedAt: new Date().toISOString(), method: { periodMatch: "exact period end", agreement: "absolute <= $0.01 or relative <= 1% of our figure", originalBasis: "stored SEC-derived figure", restatedBasis: "figure divided by positive standard-price splitRatio events after its acceptance/filing date", inferredBasisRule: "split-affected adjusted figures preferred; >=80% and strictly above the other basis, otherwise mixed/indistinguishable", dateZone: "America/New_York", preMarket: "before 09:30 New York", postMarket: "16:00 or later New York", alphaVantageSnapshots: "latest hash-verified stored answer per ticker" }, summary, inputs: [...inputs.values()], errors, companies };
+const dateExamples = companies.flatMap(company => company.dateDisagreements.map(row => ({ cik: company.cik, ticker: company.ticker, ...row }))).slice(0, 20);
+const output = { schemaVersion: 2, generatedAt: new Date().toISOString(), method: { periodMatch: "exact plus one-to-one nearest first within 10 calendar days per series; no fiscal labels", agreement: "absolute <= $0.01 or relative <= 1% of our figure", originalBasis: "stored SEC-derived figure", restatedBasis: "figure divided by positive standard-price splitRatio events after its acceptance/filing date", inferredBasisRule: "split-affected adjusted figures preferred; >=80% and strictly above the other basis, otherwise mixed/indistinguishable", dateZone: "America/New_York", preMarket: "before 09:30 New York", postMarket: "16:00 or later New York", nextSession: "standard session calendar", alphaVantageSnapshots: "latest hash-verified stored answer per ticker" }, summary, dateExamples, inputs: [...inputs.values()], errors, companies };
 const jsonFile = path.join(outputRoot, `${stamp}.json`);
 const markdownFile = path.join(outputRoot, `${stamp}.md`);
 writeAtomic(jsonFile, JSON.stringify(output, null, 1) + "\n");
@@ -136,10 +162,10 @@ const share = (value: number | null) => value === null ? "n/a" : `${(value * 100
 const markdown = [
   "# Alpha Vantage EPS verification", "", `Generated ${output.generatedAt}. Stored files only; no Alpha Vantage request or database write.`, "",
   `- Tickers checked: ${companies.length}/${selected.length}; errors: ${errors.length}`,
-  `- Adjusted comparable: ${summary.adjusted.comparable}; original ${share(summary.adjusted.originalAgreementShare)}; restated ${share(summary.adjusted.restatedAgreementShare)}; best basis ${share(summary.adjusted.bestBasisAgreementShare)}.`,
-  `- GAAP comparable: ${summary.gaap.comparable}; original ${share(summary.gaap.originalAgreementShare)}; restated ${share(summary.gaap.restatedAgreementShare)}; best basis ${share(summary.gaap.bestBasisAgreementShare)}.`,
-  `- Same New York release date: ${share(summary.dates.sameNewYorkDateShare)}; report-time agreement on ${summary.dates.reportTimeGradable} gradable quarters: ${share(summary.dates.reportTimeAgreementShare)}.`,
-  `- Disagreements: ${summary.disagreements}; one-sided AV/ours: ${summary.oneSided.alphaVantage}/${summary.oneSided.ours}. Every row and source is in the JSON.`, "",
+  `- Adjusted comparable: ${summary.adjusted.comparable} (exact ${summary.adjusted.exactComparable}, near ${summary.adjusted.nearComparable}); original ${share(summary.adjusted.originalAgreementShare)}; restated ${share(summary.adjusted.restatedAgreementShare)}; best basis ${share(summary.adjusted.bestBasisAgreementShare)}; exact-only best ${share(summary.adjusted.exactBestBasisAgreementShare)}.`,
+  `- GAAP comparable: ${summary.gaap.comparable} (exact ${summary.gaap.exactComparable}, near ${summary.gaap.nearComparable}); original ${share(summary.gaap.originalAgreementShare)}; restated ${share(summary.gaap.restatedAgreementShare)}; best basis ${share(summary.gaap.bestBasisAgreementShare)}; exact-only best ${share(summary.gaap.exactBestBasisAgreementShare)}.`,
+  `- Same New York release date: ${share(summary.dates.sameNewYorkDateShare)}; report-time agreement on ${summary.dates.reportTimeGradable} gradable quarters: ${share(summary.dates.reportTimeAgreementShare)}. Next-session post-close convention explains ${summary.dates.nextSessionPostCloseConvention} mismatches; ${summary.dates.unexplainedNonMatchingDates} remain (${share(summary.dates.unexplainedShareOfNonMatching)} of non-matches). Offset/band counts and 20 sourced examples are in JSON.`,
+  `- Disagreements: ${summary.disagreements}; near-matched one-sided AV/ours: ${summary.oneSided.alphaVantage}/${summary.oneSided.ours}; exact-only ${summary.oneSidedExact.alphaVantage}/${summary.oneSidedExact.ours}. Reasons and every source are in the JSON.`, "",
   "| Ticker | Adjusted comparable | Adjusted best | GAAP comparable | GAAP best | Inferred AV basis | Disagreements | One-sided |",
   "|---|---:|---:|---:|---:|---|---:|---:|",
   ...companies.map(company => {

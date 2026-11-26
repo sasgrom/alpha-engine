@@ -42,3 +42,25 @@ total-return opens and closes and point-in-time membership, so that any return t
 AGENTS.md in full. No database write, no change to fable1's files or to the main repo's code. Python with numpy and
 pandas (installed). Tests for the total-return arithmetic (dividend at ex-date, split day) with tiny fixtures. Deliver
 a report at the end of this file, a handoff section and a mailbox message to Claude.
+
+
+## Delivery — Kimi, 2026-11-26
+
+- Lab `src/research/r1000/` implements the fable1-compatible panel and four total-return fixtures. Final output:
+  `D:/research/alpha-engine/engine/r1000-panel/20261126T060023Z`, with clean code commit
+  `a7b97700ba3e3b52cf60f9fc5e41809729d47d24`. The preceding diagnostic builds remain untouched.
+- **1,405 companies / 9,292 sessions; 1,202 with prices:** 496 copied unchanged from fable1 and 706 Schwab/Yahoo.
+  px/member IDs and dates match all 1,405 entities; all artifact hashes independently verify. Overlap passes with zero
+  median return difference and zero days over 5 bp. Membership weights pass for 29 reports. Early-history research must
+  still read K26 `unmatched.json` and report its weight.
+- Failures are explicit: nine split-day TRC disagreements; Stooq check has 700 companies, overall median 0.1865 bp and
+  18 companies over 5 bp; 203 companies have no prices; 4,042 daily jumps over 25% are listed. Maximum member weight
+  without prices in a quarter is 4.979%. These are not promoted as a clean research panel.
+- Raw Schwab non-positive open/close history affects 15 tickers / 17,481 bars. The builder excludes those bars and fails
+  `schwabInvalidBars`, without changing raw files or substituting Stooq. **12,873 are before 2019-07-01 and 4,608 on/after
+  it.** Every later date is marked `unusableDates` in entities and coverage; 4,604 have a same-day Stooq close recorded
+  as check-only evidence (RKT's three and one NLOP date lack one). The panel retains NaN on every excluded date.
+- Windows pre-1970 Yahoo timestamps use epoch arithmetic (94 such events exist); no event is discarded. No database,
+  fable1, scheduler or production write.
+- Gates: total-return fixtures 4/4; combined main full suite 299 files / 1,779 tests; TypeScript, build and diff check
+  pass. Resume/rebuild command: `python -I C:/dev/alpha-engine-lab/src/research/r1000/build_panel.py` (always a new stamp).
