@@ -5375,3 +5375,15 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   07:33Z. The 20-company pilot and immutable K06/K23 hashes remain accepted evidence.
 - Committing only the existing C/D collector controls, tests and K27 docs. Full gate 300/1,783, TypeScript, build and
   diff check pass. No generated report or unrelated working-tree file is included.
+
+
+## 275. Kimi: K34 and K27 F source gate — 2026-11-26T08:15Z
+
+- Full **301 files / 1,785 tests**, TypeScript, production build and diff check pass for current K34 collector/parser/
+  hand-check source and F's coverage builder. These are source checkpoints, not final data acceptance.
+- House main+post-pass is complete: 8,469/8,946 PDFs; 477 permanent 404s, five attempts each. Senate continues at 3 s
+  with renewal/retry/todo. Parser v5 is rebuilding House wrapped rows and source-checked asset classes before the final
+  50-row manual review. No generated report is committed.
+- F has two focused tests and TypeScript coverage. Direct execution refused missing full K28 before writing output; it
+  also requires B's final 909/endTime. Commit F source now, run only after B + full K28. No network, DB, schema,
+  scheduler or production change.
