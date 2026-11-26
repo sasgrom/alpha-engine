@@ -156,16 +156,28 @@ export default function FlowsPage() {
   const fundFile = useFlowsFund(flowsOpen ? fund : null);
   const companyFile = useFlowsCompany(flowsOpen ? company : null);
 
-  // the hall runs edge to edge: the stylesheet needs the width of the window without its scrollbar
+  // the hall runs edge to edge and fills the window below the header and any banners (an operations alert or the
+  // view-as line would otherwise push its bottom out of sight): the stylesheet needs the width of the window without
+  // its scrollbar and the hall's own top on the page
   useEffect(() => {
     const root = document.querySelector<HTMLElement>(".desk-root");
     if (!root) return;
-    const apply = () => root.style.setProperty("--desk-vw", `${document.documentElement.clientWidth}px`);
+    const apply = () => {
+      root.style.setProperty("--desk-vw", `${document.documentElement.clientWidth}px`);
+      const hall = document.querySelector<HTMLElement>(".desk-lib");
+      if (hall) root.style.setProperty("--desk-lib-top", `${Math.max(0, Math.round(hall.getBoundingClientRect().top + window.scrollY))}px`);
+    };
     apply();
     window.addEventListener("resize", apply);
+    // banners come and go after the page opens (alerts load later): follow the page's size
+    // (a banner above the hall makes the whole page taller, so the page root is watched)
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(apply);
+    observer?.observe(root);
     return () => {
       window.removeEventListener("resize", apply);
+      observer?.disconnect();
       root.style.removeProperty("--desk-vw");
+      root.style.removeProperty("--desk-lib-top");
     };
   }, []);
 
@@ -345,6 +357,11 @@ export default function FlowsPage() {
               )}
             </div>
             <div className="desk-lib-controls" ref={controls}>
+              {/* who stands in the hall: on the bar, one click away (owner, 2026-11-26: hidden in the popover it was missed) */}
+              <div className="desk-seg" role="group" aria-label="Who stands in the hall">
+                <button type="button" aria-pressed={audience !== "people"} onClick={() => set({ audience: null })} title="The funds, as people">Funds</button>
+                <button type="button" aria-pressed={audience === "people"} onClick={() => set({ audience: "people" })} title="The famous investors behind them">Famous faces</button>
+              </div>
               {modeSwitch}
               <div className="desk-seg" role="group" aria-label="Views of the hall">
                 <button type="button" aria-pressed={rest.view === "overview" && atRest && tour === null} onClick={() => { set({ sector: null, fund: null, company: null }); restAt("overview"); }} title="Back to the opening view, with nothing selected">Overview</button>
@@ -375,15 +392,6 @@ export default function FlowsPage() {
               {displayOpen && (
                 <div className="desk-lib-pop" role="dialog" aria-label="What the hall shows">
                   <strong>What the hall shows</strong>
-                  <div className="desk-lib-pop-row">
-                    <span>Who stands in the hall</span>
-                    <Segmented<"funds" | "people">
-                      label="Who stands in the hall"
-                      value={audience}
-                      onChange={(next) => set({ audience: next === "people" ? "people" : null })}
-                      options={[{ value: "funds", label: "Funds" }, { value: "people", label: "Famous faces" }]}
-                    />
-                  </div>
                   {standing.bar !== null && standing.winners + standing.losers > 0 && (
                     <div className="desk-lib-pop-row">
                       <span>Whose books</span>

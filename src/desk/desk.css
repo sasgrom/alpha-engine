@@ -1790,8 +1790,8 @@ button.desk-list-row {
 .desk-lib {
   position: relative;
   width: var(--desk-vw, 100%);
-  height: calc(100vh - 61px);
-  min-height: 580px;
+  height: calc(100vh - var(--desk-lib-top, 61px));
+  min-height: 480px;
   margin: -28px 0 0 calc(50% - var(--desk-vw, 100%) / 2);
   overflow: hidden;
   background: var(--d-page);
