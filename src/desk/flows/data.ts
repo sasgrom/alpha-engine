@@ -26,6 +26,10 @@ export function useFlowsInsiders(enabled = true) {
   return trpc.desk.flowsInsiders.useQuery(undefined, { ...LONG, enabled });
 }
 
+export function useFlowsPoliticians(enabled = true) {
+  return trpc.desk.flowsPoliticians.useQuery(undefined, { ...LONG, enabled });
+}
+
 export function useFlowsCompany(cik: number | null) {
   return trpc.desk.flowsCompany.useQuery({ cik: cik ?? 0 }, { ...LONG, enabled: !!cik });
 }

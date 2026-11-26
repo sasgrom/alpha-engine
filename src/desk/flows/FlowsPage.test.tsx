@@ -81,6 +81,11 @@ describe("the fund-flow page, reading view", () => {
     await click(button(host, "Insiders"));
     await waitUntil(() => text().includes("Jen Hsun Huang"));
     expect(text()).toContain("President and CEO · NVDA");
+    // politicians stand on the company they traded, with the reported range, never a point value
+    await click(button(host, "Politicians"));
+    await waitUntil(() => text().includes("Nancy Pelosi"));
+    expect(text()).toContain("House · CA-11 · NVDA");
+    expect(text()).toContain("+$1M–5M");
     // activists: the quarter's 13D stakes on their company, then the activist funds' books
     await click(button(host, "Activists"));
     await waitUntil(() => text().includes("Trian Fund Management"));

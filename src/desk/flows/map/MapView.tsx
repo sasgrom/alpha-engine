@@ -5,7 +5,7 @@
  */
 import { useMemo, useState, type ReactNode } from "react";
 import { Search, X } from "lucide-react";
-import { FUND_CATEGORY_LABEL, type FlowActivistsFile, type FlowInsidersFile, type FundCategory, type FlowQuarter, type FundFlowsCompany, type FundFlowsFund, type FundFlowsOverview } from "@contracts/fund-flows";
+import { FUND_CATEGORY_LABEL, type FlowActivistsFile, type FlowInsidersFile, type FlowPoliticiansFile, type FundCategory, type FlowQuarter, type FundFlowsCompany, type FundFlowsFund, type FundFlowsOverview } from "@contracts/fund-flows";
 import type { ChartPalette } from "../../charts/color";
 import { divergingColor } from "../../charts/color";
 import { fmtCap, fmtPct, personName } from "../../format";
@@ -15,7 +15,7 @@ import MoneyMap, { type MapPerson, type MapPick, type MapThread } from "./MoneyM
 import { buildMapPlan, initialsOf, placePeople, type Tile } from "./layout";
 
 type Mode = "flow" | "outcome" | "held";
-type Group = "famous" | "insiders" | "activists" | FundCategory;
+type Group = "famous" | "insiders" | "politicians" | "activists" | FundCategory;
 /** A person standing on a company's tile (an insider, or a 13D filer), as the list and the map show it. */
 interface TileRow { id: number; cik: number; ticker: string; label: string; sub: string; tone: MapPerson["tone"]; right: string; size: number; hover: string[] }
 const STAKE_KIND = { new: "new stake", raised: "raised", cut: "cut", held: "unchanged", exited: "below 5%" } as const;
@@ -24,6 +24,7 @@ const SHORT: Record<FundCategory, string> = { index: "Index giants", manager: "M
 const GROUPS: { key: Group; label: string; title: string }[] = [
   { key: "famous", label: "Famous faces", title: "The best-known people behind the funds" },
   { key: "insiders", label: "Insiders", title: "Executives, directors and large owners trading their own company's shares on the open market (Form 4)" },
+  { key: "politicians", label: "Politicians", title: "Members of Congress, their spouses and children trading our companies' stock (House and Senate transaction reports; amounts are the reported ranges)" },
   { key: "activists", label: "Activists", title: "Stakes above 5% reported on Schedule 13D this quarter, and the activist funds' 13F books" },
   ...(Object.entries(FUND_CATEGORY_LABEL) as [FundCategory, string][]).map(([key, title]) => ({ key, label: SHORT[key], title })),
 ];
@@ -45,6 +46,7 @@ interface Props {
   companyFile: FundFlowsCompany | undefined;
   insiders: FlowInsidersFile | null | undefined;
   activists: FlowActivistsFile | null | undefined;
+  politicians: FlowPoliticiansFile | null | undefined;
   onPick: (pick: MapPick) => void;
   bar: ReactNode;
   panel: ReactNode | null;
@@ -52,7 +54,7 @@ interface Props {
 }
 
 export default function MapView(props: Props) {
-  const { data, row, mode, deflator, palette, dark, focus, fund, company, fundFile, companyFile, insiders, activists, onPick } = props;
+  const { data, row, mode, deflator, palette, dark, focus, fund, company, fundFile, companyFile, insiders, activists, politicians, onPick } = props;
   const [group, setGroup] = useState<Group>("famous");
   const [query, setQuery] = useState("");
 
@@ -117,6 +119,28 @@ export default function MapView(props: Props) {
         };
       }).filter((entry) => matches(entry.label, entry.ticker));
     }
+    if (group === "politicians") {
+      return (politicians?.quarters[row.quarter] ?? []).filter((entry) => plan.tileByCik.has(entry.cik)).map((entry, index) => {
+        const ticker = plan.tileByCik.get(entry.cik)!.ticker, label = entry.member;
+        const bought = (entry.bought[0] + entry.bought[1]) / 2, sold = (entry.sold[0] + entry.sold[1]) / 2;
+        const buys = bought >= sold, side = buys ? entry.bought : entry.sold;
+        const seat = entry.chamber === "house" ? `House${entry.seat ? ` · ${entry.seat}` : ""}` : "Senate";
+        const whose = entry.owners.map((owner) => OWNER_WORD[owner]).join(", ");
+        const traded = [entry.bought[1] > 0 ? `bought ${bandRange(entry.bought)}` : null, entry.sold[1] > 0 ? `sold ${bandRange(entry.sold)}` : null].filter(Boolean).join(" · ");
+        return {
+          id: -(index + 1), cik: entry.cik, ticker, label, sub: `${seat} · ${ticker}`,
+          tone: buys ? "up" as const : "down" as const, right: `${buys ? "+" : "−"}${bandRange(side)}`,
+          size: Math.min(1, Math.max(0.1, (Math.log10(Math.max(bought + sold, 1)) - 3.5) / 3.5)),
+          hover: [
+            `${label} · ${seat}`,
+            `${ticker} · ${quarterLabel(row.quarter)}: ${traded}`,
+            `${entry.trades} trade${entry.trades === 1 ? "" : "s"} (${whose}); reported up to ${entry.maxLagDays} days later, last on ${entry.lastFiled}`,
+            "Ranges as reported (the law asks for bands, not amounts)",
+            "Click: the company and who traded it",
+          ],
+        };
+      }).filter((entry) => matches(entry.label, entry.ticker));
+    }
     if (group === "activists") {
       return (activists?.quarters[row.quarter] ?? []).filter((entry) => plan.tileByCik.has(entry.cik)).map((entry, index) => {
         const ticker = plan.tileByCik.get(entry.cik)!.ticker, label = shortName(entry.filer);
@@ -131,11 +155,11 @@ export default function MapView(props: Props) {
       }).filter((entry) => matches(entry.label, entry.ticker));
     }
     return [];
-  }, [group, insiders, activists, row, plan, query]);
+  }, [group, insiders, activists, politicians, row, plan, query]);
   const tileRowById = useMemo(() => new Map(tileRows.map((entry) => [entry.id, entry])), [tileRows]);
 
   const listed = useMemo(() => {
-    if (group === "insiders") return [];
+    if (group === "insiders" || group === "politicians") return [];
     const reported = new Set(row.places.map((place) => place[0]));
     const q = query.trim().toLowerCase();
     return data.funds
@@ -240,7 +264,7 @@ export default function MapView(props: Props) {
           <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Find a person or a fund" aria-label="Find a person or a fund" />
           {query && <button type="button" className="desk-icon-button" onClick={() => setQuery("")} aria-label="Clear the search"><X size={13} aria-hidden="true" /></button>}
         </div>
-        {(!query || inInsiders) && (
+        {(!query || inInsiders || group === "politicians") && (
           <div className="desk-map-groups" role="tablist" aria-label="Groups of people">
             {GROUPS.map((entry) => (
               <button key={entry.key} type="button" role="tab" aria-selected={group === entry.key} onClick={() => setGroup(entry.key)} title={entry.title}>{entry.label}</button>
@@ -248,8 +272,9 @@ export default function MapView(props: Props) {
           </div>
         )}
         {inInsiders && <p className="desk-map-count">{tileRows.length} {query ? "found" : `largest open-market traders of ${quarterLabel(row.quarter)}`}{!insiders ? " · not built yet" : ""}</p>}
+        {group === "politicians" && <p className="desk-map-count">{tileRows.length} {query ? "found" : `members of Congress with the largest stock trades of ${quarterLabel(row.quarter)}`}{!politicians ? " · not built yet" : ""}</p>}
         {group === "activists" && <p className="desk-map-count">{tileRows.length} Schedule 13D stake{tileRows.length === 1 ? "" : "s"} filed in {quarterLabel(row.quarter)} · then the activist funds' 13F books</p>}
-        {!inInsiders && group !== "activists" && <p className="desk-map-count">{listed.length} {query ? "found" : "reported this quarter"}{listed.length > PINS && !query ? ` · the ${PINS} largest stand on the map` : ""}</p>}
+        {!inInsiders && group !== "activists" && group !== "politicians" && <p className="desk-map-count">{listed.length} {query ? "found" : "reported this quarter"}{listed.length > PINS && !query ? ` · the ${PINS} largest stand on the map` : ""}</p>}
         <ul className="desk-map-list">
           {tileRows.map((entry) => (
             <li key={entry.id}>
@@ -279,7 +304,7 @@ export default function MapView(props: Props) {
             );
           })}
         </ul>
-        <p className="desk-map-note">Politicians are being collected and will join these lists.</p>
+        {group === "politicians" && <p className="desk-map-note">From the House and Senate periodic transaction reports since 2012: listed stock only, a copy re-filed later counted once. Members report up to 45 days after a trade, often later.</p>}
       </aside>
       <div className="desk-map-main">
         <MoneyMap
@@ -293,6 +318,19 @@ export default function MapView(props: Props) {
       {props.panel && <aside className="desk-map-panel" aria-label="Details">{props.panel}</aside>}
     </div>
   );
+}
+
+const OWNER_WORD = { member: "own", spouse: "spouse", joint: "joint", child: "child" } as const;
+
+/** A reported band in short dollars: [1001, 15000] → "$1K–15K", [1000001, 5000000] → "$1M–5M". */
+export function bandRange([low, high]: [number, number]): string {
+  const short = (value: number) => {
+    const rounded = Math.round(value / 1000) * 1000;
+    if (rounded >= 1e6) return `${Number((rounded / 1e6).toPrecision(2))}M`;
+    if (rounded >= 1e3) return `${Number((rounded / 1e3).toPrecision(2))}K`;
+    return String(Math.round(value));
+  };
+  return low === high ? `$${short(low)}` : `$${short(low)}–${short(high)}`;
 }
 
 /** A filer's name without its legal tail ("BlackRock, Inc." → "BlackRock"). */

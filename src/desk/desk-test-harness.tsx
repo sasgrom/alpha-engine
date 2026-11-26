@@ -405,6 +405,7 @@ function answer(procedure: string, role: string, input?: unknown): unknown {
     case "desk.flowsOverview": return FLOWS_OVERVIEW;
     case "desk.flowsFund": return FLOWS_FUND;
     case "desk.flowsCompany": return FLOWS_COMPANY;
+    case "desk.flowsPoliticians": return { schemaVersion: 1, builtAt: "2026-11-26T05:00:00Z", source: "trades-resolution-test.jsonl", quarters: { "2026-06-30": [{ member: "Nancy Pelosi", chamber: "house", seat: "CA-11", cik: 1045810, bought: [1000001, 5000000], sold: [0, 0], trades: 2, owners: ["spouse"], firstTrade: "2026-05-02", lastTrade: "2026-05-20", lastFiled: "2026-06-12", maxLagDays: 41 }] } };
     case "desk.flowsActivists": return { schemaVersion: 1, builtAt: "2026-11-26T04:00:00Z", quarters: { "2026-06-30": [{ filer: "Trian Fund Management, L.P.", key: "trian", cik: 93410, percent: 6.2, previous: null, shares: 1e8, kind: "new", filed: "2026-05-20", filings: 1, how: "cusip" }] } };
     case "desk.flowsInsiders": return { schemaVersion: 1, builtAt: "2026-11-26T03:00:00Z", insiderBuild: "i1.1.test", quarters: { "2026-06-30": [{ person: 1214156, name: "Huang Jen Hsun", title: "President and CEO", cik: 1045810, bought: 0, sold: 1.2e9, lines: 40 }] } };
     case "desk.companyStatements": return DESK_DATA.empty || DESK_DATA.noStatements ? null : COMPANY_STATEMENTS;

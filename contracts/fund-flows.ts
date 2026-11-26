@@ -340,3 +340,33 @@ export interface FlowActivistsFile {
   builtAt: string;
   quarters: Record<string, FlowActivistRow[]>;
 }
+
+/**
+ * Members of Congress trading our companies' stock, per calendar quarter of the trade, largest first
+ * (scripts/build-flow-politicians.mts from the accepted Congress archive: House and Senate periodic transaction reports).
+ * One row per member and company; amounts are the reported ranges summed, [low, high], never a point value.
+ */
+export interface FlowPoliticianRow {
+  /** As filed, first name first ("Nancy Pelosi"). */
+  member: string;
+  chamber: "house" | "senate";
+  /** House seat as filed ("CA-12"); the Senate's reports name no state. */
+  seat: string | null;
+  cik: number;
+  bought: [number, number];
+  sold: [number, number];
+  trades: number;
+  /** Whose trades they were, as filed. */
+  owners: ("member" | "spouse" | "joint" | "child")[];
+  firstTrade: string;
+  lastTrade: string;
+  lastFiled: string;
+  /** The longest wait between a trade and its report, in days. */
+  maxLagDays: number;
+}
+export interface FlowPoliticiansFile {
+  schemaVersion: 1;
+  builtAt: string;
+  source: string;
+  quarters: Record<string, FlowPoliticianRow[]>;
+}

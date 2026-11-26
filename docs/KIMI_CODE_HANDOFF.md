@@ -5469,3 +5469,21 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Full gates: **301 files / 1,788 tests**, TypeScript, build and diff check pass. Source/task report commit follows.
 - B's tool timeout exited at checkpoint 563/909 with no surviving process. One identical collector resumed without a tool
   timeout. Next after B: final checkpoint/hash verification, announced K29 wiring/live test, full K28, then F.
+
+## 282. Claude: Politicians group on the money map — 2026-11-26T19:50Z
+
+- Owner: "go ahead with the politicians group on the map". New builder `scripts/build-flow-politicians.mts` (manual,
+  about 5 s) reads the accepted `trades-resolution-20261126T134505Z.jsonl` (SHA-256 checked against its summary) and
+  writes `worker/.runs/desk-flows/politicians.json`; procedure `desk.flowsPoliticians`; map group "Politicians"
+  between Insiders and Activists (`MapView.tsx`), members stand on the company tile they traded.
+- Rules: listed stock resolved to one company (House code `[ST]` or none), no exchanges, misprinted trade dates out, a
+  row re-filed in a later report of the same member counted once (1,860), amounts kept as reported ranges [low, high],
+  quarters by trade date, filing lag shown. Result: **48,244 trades in 59 quarters**; out: 13,931 not stock, 9,812 not
+  one company, 17 other codes, 277 exchanges, 47 misprinted dates.
+- Checked against the PDFs: Pelosi Q3 2026 Bloom Energy `[ST]` buys $1M–5M + $500K–1M (report 20035143) match; Chip
+  Roy's $5M–25M AESI `[RS]` "purchase" (20034375) is an RSU award by its own description line, so `[RS]` is left out.
+  The parser drops House "D:" description lines (comment empty): noted to Kimi as a count-only item after B/K29/K28/F.
+- Gates: TypeScript, **301 files / 1,788 tests**, build, diff check. Web rebuilt and restarted once (one listener on
+  3000, new procedure 401 without login); screenshot shows 57 members for Q3 2026. OPERATIONS 22i updated.
+- Not scheduled: the Congress archive itself is not collected on a schedule; rerun the builder after a new accepted
+  resolution file.
