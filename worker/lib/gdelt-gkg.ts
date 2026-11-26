@@ -43,6 +43,8 @@ export interface GkgRecord {
   tone: number | null;
   positive: number | null;
   negative: number | null;
+  /** The article's word count (the tone's last field). */
+  words: number | null;
   organizations: string[];
   themes: string[];
 }
@@ -60,7 +62,7 @@ export function parseGkg(text: string): GkgRecord[] {
     const title = f[26]?.match(/<PAGE_TITLE>([\s\S]*?)<\/PAGE_TITLE>/)?.[1];
     out.push({
       id: f[0], gdeltAt: stampIso(f[1]), source: f[3], url: f[4], title: title ? unescape(title).trim() : null,
-      tone: number(tone[0]), positive: number(tone[1]), negative: number(tone[2]),
+      tone: number(tone[0]), positive: number(tone[1]), negative: number(tone[2]), words: number(tone[6]),
       organizations: [...new Set((f[13] ?? "").split(";").map(entry => entry.split(",")[0].trim()).filter(Boolean))],
       themes: [...new Set((f[7] ?? "").split(";").map(entry => entry.split(",")[0].trim()).filter(Boolean))].slice(0, 40),
     });

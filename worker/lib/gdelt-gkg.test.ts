@@ -27,7 +27,7 @@ describe("GDELT GKG files", () => {
   it("parses records with title, tone, organizations and themes, and skips broken lines", () => {
     const records = parseGkg(GKG);
     expect(records).toHaveLength(2);
-    expect(records[0]).toMatchObject({ id: "20261126011500-1", gdeltAt: "2026-11-26T01:15:00.000Z", source: "dailyrecordnews.com", title: "Microsoft explains tech failures that triggered global outage", tone: -8.45, positive: 1.2, negative: 9.6, organizations: ["microsoft", "cloudflare"], themes: ["ECON_STOCKMARKET", "TAX_FNCACT"] });
+    expect(records[0]).toMatchObject({ id: "20261126011500-1", gdeltAt: "2026-11-26T01:15:00.000Z", source: "dailyrecordnews.com", title: "Microsoft explains tech failures that triggered global outage", tone: -8.45, positive: 1.2, negative: 9.6, words: 1200, organizations: ["microsoft", "cloudflare"], themes: ["ECON_STOCKMARKET", "TAX_FNCACT"] });
     expect(records[1].organizations).toEqual([]);
   });
 

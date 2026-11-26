@@ -9,14 +9,14 @@
  * the size and MD5 that lastupdate.txt states; every file must open as a zip.
  *
  * Archive D:/research/alpha-engine/news/gdelt:
- * - raw/<UTC date>/<stamp>.gkg.csv.zip, as received, never rewritten;
+ * - raw/<UTC date>/<stamp>.gkg.csv.zip, as received, never rewritten, kept 30 days (owner, 2026-11-26);
  * - records/<UTC date of the slot>.jsonl, one row per article that names a company of our index (organizations resolved
  *   with the news reader's CompanyIndex), with our first-seen time, GDELT's time, title, tone, organizations and themes;
  * - state.json: the last slot stored, slots that answered 404 (asked twice more on later runs, then listed as gone).
  * Not yet fed to the reader or the desk: measured first (handoff 263).
  */
 import { createHash } from "node:crypto";
-import { appendFileSync, existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { unzipSync } from "fflate";
 import { buildIndex, companiesOf, GDELT_BASE, parseGkg, parseLastUpdate, slotsBetween, stampIso } from "./lib/gdelt-gkg";
@@ -31,7 +31,8 @@ if (!existsSync(path.join(news, "lookup"))) throw new Error(`The news archive is
 if (!/^d:/i.test(realpathSync(news))) throw new Error("The news archive must resolve to D:");
 if (!(maxFiles >= 1 && maxFiles <= 96)) throw new Error("--max-files must be 1 to 96");
 
-interface State { lastStamp: string | null; missing: Record<string, number>; gone: string[]; files: number; records: number; updatedAt: string | null }
+interface State { lastStamp: string | null; missing: Record<string, number>; gone: string[]; files: number; records: number; updatedAt: string | null; prunedThrough?: string }
+const RAW_KEEP_DAYS = 30;
 const stateFile = path.join(root, "state.json");
 mkdirSync(root, { recursive: true });
 // a stop between storing a file and saving the state reads that file again on the next run: records are then repeated
@@ -74,7 +75,10 @@ for (const stamp of queue) {
     const response = await get(`${GDELT_BASE}${stamp}.gkg.csv.zip`);
     if (response.status === 404) {
       counts.notThere++;
-      const tries = (state.missing[stamp] ?? 0) + 1;
+      // lastupdate.txt can name a file a few minutes before it can be fetched (seen 2026-11-26): a 404 counts as a try
+      // only once the slot is three hours old
+      const young = Date.now() - Date.parse(stampIso(stamp)) < 3 * 3_600_000;
+      const tries = (state.missing[stamp] ?? 0) + (young ? 0 : 1);
       if (tries >= 3) { delete state.missing[stamp]; state.gone.push(stamp); } else state.missing[stamp] = tries;
       if (!state.lastStamp || stamp > state.lastStamp) state.lastStamp = stamp;
       writeJsonAtomic(stateFile, state);
@@ -111,4 +115,12 @@ for (const stamp of queue) {
 }
 state.updatedAt = new Date().toISOString();
 writeJsonAtomic(stateFile, state);
-console.log(JSON.stringify({ latest: latest.stamp, lastStored: state.lastStamp, behind: slotsBetween(state.lastStamp!, latest.stamp).length, ...counts, missing: Object.keys(state.missing).length, gone: state.gone.length, requests }));
+// raw files are kept 30 days (owner, 2026-11-26: "keep raw gdelt files 30 days"); the records stay. Only dated
+// folders directly under raw/ are removed, and only when raw/ resolves to the archive on D:.
+const rawRoot = path.join(root, "raw");
+const keepFrom = new Date(Date.now() - RAW_KEEP_DAYS * 86_400_000).toISOString().slice(0, 10);
+const pruned: string[] = [];
+if (existsSync(rawRoot) && /^d:\\research\\alpha-engine\\news\\gdelt\\raw$/i.test(realpathSync(rawRoot)))
+  for (const name of readdirSync(rawRoot)) if (/^\d{4}-\d{2}-\d{2}$/.test(name) && name < keepFrom) { rmSync(path.join(rawRoot, name), { recursive: true }); pruned.push(name); }
+if (pruned.length) { state.prunedThrough = pruned.sort().at(-1)!; writeJsonAtomic(stateFile, state); }
+console.log(JSON.stringify({ latest: latest.stamp, pruned: pruned.length, lastStored: state.lastStamp, behind: slotsBetween(state.lastStamp!, latest.stamp).length, ...counts, missing: Object.keys(state.missing).length, gone: state.gone.length, requests }));
