@@ -65,7 +65,19 @@ if (dryRun) {
   process.exit(0);
 }
 
-const counts = { files: 0, notThere: 0, records: 0, matched: 0, followed: 0 };
+const counts = { files: 0, notThere: 0, records: 0, matched: 0, followed: 0, skipped: 0 };
+/** One file that failed: tried again on the next two runs, then left in todo.jsonl for a later pass. */
+function skip(stamp: string, error: string) {
+  counts.skipped++;
+  const tries = (state.missing[stamp] ?? 0) + 1;
+  if (tries >= 3) {
+    delete state.missing[stamp];
+    state.gone.push(stamp);
+    appendFileSync(path.join(root, "todo.jsonl"), JSON.stringify({ stamp, url: `${GDELT_BASE}${stamp}.gkg.csv.zip`, error, attempts: tries, at: new Date().toISOString() }) + "\n");
+  } else state.missing[stamp] = tries;
+  if (!state.lastStamp || stamp > state.lastStamp) state.lastStamp = stamp;
+  writeJsonAtomic(stateFile, state);
+}
 for (const stamp of queue) {
   const day = `${stamp.slice(0, 4)}-${stamp.slice(4, 6)}-${stamp.slice(6, 8)}`;
   const rawFile = path.join(root, "raw", day, `${stamp}.gkg.csv.zip`);
@@ -84,16 +96,18 @@ for (const stamp of queue) {
       writeJsonAtomic(stateFile, state);
       continue;
     }
-    if (!response.ok) throw new Error(`GDELT ${stamp}.gkg.csv.zip answered HTTP ${response.status}; stopped, the next run resumes`);
+    // being refused (403, 429) is the only network answer that stops the run; anything else on one file is that file's
+    // problem (owner, 2026-11-26: "skip problem co, should never be a stop issue, just record after 2 re try and move on")
+    if (response.status === 403 || response.status === 429) throw new Error(`GDELT refused the request (HTTP ${response.status}); stopped, the next run resumes`);
+    if (!response.ok) { skip(stamp, `HTTP ${response.status}`); continue; }
     body = Buffer.from(await response.arrayBuffer());
-    if (stamp === latest.stamp && (body.length !== latest.size || createHash("md5").update(body).digest("hex") !== latest.md5))
-      throw new Error(`GDELT ${stamp}.gkg.csv.zip does not match the size and MD5 of lastupdate.txt; nothing stored`);
+    if (stamp === latest.stamp && (body.length !== latest.size || createHash("md5").update(body).digest("hex") !== latest.md5)) { skip(stamp, "size or MD5 differs from lastupdate.txt"); continue; }
     mkdirSync(path.dirname(rawFile), { recursive: true });
     writeFileSync(rawFile, body, { flag: "wx" });
   }
-  const files = unzipSync(new Uint8Array(body));
-  const csv = Object.values(files)[0];
-  if (!csv) throw new Error(`GDELT ${stamp}.gkg.csv.zip holds no file`);
+  let csv: Uint8Array | undefined;
+  try { csv = Object.values(unzipSync(new Uint8Array(body)))[0]; } catch (error) { skip(stamp, `unreadable zip: ${String((error as Error).message).slice(0, 80)}`); continue; }
+  if (!csv) { skip(stamp, "the zip holds no file"); continue; }
   const records = parseGkg(Buffer.from(csv).toString("utf8"));
   const firstSeenAt = new Date().toISOString();
   const lines: string[] = [];
