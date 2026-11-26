@@ -81,7 +81,7 @@ interface ParsedReport {
   error: string | null;
 }
 
-const parserVersion = (item: SourceItem) => item.chamber === "house" ? "house-text-v8-pdfplumber-0.11.11" : "senate-html-v1";
+const parserVersion = (item: SourceItem) => item.chamber === "house" ? "house-text-v9-pdfplumber-0.11.11" : "senate-html-v1";
 const files = [...readHouse(), ...readSenate()].filter(item => (!only || item.reportId === only) && (year === null || item.year === year) && (!chamber || item.chamber === chamber));
 
 function readHouse(): SourceItem[] {
@@ -124,7 +124,7 @@ let processed = 0;
 for (const [position, item] of files.entries()) {
   const previous: ParsedReport | null = existsSync(item.parsedFile) ? JSON.parse(readFileSync(item.parsedFile, "utf8")) : null;
   if (previous?.sourceSha256 === item.sourceSha256 && previous.parserVersion === parserVersion(item)) continue;
-  if (previous?.sourceSha256 === item.sourceSha256 && item.chamber === "house" && previous.parserVersion === "house-text-v5-pdfplumber-0.11.11") {
+  if (previous?.sourceSha256 === item.sourceSha256 && item.chamber === "house" && ["house-text-v5-pdfplumber-0.11.11", "house-text-v8-pdfplumber-0.11.11"].includes(previous.parserVersion)) {
     const migrated: ParsedReport = { ...previous, parserVersion: parserVersion(item), parsedAt: new Date().toISOString(), transactions: previous.transactions.map(trade => ({ ...trade, assetType: assetTypeWithOptionEvidence(trade.asset, trade.assetType) })) };
     writeJsonAtomic(item.parsedFile, migrated, true);
     prog.item(position + 1, files.length, `${item.reportId} migrated asset classes`);

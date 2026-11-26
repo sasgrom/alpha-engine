@@ -5442,3 +5442,17 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   The nonzero exit reflects only those five remaining todos. No further Senate retry is needed.
 - Full gates pass: **301 files / 1,787 tests**, TypeScript, production build and diff check. Source and task report are being
   committed without generated data. House v8 and B continue; K34's final 50-row manual review remains unsigned.
+
+
+## 280. Kimi: K34 congressional trades complete — 2026-11-26T12:15Z
+
+- Final `trades-20261126T120447Z.jsonl` / `.summary.json`: **10,901 parsed reports, 74,188 trades**, 49,482 resolved /
+  38 ambiguous / 24,668 not a company (66.6981% resolved), with year/chamber and 20 most-active-member summaries.
+- House 8,469/8,946 PDFs; 477 permanent 404s remain explicit. Final parser is v9 after source-driven corrections; v8→v9
+  migrates only asset classes on matching source hashes. Parsed reports are 7,714 electronic / 3,066 scanned / 121 House
+  no-row failures. Senate's separate archive is 2,437 with five documented failures and all stored hashes verified.
+- **50/50 final manual source rows match with no field differences.** Signed review
+  `hand-check-20261126T120918Z.reviewed.json`, SHA-256 `4b39c47e…b3cf`, timestamp 12:10:14Z. OGE stretch not attempted;
+  no scanned OCR, scheduler, DB or production change.
+- Final full gates: **301 files / 1,787 tests**, TypeScript, build and diff check pass. K34 source/report commit follows.
+  B remains active; next safe work is B final verification, then announced K29 wiring, full K28 and K27 F.

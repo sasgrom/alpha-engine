@@ -50,7 +50,7 @@ const OWNER: Record<string, CongressTrade["filer"]> = { "": "member", SELF: "mem
 const ASSET_TYPES: Record<string, string> = { ST: "stock", OP: "option", BO: "bond", MF: "fund", ET: "fund", CS: "bond", GS: "bond", PS: "stock", RE: "real estate", OT: "other" };
 export function assetTypeWithOptionEvidence(asset: string, assetType: string): string {
   if (assetType === "bond") return assetType;
-  if (assetType === "other" && /\b(?:NTS|B\/E|BDS|BONDS?|DEBENTURES?|OBLIG)\b/i.test(asset)) return "bond";
+  if (assetType === "other" && (/\b(?:NTS|B\/E|BDS|BONDS?|DEBENTURES?|OBLIG)\b/i.test(asset) || /\d{1,2}\.\d{2,3}%\s+\d{6}\b/.test(asset))) return "bond";
   return /\b(?:call|put)\b/i.test(asset) ? "option" : assetType;
 }
 const withOptionEvidence = assetTypeWithOptionEvidence;

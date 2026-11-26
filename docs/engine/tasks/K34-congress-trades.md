@@ -57,10 +57,23 @@ union of current and every immutable paginated index because current results cha
   `eFD: Find Reports` pages with no transaction table (16 attempts each). They are failures, not collected transaction
   reports. No unknown identity remains.
 
-### House and parser review status
+### House and final parser delivery
 
-House main+post-pass finished with 8,469/8,946 PDFs and 477 permanent 404s (five attempts each). Parser v7 produced
-71,515 trades but was not signed: its source review caught dropped `$` preferred tickers and uncoded corporate notes
-classified as other. V8 fixes those fields and its review excerpt reader matches owner for otherwise identical rows.
-A new v8 50-row manual review is pending; earlier hand-check files remain unsigned evidence of the defects, not acceptance.
-The executive-branch OGE 278-T stretch was not attempted.
+House main+post-pass finished with 8,469/8,946 PDFs and 477 permanent 404s (five attempts each). Parser review caught and
+fixed dropped `$` preferred tickers, uncoded corporate notes, wrapped page-header amounts, trailing asset terms and
+bond/option confusion. V9 migrates only asset classes from hash-identical v8 checkpoints after the final uncoded
+coupon/maturity fixture; PDF text did not need another extraction.
+
+Final artifacts:
+
+- `D:/research/alpha-engine/people/congress/trades-20261126T120447Z.jsonl` and `.summary.json`.
+- **10,901 parsed reports:** 7,714 electronic, 3,066 scanned, 121 House electronic reports with no transaction rows.
+  The five Senate failures above are retained in the collector summary, not hidden in parsed output.
+- **74,188 transactions:** 49,482 resolved, 38 ambiguous and 24,668 not a company; resolved share **66.6981%**. The summary
+  includes year/chamber coverage and the 20 most active members.
+- **50/50 hand-checked rows match all source fields** at 12:10:14Z. The signed manual review is
+  `hand-check-20261126T120918Z.reviewed.json`, SHA-256
+  `4b39c47e01bae0f27ff3838c7001fa88a8d073bfb6688f37eeda0c9fc124b3cf`; the unsigned generated source set and its SHA-256
+  are linked in the final summary. Earlier hand-check files remain unsigned evidence of corrected defects.
+- The executive-branch OGE 278-T stretch was not attempted. No scanned-report OCR, scheduler, DB or production change is
+  claimed.

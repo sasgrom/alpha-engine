@@ -20,13 +20,14 @@ describe("Congress transaction parsers", () => {
   });
 
   it("reassembles wrapped House assets and amount ranges without checkbox artifacts", () => {
-    const text = `Filing ID #20000077\n2000041538 SP Phillips 66 (PSX) [ST] S 07/30/2018 08/06/2018 $1,001 - gfedc\n$15,000\n2000041539 SP Royal Dutch Shell PLC Royal S 07/30/2018 08/06/2018 $1,001 - gfedcb\nDutch Shell PLC American $15,000\nDepositary Shares (RDS.B) [ST]\nSP Morgan Stanley Finance [CS] P 03/26/2025 08/11/2025 $250,001 -\nID Owner Asset Transaction Date Notification Amount Cap.\nType Date Gains >\n$500,000\nJT gENoN ENERgY INC NTS B/E S 01/29/2016 02/01/2016 $1,001 - $15,000\n09.875% 101520\nFILINg STATUS: New`;
+    const text = `Filing ID #20000077\n2000041538 SP Phillips 66 (PSX) [ST] S 07/30/2018 08/06/2018 $1,001 - gfedc\n$15,000\n2000041539 SP Royal Dutch Shell PLC Royal S 07/30/2018 08/06/2018 $1,001 - gfedcb\nDutch Shell PLC American $15,000\nDepositary Shares (RDS.B) [ST]\nSP Morgan Stanley Finance [CS] P 03/26/2025 08/11/2025 $250,001 -\nID Owner Asset Transaction Date Notification Amount Cap.\nType Date Gains >\n$500,000\nJT gENoN ENERgY INC NTS B/E S 01/29/2016 02/01/2016 $1,001 - $15,000\n09.875% 101520\nJT UNITED RENTALS NoRTH AM S 03/15/2017 04/01/2017 $1,001 - $15,000\n05.750% 111524\nFILINg STATUS: New`;
     const trades = parseHousePdfText(text, house, "abc");
-    expect(trades).toHaveLength(4);
+    expect(trades).toHaveLength(5);
     expect(trades[0]).toMatchObject({ asset: "Phillips 66 (PSX) [ST]", ticker: "PSX", assetType: "stock", amountLow: 1001, amountHigh: 15000, comment: "" });
     expect(trades[1]).toMatchObject({ asset: "Royal Dutch Shell PLC Royal Dutch Shell PLC American Depositary Shares (RDS.B) [ST]", ticker: "RDS.B", amountLow: 1001, amountHigh: 15000, comment: "" });
     expect(trades[2]).toMatchObject({ asset: "Morgan Stanley Finance [CS]", amountLow: 250001, amountHigh: 500000, comment: "", assetType: "bond" });
     expect(trades[3]).toMatchObject({ asset: "gENoN ENERgY INC NTS B/E 09.875% 101520", amountLow: 1001, amountHigh: 15000, assetType: "bond" });
+    expect(trades[4]).toMatchObject({ asset: "UNITED RENTALS NoRTH AM 05.750% 111524", amountLow: 1001, amountHigh: 15000, assetType: "bond" });
   });
 
   it("parses a Senate HTML table including a partial sale", () => {
