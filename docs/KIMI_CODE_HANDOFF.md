@@ -5225,3 +5225,14 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   gap backfill, its own folder, measured a day before it feeds the reader.
 - **Gates:** `npm run check`, 292 files / 1,748 tests, `npm run build`, `git diff --check` all pass (Kimi's edgar-fetch
   work in progress was in the tree, its tests passed too).
+
+## 264. Claude (Opus 5.5): GDELT knowledge-graph collector, static files only — 2026-11-26T01:30Z
+
+- `worker/gdelt-gkg.mts` + `worker/lib/gdelt-gkg.ts` (tests 4), job `gdelt-gkg-files` (6,21,36,51 * * * *), OPERATIONS
+  22f. fflate 0.8.3 added as a direct dependency (it was installed already through another package). First run stored
+  `news/gdelt/raw/2026-11-26/20261126011500.gkg.csv.zip` and 126 records. Scheduler restarted when idle (80 jobs, one
+  instance); Kimi's K27 B and C processes run outside the scheduler and were not touched (both at `SEC_RPS=1`).
+- Not fed to the reader or the desk yet. Next: after a day, measure records per followed company, the share new to our
+  archive after dedupe, noise by organization, and GDELT's delay against our first-seen times; then decide whether the
+  reader reads them. Raw retention (about 425 MB a day) is the owner's decision.
+- Gates: `npm run check`, 293 files / 1,752 tests, `npm run build` pass.
