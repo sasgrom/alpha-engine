@@ -72,3 +72,21 @@ quarantine cases:
   15.943m annual amount is labelled three months. The final report will include raw headers and wrong/correct row evidence.
 
 Full all-company and industry-group results are pending B; no full K28 result is claimed here.
+
+### Raw table/row examples
+
+- UNM `0000005513-17-000069`, exhibit hash `3653d7f5…`: wrong selected table 8 contains `Sales by Product`,
+  `Large Case Market` 8.4m and pound-denominated `Group Long-term Disability` 9.0m. Correct candidate table 6, titled
+  `Unum Group Consolidated Statements of Income`, contains `Total Revenue` 2,822.0m, `Commissions` 261.3m and `Net Income`
+  245.1m for 2017 Q2. UNM `0000005513-13-000009` likewise selects table 47, `(in millions of pounds, except exchange rate)`,
+  including supplemental `Commissions`, instead of the `Unum Group Consolidated Statements of Income` tables 17–18.
+- CBSH `0000022356-22-000040`, correct table 2 `CONSOLIDATED STATEMENTS OF INCOME`: its raw headers put five quarterly
+  dates under `For the Three Months Ended` and Jun. 2022/Jun. 2021 under `For the Six Months Ended`. The `Capital market fees`
+  row prints Jun. Q2 3,327 thousand and six-month 7,452 thousand; the cached values reverse those durations. In
+  `0000022356-22-000003`, quarterly 3,841 thousand is labelled 12 months while annual 15,943 thousand is labelled three
+  months. The table title and row labels are correct; duration assignment is the defect.
+
+The read-only diagnostic `scripts/report-flash-net-sales.mts` and `worker/lib/flash-net-sales.ts` count only exact
+same-table/current/period identities. Pilot output `engine/checks/k28-net-sales-pilot.json`: **45 identities**, all TAP;
+**12 selected mismatches**, 19 selected matches and 14 other/ungraded selections. The full report will rerun this across
+all companies and break out TAP/STZ/BF/MO/PM without restricting the count to them.

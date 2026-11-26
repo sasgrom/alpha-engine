@@ -81,7 +81,7 @@ interface ParsedReport {
   error: string | null;
 }
 
-const parserVersion = (item: SourceItem) => item.chamber === "house" ? "house-text-v7-pdfplumber-0.11.11" : "senate-html-v1";
+const parserVersion = (item: SourceItem) => item.chamber === "house" ? "house-text-v8-pdfplumber-0.11.11" : "senate-html-v1";
 const files = [...readHouse(), ...readSenate()].filter(item => (!only || item.reportId === only) && (year === null || item.year === year) && (!chamber || item.chamber === chamber));
 
 function readHouse(): SourceItem[] {

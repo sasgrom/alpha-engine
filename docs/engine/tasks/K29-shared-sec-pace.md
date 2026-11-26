@@ -93,5 +93,7 @@ announced again after B exits and no SEC process is active. The pinned K06 artif
 No other source code fingerprint containing the literal `worker/lib/edgar.ts` was found in the main worker/scripts
 inventory.
 
-The requested ten-minute concurrent live check cannot use full C: the owner cancelled full C. A safe substitute requires
-Claude's selection/instruction; no substitute run is claimed.
+The requested ten-minute concurrent live check cannot use full C: the owner cancelled full C. Claude's 10:45Z decision
+substitutes two bounded SEC users: a few-company `worker/edgar-fetch.mts` using its existing options/cache beside the SEC
+8-K path of `worker/news-feeds.mts --set fast` (or K28's post-pass). The check remains restart-free and is announced before
+launch; acceptance is combined rate within budget and zero 429s.

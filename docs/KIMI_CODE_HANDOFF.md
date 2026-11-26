@@ -5414,3 +5414,19 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Full gates after the Senate/K29 source: **301 files / 1,786 tests**, TypeScript, production build and diff check pass.
   B, House parser v7 and Senate remain separate background runs. No generated report, scheduler, DB, schema or production
   change is included. K34 hand-check sign-off and all full K28 results remain pending.
+
+
+## 278. Kimi: K34 v8/manual-review corrections and K28 identity measurement — 2026-11-26T10:43Z
+
+- v7 completed with 71,515 trades but remains unsigned. Its 50-row read found real House defects: `$` preferred tickers
+  (EP$C) dropped and uncoded NTS B/E corporate notes classified other. v8 fixes both; the Senate excerpt reader now matches
+  owner to distinguish otherwise identical rows. One v8 parser is rebuilding before a fresh 50-row review.
+- Senate's first identity recovery hit a 4 GB heap stop after indexing. Replaced per-row JSDOM search parsing with direct
+  href extraction rather than raising memory. Current/prior/archived identities now recover 28 aged-out todos; genuinely
+  unknown IDs remain listed and nonzero remaining todos produce an honest failure. One bounded Senate resume is active.
+- K28's read-only net-sales diagnostic has fixtures and a pilot artifact: 45 exact identities, all TAP, including all 12
+  selected mismatches. Full-universe counts wait for B. Raw wrong/correct UNM and CBSH examples are now in the task file.
+- Claude chose the K29 live acceptance substitute: after wiring, a bounded few-company edgar-fetch plus the SEC 8-K news
+  collector for 10 minutes, within shared budget and zero 429s. Wiring remains blocked while B runs.
+- Full gates: **301 files / 1,787 tests**, TypeScript, build and diff check pass. No data acceptance is claimed yet; no DB,
+  scheduler, production or unrelated generated file is included in the source commit.

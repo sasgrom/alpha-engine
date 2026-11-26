@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildFlashExtractSummary, flashQuarterRecord } from "./flash-extract";
+import { findNetSalesIdentity } from "./flash-net-sales";
 import type { GradeRecord, ProcessReleaseResult, ReleaseContext, ValueRecord } from "./flash-pipeline";
 
 const release: ReleaseContext = { cik: 1, ticker: "ONE", accessionNo: "0000000001-24-000001", filingDate: "2024-04-15", acceptedEt: "2024-04-15T16:00:00", fiscalPeriodEnd: "2024-03-31", periodicAccession: "0000000001-24-000002", periodicForm: "10-Q" };
@@ -64,5 +65,16 @@ describe("release-quarter extract", () => {
     expect(summary.bySector.Technology.revenueShare).toBe(1);
     expect(summary.bySector.Finance.revenueShare).toBe(0);
     expect(summary.byCompany.ONE.revenueGradeMatchShare).toBe(1);
+  });
+
+  it("identifies gross sales less excise taxes only beside matching net sales", () => {
+    const gross = value({ valueId: "gross", rowLabel: "Sales", value: 1184.8 });
+    const excise = value({ valueId: "excise", rowLabel: "Excise taxes", value: -356.3, source: { ...gross.source, rowIndex: 5 } });
+    const net = value({ valueId: "net", rowLabel: "Net sales", value: 828.5, source: { ...gross.source, rowIndex: 6 } });
+    expect(findNetSalesIdentity([gross, excise, net], gross)).toMatchObject({ gross: { value: 1184.8 }, excise: { value: -356.3 }, net: { value: 828.5 } });
+    expect(findNetSalesIdentity([gross, { ...excise, value: 356.3 }, net], gross)?.net.value).toBe(828.5);
+    expect(findNetSalesIdentity([gross, excise, { ...net, value: 900 }], gross)).toBeNull();
+    expect(findNetSalesIdentity([gross, excise, { ...net, current: false }], gross)).toBeNull();
+    expect(findNetSalesIdentity([gross, excise, { ...net, source: { ...net.source, tableIndex: 99 } }], gross)).toBeNull();
   });
 });

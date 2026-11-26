@@ -6,10 +6,11 @@ const house: HouseFiling = { docId: "20000077", year: 2014, member: "Robert E. A
 
 describe("Congress transaction parsers", () => {
   it("parses electronic House PDF text with owner, dates, asset and amount", () => {
-    const text = `Filing Id # 20000077\nP t r\ntranSactionS\niD owner asset transaction Date notification amount\ntype Date\nsP Hill International, Inc. (HIl) s 12/26/2013 12/30/2013 $15,001 - $50,000\nDC Example Co (EX) P 1/2/2014 1/3/2014 Over $50,000,000\nFILINg sTATus: New`;
+    const text = `Filing Id # 20000077\nP t r\ntranSactionS\niD owner asset transaction Date notification amount\ntype Date\nsP Hill International, Inc. (HIl) s 12/26/2013 12/30/2013 $15,001 - $50,000\nDC Example Co (EX) P 1/2/2014 1/3/2014 Over $50,000,000\nSP El Paso Corporation Preferred Stock (EP$C) S 02/27/2012 02/27/2012 $1,001 - $15,000\nFILINg sTATus: New`;
     expect(parseHousePdfText(text, house, "abc")).toEqual([
       expect.objectContaining({ chamber: "house", filer: "spouse", owner: "SP", asset: "Hill International, Inc. (HIl)", ticker: "HIl", assetType: "stock", type: "sale", transactionDate: "2013-12-26", notificationDate: "2013-12-30", amountLow: 15001, amountHigh: 50000, parseMethod: "text PDF" }),
       expect.objectContaining({ filer: "child", type: "purchase", transactionDate: "2014-01-02", amountLow: 50000000, amountHigh: null }),
+      expect.objectContaining({ asset: "El Paso Corporation Preferred Stock (EP$C)", ticker: "EP$C", assetType: "stock", type: "sale" }),
     ]);
   });
 
@@ -25,7 +26,7 @@ describe("Congress transaction parsers", () => {
     expect(trades[0]).toMatchObject({ asset: "Phillips 66 (PSX) [ST]", ticker: "PSX", assetType: "stock", amountLow: 1001, amountHigh: 15000, comment: "" });
     expect(trades[1]).toMatchObject({ asset: "Royal Dutch Shell PLC Royal Dutch Shell PLC American Depositary Shares (RDS.B) [ST]", ticker: "RDS.B", amountLow: 1001, amountHigh: 15000, comment: "" });
     expect(trades[2]).toMatchObject({ asset: "Morgan Stanley Finance [CS]", amountLow: 250001, amountHigh: 500000, comment: "", assetType: "bond" });
-    expect(trades[3]).toMatchObject({ asset: "gENoN ENERgY INC NTS B/E 09.875% 101520", amountLow: 1001, amountHigh: 15000 });
+    expect(trades[3]).toMatchObject({ asset: "gENoN ENERgY INC NTS B/E 09.875% 101520", amountLow: 1001, amountHigh: 15000, assetType: "bond" });
   });
 
   it("parses a Senate HTML table including a partial sale", () => {

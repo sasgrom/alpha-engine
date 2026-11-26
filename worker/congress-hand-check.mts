@@ -54,7 +54,7 @@ for (const [index, trade] of selected.entries()) {
   if (trade.chamber === "senate") {
     const document = new JSDOM(raw.toString("utf8")).window.document;
     const candidates = [...document.querySelectorAll("tbody tr")].map(row => [...row.querySelectorAll("td")].map(cell => (cell.textContent ?? "").replace(/\s+/g, " ").trim()));
-    source = candidates.find(cells => dateVariants(trade.transactionDate).some(date => cells.includes(date)) && cells.includes(trade.asset) && cells.includes(amount(trade))) ?? null;
+    source = candidates.find(cells => dateVariants(trade.transactionDate).some(date => cells.includes(date)) && cells.includes(trade.asset) && cells.includes(amount(trade)) && cells.some(value => value.toUpperCase() === trade.owner)) ?? null;
   } else {
     const { stdout } = await exec(python, ["-I", "-c", extractor, file], { maxBuffer: 16 * 1024 * 1024, windowsHide: true });
     const text = (JSON.parse(stdout) as { pages: string[] }).pages.join("\n");

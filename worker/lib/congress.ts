@@ -50,6 +50,7 @@ const OWNER: Record<string, CongressTrade["filer"]> = { "": "member", SELF: "mem
 const ASSET_TYPES: Record<string, string> = { ST: "stock", OP: "option", BO: "bond", MF: "fund", ET: "fund", CS: "bond", GS: "bond", PS: "stock", RE: "real estate", OT: "other" };
 export function assetTypeWithOptionEvidence(asset: string, assetType: string): string {
   if (assetType === "bond") return assetType;
+  if (assetType === "other" && /\b(?:NTS|B\/E|BDS|BONDS?|DEBENTURES?|OBLIG)\b/i.test(asset)) return "bond";
   return /\b(?:call|put)\b/i.test(asset) ? "option" : assetType;
 }
 const withOptionEvidence = assetTypeWithOptionEvidence;
@@ -81,7 +82,7 @@ export function parseHousePdfText(text: string, filing: HouseFiling, sourceSha25
     const [, rawOwner, rawAsset, rawType, traded, notified, rawAmount, comment = ""] = match;
     const asset = `${rawAsset} ${continuation}`.trim();
     const assetCode = asset.match(/\s+\[([A-Z]{2})\]\s*$/i)?.[1]?.toUpperCase() ?? null;
-    const ticker = asset.match(/\(([A-Z][A-Z0-9.-]{0,11})\)/i)?.[1] ?? null;
+    const ticker = asset.match(/\(([A-Z][A-Z0-9.$-]{0,11})\)/i)?.[1] ?? null;
     const amount = amountRange(rawAmount);
     const owner = (rawOwner ?? "").toUpperCase();
     trades.push({
@@ -124,8 +125,7 @@ export function parseSenateSearchRows(data: unknown): SenateSearchReport[] {
   if (!Array.isArray(data)) throw new Error("Senate search data is not an array");
   const reports = data.map(row => {
     if (!Array.isArray(row) || row.length < 5) throw new Error("Senate search row has fewer than five columns");
-    const document = new JSDOM(String(row[3])).window.document;
-    const href = document.querySelector("a")?.getAttribute("href") ?? "";
+    const href = String(row[3]).match(/\bhref=["']([^"']+)["']/i)?.[1] ?? "";
     const match = href.match(/^\/search\/view\/(ptr|paper)\/([0-9a-f-]{36})\/$/i);
     if (!match) throw new Error(`Senate search row has no PTR link: ${href.slice(0, 100)}`);
     return {

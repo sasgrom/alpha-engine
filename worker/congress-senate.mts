@@ -3,7 +3,7 @@
  * Usage: npx tsx worker/congress-senate.mts [--discover|--index-only] [--limit N]
  */
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, realpathSync, renameSync, rmSync, statfsSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, renameSync, rmSync, statfsSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { JSDOM } from "jsdom";
 import { parseSenateSearchRows, senateScannedImageUrls, type SenateSearchReport } from "./lib/congress";
@@ -141,6 +141,15 @@ type IndexedReport = SenateSearchReport & { firstSeenAt: string };
 const reportManifestFile = path.join(root, "reports", "manifest.json");
 const previousReports: ReportCheckpoint[] = existsSync(reportManifestFile) ? JSON.parse(readFileSync(reportManifestFile, "utf8")).reports : [];
 const oldById = new Map(previousReports.map(row => [row.reportId, row]));
+const archivedById = new Map<string, IndexedReport>();
+for (const name of readdirSync(path.join(root, "search")).filter(name => /^ptr-all-\d+-.+\.json$/.test(name)).sort()) {
+  const file = path.join(root, "search", name);
+  const raw = JSON.parse(readFileSync(file, "utf8")) as { data?: unknown };
+  const observedAt = statSync(file).mtime.toISOString();
+  for (const report of parseSenateSearchRows(raw.data)) {
+    if (!archivedById.has(report.reportId)) archivedById.set(report.reportId, { ...report, firstSeenAt: observedAt });
+  }
+}
 
 async function collectReport(report: IndexedReport, old?: ReportCheckpoint): Promise<ReportCheckpoint> {
   const htmlFile = path.join(root, "reports", `${report.reportId}.html`);
@@ -247,9 +256,14 @@ for (const [index, report] of reports.entries()) {
 
 const pending = readCollectorTodo(todoFile);
 let postFetchResolved = 0;
+const unknownTodo: typeof pending = [];
 for (const item of pending) {
-  const report = reports.find(row => row.reportId === item.reportId) ?? oldById.get(item.reportId);
-  if (!report) throw new Error(`Senate todo report ${item.reportId} has no current or prior identity`);
+  const report = reports.find(row => row.reportId === item.reportId) ?? oldById.get(item.reportId) ?? archivedById.get(item.reportId);
+  if (!report) {
+    unknownTodo.push(item);
+    prog.log(`Senate todo ${item.reportId} has no current, prior or archived identity; left unresolved`);
+    continue;
+  }
   const attempted = await collectWithRetries(report, oldById.get(report.reportId), 2);
   const position = checkpoints.findIndex(row => row.reportId === report.reportId);
   const checkpoint = attempted.value ?? { ...report, status: "failed" as const, html: null, pdf: null, error: attempted.error };
@@ -274,8 +288,8 @@ const summary = {
   pending: checkpoints.filter(row => row.status === "pending").length,
   failed: checkpoints.filter(row => row.status === "failed").length,
   completedThisRun,
-  todo: { file: todoFile, attempted: pending.length, resolved: postFetchResolved, remaining: readCollectorTodo(todoFile).length, attemptsPerItem: 2 },
+  todo: { file: todoFile, attempted: pending.length, resolved: postFetchResolved, remaining: readCollectorTodo(todoFile).length, unknownIdentities: unknownTodo, attemptsPerItem: 2 },
 };
 writeJsonAtomic(path.join(root, "summary.json"), summary, true);
 prog.done(`${reports.length} Senate PTRs · ${summary.electronic} electronic · ${summary.scanned} scanned · ${summary.failed} failed · post-pass ${postFetchResolved}/${pending.length} resolved`);
-if (summary.failed) process.exitCode = 1;
+if (summary.failed || summary.todo.remaining) process.exitCode = 1;
