@@ -125,10 +125,12 @@ const oneSidedSummary = (rows: typeof oneSidedRows) => ({
   ours: rows.filter(row => row.side === "ours").length,
   reasons: Object.fromEntries([...new Set(rows.map(row => row.reason))].sort().map(reason => [reason, rows.filter(row => row.reason === reason).length])),
 });
-const dateBands = ["pre-market", "market-hours", "post-market", "no release"] as const;
-const offsetKey = (value: number | null) => value === null ? "no release" : [-2, -1, 0, 1, 2].includes(value) ? String(value) : "other";
-const dateOffsetDistribution = Object.fromEntries(dateBands.map(band => [band, Object.fromEntries(["-2", "-1", "0", "1", "2", "other", "no release"].map(offset => [offset, dates.filter(row => (row.releaseTimeBand ?? "no release") === band && offsetKey(row.dateOffsetDays) === offset).length]))]));
-const nonMatchingDates = dates.filter(row => !row.dateMatch), conventionalDates = nonMatchingDates.filter(row => row.nextSessionPostCloseConvention);
+const coveredDates = dates.filter(row => row.coverage === "within-10-days");
+const outsideDates = dates.filter(row => row.coverage === "outside-coverage");
+const dateBands = ["pre-market", "market-hours", "post-market"] as const;
+const offsetKey = (value: number | null) => value !== null && [-2, -1, 0, 1, 2].includes(value) ? String(value) : "other";
+const dateOffsetDistribution = Object.fromEntries(dateBands.map(band => [band, Object.fromEntries(["-2", "-1", "0", "1", "2", "other"].map(offset => [offset, coveredDates.filter(row => row.releaseTimeBand === band && offsetKey(row.dateOffsetDays) === offset).length]))]));
+const nonMatchingDates = coveredDates.filter(row => !row.dateMatch), conventionalDates = nonMatchingDates.filter(row => row.nextSessionPostCloseConvention);
 const summary = {
   tickers: selected.length,
   checked: companies.length,
@@ -137,10 +139,12 @@ const summary = {
   gaap: series("gaap"),
   dates: {
     quarters: dates.length,
-    sameNewYorkDateShare: dates.length ? dates.filter(row => row.dateMatch).length / dates.length : null,
-    reportTimeGradable: dates.filter(row => row.timeMatch !== null).length,
-    reportTimeAgreementShare: dates.some(row => row.timeMatch !== null) ? dates.filter(row => row.timeMatch === true).length / dates.filter(row => row.timeMatch !== null).length : null,
-    offsetDefinition: "AV reportedDate minus nearest our-release New York date, in calendar days; bands use acceptance time",
+    coveredQuarters: coveredDates.length,
+    sameNewYorkDateShare: coveredDates.length ? coveredDates.filter(row => row.dateMatch).length / coveredDates.length : null,
+    reportTimeGradable: coveredDates.filter(row => row.timeMatch !== null).length,
+    reportTimeAgreementShare: coveredDates.some(row => row.timeMatch !== null) ? coveredDates.filter(row => row.timeMatch === true).length / coveredDates.filter(row => row.timeMatch !== null).length : null,
+    outsideCoverage: { total: outsideDates.length, reasons: Object.fromEntries(["before-calendar", "after-calendar", "gap"].map(reason => [reason, outsideDates.filter(row => row.coverageReason === reason).length])) },
+    offsetDefinition: "AV reportedDate minus nearest within-10-days our-release New York date, in calendar days; bands use acceptance time",
     offsetDistribution: dateOffsetDistribution,
     nextSessionPostCloseConvention: conventionalDates.length,
     unexplainedNonMatchingDates: nonMatchingDates.length - conventionalDates.length,
@@ -153,8 +157,21 @@ const summary = {
 };
 const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
 mkdirSync(outputRoot, { recursive: true });
-const dateExamples = companies.flatMap(company => company.dateDisagreements.map(row => ({ cik: company.cik, ticker: company.ticker, ...row }))).slice(0, 20);
-const output = { schemaVersion: 2, generatedAt: new Date().toISOString(), method: { periodMatch: "exact plus one-to-one nearest first within 10 calendar days per series; no fiscal labels", agreement: "absolute <= $0.01 or relative <= 1% of our figure", originalBasis: "stored SEC-derived figure", restatedBasis: "figure divided by positive standard-price splitRatio events after its acceptance/filing date", inferredBasisRule: "split-affected adjusted figures preferred; >=80% and strictly above the other basis, otherwise mixed/indistinguishable", dateZone: "America/New_York", preMarket: "before 09:30 New York", postMarket: "16:00 or later New York", nextSession: "standard session calendar", alphaVantageSnapshots: "latest hash-verified stored answer per ticker" }, summary, dateExamples, inputs: [...inputs.values()], errors, companies };
+const exampleGroups = companies.map(company => ({ cik: company.cik, ticker: company.ticker, rows: company.dateChecks.filter(row => row.coverage === "within-10-days" && row.dateOffsetDays !== null && Math.abs(row.dateOffsetDays) > 1).sort((a, b) => Math.abs(b.dateOffsetDays!) - Math.abs(a.dateOffsetDays!) || a.reportedDate.localeCompare(b.reportedDate)) }));
+const dateExamples: unknown[] = [];
+while (dateExamples.length < 20) {
+  let added = false;
+  for (const group of exampleGroups) {
+    const row = group.rows.shift();
+    if (!row) continue;
+    dateExamples.push({ cik: group.cik, ticker: group.ticker, ...row });
+    added = true;
+    if (dateExamples.length === 20) break;
+  }
+  if (!added) break;
+}
+const unexplainedCoveredDates = companies.flatMap(company => company.dateChecks.filter(row => row.coverage === "within-10-days" && !row.dateMatch && !row.nextSessionPostCloseConvention).map(row => ({ cik: company.cik, ticker: company.ticker, ...row })));
+const output = { schemaVersion: 3, generatedAt: new Date().toISOString(), method: { periodMatch: "exact plus one-to-one nearest first within 10 calendar days per series; no fiscal labels", agreement: "absolute <= $0.01 or relative <= 1% of our figure", originalBasis: "stored SEC-derived figure", restatedBasis: "figure divided by positive standard-price splitRatio events after its acceptance/filing date", inferredBasisRule: "split-affected adjusted figures preferred; >=80% and strictly above the other basis, otherwise mixed/indistinguishable", dateZone: "America/New_York", dateCoverage: "date/time comparisons require a release within 10 days; before/after/gap coverage is separate", preMarket: "before 09:30 New York", postMarket: "16:00 or later New York", nextSession: "standard session calendar", dateExamples: "round-robin by ticker among covered |offset|>1 rows", alphaVantageSnapshots: "latest hash-verified stored answer per ticker" }, summary, dateExamples, unexplainedCoveredDates, inputs: [...inputs.values()], errors, companies };
 const jsonFile = path.join(outputRoot, `${stamp}.json`);
 const markdownFile = path.join(outputRoot, `${stamp}.md`);
 writeAtomic(jsonFile, JSON.stringify(output, null, 1) + "\n");
@@ -164,7 +181,7 @@ const markdown = [
   `- Tickers checked: ${companies.length}/${selected.length}; errors: ${errors.length}`,
   `- Adjusted comparable: ${summary.adjusted.comparable} (exact ${summary.adjusted.exactComparable}, near ${summary.adjusted.nearComparable}); original ${share(summary.adjusted.originalAgreementShare)}; restated ${share(summary.adjusted.restatedAgreementShare)}; best basis ${share(summary.adjusted.bestBasisAgreementShare)}; exact-only best ${share(summary.adjusted.exactBestBasisAgreementShare)}.`,
   `- GAAP comparable: ${summary.gaap.comparable} (exact ${summary.gaap.exactComparable}, near ${summary.gaap.nearComparable}); original ${share(summary.gaap.originalAgreementShare)}; restated ${share(summary.gaap.restatedAgreementShare)}; best basis ${share(summary.gaap.bestBasisAgreementShare)}; exact-only best ${share(summary.gaap.exactBestBasisAgreementShare)}.`,
-  `- Same New York release date: ${share(summary.dates.sameNewYorkDateShare)}; report-time agreement on ${summary.dates.reportTimeGradable} gradable quarters: ${share(summary.dates.reportTimeAgreementShare)}. Next-session post-close convention explains ${summary.dates.nextSessionPostCloseConvention} mismatches; ${summary.dates.unexplainedNonMatchingDates} remain (${share(summary.dates.unexplainedShareOfNonMatching)} of non-matches). Offset/band counts and 20 sourced examples are in JSON.`,
+  `- Within ten days of our release: ${summary.dates.coveredQuarters}; same New York release date ${share(summary.dates.sameNewYorkDateShare)}; report-time agreement on ${summary.dates.reportTimeGradable} gradable quarters ${share(summary.dates.reportTimeAgreementShare)}. Outside coverage: ${summary.dates.outsideCoverage.total} (before ${summary.dates.outsideCoverage.reasons["before-calendar"]}, after ${summary.dates.outsideCoverage.reasons["after-calendar"]}, gaps ${summary.dates.outsideCoverage.reasons.gap}). Next-session post-close convention explains ${summary.dates.nextSessionPostCloseConvention} covered mismatches; ${summary.dates.unexplainedNonMatchingDates} remain (${share(summary.dates.unexplainedShareOfNonMatching)}). Offset/band counts and ${dateExamples.length} ticker-spread sourced examples are in JSON.`,
   `- Disagreements: ${summary.disagreements}; near-matched one-sided AV/ours: ${summary.oneSided.alphaVantage}/${summary.oneSided.ours}; exact-only ${summary.oneSidedExact.alphaVantage}/${summary.oneSidedExact.ours}. Reasons and every source are in the JSON.`, "",
   "| Ticker | Adjusted comparable | Adjusted best | GAAP comparable | GAAP best | Inferred AV basis | Disagreements | One-sided |",
   "|---|---:|---:|---:|---:|---|---:|---:|",

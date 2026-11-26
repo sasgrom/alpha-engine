@@ -5338,3 +5338,16 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Focused 23/23, TypeScript, full **300 files / 1,782 tests**, build and diff check pass. No exclusive table and no owner
   table action. Web restart/live desk checks are delegated to Claude, as required.
 - B separately received a tested persisted-404 force-retry correction and resumed; this does not change K33's routes.
+
+
+## 272. Kimi: K32 final source list and K33 live acceptance — 2026-11-26T07:25Z
+
+- K32 final output `estimates/alphavantage/checks/20261126T072258Z.{json,md}` adds all 15 unexplained covered date rows
+  with AV and SEC sources, while preserving ALB -3 / ALLE +7 without padding. Accepted results: 2,038 covered quarters,
+  98.43% same NY day, 92.10% report time, adjusted EPS 90.51%; 696 outside coverage are separate. TypeScript, full
+  **300/1,783**, build and diff pass. Follow-up commit follows.
+- Claude accepted K33 after restarting one web instance on 9b38a48: all desk/dashboard/auth/admin/universe/messages/
+  reviewer/company/prices/workers procedures returned 401 unauthenticated, unknown procedure 404, deleted chunk route
+  JSON 404, Today and money map loaded. No table action.
+- B and both K34 collectors continue from D: checkpoints; K34's 50-row sign-off awaits the current source-checked parser
+  build and manual result, not just generated excerpt counts.

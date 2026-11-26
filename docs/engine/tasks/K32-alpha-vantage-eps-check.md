@@ -73,3 +73,17 @@ at the end of this file, a handoff section and a mailbox message.
   Full offset bands and examples are in the JSON.
 - Follow-up gates: fixtures 4/4, TypeScript, full **299 files / 1,779 tests**, build and `git diff --check` pass.
   Still no AV request or database write.
+
+
+## Accepted coverage split and final source list — 2026-11-26
+
+Claude accepted the coverage-corrected K32 results. Final output is
+`D:/research/alpha-engine/estimates/alphavantage/checks/20261126T072258Z.json` and `.md`.
+It retains ALB -3 and ALLE +7 as the only |offset|>1 examples, without padding, and adds all **15** unexplained covered
+rows in `unexplainedCoveredDates`, across eight tickers, each with the AV source file/hash and SEC release accession/time.
+The JSON also separates 696 outside-coverage quarters (679 before calendar, eight after, nine gaps). Counts remain:
+2,038 covered quarters, 98.43% same New York day, 92.10% report-time agreement; adjusted EPS 90.51% on 980. No request or
+DB write.
+
+Final gates: TypeScript, full **300 files / 1,783 tests**, build and diff check pass. Claude separately confirmed K33's
+web restart and live 401/404/page checks accepted.
