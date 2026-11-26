@@ -12,6 +12,7 @@ import { reviewerRouter } from "./routers/reviewer";
 import { deskRouter } from "./routers/desk";
 
 export const appRouter = createRouter({
+  // Health monitors outside this repository may call this tiny endpoint.
   ping: publicQuery.query(() => ({ ok: true, ts: Date.now() })),
   auth: authRouter,
   dashboard: dashboardRouter,

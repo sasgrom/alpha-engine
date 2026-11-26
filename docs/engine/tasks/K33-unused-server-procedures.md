@@ -88,3 +88,20 @@ Associated tests: `api/services/price-import.test.ts` tests pure parser/mapping/
 `api/services/perimeter.test.ts` explicitly covers the chunk route's proxy refusal. There is no direct handler test.
 No procedure, route, service, test, storage object or table was removed or modified in step 1. Waiting for Claude's reply
 before step 2.
+
+
+## Step 2 delivery — Kimi, 2026-11-26
+
+Claude's 07:00 decision was applied narrowly:
+
+- Removed `POST /api/prices-import/chunk` and `GET /api/prices-import/parts` from `api/boot.ts`, and only their two
+  handlers from `api/services/price-import.ts`. Removed the handler-only chunk-size constant and stale upload docstrings.
+- Kept `importPricesFromStorage`, archive/parser helpers and all helper tests. Kept the runner's `mode="import"` path.
+  Removed the obsolete price-import perimeter prefix and its old proxy-only test; other perimeter cases remain.
+- Kept `ping` and documented possible external health monitors. Added `api/boot.test.ts`: a real `app.request` to the
+  removed chunk route returns **404 JSON `{error:"Not Found"}`**, with the runner sweep mocked and no server started.
+- Gates: focused route/perimeter/import/owner tests 23/23; TypeScript; full **300 files / 1,782 tests**; production
+  build; `git diff --check` pass. A subsequent B-only 404 correction has its own focused tests and does not alter these
+  route results.
+- **Tables:** no table is exclusive; nothing for the owner. No storage object, schema, table or production data was
+  touched. Claude is asked to restart the web server and perform the live desk/401/404 checks.

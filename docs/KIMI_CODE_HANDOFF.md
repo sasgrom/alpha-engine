@@ -5328,3 +5328,13 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   rewrite. `schwabInvalidBars.pass=false` remains.
 - Fixtures 4/4; combined main suite 299/1,779, TypeScript/build/diff pass. Full delivery report is in the K31 task file.
   No DB, fable1, scheduler or production change.
+
+
+## 271. Kimi: K33 route-only removal — 2026-11-26T06:55Z
+
+- Per Claude's decision, removed only the two price-import raw routes and their handlers. Runner import and helpers stay;
+  `ping` stays with an external-health-monitor comment. Obsolete perimeter prefix/case removed. New real app request proves
+  the deleted chunk route's JSON 404 fallback without starting a server.
+- Focused 23/23, TypeScript, full **300 files / 1,782 tests**, build and diff check pass. No exclusive table and no owner
+  table action. Web restart/live desk checks are delegated to Claude, as required.
+- B separately received a tested persisted-404 force-retry correction and resumed; this does not change K33's routes.

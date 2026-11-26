@@ -36,7 +36,6 @@ describe("what the perimeter refuses", () => {
   it("keeps the machine routes for direct local calls", () => {
     expect(refusal("POST", "/api/worker/ingest", { host: "127.0.0.1:3000", authorization: "Bearer x" })).toBeNull();
     expect(refusal("POST", "/api/worker/ingest", { ...proxied, authorization: "Bearer x" })).toEqual({ status: 404, reason: "machine route through the proxy" });
-    expect(refusal("POST", "/api/prices-import/chunk", proxied)?.status).toBe(404);
     expect(refusal("GET", "/api/oauth/callback", proxied)?.status).toBe(404);
     expect(refusal("GET", "/api/trpc/auth.me", proxied)).toBeNull();
   });

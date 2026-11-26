@@ -4,8 +4,8 @@
  * that and refuse the rest:
  *   loopback only     a connection whose socket is not this machine is refused: nothing on the home or any other
  *                     network talks to port 3000 directly
- *   machine routes    the worker's ingest, the old price import and the old OAuth callback answer only to a direct
- *                     local call, never to a request that came through the proxy
+ *   machine routes    the worker's ingest and the old OAuth callback answer only to a direct local call, never to a
+ *                     request that came through the proxy
  *   same origin       a state-changing request that names an Origin must name this site (cross-site request forgery)
  *   headers           strict transport, a content-security policy, no framing, no sniffing, no referrer
  *   client address    the address the proxy itself wrote, not one the visitor can put in a header
@@ -17,7 +17,7 @@ import type { Context, Next } from "hono";
 
 const LOOPBACK = new Set(["127.0.0.1", "::1", "::ffff:127.0.0.1"]);
 /** Routes for local machines only (prefix match). */
-export const MACHINE_ROUTES = ["/api/worker/", "/api/prices-import/", "/api/oauth/"];
+export const MACHINE_ROUTES = ["/api/worker/", "/api/oauth/"];
 
 /** True when the request came through the proxy (it adds these), false for a direct local call. */
 export function cameThroughProxy(headers: Headers): boolean {

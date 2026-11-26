@@ -3,8 +3,8 @@
  *
  * Why this exists: the cloud runtime cannot reach stooq.com / Yahoo at all
  * (UND_ERR_CONNECT_TIMEOUT from production), so live per-ticker fetching is
- * impossible for now. Instead the owner uploads Stooq's bulk daily archive
- * (d_us_txt.zip, ~516 MB) ONCE from the browser; the job stream-unzips it
+ * impossible for now. The job reads Stooq's stored bulk daily archive
+ * (d_us_txt.zip, ~516 MB) from object storage, stream-unzips it
  * and imports ONLY the companies currently in our universe (+ the SPY
  * benchmark). Everything else in the archive is deliberately ignored.
  *
@@ -14,17 +14,9 @@
  * set membership check. The uploaded zip parts stay in object storage under
  * prices-import/<batch>/ as the sample archive.
  *
- * Upload path (3k, D26): the platform object storage caps 100 MB/file, Hono
- * accepts 50 MB bodies, AND the platform edge rejects larger bodies with 413
- * before our code runs (proven in production on a 32 MB chunk). So the
- * browser slices each selected file ADAPTIVELY — starting at 8 MB and
- * halving globally on a 413 — and lands pieces as
- * prices-import/<batch>/part-NNNN.bin with a global sequential index.
- * Multi-file selection is supported (pre-split `split -b 32m` / 7-Zip
- * volumes) as well as the whole zip; resume re-reads the server-side part
- * list and skips uploaded indices. The import job then streams the parts in
- * order through one concatenated stream into unzipper.Parse — the archive
- * is never fully materialized in memory.
+ * The runner lists the existing object-storage parts in sequential order and
+ * streams them through one unzipper.Parse instance, without materializing the
+ * whole archive in memory.
  *
  * Archive layout (Stooq "preferred folders structure"):
  *   data/daily/us/{nasdaq stocks,nyse stocks,...}/{1,2,3}/aapl.us.txt
@@ -41,8 +33,6 @@ import { storage } from "../lib/storage";
 import { upsertBars, type PriceBar } from "./prices";
 
 export const IMPORT_PREFIX = "prices-import";
-/** Browser slice size; must stay under Hono's 50 MB bodyLimit with margin. */
-export const CHUNK_BYTES = 32 * 1024 * 1024;
 
 // ---------------------------------------------------------------------------
 // Metastock daily CSV parsing
@@ -107,65 +97,10 @@ export function archiveTargets(sourceTicker: string, wanted: Map<string, number>
   return [sourceTicker, ...(aliases[sourceTicker] ?? [])].filter((t) => wanted.has(t));
 }
 
-// ---------------------------------------------------------------------------
-// chunk upload (raw HTTP, admin-only — wired in boot.ts)
-// ---------------------------------------------------------------------------
-/**
- * Receive one 32 MB zip slice and persist it as
- * prices-import/<batch>/part-NNNN.bin. Auth: same session as tRPC, but
- * admin-only — storage is billed to the site owner (billing honesty rule).
- * Returns the stored key so the client can verify.
- */
-export async function handleChunkUpload(req: Request): Promise<Response> {
-  const { authenticateSession } = await import("./sessions");
-  const user = await authenticateSession(req.headers).catch(() => null);
-  if (!user || user.role !== "admin") {
-    return Response.json({ error: "Forbidden — admin only" }, { status: 403 });
-  }
-  const url = new URL(req.url);
-  const batch = url.searchParams.get("batch") ?? "";
-  const idx = Number(url.searchParams.get("idx"));
-  if (!/^[0-9a-f-]{36}$/.test(batch) || !Number.isInteger(idx) || idx < 0 || idx > 9999) {
-    return Response.json({ error: "bad batch/idx" }, { status: 400 });
-  }
-  const bytes = new Uint8Array(await req.arrayBuffer());
-  if (bytes.byteLength === 0 || bytes.byteLength > CHUNK_BYTES + 1024) {
-    return Response.json({ error: `chunk size out of bounds (${bytes.byteLength})` }, { status: 400 });
-  }
-  const key = `${IMPORT_PREFIX}/${batch}/part-${String(idx).padStart(4, "0")}.bin`;
-  const r = await storage.uploadFile({ fileContent: bytes, fileName: key, contentType: "application/octet-stream" });
-  return Response.json({ key: r.key, size: r.size });
-}
-
 /** part-NNNN.bin key -> NNNN (null on any non-part key). Pure, tested. */
 export function partIndexFromKey(key: string): number | null {
   const m = /\/part-(\d{4})-[0-9a-f]{8}\.bin$/.exec(key) ?? /\/part-(\d{4})\.bin$/.exec(key);
   return m ? Number(m[1]) : null;
-}
-
-/**
- * List the already-uploaded parts of a batch (admin-only) — the client-side
- * resume source of truth: after a page crash/reload the owner re-selects the
- * same files and every index listed here is skipped. Storage keys carry an
- * 8-char random suffix (platform), so parsing goes through partIndexFromKey.
- */
-export async function handleListParts(req: Request): Promise<Response> {
-  const { authenticateSession } = await import("./sessions");
-  const user = await authenticateSession(req.headers).catch(() => null);
-  if (!user || user.role !== "admin") {
-    return Response.json({ error: "Forbidden — admin only" }, { status: 403 });
-  }
-  const url = new URL(req.url);
-  const batch = url.searchParams.get("batch") ?? "";
-  if (!/^[0-9a-f-]{36}$/.test(batch)) {
-    return Response.json({ error: "bad batch" }, { status: 400 });
-  }
-  const listing = await storage.listFiles({ prefix: `${IMPORT_PREFIX}/${batch}/`, delimiter: "" });
-  const parts = listing.objects
-    .map((o) => ({ idx: partIndexFromKey(o.key), size: o.size }))
-    .filter((p): p is { idx: number; size: number } => p.idx !== null)
-    .sort((a, b) => a.idx - b.idx);
-  return Response.json({ batch, indices: parts.map((p) => p.idx), totalBytes: parts.reduce((s, p) => s + p.size, 0) });
 }
 
 // ---------------------------------------------------------------------------

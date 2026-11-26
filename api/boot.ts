@@ -20,19 +20,6 @@ app.use("/reports/*", reviewerReportAccess);
 app.get("/robots.txt", (c) => c.text("User-agent: *\nDisallow: /\n"));
 app.get(Paths.oauthCallback, createOAuthCallbackHandler());
 
-// Stage 1.7 (3g): browser-uploaded chunks of the Stooq bulk zip (32 MB each —
-// the object storage caps files at 100 MB, the zip is ~516 MB). Admin-only.
-// Raw route, not tRPC: binary bodies do not belong in superjson.
-app.post("/api/prices-import/chunk", async (c) => {
-  const { handleChunkUpload } = await import("./services/price-import");
-  return handleChunkUpload(c.req.raw);
-});
-// 3k: resume support — which parts of a batch are already stored (admin)
-app.get("/api/prices-import/parts", async (c) => {
-  const { handleListParts } = await import("./services/price-import");
-  return handleListParts(c.req.raw);
-});
-
 // 4k (D45): the home worker's ingest endpoint (Variant C). Sources that block
 // datacenter IPs (GDELT/Stocktwits/Reddit/YouTube-CC — proven 2026-10-19) are
 // collected on the home machine and POSTed here; Bearer key auth against
