@@ -5236,3 +5236,24 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   archive after dedupe, noise by organization, and GDELT's delay against our first-seen times; then decide whether the
   reader reads them. Raw retention (about 425 MB a day) is the owner's decision.
 - Gates: `npm run check`, 293 files / 1,752 tests, `npm run build` pass.
+
+## 265. Claude (Opus 5.5): money map, Flows fixes, refresh fix, Kimi K31–K34, GDELT tone test started — 2026-11-26T02:45Z
+
+- **Money map** (owner: "go with your ideas, leave 3d as it is done"; main e49d289): `/desk/flows` opens as a 2D canvas
+  map (`src/desk/flows/map/`: `layout.ts` treemap via d3-hierarchy 3.1.2, `MoneyMap.tsx`, `MapView.tsx`); `?view=library`
+  is the 3D hall unchanged, `?view=reading` the charts. People list on the left (famous faces and the six fund kinds,
+  search), details on the right, timeline below; nothing floats over the map. Earlier the same night: the hall fits
+  under banners and the Funds | Famous faces switch is back on the bar (8edafbd).
+- **Failed jobs of 2026-11-25:** the fundamentals refresh took every company in `facts` (K27 loaded 909 Russell
+  companies) and its gate refused 502 → 961; lab 910d564 rebuilds the published build's companies only; a manual run
+  published `v3.2-20261126T020840Z`; its desk-files step failed under memory pressure and passed when rerun by hand.
+  Data health ran 19 min (limit 15) with identical findings while K27 A loaded 16 M rows; watch tonight's run.
+- **Memory:** `scripts/gdelt-history.mts` grew to 22 GB (buffers of six parallel downloads) and starved Kimi's full
+  test runs; stopped and resumed with a bounded name cache, forced collection and four downloads (about 1.4 GB).
+- **Kimi:** K27 C skipped by the owner (pilot kept); D complete (733/736); K30 done, its full gate waits for a quiet
+  slot; new specs K31 Russell 1000 price panel, K32 Alpha Vantage EPS check, K33 unused server procedures, K34
+  congressional trades (main 1dd6e45, 0acbbda).
+- **GDELT tone test:** design pre-registered in `docs/engine/GDELT_TONE_TEST.md` (155b9b9); sampled history (1 slot in
+  16, 2019-08..2026-11) downloading to `news/gdelt-history`; analysis lab `src/research/gdelt/tone_test.py` (41195de).
+- **Gates:** `npm run check`, 293 files / 1,755 tests (Kimi's in-progress `sec-shared-pace.test.ts` failed to transform;
+  not mine), `npm run build`.
