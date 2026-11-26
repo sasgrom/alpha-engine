@@ -54,6 +54,8 @@ export interface DateCheck {
   dateOffsetDays: number | null;
   releaseTimeBand: "pre-market" | "market-hours" | "post-market" | null;
   nextSessionPostCloseConvention: boolean;
+  coverage: "within-10-days" | "outside-coverage";
+  coverageReason: "before-calendar" | "after-calendar" | "gap" | null;
   alphaSource: AvQuarter["source"];
 }
 export interface OneSidedQuarter {
@@ -177,26 +179,29 @@ export function inferBasis(comparisons: EpsComparison[]) {
 function checkDates(av: AvQuarter[], releases: ReleaseFiling[], sessions: string[]): DateCheck[] {
   return av.map(quarter => {
     const ordered = [...releases].sort((a, b) => a.acceptedEt.localeCompare(b.acceptedEt));
-    const same = ordered.filter(row => newYorkDate(row.acceptedEt) === quarter.reportedDate);
-    const nearest = same[0] ?? ordered.map(row => ({ row, days: Math.abs(Date.parse(`${newYorkDate(row.acceptedEt)}T00:00:00Z`) - Date.parse(`${quarter.reportedDate}T00:00:00Z`)) })).sort((a, b) => a.days - b.days || a.row.acceptedEt.localeCompare(b.row.acceptedEt))[0]?.row ?? null;
-    const selected = same[0] ?? null;
-    const nearestDate = nearest ? newYorkDate(nearest.acceptedEt) : null;
-    const band = nearest ? acceptanceSession(nearest.acceptedEt) : null;
+    const near = ordered.map(row => ({ row, days: Math.abs(Date.parse(`${newYorkDate(row.acceptedEt)}T00:00:00Z`) - Date.parse(`${quarter.reportedDate}T00:00:00Z`)) / 86_400_000 })).filter(item => item.days <= 10).sort((a, b) => a.days - b.days || a.row.acceptedEt.localeCompare(b.row.acceptedEt));
+    const selected = near[0]?.row ?? null;
+    const nearestDate = selected ? newYorkDate(selected.acceptedEt) : null;
+    const band = selected ? acceptanceSession(selected.acceptedEt) : null;
     const nextSession = nearestDate ? sessions.find(date => date > nearestDate) ?? new Date(Date.parse(`${nearestDate}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10) : null;
+    const firstDate = ordered.length ? newYorkDate(ordered[0].acceptedEt) : null;
+    const lastDate = ordered.length ? newYorkDate(ordered.at(-1)!.acceptedEt) : null;
     return {
       periodEnd: quarter.periodEnd,
       reportedDate: quarter.reportedDate,
       reportTime: quarter.reportTime,
-      releaseDate: selected ? newYorkDate(selected.acceptedEt) : null,
+      releaseDate: nearestDate,
       acceptedEt: selected?.acceptedEt ?? null,
       accessionNo: selected?.accessionNo ?? null,
-      dateMatch: Boolean(selected),
+      dateMatch: nearestDate === quarter.reportedDate,
       timeMatch: reportTimeAgrees(quarter.reportTime, selected?.acceptedEt ?? null),
-      nearestRelease: nearest,
+      nearestRelease: selected,
       nearestReleaseDate: nearestDate,
       dateOffsetDays: nearestDate ? (Date.parse(`${quarter.reportedDate}T00:00:00Z`) - Date.parse(`${nearestDate}T00:00:00Z`)) / 86_400_000 : null,
       releaseTimeBand: band,
-      nextSessionPostCloseConvention: !selected && band === "post-market" && quarter.reportedDate === nextSession,
+      nextSessionPostCloseConvention: Boolean(selected) && band === "post-market" && quarter.reportedDate === nextSession,
+      coverage: selected ? "within-10-days" : "outside-coverage",
+      coverageReason: selected ? null : firstDate && quarter.reportedDate < firstDate ? "before-calendar" : lastDate && quarter.reportedDate > lastDate ? "after-calendar" : "gap",
       alphaSource: quarter.source,
     };
   });
@@ -245,7 +250,7 @@ export function checkCompany(input: {
     exactComparisons: comparisons.filter(row => row.matchType === "exact"),
     disagreements: comparisons.filter(row => !row.bestMatch),
     dateChecks,
-    dateDisagreements: dateChecks.filter(row => !row.dateMatch || row.timeMatch === false),
+    dateDisagreements: dateChecks.filter(row => row.coverage === "within-10-days" && (!row.dateMatch || row.timeMatch === false)),
     oneSided,
     oneSidedExact,
     basis: inferBasis(comparisons),

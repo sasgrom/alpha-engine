@@ -63,10 +63,17 @@ describe("Alpha Vantage EPS verification", () => {
       splits: [],
     });
     expect(result.disagreements).toHaveLength(1);
-    expect(result.dateDisagreements).toHaveLength(2);
+    expect(result.dateDisagreements).toHaveLength(0);
+    expect(result.dateChecks.every(row => row.coverage === "outside-coverage" && row.coverageReason === "gap")).toBe(true);
     expect(result.oneSided).toEqual([
       { periodEnd: "2026-03-31", side: "alphaVantage", reason: "av-before-ours", ourSources: [], alphaSource: source },
       { periodEnd: "2026-06-30", side: "ours", reason: "true-gap", ourSources: ["gaap"] },
     ]);
+  });
+
+  it("keeps pre-calendar AV history out of date and time mismatches", () => {
+    const result = checkCompany({ cik: 5, ticker: "OLD", alphaVantage: [av("2000-03-31", 1, "2000-05-01")], adjusted: [], gaap: [], releases: [{ acceptedEt: "2005-01-03T16:05:00", accessionNo: "first" }], splits: [] });
+    expect(result.dateDisagreements).toEqual([]);
+    expect(result.dateChecks[0]).toMatchObject({ coverage: "outside-coverage", coverageReason: "before-calendar", nearestRelease: null, timeMatch: null });
   });
 });
