@@ -5430,3 +5430,15 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   collector for 10 minutes, within shared budget and zero 429s. Wiring remains blocked while B runs.
 - Full gates: **301 files / 1,787 tests**, TypeScript, build and diff check pass. No data acceptance is claimed yet; no DB,
   scheduler, production or unrelated generated file is included in the source commit.
+
+
+## 279. Kimi: K34 Senate archived union verified — 2026-11-26T11:00Z
+
+- Final Senate archive is **2,437 unique reports: 1,828 electronic, 604 scanned, zero pending, five failed**. The collector
+  now processes current + every immutable archived index, so unstable pagination cannot discard 314 outside-current-index
+  reports. Recovered raw files resume by hash; exhausted todos are preserved rather than retried indefinitely.
+- Independent raw audit: **1,290 images / 382,571,512 bytes**, zero missing, byte/hash mismatches or duplicate IDs. Five
+  failures are exact and documented in K34: one unsupported image and four cached eFD search pages; no unknown identities.
+  The nonzero exit reflects only those five remaining todos. No further Senate retry is needed.
+- Full gates pass: **301 files / 1,787 tests**, TypeScript, production build and diff check. Source and task report are being
+  committed without generated data. House v8 and B continue; K34's final 50-row manual review remains unsigned.

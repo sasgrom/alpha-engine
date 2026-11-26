@@ -150,6 +150,11 @@ for (const name of readdirSync(path.join(root, "search")).filter(name => /^ptr-a
     if (!archivedById.has(report.reportId)) archivedById.set(report.reportId, { ...report, firstSeenAt: observedAt });
   }
 }
+const currentIds = new Set(reports.map(row => row.reportId));
+const collectionReports = reports.map(report => archivedById.get(report.reportId) ?? report);
+for (const report of archivedById.values()) if (!currentIds.has(report.reportId)) collectionReports.push(report);
+const previousTodo = new Map(readCollectorTodo(todoFile).map(item => [item.reportId, item]));
+const exhausted = new Set(previousReports.filter(report => report.status === "failed" && (previousTodo.get(report.reportId)?.attempts ?? 0) >= 5).map(report => report.reportId));
 
 async function collectReport(report: IndexedReport, old?: ReportCheckpoint): Promise<ReportCheckpoint> {
   const htmlFile = path.join(root, "reports", `${report.reportId}.html`);
@@ -229,12 +234,14 @@ async function collectWithRetries(report: IndexedReport, old: ReportCheckpoint |
 const checkpoints: ReportCheckpoint[] = [];
 let completedThisRun = 0;
 let transportStreak = 0;
-for (const [index, report] of reports.entries()) {
+for (const [index, report] of collectionReports.entries()) {
   const old = oldById.get(report.reportId);
   const htmlFile = path.join(root, "reports", `${report.reportId}.html`);
   const pdfFile = path.join(root, "reports", `${report.reportId}.pdf`);
   if (old && ["electronic", "scanned", "resumed"].includes(old.status) && ((old.sourceKind === "paper" && !old.html ? old.images?.length ? true : matches(pdfFile, old.pdf?.sha256) : matches(htmlFile, old.html?.sha256)) && imagesMatch(old) && (!old.pdf || matches(pdfFile, old.pdf.sha256)))) {
     checkpoints.push({ ...old, status: "resumed" });
+  } else if (exhausted.has(report.reportId) && old) {
+    checkpoints.push(old);
   } else if (completedThisRun < limit && statfsSync(path.parse(root).root).bavail * statfsSync(path.parse(root).root).bsize >= 20 * 1024 ** 3) {
     const attempted = await collectWithRetries(report, old, 3);
     if (attempted.value) {
@@ -248,14 +255,14 @@ for (const [index, report] of reports.entries()) {
   } else {
     checkpoints.push({ ...report, status: "pending", html: null, pdf: null, error: completedThisRun >= limit ? "Not attempted: run limit reached" : "Not attempted: less than 20 GiB free on D:" });
   }
-  const outstanding = reports.slice(index + 1).map(current => oldById.get(current.reportId) ?? { ...current, status: "pending" as const, html: null, pdf: null, error: "Not attempted: run stopped" });
+  const outstanding = collectionReports.slice(index + 1).map(current => oldById.get(current.reportId) ?? { ...current, status: "pending" as const, html: null, pdf: null, error: "Not attempted: run stopped" });
   writeJsonAtomic(reportManifestFile, { schemaVersion: 1, updatedAt: new Date().toISOString(), reports: [...checkpoints, ...outstanding] }, true);
-  prog.item(index + 1, reports.length, `${report.reportId} ${checkpoints.at(-1)!.status}`);
+  prog.item(index + 1, collectionReports.length, `${report.reportId} ${checkpoints.at(-1)!.status}`);
   if (transportStreak >= 3) throw new Error("Stopped after three consecutive Senate transport failures");
 }
 
 const pending = readCollectorTodo(todoFile);
-let postFetchResolved = 0;
+let postFetchResolved = 0, postFetchAttempted = 0;
 const unknownTodo: typeof pending = [];
 for (const item of pending) {
   const report = reports.find(row => row.reportId === item.reportId) ?? oldById.get(item.reportId) ?? archivedById.get(item.reportId);
@@ -264,6 +271,8 @@ for (const item of pending) {
     prog.log(`Senate todo ${item.reportId} has no current, prior or archived identity; left unresolved`);
     continue;
   }
+  if (item.reportId && exhausted.has(item.reportId)) continue;
+  postFetchAttempted++;
   const attempted = await collectWithRetries(report, oldById.get(report.reportId), 2);
   const position = checkpoints.findIndex(row => row.reportId === report.reportId);
   const checkpoint = attempted.value ?? { ...report, status: "failed" as const, html: null, pdf: null, error: attempted.error };
@@ -274,7 +283,6 @@ for (const item of pending) {
   transportStreak = attempted.transportAfterRenewal ? transportStreak + 1 : 0;
   if (transportStreak >= 3) throw new Error("Stopped after three consecutive Senate post-fetch transport failures");
 }
-const currentIds = new Set(reports.map(row => row.reportId));
 const summary = {
   schemaVersion: 1,
   generatedAt: new Date().toISOString(),
@@ -282,14 +290,15 @@ const summary = {
   sessionRenewals,
   reports: checkpoints.length,
   currentIndexReports: reports.length,
+  archivedIndexReports: archivedById.size,
   outsideCurrentIndex: checkpoints.filter(row => !currentIds.has(row.reportId)).length,
   electronic: checkpoints.filter(row => row.status === "electronic" || row.status === "resumed" && row.html && !row.pdf && !row.images?.length).length,
   scanned: checkpoints.filter(row => row.status === "scanned" || row.status === "resumed" && (row.pdf || row.images?.length)).length,
   pending: checkpoints.filter(row => row.status === "pending").length,
   failed: checkpoints.filter(row => row.status === "failed").length,
   completedThisRun,
-  todo: { file: todoFile, attempted: pending.length, resolved: postFetchResolved, remaining: readCollectorTodo(todoFile).length, unknownIdentities: unknownTodo, attemptsPerItem: 2 },
+  todo: { file: todoFile, attempted: postFetchAttempted, resolved: postFetchResolved, remaining: readCollectorTodo(todoFile).length, exhaustedPreserved: pending.filter(item => item.reportId && exhausted.has(item.reportId)).length, unknownIdentities: unknownTodo, attemptsPerItem: 2 },
 };
 writeJsonAtomic(path.join(root, "summary.json"), summary, true);
-prog.done(`${reports.length} Senate PTRs · ${summary.electronic} electronic · ${summary.scanned} scanned · ${summary.failed} failed · post-pass ${postFetchResolved}/${pending.length} resolved`);
+prog.done(`${checkpoints.length} Senate PTRs · ${summary.electronic} electronic · ${summary.scanned} scanned · ${summary.failed} failed · post-pass ${postFetchResolved}/${postFetchAttempted} resolved`);
 if (summary.failed || summary.todo.remaining) process.exitCode = 1;

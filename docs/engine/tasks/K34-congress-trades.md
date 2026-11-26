@@ -40,3 +40,27 @@ AGENTS.md in full; no database write; no change to the scheduler (a daily job is
 (`worker/congress-*.mts`, `worker/lib/congress-*.ts`, tests with small fixtures of one House PDF text and one Senate
 HTML table). Gates for code: `npm run check`, the new tests, `npm test -- --run`, `npm run build`, `git diff --check`;
 announce full runs to Claude. Deliver a report at the end of this file, a handoff section and a mailbox message.
+
+## Collection and verification evidence — 2026-11-26
+
+### Senate final archive
+
+Final summary: `D:/research/alpha-engine/people/congress/senate/summary.json` (10:55:18Z). The archive preserves the
+union of current and every immutable paginated index because current results changed during pagination:
+
+- **2,437 unique reports:** 1,828 electronic, 604 scanned, zero pending, five failed. Current index 2,123; 314
+  outside-current-index reports retained. Recovered identities use the earliest retained raw-index observation.
+- Independent audit covered all referenced HTML/PDF/image files: **1,290 scanned images, 382,571,512 bytes, zero missing
+  files, zero hash/byte mismatches and zero duplicate report IDs**. Scans remain listed and are not OCR-parsed.
+- `senate-todo.jsonl` preserves five exhausted failures, without endless retries: `40f35e56-…` returned an unsupported
+  scanned image (8 attempts); Sessions PTRs `489c3783-…`, `dd4abe42-…`, `ef1398cf-…`, `7df7e34b-…` are cached
+  `eFD: Find Reports` pages with no transaction table (16 attempts each). They are failures, not collected transaction
+  reports. No unknown identity remains.
+
+### House and parser review status
+
+House main+post-pass finished with 8,469/8,946 PDFs and 477 permanent 404s (five attempts each). Parser v7 produced
+71,515 trades but was not signed: its source review caught dropped `$` preferred tickers and uncoded corporate notes
+classified as other. V8 fixes those fields and its review excerpt reader matches owner for otherwise identical rows.
+A new v8 50-row manual review is pending; earlier hand-check files remain unsigned evidence of the defects, not acceptance.
+The executive-branch OGE 278-T stretch was not attempted.
