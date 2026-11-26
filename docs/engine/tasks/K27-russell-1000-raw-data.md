@@ -101,3 +101,57 @@ they were delisted we should have them updated to current time".
 Current source response: 10,400 SEC rows, 521,932 bytes, SHA-256
 `a4549a73d027584e90490c5b8ff207de3e6a607768c7de416144ef52e6474c84` at
 `D:/research/alpha-engine/index-membership/russell1000/k27-company_tickers_exchange-2026-11-26.json`.
+
+
+## Interim delivery: A, C, D and E; B running — Kimi, 2026-11-26
+
+### A — SEC companyfacts (complete after K30's GLOB recovery)
+
+- **907/909 companies succeeded**, 16,327,808 raw fact rows, 2,461,846,530 raw bytes. Active 516/517, former 391/392.
+  GLOB contributes 4,535 raw / 4,534 ingested and one explicitly excluded 212-character concept; all other ingested rows
+  total 16,327,807. OZK (CIK 1569650) and CIK 200411 remain SEC 404 after the existing retry; no alternative source.
+- Per-company periods/counts/hashes: `D:/research/alpha-engine/index-membership/russell1000/k27-a-companyfacts.json`;
+  GLOB's recovered manifest is `worker/cache/companyfacts/manifest/1557860.json` and K30's task report. Only the
+  authorized local `factsSnapshot` ingest wrote the app DB.
+- Resume: `SEC_RPS=1 npx tsx worker/facts-fetch.mts --universe edgar-universe-r1000-new.json`, then the same with
+  `edgar-universe-r1000-former.json`.
+
+### B — release calendar/exhibits (pilot accepted; full collection not complete)
+
+- Pilot 20/20: 7,761 filings, 1,758 quarters, 1,857 releases, 1,183,264,040 bytes, 30/30 seeded index-time matches;
+  K06's and K23's five artifacts each remained byte-identical. Repeated SEC index 502/504 responses have a tested
+  official HTML-index fallback.
+- Full collection is active from atomic company checkpoints. At 07:33Z it was 327/909, latest LBTYA; this is not a
+  completion claim. Owner's 05:15 skip rule is implemented in source commit c37815c: two retries, partial checkpoints,
+  `r1000-todo.jsonl`, and one two-attempt post-pass. Completed counts/failures will be reported only from the final
+  manifest. Resume: `SEC_RPS=1 npx tsx scripts/build-release-calendar-rest.mts --universe
+  edgar-universe-r1000-new.json,edgar-universe-r1000-former.json --addendum r1000 --limit 909`.
+
+### C — 10-K/10-Q primary documents (20-company pilot kept; full part skipped by owner)
+
+- Added tested `--limit` and `--forms 10-K,10-Q` controls; amendments are included and no 8-K bodies are downloaded.
+  Pilot: 20 companies, 2,675 primary documents, 4,507,522,421 bytes, 39 retained missing/failed rows. Evidence:
+  `D:/research/alpha-engine/index-membership/russell1000/k27-c-primary-pilot.json`.
+- Projected full C was 159.79 GB and B+C 194.20 GiB. On 2026-11-26 the owner accepted Claude's recommendation to skip
+  full C. **Do not resume it.** Part F lists these documents as not collected. The pilot and resume command in its
+  evidence remain unchanged.
+
+### D — Schwab 20-year history (complete)
+
+- **733/736 ticker histories**, 2,409,370 candles, 233,802,166 bytes, all raw and outside the app price tables. Empty:
+  CIK1437107, CIK1604778 and FGRS. Per-ticker dates/counts/hashes:
+  `D:/research/alpha-engine/index-membership/russell1000/k27-d-schwab-history.json`; raw is
+  `D:/research/alpha-engine/schwab/history-r1000/`.
+- Resume: `npx tsx worker/schwab-history-backfill.mts --universe
+  edgar-universe-r1000-new.json,edgar-universe-r1000-former-listed.json --years 20 --out
+  D:/research/alpha-engine/schwab/history-r1000 --min-interval-ms 1000`.
+
+### E — Yahoo actions and Stooq coverage (complete)
+
+- Yahoo: 736 tickers, **732 ok / four not found / zero failed**; BMNP has `dividendsAtLimit=true`. New immutable folder:
+  `D:/research/alpha-engine/prices/yahoo/r1000-actions-2026-11-26T020001764Z`.
+- Stooq no-download coverage: **722/736 present, 14 missing**. Evidence:
+  `D:/research/alpha-engine/index-membership/russell1000/k27-e-stooq-coverage.json`. Existing Stooq archives were read;
+  nothing was downloaded from Stooq.
+- Code gates for these completed parts and B's current source: TypeScript, targeted tests, full 300 files / 1,783 tests,
+  production build and `git diff --check` pass. No scheduler, registry, schema, research DB or production change.

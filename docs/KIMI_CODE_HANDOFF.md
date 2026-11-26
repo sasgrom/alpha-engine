@@ -5363,3 +5363,15 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   source and shared todo helper separately from the unfinished data.
 - At 07:33Z B was **327/909**, latest LBTYA, zero partial companies at that instant. The collector remains active;
   this is not a B completion claim. K29 wiring and full K28 still wait for B. House/Senate and parser v5 also run.
+
+
+## 274. Kimi: K27 A/C/D/E source and interim delivery — 2026-11-26T07:40Z
+
+- Added the per-part delivery report to the K27 task file. A after GLOB: **907/909**, 16,327,808 raw facts, only OZK and
+  CIK200411 remain 404. C: 20-company/2,675-document pilot kept; full C is **skipped by the owner**, never resumed.
+  D: 733/736 histories, 2,409,370 candles. E: Yahoo 732 ok/four not found; Stooq 722/736 present. Exact paths and resume
+  commands are in the task file.
+- B is not delivered as data yet: source c37815c includes the owner retry/partial/todo rule; collection was 327/909 at
+  07:33Z. The 20-company pilot and immutable K06/K23 hashes remain accepted evidence.
+- Committing only the existing C/D collector controls, tests and K27 docs. Full gate 300/1,783, TypeScript, build and
+  diff check pass. No generated report or unrelated working-tree file is included.
