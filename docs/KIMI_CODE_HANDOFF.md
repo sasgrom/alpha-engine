@@ -5162,3 +5162,35 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - **Gates:** `npm run check`; full suite 289 files / 1,738 tests before the last fixes, rerun before the commit; build.
 - **Next:** article text for picked stories (measure fetch success first: 42% of followed stories are Google News
   redirects); the 08:45 New York brief of 2026-11-26 is the first real morning edition.
+
+
+## 258. Kimi: K27 part A, B pilot and the still-listed-former amendment — 2026-11-26T00:30Z
+
+- **A complete:** all 909 K26 active/former CIKs were run through the existing companyfacts collector at `SEC_RPS=1` with
+  local-only factsSnapshot ingest. Active 516/517 and former 390/392 succeeded: **906/909, 16,323,273 facts,
+  2,461,167,612 raw bytes**. OZK and CIK200411 returned SEC 404 after the collector's second attempt; GLOB's local ingest
+  rejected a concept over 200 characters. No retry, truncation or schema workaround hides them. Per-company periods,
+  counts, raw hashes and errors are in `index-membership/russell1000/k27-a-companyfacts.json` on D:. Both resume commands
+  are in the mailbox report.
+- **B implementation:** K06's builder accepts an explicit comma-separated `--universe` list only with an isolated
+  `--addendum`; `r1000` uses exactly the 909 K26 CIKs, rejects duplicate CIKs, retains read-only SPY sessions and uses
+  suffix-specific company/index checkpoints. Default K06 behavior remains unchanged. TypeScript and 20 calendar tests
+  pass. The new-suffix early-progress universe write was fixed after LNG completed. A repeated SEC 502 and a later 504
+  were diagnosed separately and now have a tested fallback to the official SEC HTML index; 404/503 still fail closed.
+- **B pilot:** 20/20 companies and every aggregate check pass: 7,761 filings, 1,758 quarters, 1,857 releases,
+  1,183,264,040 bytes, 30/30 seeded SEC index-time matches. Projection for the remaining 889 was 52.596 GB, below the
+  150 GB stop threshold, with 550.09 GB free and storagePass=true. K06's five artifacts and K23's five artifacts have
+  identical before/after SHA-256 values. Full B is running resumably; at 2026-11-26T00:29Z **187/909** were complete,
+  latest CHH, all completed checks passing. Recovery and the index fallback were reported to Claude.
+- **Owner amendment relayed by Claude:** former members still exchange-listed receive current C/D/E collection. SEC
+  exchange data is fetched through `secGet` and cached on D:. `worker/edgar-universe-r1000-former-listed.json` has **192
+  companies / 219 common-share listings**; 200 former companies have no current common-stock listing. Preferred-only
+  instruments are excluded and multiple common classes are retained. The one-company difference from Claude's earlier
+  193 count is explicit. Builder `scripts/build-russell1000-former-listed.mts` and its test pass TypeScript and the
+  focused suite. Evidence and gone reasons are in `index-membership/russell1000/k27-former-listed-evidence.json`; source
+  SHA-256 is `a4549a73d027584e90490c5b8ff207de3e6a607768c7de416144ef52e6474c84`.
+- **Boundaries:** only part A used the authorized local `alpha_engine.facts` write. No `alpha_research` write, schema,
+  nightly universe/registry/scheduler change, standard build, model call, production action or web/scheduler restart by
+  Kimi. Pre-existing generated changes and Claude's news files remain excluded.
+- **Next:** finish B for all 909 before C. C/D/E will include the still-listed former universe; F will add SEC Form 25/15
+  or merger evidence when available. Final full test/build will be announced to Claude before running.
