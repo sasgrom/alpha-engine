@@ -5487,3 +5487,20 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   3000, new procedure 401 without login); screenshot shows 57 members for Q3 2026. OPERATIONS 22i updated.
 - Not scheduled: the Congress archive itself is not collected on a schedule; rerun the builder after a new accepted
   resolution file.
+
+## 283. Claude: politicians builder scheduled nightly with the Congress collection — 2026-11-26T20:05Z
+
+- Owner: "schedule the politicians builder nightly". The builder alone would rebuild the same accepted file, so the
+  Congress collection runs first: `congress-house-daily` (03:45) → `congress-senate-daily` → `congress-parse-daily` →
+  `flow-politicians`. Scheduler restarted when idle: **86 registered jobs**, one scheduler (lock pid 1852).
+- Flags added to Kimi's scripts (defaults unchanged): `congress-house.mts --daily` (this and last year, index re-read and a
+  changed index kept as a new dated `YYYYFD-<stamp>.zip`, five-attempt items not retried, `summary-daily.json`, exit 0 on
+  item failures); `congress-senate.mts --daily` (exit 0 on item failures); `congress-parse.mts --no-combined` (per-report
+  checkpoints only, no 50 MB trades file). Collector skip rule: failures go to the todo files, never stop the chain.
+- Builder: accepted K34.1 file as base plus reports parsed since by the accepted parser versions, resolved with the K34.1
+  resolution, counted in `newerReports` (not hand-checked); `--accepted-only` leaves them out.
+- Hand test of the chain: House 13 s (2026 index unchanged since 03:36Z, 485 PTRs, 477 old 404s not retried), Senate 4 min
+  (2,437 reports, 5 known failures), parse 9 s (0 new), builder unchanged at 48,244 trades; all exit 0. The new-report path
+  has not yet met a new report; check `newerReports` in politicians.json after the first nights.
+- Gates: TypeScript, **301 files / 1,788 tests**, build, diff check; web rebuilt and restarted once (one listener, 401).
+  OPERATIONS 22i updated. Kimi notified of the changes to its three scripts.

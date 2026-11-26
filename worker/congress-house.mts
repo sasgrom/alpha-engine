@@ -15,8 +15,12 @@ const arg = (name: string) => {
   const index = process.argv.indexOf(name);
   return index > -1 ? process.argv[index + 1] : null;
 };
-const from = Number(arg("--from") ?? 2012);
-const to = Number(arg("--to") ?? new Date().getUTCFullYear());
+// --daily (the nightly job): this year and last year only, their indexes read again (a changed index is kept as a new
+// dated file beside the old one, never written over), reports that used five attempts are not retried, and a report
+// that fails stays in the todo file and the summary without failing the run (the collector skip rule)
+const daily = process.argv.includes("--daily");
+const from = daily ? new Date().getUTCFullYear() - 1 : Number(arg("--from") ?? 2012);
+const to = daily ? new Date().getUTCFullYear() : Number(arg("--to") ?? new Date().getUTCFullYear());
 const limit = arg("--limit") === null ? Number.POSITIVE_INFINITY : Number(arg("--limit"));
 const indexOnly = process.argv.includes("--index-only");
 if (!Number.isInteger(from) || !Number.isInteger(to) || from < 2012 || to < from || to > new Date().getUTCFullYear()) throw new Error("Invalid House year range");
@@ -25,6 +29,7 @@ const root = path.resolve(arg("--root") ?? "D:/research/alpha-engine/people/cong
 if (!/^d:/i.test(realpathSync(path.parse(root).root))) throw new Error("House raw archive must resolve to D:");
 mkdirSync(root, { recursive: true });
 const todoFile = path.join(root, "house-todo.jsonl");
+const exhausted = new Set(readCollectorTodo(todoFile).filter(item => item.attempts >= 5).map(item => item.reportId));
 const prog = startProgress("congress-house", `${from}..${to} · ${root}${indexOnly ? " · indexes only" : ""}`);
 let lastRequest = 0;
 let requests = 0;
@@ -88,12 +93,22 @@ for (let year = from; year <= to; year++) {
   mkdirSync(directory, { recursive: true });
   const manifestFile = path.join(directory, "manifest.json");
   const previous: YearManifest | null = existsSync(manifestFile) ? JSON.parse(readFileSync(manifestFile, "utf8")) : null;
-  const indexFile = path.join(directory, `${year}FD.zip`);
+  let indexFile = path.join(directory, previous?.index?.file ?? `${year}FD.zip`);
   const url = houseIndexUrl(year);
   let indexBody: Buffer;
+  let indexEvidence = previous?.index ?? null;
   if (existsSync(indexFile)) {
     indexBody = readFileSync(indexFile);
     if (previous?.index && (previous.index.sha256 !== sha256(indexBody) || previous.index.bytes !== indexBody.length)) throw new Error(`${year} index does not match its completed checkpoint`);
+    if (daily) {
+      const fresh = await get(url);
+      if (indexXml(fresh) !== indexXml(indexBody)) {
+        indexFile = path.join(directory, `${year}FD-${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z")}.zip`);
+        writeRaw(indexFile, fresh);
+        indexBody = fresh;
+        indexEvidence = evidence(indexFile, url, new Date().toISOString());
+      }
+    }
   } else {
     indexBody = await get(url);
     writeRaw(indexFile, indexBody);
@@ -104,7 +119,7 @@ for (let year = from; year <= to; year++) {
   const manifest: YearManifest = {
     schemaVersion: 1,
     year,
-    index: previous?.index ?? evidence(indexFile, url, new Date().toISOString()),
+    index: indexEvidence ?? evidence(indexFile, url, new Date().toISOString()),
     updatedAt: new Date().toISOString(),
     reports: indexOnly ? previous?.reports ?? [] : [],
   };
@@ -123,6 +138,8 @@ for (let year = from; year <= to; year++) {
       } else {
         checkpoint = { ...checkpoint, status: "resumed", bytes: item.bytes, sha256: item.sha256, fetchedAt: old?.fetchedAt ?? now };
       }
+    } else if (daily && exhausted.has(filing.docId)) {
+      checkpoint.error = old?.error ?? "Not retried: five attempts used (house-todo.jsonl)";
     } else if (downloads < limit && statfsSync(path.parse(root).root).bavail * statfsSync(path.parse(root).root).bsize >= 20 * 1024 ** 3) {
       const url = housePtrUrl(year, filing.docId);
       const attempted = await withCollectorRetries({
@@ -158,7 +175,7 @@ for (let year = from; year <= to; year++) {
   summary.push({ year, ptrs: ptrs.length, complete: manifest.reports.filter(row => row.status !== "failed" && row.bytes !== null).length, failed: manifest.reports.filter(row => row.status === "failed").length, bytes: manifest.reports.reduce((sum, row) => sum + (row.bytes ?? 0), 0) });
   prog.stageDone(`${year}: ${summary.at(-1)!.complete}/${ptrs.length} PDFs available`);
 }
-const pending = indexOnly ? [] : readCollectorTodo(todoFile);
+const pending = indexOnly ? [] : readCollectorTodo(todoFile).filter(item => !daily || item.attempts < 5);
 let postFetchResolved = 0;
 for (const item of pending) {
   const match = item.url.match(/\/ptr-pdfs\/(\d{4})\/(\d+)\.pdf$/);
@@ -201,6 +218,7 @@ for (const item of pending) {
 }
 const remaining = readCollectorTodo(todoFile).length;
 const output = { schemaVersion: 1, generatedAt: new Date().toISOString(), root, requests, newDownloads: downloads, mainFailures: failures, failures: remaining, todo: { file: todoFile, attempted: pending.length, resolved: postFetchResolved, remaining, attemptsPerItem: 2 }, indexOnly, years: summary };
-writeJsonAtomic(path.join(root, "summary.json"), output, true);
+// the nightly run covers two years, so it keeps its own summary beside the full archive's
+writeJsonAtomic(path.join(root, daily ? "summary-daily.json" : "summary.json"), { ...output, daily }, true);
 prog.done(`${summary.reduce((sum, row) => sum + row.complete, 0)} PDFs available · ${downloads} downloaded · ${remaining} failed · post-pass ${postFetchResolved}/${pending.length} resolved`);
-if (remaining) process.exitCode = 1;
+if (remaining && !daily) process.exitCode = 1;

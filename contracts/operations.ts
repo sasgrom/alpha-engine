@@ -344,6 +344,30 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local file read by the desk; no production write and no database write.", requirements: ["driveD"], notes: "The owner's request of 2026-11-26. Runs after every insider refresh (Monday to Saturday), in about ten seconds. Consumer rules of the standard: open-market P and S lines, no flagged or duplicate lines, related owners' repeats counted once. A line that does not read is left out and named in the file and the log (damagedLines), never guessed at.",
   }),
   job({
+    id: "congress-house-daily", name: "Congress: House transaction reports", group: "research", mode: "scheduled", cron: "45 3 * * *", defaultEnabled: true, dependsOn: [],
+    ...npx("worker/congress-house.mts", ["--daily"]), purpose: "Collect the House members' new periodic transaction reports: this year's and last year's index read again, new PDFs downloaded.",
+    input: "The House Clerk's public yearly index (YYYYFD.zip) and PTR PDFs, one request a second.", output: "D:/research/alpha-engine/people/congress/house: a changed index as a new dated ZIP beside the old one (never written over), new PDFs, the year manifests and summary-daily.json.",
+    destination: "Local raw archive on D:; no production write and no database write.", requirements: ["network", "driveD"], notes: "The owner's request of 2026-11-26 (\"schedule the politicians builder nightly\"). A report that fails gets its retries, goes to house-todo.jsonl and is skipped; after five attempts it is not retried; it never fails the run (the collector skip rule). About 15 s when nothing is new.",
+  }),
+  job({
+    id: "congress-senate-daily", name: "Congress: Senate transaction reports", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["congress-house-daily"],
+    ...npx("worker/congress-senate.mts", ["--daily"]), purpose: "Collect the senators' new periodic transaction reports from the Senate's public eFD search.",
+    input: "Senate eFD public search (the statutory agreement accepted in memory) and the report pages, one request every 3 s.", output: "D:/research/alpha-engine/people/congress/senate: the index pages of the run, new report HTML (or PDF and images for paper filings), the manifest and summary.json.",
+    destination: "Local raw archive on D:; no production write and no database write.", requirements: ["network", "driveD"], notes: "Runs after the House job. About 4 minutes (the whole index is paged each night). A report that fails is retried on later nights up to five attempts and stays in senate-todo.jsonl; it never fails the run; 403/429 or three transport failures in a row still stop it.",
+  }),
+  job({
+    id: "congress-parse-daily", name: "Congress: parse new reports", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["congress-senate-daily"],
+    ...npx("worker/congress-parse.mts", ["--no-combined"]), purpose: "Parse the new House PDFs and Senate pages into their per-report checkpoints with the accepted parsers.",
+    input: "The stored reports on D: and the company index (D:/research/alpha-engine/news/lookup/company-index.json); no network.", output: "One parsed JSON per new report under house/<year>/parsed and senate/parsed; no combined trades file (a reviewed run writes that).",
+    destination: "Local files on D:; no production write and no database write.", requirements: ["driveD"], notes: "Reports already parsed by the same parser version are skipped, so a night without news takes about 10 s. Scanned paper filings are listed, not read.",
+  }),
+  job({
+    id: "flow-politicians", name: "Money map: politicians", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["congress-parse-daily"],
+    ...npx("scripts/build-flow-politicians.mts"), purpose: "Rebuild the money map's Politicians group: per quarter, the members of Congress with the largest stock trades in our companies.",
+    input: "The accepted Congress trades (K34.1 resolution file, its SHA-256 checked) plus the reports parsed since, resolved the same way.", output: "worker/.runs/desk-flows/politicians.json, read by desk.flowsPoliticians (newerReports counts what is not in the accepted file).",
+    destination: "Local file read by the desk; no production write and no database write.", requirements: ["driveD"], notes: "The owner's request of 2026-11-26. Listed stock only, amounts as the reported ranges, re-filed rows counted once, restricted-stock awards left out. About 5 s.",
+  }),
+  job({
     id: "flow-activists", name: "Money map: activists (Schedule 13D)", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["edgar-fetch-daily"],
     ...npx("scripts/build-flow-activists.mts"), purpose: "Rebuild the money map's Activists group: the Schedule 13D stakes of more than 5% in our companies, per quarter, new, raised, cut or below 5%.",
     input: "The 13D filings the nightly SEC fetch keeps under worker/cache/edgar (no download), the CUSIP map of index-membership and the flows overview's companies.", output: "worker/.runs/desk-flows/activists.json, read by desk.flowsActivists.",

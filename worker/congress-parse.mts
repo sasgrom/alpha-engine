@@ -1,7 +1,8 @@
 /**
  * Parse stored congressional PTRs only; no network or database. pdfplumber handles House text PDFs, the Senate parser
  * reads electronic HTML, and CompanyIndex resolves assets. Per-report checkpoints make every rerun idempotent.
- * Usage: npx tsx worker/congress-parse.mts [--limit N] [--only ID] [--year YYYY] [--chamber house|senate]
+ * Usage: npx tsx worker/congress-parse.mts [--limit N] [--only ID] [--year YYYY] [--chamber house|senate] [--no-combined]
+ * --no-combined (the nightly job): parse new reports into their checkpoints, write no combined trades file.
  */
 import { execFile } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from "node:fs";
@@ -23,6 +24,7 @@ const limit = arg("--limit") === null ? Number.POSITIVE_INFINITY : Number(arg("-
 const only = arg("--only");
 const year = arg("--year") === null ? null : Number(arg("--year"));
 const chamber = arg("--chamber");
+const noCombined = process.argv.includes("--no-combined");
 if (!(limit > 0)) throw new Error("--limit must be positive");
 if (chamber && !["house", "senate"].includes(chamber)) throw new Error("--chamber must be house or senate");
 if (!/^d:/i.test(realpathSync(path.parse(root).root))) throw new Error("Congress archive must resolve to D:");
@@ -156,6 +158,13 @@ for (const [position, item] of files.entries()) {
   mkdirSync(path.dirname(item.parsedFile), { recursive: true });
   writeJsonAtomic(item.parsedFile, parsed, true);
   prog.item(position + 1, files.length, `${item.chamber} ${item.reportId} ${parsed.status} · ${parsed.transactions.length} trades`);
+}
+
+// the nightly run (--no-combined) keeps only the per-report checkpoints: the money map's builder reads the new reports
+// from them, and a full trades file of every report (about 50 MB) is written only by a reviewed run
+if (noCombined) {
+  prog.done(`${processed} reports parsed this run · ${files.length} stored reports · combined trades file not written (--no-combined)`);
+  process.exit(0);
 }
 
 const reports: ParsedReport[] = [];

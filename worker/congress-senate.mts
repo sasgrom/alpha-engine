@@ -1,6 +1,7 @@
 /**
  * Senate eFD public PTR archive. In-memory statutory agreement, 3-second pacing, resumable raw HTML/PDF/image checkpoints.
- * Usage: npx tsx worker/congress-senate.mts [--discover|--index-only] [--limit N]
+ * Usage: npx tsx worker/congress-senate.mts [--discover|--index-only] [--limit N] [--daily]
+ * --daily (the nightly job): failed reports stay in the todo file and the summary without failing the run.
  */
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, renameSync, rmSync, statfsSync, statSync, writeFileSync } from "node:fs";
@@ -18,6 +19,7 @@ const arg = (name: string) => {
 };
 const discover = process.argv.includes("--discover");
 const indexOnly = process.argv.includes("--index-only");
+const daily = process.argv.includes("--daily");
 const limit = arg("--limit") === null ? Number.POSITIVE_INFINITY : Number(arg("--limit"));
 if (!(limit > 0)) throw new Error("--limit must be positive");
 const root = path.resolve(arg("--root") ?? "D:/research/alpha-engine/people/congress/senate");
@@ -301,4 +303,7 @@ const summary = {
 };
 writeJsonAtomic(path.join(root, "summary.json"), summary, true);
 prog.done(`${checkpoints.length} Senate PTRs · ${summary.electronic} electronic · ${summary.scanned} scanned · ${summary.failed} failed · post-pass ${postFetchResolved}/${postFetchAttempted} resolved`);
-if (summary.failed || summary.todo.remaining) process.exitCode = 1;
+// the nightly job (--daily) follows the collector skip rule: a report that keeps failing is in the todo file and the
+// summary, and does not fail the run (its dependents, the parse and the money map, still run); an infrastructure error
+// (403/429, three transport failures in a row, the D: drive) still throws above
+if ((summary.failed || summary.todo.remaining) && !daily) process.exitCode = 1;
