@@ -18,6 +18,10 @@ export function useFlowsFund(cik: number | null) {
   return trpc.desk.flowsFund.useQuery({ cik: cik ?? 0 }, { ...LONG, enabled: !!cik });
 }
 
+export function useFlowsActivists(enabled = true) {
+  return trpc.desk.flowsActivists.useQuery(undefined, { ...LONG, enabled });
+}
+
 export function useFlowsInsiders(enabled = true) {
   return trpc.desk.flowsInsiders.useQuery(undefined, { ...LONG, enabled });
 }

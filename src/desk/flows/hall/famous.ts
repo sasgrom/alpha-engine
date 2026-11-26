@@ -91,4 +91,10 @@ export const NOT_COLLECTED: { name: string; note: string }[] = [
   { name: "Donald Trump", note: "executive financial disclosures, being collected" },
 ];
 
+/**
+ * Activist funds whose 13F books are tracked (the money map's Activists group): firms known for public campaigns at
+ * the companies they buy into. Their 13D stakes, where above 5%, come from the SEC filings themselves.
+ */
+export const ACTIVIST_FUNDS = new Set([921669, 1345471, 1418814, 1791786, 1517137, 1336528, 1040273, 1998597, 1159159, 1582090, 1535472, 1695459, 1647251, 1510281, 1817187]);
+
 export const FAMOUS_BY_CIK = new Map(FAMOUS_FACES.map((face) => [face.cik, face]));

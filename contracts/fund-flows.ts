@@ -316,3 +316,27 @@ export interface FlowInsidersFile {
   insiderBuild: string;
   quarters: Record<string, FlowInsiderRow[]>;
 }
+
+/**
+ * Schedule 13D stakes of more than 5% in our companies, per calendar quarter of filing (scripts/build-flow-activists.mts
+ * from the cached SEC filings): the latest filing of each filer and company in the quarter, against its previous one.
+ */
+export interface FlowActivistRow {
+  /** The first reporting person on the cover, as filed. */
+  filer: string;
+  key: string;
+  cik: number;
+  percent: number | null;
+  previous: number | null;
+  shares: number | null;
+  kind: "new" | "raised" | "cut" | "held" | "exited";
+  filed: string;
+  filings: number;
+  /** How the company was found: the cover's CUSIP, or the issuer's name against the filing's folder. */
+  how: "cusip" | "name";
+}
+export interface FlowActivistsFile {
+  schemaVersion: 1;
+  builtAt: string;
+  quarters: Record<string, FlowActivistRow[]>;
+}

@@ -5257,3 +5257,21 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   16, 2019-08..2026-11) downloading to `news/gdelt-history`; analysis lab `src/research/gdelt/tone_test.py` (41195de).
 - **Gates:** `npm run check`, 293 files / 1,755 tests (Kimi's in-progress `sec-shared-pace.test.ts` failed to transform;
   not mine), `npm run build`.
+
+## 266. Claude (Opus 5.5): famous people on the money map — investors, insiders, activists — 2026-11-26T04:30Z
+
+- **Investors** (owner: "go ahead with the famous people data"): 47 more 13F filers fetched into the cache with
+  `scripts/fetch-13f-cache.mts` (no database write; SEC_RPS=4 beside K27 B at 1); books and flows rebuilt (2026-06-30:
+  349 funds, was 307; flows 357 funds). `famous.ts` +38 people, each filer CIK checked against SEC submissions and each
+  person against a Wikipedia page with role and pronoun; Einhorn and Rosenstein under both their old and new filer CIKs.
+  `ACTIVIST_FUNDS` lists the activist filers for the map.
+- **Insiders:** `scripts/build-flow-insiders.mts` → `worker/.runs/desk-flows/insiders.json` (insider standard i1.1, read
+  only; 175,270 open-market lines since 2020-04, 1,411 related-owner repeats counted once; top 80 a quarter).
+- **Activists:** `worker/lib/schedule-13d.ts` (cover-page parser, tests 5) and `scripts/build-flow-activists.mts` →
+  `activists.json`: 1,767 cached 13D filings since 2019-07, 632 stakes in our companies (507 by CUSIP, 125 by the issuer's
+  name against the filing's folder; all 98 name matches of the first pass read by hand, correct). Few a quarter, because
+  activists in S&P 500 names usually stay under 5%; the Activists group therefore also lists the activist funds' 13F books.
+- **Map:** groups Insiders and Activists (people on their company's tile; a click opens the company); new server
+  procedures `desk.flowsInsiders`, `desk.flowsActivists` (web restarted 04:20Z). Neither builder is scheduled yet: rerun
+  them after the nightly insider refresh and the SEC fetch (a scheduler entry is a next step).
+- **Gates:** `npm run check`, 295 files / 1,764 tests, `npm run build` pass.

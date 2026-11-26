@@ -5,22 +5,26 @@
  */
 import { useMemo, useState, type ReactNode } from "react";
 import { Search, X } from "lucide-react";
-import { FUND_CATEGORY_LABEL, type FlowInsidersFile, type FundCategory, type FlowQuarter, type FundFlowsCompany, type FundFlowsFund, type FundFlowsOverview } from "@contracts/fund-flows";
+import { FUND_CATEGORY_LABEL, type FlowActivistsFile, type FlowInsidersFile, type FundCategory, type FlowQuarter, type FundFlowsCompany, type FundFlowsFund, type FundFlowsOverview } from "@contracts/fund-flows";
 import type { ChartPalette } from "../../charts/color";
 import { divergingColor } from "../../charts/color";
 import { fmtCap, fmtPct, personName } from "../../format";
-import { FAMOUS_FACES } from "../hall/famous";
+import { ACTIVIST_FUNDS, FAMOUS_FACES } from "../hall/famous";
 import { quarterLabel } from "../data";
 import MoneyMap, { type MapPerson, type MapPick, type MapThread } from "./MoneyMap";
 import { buildMapPlan, initialsOf, placePeople, type Tile } from "./layout";
 
 type Mode = "flow" | "outcome" | "held";
-type Group = "famous" | "insiders" | FundCategory;
+type Group = "famous" | "insiders" | "activists" | FundCategory;
+/** A person standing on a company's tile (an insider, or a 13D filer), as the list and the map show it. */
+interface TileRow { id: number; cik: number; ticker: string; label: string; sub: string; tone: MapPerson["tone"]; right: string; size: number; hover: string[] }
+const STAKE_KIND = { new: "new stake", raised: "raised", cut: "cut", held: "unchanged", exited: "below 5%" } as const;
 // short names for the chips; the full name is the chip's title
 const SHORT: Record<FundCategory, string> = { index: "Index giants", manager: "Managers", quant: "Quant", hedge: "Hedge & activists", pension: "Pensions", bank: "Banks & insurers" };
 const GROUPS: { key: Group; label: string; title: string }[] = [
   { key: "famous", label: "Famous faces", title: "The best-known people behind the funds" },
   { key: "insiders", label: "Insiders", title: "Executives, directors and large owners trading their own company's shares on the open market (Form 4)" },
+  { key: "activists", label: "Activists", title: "Stakes above 5% reported on Schedule 13D this quarter, and the activist funds' 13F books" },
   ...(Object.entries(FUND_CATEGORY_LABEL) as [FundCategory, string][]).map(([key, title]) => ({ key, label: SHORT[key], title })),
 ];
 /** At most this many pins of a group stand on the map (the largest); the list shows them all. */
@@ -40,6 +44,7 @@ interface Props {
   fundFile: FundFlowsFund | undefined;
   companyFile: FundFlowsCompany | undefined;
   insiders: FlowInsidersFile | null | undefined;
+  activists: FlowActivistsFile | null | undefined;
   onPick: (pick: MapPick) => void;
   bar: ReactNode;
   panel: ReactNode | null;
@@ -47,7 +52,7 @@ interface Props {
 }
 
 export default function MapView(props: Props) {
-  const { data, row, mode, deflator, palette, dark, focus, fund, company, fundFile, companyFile, insiders, onPick } = props;
+  const { data, row, mode, deflator, palette, dark, focus, fund, company, fundFile, companyFile, insiders, activists, onPick } = props;
   const [group, setGroup] = useState<Group>("famous");
   const [query, setQuery] = useState("");
 
@@ -96,15 +101,38 @@ export default function MapView(props: Props) {
 
   // who is listed: the group's funds that reported this quarter, largest first, or everyone matching the search
   const inInsiders = group === "insiders";
-  // insiders of the quarter: each stands on its own company's tile; ids are negative so they never meet a fund's CIK
-  const insiderRows = useMemo(() => {
+  // people who stand on a company's tile: the quarter's insiders (their own company), or the quarter's 13D stakes (the
+  // company they hold more than 5% of); ids are negative so they never meet a fund's CIK
+  const tileRows = useMemo<TileRow[]>(() => {
     const q = query.trim().toLowerCase();
-    return (insiders?.quarters[row.quarter] ?? [])
-      .filter((entry) => plan.tileByCik.has(entry.cik))
-      .map((entry, index) => ({ ...entry, id: -(index + 1), label: personName(entry.name), ticker: plan.tileByCik.get(entry.cik)!.ticker }))
-      .filter((entry) => !q || entry.label.toLowerCase().includes(q) || entry.ticker.toLowerCase() === q);
-  }, [insiders, row, plan, query]);
-  const insiderById = useMemo(() => new Map(insiderRows.map((entry) => [entry.id, entry])), [insiderRows]);
+    const matches = (label: string, ticker: string) => !q || label.toLowerCase().includes(q) || ticker.toLowerCase() === q;
+    if (group === "insiders") {
+      return (insiders?.quarters[row.quarter] ?? []).filter((entry) => plan.tileByCik.has(entry.cik)).map((entry, index) => {
+        const ticker = plan.tileByCik.get(entry.cik)!.ticker, label = personName(entry.name), net = entry.bought - entry.sold;
+        return {
+          id: -(index + 1), cik: entry.cik, ticker, label, sub: `${entry.title ?? "Owner (10% or other)"} · ${ticker}`,
+          tone: net > 0 ? "up" as const : "down" as const, right: `${net < 0 ? "−" : "+"}${fmtCap(Math.abs(net))}`,
+          size: Math.min(1, Math.max(0, (Math.log10(Math.max(entry.bought + entry.sold, 1)) - 6) / 4)),
+          hover: [`${label}${entry.title ? ` · ${entry.title}` : ""}`, `${ticker} · ${quarterLabel(row.quarter)}: bought ${fmtCap(entry.bought)} · sold ${fmtCap(entry.sold)} on the open market`, "Form 4 reports (the insider standard)", "Click: the company and who traded it"],
+        };
+      }).filter((entry) => matches(entry.label, entry.ticker));
+    }
+    if (group === "activists") {
+      return (activists?.quarters[row.quarter] ?? []).filter((entry) => plan.tileByCik.has(entry.cik)).map((entry, index) => {
+        const ticker = plan.tileByCik.get(entry.cik)!.ticker, label = shortName(entry.filer);
+        const pct = entry.percent === null ? "a stake" : `${entry.percent.toFixed(1)}%`;
+        return {
+          id: -(index + 1), cik: entry.cik, ticker, label, sub: `${pct} of ${ticker} · ${STAKE_KIND[entry.kind]}`,
+          tone: entry.kind === "new" || entry.kind === "raised" ? "up" as const : entry.kind === "held" ? "flat" as const : "down" as const,
+          right: entry.percent === null ? "—" : `${entry.percent.toFixed(1)}%`,
+          size: Math.min(1, Math.max(0.15, ((entry.percent ?? 5) - 5) / 25)),
+          hover: [label, `${pct} of ${ticker}${entry.previous !== null ? ` (was ${entry.previous.toFixed(1)}%)` : ""} · ${STAKE_KIND[entry.kind]}, filed ${entry.filed}`, `Schedule 13D${entry.filings > 1 ? `, ${entry.filings} filings this quarter` : ""}`, "Click: the company and who traded it"],
+        };
+      }).filter((entry) => matches(entry.label, entry.ticker));
+    }
+    return [];
+  }, [group, insiders, activists, row, plan, query]);
+  const tileRowById = useMemo(() => new Map(tileRows.map((entry) => [entry.id, entry])), [tileRows]);
 
   const listed = useMemo(() => {
     if (group === "insiders") return [];
@@ -112,7 +140,7 @@ export default function MapView(props: Props) {
     const q = query.trim().toLowerCase();
     return data.funds
       .filter((entry) => reported.has(entry.cik))
-      .filter((entry) => (q ? entry.name.toLowerCase().includes(q) || (FAMOUS.get(entry.cik)?.name.toLowerCase().includes(q) ?? false) : group === "famous" ? FAMOUS.has(entry.cik) : entry.category === group))
+      .filter((entry) => (q ? entry.name.toLowerCase().includes(q) || (FAMOUS.get(entry.cik)?.name.toLowerCase().includes(q) ?? false) : group === "famous" ? FAMOUS.has(entry.cik) : group === "activists" ? ACTIVIST_FUNDS.has(entry.cik) : entry.category === group))
       .sort((a, b) => b.tracked - a.tracked);
   }, [data, row, group, query]);
 
@@ -145,20 +173,13 @@ export default function MapView(props: Props) {
         named: FAMOUS.has(cik) && group === "famous" && !query,
       };
     });
-    // insiders: sized by the dollars they traded ($1 million to $10 billion, log scale), blue when they bought more
-    const insiderPins: MapPerson[] = inInsiders ? insiderRows.slice(0, PINS).map((entry) => ({
-      cik: entry.id,
-      label: `${entry.label} · ${entry.ticker}`,
-      initials: initialsOf(entry.label),
-      size: Math.min(1, Math.max(0, (Math.log10(Math.max(entry.bought + entry.sold, 1)) - 6) / 4)),
-      tone: entry.bought > entry.sold ? "up" : "down",
-      named: true,
-      company: entry.cik,
-    })) : [];
-    return [...funds, ...insiderPins].sort((a, b) => b.size - a.size);
+    const onTiles: MapPerson[] = tileRows.slice(0, PINS).map((entry) => ({
+      cik: entry.id, label: `${entry.label} · ${entry.ticker}`, initials: initialsOf(entry.label), size: entry.size, tone: entry.tone, named: true, company: entry.cik,
+    }));
+    return [...funds, ...onTiles].sort((a, b) => b.size - a.size);
     // labelOf and toneOf read the memoized maps above
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listed, fund, company, threads, fundsByCik, group, query, fundReturns, row, inInsiders, insiderRows]);
+  }, [listed, fund, company, threads, fundsByCik, group, query, fundReturns, row, tileRows]);
 
   const positions = useMemo(() => {
     const out = placePeople(plan, homes, people.filter((person) => person.company === undefined).map((person) => person.cik));
@@ -198,15 +219,8 @@ export default function MapView(props: Props) {
     return lines;
   };
   const describePerson = (cik: number) => {
-    const insider = insiderById.get(cik);
-    if (insider) {
-      return [
-        `${insider.label}${insider.title ? ` · ${insider.title}` : ""}`,
-        `${insider.ticker} · ${quarterLabel(row.quarter)}: bought ${fmtCap(insider.bought)} · sold ${fmtCap(insider.sold)} on the open market`,
-        "Form 4 reports (the insider standard)",
-        "Click: the company and who traded it",
-      ];
-    }
+    const onTile = tileRowById.get(cik);
+    if (onTile) return onTile.hover;
     const entry = fundsByCik.get(cik), face = FAMOUS.get(cik), flow = fundFlows.get(cik), own = fundReturns.get(cik);
     const lines = [face ? `${face.name} · ${face.role}` : entry?.name ?? String(cik)];
     if (face && entry) lines.push(entry.name);
@@ -233,27 +247,22 @@ export default function MapView(props: Props) {
             ))}
           </div>
         )}
-        {inInsiders ? (
-          <p className="desk-map-count">{insiderRows.length} {query ? "found" : `largest open-market traders of ${quarterLabel(row.quarter)}`}{!insiders ? " · not built yet" : ""}</p>
-        ) : (
-          <p className="desk-map-count">{listed.length} {query ? "found" : "reported this quarter"}{listed.length > PINS && !query ? ` · the ${PINS} largest stand on the map` : ""}</p>
-        )}
+        {inInsiders && <p className="desk-map-count">{tileRows.length} {query ? "found" : `largest open-market traders of ${quarterLabel(row.quarter)}`}{!insiders ? " · not built yet" : ""}</p>}
+        {group === "activists" && <p className="desk-map-count">{tileRows.length} Schedule 13D stake{tileRows.length === 1 ? "" : "s"} filed in {quarterLabel(row.quarter)} · then the activist funds' 13F books</p>}
+        {!inInsiders && group !== "activists" && <p className="desk-map-count">{listed.length} {query ? "found" : "reported this quarter"}{listed.length > PINS && !query ? ` · the ${PINS} largest stand on the map` : ""}</p>}
         <ul className="desk-map-list">
-          {inInsiders && insiderRows.map((entry) => {
-            const net = entry.bought - entry.sold;
-            return (
-              <li key={entry.id}>
-                <button type="button" aria-pressed={company === entry.cik} onClick={() => onPick({ kind: "company", id: entry.cik })}>
-                  <span className="desk-map-avatar" data-tone={net > 0 ? "up" : "down"} aria-hidden="true">{initialsOf(entry.label)}</span>
-                  <span className="desk-map-who">
-                    <strong>{entry.label}</strong>
-                    <span>{entry.title ?? "Insider"} · {entry.ticker}</span>
-                  </span>
-                  <span className="desk-map-net" data-way={net >= 0 ? "in" : "out"}>{`${net < 0 ? "−" : "+"}${fmtCap(Math.abs(net))}`}</span>
-                </button>
-              </li>
-            );
-          })}
+          {tileRows.map((entry) => (
+            <li key={entry.id}>
+              <button type="button" aria-pressed={company === entry.cik} onClick={() => onPick({ kind: "company", id: entry.cik })}>
+                <span className="desk-map-avatar" data-tone={entry.tone} aria-hidden="true">{initialsOf(entry.label)}</span>
+                <span className="desk-map-who">
+                  <strong>{entry.label}</strong>
+                  <span>{entry.sub}</span>
+                </span>
+                <span className="desk-map-net" data-way={entry.tone === "up" ? "in" : entry.tone === "down" ? "out" : undefined}>{entry.right}</span>
+              </button>
+            </li>
+          ))}
           {listed.map((entry) => {
             const face = FAMOUS.get(entry.cik), flow = fundFlows.get(entry.cik), tone = toneOf(entry.cik), net = flow ? flow.bought - flow.sold : null;
             return (
@@ -270,7 +279,7 @@ export default function MapView(props: Props) {
             );
           })}
         </ul>
-        <p className="desk-map-note">Politicians and activists are being collected and will join these lists.</p>
+        <p className="desk-map-note">Politicians are being collected and will join these lists.</p>
       </aside>
       <div className="desk-map-main">
         <MoneyMap
@@ -289,5 +298,7 @@ export default function MapView(props: Props) {
 /** A filer's name without its legal tail ("BlackRock, Inc." → "BlackRock"). */
 function shortName(name: string): string {
   const cleaned = name.replace(/,?\s+(inc|llc|l\.?p|ltd|corp|co|plc|n\.?a|lp|group|holdings?|management|advisors?|& co)\.?$/i, "").replace(/,?\s+(inc|llc|l\.?p|ltd)\.?$/i, "");
+  // a name the tail is most of ("Link Co") stays whole
+  if (cleaned.length < 6) return name.length > 34 ? `${name.slice(0, 33)}…` : name;
   return cleaned.length > 34 ? `${cleaned.slice(0, 33)}…` : cleaned;
 }

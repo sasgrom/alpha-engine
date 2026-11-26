@@ -81,6 +81,10 @@ describe("the fund-flow page, reading view", () => {
     await click(button(host, "Insiders"));
     await waitUntil(() => text().includes("Jen Hsun Huang"));
     expect(text()).toContain("President and CEO · NVDA");
+    // activists: the quarter's 13D stakes on their company, then the activist funds' books
+    await click(button(host, "Activists"));
+    await waitUntil(() => text().includes("Trian Fund Management"));
+    expect(text()).toContain("6.2% of CVX · new stake");
     // the other views stay one click away
     expect(button(host, "Reading view")).toBeTruthy();
   });
