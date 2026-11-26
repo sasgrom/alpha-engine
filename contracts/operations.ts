@@ -338,6 +338,18 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local credential store only.", requirements: ["network"], notes: "Browser authorization is needed only after revocation, credential/app changes or an outage long enough to lose the refresh window. The daily collector also refreshes an expired access token when credentials are available.",
   }),
   job({
+    id: "flow-insiders", name: "Money map: insiders", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["std-insiders-refresh"],
+    ...npx("scripts/build-flow-insiders.mts"), purpose: "Rebuild the money map's Insiders group: per quarter, the largest open-market buyers and sellers of their own company's shares.",
+    input: "The insider standard's published build as files (D:/research/alpha-engine/insiders/std/current.json), which the nightly gated refresh writes; the research database is not read.", output: "worker/.runs/desk-flows/insiders.json, read by desk.flowsInsiders.",
+    destination: "Local file read by the desk; no production write and no database write.", requirements: ["driveD"], notes: "The owner's request of 2026-11-26. Runs after every insider refresh (Monday to Saturday), in about ten seconds. Consumer rules of the standard: open-market P and S lines, no flagged or duplicate lines, related owners' repeats counted once. A line that does not read is left out and named in the file and the log (damagedLines), never guessed at.",
+  }),
+  job({
+    id: "flow-activists", name: "Money map: activists (Schedule 13D)", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["edgar-fetch-daily"],
+    ...npx("scripts/build-flow-activists.mts"), purpose: "Rebuild the money map's Activists group: the Schedule 13D stakes of more than 5% in our companies, per quarter, new, raised, cut or below 5%.",
+    input: "The 13D filings the nightly SEC fetch keeps under worker/cache/edgar (no download), the CUSIP map of index-membership and the flows overview's companies.", output: "worker/.runs/desk-flows/activists.json, read by desk.flowsActivists.",
+    destination: "Local file read by the desk; no production write and no database write.", requirements: ["driveD"], notes: "The owner's request of 2026-11-26. Runs after the nightly SEC fetch, in about a minute. A filing's company is its cover's CUSIP, else the issuer's name against the folder it sits in; each accession is counted once.",
+  }),
+  job({
     id: "desk-company-statements", name: "Desk company files", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["edgar-fetch-daily"],
     ...npx("scripts/build-desk-company.mts"), purpose: "Rebuild the per-company files behind the desk from the research standards and the nightly SEC cache: statements, guidance history, splits and dividends, holders, insiders, and the filings list with the Today page's feed.",
     input: "On D:, the standards' own files (fundamentals, guidance, daily prices, 13F holders, insiders, adjusted earnings), the release calendar, and the manifests the nightly SEC fetch keeps beside the cached documents. The research database is not read.", output: "worker/.runs/desk-company: one file per company and kind, the cross-company files (insiders-market, guidance-market, screen, filings-latest) and index.json with the versions used and a content hash.",

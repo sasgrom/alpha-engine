@@ -1,7 +1,7 @@
 /**
  * The insiders of the money map (owner, 2026-11-26: "go ahead with the famous people data"): per quarter, the people
- * who bought or sold their own company's shares on the open market, largest first, from the insider standard (i1.1 in
- * alpha_research, read only).
+ * who bought or sold their own company's shares on the open market, largest first, from the insider standard's
+ * published build (D:/research/alpha-engine/insiders/std/current.json, read only; refreshed every night).
  *
  *   npx tsx scripts/build-flow-insiders.mts [--from 2020-04-01] [--top 80]
  *
@@ -12,31 +12,45 @@
  * director, else its first owner). Quarters are calendar quarters of the trade date, as the 13F flows use.
  * Output worker/.runs/desk-flows/insiders.json, read by desk.flowsInsiders.
  */
-import "dotenv/config";
+import { createReadStream, existsSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
+import { createInterface } from "node:readline";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 
 const arg = (name: string) => { const index = process.argv.indexOf(name); return index > -1 ? process.argv[index + 1] : null; };
 const from = arg("--from") ?? "2020-04-01", top = Number(arg("--top") ?? 80);
-const { researchDb } = await import("file:///C:/dev/alpha-engine-lab/src/research-db.mts");
-const db = await researchDb();
 
-const [builds] = await db.query("SELECT buildVersion FROM std_insider_builds WHERE status = 'final' ORDER BY buildVersion DESC LIMIT 1") as [{ buildVersion: string }[], unknown];
-const version = builds[0]?.buildVersion;
-if (!version) throw new Error("No final insider build in alpha_research");
+// the published build of the insider standard, as files (the nightly gated refresh writes them; the research database
+// gets the same build only on Sundays): one line per filing with its owners and transactions, per company
+const STD = "D:/research/alpha-engine/insiders/std";
+const pointerFile = path.join(STD, "current.json");
+if (!existsSync(pointerFile) || !/^d:/i.test(realpathSync(STD))) throw new Error(`No published insider standard at ${STD} (the D: drive may be away); nothing was written`);
+const pointer = JSON.parse(readFileSync(pointerFile, "utf8")) as { dir: string; buildVersion: string };
+const version = pointer.buildVersion;
+const companiesDir = path.join(pointer.dir, "companies");
 
 interface Line { accessionNo: string; issuerCik: number; groupId: string; transactionDate: string; code: string; shares: number; price: number; valueUsd: number; directOrIndirect: string | null; flags: string | null }
-const [lines] = await db.query(
-  `SELECT accessionNo, issuerCik, groupId, DATE_FORMAT(transactionDate, '%Y-%m-%d') transactionDate, code, shares, price, valueUsd, directOrIndirect, flags
-     FROM std_insider_transactions
-    WHERE buildVersion = ? AND code IN ('P', 'S') AND derivative = 0 AND duplicateOf IS NULL AND transactionDate >= ? AND valueUsd > 0`,
-  [version, from],
-) as [Line[], unknown];
-const [owners] = await db.query(
-  `SELECT accessionNo, groupId, ownerCik, ownerName, director, officer, officerTitle FROM std_insider_owners WHERE buildVersion = ? AND filingDate >= ?`,
-  [version, from],
-) as [{ accessionNo: string; groupId: string; ownerCik: number; ownerName: string; director: number; officer: number; officerTitle: string | null }[], unknown];
-await db.end();
+interface OwnerRow { accessionNo: string; groupId: string; ownerCik: number; ownerName: string; director: boolean; officer: boolean; officerTitle: string | null }
+const lines: Line[] = [];
+const owners: OwnerRow[] = [];
+// a line that does not read is counted and named, never guessed at (2026-11-26: one flipped bit in Humana's file of
+// the 2026-11-25 build turned a quote into "#")
+const damaged: { file: string; line: number }[] = [];
+for (const name of readdirSync(companiesDir).filter((file) => file.endsWith(".jsonl"))) {
+  let number = 0;
+  for await (const text of createInterface({ input: createReadStream(path.join(companiesDir, name), "utf8"), crlfDelay: Infinity })) {
+    number++;
+    if (!text) continue;
+    let record: { filing: { filingDate: string }; owners: OwnerRow[]; transactions: (Omit<Line, "flags"> & { derivative: boolean; duplicateOf: string | null; flags: string[] | null })[] };
+    try { record = JSON.parse(text); } catch { damaged.push({ file: name, line: number }); continue; }
+    if (record.filing.filingDate < from) continue;
+    owners.push(...record.owners);
+    for (const line of record.transactions) {
+      if ((line.code !== "P" && line.code !== "S") || line.derivative || line.duplicateOf || !(line.valueUsd > 0) || line.transactionDate < from) continue;
+      lines.push({ ...line, flags: (line.flags ?? []).join(",") });
+    }
+  }
+}
 
 // the person a group stands for, per filing: its officer, else its director, else its first owner
 const lead = new Map<string, { cik: number; name: string; title: string | null }>();
@@ -87,6 +101,6 @@ for (const [quarter, rows] of [...byQuarter].sort()) {
     .map((row) => ({ ...row, bought: Math.round(row.bought), sold: Math.round(row.sold) }));
 }
 const out = path.resolve("worker/.runs/desk-flows/insiders.json");
-writeJsonAtomic(out, { schemaVersion: 1, builtAt: new Date().toISOString(), insiderBuild: version, from, top, lines: lines.length, kept: kept.length, countedOnce: twice, quarters });
-console.log(`insiders: build ${version}, ${lines.length} open-market lines since ${from}, ${clean.length} after flags, ${twice} counted once as the same trade, ${Object.keys(quarters).length} quarters -> ${out}`);
+writeJsonAtomic(out, { schemaVersion: 1, builtAt: new Date().toISOString(), insiderBuild: version, from, top, lines: lines.length, kept: kept.length, countedOnce: twice, damagedLines: damaged, quarters });
+console.log(`insiders: build ${version}, ${lines.length} open-market lines since ${from}, ${clean.length} after flags, ${twice} counted once as the same trade, ${Object.keys(quarters).length} quarters${damaged.length ? ` · ${damaged.length} DAMAGED LINES left out: ${damaged.slice(0, 5).map((entry) => `${entry.file}:${entry.line}`).join(", ")}` : ""} -> ${out}`);
 process.exit(0);
