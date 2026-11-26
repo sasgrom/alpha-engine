@@ -72,7 +72,7 @@ export function anchorOf(plan: MapPlan, sector: string): { x: number; y: number 
  * middle so that people of one district do not cover each other; a fund without a home stands by the outside gate.
  * `spacing` is in map units at zoom 1.
  */
-export function placePeople(plan: MapPlan, homes: Map<number, string | null>, order: number[], spacing = 40): Map<number, { x: number; y: number }> {
+export function placePeople(plan: MapPlan, homes: Map<number, string | null>, order: number[], spacing = 56): Map<number, { x: number; y: number }> {
   const out = new Map<number, { x: number; y: number }>();
   const used = new Map<string, number>();
   for (const cik of order) {

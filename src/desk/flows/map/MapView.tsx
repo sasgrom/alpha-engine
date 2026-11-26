@@ -7,7 +7,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import { Search, X } from "lucide-react";
 import { FUND_CATEGORY_LABEL, type FundCategory, type FlowQuarter, type FundFlowsCompany, type FundFlowsFund, type FundFlowsOverview } from "@contracts/fund-flows";
 import type { ChartPalette } from "../../charts/color";
-import { divergingColor, mixOklab } from "../../charts/color";
+import { divergingColor } from "../../charts/color";
 import { fmtCap, fmtPct } from "../../format";
 import { FAMOUS_FACES } from "../hall/famous";
 import { quarterLabel } from "../data";
@@ -57,16 +57,22 @@ export default function MapView(props: Props) {
   const fundReturns = useMemo(() => new Map(row.fundReturns), [row]);
   const homes = useMemo(() => new Map(row.places.map((place) => [place[0], place[1] >= 0 ? data.sectorNames[place[1]] ?? null : null])), [row, data]);
 
-  // tile colours of the quarter
+  // what the funds held a quarter earlier, for "What is held": the change in the value held (prices and trades together)
+  const previousHeld = useMemo(() => {
+    const index = data.quarters.findIndex((quarter) => quarter.quarter === row.quarter);
+    const previous = index > 0 ? data.quarters[index - 1] : null;
+    return new Map((previous?.companyFlows ?? []).map(([cik, , held]) => [cik, held]));
+  }, [data, row]);
+
+  // tile colours of the quarter: blue for growth, red for loss in every mode (owner, 2026-11-26: "brown color doesnt
+  // look good, blue for growing, red for loss would work better"); the size of a tile already says how much is held
   const fills = useMemo(() => {
     const out = new Map<number, string>();
-    const maxLog = Math.log10(Math.max(...plan.tiles.map((tile) => tile.held), 1));
-    const gold = dark ? "#d8a93b" : "#b8860b";
     for (const tile of plan.tiles) {
       const flow = flows.get(tile.cik);
       if (mode === "held") {
-        const held = flow?.held ?? 0;
-        out.set(tile.cik, held > 0 ? mixOklab(palette.mid, gold, Math.max(0.08, (Math.log10(held) - (maxLog - 3.5)) / 3.5)) : palette.mid);
+        const held = flow?.held ?? 0, before = previousHeld.get(tile.cik) ?? 0;
+        out.set(tile.cik, divergingColor(held > 0 && before > 0 ? held / before - 1 : null, 0.25, palette));
       } else if (mode === "outcome") {
         const since = flow?.since ?? null;
         out.set(tile.cik, divergingColor(since === null ? null : (1 + since) / deflator - 1, 0.6, palette));
@@ -75,7 +81,7 @@ export default function MapView(props: Props) {
       }
     }
     return out;
-  }, [plan, flows, mode, deflator, palette, dark]);
+  }, [plan, flows, previousHeld, mode, deflator, palette]);
 
   const streams = useMemo(() => (mode === "flow" ? row.rotation.filter((link) => link.from !== link.to).sort((a, b) => b.usd - a.usd).slice(0, 10) : []), [row, mode]);
 
@@ -134,7 +140,10 @@ export default function MapView(props: Props) {
   const districtNote = (name: string) => {
     const sector = row.sectors.find((entry) => entry.sector === name);
     if (!sector) return "";
-    if (mode === "held") return fmtCap(sector.held);
+    if (mode === "held") {
+      const before = data.quarters[data.quarters.findIndex((quarter) => quarter.quarter === row.quarter) - 1]?.sectors.find((entry) => entry.sector === name)?.held;
+      return `${fmtCap(sector.held)}${before ? ` · ${fmtPct(sector.held / before - 1, 1)}` : ""}`;
+    }
     if (mode === "flow") return `${sector.net < 0 ? "−" : "+"}${fmtCap(Math.abs(sector.net))}`;
     return "";
   };
@@ -142,6 +151,8 @@ export default function MapView(props: Props) {
     const flow = flows.get(tile.cik), entry = companiesByCik.get(tile.cik);
     const lines = [`${tile.ticker} · ${tile.name}`];
     if (flow) lines.push(`${quarterLabel(row.quarter)}: net ${flow.net < 0 ? "−" : "+"}${fmtCap(Math.abs(flow.net))} · held ${fmtCap(flow.held)}`);
+    const before = previousHeld.get(tile.cik);
+    if (flow && before) lines.push(`value held ${fmtPct(flow.held / before - 1, 1)} over the quarter (prices and trades)`);
     if (flow?.since !== null && flow?.since !== undefined) lines.push(`stock since then ${fmtPct((1 + flow.since) / deflator - 1, 1)}${deflator !== 1 ? " after inflation" : ""}`);
     if (entry) lines.push(`${entry.holders} tracked funds hold it now · ${entry.sector}`);
     lines.push("Click: who traded it");

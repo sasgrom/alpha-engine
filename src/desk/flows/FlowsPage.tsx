@@ -588,7 +588,11 @@ function MapLegend({ mode, real }: { mode: Mode; real: boolean }) {
   return (
     <div className="desk-lib-legend">
       {mode === "held" ? (
-        <span>tiles: the value the tracked funds hold, darker gold for more · tile size: value held in the latest quarter</span>
+        <>
+          <span><span className="desk-flow-dot" data-way="in" aria-hidden="true" />held more</span>
+          <span><span className="desk-flow-dot" data-way="out" aria-hidden="true" />held less</span>
+          <span className="desk-lib-legend-note">tiles: the change in the value the tracked funds hold over the quarter (prices and trades together) · tile size: value held in the latest quarter</span>
+        </>
       ) : (
         <>
           <span><span className="desk-flow-dot" data-way="in" aria-hidden="true" />{mode === "flow" ? "bought, net" : "gained since"}</span>
