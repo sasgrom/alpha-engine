@@ -5351,3 +5351,15 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   JSON 404, Today and money map loaded. No table action.
 - B and both K34 collectors continue from D: checkpoints; K34's 50-row sign-off awaits the current source-checked parser
   build and manual result, not just generated excerpt counts.
+
+
+## 273. Kimi: B owner-rule source checkpoint; collection still running — 2026-11-26T07:35Z
+
+- B source now has tested three-attempt exhibit/index handling, exact-document `r1000-todo.jsonl`, continued company
+  processing, cacheable `completion:"partial"`/`missingDocuments`, and one two-attempt post-pass that updates manifests,
+  results and checkpoints. Persisted 404/410 text forces real retries after the first cached read. Infrastructure/code
+  errors still stop.
+- Full gate after that correction: **300 files / 1,783 tests**, TypeScript, build and diff check pass. Committing the B
+  source and shared todo helper separately from the unfinished data.
+- At 07:33Z B was **327/909**, latest LBTYA, zero partial companies at that instant. The collector remains active;
+  this is not a B completion claim. K29 wiring and full K28 still wait for B. House/Senate and parser v5 also run.

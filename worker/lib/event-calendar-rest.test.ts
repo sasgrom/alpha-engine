@@ -1,5 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { calendarRowsFromSubmissions, companyPilotChecks, parseIndexAcceptanceEt, projectRestRun, restRunOptions, seededQuarterSample, stooqTickerMap, type ExhibitOutcome } from "./event-calendar-rest";
+import {
+  calendarRowsFromSubmissions,
+  companyPilotChecks,
+  filingDocsFromIndexHtml,
+  isMissingExhibitOutcome,
+  isSecGatewayIndexError,
+  parseIndexAcceptanceEt,
+  projectRestRun,
+  restRunOptions,
+  seededQuarterSample,
+  stooqTickerMap,
+  type ExhibitOutcome,
+} from "./event-calendar-rest";
 import { buildQuarters, type CalendarFiling } from "./event-calendar";
 
 const company = { cik: 1, ticker: "AAA", name: "Example" };
@@ -8,7 +20,11 @@ const page = {
   form: ["10-Q", "8-K", "8-K"],
   filingDate: ["2026-05-07", "2026-05-01", "2004-12-31"],
   reportDate: ["2026-03-31", "", ""],
-  acceptanceDateTime: ["2026-05-07T14:00:00.000Z", "2026-05-01T13:00:00.000Z", "2004-12-31T13:00:00.000Z"],
+  acceptanceDateTime: [
+    "2026-05-07T14:00:00.000Z",
+    "2026-05-01T13:00:00.000Z",
+    "2004-12-31T13:00:00.000Z",
+  ],
   items: ["", "2.02,9.01", "2.02"],
   primaryDocument: ["q1.htm", "release.htm", "old.htm"],
 };
@@ -17,33 +33,76 @@ describe("REST submissions calendar", () => {
   it("uses SEC metadata, filters scope and rejects conflicting duplicates", () => {
     const rows = calendarRowsFromSubmissions(company, [page, page]);
     expect(rows).toHaveLength(2);
-    expect(rows[0]).toMatchObject({ accessionNo: "q1", acceptedEt: "2026-05-07T10:00:00", acceptedUtc: "2026-05-07T14:00:00.000Z", reportDate: "2026-03-31" });
-    expect(rows[1]).toMatchObject({ accessionNo: "release", isEarningsRelease: true, earningsFlagBasis: "item_2.02", itemsSource: "sec_submissions" });
-    expect(buildQuarters(rows, []).map((row) => row.earningsAccession)).toEqual(["release"]);
-    expect(() => calendarRowsFromSubmissions(company, [page, { ...page, primaryDocument: ["other.htm", "release.htm", "old.htm"] }])).toThrow(/Inconsistent submissions metadata/);
+    expect(rows[0]).toMatchObject({
+      accessionNo: "q1",
+      acceptedEt: "2026-05-07T10:00:00",
+      acceptedUtc: "2026-05-07T14:00:00.000Z",
+      reportDate: "2026-03-31",
+    });
+    expect(rows[1]).toMatchObject({
+      accessionNo: "release",
+      isEarningsRelease: true,
+      earningsFlagBasis: "item_2.02",
+      itemsSource: "sec_submissions",
+    });
+    expect(buildQuarters(rows, []).map(row => row.earningsAccession)).toEqual([
+      "release",
+    ]);
+    expect(() =>
+      calendarRowsFromSubmissions(company, [
+        page,
+        { ...page, primaryDocument: ["other.htm", "release.htm", "old.htm"] },
+      ])
+    ).toThrow(/Inconsistent submissions metadata/);
   });
 
   it("reads SEC index headers and index-page acceptance times", () => {
-    expect(parseIndexAcceptanceEt("<ACCEPTANCE-DATETIME>20260701120000")).toBe("2026-07-01T12:00:00");
-    expect(parseIndexAcceptanceEt("<span>Accepted</span><span>2026-07-01 12:00:00</span>")).toBe("2026-07-01T12:00:00");
+    expect(parseIndexAcceptanceEt("<ACCEPTANCE-DATETIME>20260701120000")).toBe(
+      "2026-07-01T12:00:00"
+    );
+    expect(
+      parseIndexAcceptanceEt(
+        "<span>Accepted</span><span>2026-07-01 12:00:00</span>"
+      )
+    ).toBe("2026-07-01T12:00:00");
     expect(parseIndexAcceptanceEt("not found")).toBeNull();
   });
 
   it("selects a seeded, deterministic earnings-quarter sample", () => {
     const rows = calendarRowsFromSubmissions(company, [page]);
     const quarters = buildQuarters(rows, []);
-    expect(seededQuarterSample(quarters, 1, "seed")).toEqual(seededQuarterSample([...quarters].reverse(), 1, "seed"));
-    expect(seededQuarterSample(quarters, 1, "seed")[0].earningsAccession).toBe("release");
+    expect(seededQuarterSample(quarters, 1, "seed")).toEqual(
+      seededQuarterSample([...quarters].reverse(), 1, "seed")
+    );
+    expect(seededQuarterSample(quarters, 1, "seed")[0].earningsAccession).toBe(
+      "release"
+    );
   });
 
   it("checks K01 thresholds and explicit exhibit reasons", () => {
     const filings = calendarRowsFromSubmissions(company, [page]);
     const quarters = buildQuarters(filings, []);
-    const complete: ExhibitOutcome = { accessionNo: "release", status: "complete", files: [{ name: "ex.htm", size: 10, sha256: "x" }], reason: null, bytesDownloaded: 10 };
+    const complete: ExhibitOutcome = {
+      accessionNo: "release",
+      status: "complete",
+      files: [{ name: "ex.htm", size: 10, sha256: "x" }],
+      reason: null,
+      bytesDownloaded: 10,
+    };
     expect(companyPilotChecks(filings, quarters, [complete]).pass).toBe(true);
-    expect(companyPilotChecks(filings, quarters, []).issues).toContain("1 earnings releases have no exhibit outcome");
-    const missing: ExhibitOutcome = { ...complete, files: [], status: "no_exhibit", reason: "no substantive exhibit", bytesDownloaded: 0 };
+    expect(companyPilotChecks(filings, quarters, []).issues).toContain(
+      "1 earnings releases have no exhibit outcome"
+    );
+    const missing: ExhibitOutcome = {
+      ...complete,
+      files: [],
+      status: "no_exhibit",
+      reason: "no substantive exhibit",
+      bytesDownloaded: 0,
+    };
     expect(companyPilotChecks(filings, quarters, [missing]).pass).toBe(true);
+    expect(isMissingExhibitOutcome(missing)).toBe(false);
+    expect(isMissingExhibitOutcome({ ...missing, status: "error", reason: "Error: HTTP 404 for exhibit" })).toBe(true);
   });
 
   it("marks an empty in-scope company not applicable without weakening metadata checks", () => {
@@ -52,39 +111,137 @@ describe("REST submissions calendar", () => {
     expect(empty.notApplicable).toMatch(/No in-scope/);
     const filings = calendarRowsFromSubmissions(company, [page]);
     const quarters = buildQuarters(filings, []);
-    const missingAcceptance = companyPilotChecks(filings.map((row) => ({ ...row, acceptedEt: null, acceptedUtc: null })), quarters, []);
+    const missingAcceptance = companyPilotChecks(
+      filings.map(row => ({ ...row, acceptedEt: null, acceptedUtc: null })),
+      quarters,
+      []
+    );
     expect(missingAcceptance.pass).toBe(false);
     expect(missingAcceptance.notApplicable).toBeNull();
   });
 
   it("uses the traded Stooq ticker and rejects ambiguous CIK mappings", () => {
-    const tickers = stooqTickerMap([{ cik: 1, priceTicker: "C" }, { cik: 2, priceTicker: "BRK-B" }, { cik: 3, priceTicker: null }]);
+    const tickers = stooqTickerMap([
+      { cik: 1, priceTicker: "C" },
+      { cik: 2, priceTicker: "BRK-B" },
+      { cik: 3, priceTicker: null },
+    ]);
     expect(tickers.get(1)).toBe("C");
     expect(tickers.get(2)).toBe("BRK-B");
     expect(tickers.has(3)).toBe(false);
-    expect(() => stooqTickerMap([{ cik: 1, priceTicker: "GOOG" }, { cik: 1, priceTicker: "GOOGL" }])).toThrow(/Multiple Stooq tickers/);
+    expect(() =>
+      stooqTickerMap([
+        { cik: 1, priceTicker: "GOOG" },
+        { cik: 1, priceTicker: "GOOGL" },
+      ])
+    ).toThrow(/Multiple Stooq tickers/);
   });
 
   it("projects remaining bytes, time and the 100 GiB stop guard", () => {
-    const result = projectRestRun({ eligibleCompanies: 446, pilotCompanies: 20, bytesDownloaded: 2 ** 30, elapsedSeconds: 600, freeBytes: 102 * 2 ** 30 });
-    expect(result.projectedRemainingBytes).toBe(Math.round(2 ** 30 / 20 * 426));
+    const result = projectRestRun({
+      eligibleCompanies: 446,
+      pilotCompanies: 20,
+      bytesDownloaded: 2 ** 30,
+      elapsedSeconds: 600,
+      freeBytes: 102 * 2 ** 30,
+    });
+    expect(result.projectedRemainingBytes).toBe(
+      Math.round((2 ** 30 / 20) * 426)
+    );
     expect(result.projectedRemainingSeconds).toBe(12780);
     expect(result.storagePass).toBe(false);
-    expect(projectRestRun({ eligibleCompanies: 20, pilotCompanies: 20, bytesDownloaded: 0, elapsedSeconds: 1, freeBytes: 100 * 2 ** 30 }).storagePass).toBe(true);
+    expect(
+      projectRestRun({
+        eligibleCompanies: 20,
+        pilotCompanies: 20,
+        bytesDownloaded: 0,
+        elapsedSeconds: 1,
+        freeBytes: 100 * 2 ** 30,
+      }).storagePass
+    ).toBe(true);
   });
 });
 
-
 describe("REST addendum options", () => {
   it("keeps K06 output names by default and requires a paired CIK filter and addendum", () => {
-    expect(restRunOptions([])).toEqual({ cikFilter: null, addendum: "" });
-    const result = restRunOptions(["--ciks", "27419,46080,76334,766704,1113169,1116132", "--addendum", "six"]);
+    expect(restRunOptions([])).toEqual({
+      cikFilter: null,
+      addendum: "",
+      universeFiles: [],
+    });
+    const result = restRunOptions([
+      "--ciks",
+      "27419,46080,76334,766704,1113169,1116132",
+      "--addendum",
+      "six",
+    ]);
     expect(result.addendum).toBe("-six");
-    expect([...result.cikFilter!].sort((a, b) => a - b)).toEqual([27419, 46080, 76334, 766704, 1113169, 1116132]);
-    expect(() => restRunOptions(["--ciks", "27419"])).toThrow(/required together/);
-    expect(() => restRunOptions(["--addendum", "six"])).toThrow(/required together/);
-    expect(() => restRunOptions(["--ciks", "27419", "--addendum", "../six"])).toThrow(/Invalid addendum suffix/);
-    expect(() => restRunOptions(["--ciks", "0", "--addendum", "six"])).toThrow(/Invalid CIK/);
+    expect([...result.cikFilter!].sort((a, b) => a - b)).toEqual([
+      27419, 46080, 76334, 766704, 1113169, 1116132,
+    ]);
+    expect(() => restRunOptions(["--ciks", "27419"])).toThrow(
+      /required together/
+    );
+    expect(() => restRunOptions(["--addendum", "six"])).toThrow(
+      /required together/
+    );
+    expect(() =>
+      restRunOptions(["--ciks", "27419", "--addendum", "../six"])
+    ).toThrow(/Invalid addendum suffix/);
+    expect(() => restRunOptions(["--ciks", "0", "--addendum", "six"])).toThrow(
+      /Invalid CIK/
+    );
     expect(() => restRunOptions(["--unknown"])).toThrow(/Unknown argument/);
+  });
+
+  it("accepts an explicit active+former universe only with an isolated suffix", () => {
+    expect(
+      restRunOptions([
+        "--universe",
+        "edgar-universe-r1000-new.json,edgar-universe-r1000-former.json",
+        "--addendum",
+        "r1000",
+        "--limit",
+        "20",
+      ])
+    ).toEqual({
+      cikFilter: null,
+      addendum: "-r1000",
+      universeFiles: [
+        "edgar-universe-r1000-new.json",
+        "edgar-universe-r1000-former.json",
+      ],
+    });
+    expect(() =>
+      restRunOptions(["--universe", "edgar-universe-r1000-new.json"])
+    ).toThrow(/requires --addendum/);
+    expect(() =>
+      restRunOptions([
+        "--universe",
+        "edgar-universe-r1000-new.json",
+        "--addendum",
+        "r1000",
+        "--ciks",
+        "27419",
+      ])
+    ).toThrow(/cannot be combined/);
+  });
+
+  it("parses SEC HTML index documents when the JSON index is unavailable", () => {
+    const html = `<table class="tableFile"><tr><th>Seq</th></tr>
+      <tr><td>1</td><td>FORM 8-K/A</td><td><a href="/Archives/edgar/data/67347/x/f8k_sab108.htm">f8k_sab108.htm</a></td><td>8-K/A</td><td>30,198</td></tr>
+      <tr><td>2</td><td>PRESS RELEASE</td><td><a href="/Archives/edgar/data/67347/x/exh991.htm">exh991.htm</a></td><td>EX-99.1</td><td>6898</td></tr>
+    </table>`;
+    expect(filingDocsFromIndexHtml(html)).toEqual([
+      { name: "f8k_sab108.htm", size: 30198 },
+      { name: "exh991.htm", size: 6898 },
+    ]);
+    expect(() => filingDocsFromIndexHtml("<html></html>")).toThrow(
+      /no document table/
+    );
+    expect(isSecGatewayIndexError("HTTP 502")).toBe(true);
+    expect(isSecGatewayIndexError("HTTP 504")).toBe(true);
+    expect(isSecGatewayIndexError("HTTP 404")).toBe(false);
+    expect(isSecGatewayIndexError("HTTP 503")).toBe(false);
   });
 });

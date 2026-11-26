@@ -1,5 +1,13 @@
 import { createHash } from "node:crypto";
-import { acceptanceChecks, acceptanceEt, acceptanceUtc, buildQuarters, earningsFlag, type CalendarFiling, type CalendarQuarter } from "./event-calendar";
+import {
+  acceptanceChecks,
+  acceptanceEt,
+  acceptanceUtc,
+  buildQuarters,
+  earningsFlag,
+  type CalendarFiling,
+  type CalendarQuarter,
+} from "./event-calendar";
 
 export interface RestCompany {
   cik: number;
@@ -7,12 +15,17 @@ export interface RestCompany {
   name: string;
 }
 
-export function stooqTickerMap(rows: { cik: number; priceTicker: string | null }[]): Map<number, string> {
+export function stooqTickerMap(
+  rows: { cik: number; priceTicker: string | null }[]
+): Map<number, string> {
   const output = new Map<number, string>();
   for (const row of rows) {
     if (!row.priceTicker) continue;
     const existing = output.get(row.cik);
-    if (existing && existing !== row.priceTicker) throw new Error(`Multiple Stooq tickers for CIK ${row.cik}: ${existing}, ${row.priceTicker}`);
+    if (existing && existing !== row.priceTicker)
+      throw new Error(
+        `Multiple Stooq tickers for CIK ${row.cik}: ${existing}, ${row.priceTicker}`
+      );
     output.set(row.cik, row.priceTicker);
   }
   return output;
@@ -26,10 +39,19 @@ export interface ExhibitOutcome {
   bytesDownloaded: number;
 }
 
-const forms = new Set(["10-Q", "10-K", "8-K", "10-Q/A", "10-K/A", "8-K/A"]);
-const text = (value: unknown): string | null => typeof value === "string" && value.length ? value : null;
+export function isMissingExhibitOutcome(outcome: ExhibitOutcome): boolean {
+  return outcome.status === "error" && /HTTP (?:404|410)\b/i.test(outcome.reason ?? "");
+}
 
-export function calendarRowsFromSubmissions(company: RestCompany, pages: any[], from = "2005-01-01"): CalendarFiling[] {
+const forms = new Set(["10-Q", "10-K", "8-K", "10-Q/A", "10-K/A", "8-K/A"]);
+const text = (value: unknown): string | null =>
+  typeof value === "string" && value.length ? value : null;
+
+export function calendarRowsFromSubmissions(
+  company: RestCompany,
+  pages: any[],
+  from = "2005-01-01"
+): CalendarFiling[] {
   const byAccession = new Map<string, CalendarFiling>();
   const signatures = new Map<string, string>();
   for (const page of pages) {
@@ -41,9 +63,19 @@ export function calendarRowsFromSubmissions(company: RestCompany, pages: any[], 
       const rawAcceptance = page.acceptanceDateTime?.[index];
       const items = text(page.items?.[index]);
       const primaryDoc = text(page.primaryDocument?.[index]);
-      const signature = JSON.stringify({ form, filingDate, reportDate: text(page.reportDate?.[index]), rawAcceptance: text(rawAcceptance), items, primaryDoc });
+      const signature = JSON.stringify({
+        form,
+        filingDate,
+        reportDate: text(page.reportDate?.[index]),
+        rawAcceptance: text(rawAcceptance),
+        items,
+        primaryDoc,
+      });
       if (byAccession.has(accessionNo)) {
-        if (signatures.get(accessionNo) !== signature) throw new Error(`Inconsistent submissions metadata for ${company.ticker}/${accessionNo}`);
+        if (signatures.get(accessionNo) !== signature)
+          throw new Error(
+            `Inconsistent submissions metadata for ${company.ticker}/${accessionNo}`
+          );
         continue;
       }
       const accepted = acceptanceEt(rawAcceptance);
@@ -66,88 +98,243 @@ export function calendarRowsFromSubmissions(company: RestCompany, pages: any[], 
       signatures.set(accessionNo, signature);
     }
   }
-  return [...byAccession.values()].sort((a, b) => a.accessionNo.localeCompare(b.accessionNo));
+  return [...byAccession.values()].sort((a, b) =>
+    a.accessionNo.localeCompare(b.accessionNo)
+  );
 }
 
 export function parseIndexAcceptanceEt(html: string): string | null {
   const header = html.match(/<ACCEPTANCE-DATETIME>(\d{14})/i);
   if (header) return acceptanceEt(header[1]);
-  const plain = html.replace(/<[^>]+>/g, " ").replace(/&nbsp;/gi, " ").replace(/\s+/g, " ");
-  const match = plain.match(/\bAccepted\s+(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}:\d{2})\b/i);
+  const plain = html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/\s+/g, " ");
+  const match = plain.match(
+    /\bAccepted\s+(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}:\d{2})\b/i
+  );
   return match ? `${match[1]}T${match[2]}` : null;
 }
 
-export function seededQuarterSample(quarters: CalendarQuarter[], count: number, seed: string): CalendarQuarter[] {
-  return quarters.filter((row) => row.earningsAccession !== null && row.earningsAcceptedEt !== null).map((row) => ({
-    row,
-    key: createHash("sha256").update(`${seed}|${row.cik}|${row.fiscalPeriodEnd}|${row.periodicAccession}`).digest("hex"),
-  })).sort((a, b) => a.key.localeCompare(b.key) || a.row.cik - b.row.cik || a.row.fiscalPeriodEnd.localeCompare(b.row.fiscalPeriodEnd)).slice(0, count).map(({ row }) => row);
+export function seededQuarterSample(
+  quarters: CalendarQuarter[],
+  count: number,
+  seed: string
+): CalendarQuarter[] {
+  return quarters
+    .filter(
+      row => row.earningsAccession !== null && row.earningsAcceptedEt !== null
+    )
+    .map(row => ({
+      row,
+      key: createHash("sha256")
+        .update(
+          `${seed}|${row.cik}|${row.fiscalPeriodEnd}|${row.periodicAccession}`
+        )
+        .digest("hex"),
+    }))
+    .sort(
+      (a, b) =>
+        a.key.localeCompare(b.key) ||
+        a.row.cik - b.row.cik ||
+        a.row.fiscalPeriodEnd.localeCompare(b.row.fiscalPeriodEnd)
+    )
+    .slice(0, count)
+    .map(({ row }) => row);
 }
 
-export function companyPilotChecks(filings: CalendarFiling[], quarters: CalendarQuarter[], outcomes: ExhibitOutcome[]) {
+export function companyPilotChecks(
+  filings: CalendarFiling[],
+  quarters: CalendarQuarter[],
+  outcomes: ExhibitOutcome[]
+) {
   const checks = acceptanceChecks(filings, quarters);
-  const earnings = filings.filter((row) => row.isEarningsRelease === true);
-  const byAccession = new Map(outcomes.map((outcome) => [outcome.accessionNo, outcome]));
-  const missingOutcome = earnings.filter((row) => !byAccession.has(row.accessionNo)).map((row) => row.accessionNo);
-  const unexplained = outcomes.filter((outcome) => outcome.files.length === 0 && !outcome.reason).map((outcome) => outcome.accessionNo);
+  const earnings = filings.filter(row => row.isEarningsRelease === true);
+  const byAccession = new Map(
+    outcomes.map(outcome => [outcome.accessionNo, outcome])
+  );
+  const missingOutcome = earnings
+    .filter(row => !byAccession.has(row.accessionNo))
+    .map(row => row.accessionNo);
+  const unexplained = outcomes
+    .filter(outcome => outcome.files.length === 0 && !outcome.reason)
+    .map(outcome => outcome.accessionNo);
   const issues: string[] = [];
-  if (filings.length > 0 && checks.acceptedSince2004.share < 0.995) issues.push(`acceptedEt share ${checks.acceptedSince2004.share} < 0.995`);
-  if (filings.length > 0 && checks.itemLists8k.share < 0.99) issues.push(`8-K item-list share ${checks.itemLists8k.share} < 0.99`);
-  if (checks.quarters.duplicateCompanyPeriods) issues.push(`${checks.quarters.duplicateCompanyPeriods} duplicate company-periods`);
-  if (checks.quarters.missingOriginalAccessionsSince2005.length) issues.push(`${checks.quarters.missingOriginalAccessionsSince2005.length} original filings missing from quarters`);
-  if (checks.quarters.lagDays.negative) issues.push(`${checks.quarters.lagDays.negative} negative release lags`);
-  if (checks.quarters.nonIncreasingNextPublications.length) issues.push(`${checks.quarters.nonIncreasingNextPublications.length} non-increasing next publications`);
-  if (!checks.quarters.chosenReleaseIsFirst) issues.push("chosen release is not the earliest release");
-  if (missingOutcome.length) issues.push(`${missingOutcome.length} earnings releases have no exhibit outcome`);
-  if (unexplained.length) issues.push(`${unexplained.length} earnings releases have no exhibit or reason`);
+  if (filings.length > 0 && checks.acceptedSince2004.share < 0.995)
+    issues.push(`acceptedEt share ${checks.acceptedSince2004.share} < 0.995`);
+  if (filings.length > 0 && checks.itemLists8k.share < 0.99)
+    issues.push(`8-K item-list share ${checks.itemLists8k.share} < 0.99`);
+  if (checks.quarters.duplicateCompanyPeriods)
+    issues.push(
+      `${checks.quarters.duplicateCompanyPeriods} duplicate company-periods`
+    );
+  if (checks.quarters.missingOriginalAccessionsSince2005.length)
+    issues.push(
+      `${checks.quarters.missingOriginalAccessionsSince2005.length} original filings missing from quarters`
+    );
+  if (checks.quarters.lagDays.negative)
+    issues.push(`${checks.quarters.lagDays.negative} negative release lags`);
+  if (checks.quarters.nonIncreasingNextPublications.length)
+    issues.push(
+      `${checks.quarters.nonIncreasingNextPublications.length} non-increasing next publications`
+    );
+  if (!checks.quarters.chosenReleaseIsFirst)
+    issues.push("chosen release is not the earliest release");
+  if (missingOutcome.length)
+    issues.push(
+      `${missingOutcome.length} earnings releases have no exhibit outcome`
+    );
+  if (unexplained.length)
+    issues.push(
+      `${unexplained.length} earnings releases have no exhibit or reason`
+    );
   return {
     pass: issues.length === 0,
     issues,
     checks,
-    notApplicable: filings.length === 0 ? "No in-scope 10-Q, 10-K, 8-K or amendment submissions since 2005; publication and item-list ratios are not applicable" : null,
+    notApplicable:
+      filings.length === 0
+        ? "No in-scope 10-Q, 10-K, 8-K or amendment submissions since 2005; publication and item-list ratios are not applicable"
+        : null,
     exhibits: {
       releases: earnings.length,
       outcomes: outcomes.length,
-      withFiles: outcomes.filter((outcome) => outcome.files.length > 0).length,
-      withoutFilesWithReason: outcomes.filter((outcome) => outcome.files.length === 0 && outcome.reason !== null).length,
+      withFiles: outcomes.filter(outcome => outcome.files.length > 0).length,
+      withoutFilesWithReason: outcomes.filter(
+        outcome => outcome.files.length === 0 && outcome.reason !== null
+      ).length,
       missingOutcome,
       unexplained,
     },
   };
 }
 
-export function projectRestRun(options: { eligibleCompanies: number; pilotCompanies: number; bytesDownloaded: number; elapsedSeconds: number; freeBytes: number }) {
+export function projectRestRun(options: {
+  eligibleCompanies: number;
+  pilotCompanies: number;
+  bytesDownloaded: number;
+  elapsedSeconds: number;
+  freeBytes: number;
+}) {
   const minimumFreeBytes = 100 * 2 ** 30;
-  if (options.pilotCompanies <= 0) return { projectedRemainingBytes: null, projectedRemainingSeconds: null, projectedFreeBytes: null, minimumFreeBytes, storagePass: false };
-  const remaining = Math.max(0, options.eligibleCompanies - options.pilotCompanies);
-  const projectedRemainingBytes = Math.round(options.bytesDownloaded / options.pilotCompanies * remaining);
-  const projectedRemainingSeconds = options.elapsedSeconds / options.pilotCompanies * remaining;
+  if (options.pilotCompanies <= 0)
+    return {
+      projectedRemainingBytes: null,
+      projectedRemainingSeconds: null,
+      projectedFreeBytes: null,
+      minimumFreeBytes,
+      storagePass: false,
+    };
+  const remaining = Math.max(
+    0,
+    options.eligibleCompanies - options.pilotCompanies
+  );
+  const projectedRemainingBytes = Math.round(
+    (options.bytesDownloaded / options.pilotCompanies) * remaining
+  );
+  const projectedRemainingSeconds =
+    (options.elapsedSeconds / options.pilotCompanies) * remaining;
   const projectedFreeBytes = options.freeBytes - projectedRemainingBytes;
-  return { projectedRemainingBytes, projectedRemainingSeconds, projectedFreeBytes, minimumFreeBytes, storagePass: projectedFreeBytes >= minimumFreeBytes };
+  return {
+    projectedRemainingBytes,
+    projectedRemainingSeconds,
+    projectedFreeBytes,
+    minimumFreeBytes,
+    storagePass: projectedFreeBytes >= minimumFreeBytes,
+  };
 }
 
+export function isSecGatewayIndexError(error: unknown): boolean {
+  return /HTTP (?:502|504)\b/i.test(String(error));
+}
 
-export interface RestRunOptions { cikFilter: Set<number> | null; addendum: string }
+export function filingDocsFromIndexHtml(
+  html: string
+): { name: string; size: number }[] {
+  const table = html.match(
+    /<table[^>]*class=["']tableFile["'][^>]*>([\s\S]*?)<\/table>/i
+  )?.[1];
+  if (!table) throw new Error("SEC index HTML has no document table");
+  const documents: { name: string; size: number }[] = [];
+  for (const row of table.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)) {
+    const link = row[1].match(
+      /<a\b[^>]*href=["'][^"']*\/([^/"']+)["'][^>]*>([\s\S]*?)<\/a>/i
+    );
+    if (!link) continue;
+    const cells = [...row[1].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/gi)];
+    const size = Number(
+      cells
+        .at(-1)?.[1]
+        .replace(/<[^>]+>/g, "")
+        .replace(/,/g, "")
+        .trim()
+    );
+    const name = link[2]
+      .replace(/<[^>]+>/g, "")
+      .replace(/&amp;/g, "&")
+      .trim();
+    if (!name || name !== link[1] || !Number.isInteger(size) || size < 0)
+      throw new Error("Invalid SEC index document row");
+    documents.push({ name, size });
+  }
+  if (!documents.length)
+    throw new Error("SEC index HTML document table is empty");
+  return documents;
+}
+
+export interface RestRunOptions {
+  cikFilter: Set<number> | null;
+  addendum: string;
+  universeFiles: string[];
+}
 
 export function restRunOptions(argv: string[]): RestRunOptions {
-  let cikText: string | undefined, suffix = "";
+  let cikText: string | undefined,
+    suffix = "";
+  const universeFiles: string[] = [];
   for (let index = 0; index < argv.length; index++) {
     const argument = argv[index];
-    if (argument === "--limit") { index++; continue; }
-    if (argument !== "--ciks" && argument !== "--addendum") throw new Error(`Unknown argument: ${argument}`);
+    if (argument === "--limit") {
+      index++;
+      continue;
+    }
+    if (
+      argument !== "--ciks" &&
+      argument !== "--addendum" &&
+      argument !== "--universe"
+    )
+      throw new Error(`Unknown argument: ${argument}`);
     const value = argv[++index];
     if (!value) throw new Error(`${argument} requires a value`);
     if (argument === "--ciks") cikText = value;
+    else if (argument === "--universe")
+      universeFiles.push(
+        ...value
+          .split(",")
+          .map(file => file.trim())
+          .filter(Boolean)
+      );
     else {
-      if (!/^[a-z0-9][a-z0-9-]*$/i.test(value)) throw new Error(`Invalid addendum suffix: ${value}`);
+      if (!/^[a-z0-9][a-z0-9-]*$/i.test(value))
+        throw new Error(`Invalid addendum suffix: ${value}`);
       suffix = `-${value}`;
     }
   }
-  const cikFilter = cikText ? new Set(cikText.split(",").map(value => {
-    const cik = Number(value);
-    if (!Number.isInteger(cik) || cik <= 0) throw new Error(`Invalid CIK: ${value}`);
-    return cik;
-  })) : null;
-  if (Boolean(cikFilter) !== Boolean(suffix)) throw new Error("--ciks and --addendum are required together");
-  return { cikFilter, addendum: suffix };
+  const cikFilter = cikText
+    ? new Set(
+        cikText.split(",").map(value => {
+          const cik = Number(value);
+          if (!Number.isInteger(cik) || cik <= 0)
+            throw new Error(`Invalid CIK: ${value}`);
+          return cik;
+        })
+      )
+    : null;
+  if (Boolean(cikFilter) !== Boolean(suffix) && !universeFiles.length)
+    throw new Error("--ciks and --addendum are required together");
+  if (universeFiles.length && (!suffix || cikFilter))
+    throw new Error(
+      "--universe requires --addendum and cannot be combined with --ciks"
+    );
+  return { cikFilter, addendum: suffix, universeFiles };
 }
