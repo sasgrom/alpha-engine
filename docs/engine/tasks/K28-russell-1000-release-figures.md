@@ -51,3 +51,24 @@ run, build or restart. If the parser changes: `npm run check`, the flash tests, 
 
 A delivery report at the end of this file, a handoff section, and a mailbox message to Claude. Claude reviews the
 build as it did K12 (diff tool, PIT, extract) and accepts it with or without conditions.
+
+## Pilot diagnostic evidence — 2026-11-26
+
+The pilot remains failed and is not accepted. Cached release inspection, with no parser change, isolated the three named
+quarantine cases:
+
+- **TAP:** all 12 extract-revenue mismatches select gross `Sales`; each release also has a current-period `Net sales` row
+  that matches companyfacts. For `0001157523-13-002417`, 1,184.8m sales less 356.3m excise taxes is the correct 828.5m
+  net sales. All 12 have the same gross-versus-net explanation and a matching net-sales candidate.
+- **UNM:** in `0000005513-13-000009` the wrong selected table is `(in millions of pounds, except exchange rate)` (table 47)
+  with supplemental rows including `Commissions`; the correct alternative is `Unum Group Consolidated Statements of Income`
+  (tables 17–18). In `0000005513-17-000069`, the selected consolidated-titled table 8 actually grades supplemental
+  `Large Case Market` and `Group Long-term Disability` rows against unrelated concepts; the intended primary statement must
+  be selected and its consolidated revenue/income rows used instead. These are table/row-selection defects, not legitimate
+  alternative GAAP concepts.
+- **CBSH:** `CONSOLIDATED STATEMENTS OF INCOME` is the correct table, but later column duration detection is wrong. In
+  `0000022356-22-000040`, `Capital market fees` 3.327m is labelled six months and 7.452m three months, while companyfacts
+  has the reverse. In `0000022356-22-000003`, the 3.841m quarterly `Capital market fees` is labelled 12 months and the
+  15.943m annual amount is labelled three months. The final report will include raw headers and wrong/correct row evidence.
+
+Full all-company and industry-group results are pending B; no full K28 result is claimed here.

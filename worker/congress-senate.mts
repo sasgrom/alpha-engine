@@ -248,23 +248,27 @@ for (const [index, report] of reports.entries()) {
 const pending = readCollectorTodo(todoFile);
 let postFetchResolved = 0;
 for (const item of pending) {
-  const report = reports.find(row => row.reportId === item.reportId);
-  if (!report) throw new Error(`Senate todo report ${item.reportId} is absent from the current index`);
+  const report = reports.find(row => row.reportId === item.reportId) ?? oldById.get(item.reportId);
+  if (!report) throw new Error(`Senate todo report ${item.reportId} has no current or prior identity`);
   const attempted = await collectWithRetries(report, oldById.get(report.reportId), 2);
   const position = checkpoints.findIndex(row => row.reportId === report.reportId);
-  if (position < 0) throw new Error(`Senate todo report ${item.reportId} has no current checkpoint`);
-  checkpoints[position] = attempted.value ?? { ...report, status: "failed", html: null, pdf: null, error: attempted.error };
+  const checkpoint = attempted.value ?? { ...report, status: "failed" as const, html: null, pdf: null, error: attempted.error };
+  if (position < 0) checkpoints.push(checkpoint);
+  else checkpoints[position] = checkpoint;
   if (attempted.value) postFetchResolved++;
   writeJsonAtomic(reportManifestFile, { schemaVersion: 1, updatedAt: new Date().toISOString(), reports: checkpoints }, true);
   transportStreak = attempted.transportAfterRenewal ? transportStreak + 1 : 0;
   if (transportStreak >= 3) throw new Error("Stopped after three consecutive Senate post-fetch transport failures");
 }
+const currentIds = new Set(reports.map(row => row.reportId));
 const summary = {
   schemaVersion: 1,
   generatedAt: new Date().toISOString(),
   requests: client.requests,
   sessionRenewals,
-  reports: reports.length,
+  reports: checkpoints.length,
+  currentIndexReports: reports.length,
+  outsideCurrentIndex: checkpoints.filter(row => !currentIds.has(row.reportId)).length,
   electronic: checkpoints.filter(row => row.status === "electronic" || row.status === "resumed" && row.html && !row.pdf && !row.images?.length).length,
   scanned: checkpoints.filter(row => row.status === "scanned" || row.status === "resumed" && (row.pdf || row.images?.length)).length,
   pending: checkpoints.filter(row => row.status === "pending").length,

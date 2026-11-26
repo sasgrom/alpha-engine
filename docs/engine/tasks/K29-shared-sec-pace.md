@@ -57,3 +57,41 @@ AGENTS.md in full. No change to the scheduler, job definitions or `operations-co
    window) run together: the telemetry shows the combined rate at or below the budget, with 0 429s.
 3. Delivery report at the end of this file: the inventory, the hash list, the telemetry summary, commits, and a handoff
    section.
+
+## Wiring inventory — read-only, 2026-11-26
+
+No wiring has been done while an SEC collector is active. Direct-request inventory (fixtures and source-URL-only strings
+excluded):
+
+### Main repository
+
+- `worker/lib/edgar.ts` — central worker `secGet`; used by `edgar-fetch`, `edgar-exhibits`, `form4-fetch`, `form4-qa`,
+  `news-company-index`, `news-feeds` (SEC 8-K Atom), `facts-incremental`, and the SEC paths in `13f-refresh`,
+  `fetch-13f-cache`, `build-13f-top300`, `build-event-calendar`, `build-fund-first-filings`, `build-company-headquarters`,
+  `build-russell1000-membership`, `build-russell1000-former-listed`, `build-release-calendar-rest`, and the gap/exposure
+  probes. These inherit shared pacing when `secGet` is wired.
+- `api/services/edgar.ts` — separate server-side limiter/client, not the worker `secGet`; `api/services/documents.ts`,
+  `api/services/insiders.ts`, runner and presentation callers go through it. `api/lib/`/`api/kimi/` are prohibited here;
+  this server client is listed for Claude rather than silently changed.
+- `scripts/seed-sp500-companies.mts` — one direct `fetch` to `company_tickers_exchange.json`; a small `secGet` routing
+  candidate, separate from the one-file `edgar.ts` wiring edit.
+
+### Lab repository
+
+- Through main `worker/lib/edgar.ts`: `src/insiders/sec-bulk.mts`, `edgar-insiders.mts`, `insider-acceptance.mts`;
+  `src/research/spx/nport_fetch.mts`; `src/research/fable1/ftd_fetch.mts` and `ftd_probe.mts`;
+  `src/fundamentals/edgar-filings-fetch.mts` and `fsds-fetch.mts`.
+- Bypasses that client: `src/thirteenf/dates.mts` uses injected/global `fetch` with a local 210 ms limiter. It needs its
+  own reviewed routing or must remain explicitly listed; it is not covered by editing main `edgar.ts`.
+
+### Code fingerprints and live-check constraint
+
+`scripts/build-release-calendar-rest.mts:80-90` explicitly includes `worker/lib/edgar.ts` in B/K06/K23 release-calendar
+code hashes and company checkpoints. B is therefore a running job whose checkpoint depends on `edgar.ts`; wiring must be
+announced again after B exits and no SEC process is active. The pinned K06 artifacts will not be rerun. K28's
+`7f76b2c2…` fingerprint is defined at `scripts/build-flash-statements.mts:61-64` and does **not** include `edgar.ts`.
+No other source code fingerprint containing the literal `worker/lib/edgar.ts` was found in the main worker/scripts
+inventory.
+
+The requested ten-minute concurrent live check cannot use full C: the owner cancelled full C. A safe substitute requires
+Claude's selection/instruction; no substitute run is claimed.

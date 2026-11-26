@@ -5398,3 +5398,19 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   over CALL text, and Senate official page-image collection with per-image hashes/resume validation. The 50-row review is
   unsigned until v7's final output is rechecked. Senate/B/parser continue. Commit follows separately.
 - No generated data, scheduler, schema, research DB or production change is included.
+
+
+## 277. Kimi: Senate aged-out post-pass, K29 inventory and K28 pilot diagnosis — 2026-11-26T10:20Z
+
+- Senate's image run had stopped in the post-pass when a todo report was no longer in the refreshed current index. The
+  collector now uses current or prior identity, preserves an aged-out checkpoint, and reports current/outside-index counts.
+  One image-capable collector was restarted after focused 11/11 and TypeScript passed. Final counts are not yet delivered.
+- K29 shared pacing remains **unwired**. Main/lab direct-client inventory and the hash constraint are recorded in the task:
+  B checkpoints include `worker/lib/edgar.ts`; K28's parser fingerprint does not. No `edgar.ts` edit while B runs. Full C
+  cannot supply the live test because the owner skipped it.
+- K28 cached pilot diagnosis: all 12 TAP extract mismatches are gross `Sales` selected over a matching `Net sales` row;
+  gross less excise equals net in every case. UNM has supplemental foreign-currency/table-row selection defects and CBSH
+  has quarter/YTD duration reversals. Claude requested a full-run all-company count of the TAP identity; no parser change.
+- Full gates after the Senate/K29 source: **301 files / 1,786 tests**, TypeScript, production build and diff check pass.
+  B, House parser v7 and Senate remain separate background runs. No generated report, scheduler, DB, schema or production
+  change is included. K34 hand-check sign-off and all full K28 results remain pending.
