@@ -146,9 +146,36 @@ describe("incremental companyfacts collection", () => {
     expect(readFileSync(path.join(root, `${CIK}.json`), "utf8")).toBe(rawBefore);
     const manifest = JSON.parse(readFileSync(factsManifestPath(root, CIK), "utf8"));
     expect(manifest.status).toBe("failed");
+    expect(manifest.failureStage).toBe("download");
     expect(manifest.lastSuccessfulCapture).toBe(before.lastSuccessfulCapture);
     expect(manifest.lastSuccessfulIngest).toBe(before.lastSuccessfulIngest);
     expect(manifest.rawSha256).toBe(before.rawSha256);
+  });
+
+  it("writes raw before failed ingest and retries its supported rows without another download", async () => {
+    const root = tempDir();
+    const overlong = "X".repeat(201);
+    const data = payload(CIK);
+    (data.facts["us-gaap"] as any)[overlong] = { units: { USD: [{ end: "2025-03-31", val: 200, form: "10-Q", filed: "2025-05-10", accn: "a1" }] } };
+    const first = options(root, [filing("10-Q", "a1")], { [CIK]: data });
+    first.postFactsSnapshot = async () => {
+      expect(JSON.parse(readFileSync(path.join(root, `${CIK}.json`), "utf8")).facts["us-gaap"][overlong]).toBeDefined();
+      throw new Error("mocked ingest failure");
+    };
+    const failed = await runFactsCollection([company()], first);
+    expect(failed).toMatchObject({ failed: 1, excludedRowsTotal: 1 });
+    const manifest = JSON.parse(readFileSync(factsManifestPath(root, CIK), "utf8"));
+    expect(manifest).toMatchObject({ status: "failed", failureStage: "ingest" });
+    expect(manifest.excluded[0]).toMatchObject({ count: 1, examples: [{ concept: "X".repeat(80), length: 201 }] });
+
+    const second = options(root, [filing("10-Q", "a1")], { [CIK]: data });
+    let ingestedConcepts: string[] = [];
+    second.postFactsSnapshot = async (_cik, rows) => { ingestedConcepts = rows.map(row => row.concept); return { replaced: rows.length }; };
+    const recovered = await runFactsCollection([company()], second);
+    expect(recovered).toMatchObject({ refreshed: 1, failed: 0, rowsTotal: 2, ingestedRowsTotal: 1, excludedRowsTotal: 1 });
+    expect(second.downloads).toHaveLength(0);
+    expect(ingestedConcepts).toEqual(["Assets"]);
+    expect(JSON.parse(readFileSync(path.join(root, `${CIK}.json`), "utf8")).facts["us-gaap"][overlong]).toBeDefined();
   });
 
   it("deduplicates share classes and downloads each CIK once", async () => {

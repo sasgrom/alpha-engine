@@ -5275,3 +5275,16 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   procedures `desk.flowsInsiders`, `desk.flowsActivists` (web restarted 04:20Z). Neither builder is scheduled yet: rerun
   them after the nightly insider refresh and the SEC fetch (a scheduler entry is a next step).
 - **Gates:** `npm run check`, 295 files / 1,764 tests, `npm run build` pass.
+
+
+## 267. Kimi: K30 companyfacts raw-first recovery complete — 2026-11-26T04:10Z
+
+- `worker/lib/facts-incremental.ts` writes validated companyfacts raw atomically before local ingest, distinguishes
+  download from ingest failure, retries failed ingests from cached raw, and excludes overlong concepts without
+  truncation using the schema's actual 200-character limit. Manifests retain exclusion counts/examples and raw hashes.
+- GLOB recovered: **4,535 raw / 4,534 ingested / one excluded 212-character concept**, periods 2014-12-31 through
+  2026-04-22; raw SHA-256 `f38e144fd7f5058b8b9cb554a08ae3435d4ce1c27659398d95e4fd9a5e5e5412`. OZK and
+  CIK 200411 remain SEC 404 failures. No schema or production action.
+- Gates after the final download-stage assertion: facts 15/15, TypeScript, full **297 files / 1,772 tests**, build and
+  `git diff --check` pass. Delivery is in `docs/engine/tasks/K30-facts-raw-first.md`; source commit follows with only
+  the K30 implementation, test and task documentation.

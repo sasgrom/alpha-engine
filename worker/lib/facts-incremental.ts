@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
+import { facts as factsTable } from "../../db/schema";
 import { companyFacts as defaultCompanyFacts, factsToRows, listFilings as defaultListFilings, type CompanyFactRow, type EdgarCompany, type EdgarFiling } from "./edgar";
 import { postFactsSnapshot as defaultPostFactsSnapshot } from "./ingest";
 import { writeJsonAtomic } from "./json-file";
@@ -9,6 +10,12 @@ import { sha256Text } from "./fred";
 export const DEFAULT_FULL_RECONCILIATION_MS = 7 * 24 * 3600_000;
 const DAY_MS = 24 * 3600_000;
 const RELEVANT_FORMS = new Set(["10-K", "10-Q", "20-F", "40-F", "10-KT", "10-QT"]);
+
+export interface FactsExclusion {
+  reason: string;
+  count: number;
+  examples: { concept: string; length: number }[];
+}
 
 export interface FactsManifestEntry {
   cik: number;
@@ -25,6 +32,8 @@ export interface FactsManifestEntry {
   status: "refreshed" | "unchanged" | "failed";
   error: string | null;
   universeHash: string;
+  excluded?: FactsExclusion[];
+  failureStage?: "download" | "ingest" | null;
 }
 
 interface RawSnapshot {
@@ -45,6 +54,8 @@ export interface FactsRunResult {
   ticker: string;
   status: FactsManifestEntry["status"];
   rows: number;
+  ingestedRows: number;
+  excludedRows: number;
   reason: string;
   error: string | null;
   /** 1, or 2 when the company was tried again at the end of the run. */
@@ -58,6 +69,8 @@ export interface FactsRunSummary {
   unchanged: number;
   failed: number;
   rowsTotal: number;
+  ingestedRowsTotal: number;
+  excludedRowsTotal: number;
   results: FactsRunResult[];
 }
 
@@ -169,6 +182,20 @@ export function assertLocalFactsIngestUrl(value: string): void {
   }
 }
 
+export function excludeUnsupportedFacts(rows: CompanyFactRow[]): { rows: CompanyFactRow[]; excluded: FactsExclusion[] } {
+  const limit = factsTable.concept.length;
+  if (!Number.isInteger(limit)) throw new Error("facts concept limit is unavailable from the schema");
+  const rowsExcluded = rows.filter(row => row.concept.length > limit);
+  if (!rowsExcluded.length) return { rows, excluded: [] };
+  const examples = [...new Map(rowsExcluded.map(row => [row.concept, row])).values()]
+    .slice(0, 5)
+    .map(row => ({ concept: row.concept.slice(0, 80), length: row.concept.length }));
+  return {
+    rows: rows.filter(row => row.concept.length <= limit),
+    excluded: [{ reason: `concept_exceeds_${limit}_characters`, count: rowsExcluded.length, examples }],
+  };
+}
+
 export async function runFactsCollection(companies: EdgarCompany[], options: FactsCollectionOptions): Promise<FactsRunSummary> {
   const cacheRoot = options.cacheRoot ?? path.resolve(import.meta.dirname, "..", "cache", "companyfacts");
   const listFilings = options.listFilings ?? defaultListFilings;
@@ -187,7 +214,11 @@ export async function runFactsCollection(companies: EdgarCompany[], options: Fac
       form: previous?.lastRelevantForm ?? null,
     };
     let refreshed = false;
+    let failureStage: "download" | "ingest" | null = "download";
+    let excluded = previous?.excluded ?? [];
+    let ingestedRows = 0;
     try {
+      let rawForIngest = rawBefore;
       if (options.useCached) {
         if (!rawBefore) throw new Error("no valid cached companyfacts payload");
       } else {
@@ -204,20 +235,30 @@ export async function runFactsCollection(companies: EdgarCompany[], options: Fac
             lastRelevantSignature: signature.signature,
             status: "unchanged",
             error: null,
+            failureStage: null,
             universeHash,
           };
           writeManifest(cacheRoot, entry);
-          return { cik: company.cik, ticker: company.ticker, status: "unchanged", rows: rawBefore!.rows.length, reason: "unchanged", error: null, attempts };
+          const excludedRows = excluded.reduce((sum, group) => sum + group.count, 0);
+          return { cik: company.cik, ticker: company.ticker, status: "unchanged", rows: rawBefore!.rows.length, ingestedRows: 0, excludedRows, reason: "unchanged", error: null, attempts };
         }
-        const payload = await companyFacts(company.cik);
-        if (Number(payload?.cik) !== company.cik) throw new Error("companyfacts CIK mismatch");
-        const rows = factsToRows(payload);
-        if (rows.length === 0) throw new Error("SEC returned zero fact rows; existing facts kept");
-        await postFactsSnapshot(company.cik, rows, { url: options.ingestUrl });
-        writeJsonAtomic(factsRawPath(cacheRoot, company.cik), payload);
-        refreshed = true;
+        if (previous?.status !== "failed" || previous.failureStage !== "ingest" || !rawBefore) {
+          const payload = await companyFacts(company.cik);
+          if (Number(payload?.cik) !== company.cik) throw new Error("companyfacts CIK mismatch");
+          const rows = factsToRows(payload);
+          if (rows.length === 0) throw new Error("SEC returned zero fact rows; existing facts kept");
+          writeJsonAtomic(factsRawPath(cacheRoot, company.cik), payload);
+          rawForIngest = readRawSnapshot(cacheRoot, company.cik)!;
+          refreshed = true;
+        }
       }
-      const rawAfter = refreshed ? readRawSnapshot(cacheRoot, company.cik)! : rawBefore!;
+      failureStage = "ingest";
+      const supported = excludeUnsupportedFacts(rawForIngest!.rows);
+      excluded = supported.excluded;
+      await postFactsSnapshot(company.cik, supported.rows, { url: options.ingestUrl });
+      ingestedRows = supported.rows.length;
+      failureStage = null;
+      const rawAfter = rawForIngest!;
       const successAt = now().toISOString();
       const entry: FactsManifestEntry = {
         cik: company.cik,
@@ -234,9 +275,11 @@ export async function runFactsCollection(companies: EdgarCompany[], options: Fac
         status: "refreshed",
         error: null,
         universeHash,
+        excluded,
+        failureStage: null,
       };
       writeManifest(cacheRoot, entry);
-      return { cik: company.cik, ticker: company.ticker, status: "refreshed", rows: rawAfter.rows.length, reason: refreshed ? "new_data" : options.useCached ? "cached_recovery" : "reconciliation_or_recovery", error: null, attempts };
+      return { cik: company.cik, ticker: company.ticker, status: "refreshed", rows: rawAfter.rows.length, ingestedRows, excludedRows: excluded.reduce((sum, group) => sum + group.count, 0), reason: refreshed ? "new_data" : options.useCached ? "cached_recovery" : "reconciliation_or_recovery", error: null, attempts };
     } catch (error) {
       const message = boundedError(error);
       const checkedAt = now().toISOString();
@@ -255,9 +298,11 @@ export async function runFactsCollection(companies: EdgarCompany[], options: Fac
         status: "failed",
         error: message,
         universeHash,
+        excluded,
+        failureStage,
       };
       writeManifest(cacheRoot, entry);
-      return { cik: company.cik, ticker: company.ticker, status: "failed", rows: 0, reason: "failed", error: message, attempts };
+      return { cik: company.cik, ticker: company.ticker, status: "failed", rows: 0, ingestedRows, excludedRows: excluded.reduce((sum, group) => sum + group.count, 0), reason: "failed", error: message, attempts };
     }
   };
   const results: FactsRunResult[] = [];
@@ -277,6 +322,8 @@ export async function runFactsCollection(companies: EdgarCompany[], options: Fac
     unchanged: results.filter((row) => row.status === "unchanged").length,
     failed: results.filter((row) => row.status === "failed").length,
     rowsTotal: results.reduce((sum, row) => sum + row.rows, 0),
+    ingestedRowsTotal: results.reduce((sum, row) => sum + row.ingestedRows, 0),
+    excludedRowsTotal: results.reduce((sum, row) => sum + row.excludedRows, 0),
     results,
   };
 }

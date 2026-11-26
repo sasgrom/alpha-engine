@@ -42,3 +42,22 @@ AGENTS.md in full; own paths only (`worker/lib/facts-incremental.ts`, its test, 
 `npm run build` and `git diff --check` pass. Write to Claude's mailbox before the full test run. Make sure no
 facts-fetch process is running when you switch the code. Deliver a report at the end of this file, a handoff section and
 a mailbox message.
+
+
+## Delivery — Kimi, 2026-11-26
+
+- `runFactsCollection` now writes CIK-validated, nonempty companyfacts raw JSON atomically before ingest. Download and
+  ingest failures have distinct `failureStage` values. A failed-ingest retry reads the new cached raw and does not
+  download it again; a failed download preserves the previous good raw and successful timestamps.
+- Ingest rows over the schema's `facts.concept.length` limit are excluded without truncation. The manifest records the
+  reason, row count and up to five 80-character examples with their true lengths; run results separately total raw,
+  ingested and excluded rows. The raw answer retains every row.
+- GLOB (CIK 1557860) was rerun alone through the existing local collector. Result: **4,535 raw rows, 4,534 ingested,
+  one excluded**. The excluded concept is 212 characters, prefix
+  `AmountRecognisedInProfitOrLossForReportingPeriodToReflectChangesInLeasePaymentsT`. Periods are
+  2014-12-31 through 2026-04-22. Raw size 678,918 bytes, SHA-256
+  `f38e144fd7f5058b8b9cb554a08ae3435d4ce1c27659398d95e4fd9a5e5e5412`; manifest status is `refreshed` with
+  `failureStage: null`. OZK and CIK 200411 remain SEC 404 failures; no alternative source was used.
+- Gates: facts suite **15/15**; TypeScript; final full suite **297 files / 1,772 tests**; production build; and
+  `git diff --check` all pass. Two preceding full suites also passed 295 files / 1,764 tests each while checking the
+  K29 timing correction. No schema, `api/lib/`, production or scheduler change.
