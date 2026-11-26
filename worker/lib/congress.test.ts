@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { amountRange, parseHousePdfText, parseSenateHtml, parseSenateSearchRows, senateScannedImageUrls } from "./congress";
+import { amountRange, parseHousePdfText, parseSenateHtml, parseSenateSearchRows, senateScannedImageUrls, type ResolvedCongressTrade } from "./congress";
+import { congressAssetName, resolveCongressTradeHistorical } from "./congress-resolution";
 import type { HouseFiling } from "./congress-house";
+import { CompanyIndex } from "./news-companies";
 
 const house: HouseFiling = { docId: "20000077", year: 2014, member: "Robert E. Andrews", firstName: "Robert E.", lastName: "Andrews", state: "NJ", district: "01", filingType: "P", filedDate: "2014-01-13" };
 
@@ -57,5 +59,27 @@ describe("Congress transaction parsers", () => {
   it("handles open-ended and absent amount ranges without guessing", () => {
     expect(amountRange("Over $50,000,000")).toEqual({ low: 50000000, high: null });
     expect(amountRange("None")).toEqual({ low: null, high: null });
+  });
+
+  it("resolves historical company names without resolving funds or changing parsed fields", () => {
+    const index = new CompanyIndex([
+      { cik: 101829, tickers: ["RTX"], names: ["RTX Corp", "United Technologies Corporation"] },
+      { cik: 1045810, tickers: ["NVDA"], names: ["NVIDIA Corporation"] },
+      { cik: 9000, tickers: ["ETF"], names: ["Example Index Fund"] },
+      { cik: 1738827, tickers: ["KLXE"], names: ["KLX Energy Services Holdings, Inc."] },
+      { cik: 1528985, tickers: ["INRE"], names: ["Inland Real Estate Income Trust, Inc."] },
+    ]);
+    const trade = (asset: string, ticker: string | null): ResolvedCongressTrade => ({
+      chamber: "house", member: "Example", state: null, district: null, filer: "member", reportId: "r", filedDate: "2020-01-01",
+      transactionDate: "2019-01-01", notificationDate: null, owner: "", asset, ticker, assetType: "stock", type: "purchase",
+      amountLow: 1001, amountHigh: 15000, comment: "", parseMethod: "text PDF", sourceSha256: "x", sourceUrl: "https://example.test",
+      resolution: "not a company", cik: null, candidates: [],
+    });
+    expect(resolveCongressTradeHistorical(index, trade("United Technologies Corporation (uTX)", "uTX"))).toMatchObject({ cik: 101829, resolution: "resolved", resolutionMethod: "case+company-name", asset: "United Technologies Corporation (uTX)", ticker: "uTX" });
+    expect(resolveCongressTradeHistorical(index, trade("NVDA-NVIDIA Corporation", null))).toMatchObject({ cik: 1045810, resolutionMethod: "leading-symbol" });
+    expect(resolveCongressTradeHistorical(index, trade("Example Index Fund (ETF)", "ETF")).resolution).toBe("not a company");
+    expect(resolveCongressTradeHistorical(index, trade("KLX Inc. (NASDAQ)", "KLXI"))).toMatchObject({ resolution: "ambiguous", cik: null, resolutionMethod: "unresolved" });
+    expect(resolveCongressTradeHistorical(index, trade("Inland Real Estate Income Trust [PS]", null)).resolution).toBe("not a company");
+    expect(congressAssetName("Block, Inc. Class A Common Stock, (SQ)").name).toBe("Block, Inc.");
   });
 });

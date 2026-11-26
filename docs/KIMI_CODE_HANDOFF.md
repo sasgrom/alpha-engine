@@ -5456,3 +5456,16 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   no scanned OCR, scheduler, DB or production change.
 - Final full gates: **301 files / 1,787 tests**, TypeScript, build and diff check pass. K34 source/report commit follows.
   B remains active; next safe work is B final verification, then announced K29 wiring, full K28 and K27 F.
+
+
+## 281. Kimi: K34.1 historical resolution complete; B resumed — 2026-11-26T13:52Z
+
+- Final `trades-resolution-20261126T134505Z.jsonl` / `.summary.json`: stock resolved **47,518 → 50,445**; unresolved
+  **12,739 → 9,812**. New **2,927** (2,618 House / 309 Senate): 799 case+name, 2,071 name, 57 leading-symbol.
+  Accepted K34 input and all existing resolutions/parsed fields are unchanged.
+- Review removed 74 weak-prefix matches and nine non-traded Inland resolutions. No ETF/fund/note/private-holding promotion
+  or invented ticker dates. **30/30** final company identities verified; signed review
+  `resolution-check-20261126T134544Z.reviewed.json`, SHA-256 `01cc19d5…7cda`. House/Senate excerpts are owner-aware.
+- Full gates: **301 files / 1,788 tests**, TypeScript, build and diff check pass. Source/task report commit follows.
+- B's tool timeout exited at checkpoint 563/909 with no surviving process. One identical collector resumed without a tool
+  timeout. Next after B: final checkpoint/hash verification, announced K29 wiring/live test, full K28, then F.

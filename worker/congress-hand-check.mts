@@ -19,6 +19,10 @@ const root = path.resolve(arg("--root") ?? "D:/research/alpha-engine/people/cong
 if (!/^d:/i.test(realpathSync(path.parse(root).root))) throw new Error("Congress archive must resolve to D:");
 const tradesFile = path.resolve(arg("--trades") ?? path.join(root, readdirSync(root).filter(name => /^trades-.*\.jsonl$/.test(name)).sort().at(-1)!));
 const trades = readFileSync(tradesFile, "utf8").split(/\r?\n/).filter(Boolean).map(line => JSON.parse(line) as ResolvedCongressTrade);
+const beforeFile = arg("--before") ? path.resolve(arg("--before")!) : null;
+const before = beforeFile ? readFileSync(beforeFile, "utf8").split(/\r?\n/).filter(Boolean).map(line => JSON.parse(line) as ResolvedCongressTrade) : null;
+if (before && before.length !== trades.length) throw new Error("Resolution comparison must preserve trade rows");
+const candidates = before ? trades.filter((trade, index) => trade.resolution === "resolved" && before[index].resolution !== "resolved") : trades;
 const exec = promisify(execFile);
 const python = "D:/research/alpha-engine/tools/congress-venv/Scripts/python.exe";
 const extractor = "import json,sys,pdfplumber\nwith pdfplumber.open(sys.argv[1]) as pdf:\n print(json.dumps({'pages':[page.extract_text() or '' for page in pdf.pages]}))";
@@ -35,8 +39,9 @@ const sample = (rows: ResolvedCongressTrade[], count: number) => {
   const ordered = [...rows].sort((a, b) => `${a.transactionDate}|${a.reportId}|${a.asset}|${a.type}`.localeCompare(`${b.transactionDate}|${b.reportId}|${b.asset}|${b.type}`));
   return Array.from({ length: Math.min(count, ordered.length) }, (_, index) => ordered[Math.floor(index * ordered.length / count)]);
 };
-const selected = [...sample(trades.filter(row => row.chamber === "house"), 25), ...sample(trades.filter(row => row.chamber === "senate"), 25)];
-if (selected.length !== 50) throw new Error(`Need 25 rows per chamber, got ${selected.length}`);
+const perChamber = before ? 15 : 25;
+const selected = [...sample(candidates.filter(row => row.chamber === "house"), perChamber), ...sample(candidates.filter(row => row.chamber === "senate"), perChamber)];
+if (selected.length !== perChamber * 2) throw new Error(`Need ${perChamber} rows per chamber, got ${selected.length}`);
 const rows = [];
 for (const [index, trade] of selected.entries()) {
   let file: string;
@@ -84,13 +89,14 @@ for (const [index, trade] of selected.entries()) {
       const type = trade.type === "purchase" ? "P" : trade.type === "exchange" ? "E" : trade.type === "partial sale" ? "S\\s*\\(partial\\)" : "S(?!\\s*\\(partial\\))";
       return new RegExp(`(?:^|\\s)${type}\\s+${date}`, "i").test(value);
     });
-    const matches = (value: string) => typeMatches(value) && amountInOrder(value) && assetInOrder(value) && (!trade.ticker || value.toLowerCase().includes(trade.ticker.toLowerCase()));
+    const ownerMatches = (value: string) => !trade.owner || new RegExp(`(?:^|\\s)${trade.owner}\\s+`, "i").test(value);
+    const matches = (value: string) => ownerMatches(value) && typeMatches(value) && amountInOrder(value) && assetInOrder(value) && (!trade.ticker || value.toLowerCase().includes(trade.ticker.toLowerCase()));
     source = lines.map((_, index) => lines.slice(index, index + 6).join(" ")).filter((_, index) => typeMatches(lines[index])).find(matches) ?? null;
   }
-  rows.push({ reviewNumber: index + 1, checked: false, source, parsed: { chamber: trade.chamber, member: trade.member, reportId: trade.reportId, filedDate: trade.filedDate, transactionDate: trade.transactionDate, notificationDate: trade.notificationDate, owner: trade.owner, filer: trade.filer, asset: trade.asset, ticker: trade.ticker, assetType: trade.assetType, type: trade.type, amountLow: trade.amountLow, amountHigh: trade.amountHigh, comment: trade.comment }, sourceFile: file, sourceSha256: hash });
+  rows.push({ reviewNumber: index + 1, checked: false, source, parsed: { chamber: trade.chamber, member: trade.member, reportId: trade.reportId, filedDate: trade.filedDate, transactionDate: trade.transactionDate, notificationDate: trade.notificationDate, owner: trade.owner, filer: trade.filer, asset: trade.asset, ticker: trade.ticker, assetType: trade.assetType, type: trade.type, amountLow: trade.amountLow, amountHigh: trade.amountHigh, comment: trade.comment, ...(before ? { beforeResolution: before[trades.indexOf(trade)].resolution, resolution: trade.resolution, cik: trade.cik, candidates: trade.candidates, resolutionMethod: (trade as any).resolutionMethod } : {}) }, sourceFile: file, sourceSha256: hash });
 }
 const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
-const output = { schemaVersion: 1, generatedAt: new Date().toISOString(), tradesFile, method: "50 deterministic stratified rows (25 per chamber), source hash verified; checked remains false until a person reads the source", rows };
-const file = path.join(root, `hand-check-${stamp}.json`);
+const output = { schemaVersion: 1, generatedAt: new Date().toISOString(), tradesFile, beforeFile, method: before ? "30 deterministic newly resolved rows (15 per chamber), source hash verified; checked remains false until company identity is reviewed" : "50 deterministic stratified rows (25 per chamber), source hash verified; checked remains false until a person reads the source", rows };
+const file = path.join(root, `${before ? "resolution-check" : "hand-check"}-${stamp}.json`);
 writeJsonAtomic(file, output, true);
 console.log(JSON.stringify({ file, rows: rows.length, sourceFound: rows.filter(row => row.source !== null).length, checked: 0 }, null, 1));

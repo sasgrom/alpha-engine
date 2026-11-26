@@ -77,3 +77,21 @@ Final artifacts:
   are linked in the final summary. Earlier hand-check files remain unsigned evidence of corrected defects.
 - The executive-branch OGE 278-T stretch was not attempted. No scanned-report OCR, scheduler, DB or production change is
   claimed.
+
+## K34.1 historical company resolution — 2026-11-26
+
+Resolution only; the accepted `trades-20261126T120447Z` input is unchanged (SHA-256
+`7b444c052f2e96eb8f6ebf0cac4605ef80086886151c7d05761d6258a77dfd11`). Final output is
+`D:/research/alpha-engine/people/congress/trades-resolution-20261126T134505Z.jsonl` and `.summary.json` (SHA-256
+`73a5b0e407d3118e110902e589be12fe55d94c317e34f764ddae5efacf3dc6de`).
+
+- Stock trades: **60,257**, resolved **47,518 → 50,445**, unresolved **12,739 → 9,812**. Newly resolved:
+  **2,927** (2,618 House / 309 Senate): 799 case+company-name, 2,071 company-name and 57 leading-symbol.
+- Parsed fields and every existing resolution are unchanged. Name cleaning removes ticker/exchange/source-code and common
+  share-class wrappers. Fallback accepts exact/word/ticker matches only. No ticker validity dates are invented.
+- Review rejected 74 weak-prefix resolutions (including historical KLX Inc. incorrectly matching later KLX Energy Services)
+  and nine non-traded Inland Real Estate Income Trust resolutions. ETFs, funds, notes and private holdings stay unresolved.
+- **30/30 newly sampled House/Senate rows have the correct company identity** after owner-aware source excerpts. Signed
+  review `resolution-check-20261126T134544Z.reviewed.json`, SHA-256
+  `01cc19d543a3a6136c897c944e022b7a16b0ed6d7ddf24311e60f8d7ae107cda`, timestamp 13:47:15Z. Earlier unsigned resolution
+  files/reviews document rejected matches and are not final artifacts.
