@@ -5387,3 +5387,14 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - F has two focused tests and TypeScript coverage. Direct execution refused missing full K28 before writing output; it
   also requires B's final 909/endTime. Commit F source now, run only after B + full K28. No network, DB, schema,
   scheduler or production change.
+
+
+## 276. Kimi: B import correction and K34 parser/image source checkpoint — 2026-11-26T09:35Z
+
+- B's 407/909 stop was a confirmed `ReferenceError`: the original permanent-404 catch still used
+  `isPermanentSecMissing` after its import was removed. Restored it, resumed the same command, and reported the code error
+  to Claude. Focused 13/13; full **301 files / 1,786 tests**; build and diff pass. Commit follows; collection remains active.
+- K34 source now includes v7 header/NUL normalization, wrapped amount/asset assembly, trailing bond terms, bond precedence
+  over CALL text, and Senate official page-image collection with per-image hashes/resume validation. The 50-row review is
+  unsigned until v7's final output is rechecked. Senate/B/parser continue. Commit follows separately.
+- No generated data, scheduler, schema, research DB or production change is included.

@@ -38,6 +38,7 @@ import {
 } from "../worker/lib/event-calendar-rest";
 import {
   fetchDoc,
+  isPermanentSecMissing,
   listFilingDocs,
   loadEdgarUniverse,
   realCacheRoot,
