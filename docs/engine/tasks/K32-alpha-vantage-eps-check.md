@@ -35,3 +35,23 @@ AGENTS.md in full; no Alpha Vantage request (read the stored files only); no dat
 (a split, a fiscal year not ending in December, a pre-market and a post-market release). Gates for code: `npm run check`,
 the new tests, `npm test -- --run`, `npm run build`, `git diff --check`; announce the full run to Claude. Deliver a report
 at the end of this file, a handoff section and a mailbox message.
+
+
+## Delivery — Kimi, 2026-11-26
+
+- Added `worker/lib/alpha-vantage-eps-check.ts`, four fixtures and `scripts/check-alpha-vantage-eps.mts`. The latest
+  hash-verified stored answer per ticker is compared by exact period end with a8 adjusted EPS and the earliest stored
+  standard-fundamentals GAAP diluted EPS. No fiscal labels or fuzzy period matching are used.
+- Agreement is one cent or one percent, reported separately on the original and later-split-restated bases. Split
+  evidence comes from standard prices' positive `splitRatio` events after the release acceptance/filing date. Per-company
+  basis inference uses split-affected adjusted rows first and states mixed/indistinguishable where it cannot decide.
+  Dates use New York; pre-market is before 09:30 and post-market at/after 16:00. Every disagreement carries both values
+  and source evidence; every one-sided period is listed.
+- Full stored run: `D:/research/alpha-engine/estimates/alphavantage/checks/20261126T050350Z.json` and `.md`.
+  **25/25 tickers, zero input errors.** Adjusted: 787 comparable, 86.79% original, **90.85% restated/best**. GAAP:
+  1,453 comparable, 21.34% original, **22.30% restated/best**. Same New York date 73.37%; report-time agreement 93.32%
+  on 2,006 gradable quarters. Disagreements 1,201; one-sided AV/ours 1,247/271. AAPL's nine exact GAAP comparisons all
+  agree on the restated basis. The low GAAP share is consistent with AV predominantly reporting adjusted figures and is
+  not hidden by blending the two series.
+- Gates: new fixtures **4/4**, TypeScript, full suite **298 files / 1,776 tests**, build and `git diff --check` pass.
+  No Alpha Vantage request, database write or production action.

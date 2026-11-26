@@ -5288,3 +5288,16 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Gates after the final download-stage assertion: facts 15/15, TypeScript, full **297 files / 1,772 tests**, build and
   `git diff --check` pass. Delivery is in `docs/engine/tasks/K30-facts-raw-first.md`; source commit follows with only
   the K30 implementation, test and task documentation.
+
+
+## 268. Kimi: K32 Alpha Vantage EPS verification — 2026-11-26T05:10Z
+
+- New pure checker/tests and `scripts/check-alpha-vantage-eps.mts`: exact period ends, adjusted and GAAP kept separate,
+  original/restated split bases, New York release dates and pre/post-market times, per-company basis inference, every
+  disagreement and one-sided quarter. Latest stored AV answers are hash-checked; no request or DB write.
+- Full 25-ticker report `estimates/alphavantage/checks/20261126T050350Z.{json,md}` on D:: adjusted 787 comparisons,
+  **90.85%** best-basis agreement; GAAP 1,453, **22.30%**; same NY date 73.37%; report time 93.32% (2,006 gradable).
+  Zero company input errors; 1,201 disagreements and 1,247/271 AV/ours one-sided quarters retained. Exact matching does
+  not disguise AV month-end versus actual fiscal-period-end differences.
+- Gates: fixtures 4/4, TypeScript, **298 files / 1,776 tests**, build and diff check pass. K32 source/report commit
+  follows. K34 collectors and parser continue resumably on D:.
