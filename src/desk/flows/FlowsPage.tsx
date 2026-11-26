@@ -12,7 +12,7 @@ import { useDesk, useDocumentTitle } from "../context";
 import { DevNotes } from "../DevNotes";
 import { fmtCap, fmtDate, fmtPct } from "../format";
 import { FlowTape, FlowTimeline, RotationDiagram } from "./charts";
-import { deflatorSince, quarterLabel, quarterSentence, standingOf, useFlowsCompany, useFlowsFund, useFlowsOverview, type Who } from "./data";
+import { deflatorSince, quarterLabel, quarterSentence, standingOf, useFlowsCompany, useFlowsFund, useFlowsInsiders, useFlowsOverview, type Who } from "./data";
 import type { StageSelection, StageTarget } from "./hall/stage";
 import type { HallRest } from "./Library3D";
 import type { StreamPart } from "./hall/streams";
@@ -160,6 +160,7 @@ export default function FlowsPage() {
 
   const fundFile = useFlowsFund(flowsOpen ? fund : null);
   const companyFile = useFlowsCompany(flowsOpen ? company : null);
+  const insiders = useFlowsInsiders(flowsOpen && view === "map");
 
   // the hall runs edge to edge and fills the window below the header and any banners (an operations alert or the
   // view-as line would otherwise push its bottom out of sight): the stylesheet needs the width of the window without
@@ -371,7 +372,7 @@ export default function FlowsPage() {
           <MapView
             data={data} row={row} mode={mode} deflator={deflator} palette={palette} dark={theme.resolved === "dark"}
             focus={sector} fund={fund} company={company}
-            fundFile={fundFile.data ?? undefined} companyFile={companyFile.data ?? undefined}
+            fundFile={fundFile.data ?? undefined} companyFile={companyFile.data ?? undefined} insiders={insiders.data}
             onPick={onMapPick} bar={bar} foot={foot} panel={panelOpen ? panel : null}
           />
         </Suspense>

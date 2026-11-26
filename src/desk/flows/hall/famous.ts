@@ -39,20 +39,56 @@ export const FAMOUS_FACES: FamousFace[] = [
   { cik: 1040273, name: "Daniel Loeb", role: "Third Point, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Daniel_S._Loeb" },
   { cik: 1517137, name: "Jeff Smith", role: "Starboard Value, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Jeffrey_C._Smith" },
   { cik: 1336528, name: "Bill Ackman", role: "Pershing Square, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Bill_Ackman" },
+  // Added 2026-11-26 (owner: "more famous traders ... all we can get"). Each filer CIK checked against its SEC
+  // submissions (name, 13F-HR reports); each person against a Wikipedia page that names the role and the pronoun.
+  // Firms whose leader has no such page stay in the books under the firm's name (ValueAct, D1, Sachem Head, Markel,
+  // Harris/Oakmark, Davis, Gardner Russo, Yacktman, Weitz, Corvex, Eminence, Brave Warrior, Marshall Wace, Abrams,
+  // Zevenbergen, Semper Augustus, Greenlea Lane, Valley Forge, Durable, Atreides).
+  { cik: 1649339, name: "Michael Burry", role: "Scion Asset Management, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Michael_Burry" },
+  { cik: 1536411, name: "Stanley Druckenmiller", role: "Duquesne Family Office, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Stanley_Druckenmiller" },
+  { cik: 1656456, name: "David Tepper", role: "Appaloosa Management, founder", gender: "m", source: "https://en.wikipedia.org/wiki/David_Tepper" },
+  { cik: 921669, name: "Carl Icahn", role: "Icahn Enterprises, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Carl_Icahn" },
+  { cik: 1489933, name: "David Einhorn", role: "Greenlight Capital, founder (reports as DME Capital since 2024)", gender: "m", source: "https://en.wikipedia.org/wiki/David_Einhorn_(hedge_fund_manager)" },
+  { cik: 1079114, name: "David Einhorn", role: "Greenlight Capital, founder (reports to 2023)", gender: "m", source: "https://en.wikipedia.org/wiki/David_Einhorn_(hedge_fund_manager)" },
+  { cik: 1345471, name: "Nelson Peltz", role: "Trian Fund Management, co-founder", gender: "m", source: "https://en.wikipedia.org/wiki/Nelson_Peltz" },
+  { cik: 949509, name: "Howard Marks", role: "Oaktree Capital, co-founder", gender: "m", source: "https://en.wikipedia.org/wiki/Howard_Marks_(investor)" },
+  { cik: 1709323, name: "Li Lu", role: "Himalaya Capital, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Li_Lu" },
+  { cik: 1549575, name: "Mohnish Pabrai", role: "Pabrai Investment Funds (Dalal Street), founder", gender: "m", source: "https://en.wikipedia.org/wiki/Mohnish_Pabrai" },
+  { cik: 1112520, name: "Chuck Akre", role: "Akre Capital Management, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Charles_T._Akre" },
+  { cik: 1569205, name: "Terry Smith", role: "Fundsmith, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Terry_Smith_(businessman)" },
+  { cik: 850529, name: "Ken Fisher", role: "Fisher Investments, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Kenneth_Fisher" },
+  { cik: 1135778, name: "Bill Miller", role: "Miller Value Partners, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Bill_Miller_(investor)" },
+  { cik: 1998597, name: "Barry Rosenstein", role: "JANA Partners, founder (reports as JANA Partners Management since 2023)", gender: "m", source: "https://en.wikipedia.org/wiki/Barry_Rosenstein" },
+  { cik: 1159159, name: "Barry Rosenstein", role: "JANA Partners, founder (reports to 2023)", gender: "m", source: "https://en.wikipedia.org/wiki/Barry_Rosenstein" },
+  { cik: 1138995, name: "Larry Robbins", role: "Glenview Capital, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Larry_Robbins" },
+  { cik: 934639, name: "Lee Ainslie", role: "Maverick Capital, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Lee_Ainslie" },
+  { cik: 1541617, name: "Brad Gerstner", role: "Altimeter Capital, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Brad_Gerstner" },
+  { cik: 915191, name: "Prem Watsa", role: "Fairfax Financial, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Prem_Watsa" },
+  { cik: 783412, name: "Charlie Munger", role: "Daily Journal, chairman (died 2023)", gender: "m", source: "https://en.wikipedia.org/wiki/Charlie_Munger" },
+  { cik: 807985, name: "Mason Hawkins", role: "Southeastern Asset Management, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Mason_Hawkins" },
+  { cik: 936753, name: "John W. Rogers Jr.", role: "Ariel Investments, founder", gender: "m", source: "https://en.wikipedia.org/wiki/John_W._Rogers_Jr." },
+  { cik: 1510281, name: "Boaz Weinstein", role: "Saba Capital, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Boaz_Weinstein" },
+  { cik: 1027796, name: "Richard Pzena", role: "Pzena Investment Management, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Richard_Pzena" },
+  { cik: 1352662, name: "Jeremy Grantham", role: "GMO, co-founder", gender: "m", source: "https://en.wikipedia.org/wiki/Jeremy_Grantham" },
+  { cik: 1056831, name: "Bruce Berkowitz", role: "Fairholme Capital, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Bruce_R._Berkowitz" },
+  { cik: 1512857, name: "Alan Howard", role: "Brevan Howard, co-founder", gender: "m", source: "https://en.wikipedia.org/wiki/Alan_Howard_(hedge_fund_manager)" },
+  { cik: 1647251, name: "Chris Hohn", role: "TCI Fund Management, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Chris_Hohn" },
+  { cik: 1035674, name: "John Paulson", role: "Paulson & Co., founder", gender: "m", source: "https://en.wikipedia.org/wiki/John_Paulson" },
+  { cik: 1027451, name: "Julian Robertson", role: "Tiger Management, founder (died 2022)", gender: "m", source: "https://en.wikipedia.org/wiki/Julian_Robertson" },
+  { cik: 1389507, name: "Rob Citrone", role: "Discovery Capital Management, co-founder", gender: "m", source: "https://en.wikipedia.org/wiki/Robert_Citrone" },
+  { cik: 1817187, name: "Jeffrey Ubben", role: "Inclusive Capital Partners, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Jeffrey_W._Ubben" },
+  { cik: 1081407, name: "Mario Gabelli", role: "Gabelli Funds (GAMCO), founder", gender: "m", source: "https://en.wikipedia.org/wiki/Mario_Gabelli" },
+  { cik: 1256071, name: "Kerr Neilson", role: "Platinum Asset Management, co-founder", gender: "m", source: "https://en.wikipedia.org/wiki/Kerr_Neilson" },
+  { cik: 1695459, name: "Paul Hilal", role: "Mantle Ridge, founder", gender: "m", source: "https://en.wikipedia.org/wiki/Paul_Hilal" },
 ];
 
 /**
- * Public figures whose trades the hall does not have: placeholders by the entrance. Members of Congress and the
- * executive file their trades under the Ethics in Government Act, whose reports may not be used for commercial
- * purposes (5 U.S.C. § 13107); whether and how they may appear here is the owner's decision.
+ * Public figures whose trades the books do not have yet: placeholders by the entrance. The owner asked for members of
+ * Congress and the executive branch (2026-11-26); their trade reports are being collected (task K34).
  */
 export const NOT_COLLECTED: { name: string; note: string }[] = [
-  { name: "Nancy Pelosi", note: "congressional trade reports, not collected" },
-  { name: "Donald Trump", note: "executive financial disclosures, not collected" },
-  { name: "Michael Burry", note: "Scion Asset Management: its 13F reports are not in the books yet" },
-  { name: "Stanley Druckenmiller", note: "Duquesne Family Office: its 13F reports are not in the books yet" },
-  { name: "David Tepper", note: "Appaloosa: its 13F reports are not in the books yet" },
-  { name: "Carl Icahn", note: "Icahn Capital: its 13F reports are not in the books yet" },
+  { name: "Nancy Pelosi", note: "congressional trade reports, being collected" },
+  { name: "Donald Trump", note: "executive financial disclosures, being collected" },
 ];
 
 export const FAMOUS_BY_CIK = new Map(FAMOUS_FACES.map((face) => [face.cik, face]));

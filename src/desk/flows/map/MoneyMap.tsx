@@ -25,6 +25,8 @@ export interface MapPerson {
   tone: "up" | "down" | "flat";
   /** Famous faces carry their name on the map; other pins show it on hover. */
   named: boolean;
+  /** An insider: the company it trades (its pin stands on that tile, and a click picks the company). */
+  company?: number;
 }
 export interface MapStream { from: string; to: string; usd: number }
 export interface MapThread { id: number; usd: number; way: "in" | "out" }
@@ -340,7 +342,7 @@ export default function MoneyMap(props: Props) {
       const s = toScreen(at.x, at.y);
       if (s.x < -40 || s.y < -40 || s.x > w + 40 || s.y > h + 40) continue;
       const picked = p.selection.kind === "fund" && p.selection.id === person.cik;
-      const traded = p.selection.kind === "company" && threadIds.has(person.cik);
+      const traded = p.selection.kind === "company" && (threadIds.has(person.cik) || person.company === p.selection.id);
       const dim = (p.selection.kind === "fund" && !picked) || (p.selection.kind === "company" && !traded);
       const r = 8 + person.size * 9;
       ctx.globalAlpha = dim ? 0.35 : 1;
@@ -449,7 +451,10 @@ export default function MoneyMap(props: Props) {
     if (!d || d.moved) return;
     const at = local(event);
     const hit = pick(at.x, at.y);
-    if (hit?.kind === "person") onPick({ kind: "fund", id: hit.id });
+    if (hit?.kind === "person") {
+      const company = people.find((person) => person.cik === hit.id)?.company;
+      onPick(company !== undefined ? { kind: "company", id: company } : { kind: "fund", id: hit.id });
+    }
     else if (hit?.kind === "tile") onPick({ kind: "company", id: hit.id });
     else {
       const district = districtAt(at.x, at.y);

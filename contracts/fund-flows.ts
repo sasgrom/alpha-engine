@@ -294,3 +294,25 @@ export interface FundFlowsCompany {
   /** Per quarter, newest first: who bought and who sold most. */
   quarters: { quarter: string; buyers: CompanyFundRow[]; sellers: CompanyFundRow[] }[];
 }
+
+/**
+ * The insiders of the money map: per calendar quarter, the people who bought or sold their own company's shares on the
+ * open market, largest first (scripts/build-flow-insiders.mts from the insider standard; public Form 4 reports).
+ */
+export interface FlowInsiderRow {
+  /** The reporting person's SEC CIK and name as filed ("Ullal Jayshree"); the title is the officer title, or Director. */
+  person: number;
+  name: string;
+  title: string | null;
+  /** The company (issuer) CIK. */
+  cik: number;
+  bought: number;
+  sold: number;
+  lines: number;
+}
+export interface FlowInsidersFile {
+  schemaVersion: 1;
+  builtAt: string;
+  insiderBuild: string;
+  quarters: Record<string, FlowInsiderRow[]>;
+}

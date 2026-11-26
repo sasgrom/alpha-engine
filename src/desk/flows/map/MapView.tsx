@@ -5,21 +5,22 @@
  */
 import { useMemo, useState, type ReactNode } from "react";
 import { Search, X } from "lucide-react";
-import { FUND_CATEGORY_LABEL, type FundCategory, type FlowQuarter, type FundFlowsCompany, type FundFlowsFund, type FundFlowsOverview } from "@contracts/fund-flows";
+import { FUND_CATEGORY_LABEL, type FlowInsidersFile, type FundCategory, type FlowQuarter, type FundFlowsCompany, type FundFlowsFund, type FundFlowsOverview } from "@contracts/fund-flows";
 import type { ChartPalette } from "../../charts/color";
 import { divergingColor } from "../../charts/color";
-import { fmtCap, fmtPct } from "../../format";
+import { fmtCap, fmtPct, personName } from "../../format";
 import { FAMOUS_FACES } from "../hall/famous";
 import { quarterLabel } from "../data";
 import MoneyMap, { type MapPerson, type MapPick, type MapThread } from "./MoneyMap";
 import { buildMapPlan, initialsOf, placePeople, type Tile } from "./layout";
 
 type Mode = "flow" | "outcome" | "held";
-type Group = "famous" | FundCategory;
+type Group = "famous" | "insiders" | FundCategory;
 // short names for the chips; the full name is the chip's title
 const SHORT: Record<FundCategory, string> = { index: "Index giants", manager: "Managers", quant: "Quant", hedge: "Hedge & activists", pension: "Pensions", bank: "Banks & insurers" };
 const GROUPS: { key: Group; label: string; title: string }[] = [
   { key: "famous", label: "Famous faces", title: "The best-known people behind the funds" },
+  { key: "insiders", label: "Insiders", title: "Executives, directors and large owners trading their own company's shares on the open market (Form 4)" },
   ...(Object.entries(FUND_CATEGORY_LABEL) as [FundCategory, string][]).map(([key, title]) => ({ key, label: SHORT[key], title })),
 ];
 /** At most this many pins of a group stand on the map (the largest); the list shows them all. */
@@ -38,6 +39,7 @@ interface Props {
   company: number | null;
   fundFile: FundFlowsFund | undefined;
   companyFile: FundFlowsCompany | undefined;
+  insiders: FlowInsidersFile | null | undefined;
   onPick: (pick: MapPick) => void;
   bar: ReactNode;
   panel: ReactNode | null;
@@ -45,7 +47,7 @@ interface Props {
 }
 
 export default function MapView(props: Props) {
-  const { data, row, mode, deflator, palette, dark, focus, fund, company, fundFile, companyFile, onPick } = props;
+  const { data, row, mode, deflator, palette, dark, focus, fund, company, fundFile, companyFile, insiders, onPick } = props;
   const [group, setGroup] = useState<Group>("famous");
   const [query, setQuery] = useState("");
 
@@ -93,7 +95,19 @@ export default function MapView(props: Props) {
   const labelOf = (cik: number) => FAMOUS.get(cik)?.name ?? shortName(fundsByCik.get(cik)?.name ?? String(cik));
 
   // who is listed: the group's funds that reported this quarter, largest first, or everyone matching the search
+  const inInsiders = group === "insiders";
+  // insiders of the quarter: each stands on its own company's tile; ids are negative so they never meet a fund's CIK
+  const insiderRows = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return (insiders?.quarters[row.quarter] ?? [])
+      .filter((entry) => plan.tileByCik.has(entry.cik))
+      .map((entry, index) => ({ ...entry, id: -(index + 1), label: personName(entry.name), ticker: plan.tileByCik.get(entry.cik)!.ticker }))
+      .filter((entry) => !q || entry.label.toLowerCase().includes(q) || entry.ticker.toLowerCase() === q);
+  }, [insiders, row, plan, query]);
+  const insiderById = useMemo(() => new Map(insiderRows.map((entry) => [entry.id, entry])), [insiderRows]);
+
   const listed = useMemo(() => {
+    if (group === "insiders") return [];
     const reported = new Set(row.places.map((place) => place[0]));
     const q = query.trim().toLowerCase();
     return data.funds
@@ -120,7 +134,7 @@ export default function MapView(props: Props) {
     if (fund) ciks.add(fund);
     if (company) for (const thread of threads) ciks.add(thread.id);
     const maxLog = 12.3, minLog = 9;
-    return [...ciks].filter((cik) => fundsByCik.has(cik)).map((cik) => {
+    const funds: MapPerson[] = [...ciks].filter((cik) => fundsByCik.has(cik)).map((cik) => {
       const entry = fundsByCik.get(cik)!;
       return {
         cik,
@@ -130,12 +144,37 @@ export default function MapView(props: Props) {
         tone: toneOf(cik),
         named: FAMOUS.has(cik) && group === "famous" && !query,
       };
-    }).sort((a, b) => b.size - a.size);
+    });
+    // insiders: sized by the dollars they traded ($1 million to $10 billion, log scale), blue when they bought more
+    const insiderPins: MapPerson[] = inInsiders ? insiderRows.slice(0, PINS).map((entry) => ({
+      cik: entry.id,
+      label: `${entry.label} · ${entry.ticker}`,
+      initials: initialsOf(entry.label),
+      size: Math.min(1, Math.max(0, (Math.log10(Math.max(entry.bought + entry.sold, 1)) - 6) / 4)),
+      tone: entry.bought > entry.sold ? "up" : "down",
+      named: true,
+      company: entry.cik,
+    })) : [];
+    return [...funds, ...insiderPins].sort((a, b) => b.size - a.size);
     // labelOf and toneOf read the memoized maps above
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listed, fund, company, threads, fundsByCik, group, query, fundReturns, row]);
+  }, [listed, fund, company, threads, fundsByCik, group, query, fundReturns, row, inInsiders, insiderRows]);
 
-  const positions = useMemo(() => placePeople(plan, homes, people.map((person) => person.cik)), [plan, homes, people]);
+  const positions = useMemo(() => {
+    const out = placePeople(plan, homes, people.filter((person) => person.company === undefined).map((person) => person.cik));
+    // an insider on its company's tile; several of one company around its middle
+    const used = new Map<number, number>();
+    for (const person of people) {
+      if (person.company === undefined) continue;
+      const tile = plan.tileByCik.get(person.company);
+      if (!tile) continue;
+      const n = used.get(tile.cik) ?? 0;
+      used.set(tile.cik, n + 1);
+      const angle = n * 2.39996, radius = n ? 24 * Math.sqrt(n) : 0;
+      out.set(person.cik, { x: (tile.x0 + tile.x1) / 2 + Math.cos(angle) * radius, y: (tile.y0 + tile.y1) / 2 + Math.sin(angle) * radius });
+    }
+    return out;
+  }, [plan, homes, people]);
 
   const districtNote = (name: string) => {
     const sector = row.sectors.find((entry) => entry.sector === name);
@@ -159,6 +198,15 @@ export default function MapView(props: Props) {
     return lines;
   };
   const describePerson = (cik: number) => {
+    const insider = insiderById.get(cik);
+    if (insider) {
+      return [
+        `${insider.label}${insider.title ? ` · ${insider.title}` : ""}`,
+        `${insider.ticker} · ${quarterLabel(row.quarter)}: bought ${fmtCap(insider.bought)} · sold ${fmtCap(insider.sold)} on the open market`,
+        "Form 4 reports (the insider standard)",
+        "Click: the company and who traded it",
+      ];
+    }
     const entry = fundsByCik.get(cik), face = FAMOUS.get(cik), flow = fundFlows.get(cik), own = fundReturns.get(cik);
     const lines = [face ? `${face.name} · ${face.role}` : entry?.name ?? String(cik)];
     if (face && entry) lines.push(entry.name);
@@ -178,15 +226,34 @@ export default function MapView(props: Props) {
           <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Find a person or a fund" aria-label="Find a person or a fund" />
           {query && <button type="button" className="desk-icon-button" onClick={() => setQuery("")} aria-label="Clear the search"><X size={13} aria-hidden="true" /></button>}
         </div>
-        {!query && (
+        {(!query || inInsiders) && (
           <div className="desk-map-groups" role="tablist" aria-label="Groups of people">
             {GROUPS.map((entry) => (
               <button key={entry.key} type="button" role="tab" aria-selected={group === entry.key} onClick={() => setGroup(entry.key)} title={entry.title}>{entry.label}</button>
             ))}
           </div>
         )}
-        <p className="desk-map-count">{listed.length} {query ? "found" : "reported this quarter"}{listed.length > PINS && !query ? ` · the ${PINS} largest stand on the map` : ""}</p>
+        {inInsiders ? (
+          <p className="desk-map-count">{insiderRows.length} {query ? "found" : `largest open-market traders of ${quarterLabel(row.quarter)}`}{!insiders ? " · not built yet" : ""}</p>
+        ) : (
+          <p className="desk-map-count">{listed.length} {query ? "found" : "reported this quarter"}{listed.length > PINS && !query ? ` · the ${PINS} largest stand on the map` : ""}</p>
+        )}
         <ul className="desk-map-list">
+          {inInsiders && insiderRows.map((entry) => {
+            const net = entry.bought - entry.sold;
+            return (
+              <li key={entry.id}>
+                <button type="button" aria-pressed={company === entry.cik} onClick={() => onPick({ kind: "company", id: entry.cik })}>
+                  <span className="desk-map-avatar" data-tone={net > 0 ? "up" : "down"} aria-hidden="true">{initialsOf(entry.label)}</span>
+                  <span className="desk-map-who">
+                    <strong>{entry.label}</strong>
+                    <span>{entry.title ?? "Insider"} · {entry.ticker}</span>
+                  </span>
+                  <span className="desk-map-net" data-way={net >= 0 ? "in" : "out"}>{`${net < 0 ? "−" : "+"}${fmtCap(Math.abs(net))}`}</span>
+                </button>
+              </li>
+            );
+          })}
           {listed.map((entry) => {
             const face = FAMOUS.get(entry.cik), flow = fundFlows.get(entry.cik), tone = toneOf(entry.cik), net = flow ? flow.bought - flow.sold : null;
             return (
@@ -203,7 +270,7 @@ export default function MapView(props: Props) {
             );
           })}
         </ul>
-        <p className="desk-map-note">Politicians, insiders and activists are being collected and will join these lists.</p>
+        <p className="desk-map-note">Politicians and activists are being collected and will join these lists.</p>
       </aside>
       <div className="desk-map-main">
         <MoneyMap

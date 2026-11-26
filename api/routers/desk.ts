@@ -20,7 +20,7 @@ import { z } from "zod";
 import { readDeskOptionChain } from "../services/desk-option-chain";
 import type { DeskCompanyActions, DeskCompanyFilings, DeskCompanyGuidance, DeskCompanyHolders, DeskCompanyInsiders, DeskCompanyStatements, DeskGuidanceMarket, DeskInsiderMarket, DeskScreen } from "@contracts/desk-company";
 import type { EngineFlowCompany, EngineFlowIndex } from "@contracts/engine-flow";
-import type { FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
+import type { FlowInsidersFile, FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
 import { operationsHealth } from "../../worker/lib/operations-health";
 import { readSourceFreshness } from "../services/source-freshness";
 import { readSecuritySummary } from "../services/security-events";
@@ -48,6 +48,8 @@ export const deskRouter = createRouter({
   flowsOverview: authedQuery.query(() => readFundFlowsFile<FundFlowsOverview>("overview.json")),
   flowsFund: authedQuery.input(entity).query(({ input }) => readFundFlowsFile<FundFlowsFund>(`fund/${input.cik}.json`)),
   flowsCompany: authedQuery.input(entity).query(({ input }) => readFundFlowsFile<FundFlowsCompany>(`company/${input.cik}.json`)),
+  // the money map's insiders (public Form 4 reports, the insider standard), for every signed-in reader like the overview
+  flowsInsiders: authedQuery.query(() => readFundFlowsFile<FlowInsidersFile>("insiders.json")),
   companyStatements: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyStatements>(`statements/${input.cik}.json`)),
   companyActions: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyActions>(`actions/${input.cik}.json`)),
   companyHolders: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyHolders>(`holders/${input.cik}.json`)),

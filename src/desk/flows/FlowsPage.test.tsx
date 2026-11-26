@@ -77,6 +77,10 @@ describe("the fund-flow page, reading view", () => {
     await click(host.querySelector(".desk-map-list button"));
     await waitUntil(() => text().includes("From its own filings"));
     expect(host.querySelector(".desk-map-panel")).not.toBeNull();
+    // insiders stand on their own company and lead to it
+    await click(button(host, "Insiders"));
+    await waitUntil(() => text().includes("Jen Hsun Huang"));
+    expect(text()).toContain("President and CEO · NVDA");
     // the other views stay one click away
     expect(button(host, "Reading view")).toBeTruthy();
   });
