@@ -76,3 +76,28 @@ consensus EPS was the missing input.
 ## Results
 
 (Added after the runs. Pilot on 50 tickers first, marked as a pilot; the verdict waits for the full archive.)
+
+### Pilot, 50 tickers (A..AZO), 2026-11-26 — not the verdict
+
+Lab `src/research/surprise/surprise_test.py`; outputs `D:/research/alpha-engine/engine/surprise/surprise-test-pilot50.json`
+(with 1,000 shuffles) and `surprise-test-pilot50-account.json` (the account; same code, shuffles off). 3,103 events
+2005-03-17..2026-10-30, all 50 mapped to the panel by CIK, S1 on 3,091.
+
+- **Sanity passes:** rank IC with the reaction R0: S1 0.263 (t 12.8), S2 0.272 (t 12.3) over 87 quarters. Data and timing
+  are sound.
+- **Q1 drift** (rank IC in %, t): S1 D1 4.6 (2.37), D20 3.8 (1.98), D60 2.1 (1.16); S2 D1 5.4 (2.62), D20 3.2 (1.65),
+  D60 2.2 (1.17). Halves of the best cell S2 D1: 6.0 (1.79) and 4.8 (1.98), same sign. Last 3 years: D1 negative (S1
+  −3.6, t −1.23), D60 positive (S1 6.1, t 2.74, 12 quarters). Top minus bottom fifth: D1 +0.37% / +0.39% per event
+  (t 2.1), D20 +0.5% (t 1.3), D60 +0.1..0.5% (t ≤ 0.6). Family-wise: best |t| 2.62, p 0.057 against the shuffles
+  (95th percentile 2.70) — just short of the bar. $1M accounts (top fifth, 60 sessions): S1 +1.87%/yr over the sector
+  money (t 0.90), S2 +3.16%/yr (t 1.40); their levels ($26.5M and $27.7M from $1M) only show the universe is survivors.
+- **Survivor control is weak as designed:** measuring against surviving peers changes the ICs by at most 0.01 point,
+  because a sector benchmark shifts every event of a quarter and sector alike, while the rank IC is taken across them.
+  The bias that matters is in the event set (today's members only); the full run reports it as unresolved unless
+  former members' consensus can be obtained.
+- **Q2:** the surprise is predictable — P1 forecasts S1 at rank IC 0.335 (t 18.3), P2 at 0.284 (t 13.6) — but the
+  predicted part does not earn: P1 vs R0 −2.7 (t −1.60), vs D1 −1.5 (t −0.84); P2 vs R0 −3.5 (t −1.88); both halves
+  negative; shuffle p 0.227. The market expects the habitual beat, as it expected the guidance miss.
+- **Pilot reading:** a small first-day continuation (about 0.4% top minus bottom fifth) that does not survive the
+  family-wise bar on 50 names, no reliable 60-day drift, and a predictable surprise that is already priced. Stage 1 needs
+  information the consensus lacks. Verdict on the full archive.
