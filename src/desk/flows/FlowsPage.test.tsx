@@ -23,12 +23,12 @@ const click = async (element: Element | null | undefined) => {
 const button = (host: HTMLElement, text: string) => [...host.querySelectorAll("button")].find((element) => (element.textContent ?? "").includes(text));
 
 describe("the fund-flow page, reading view", () => {
-  it("has no WebGL in the test browser, so the page opens as the reading view", () => {
+  it("has no WebGL in the test browser (the 3D library is then not offered)", () => {
     expect(webglAvailable()).toBe(false);
   });
 
   it("tells the latest quarter and follows the money from a fund to a company and back", async () => {
-    mounted = await mountDesk("admin", "/desk/flows", "Fund flows");
+    mounted = await mountDesk("admin", "/desk/flows?view=reading", "Fund flows");
     const { host, calls } = mounted;
     await waitUntil(() => (host.textContent ?? "").includes("Most bought"));
     expect(calls).toContain("desk.flowsOverview");
@@ -58,6 +58,27 @@ describe("the fund-flow page, reading view", () => {
     expect(text()).toContain("last report Q4 2025");
     // the same figures as a table
     expect(host.querySelector("table.desk-table")?.textContent).toContain("Information Technology");
+  });
+
+  it("opens as the money map: people by group on the left, a person's click follows its money", async () => {
+    mounted = await mountDesk("admin", "/desk/flows", "Money map");
+    const { host } = mounted;
+    const text = () => host.textContent ?? "";
+    await waitUntil(() => host.querySelector("canvas.desk-map-canvas") !== null && text().includes("Famous faces"));
+    // the famous faces first, under their own names
+    expect(text()).toContain("Warren Buffett");
+    expect(text()).not.toContain("3D library");
+    // a group of funds by kind, and back
+    await click(button(host, "Index giants"));
+    await waitUntil(() => text().includes("BlackRock"));
+    await click(button(host, "Famous faces"));
+    // a click on a person selects the fund and opens its record beside the map (the record may come from the query
+    // cache of the test before, so the text is awaited, not the call)
+    await click(host.querySelector(".desk-map-list button"));
+    await waitUntil(() => text().includes("From its own filings"));
+    expect(host.querySelector(".desk-map-panel")).not.toBeNull();
+    // the other views stay one click away
+    expect(button(host, "Reading view")).toBeTruthy();
   });
 
   it("is in the main navigation for the research audience", async () => {

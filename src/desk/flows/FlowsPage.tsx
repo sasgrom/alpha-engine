@@ -19,11 +19,15 @@ import type { StreamPart } from "./hall/streams";
 import { webglAvailable } from "./hall/webgl";
 import { CatalogPanel, CompanyPanel, FundPanel, QuarterPanel, Sentence, type FlowNav } from "./panels";
 import { quarterStory } from "./story";
+import type { MapPick } from "./map/MoneyMap";
 
 const Library3D = lazy(() => import("./Library3D"));
+const MapView = lazy(() => import("./map/MapView"));
 const TOUR_KEY = "alpha.desk.flows.tour";
 
-type View = "library" | "reading";
+// the money map is the main view since 2026-11-26 (owner: "create new look per your recommendations"); the 3D library
+// stays as it was ("leave 3d as it is done, let it survive for now")
+type View = "map" | "library" | "reading";
 type Mode = "flow" | "outcome" | "held";
 type Tab = "quarter" | "find" | "selected";
 
@@ -60,7 +64,8 @@ export default function FlowsPage() {
   const state = useFlowState(overview.data);
   const { row, fund, company, sector, set, params } = state;
   const canWalk = useMemo(() => webglAvailable(), []);
-  const view: View = params.get("view") === "reading" || !canWalk ? "reading" : "library";
+  const viewParam = params.get("view");
+  const view: View = viewParam === "reading" ? "reading" : viewParam === "library" && canWalk ? "library" : "map";
   const show = params.get("show");
   const mode: Mode = show === "outcome" ? "outcome" : show === "held" ? "held" : "flow";
   const real = params.get("real") === "1";
@@ -164,7 +169,7 @@ export default function FlowsPage() {
     if (!root) return;
     const apply = () => {
       root.style.setProperty("--desk-vw", `${document.documentElement.clientWidth}px`);
-      const hall = document.querySelector<HTMLElement>(".desk-lib");
+      const hall = document.querySelector<HTMLElement>(".desk-lib, .desk-map");
       if (hall) root.style.setProperty("--desk-lib-top", `${Math.max(0, Math.round(hall.getBoundingClientRect().top + window.scrollY))}px`);
     };
     apply();
@@ -266,8 +271,8 @@ export default function FlowsPage() {
     <Segmented<View>
       label="View"
       value={view}
-      onChange={(next) => set({ view: next === "reading" ? "reading" : null })}
-      options={[{ value: "library", label: "Library" }, { value: "reading", label: "Reading view" }]}
+      onChange={(next) => set({ view: next === "map" ? null : next })}
+      options={[{ value: "map", label: "Map" }, ...(canWalk ? [{ value: "library" as View, label: "3D library" }] : []), { value: "reading", label: "Reading view" }]}
     />
   );
   const modeSwitch = (
@@ -283,7 +288,7 @@ export default function FlowsPage() {
       <input type="checkbox" checked={real} onChange={(event) => set({ real: event.target.checked ? "1" : null })} /> after inflation
     </label>
   );
-  const timeline = <FlowTimeline quarters={data.quarters} selected={row.quarter} onSelect={(quarter) => { setPlaying(false); set({ q: quarter }); }} palette={palette} height={view === "library" ? 64 : 132} />;
+  const timeline = <FlowTimeline quarters={data.quarters} selected={row.quarter} onSelect={(quarter) => { setPlaying(false); set({ q: quarter }); }} palette={palette} height={view === "reading" ? 132 : view === "map" ? 52 : 64} />;
   const playButton = (
     <button type="button" className="desk-icon-button" onClick={() => {
       if (running) return setPlaying(false);
@@ -323,6 +328,60 @@ export default function FlowsPage() {
       {data.openQuarter ? ` ${quarterLabel(data.openQuarter.quarter)} is still being filed (${data.openQuarter.funds} reports so far) and is not shown.` : ""}
     </p>
   );
+
+  if (view === "map") {
+    const onMapPick = (pick: MapPick) => {
+      setTour(null);
+      if (pick.kind === "company") set({ company: pick.id === company ? null : pick.id, fund: null });
+      else if (pick.kind === "fund") set({ fund: pick.id === fund ? null : pick.id, company: null });
+      else if (pick.kind === "sector") set({ sector: pick.name === sector ? null : pick.name, fund: null, company: null });
+      else set({ fund: null, company: null });
+    };
+    const bar = (
+      <>
+        <div>
+          <h1>Money map</h1>
+          <p>
+            <strong>{quarterLabel(row.quarter)}</strong> · {row.funds} funds · bought <strong>{fmtCap(row.bought)}</strong> · sold <strong>{fmtCap(row.sold)}</strong>
+            {sector ? <> · <button type="button" className="desk-lib-chip" onClick={() => nav.sector(null)} aria-label={`Clear: ${sector}`}>{sector} <X size={12} aria-hidden="true" /></button></> : null}
+          </p>
+        </div>
+        <div className="desk-map-bar-controls">
+          {modeSwitch}
+          {mode === "outcome" && inflation}
+          {viewSwitch}
+          <button type="button" className="desk-icon-button" aria-pressed={panelOpen} onClick={togglePanel} aria-label={panelOpen ? "Hide the details" : "Show the details"} title={panelOpen ? "Hide the details" : "Details of the quarter and of what is selected"}>
+            {panelOpen ? <PanelRightClose size={16} aria-hidden="true" /> : <PanelRightOpen size={16} aria-hidden="true" />}
+          </button>
+        </div>
+      </>
+    );
+    const foot = (
+      <>
+        <div className="desk-lib-time">
+          {playButton}
+          <div style={{ flex: 1, minWidth: 0 }}>{timeline}</div>
+        </div>
+        <MapLegend mode={mode} real={real} />
+      </>
+    );
+    return (
+      <>
+        <Suspense fallback={<Shimmer height={520} />}>
+          <MapView
+            data={data} row={row} mode={mode} deflator={deflator} palette={palette} dark={theme.resolved === "dark"}
+            focus={sector} fund={fund} company={company}
+            fundFile={fundFile.data ?? undefined} companyFile={companyFile.data ?? undefined}
+            onPick={onMapPick} bar={bar} foot={foot} panel={panelOpen ? panel : null}
+          />
+        </Suspense>
+        <div style={{ marginTop: 14, display: "grid", gap: 6 }}>
+          {provenance}
+          <DevNotes page="flows" />
+        </div>
+      </>
+    );
+  }
 
   if (view === "library") {
     // what the reader has narrowed the hall to, each with a way back
@@ -370,7 +429,8 @@ export default function FlowsPage() {
                   <Route size={14} aria-hidden="true" style={{ marginRight: 5, verticalAlign: "-2px" }} />Walk me through
                 </button>
               </div>
-              <div className="desk-seg" role="group" aria-label="The other view of these figures">
+              <div className="desk-seg" role="group" aria-label="The other views of these figures">
+                <button type="button" onClick={() => set({ view: null })} title="The money map: the same figures flat, fast and zoomable">Money map</button>
                 <button type="button" onClick={() => set({ view: "reading" })} title="The same figures as charts and tables">
                   <BookOpen size={14} aria-hidden="true" style={{ marginRight: 5, verticalAlign: "-2px" }} />Reading view
                 </button>
@@ -495,7 +555,8 @@ export default function FlowsPage() {
           <p><Sentence parts={quarterSentence(row)} /></p>
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center" }}>
-          {canWalk ? viewSwitch : <span className="desk-muted" style={{ fontSize: 12.5 }}><Library size={14} aria-hidden="true" /> The library view needs WebGL, which this browser does not offer.</span>}
+          {viewSwitch}
+          {!canWalk && <span className="desk-muted" style={{ fontSize: 12.5 }}><Library size={14} aria-hidden="true" /> The 3D library needs WebGL, which this browser does not offer.</span>}
         </div>
       </div>
       <div className="desk-grid">
@@ -518,6 +579,23 @@ export default function FlowsPage() {
         <p className="desk-muted" style={{ margin: 0, fontSize: 12 }}><BookOpen size={13} aria-hidden="true" /> A 13F report is a list of holdings at a quarter end, public up to 45 days later. A flow here is the change between two such lists; nothing inside a quarter is seen.</p>
         <DevNotes page="flows" />
       </div>
+    </div>
+  );
+}
+
+/** What the map's colours say, in one line. */
+function MapLegend({ mode, real }: { mode: Mode; real: boolean }) {
+  return (
+    <div className="desk-lib-legend">
+      {mode === "held" ? (
+        <span>tiles: the value the tracked funds hold, darker gold for more · tile size: value held in the latest quarter</span>
+      ) : (
+        <>
+          <span><span className="desk-flow-dot" data-way="in" aria-hidden="true" />{mode === "flow" ? "bought, net" : "gained since"}</span>
+          <span><span className="desk-flow-dot" data-way="out" aria-hidden="true" />{mode === "flow" ? "sold, net" : "lost since"}</span>
+          <span className="desk-lib-legend-note">{mode === "flow" ? "streams: money moved between sectors (an estimate), red where it left, blue where it arrived · pins: people, blue when their book beat all funds" : `tiles: the stock's return since that quarter${real ? ", after inflation" : ""}`}</span>
+        </>
+      )}
     </div>
   );
 }

@@ -47,9 +47,14 @@ const entries = (JSON.parse(readFileSync("D:/research/alpha-engine/news/lookup/c
 const index = new CompanyIndex(entries);
 const resolved = new Map<string, number | null>();
 const cikOf = (organization: string) => {
+  // bounded: years of organization names would otherwise fill the memory (2026-11-26: 22 GB with this unbounded)
+  if (resolved.size > 300_000) resolved.clear();
   if (!resolved.has(organization)) resolved.set(organization, organization.length >= 3 ? index.resolve(organization)?.cik ?? null : null);
   return resolved.get(organization)!;
 };
+// the zips and their text are large buffers outside the heap; with several downloads at once the collector runs too
+// rarely for them, so it is asked to run every few files (start with NODE_OPTIONS=--expose-gc)
+const collect = (globalThis as { gc?: () => void }).gc;
 
 mkdirSync(path.join(root, "rows"), { recursive: true });
 let finished = 0, bytes = 0, matched = 0;
@@ -75,6 +80,7 @@ async function one(stamp: string): Promise<void> {
       if (lines.length) appendFileSync(path.join(root, "rows", `${month}.jsonl`), lines.join("\n") + "\n");
       appendFileSync(path.join(root, "done.txt"), `${stamp}\t${records.length}\t${lines.length}\t${body.length}\n`);
       finished++; bytes += body.length; matched += lines.length;
+      if (collect && finished % 4 === 0) collect();
       return;
     } catch (error) {
       lastError = (error as Error).message;
@@ -87,7 +93,7 @@ async function one(stamp: string): Promise<void> {
 let next = 0;
 const report = setInterval(() => {
   const seconds = (Date.now() - started) / 1000;
-  console.log(`${new Date().toISOString()} ${finished}/${queue.length} files · ${(bytes / 1e9).toFixed(2)} GB · ${(bytes / 1e6 / seconds).toFixed(1)} MB/s · ${matched} rows · eta ${((queue.length - finished) * seconds / Math.max(finished, 1) / 3600).toFixed(1)} h`);
+  console.log(`${new Date().toISOString()} ${finished}/${queue.length} files · ${(bytes / 1e9).toFixed(2)} GB · ${(bytes / 1e6 / seconds).toFixed(1)} MB/s · ${matched} rows · memory ${(process.memoryUsage().rss / 1e9).toFixed(1)} GB · eta ${((queue.length - finished) * seconds / Math.max(finished, 1) / 3600).toFixed(1)} h`);
 }, 60_000);
 await Promise.all(Array.from({ length: workers }, async () => { while (next < queue.length) await one(queue[next++]); }));
 clearInterval(report);
