@@ -104,6 +104,13 @@ describe("news briefs", () => {
     expect(openThreads([brief], new Date("2026-11-28T13:00:00Z"))).toEqual([]);
   });
 
+  it("reads the parts of a hyphenated word and an SEC form name, and sentence openers, without taking them for names", () => {
+    expect(checkAgainst("SpaceX and Tesla may merge.", ["A SpaceX-Tesla Deal Could Come in December"]).ok).toBe(true);
+    expect(checkAgainst("Alphabet filed an 8-K on Monday.", ["8-K - Alphabet Inc. (0001652044) (Filer)"]).ok).toBe(true);
+    expect(checkAgainst("Conversely, Bernstein sees upside.", ["Bernstein sees upside for Acme"]).ok).toBe(true);
+    expect(checkAgainst("SpaceX and Boeing may merge.", ["A SpaceX-Tesla Deal Could Come in December"])).toMatchObject({ ok: false, names: ["Boeing"] });
+  });
+
   it("accepts a spelled-out abbreviation or small number the sources state, and nothing else", () => {
     expect(checkAgainst("The European Union delayed a vote; thirteen funds bought.", ["EU delays vote", "13 big funds bought"]).ok).toBe(true);
     expect(checkAgainst("The United Kingdom raised a tax.", ["EU delays vote"])).toMatchObject({ ok: false, names: ["United", "Kingdom"] });

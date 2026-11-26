@@ -139,7 +139,7 @@ const shortFile = path.resolve("worker/.runs/desk-short-interest.json");
 const shortSince = new Date(Date.now() - 150 * 86_400_000).toISOString().slice(0, 10);
 const shortRows: Array<ShortInterestRow & { cik: number }> = existsSync(shortFile)
   ? Object.entries((JSON.parse(readFileSync(shortFile, "utf8")) as DeskShortInterestFile).companies).flatMap(([cik, points]) =>
-      points.filter((point) => point.date >= shortSince).map((point) => ({ cik: Number(cik), date: point.date, shares: point.shares, pctFloat: null, daysToCover: point.daysToCover })))
+      points.filter((point) => point.date >= shortSince).map((point) => ({ cik: Number(cik), date: point.date, shares: point.shares, pctFloat: null, pctShares: point.shareOfShares ?? null, daysToCover: point.daysToCover })))
   : [];
 const insiderSince = new Date(Date.now() - 150 * 86_400_000).toISOString().slice(0, 10);
 const insiderTradeRows = companyRows.flatMap((company) =>
@@ -150,7 +150,7 @@ const group = <T extends { cik: number }>(rows: T[]) => {
   for (const row of rows) map.set(Number(row.cik), [...(map.get(Number(row.cik)) ?? []), row]);
   return map;
 };
-const shortInterest = new Map([...group(shortRows)].map(([cik, rows]) => [cik, shortInterestSummary(rows.map((row) => ({ date: row.date, shares: row.shares === null ? null : Number(row.shares), pctFloat: row.pctFloat === null ? null : Number(row.pctFloat), daysToCover: row.daysToCover === null ? null : Number(row.daysToCover) })))!] as const));
+const shortInterest = new Map([...group(shortRows)].map(([cik, rows]) => [cik, shortInterestSummary(rows.map((row) => ({ date: row.date, shares: row.shares === null ? null : Number(row.shares), pctFloat: row.pctFloat === null ? null : Number(row.pctFloat), pctShares: row.pctShares ?? null, daysToCover: row.daysToCover === null ? null : Number(row.daysToCover) })))!] as const));
 const insiderRows = new Map<number, InsiderTradeRow[]>([...group(insiderTradeRows)].map(([cik, rows]) => [cik, rows.map((row) => ({ date: row.date, code: row.code, insider: row.insider, shares: row.shares === null ? null : Number(row.shares), price: row.price === null ? null : Number(row.price), plan: Boolean(row.plan) }))]));
 // the registry check that keeps the ticker fix honest: index members whose row disagrees with the GICS snapshot
 const registryIssues = registryCorrections(companyRows.map((row) => ({ cik: Number(row.cik), ticker: row.ticker, sector: row.sector, industry: row.industry }))).map((issue) =>

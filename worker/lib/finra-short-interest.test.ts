@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildDeskShortInterest, finraSymbol, parseFinraShortInterest, shortInterestCandidates } from "./finra-short-interest";
+import { buildDeskShortInterest, finraSymbol, parseFinraShortInterest, shareCountAt, shareCountsFromStatements, shortInterestCandidates } from "./finra-short-interest";
 
 const HEADER = `"accountingYearMonthNumber"|"symbolCode"|"issueName"|"issuerServicesGroupExchangeCode"|"marketClassCode"|"currentShortPositionQuantity"|"previousShortPositionQuantity"|"stockSplitFlag"|"averageDailyVolumeQuantity"|"daysToCoverQuantity"|"revisionFlag"|"changePercent"|"changePreviousNumber"|"settlementDate"`;
 const line = (symbol: string, shares: string, volume: string, days: string, date: string) => `"${date.replaceAll("-", "")}"|"${symbol}"|"Name"|"A"|"NYSE"|"${shares}"|"1"||"${volume}"|"${days}"||"0.00"|"0"|"${date}"`;
@@ -69,6 +69,25 @@ describe("the desk's short interest history", () => {
     const file = buildDeskShortInterest({ files: [october], companies: [{ cik: 1, ticker: "BRK-B" }, { cik: 2, ticker: "BRK.B" }, { cik: 3, ticker: "A" }], builtAt: "x" });
     expect(file.ambiguous).toEqual(["BRKB"]);
     expect(Object.keys(file.companies)).toEqual(["3"]);
+  });
+
+  it("divides shares short by the share count filed by the settlement date, all classes, never a later one", () => {
+    const statements = {
+      quarters: [{ end: "2026-03-31" }, { end: "2026-06-30" }, { end: "2026-09-30" }],
+      statements: {
+        income: [{ code: "shareswa", cells: [{ value: 990, filed: "2026-05-01" }, { value: 995, filed: "2026-08-01" }, { value: 1000, filed: "2026-11-01" }] }],
+        balance: [{ code: "sharesBasic", cells: [null, { value: 1000, filed: "2026-08-01" }, { value: 2000, filed: "2026-11-01" }] }],
+      },
+    };
+    const counts = shareCountsFromStatements(statements);
+    expect(counts.map((count) => [count.end, count.kind])).toEqual([["2026-03-31", "weighted average"], ["2026-06-30", "outstanding"], ["2026-09-30", "outstanding"]]);
+    expect(shareCountAt(counts, "2026-10-30")).toMatchObject({ end: "2026-06-30", shares: 1000 });
+    expect(shareCountAt(counts, "2026-07-15")).toMatchObject({ end: "2026-03-31", shares: 990 });
+    expect(shareCountAt(counts, "2027-06-30")).toBeNull();                      // newest filed more than 200 days before
+    const file = buildDeskShortInterest({ files: [october], companies: [{ cik: 1, ticker: "A" }, { cik: 1652044, ticker: "GOOGL" }], builtAt: "x", shareCounts: new Map([[1, counts]]) });
+    expect(file.companies["1"][0]).toMatchObject({ shareOfShares: 0.1, shareCount: { end: "2026-06-30", kind: "outstanding" } });
+    const several = buildDeskShortInterest({ files: [parseFinraShortInterest([HEADER, line("GOOGL", "100", "50", "2.00", "2026-10-30")].join("\n"))], companies: [{ cik: 1652044, ticker: "GOOGL" }], builtAt: "x", shareCounts: new Map([[1652044, counts]]) });
+    expect(several.companies["1652044"][0]).toMatchObject({ shareOfShares: null, shareCount: null });
   });
 
   it("refuses a settlement read twice and no file at all", () => {

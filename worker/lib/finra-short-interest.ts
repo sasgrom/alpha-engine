@@ -71,7 +71,49 @@ export function finraSymbol(ticker: string): string {
   return ticker.toUpperCase().replace(/[^A-Z0-9]/g, "");
 }
 
-export interface DeskShortInterestPoint { date: string; shares: number; averageDailyVolume: number | null; daysToCover: number | null }
+/** A company's share count for one quarter, as filed (the desk's statements file, from the fundamentals standard). */
+export interface ShareCount { end: string; filed: string; shares: number; kind: "outstanding" | "weighted average" }
+
+export interface DeskShortInterestPoint {
+  date: string; shares: number; averageDailyVolume: number | null; daysToCover: number | null;
+  /**
+   * Shares short / the company's share count known at the settlement date (all its share classes): the newest quarter
+   * filed on or before that date, at most SHARE_COUNT_MAX_AGE_DAYS old, period-end shares outstanding where filed, else
+   * the weighted average. Null without such a count, above 1, or for a company with several listed common classes
+   * (FINRA counts one class, the share count all of them). Absent in files built before 2026-11-26.
+   */
+  shareOfShares?: number | null;
+  shareCount?: ShareCount | null;
+}
+
+/**
+ * Companies whose common stock trades under more than one symbol, checked by hand on 2026-11-26 against SEC
+ * company_tickers_exchange (notes, preferreds and foreign OTC lines set aside): Brown-Forman BF-A/BF-B, Berkshire
+ * BRK-A/BRK-B, Fox FOXA/FOX, Alphabet GOOGL/GOOG, Lennar LEN/LEN-B, McCormick MKC/MKC-V, News Corp NWSA/NWS.
+ */
+export const SEVERAL_LISTED_CLASSES = new Set([14693, 1067983, 1754301, 1652044, 920760, 63754, 1564708]);
+export const SHARE_COUNT_MAX_AGE_DAYS = 200;
+
+/** The share counts of a desk statements file: per quarter, period-end shares outstanding, else the weighted average. */
+export function shareCountsFromStatements(file: { quarters: { end: string }[]; statements: Record<string, { code: string; cells: ({ value: number | null; filed: string } | null)[] }[]> }): ShareCount[] {
+  const line = (code: string) => Object.values(file.statements).flat().find((row) => row.code === code)?.cells ?? [];
+  const outstanding = line("sharesBasic"), average = line("shareswa");
+  const counts: ShareCount[] = [];
+  file.quarters.forEach((quarter, index) => {
+    const a = outstanding[index], b = average[index];
+    if (a && a.value && a.value > 0) counts.push({ end: quarter.end, filed: a.filed, shares: a.value, kind: "outstanding" });
+    else if (b && b.value && b.value > 0) counts.push({ end: quarter.end, filed: b.filed, shares: b.value, kind: "weighted average" });
+  });
+  return counts;
+}
+
+/** The count known at a date: filed on or before it, newest quarter end first, at most SHARE_COUNT_MAX_AGE_DAYS old. */
+export function shareCountAt(counts: ShareCount[], date: string): ShareCount | null {
+  const oldest = new Date(Date.parse(`${date}T00:00:00Z`) - SHARE_COUNT_MAX_AGE_DAYS * 86_400_000).toISOString().slice(0, 10);
+  const known = counts.filter((count) => count.filed <= date && count.filed >= oldest);
+  known.sort((x, y) => y.end.localeCompare(x.end) || y.filed.localeCompare(x.filed));
+  return known[0] ?? null;
+}
 
 export interface DeskShortInterestFile {
   schemaVersion: typeof DESK_SHORT_INTEREST_SCHEMA_VERSION;
@@ -91,7 +133,7 @@ export interface DeskShortInterestFile {
  * Each company's readings over the given settlement files. A company is matched by its ticker in FINRA's spelling;
  * one without a row in a file simply has no reading for that date. A symbol two companies share is given to neither.
  */
-export function buildDeskShortInterest(params: { files: FinraShortInterestRow[][]; companies: { cik: number; ticker: string }[]; builtAt: string }): DeskShortInterestFile {
+export function buildDeskShortInterest(params: { files: FinraShortInterestRow[][]; companies: { cik: number; ticker: string }[]; builtAt: string; shareCounts?: Map<number, ShareCount[]> }): DeskShortInterestFile {
   const bySymbol = new Map<string, number>(), ambiguous = new Set<string>();
   for (const company of params.companies) {
     const symbol = finraSymbol(company.ticker);
@@ -109,7 +151,14 @@ export function buildDeskShortInterest(params: { files: FinraShortInterestRow[][
     for (const row of rows) {
       const cik = bySymbol.get(row.symbol);
       if (cik === undefined) continue;
-      (companies[String(cik)] ??= []).push({ date: row.settlementDate, shares: row.shares, averageDailyVolume: row.averageDailyVolume, daysToCover: row.daysToCover });
+      const point: DeskShortInterestPoint = { date: row.settlementDate, shares: row.shares, averageDailyVolume: row.averageDailyVolume, daysToCover: row.daysToCover };
+      if (params.shareCounts) {
+        const count = SEVERAL_LISTED_CLASSES.has(cik) ? null : shareCountAt(params.shareCounts.get(cik) ?? [], row.settlementDate);
+        const share = count ? row.shares / count.shares : null;
+        point.shareCount = count;
+        point.shareOfShares = share !== null && share <= 1 ? share : null;
+      }
+      (companies[String(cik)] ??= []).push(point);
     }
   }
   if (!settlements.length) throw new Error("No FINRA short interest file was read");

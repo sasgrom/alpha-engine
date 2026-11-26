@@ -65,6 +65,8 @@ export interface NewsBrief {
     skipped: Record<string, number>;
     /** Stories the reader had not read yet when the brief was written. */
     unread: number;
+    /** Of the stories given, those the model read with the start of the article (absent before 2026-11-26). */
+    texts?: number;
   };
   /** Picked stories that no point or update cites, newest first (at most 20). */
   others: BriefSource[];

@@ -40,6 +40,12 @@ describe("news feed parsing", () => {
     expect(feedTags("sec-8k-current", entry)).toMatchObject({ ciks: [1590715], secItems: ["4.02", "9.01"] });
   });
 
+  it("reads a time without a zone as UTC only where the feed says so, never as local time", () => {
+    const zoneless = `<rss><channel><item><title>Vivakor announces 1-for-15 reverse stock split</title><link>https://www.investing.com/news/company-news/x-93CH-5051710</link><pubDate>2026-11-25 22:51:06</pubDate></item></channel></rss>`;
+    expect(parseFeed(zoneless, { zonelessTimes: "utc" })[0].publishedAt).toBe("2026-11-25T22:51:06.000Z");
+    expect(parseFeed(zoneless)[0].publishedAt).toBeNull();
+  });
+
   it("takes exchange tickers and ISINs from wire categories, nothing from other categories", () => {
     const [wire] = parseFeed(RSS);
     expect(feedTags("globenewswire-public", wire)).toEqual({ tickers: ["ACME"], ciks: [], isins: ["US0000000001"], secItems: [] });

@@ -53,9 +53,9 @@ const now = new Date(), nowIso = now.toISOString(), day = nowIso.slice(0, 10), s
 const keepSeen = Date.now() - 45 * 86_400_000, keepStory = Date.now() - 7 * 86_400_000;
 const storyIndex = new StoryIndex(stories.filter(row => Date.parse(row.seenAt) >= keepStory));
 
-type Request = { feedId: string; publisher: string; url: string; sec?: boolean; ticker?: string; cik?: number };
+type Request = { feedId: string; publisher: string; url: string; sec?: boolean; ticker?: string; cik?: number; zonelessTimes?: "utc" };
 const requests: Request[] = [];
-if (set === "fast") requests.push(...FAST_FEEDS.map(feed => ({ feedId: feed.id, publisher: feed.publisher, url: feed.url, sec: feed.sec })));
+if (set === "fast") requests.push(...FAST_FEEDS.map(feed => ({ feedId: feed.id, publisher: feed.publisher, url: feed.url, sec: feed.sec, zonelessTimes: feed.zonelessTimes })));
 let picked: { cik: number; ticker: string; name: string }[] = [];
 if (set === "company") {
   const client = getDb().$client.promise();
@@ -114,7 +114,7 @@ for (const request of requests) {
   mkdirSync(rawDir, { recursive: true });
   writeFileSync(path.join(rawDir, `${stamp}${request.ticker ? `-${request.ticker.replace(/[^A-Z0-9.-]/g, "_")}` : ""}.xml.gz`), gzipSync(text), { flag: "wx" });
   let items: FeedItem[];
-  try { items = parseFeed(text); } catch { items = []; }
+  try { items = parseFeed(text, { zonelessTimes: request.zonelessTimes }); } catch { items = []; }
   const fresh = items.filter(item => !state.seen[itemId(request.feedId, item)]);
   // a whole answer of new items after an earlier fetch of the same feed (not a per-company query): possibly missed items
   if (!request.ticker && state.lastFetchAt && items.length >= 5 && fresh.length === items.length) { state.gaps++; counts.gaps++; }

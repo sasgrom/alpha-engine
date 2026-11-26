@@ -7,7 +7,7 @@ import { trpc } from "@/providers/trpc";
 import { findCompany, useDeskSnapshot } from "../../data";
 import { DevNotes } from "../../DevNotes";
 import { quarterLabel, useFlowsOverview } from "../../flows/data";
-import { fmtCap, fmtCompact, fmtDate, fmtNum, fmtPrice, personName } from "../../format";
+import { fmtCap, fmtCompact, fmtDate, fmtNum, fmtPct, fmtPrice, personName } from "../../format";
 import { EvidenceNote, ResearchFrame } from "../../ResearchParts";
 
 const secFiling = (cik: number, accession: string) => `https://www.sec.gov/Archives/edgar/data/${cik}/${accession.replaceAll("-", "")}/`;
@@ -175,13 +175,14 @@ export default function Ownership() {
             <div className="desk-table-wrap">
               <table className="desk-table">
                 <thead>
-                  <tr><th>Company</th><th className="num">Shares short</th><th className="num">Days to cover</th><th>As of</th></tr>
+                  <tr><th>Company</th><th className="num">Shares short</th><th className="num" title="Shares short over the share count known at that date, all share classes; not the float">Of shares</th><th className="num">Days to cover</th><th>As of</th></tr>
                 </thead>
                 <tbody>
                   {shorts.map((company) => (
                     <tr key={company.cik} style={{ cursor: "default" }}>
                       <td><CompanyLink company={company} className="desk-ticker">{company.ticker}</CompanyLink></td>
                       <td className="num">{fmtCompact(company.shortInterest!.shares)}</td>
+                      <td className="num">{company.shortInterest!.pctShares != null ? fmtPct(company.shortInterest!.pctShares, 1, false) : "—"}</td>
                       <td className="num">{fmtNum(company.shortInterest!.daysToCover, 1)}</td>
                       <td className="desk-ink-2">{fmtDate(company.shortInterest!.date, "short")}</td>
                     </tr>

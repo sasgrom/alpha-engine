@@ -10,7 +10,12 @@
 import { createHash } from "node:crypto";
 
 export type FeedSet = "fast" | "company" | "macro";
-export interface FeedSource { id: string; set: FeedSet; url: string; sec?: boolean; publisher: string }
+/**
+ * zonelessTimes: how to read a publication time without a time zone ("2026-11-25 22:51:06"). Absent: the time is
+ * unknown (null), never the machine's local time. "utc" only where it was checked against other sources.
+ */
+export interface FeedSource { id: string; set: FeedSet; url: string; sec?: boolean; publisher: string; zonelessTimes?: "utc" }
+export interface ParseOptions { zonelessTimes?: "utc" }
 export interface CompanyFeed { id: string; publisher: string; url: (ticker: string, name: string) => string }
 
 /** Feeds that cover everyone, polled every few minutes (they hold only the latest 7 to 100 items). */
@@ -23,6 +28,11 @@ export const FAST_FEEDS: FeedSource[] = [
   { id: "benzinga", set: "fast", publisher: "Benzinga", url: "https://www.benzinga.com/feed" },
   { id: "cnbc-business", set: "fast", publisher: "CNBC", url: "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10001147" },
   { id: "nasdaq-earnings", set: "fast", publisher: "Nasdaq", url: "https://www.nasdaq.com/feed/rssoutbound?category=Earnings" },
+  // Investing.com: 10 items a feed, times without a zone. They are UTC: checked on 2026-11-26 against GlobeNewswire and
+  // the SEC 8-K of the same news (Vivakor's reverse split: 8-K 21:03Z, Investing.com 22:51, GlobeNewswire 23:08Z;
+  // US or Israel time would put it in the future or before the filing it was written from).
+  ...([["25", "stock-market"], ["356", "company"], ["1061", "analyst-ratings"], ["1062", "earnings"], ["357", "insider"], ["355", "press-releases"], ["14", "economy"], ["95", "indicators"]] as const)
+    .map(([code, name]): FeedSource => ({ id: `investing-${name}`, set: "fast", publisher: "Investing.com", url: `https://www.investing.com/rss/news_${code}.rss`, zonelessTimes: "utc" })),
 ];
 /** Official macro releases, polled with the company pass. */
 export const MACRO_FEEDS: FeedSource[] = [
@@ -74,14 +84,20 @@ function attr(block: string, name: string, attribute: string): string | null {
   const match = block.match(new RegExp(`<${name}\\b[^>]*\\b${attribute}\\s*=\\s*"([^"]*)"`, "i"));
   return match ? decodeEntities(match[1]) : null;
 }
-function isoTime(value: string | null): string | null {
+const ZONELESS = /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/;
+function isoTime(value: string | null, options: ParseOptions): string | null {
   if (!value) return null;
-  const ms = Date.parse(value.trim());
+  let text = value.trim();
+  if (ZONELESS.test(text)) {
+    if (options.zonelessTimes !== "utc") return null;   // Date.parse would read it as this machine's local time
+    text = `${text.replace(" ", "T")}Z`;
+  }
+  const ms = Date.parse(text);
   return Number.isFinite(ms) ? new Date(ms).toISOString() : null;
 }
 
 /** RSS 2.0 items or Atom entries. Tolerant of namespaces, CDATA and attributes split over lines. */
-export function parseFeed(text: string): FeedItem[] {
+export function parseFeed(text: string, options: ParseOptions = {}): FeedItem[] {
   const blocks = [...text.matchAll(/<item\b[^>]*>([\s\S]*?)<\/item>/gi)].map(m => m[1]);
   const atom = blocks.length ? [] : [...text.matchAll(/<entry\b[^>]*>([\s\S]*?)<\/entry>/gi)].map(m => m[1]);
   return [...blocks, ...atom].map(block => {
@@ -92,7 +108,7 @@ export function parseFeed(text: string): FeedItem[] {
     return {
       guid: guid.trim(), url: link ? link.trim() : null, title: plainText(tag(block, "title") ?? ""),
       summary: plainText(tag(block, "description") ?? tag(block, "summary") ?? tag(block, "content") ?? "").slice(0, 4000),
-      publishedAt: isoTime(tag(block, "pubDate") ?? tag(block, "published") ?? tag(block, "updated") ?? tag(block, "dc:date")),
+      publishedAt: isoTime(tag(block, "pubDate") ?? tag(block, "published") ?? tag(block, "updated") ?? tag(block, "dc:date"), options),
       categories: categories.filter(row => row.value),
       publisher: tag(block, "source") ?? tag(block, "dc:publisher"), contributor: tag(block, "dc:contributor") ?? tag(block, "dc:creator"),
     };

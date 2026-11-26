@@ -5194,3 +5194,34 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   Kimi. Pre-existing generated changes and Claude's news files remain excluded.
 - **Next:** finish B for all 909 before C. C/D/E will include the still-listed former universe; F will add SEC Form 25/15
   or merger evidence when available. Final full test/build will be announced to Claude before running.
+
+
+## 263. Claude (Opus 5.5): article text for the briefs, Investing.com feeds, short interest as a share of shares, K29/K30 for Kimi, GDELT probe — 2026-11-26T01:30Z
+
+- **Owner, 2026-11-26:** "go ahead with 1,2,3,5": article text, broken feeds, GDELT, short interest share; FNSPID download
+  "late night after 2am" (background script waits until 02:00 PST, resumes with `curl -C -`, checks both files against
+  the dataset's SHA-256, log `news/history/fnspid/download.log`).
+- **Article text** (OPERATIONS 22h): `worker/lib/news-article.ts` (Readability 0.6.0, undici 6.29.0 with a 256 KB header
+  limit for Yahoo). Measurement `news/article-trial/*.jsonl` (192 followed stories): 17% readable, Google News 46% of
+  stories is a redirect page, nasdaq.com 403, Yahoo failed only on header size (8/8 after). The brief job prefetches and
+  stores `news/articles/<date>.jsonl`; trials `news/briefs-trial3`, `-trial4`: 51 of 122 given stories with text, 6
+  failed parts (4 right: Pentagon, Sam, 5 for 5.56; 2 ordinary words), the Yahoo Plus teaser now rejected. Check fixes:
+  hyphenated words, 8-K, sentence openers. Decoding Google News links would need Google's internal interface: blocked
+  by the session's safety check, left for the owner.
+- **Feeds** (OPERATIONS 22f): eight Investing.com feeds, zoneless times read as UTC only for them (Vivakor check), unknown
+  elsewhere. Business Wire site 403 and no reliable code list; Accesswire 403; Reddit 429/blocked, API needs an owner
+  account.
+- **Short interest** (OPERATIONS 22d): share of shares, point in time from the desk statements files; 486/501, median
+  3.0%; seven two-symbol companies left out.
+- **Kimi:** reviewed its proposals; K29 (machine-wide SEC pace, wire after part B) and K30 (companyfacts raw first,
+  overlong concepts excluded, GLOB rerun) written; F gives a coverage file; the mid-cap study is mine after K28; hard
+  links not now. Order amended: D, E, K28 pilot, K30, K29 build beside B; after B: K29 wiring, C beside full K28; then F.
+  Kimi's handoff section "258" of 00:30Z repeats an earlier number; this section continues at 263.
+- **GDELT probe** (owner's permission for Claude, AGENTS.md 3): only the static file server, no query API. Two requests:
+  `lastupdate.txt` and one GKG file (`news/gdelt-probe/20261126011500.gkg.csv.zip`, 4.4 MB, MD5 matched). 1,032 English
+  articles in 15 minutes; 169 name an indexed company by organization name, 73 a followed one; 41 checked for seven
+  followed companies were all new to our archive (AP copies on local sites, also new stories: Moody's on Nvidia,
+  Microsoft's outage explanation). Noise: TV listings, store hours. Next: a 15-minute collector of the GKG files with
+  gap backfill, its own folder, measured a day before it feeds the reader.
+- **Gates:** `npm run check`, 292 files / 1,748 tests, `npm run build`, `git diff --check` all pass (Kimi's edgar-fetch
+  work in progress was in the tree, its tests passed too).

@@ -231,6 +231,7 @@ export interface ShortInterestRow {
   date: string;
   shares: number | null;
   pctFloat: number | null;
+  pctShares?: number | null;
   daysToCover: number | null;
 }
 
@@ -244,6 +245,7 @@ export function shortInterestSummary(rows: ShortInterestRow[]): DeskShortInteres
     date: latest.date,
     shares: latest.shares,
     pctFloat: latest.pctFloat,
+    ...(latest.pctShares !== undefined ? { pctShares: latest.pctShares } : {}),
     daysToCover: latest.daysToCover,
     changePct: latest.shares !== null && prior?.shares ? latest.shares / prior.shares - 1 : null,
   };

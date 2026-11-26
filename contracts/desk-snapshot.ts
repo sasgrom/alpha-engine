@@ -43,6 +43,8 @@ export interface DeskShortInterest {
   date: string;
   shares: number | null;
   pctFloat: number | null;
+  /** Shares short / the company's share count known at that date, all classes (FINRA file, since 2026-11-26). */
+  pctShares?: number | null;
   daysToCover: number | null;
   changePct: number | null;
 }

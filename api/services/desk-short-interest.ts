@@ -5,13 +5,16 @@
  */
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
-import { DESK_SHORT_INTEREST_SCHEMA_VERSION, type DeskShortInterestFile, type DeskShortInterestPoint } from "../../worker/lib/finra-short-interest";
+import { DESK_SHORT_INTEREST_SCHEMA_VERSION, type DeskShortInterestFile, type DeskShortInterestPoint, type ShareCount } from "../../worker/lib/finra-short-interest";
 
 export interface ShortInterestReading {
   settlementDate: string;
   sharesShort: number;
   /** FINRA does not publish a float, so no share of float is given. */
   shortPercentOfFloat: null;
+  /** Shares short / the share count known at the settlement date, all classes (see DeskShortInterestPoint). */
+  shortPercentOfShares: number | null;
+  shareCount: ShareCount | null;
   /** Days to cover: shares short over average daily volume. */
   shortRatio: number | null;
   source: "finra";
@@ -33,7 +36,7 @@ export function readDeskShortInterestFile(file: string = deskShortInterestFile()
   return value;
 }
 
-const reading = (point: DeskShortInterestPoint): ShortInterestReading => ({ settlementDate: point.date, sharesShort: point.shares, shortPercentOfFloat: null, shortRatio: point.daysToCover, source: "finra" });
+const reading = (point: DeskShortInterestPoint): ShortInterestReading => ({ settlementDate: point.date, sharesShort: point.shares, shortPercentOfFloat: null, shortPercentOfShares: point.shareOfShares ?? null, shareCount: point.shareCount ?? null, shortRatio: point.daysToCover, source: "finra" });
 
 /** The latest reading, the one before it and the change in shares short; null for a company FINRA does not list. */
 export function latestDeskShortInterest(cik: number, file: string = deskShortInterestFile()): { current: ShortInterestReading; prior: ShortInterestReading | null; deltaShares: number | null } | null {

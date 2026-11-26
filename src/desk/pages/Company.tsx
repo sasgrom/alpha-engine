@@ -35,9 +35,9 @@ const RANGES: { value: Range; label: string }[] = [
   { value: "ALL", label: "Max" },
 ];
 
-function Stat({ label, value }: { label: string; value: React.ReactNode }) {
+function Stat({ label, value, title }: { label: string; value: React.ReactNode; title?: string }) {
   return (
-    <div className="desk-stat">
+    <div className="desk-stat" title={title}>
       <span>{label}</span>
       <strong>{value}</strong>
     </div>
@@ -309,7 +309,13 @@ export default function CompanyPage() {
           {short?.sharesShort ? (
             <div className="desk-stats" style={{ gridTemplateColumns: "1fr", marginTop: 6 }}>
               <Stat label={`Short interest (${fmtDate(short.settlementDate, "short")})`} value={`${fmtCompact(short.sharesShort)} shares`} />
-              {short.shortPercentOfFloat ? <Stat label="Share of float sold short" value={fmtPct(short.shortPercentOfFloat, 2, false)} /> : null}
+              {short.shortPercentOfShares !== null && short.shareCount ? (
+                <Stat
+                  label="Share of shares sold short"
+                  value={fmtPct(short.shortPercentOfShares, 1, false)}
+                  title={`Shares short over ${fmtCompact(short.shareCount.shares)} shares (${short.shareCount.kind === "outstanding" ? "outstanding at" : "weighted average for the quarter to"} ${fmtDate(short.shareCount.end, "short")}, filed ${fmtDate(short.shareCount.filed, "short")}). All share classes; not the float.`}
+                />
+              ) : null}
               {short.shortRatio ? <Stat label="Days to cover" value={fmtNum(short.shortRatio, 1)} /> : null}
             </div>
           ) : null}

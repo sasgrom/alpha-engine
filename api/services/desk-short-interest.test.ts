@@ -10,7 +10,7 @@ const file = path.join(folder, "desk-short-interest.json");
 writeFileSync(file, JSON.stringify({
   schemaVersion: 1, source: "s", asOf: "2026-10-30", settlements: ["2026-10-30", "2026-10-15"], builtAt: "b", ambiguous: [],
   companies: {
-    "1": [{ date: "2026-10-30", shares: 120, averageDailyVolume: 40, daysToCover: 3 }, { date: "2026-10-15", shares: 100, averageDailyVolume: 50, daysToCover: 2 }],
+    "1": [{ date: "2026-10-30", shares: 120, averageDailyVolume: 40, daysToCover: 3, shareOfShares: 0.012, shareCount: { end: "2026-09-30", filed: "2026-10-28", shares: 10_000, kind: "outstanding" } }, { date: "2026-10-15", shares: 100, averageDailyVolume: 50, daysToCover: 2 }],
     "2": [{ date: "2026-10-30", shares: 7, averageDailyVolume: 0, daysToCover: null }],
   },
 }));
@@ -18,8 +18,8 @@ writeFileSync(file, JSON.stringify({
 describe("a company's short interest from the FINRA file", () => {
   it("gives the latest reading, the one before and the change", () => {
     expect(latestDeskShortInterest(1, file)).toEqual({
-      current: { settlementDate: "2026-10-30", sharesShort: 120, shortPercentOfFloat: null, shortRatio: 3, source: "finra" },
-      prior: { settlementDate: "2026-10-15", sharesShort: 100, shortPercentOfFloat: null, shortRatio: 2, source: "finra" },
+      current: { settlementDate: "2026-10-30", sharesShort: 120, shortPercentOfFloat: null, shortPercentOfShares: 0.012, shareCount: { end: "2026-09-30", filed: "2026-10-28", shares: 10_000, kind: "outstanding" }, shortRatio: 3, source: "finra" },
+      prior: { settlementDate: "2026-10-15", sharesShort: 100, shortPercentOfFloat: null, shortPercentOfShares: null, shareCount: null, shortRatio: 2, source: "finra" },
       deltaShares: 20,
     });
   });

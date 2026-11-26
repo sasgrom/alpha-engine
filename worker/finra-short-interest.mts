@@ -16,7 +16,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { getDb } from "../api/queries/connection";
-import { buildDeskShortInterest, FINRA_SHORT_INTEREST_URL, parseFinraShortInterest, shortInterestCandidates } from "./lib/finra-short-interest";
+import { buildDeskShortInterest, FINRA_SHORT_INTEREST_URL, parseFinraShortInterest, shareCountsFromStatements, shortInterestCandidates, type ShareCount } from "./lib/finra-short-interest";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
 
@@ -82,8 +82,16 @@ const files = names.map((name) => {
 const client = getDb().$client.promise();
 const [companies] = await client.query("SELECT cik, ticker FROM companies WHERE ticker IS NOT NULL AND ticker <> ''") as [Array<{ cik: number; ticker: string }>, unknown];
 await client.end();
-const result = buildDeskShortInterest({ files, companies: companies.map((row) => ({ cik: Number(row.cik), ticker: String(row.ticker) })), builtAt: new Date().toISOString() });
+// share counts from the desk's statements files (fundamentals standard); a company without one gets no share of shares
+const statementsDir = path.resolve("worker/.runs/desk-company/statements");
+const shareCounts = new Map<number, ShareCount[]>();
+for (const row of companies) {
+  const file = path.join(statementsDir, `${Number(row.cik)}.json`);
+  if (existsSync(file)) shareCounts.set(Number(row.cik), shareCountsFromStatements(JSON.parse(readFileSync(file, "utf8"))));
+}
+const result = buildDeskShortInterest({ files, companies: companies.map((row) => ({ cik: Number(row.cik), ticker: String(row.ticker) })), builtAt: new Date().toISOString(), shareCounts });
 if (!dryRun) writeJsonAtomic(out, result);
 const covered = Object.keys(result.companies).length;
-prog.done(`${dryRun ? "dry run · " : ""}fetched ${fetched} (${requests} requests)${notOut.length ? ` · not out yet: ${notOut.join(", ")}` : ""} · settlements ${result.settlements.at(-1)} to ${result.asOf} (${result.settlements.length}) · ${covered} of ${companies.length} companies${result.ambiguous.length ? ` · shared symbols left out: ${result.ambiguous.join(", ")}` : ""} · ${out}`);
+const withShare = Object.values(result.companies).filter((points) => points[0]?.shareOfShares != null).length;
+prog.done(`${dryRun ? "dry run · " : ""}fetched ${fetched} (${requests} requests)${notOut.length ? ` · not out yet: ${notOut.join(", ")}` : ""} · settlements ${result.settlements.at(-1)} to ${result.asOf} (${result.settlements.length}) · ${covered} of ${companies.length} companies (${withShare} with a share of shares)${result.ambiguous.length ? ` · shared symbols left out: ${result.ambiguous.join(", ")}` : ""} · ${out}`);
 process.exit(0);

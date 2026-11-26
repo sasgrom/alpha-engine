@@ -10,7 +10,8 @@
  * the database is unreachable the last list is used). The list is also what the reader reads first.
  *
  * Inputs: the desk's day files (stories with ties and the reader's labels), the feed summaries from the archive's
- * items, the company index, the desk snapshot (names, the code-written price line). The model is gemma4:12b
+ * items, the start of the article where its page could be read (fetched here ahead of the briefs, kept in articles/ on
+ * D:; Google News and Nasdaq links stay headline-only), the company index, the desk snapshot (names, the price line). The model is gemma4:12b
  * (temperature 0, fixed seed); every number and name it writes is checked against the cited stories, and a part that
  * fails shows its headline instead. Every version is appended to briefs/<edition>/<cik>.jsonl on D: (complete, so
  * the record shows what the brief said and when); the desk reads worker/.runs/desk-news/briefs/<cik>.json.
@@ -25,6 +26,7 @@ import {
   BRIEF_MODEL, BRIEF_PROMPT_VERSION, briefAction, buildPoints, buildUpdates, checkedTopLine, etClock, MAX_ITEMS, MORNING_SCHEMA, MORNING_SYSTEM, morningMessage,
   openThreads, ordinaryWords, parseMorning, PICK_VERSION, parseUpdate, pickStories, sourceOf, UPDATE_SCHEMA, UPDATE_SYSTEM, updateMessage, type BriefInput, type OpenThread,
 } from "./lib/news-briefs";
+import { cleanArticle, fetchArticle, judgeArticle, type ArticleRecord } from "./lib/news-article";
 import { readFollowed, writeFollowed, type FollowedFile } from "./lib/news-followed";
 
 const arg = (name: string) => { const index = process.argv.indexOf(name); return index > -1 ? process.argv[index + 1] : null; };
@@ -94,6 +96,62 @@ for (let time = windowStart.getTime(); time <= now.getTime() + 86_400_000; time 
 
 // summaries only: headlines are in Title Case, so a word there says nothing about whether it is a name
 const ordinary = ordinaryWords(dayTexts);
+
+// article texts (worker/lib/news-article.ts), kept in articles/<UTC date of the fetch>.jsonl on D:, one record per try
+const articlesDir = path.join(root, "articles");
+const articles = new Map<string, ArticleRecord[]>();
+for (let time = windowStart.getTime(); time <= now.getTime() + 86_400_000; time += 86_400_000)
+  for (const line of readLines(path.join(articlesDir, `${new Date(time).toISOString().slice(0, 10)}.jsonl`))) {
+    const record = parseLine<ArticleRecord>(line);
+    if (record) articles.set(record.storyId, [...(articles.get(record.storyId) ?? []), record]);
+  }
+// a stored text is judged again by the current rules (a record of an earlier rule version may pass no longer)
+function articleOf(story: DeskNewsStory): string | undefined {
+  const record = articles.get(story.id)?.find(entry => entry.ok);
+  if (!record) return undefined;
+  const text = cleanArticle(record.text);
+  return judgeArticle(story.title, text).ok ? text : undefined;
+}
+// asked again only after a network error or a server error, at most twice in all
+const retryable = (records: ArticleRecord[]) => records.length < 2 && records.every(record => record.reason?.startsWith("error:") || record.status === 429 || record.status >= 500);
+
+/**
+ * Fetches, ahead of the briefs, the pages of the stories a brief would pick now (each followed company's picks of the
+ * last 30 hours), newest first, one page at a time, at most one request per outlet every 1.5 s, for at most
+ * --fetch-seconds (default 75) and never past the run's deadline less three minutes for the model.
+ */
+async function prefetchArticles(): Promise<{ asked: number; ok: number }> {
+  const since = new Date(now.getTime() - 30 * 3_600_000).toISOString();
+  const wanted = new Map<string, DeskNewsStory>();
+  for (const cik of followed.ciks) {
+    const tied = stories.filter(story => story.firstSeenAt >= since && story.companies.some(company => company.cik === cik));
+    for (const story of pickStories(tied, cik, since, deskCompany.get(cik)).picked) {
+      if (story.secItems.length || articleOf(story) !== undefined) continue;
+      const tried = articles.get(story.id) ?? [];
+      if (tried.length && !retryable(tried)) continue;
+      wanted.set(story.id, story);
+    }
+  }
+  const queue = [...wanted.values()].sort((a, b) => b.firstSeenAt.localeCompare(a.firstSeenAt));
+  const until = Math.min(Date.now() + Number(arg("--fetch-seconds") ?? 75) * 1000, deadline - 180_000);
+  const lastAsked = new Map<string, number>();
+  let asked = 0, ok = 0;
+  mkdirSync(articlesDir, { recursive: true });
+  for (const story of queue) {
+    if (Date.now() >= until) break;
+    let host = "";
+    try { host = new URL(story.url).hostname; } catch { /* the record says why */ }
+    const wait = (lastAsked.get(host) ?? 0) + 1500 - Date.now();
+    if (wait > 0) await new Promise(resolve => setTimeout(resolve, wait));
+    const record = await fetchArticle(story.id, story.url, story.title);
+    if (!record.reason?.startsWith("skipped")) { lastAsked.set(host, Date.now()); asked++; }
+    if (record.ok) ok++;
+    appendFileSync(path.join(articlesDir, `${record.fetchedAt.slice(0, 10)}.jsonl`), JSON.stringify(record) + "\n");
+    articles.set(story.id, [...(articles.get(story.id) ?? []), record]);
+  }
+  return { asked, ok };
+}
+const fetched = dryRun ? { asked: 0, ok: 0 } : await prefetchArticles();
 let ollama: { digest: string; version: string | null } | null = null;
 async function model(system: string, schema: object, user: string): Promise<string> {
   if (!ollama) {
@@ -155,13 +213,13 @@ for (const cik of followed.ciks) {
   const inWindow = stories.filter(story => story.firstSeenAt >= from && story.companies.some(company => company.cik === cik));
   const pick = pickStories(inWindow, cik, from, desk);
   const picked = [...pick.picked].sort(order);
-  const toInput = (story: DeskNewsStory): BriefInput => ({ story, summary: summaries.get(story.id) ?? "" });
+  const toInput = (story: DeskNewsStory): BriefInput => ({ story, summary: summaries.get(story.id) ?? "", article: articleOf(story) });
   // a morning brief continues the stories of earlier days only (a redone one never its own first version)
   const threads = openThreads([...previousBriefs(cik, clock.date), ...(latest && action.kind === "update" ? [latest] : [])], now);
   const company = `${name}${ticker ? ` (${ticker})` : ""}`;
   const base = { schemaVersion: NEWS_BRIEF_SCHEMA_VERSION, cik, ticker, name, edition: clock.date, from, to: now.toISOString(), generatedAt: now.toISOString(),
     price: priceLine(cik), model: BRIEF_MODEL, promptVersion: BRIEF_PROMPT_VERSION, pickVersion: PICK_VERSION };
-  const tally = (given: number) => ({ stories: inWindow.length, picked: picked.length, given, skipped: pick.skipped, unread: pick.unread.length });
+  const tally = (given: number, texts: number) => ({ stories: inWindow.length, picked: picked.length, given, skipped: pick.skipped, unread: pick.unread.length, texts });
 
   let brief: NewsBrief;
   if (action.kind === "morning") {
@@ -169,7 +227,7 @@ for (const cik of followed.ciks) {
     const inputs = picked.slice(0, MAX_ITEMS).map(toInput);
     if (!inputs.length) {
       counts.quiet++;
-      brief = { ...base, kind: "morning", topLine: { text: "No news of note since the close.", checked: true, changedAt: now.toISOString() }, points: [], updates: [], counts: tally(0), others: [], inputs: [], modelDigest: null, ollamaVersion: null };
+      brief = { ...base, kind: "morning", topLine: { text: "No news of note since the close.", checked: true, changedAt: now.toISOString() }, points: [], updates: [], counts: tally(0, 0), others: [], inputs: [], modelDigest: null, ollamaVersion: null };
     } else {
       const message = morningMessage(company, threads, inputs);
       if (dryRun) { console.log(`---- ${ticker} morning\n${message}\n`); continue; }
@@ -187,7 +245,7 @@ for (const cik of followed.ciks) {
         topLine = { text: inputs[0].story.title, checked: false, problems: ["the model's answer was not valid"] };
       }
       counts.failedChecks += points.filter(point => !point.checked).length + (topLine.checked ? 0 : 1);
-      brief = { ...base, kind: "morning", topLine: { ...topLine, changedAt: now.toISOString() }, points, updates: [], counts: tally(inputs.length), others: [], inputs: inputs.map(input => input.story.id), modelDigest: ollama?.digest ?? null, ollamaVersion: ollama?.version ?? null };
+      brief = { ...base, kind: "morning", topLine: { ...topLine, changedAt: now.toISOString() }, points, updates: [], counts: tally(inputs.length, inputs.filter(input => input.article).length), others: [], inputs: inputs.map(input => input.story.id), modelDigest: ollama?.digest ?? null, ollamaVersion: ollama?.version ?? null };
       brief.others = othersOf(picked, citedIds(brief));
     }
     counts.morning++;
@@ -211,7 +269,7 @@ for (const cik of followed.ciks) {
       if (checked.checked) topLine = { ...checked, changedAt: now.toISOString() };
       else counts.failedChecks++;
     }
-    brief = { ...latest!, ...base, kind: updates.length ? "update" : "check", topLine, updates: [...latest!.updates, ...updates], counts: tally(latest!.counts.given + inputs.length),
+    brief = { ...latest!, ...base, kind: updates.length ? "update" : "check", topLine, updates: [...latest!.updates, ...updates], counts: tally(latest!.counts.given + inputs.length, (latest!.counts.texts ?? 0) + inputs.filter(input => input.article).length),
       inputs: [...latest!.inputs, ...inputs.map(input => input.story.id)], modelDigest: ollama?.digest ?? latest!.modelDigest, ollamaVersion: ollama?.version ?? latest!.ollamaVersion };
     brief.others = othersOf(picked, citedIds(brief));
     if (updates.length) counts.updates++; else counts.checks++;
@@ -221,5 +279,5 @@ for (const cik of followed.ciks) {
   appendFileSync(file, JSON.stringify(brief) + "\n");
   if (!trialOut) writeJsonAtomic(path.join(deskDir, "briefs", `${cik}.json`), brief);
 }
-console.log(JSON.stringify({ at: now.toISOString(), followed: followed.ciks.length, ...counts, waitingFor: waiting.slice(0, 12), promptVersion: BRIEF_PROMPT_VERSION, seconds: Math.round((Date.now() - started) / 100) / 10 }));
+console.log(JSON.stringify({ at: now.toISOString(), followed: followed.ciks.length, ...counts, articlesAsked: fetched.asked, articlesOk: fetched.ok, waitingFor: waiting.slice(0, 12), promptVersion: BRIEF_PROMPT_VERSION, seconds: Math.round((Date.now() - started) / 100) / 10 }));
 process.exit(0);   // the database pool would keep the process alive

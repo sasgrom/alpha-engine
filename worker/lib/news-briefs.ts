@@ -161,12 +161,20 @@ Answer only with the JSON object.`;
 
 export const BRIEF_PROMPT_VERSION = createHash("sha256").update(MORNING_SYSTEM).update(JSON.stringify(MORNING_SCHEMA)).update(UPDATE_SYSTEM).update(JSON.stringify(UPDATE_SCHEMA)).digest("hex").slice(0, 16);
 
-/** A picked story as the model and the checks see it: our own text of it is its headline and the feed's summary. */
-export interface BriefInput { story: DeskNewsStory; summary: string }
+/**
+ * A picked story as the model and the checks see it: its headline and, where we fetched it (worker/lib/news-article.ts),
+ * the start of the article; else the feed's summary.
+ */
+export interface BriefInput { story: DeskNewsStory; summary: string; article?: string }
 export interface OpenThread { id: string; title: string; text: string; lastAt: string; since: string }
+/** How much of an article the model sees (and the checks read). */
+export const ARTICLE_CHARS = 1500;
+/** The story's own text the model reads: the article's first ARTICLE_CHARS characters, else the summary's first 500. */
+export const storyText = (input: BriefInput) => input.article ? input.article.slice(0, ARTICLE_CHARS) : input.summary.slice(0, 500);
 
 const nyTime = (iso: string) => new Intl.DateTimeFormat("en-US", { timeZone: ET, month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(iso));
-export const sourceText = (input: BriefInput) => `${input.story.title}\n${input.summary}`;
+/** What the checks read: exactly what the model was shown. */
+export const sourceText = (input: BriefInput) => `${input.story.title}\n${storyText(input)}`;
 
 /** The items as the model reads them: S1 ... in order, each with time, outlet, kind, tone and its own text. */
 export function itemsBlock(inputs: BriefInput[]): string {
@@ -174,7 +182,8 @@ export function itemsBlock(inputs: BriefInput[]): string {
     const reading = input.story.reading;
     const kind = input.story.secItems.length ? `SEC filing, items ${input.story.secItems.join(", ")}` : reading ? `${NEWS_EVENT_LABELS[reading.eventType] ?? reading.eventType}, ${reading.direction}` : "unread";
     const outlets = input.story.copies ? ` (+${input.story.copies} other outlet${input.story.copies > 1 ? "s" : ""})` : "";
-    return `S${i + 1} [${nyTime(input.story.publishedAt ?? input.story.firstSeenAt)} ET, ${input.story.publisher}${outlets}, ${kind}]\n${input.story.title}${input.summary ? `\n${input.summary.slice(0, 500)}` : ""}`;
+    const text = storyText(input);
+    return `S${i + 1} [${nyTime(input.story.publishedAt ?? input.story.firstSeenAt)} ET, ${input.story.publisher}${outlets}, ${kind}]\n${input.story.title}${text ? `\n${input.article ? "Article: " : ""}${text}` : ""}`;
   }).join("\n\n");
 }
 /** Threads are shown to the model as T1, T2 ... (labels, never our ids). */
@@ -299,14 +308,17 @@ const numberValue = (token: string) => Number(token.replace(/,(?=\d{3}\b)/g, "")
 export function numbersIn(text: string): number[] { return (text.match(NUMBER) ?? []).map(numberValue).filter(Number.isFinite); }
 
 const ALWAYS_OK = new Set(["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december",
-  "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "us", "u.s", "ceo", "cfo", "eps", "sec", "the", "a", "an"]);
+  "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "us", "u.s", "ceo", "cfo", "eps", "sec", "the", "a", "an",
+  // words that open a sentence and are never names ("Conversely, ...")
+  "however", "meanwhile", "conversely", "separately", "additionally", "moreover", "furthermore", "overall", "also", "still", "while", "although", "despite", "earlier", "later"]);
 const plain = (text: string) => text.normalize("NFKD").replace(/[‘’]/g, "'").replace(/'s\b/gi, "");
 const words = (text: string) => plain(text).toLowerCase().match(/[a-z0-9][a-z0-9.&'-]*[a-z0-9]|[a-z0-9]/g) ?? [];
 
 /** Capitalised words, the first word of a sentence included (a sentence may start with a name): the names a text may
  * state; ordinary words among them pass the check. */
 export function namesIn(text: string): string[] {
-  return (plain(text).match(/[A-Za-z][A-Za-z0-9.&'-]*[A-Za-z0-9]|[A-Za-z]/g) ?? []).filter(token => /^[A-Z]/.test(token)).map(token => token.replace(/[.'-]+$/, ""));
+  // a letter right after a digit and a hyphen is part of a form name ("8-K", "10-Q"), not a word of its own
+  return (plain(text).match(/(?<![A-Za-z0-9-])[A-Za-z][A-Za-z0-9.&'-]*[A-Za-z0-9]|(?<![A-Za-z0-9-])[A-Za-z]/g) ?? []).filter(token => /^[A-Z]/.test(token)).map(token => token.replace(/[.'-]+$/, ""));
 }
 
 /** Ordinary words: those the day's news writes in lower case at least `min` times ("outlook", "analyst"). A
@@ -326,7 +338,8 @@ export interface CheckResult { ok: boolean; numbers: number[]; names: string[] }
 export function checkAgainst(text: string, sources: string[], companyNames: string[] = [], ordinary: Set<string> = new Set()): CheckResult {
   const sourceText = sources.join(" \n ");
   const known = new Set(numbersIn(sourceText));
-  const vocabulary = new Set([...words(sourceText), ...companyNames.flatMap(words)]);
+  // the parts of a hyphenated word count too ("SpaceX" in "A SpaceX-Tesla Deal")
+  const vocabulary = new Set([...words(sourceText), ...companyNames.flatMap(words)].flatMap(word => [word, ...word.split("-").filter(Boolean)]));
   for (const [short, long] of Object.entries(SPELLED_OUT)) if (vocabulary.has(short)) for (const word of long) vocabulary.add(word);
   NUMBER_WORDS.forEach((word, value) => { if (known.has(value)) vocabulary.add(word); });
   const numbers = numbersIn(text).filter(value => !known.has(value));
