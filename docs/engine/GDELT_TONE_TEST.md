@@ -101,3 +101,37 @@ Everything above holds (signals, horizons, measures, controls, verdict rule), wi
   more than 5 points in 831 of 1,981 cases, e.g. VISN 2026-04-06→05-04 +926% vs +35%; windows without one: 94 of 53,543),
   and a new listed segment restarts the index (WOLF 2025-09-29). Such company-periods are left out, not repaired.
 - Window 2019-10-01..2026-10-31, halves split at 2023-04-01, as above.
+
+### Results, Russell 1000 (2026-11-27, lab `src/research/gdelt/tone_test_r1000.py` d5a0c92; outputs
+`news/gdelt-history/tone-test-r1000-midcap.json` and `-all.json`)
+
+**Data.** 3,421,888 company-article rows kept for 1,332 panel companies. S&P membership by date from fable1: 113 of its
+members in the window have no CIK and were matched by ticker; 43 have no ticker match either. They are all among the
+panel's unpriced companies (placeholder tickers, no prices), so they never enter a scored set.
+
+**Mid-caps (the verdict).** Inside-sector rank IC with the next period's open-to-open return, in percent (median scored
+companies per period in brackets):
+
+| Cell | Periods | IC | t | First half (t) | Second half (t) | Best fifth vs sector |
+|---|---|---|---|---|---|---|
+| weekly S1 level | — | not measurable: median 38 scored, below the design's 50 | | | | |
+| weekly S2 abnormal | — | not measurable | | | | |
+| weekly S3 change | — | not measurable | | | | |
+| weekly S4 attention (90) | 366 | −0.33 | −0.50 | +0.19 (0.18) | −0.83 (−1.08) | −7.0%/yr (t −1.48) |
+| monthly S1 level (84) | 83 | −0.20 | −0.15 | +0.96 (0.42) | −1.39 (−1.07) | −6.7%/yr (t −1.14) |
+| monthly S2 abnormal (46) | 69 | +0.19 | +0.09 | −1.69 (−0.52) | +1.82 (0.62) | +3.0%/yr (t 0.42) |
+| monthly S3 change (49) | 68 | −1.60 | −1.02 | −0.60 (−0.31) | −2.59 (−1.06) | −13.4%/yr (t −1.69) |
+| monthly S4 attention (214) | 84 | −0.53 | −0.68 | −0.20 (−0.17) | −0.86 (−0.83) | −2.5%/yr (t −0.79) |
+
+Sanity (same month): level +2.37 (t 1.88), abnormal +2.79 (t 1.36), change +2.08 (t 1.25), attention +1.56 (t 2.10) —
+weaker than on the S&P 500 (t 2.4 to 3.3): the one-in-16 sample holds few articles per mid-cap. Family-wise: best |t|
+1.02; 88.7% of 80 shifted copies do at least as well (95th percentile 3.22).
+
+**Verdict by the rule: no edge for timing on the mid-caps.** No cell comes near |t| 2. The test is weak, not only
+negative: three weekly cells cannot be measured, and the monthly cells score 46–214 companies. A stronger mid-cap test
+would need far more articles per company (a denser GDELT sample or another news source), not a different design.
+
+**All Russell 1000 members (secondary, not judged).** It repeats the S&P 500 result, which it contains: monthly abnormal
+tone +0.93 (t 1.24) is the best cell; weekly level's best fifth −7.6%/yr (t −2.03) with a negative second half
+(t −1.96), as on the S&P; family-wise best |t| 1.52, 83.8% of shifts at least as good. Sanity is as strong as on the S&P
+(weekly level t 4.17, monthly level t 3.37).
