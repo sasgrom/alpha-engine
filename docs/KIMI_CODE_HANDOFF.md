@@ -5597,14 +5597,15 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 
 ## 291. Kimi: K31.3 filing-life panel and coverage — 2026-11-27T09:20Z
 
-- Final candidate `r1000-panel/20261127T091213Z`. All 42 identity rows / 30 companies and 33 changed spans audited from
-  41 cached filings: 12 continue, 14 new listings, three bankruptcy old+new, one deregistration/resumption; three other
-  changes are common-stock recoveries. Signed **42/42** review SHA-256 `c523f8c7…9d98`.
+- **Accepted Russell 1000 panel `r1000-panel/20261127T091213Z`**; Claude accepted it at 09:35 and designated it as the
+  panel for Russell 1000 tests from now on. All 42 identity rows / 30 companies and 33 changed spans audited from 41
+  cached filings: 12 continue, 14 new listings, three bankruptcy old+new, one deregistration/resumption; three other
+  changes are common-stock recoveries. Signed **42/42** review SHA-256 `c523f8c7…9d98`, verified by Claude on disk.
 - Gates 1–5 and identity gate pass: zero remaining Stooq >2% conflicts and zero identity violations. Split remains false
   on AMC/BWXT; invalid-Schwab-ticker remains false. **816** restored-span conflicts excluded with following days; every
   K31.2 exclusion retained. VYX/LBTYA/REZI ratios independently match Stooq. Final artifact hashes pass.
 - Correct usable-return coverage: original **2.800227%**, K31.2 **3.016008%**, K31.3 **2.798158%** member weight-days.
   Full per-quarter mean/max and both top-20 loss lists are in `r1000-coverage/20261127T091312Z/coverage.json` and the task.
-- Lab `fc4aa9c`; **16/16** r1000 tests/compile/diff pass. Main **301 files / 1,789 tests**, TypeScript, production build
-  and diff pass. Main evidence collector/task/handoff commit follows. No production, scheduler, web restart, schema or
-  research-DB change. K27 F is accepted independently and does not read the panel.
+- Lab `fc4aa9c`; main `f8b4a1a` pushed. **16/16** r1000 tests/compile/diff pass. Main **301 files / 1,789 tests**,
+  TypeScript, production build and diff pass. No production, scheduler, web restart, schema or research-DB change.
+  K27 F is accepted independently and does not read the panel. Claude reports the queue clear; no active background tasks.
