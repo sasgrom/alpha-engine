@@ -81,3 +81,23 @@ period; the best (monthly abnormal tone, t 1.8) is strong in the first half only
 weekly level's negative second half (t −2.45) has the opposite sign in the first half and fails the family-wise control.
 GDELT tone stays a description of the news flow (same-week), not a forecast. Next, as planned: the same design on the
 Russell 1000 mid-caps once their price panel is screened (K31), monthly horizon first.
+
+## Russell 1000 mid-caps — design addendum (fixed 2026-11-27, before any mid-cap result was computed)
+
+Everything above holds (signals, horizons, measures, controls, verdict rule), with these inputs:
+
+- **Panel:** the accepted Russell 1000 panel `D:/research/alpha-engine/engine/r1000-panel/20261127T091213Z` (K31.3):
+  total-return opens, Russell 1000 membership and weights by quarter from 2019-09-30, sectors.
+- **Universe (primary, the verdict):** on each decision session, Russell 1000 members that are **not** S&P 500 members
+  that day (S&P membership from the fable1 panel, matched by CIK). Index weights in the money measure are their
+  Russell 1000 weights.
+- **Secondary (reported, not judged):** all Russell 1000 members, same design.
+- **Articles:** the stored sample rows (`news/gdelt-history/rows`, the 15,744 files of the S&P run; no new GDELT
+  requests). They were resolved against a 6,728-company index, so 669 of the panel's 706 priced non-S&P companies already
+  have articles (521,644 company-article rows before the ≤ 3 companies rule).
+- **Return validity (a data rule found on the panel before the run):** a period's return counts only if **every session
+  from entry to exit has a price and lies in one listed segment** of the company. Reason: in this panel the price level
+  is not on one basis across an excluded day (20-session windows containing an excluded day disagree with Stooq by
+  more than 5 points in 831 of 1,981 cases, e.g. VISN 2026-04-06→05-04 +926% vs +35%; windows without one: 94 of 53,543),
+  and a new listed segment restarts the index (WOLF 2025-09-29). Such company-periods are left out, not repaired.
+- Window 2019-10-01..2026-10-31, halves split at 2023-04-01, as above.
