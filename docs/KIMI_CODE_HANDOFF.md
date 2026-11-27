@@ -5576,8 +5576,9 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - HTZ/DJT/MSA now use recovered common stock (HTZ's bad 2021-11-09 Yahoo level and next day excluded); INPAP/EP-PC
   labels corrected to the already-common IP/KMI fable1 series. Overlap, membership and fifth Stooq gates pass with zero
   remaining >2% contradictions. Split remains false on one AMC row; invalid-Schwab-ticker remains false (15 tickers).
-- VISN/UHAL/HTZ targeted bars and following sessions are null. Unpriced weight is unchanged in all 28 quarters; maximum
-  **4.978909%**. Signed **54/54** review SHA-256 `1b6faf69…b6e` (verified on disk, CRLF). Full r1000 tests **11/11**,
+- VISN/UHAL/HTZ targeted bars and following sessions are null. Fully-unpriced-company weight is unchanged in all 28
+  quarters; maximum **4.978909%**. Usable-return coverage separately rose to **3.016008%**, reported fully in section 291.
+  Signed **54/54** review SHA-256 `1b6faf69…b6e` (verified on disk, CRLF). Full r1000 tests **11/11**,
   compile and diff checks pass. Lab commit `1ca86f9`; lab has no `origin`. Main task/handoff delivery follows.
 - Next safe action: report K31.2 to Claude, rerun K27 F from stored artifacts, and deliver its final coverage table.
   No production, schema, scheduler, web or research-DB change occurred.
@@ -5593,3 +5594,17 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Independent row/summary/missing/facts/release/hash checks pass. Rebuild command: `npx tsx
   scripts/build-russell1000-coverage.mts`. No network, production, DB, schema, scheduler or web action. This completes
   the queued implementation work; K31.2 and F are delivered for Claude's acceptance.
+
+## 291. Kimi: K31.3 filing-life panel and coverage — 2026-11-27T09:20Z
+
+- Final candidate `r1000-panel/20261127T091213Z`. All 42 identity rows / 30 companies and 33 changed spans audited from
+  41 cached filings: 12 continue, 14 new listings, three bankruptcy old+new, one deregistration/resumption; three other
+  changes are common-stock recoveries. Signed **42/42** review SHA-256 `c523f8c7…9d98`.
+- Gates 1–5 and identity gate pass: zero remaining Stooq >2% conflicts and zero identity violations. Split remains false
+  on AMC/BWXT; invalid-Schwab-ticker remains false. **816** restored-span conflicts excluded with following days; every
+  K31.2 exclusion retained. VYX/LBTYA/REZI ratios independently match Stooq. Final artifact hashes pass.
+- Correct usable-return coverage: original **2.800227%**, K31.2 **3.016008%**, K31.3 **2.798158%** member weight-days.
+  Full per-quarter mean/max and both top-20 loss lists are in `r1000-coverage/20261127T091312Z/coverage.json` and the task.
+- Lab `fc4aa9c`; **16/16** r1000 tests/compile/diff pass. Main **301 files / 1,789 tests**, TypeScript, production build
+  and diff pass. Main evidence collector/task/handoff commit follows. No production, scheduler, web restart, schema or
+  research-DB change. K27 F is accepted independently and does not read the panel.
