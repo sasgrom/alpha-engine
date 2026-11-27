@@ -90,3 +90,24 @@ The read-only diagnostic `scripts/report-flash-net-sales.mts` and `worker/lib/fl
 same-table/current/period identities. Pilot output `engine/checks/k28-net-sales-pilot.json`: **45 identities**, all TAP;
 **12 selected mismatches**, 19 selected matches and 14 other/ungraded selections. The full report will rerun this across
 all companies and break out TAP/STZ/BF/MO/PM without restricting the count to them.
+
+## Final delivery — 2026-11-27
+
+Final `D:/research/alpha-engine/engine/flash-r1000/manifest.json` is **complete with zero errors**, 46,101 releases and one
+code hash `eb1d5dfcae0534807f6e88cde4af80950aa98f507096931c51e636bd932bb19b` across every release checkpoint. The
+sparse-cell guard is source commit `049bbca`.
+
+- Grade **98.54823%** (1,319,748/1,339,190), period-code **98.48273%** (35,894/36,447); PIT printed and answer-key
+  violations **0/0**. Independent golden is **113/113**.
+- Default-50 diff: 313,847 printed values with zero period/statement/value changes. 452 diff: 2,566,309 with zero changes.
+- Full net-sales identity count is **45**, all TAP (12 selected mismatches, 19 selected matches, 14 other/ungraded). No
+  other-company identity occurred, so the candidate net-sales rule is not promoted. UNM and CBSH remain quarantined with
+  the raw table/row evidence above. Existing pilot quarantine evidence is retained.
+- Final all-company grades are in the summary; unfiltered industry aggregation is
+  `D:/research/alpha-engine/engine/checks/k28-grade-by-sector.json` using K26's sector map (app `companies.sector` was
+  unclassified). No quarantine was applied to the grade.
+- **Pre-fix overwrite disclosure:** the final build rewrote `flash-r1000`; the pre-fix full output was not copied aside,
+  so an old/new full-universe diff is unavailable. The old build was not reconstructed. The exact 50/452 diffs and one
+  parser hash for all releases are the regression evidence.
+- Full test gates: 301 files / 1,789 tests, TypeScript, production build and diff check pass. K27 F was run but is held
+  for K31.2 before acceptance, per Claude's queue.

@@ -5552,3 +5552,14 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Signed **60/60** evidence review `review-20261127T051707Z.reviewed.json`, SHA-256 `fb2899d6…5664`. Lab commit `d0acfe1`;
   nine r1000 Python tests/compile/diff pass. The lab has no `origin` remote, so no lab push was possible. Main task report is
   included. K28's 452 regression is still active.
+
+
+## 288. Kimi: K28 final zero-error manifest — 2026-11-27T07:19Z
+
+- Final `flash-r1000`: **46,101 releases / zero errors / one parser hash** `eb1d5dfc…` across all checkpoints. Grade
+  **98.54823%**, period-code **98.48273%**, PIT 0/0, golden 113/113. Net-sales identity 45, all TAP (12 mismatches).
+  Unfiltered all-company and K26 industry grades are in `engine/checks/k28-grade-by-sector.json`.
+- Default-50 and 452 diffs are exact: no period/statement/value changes. **The pre-fix full output was already rewritten**
+  and was not copied, so no old/new full diff is available; it was not rebuilt. This is disclosed in the task and mailbox.
+- Full gates 301 files / 1,789 tests, TypeScript, build and diff pass. K27 F ran and reports 394 former-status companies
+  (194 listed / 200 gone), not 392 former-new registry rows; its acceptance waits for K31.2 as Claude instructed.
