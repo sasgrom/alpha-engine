@@ -5516,3 +5516,12 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Restart-free acceptance is running with five EDGAR companies plus ten spaced fast-news passes, machine budget 4 and
   process budget 2. Actual telemetry acceptance is not claimed yet. Full K28 is also running into new `flash-r1000`
   with unchanged parser `7f76b2c…`; no results are claimed yet. K27 task report and K29 wiring evidence are updated.
+
+
+## 283. Kimi: K29 live acceptance passed — 2026-11-27T02:26Z
+
+- Restart-free two-client check completed 13m35s: 983 requests, **0 429 / 0 403 / 0 fallback / 0 cool-down**. Five
+  transient 5xx responses used existing retries. Mean combined 1.21/s under machine budget 4; all ten news passes had zero
+  feed errors. K29's inventory, wiring, hash list and live evidence are complete in the task file.
+- Full K28 remains active with unchanged parser. Its final all-company/industry grades, PIT/golden checks and net-sales
+  measurement are not claimed yet. The five-company EDGAR process also continues normally and is not claimed complete.

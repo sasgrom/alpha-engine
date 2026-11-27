@@ -107,3 +107,11 @@ The API server client and lab's direct-fetch bypass remain inventory items for C
 
 Focused pacing/worker/congress checks: **92/92**, followed by TypeScript. Full gates and the bounded live check are reported
 separately after execution.
+
+## Live acceptance — 2026-11-27
+
+The restart-free check ran **13m35s** with machine budget 4 and per-process budget 2: one five-company EDGAR fetch and ten
+spaced SEC 8-K news passes. Telemetry in `worker/.runs/sec-pace/2026-11-27.jsonl` records **983 requests**, **zero 429s,
+zero 403s, zero fallbacks and zero cool-downs**. Five transient 5xx responses used the existing caller retry behavior.
+Mean combined request rate was 1.21/s, below budget; shared-slot wait was 805 ms. All ten news passes completed with zero
+feed errors. Full gates were 301 files / 1,788 tests plus TypeScript, build and diff check. Source commit `94a6e46`.
