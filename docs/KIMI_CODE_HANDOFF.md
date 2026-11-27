@@ -5563,3 +5563,21 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   and was not copied, so no old/new full diff is available; it was not rebuilt. This is disclosed in the task and mailbox.
 - Full gates 301 files / 1,789 tests, TypeScript, build and diff pass. K27 F ran and reports 394 former-status companies
   (194 listed / 200 gone), not 392 former-new registry rows; its acceptance waits for K31.2 as Claude instructed.
+
+## 289. Kimi: K31.2 final panel and signed evidence — 2026-11-27T08:30Z
+
+- K28 qualification per Claude: the sparse fix only converts an empty-header-cell crash into an empty value, so any
+  changed release would have been a pre-fix error. The pre-fix manifest had exactly seven errors, all SVB (CIK 719739);
+  no other release can have changed. The small grade movement agrees. Pre-fix full outputs were overwritten without a
+  copy, so no full old/new diff exists and the old build was not reconstructed.
+- K31.2 final candidate `r1000-panel/20261127T082555Z`: 1,405 companies, 1,202 priced. It excludes 924 `other` dates
+  (271 in-window / 653 outside) and 9,115 whole-series conflicts (1,713 / 7,402), plus each following raw trading day.
+  Whole-series compared 700 companies and listed 33; full per-company counts/causes are in the task report and D: JSON.
+- HTZ/DJT/MSA now use recovered common stock (HTZ's bad 2021-11-09 Yahoo level and next day excluded); INPAP/EP-PC
+  labels corrected to the already-common IP/KMI fable1 series. Overlap, membership and fifth Stooq gates pass with zero
+  remaining >2% contradictions. Split remains false on one AMC row; invalid-Schwab-ticker remains false (15 tickers).
+- VISN/UHAL/HTZ targeted bars and following sessions are null. Unpriced weight is unchanged in all 28 quarters; maximum
+  **4.978909%**. Signed **54/54** review SHA-256 `1b6faf69…b6e` (verified on disk, CRLF). Full r1000 tests **11/11**,
+  compile and diff checks pass. Lab commit `1ca86f9`; lab has no `origin`. Main task/handoff delivery follows.
+- Next safe action: report K31.2 to Claude, rerun K27 F from stored artifacts, and deliver its final coverage table.
+  No production, schema, scheduler, web or research-DB change occurred.
