@@ -157,3 +157,24 @@ Current source response: 10,400 SEC rows, 521,932 bytes, SHA-256
   nothing was downloaded from Stooq.
 - Code gates for these completed parts and B's current source: TypeScript, targeted tests, full 300 files / 1,783 tests,
   production build and `git diff --check` pass. No scheduler, registry, schema, research DB or production change.
+
+### F — former-member coverage (final rerun after K28 and K31.2)
+
+- Regenerated `D:/research/alpha-engine/index-membership/russell1000/k27-f-coverage.json` and `.md` at
+  **2026-11-27T08:32:24.115Z** from stored evidence only. The recorded final K28 manifest SHA-256 independently matches
+  `d3a97bc2c625bb4e7228ec031209d5531150be71aaf0121f5654f6423a981fbc`.
+- **394 former-status companies** (194 still listed / 200 gone), with 394 unique CIKs. This is the full K26 former-status
+  set, not only the 392 rows in the earlier former-new registry extract.
+- A: **391/394 facts succeeded, 6,607,387 rows**. CIK 200411 remains SEC 404; ERIE (922621) and NXPI (1413447) have no
+  original-A row because they were not in that earlier universe. B: **21,273 releases**; ERIE/NXPI likewise have no
+  original-B row. STORE CAPITAL (1538990) is the one partial, retaining accession `0001104659-16-117958` `index.json`
+  404 after five attempts.
+- C: zero former-company pilot rows; all 394 are explicitly not collected because the owner skipped full C. The retained
+  20-company pilot was not a former-member sample. D Schwab covers **192** (202 missing); E Stooq **189** (205 missing),
+  Yahoo **192** (202 missing). Per-ticker absence/errors and corporate-end evidence are preserved per company; **362**
+  companies have Form 15/25 or merger-8-K evidence.
+- Independent validation recomputed status, missing, facts and release counts from all rows; all match the summary. JSON:
+  1,157,835 bytes, SHA-256 `4072c449ca4aebafe4c7d1c32526c7ff2cadd5fb81b86fb0990219bd669fb99a`. Markdown: 843 bytes,
+  SHA-256 `899b4603625000492a8c86f496ea49a649030af1a3631ee5ceb2f2ec52feea41`.
+- Resume/rebuild: `npx tsx scripts/build-russell1000-coverage.mts`. No network, production, database, schema, scheduler
+  or web action occurred. Early 2019-09 through 2020-02 research must still report K26 unmatched weight.

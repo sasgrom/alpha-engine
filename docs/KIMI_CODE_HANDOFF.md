@@ -5581,3 +5581,15 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   compile and diff checks pass. Lab commit `1ca86f9`; lab has no `origin`. Main task/handoff delivery follows.
 - Next safe action: report K31.2 to Claude, rerun K27 F from stored artifacts, and deliver its final coverage table.
   No production, schema, scheduler, web or research-DB change occurred.
+
+## 290. Kimi: K27 F regenerated after K31.2 — 2026-11-27T08:34Z
+
+- Final `k27-f-coverage.json` / `.md` generated **2026-11-27T08:32:24.115Z** after K31.2 delivery. It records the final
+  K28 manifest hash `d3a97bc2…fbc`, independently reverified. JSON SHA-256 `4072c449…b99a`, 1,157,835 bytes.
+- **394 unique former-status companies (194 listed / 200 gone)**; A 391/394 and 6,607,387 facts rows; B 21,273 releases.
+  CIK200411 remains SEC 404; ERIE/NXPI have no original A/B universe rows. STORE CAPITAL is the one B partial with the
+  documented five-attempt `index.json` 404. C is owner-skipped for all 394; D/Schwab 192, E/Stooq 189, E/Yahoo 192;
+  362 have corporate-end evidence. Full per-company gaps and resume commands are in the D: artifact and K27 task report.
+- Independent row/summary/missing/facts/release/hash checks pass. Rebuild command: `npx tsx
+  scripts/build-russell1000-coverage.mts`. No network, production, DB, schema, scheduler or web action. This completes
+  the queued implementation work; K31.2 and F are delivered for Claude's acceptance.
