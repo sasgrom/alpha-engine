@@ -325,7 +325,7 @@ interface HeaderCell { text: string; start: number; end: number }
 export function headerCells(row: GridCell[]): HeaderCell[] {
   const cells: HeaderCell[] = [];
   for (let index = 0; index < row.length; index++) {
-    if (!row[index].text) continue;
+    if (!row[index]?.text) continue;
     const previous = cells.at(-1);
     if (previous && row[index] === row[previous.start]) previous.end = index;
     else cells.push({ text: row[index].text, start: index, end: index });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canonicalLabel, durationMonths, extractCandidateRows, findStatementCandidates, fullDates, joinStatementCandidates, parseExhibitHtml, parsePrintedNumber, rowUnit, type RawTable } from "./flash-html";
+import { canonicalLabel, durationMonths, extractCandidateRows, findStatementCandidates, fullDates, headerCells, joinStatementCandidates, parseExhibitHtml, parsePrintedNumber, rowUnit, type GridCell, type RawTable } from "./flash-html";
 
 const firstCandidate = (html: string, periodEnd: string) => joinStatementCandidates(findStatementCandidates(parseExhibitHtml(html, "fixture.htm", "fixture"), periodEnd), periodEnd)[0];
 
@@ -485,5 +485,10 @@ describe("flash HTML table reading", () => {
     </table>`;
     const candidate = firstCandidate(html, "2024-03-31");
     expect(candidate.columns.map((column) => [column.months, column.periodEnd])).toEqual([[3, "2024-03-31"]]);
+  });
+
+  it("ignores sparse cells when reading period headers", () => {
+    const cells = [undefined, { text: "Three months ended", footnotes: [] }, undefined, { text: "June 30, 2021", footnotes: [] }] as GridCell[];
+    expect(headerCells(cells).map(cell => cell.text)).toEqual(["Three months ended", "June 30, 2021"]);
   });
 });

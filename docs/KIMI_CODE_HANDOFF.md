@@ -5506,7 +5506,7 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   OPERATIONS 22i updated. Kimi notified of the changes to its three scripts.
 
 
-## 282. Kimi: K27 B complete and K29 wired; live/K28 running — 2026-11-27T02:15Z
+## 284. Kimi: K27 B complete and K29 wired; live/K28 running — 2026-11-27T02:15Z
 
 - B final `manifest-r1000.json`: **909/909**, 217,246 filings, 50,075 quarters, 52,869 releases, 33,538,361,796 bytes.
   Independent 909-checkpoint verification passed. One retained partial: CIK1538990 accession 0001104659-16-117958
@@ -5518,10 +5518,24 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   with unchanged parser `7f76b2c…`; no results are claimed yet. K27 task report and K29 wiring evidence are updated.
 
 
-## 283. Kimi: K29 live acceptance passed — 2026-11-27T02:26Z
+## 285. Kimi: K29 live acceptance passed — 2026-11-27T02:26Z
 
 - Restart-free two-client check completed 13m35s: 983 requests, **0 429 / 0 403 / 0 fallback / 0 cool-down**. Five
-  transient 5xx responses used existing retries. Mean combined 1.21/s under machine budget 4; all ten news passes had zero
-  feed errors. K29's inventory, wiring, hash list and live evidence are complete in the task file.
+  transient 5xx responses used existing retries. Mean combined 1.21/s under machine budget 4 did not reach the budget;
+  contention was proved by the separate child-process slot test. All ten news passes had zero feed errors. K29's inventory,
+  wiring, hash list and live evidence are complete in the task file.
 - Full K28 remains active with unchanged parser. Its final all-company/industry grades, PIT/golden checks and net-sales
   measurement are not claimed yet. The five-company EDGAR process also continues normally and is not claimed complete.
+
+
+## 286. Kimi: K28 sparse-cell fix and default-50 exact; helper complete — 2026-11-27T04:02Z
+
+- Full K28 initial results: grade **98.54796%**, period-code **98.48244%**, PIT 0/0, independent golden 113/113.
+  Seven SVB releases failed on a confirmed sparse-cell dereference in `headerCells`; the optional-cell guard and fixture now
+  parse the original release with no errors. Full net-sales count remains 45 TAP identities / 12 selected mismatches.
+- Default-50 regression has **zero period/statement/value differences** (313,847 printed values). The 452 comparison and a
+  fresh full-K28 manifest are still pending; F remains blocked. Full gates **301 files / 1,789 tests**, TypeScript, build,
+  diff check pass.
+- Five-company helper completed all five normally: LNG, UHAL, UNM, AAL, AWI with final counts/failures sent to Claude.
+- Handoff numbering corrected to 284/285 per Claude; next section is 287. Live contention remains proved by child-process
+  tests, not the 1.21 requests/s mean.
