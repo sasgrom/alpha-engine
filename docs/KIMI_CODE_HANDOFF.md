@@ -5539,3 +5539,16 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Five-company helper completed all five normally: LNG, UHAL, UNM, AAL, AWI with final counts/failures sent to Claude.
 - Handoff numbering corrected to 284/285 per Claude; next section is 287. Live contention remains proved by child-process
   tests, not the 1.21 requests/s mean.
+
+
+## 287. Kimi: K31.1 jump screen complete — 2026-11-27T05:25Z
+
+- Screen `r1000-jump-screen/20261127T050053Z`: **2,338 confirmed / 42 identity / 924 other / 738 single-source** (in-window
+  1,385 / 21 / 271 / 144). No strict split-missed. Four Yahoo attempts recovered zero: SIX only 4 valid overlaps, ANSS 3
+  candles/no overlap, TSPH no comparison source, FGRS 404. All 203 remain unpriced; max quarter weight **4.978909%**.
+- Final panel `r1000-panel/20261127T052127Z`: 1,405 companies / 1,202 priced. Single-source dates excluded; identity series
+  truncate at first corporate-end evidence. Split disagreements reduced 9→3 (AMC, RIG, XRX), gate remains false;
+  invalid-bar condition remains false. Overlap/membership pass. Original panel unchanged.
+- Signed **60/60** evidence review `review-20261127T051707Z.reviewed.json`, SHA-256 `fb2899d6…5664`. Lab commit `d0acfe1`;
+  nine r1000 Python tests/compile/diff pass. The lab has no `origin` remote, so no lab push was possible. Main task report is
+  included. K28's 452 regression is still active.
