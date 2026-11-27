@@ -17,6 +17,7 @@
 import { readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
 import reviewerUniverseJson from "../research-universe-50.json";
+import { createSharedSecPace } from "./sec-shared-pace";
 
 const SEC_BASE = "https://www.sec.gov";
 const SEC_DATA_BASE = "https://data.sec.gov";
@@ -25,6 +26,8 @@ const UA = "alpha-engine-research/1.0 (contact: owner@alphadelta-2.kimi.pro)";
 // Default 7 leaves headroom; SEC_RPS may lower it for parallel workers. Cap 8.
 const RPS = Math.min(Math.max(Number(process.env.SEC_RPS ?? 7) || 7, 1), 8);
 const DEFAULT_TIMEOUT_MS = Math.min(Math.max(Number(process.env.SEC_TIMEOUT_MS ?? 30_000) || 30_000, 5_000), 120_000);
+const sharedPace = createSharedSecPace({ log: message => console.warn(`[sec] ${message}`) });
+process.once("exit", () => sharedPace.close());
 
 // --- tiny serialized rate limiter (same shape as the server's) -------------
 let nextAllowed = 0;
@@ -34,6 +37,7 @@ function throttle(): Promise<void> {
     const delay = nextAllowed - Date.now();
     if (delay > 0) await new Promise((r) => setTimeout(r, delay));
     nextAllowed = Math.max(Date.now(), nextAllowed) + 1000 / RPS;
+    await sharedPace.schedule();
   });
   chain = run.catch(() => {});
   return run;
@@ -69,6 +73,7 @@ export async function secGet(url: string, timeoutMs = DEFAULT_TIMEOUT_MS): Promi
         headers: { "user-agent": UA, "accept-encoding": "gzip, deflate" },
         signal: AbortSignal.timeout(timeoutMs),
       });
+      await sharedPace.recordResponse(res.status, res.status === 403 ? await res.text() : "", Number(res.headers.get("retry-after")) || 0);
       if (res.ok) return res;
       if (res.status === 429 || res.status >= 500) {
         lastErr = new SecHttpError(res.status, url);

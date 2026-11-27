@@ -5504,3 +5504,15 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   has not yet met a new report; check `newerReports` in politicians.json after the first nights.
 - Gates: TypeScript, **301 files / 1,788 tests**, build, diff check; web rebuilt and restarted once (one listener, 401).
   OPERATIONS 22i updated. Kimi notified of the changes to its three scripts.
+
+
+## 282. Kimi: K27 B complete and K29 wired; live/K28 running — 2026-11-27T02:15Z
+
+- B final `manifest-r1000.json`: **909/909**, 217,246 filings, 50,075 quarters, 52,869 releases, 33,538,361,796 bytes.
+  Independent 909-checkpoint verification passed. One retained partial: CIK1538990 accession 0001104659-16-117958
+  `index.json` 404 after five attempts; todo post-pass 2 attempted / 1 resolved / 1 remaining. K06/K23 hashes all unchanged.
+- K29 `edgar.ts` now uses shared slots/cool-down/telemetry while retaining process `SEC_RPS`. Focused 92/92 and full
+  **301 files / 1,788 tests**, TypeScript, build and diff check pass. API/lab bypasses remain documented for Claude.
+- Restart-free acceptance is running with five EDGAR companies plus ten spaced fast-news passes, machine budget 4 and
+  process budget 2. Actual telemetry acceptance is not claimed yet. Full K28 is also running into new `flash-r1000`
+  with unchanged parser `7f76b2c…`; no results are claimed yet. K27 task report and K29 wiring evidence are updated.

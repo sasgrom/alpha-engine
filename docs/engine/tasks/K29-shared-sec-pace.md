@@ -97,3 +97,13 @@ The requested ten-minute concurrent live check cannot use full C: the owner canc
 substitutes two bounded SEC users: a few-company `worker/edgar-fetch.mts` using its existing options/cache beside the SEC
 8-K path of `worker/news-feeds.mts --set fast` (or K28's post-pass). The check remains restart-free and is announced before
 launch; acceptance is combined rate within budget and zero 429s.
+
+## Wiring evidence — 2026-11-27
+
+B completed first: 909/909, with one explicitly retained partial document. No SEC process was active before editing.
+`worker/lib/edgar.ts` now retains its local `SEC_RPS` limiter, then takes each slot from `createSharedSecPace`; responses
+record request counts, status classes, shared 429/rate-403 cool-down and retry-after, and process exit flushes telemetry.
+The API server client and lab's direct-fetch bypass remain inventory items for Claude, not hidden edits.
+
+Focused pacing/worker/congress checks: **92/92**, followed by TypeScript. Full gates and the bounded live check are reported
+separately after execution.

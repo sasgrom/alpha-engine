@@ -116,16 +116,18 @@ Current source response: 10,400 SEC rows, 521,932 bytes, SHA-256
 - Resume: `SEC_RPS=1 npx tsx worker/facts-fetch.mts --universe edgar-universe-r1000-new.json`, then the same with
   `edgar-universe-r1000-former.json`.
 
-### B — release calendar/exhibits (pilot accepted; full collection not complete)
+### B — release calendar/exhibits (complete)
 
-- Pilot 20/20: 7,761 filings, 1,758 quarters, 1,857 releases, 1,183,264,040 bytes, 30/30 seeded index-time matches;
-  K06's and K23's five artifacts each remained byte-identical. Repeated SEC index 502/504 responses have a tested
-  official HTML-index fallback.
-- Full collection is active from atomic company checkpoints. At 07:33Z it was 327/909, latest LBTYA; this is not a
-  completion claim. Owner's 05:15 skip rule is implemented in source commit c37815c: two retries, partial checkpoints,
-  `r1000-todo.jsonl`, and one two-attempt post-pass. Completed counts/failures will be reported only from the final
-  manifest. Resume: `SEC_RPS=1 npx tsx scripts/build-release-calendar-rest.mts --universe
-  edgar-universe-r1000-new.json,edgar-universe-r1000-former.json --addendum r1000 --limit 909`.
+- Final `D:/research/alpha-engine/engine/events/manifest-r1000.json` (2026-11-27T01:57:15Z): **909/909**, 217,246
+  filings, 50,075 quarters, 52,869 releases, 33,538,361,796 bytes on disk; overall pass and storage pass. Thirty seeded
+  index-time matches passed. K06's and K23's five artifacts each remained byte-identical; all hashes were independently
+  recomputed after completion.
+- Independent validation found 909 unique valid company checkpoints matching progress and code hash. One explicit partial
+  remains: CIK 1538990 accession `0001104659-16-117958`, `index.json` 404 after five attempts. The todo post-pass attempted
+  two items, resolved one, and leaves that one in `r1000-todo.jsonl`; no other document failures remain.
+- Owner's retry/partial rule was applied throughout. Resume command (idempotent from valid checkpoints): `SEC_RPS=1 npx tsx
+  scripts/build-release-calendar-rest.mts --universe edgar-universe-r1000-new.json,edgar-universe-r1000-former.json
+  --addendum r1000 --limit 909`.
 
 ### C — 10-K/10-Q primary documents (20-company pilot kept; full part skipped by owner)
 
