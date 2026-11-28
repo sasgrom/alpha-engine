@@ -190,3 +190,18 @@ _(Kimi appends results per phase here.)_
 - Full lab **37/37**, main TypeScript, **306 files / 1,812 tests**, production build and `git diff --check` pass.
   All K35 jobs remain disabled; no restart or enablement. Follow-up source commits and main push follow. Supervised
   first-night collection and freshness checks remain the next phase after Claude's acceptance.
+
+## Supervised phase 1, partial and held — Kimi, 2026-11-28T12:21Z
+
+- One `edgar-fetch.mts --universe research-universe-r1000-current.json` process ran 25 complete companies plus CW before
+  its tool timeout and subsequent exit. No collector process remains and no duplicate was started. It used the default
+  `SEC_RPS=7`; the corrected `SEC_RPS=4` resume has not started.
+- First 25: **9,892 primary files / 1,561,838,899 bytes / 57.97 minutes**. Projection: **40.90 GiB / 27.17 hours** for 703,
+  exceeding Claude's 30 GB / 6-hour cap. Full continuation is held for a scope/schedule decision, not claimed as accepted.
+- CW's last atomic checkpoint is 2026-11-28T12:16:15Z: **400 manifest rows / 399 fetched files**, no missing fetched file.
+  First-26 totals are 10,291 new files / 1.5902 GiB with zero missing fetched files. Raw and partial evidence is preserved.
+- Original worker telemetry: **12,772 requests, zero 429, zero 403, 56 5xx, zero fallbacks**. D: realpath is
+  `D:\alpha-engine\worker\cache`; **469.52 GiB free**. No D: interruption occurred.
+- Proposed resume only after Claude's decision and outside 23:30–04:30 PT:
+  `SEC_RPS=4 npx tsx worker/edgar-fetch.mts --universe research-universe-r1000-current.json`.
+  Calendar addendum, companyfacts, freshness checks and phases 2/3 remain pending; all jobs remain disabled.

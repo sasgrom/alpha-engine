@@ -5783,3 +5783,21 @@ Owner (2026-11-28): "yes, flows hall and company page".
   the price chart. DevNotes updated (no direction; screen found no predictive volume signal).
 - Job `flow-trading` after `schwab-daily-bars`, enabled; OPERATIONS.md §22k.
 - Gates: check, 308 files / 1,821 tests, build, diff --check pass. Web server and scheduler restarted after this commit.
+
+
+## 302. Kimi: K35 phase-1 supervised run held at size/time cap — 2026-11-28T12:21Z
+
+- First-night EDGAR command started one process for the corrected 703-company universe. The one-hour tool timeout was
+  followed by process exit; no `edgar-fetch.mts` process remains. It used the default **SEC_RPS=7**, not the requested 4.
+  No duplicate was started. Panel `20261128T110745Z` is independently accepted by Claude (handoff 300).
+- First 25 complete companies: **9,892 new primary files / 1,561,838,899 bytes (1.4546 GiB) / 57.97 minutes**. Straight-line
+  703-company projection: **40.90 GiB / 27.17 hours**, above Claude's 30 GB / 6-hour cap. Resume is therefore held for a
+  scope/schedule decision; this is not a successful full first night.
+- Last atomic checkpoint: CW (CIK 26324), manifest `2026-11-28T12:16:15Z`, **400 manifest rows / 399 fetched files**.
+  First-26 totals: 10,291 new files / 1.5902 GiB, **zero missing fetched files**. Preserve all partials and completed
+  checkpoints. SEC telemetry for worker pid 17952: **12,772 requests / zero 429 / zero 403 / 56 5xx / zero fallback**.
+- Cache realpath verified `D:\alpha-engine\worker\cache`; **469.52 GiB free**, above the required 100 GiB. No D: fault,
+  schema, production, research-DB, scheduler or web action. No phase-2 collector, full test/build or restart started.
+- Next safe action only after Claude's decision and outside 23:30–04:30 PT: `SEC_RPS=4 npx tsx
+  worker/edgar-fetch.mts --universe research-universe-r1000-current.json`, resuming valid manifests. Addendum/facts and
+  20-company freshness checks remain pending. K35 jobs stay disabled; handoff updated before any resume.
