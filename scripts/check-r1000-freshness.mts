@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { secGet } from "../worker/lib/edgar";
 import { listFilingsDetailed } from "../worker/lib/edgar-listing";
 import { writeJsonAtomic } from "../worker/lib/json-file";
-import { r1000CompanyFactsPeriod, r1000DeterministicSample, r1000LastCandle, r1000LatestFiling } from "../worker/lib/r1000-freshness";
+import { r1000CompanyFactsPeriod, r1000DeterministicSample, r1000LastCandle, r1000LatestFiling, r1000ReusablePanelFreshness } from "../worker/lib/r1000-freshness";
 import { createSchwabSession } from "../worker/lib/schwab-paced";
 import { schwabDailyPriceHistoryPath } from "../worker/lib/schwab";
 import { schwabSymbol } from "../worker/lib/schwab-price-series";
@@ -33,17 +33,20 @@ if (arg("--resume")) {
 }
 mkdirSync(path.join(root, "companies"), { recursive: true });
 const completed = new Set(manifest.results.filter((row: any) => row.pass === true).map((row: any) => row.cik));
+let schwabRequests = 0;
 function save() {
   const latest = new Map<number, any>();
   for (const row of manifest.results) latest.set(row.cik, row);
   manifest.results = [...latest.values()];
   manifest.counts = { companies: manifest.results.length, passed: manifest.results.filter((row: any) => row.pass).length, failed: manifest.results.filter((row: any) => !row.pass).length };
   manifest.status = manifest.results.length === sample.length && manifest.results.every((row: any) => row.pass) ? "complete" : "partial";
+  manifest.schwabRequests = schwabRequests;
   manifest.updatedAt = new Date().toISOString();
   writeJsonAtomic(runFile, manifest, true);
 }
 save();
 const schwab = market ? createSchwabSession({ log: line => console.log(`[freshness] ${line}`) }) : null;
+const schwabGet = async (pathname: string) => { schwabRequests++; return schwab!.get(pathname); };
 await schwab?.prepare();
 for (const company of sample) {
   if (completed.has(company.cik)) {
@@ -71,7 +74,7 @@ for (const company of sample) {
       facts: { sourcePeriod, cachedPeriod, sourcePayloadHash: sourceFactsHash, cachedPayloadHash: cachedFactsHash, sourceBodySha256: sha(sourceText), manifestSha256: factsManifest.rawSha256, pass: factsPass },
     };
     if (schwab) {
-      const raw = await schwab.get(schwabDailyPriceHistoryPath(schwabSymbol(company.ticker), Date.now()));
+      const raw = await schwabGet(schwabDailyPriceHistoryPath(schwabSymbol(company.ticker), Date.now()));
       const source = r1000LastCandle(JSON.parse(raw));
       const cached = r1000LastCandle(JSON.parse(readFileSync(path.join("D:/research/alpha-engine/schwab-r1000", "pricehistory", `${company.ticker}.json`), "utf8")));
       result.schwab = { source, cached, sourceBodySha256: sha(raw), pass: Boolean(source && cached && source.date === cached.date && source.close === cached.close) };
@@ -91,9 +94,13 @@ if (schwab) {
   const panelFile = path.join(pointer.panel, "px.npz");
   const panelDate = spawnSync("python", ["-c", "import numpy as np,sys; print(np.load(sys.argv[1])['dates'][-1])", panelFile], { encoding: "utf8" });
   if (panelDate.error || panelDate.status !== 0) throw new Error(`Panel date could not be read: ${panelDate.stderr}`);
-  const benchmarkRaw = await schwab.get(schwabDailyPriceHistoryPath("SPY", Date.now()));
-  const benchmark = r1000LastCandle(JSON.parse(benchmarkRaw));
-  manifest.panel = { panel: pointer.panel, date: panelDate.stdout.trim(), benchmark, benchmarkBodySha256: sha(benchmarkRaw), pass: panelDate.stdout.trim() === benchmark?.date };
+  const date = panelDate.stdout.trim();
+  if (r1000ReusablePanelFreshness(manifest.panel, pointer.panel, date)) console.log("[freshness] panel benchmark resumed");
+  else {
+    const benchmarkRaw = await schwabGet(schwabDailyPriceHistoryPath("SPY", Date.now()));
+    const benchmark = r1000LastCandle(JSON.parse(benchmarkRaw));
+    manifest.panel = { panel: pointer.panel, date, benchmark, benchmarkBodySha256: sha(benchmarkRaw), pass: date === benchmark?.date };
+  }
   save();
 }
 manifest.pass = manifest.status === "complete" && (!schwab || manifest.panel?.pass === true);

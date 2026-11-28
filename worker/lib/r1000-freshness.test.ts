@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { r1000CompanyFactsPeriod, r1000DeterministicSample, r1000LastCandle, r1000LatestFiling } from "./r1000-freshness";
+import { r1000CompanyFactsPeriod, r1000DeterministicSample, r1000LastCandle, r1000LatestFiling, r1000ReusablePanelFreshness } from "./r1000-freshness";
 
 const filing = (accessionNo: string, filingDate: string, acceptedEt: string | null = null) => ({ accessionNo, form: "8-K", filingDate, acceptedEt, eventTs: filingDate });
 
@@ -31,5 +31,13 @@ describe("Russell freshness checks", () => {
   it("reads the last candle date and preserves a zero close only when present", () => {
     expect(r1000LastCandle({ candles: [{ datetime: Date.UTC(2026, 10, 27), close: 12.5 }] })).toEqual({ date: "2026-11-27", close: 12.5 });
     expect(r1000LastCandle({ candles: [] })).toBeNull();
+  });
+
+  it("resumes only an unchanged passing panel benchmark", () => {
+    const previous = { panel: "D:/panel/one", date: "2026-11-27", benchmark: { date: "2026-11-27", close: 100 }, pass: true };
+    expect(r1000ReusablePanelFreshness(previous, "D:/panel/one", "2026-11-27")).toBe(true);
+    expect(r1000ReusablePanelFreshness(previous, "D:/panel/two", "2026-11-27")).toBe(false);
+    expect(r1000ReusablePanelFreshness(previous, "D:/panel/one", "2026-11-28")).toBe(false);
+    expect(r1000ReusablePanelFreshness({ ...previous, pass: false }, "D:/panel/one", "2026-11-27")).toBe(false);
   });
 });

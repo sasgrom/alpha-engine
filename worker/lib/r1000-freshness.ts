@@ -34,3 +34,7 @@ export function r1000LastCandle(payload: any): { date: string; close: number | n
   if (!row || !Number.isFinite(row.datetime)) return null;
   return { date: new Date(row.datetime).toISOString().slice(0, 10), close: typeof row.close === "number" && Number.isFinite(row.close) ? row.close : null };
 }
+
+export function r1000ReusablePanelFreshness(previous: any, panel: string, date: string): boolean {
+  return previous?.pass === true && previous.panel === panel && previous.date === date && previous.benchmark?.date === date;
+}

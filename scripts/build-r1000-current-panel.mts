@@ -14,6 +14,8 @@ if (!securityTypesFile) throw new Error("No dated Russell security-type evidence
 const reviewRoot = path.join(securityRoot, "review");
 const latestReview = existsSync(reviewRoot) ? readdirSync(reviewRoot).filter(file => /^history-review-.*\.json$/.test(file)).sort().at(-1) : undefined;
 const securityReviewFile = arg("--security-review") ?? (latestReview ? path.join(reviewRoot, latestReview) : null);
+const panelPointer = "D:/research/alpha-engine/engine/r1000-panel/current.json";
+const priorEntities = arg("--prior-entities") ?? (existsSync(panelPointer) ? panelPointer : null);
 const evidenceRoot = "D:/research/alpha-engine";
 const env = {
   ...process.env,
@@ -26,6 +28,9 @@ const env = {
   R1000_FABLE1_JOIN: `${evidenceRoot}/engine/r1000-fable1-join/20261128T030114Z/fable1-matches.json`,
   R1000_UNPRICE_CIKS: "821130",
   R1000_SCHWAB_ROOT: schwabRoot,
+  R1000_SCHWAB_HISTORY_ROOT: path.resolve(arg("--history-root") ?? "D:/research/alpha-engine/schwab/history-r1000"),
+  R1000_SPY_HISTORY: path.resolve(arg("--spy-history") ?? "D:/research/alpha-engine/schwab-sp500/pricehistory/SPY.json"),
+  ...(priorEntities ? { R1000_PRIOR_ENTITIES: path.resolve(priorEntities) } : {}),
   R1000_SECURITY_TYPES: path.resolve(securityTypesFile),
   ...(securityReviewFile ? { R1000_SECURITY_REVIEW: path.resolve(securityReviewFile) } : {}),
 };
