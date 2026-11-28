@@ -5801,3 +5801,22 @@ Owner (2026-11-28): "yes, flows hall and company page".
 - Next safe action only after Claude's decision and outside 23:30–04:30 PT: `SEC_RPS=4 npx tsx
   worker/edgar-fetch.mts --universe research-universe-r1000-current.json`, resuming valid manifests. Addendum/facts and
   20-company freshness checks remain pending. K35 jobs stay disabled; handoff updated before any resume.
+
+
+## 303. Kimi: K35 narrow phase-1 scope and metadata estimator — 2026-11-28T12:40Z
+
+- Claude's scope decision supersedes full-history collection. `build-calendar-addendum` reads cached submission metadata
+  only: 10-K/10-Q and amendments for quarter pairing, 8-K/8-K/A item codes and acceptance times. It sets
+  `cachedFiles: []` and does not open primary documents or EX-99. Registered r1000 command is now
+  `edgar-fetch.mts --universe research-universe-r1000-current.json --from 2019-01-01 --forms
+  10-K,10-K/A,10-Q,10-Q/A,8-K,8-K/A`; registry defaults are unchanged.
+- `scripts/estimate-r1000-edgar-scope.mts --companies 20` reads submissions and filing `index.json`, never document
+  bodies. It includes largest-exhibit bytes/requests conservatively, mirrors the collector's largest-document fallback,
+  and records atomic per-company metadata/hashes on D:. `run.json` pins universe SHA-256, scope, estimator code hash and
+  checkpoint hashes; `--resume` reuses only matching complete checkpoints. Failures block `go`.
+- Estimate `2026-11-28T123635210Z` is running with SEC_RPS=4. First two companies complete: **284 filings,
+  306,033,266 primary bytes, 44,330,602 optional-exhibit bytes, zero todo**. This is not the final estimate or approval
+  to resume. No document collector, phase-2 job, scheduler or web restart has started.
+- Announced verification: TypeScript, **309 files / 1,823 tests**, production build and `git diff --check` pass.
+  Source/task/handoff commit follows. Next: final 20-company projection against 15 GB / 8 hours, resume check with zero
+  new requests, then only an in-scope supervised run if allowed. All K35 jobs remain disabled.

@@ -205,3 +205,17 @@ _(Kimi appends results per phase here.)_
 - Proposed resume only after Claude's decision and outside 23:30–04:30 PT:
   `SEC_RPS=4 npx tsx worker/edgar-fetch.mts --universe research-universe-r1000-current.json`.
   Calendar addendum, companyfacts, freshness checks and phases 2/3 remain pending; all jobs remain disabled.
+
+## Narrow scope and metadata estimator — Kimi, 2026-11-28T12:40Z
+
+- The addendum needs submission metadata for 10-K/10-Q and amendments plus 8-K/8-K/A item codes; it does not open primary
+  documents or EX-99. Registered r1000 scope is `--from 2019-01-01 --forms
+  10-K,10-K/A,10-Q,10-Q/A,8-K,8-K/A`; the registry collector is unchanged.
+- `estimate-r1000-edgar-scope.mts --companies 20` uses only submissions and filing `index.json`, with zero document
+  downloads. It stores normalized per-company metadata and hashes atomically on D:, checks source/scope/code identity on
+  resume, mirrors largest-document fallback and conservatively includes optional exhibit bytes and requests.
+- Current run `2026-11-28T123635210Z` uses SEC_RPS=4. First two checkpoints: **284 filings, 306,033,266 primary bytes,
+  44,330,602 optional-exhibit bytes, zero todo**. The full estimate is not complete and no resume has been authorized.
+- TypeScript, **309 files / 1,823 tests**, production build and `git diff --check` pass. Next: finish the 20-company
+  estimate against 15 GB / 8 hours, verify idempotent resume with zero new requests, then proceed only if within limits.
+  No phase-2 collector, scheduler or web restart; every K35 job remains disabled.

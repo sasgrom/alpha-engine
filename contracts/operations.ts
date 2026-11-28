@@ -57,9 +57,9 @@ export const OPERATION_JOBS: OperationJob[] = [
   }),
   job({
     id: "edgar-fetch-r1000", name: "EDGAR Russell 1000 filing cache", group: "sec", mode: "scheduled", cron: "40 2 * * *", defaultEnabled: false, dependsOn: ["edgar-fetch-daily"],
-    ...npx("worker/edgar-fetch.mts", ["--universe", "research-universe-r1000-current.json"]), purpose: "Incrementally cache current Russell 1000 and still-listed former-company filings through the existing collector and shared SEC budget.",
+    ...npx("worker/edgar-fetch.mts", ["--universe", "research-universe-r1000-current.json", "--from", "2019-01-01", "--forms", "10-K,10-K/A,10-Q,10-Q/A,8-K,8-K/A"]), purpose: "Incrementally cache panel-era Russell 1000 and still-listed former-company filings through the existing collector and shared SEC budget.",
     input: "SEC submissions and documents; research-universe-r1000-current.json; shared per-CIK manifests.", output: "The existing raw EDGAR cache and atomic manifests; no alternate cache or production write.",
-    destination: "Local raw cache only.", requirements: ["network", "driveD"], notes: "Disabled until Claude accepts phase 1. Existing registry flags and behavior are unchanged; two item retries then todo and continue.",
+    destination: "Local raw cache only.", requirements: ["network", "driveD"], notes: "Disabled until Claude accepts phase 1. The r1000 scope starts 2019-01-01 and includes the six forms the addendum reads; registry flags and behavior are unchanged. Addendum inputs are submission metadata, not EX-99 contents; two item retries then todo and continue.",
   }),
   job({
     id: "calendar-addendum-r1000", name: "Russell 1000 release-calendar addendum", group: "sec", mode: "scheduled", cron: "50 2 * * *", defaultEnabled: false, dependsOn: ["edgar-fetch-r1000"],
