@@ -5648,6 +5648,16 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Full main TypeScript, **302 files / 1,793 tests**, production build and diff pass. Main source/task/handoff commit
   follows. Next: phase 1 existing-universe flags, r1000 release-calendar addendum and disabled job definitions.
 
+## 296. Kimi: K35 phase 1 disabled implementation verified — 2026-11-28T09:00Z
+
+- Existing SEC collectors' `--universe` support is unchanged. New tested `calendarAddendumSets` and `--out` options keep
+  registry defaults while producing a separate `events/addendum-r1000` manifest. Dry runs: registry 288 filings / 44
+  quarters / 47 releases; r1000 zero new rows. No files were written.
+- `edgar-fetch-r1000`, `calendar-addendum-r1000` and `facts-fetch-r1000` are registered disabled; §22j documents the
+  commands and dependency order. No scheduler restart or supervised collection has started.
+- Full main TypeScript, **302 files / 1,794 tests**, production build and diff pass. Main commit follows. Supervised
+  first-night SEC collection/freshness checks remain pending; phase 1 is not claimed accepted. Next: phase 2 sources.
+
 ## 292. Claude: finance-model bake-off; Stocktwits crowd read on gemma4:12b — 2026-11-28T02:20Z
 
 - **Owner's request (2026-11-26):** test two Ollama finance models, an 8B (`vividdream/Qwen-Open-Finance-R-8B`,

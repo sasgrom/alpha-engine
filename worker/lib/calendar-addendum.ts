@@ -131,3 +131,10 @@ export function buildCompanyAddendum(params: {
   }
   return { filings, quarters, unplaced };
 }
+
+export function calendarAddendumSets(value?: string | null): string[] {
+  if (value === undefined || value === null) return ["50", "rest", "six"];
+  const sets = [...new Set(value.split(",").map(row => row.trim()).filter(Boolean))];
+  if (!sets.length || sets.some(row => !/^[a-z0-9_-]+$/i.test(row))) throw new Error(`Invalid --sets ${value}`);
+  return sets;
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCompanyAddendum, calendarFilingFromCache, nextPeriodEnd, periodEndAccuracy, type CachedManifestFiling } from "./calendar-addendum";
+import { buildCompanyAddendum, calendarAddendumSets, calendarFilingFromCache, nextPeriodEnd, periodEndAccuracy, type CachedManifestFiling } from "./calendar-addendum";
 import { newYorkToUtc, type CalendarFiling } from "./event-calendar";
 
 const company = { cik: 1, ticker: "ONE" };
@@ -79,5 +79,15 @@ describe("a company's addendum", () => {
   it("does not take a filing the calendar already lists or one filed before the calendar's last day", () => {
     const cached = [cache("0000000001-26-000001", "8-K", "2026-07-30", "2026-07-30T16:05:00", "2.02,9.01"), cache("0000000001-26-000003", "8-K", "2026-07-15", "2026-07-15T16:05:00", "2.02")];
     expect(buildCompanyAddendum({ company, pinnedFilings, pinnedQuarterEnds: ["2026-06-30"], cached, calendarAsOf: "2026-08-01" }).filings).toEqual([]);
+  });
+});
+
+describe("calendar addendum sets", () => {
+  it("preserves the registry default and allows the independent r1000 addendum", () => {
+    expect(calendarAddendumSets(null)).toEqual(["50", "rest", "six"]);
+    expect(calendarAddendumSets("r1000")).toEqual(["r1000"]);
+    expect(calendarAddendumSets("r1000,rest,r1000")).toEqual(["r1000", "rest"]);
+    expect(() => calendarAddendumSets(",")).toThrow("Invalid --sets");
+    expect(() => calendarAddendumSets("r1000 other")).toThrow("Invalid --sets");
   });
 });

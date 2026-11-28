@@ -112,3 +112,15 @@ _(Kimi appends results per phase here.)_
   §22j documents the weekly command, evidence and failed-gate behavior. No scheduler restart or production change.
 - Focused helper tests 3/3. Full main TypeScript, **302 files / 1,793 tests**, production build and `git diff --check`
   pass. Main source/task/handoff commit follows.
+
+## Phase 1 implementation — Kimi, 2026-11-28T09:00Z
+
+- Existing `edgar-fetch.mts` and `facts-fetch.mts` already accept `--universe`; no fork or default change was needed.
+- `calendarAddendumSets` preserves `50,rest,six` and adds the r1000 option. `--out` keeps the registry addendum path
+  unchanged; the r1000 addendum writes separately to `events/addendum-r1000`. Focused tests: 10/10.
+- `edgar-fetch-r1000`, `calendar-addendum-r1000` and `facts-fetch-r1000` are registered `defaultEnabled: false`;
+  operations §22j documents their cron/dependency commands and shared SEC/todo rules. No scheduler restart.
+- Dry runs: registry 288 filings / 44 quarters / 47 releases; r1000 zero new filings/quarters/releases since its pinned
+  calendar. No output was written.
+- Full main TypeScript, **302 files / 1,794 tests**, production build and `git diff --check` pass. Main commit follows.
+  **Supervised first-night collection and freshness checks are still pending; this is not phase-1 acceptance.**

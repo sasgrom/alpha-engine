@@ -1456,6 +1456,8 @@ Frozen — no automated or manual GDELT requests
 - **Output:** `worker/research-universe-r1000-current.json` (atomic, only after every gate passes) and `D:/research/alpha-engine/index-membership/russell1000/current-universe/<stamp>.json` plus the 10-company review file. Evidence includes source hashes, counts and joiners/leavers.
 - **Gates:** unique CIKs, every ticker resolves in the SEC exchange file, nonempty output, and within ±5% of the previous count unless a new N-PORT quarter explains the change. A failed gate leaves the previous worker file in place.
 - **Destination:** Local universe file and D: evidence only; no production, database, app-registry, scheduler or web change.
+- **Phase 1 jobs, all disabled until Claude accepts them:** `edgar-fetch-r1000` (02:40, after `edgar-fetch-daily`) runs `npx tsx worker/edgar-fetch.mts --universe research-universe-r1000-current.json`; `calendar-addendum-r1000` (02:50, after `edgar-fetch-r1000`) runs `npx tsx scripts/build-calendar-addendum.mts --sets r1000 --out D:/research/alpha-engine/engine/events/addendum-r1000`; `facts-fetch-r1000` (23:50, after `sp500-facts-daily`) runs `npx tsx worker/facts-fetch.mts --universe research-universe-r1000-current.json`.
+- **Phase 1 behavior:** the collectors and their registry defaults are unchanged. The calendar's default sets remain `50,rest,six` and its default output remains `events/addendum`; only the r1000 invocation uses `--sets r1000` and the separate `events/addendum-r1000` manifest. Pinned calendars are never rewritten. SEC traffic uses the shared budget and per-item todo/continue rule.
 
 ## 6. Daily review checklist
 

@@ -56,6 +56,24 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local MySQL and the D:-only raw cache; no production write and no research-universe expansion.", requirements: ["network", "server", "mysql", "driveD"], notes: "Independent from research-50: failures never block its dependency chain, and this job has no research-series/factors downstream.",
   }),
   job({
+    id: "edgar-fetch-r1000", name: "EDGAR Russell 1000 filing cache", group: "sec", mode: "scheduled", cron: "40 2 * * *", defaultEnabled: false, dependsOn: ["edgar-fetch-daily"],
+    ...npx("worker/edgar-fetch.mts", ["--universe", "research-universe-r1000-current.json"]), purpose: "Incrementally cache current Russell 1000 and still-listed former-company filings through the existing collector and shared SEC budget.",
+    input: "SEC submissions and documents; research-universe-r1000-current.json; shared per-CIK manifests.", output: "The existing raw EDGAR cache and atomic manifests; no alternate cache or production write.",
+    destination: "Local raw cache only.", requirements: ["network", "driveD"], notes: "Disabled until Claude accepts phase 1. Existing registry flags and behavior are unchanged; two item retries then todo and continue.",
+  }),
+  job({
+    id: "calendar-addendum-r1000", name: "Russell 1000 release-calendar addendum", group: "sec", mode: "scheduled", cron: "50 2 * * *", defaultEnabled: false, dependsOn: ["edgar-fetch-r1000"],
+    ...npx("scripts/build-calendar-addendum.mts", ["--sets", "r1000", "--out", "D:/research/alpha-engine/engine/events/addendum-r1000"]), purpose: "Add new Russell 1000 filings and quarters to a separate addendum without touching the pinned calendar or registry addendum.",
+    input: "Pinned r1000 release calendar and the shared SEC cache.", output: "D:/research/alpha-engine/engine/events/addendum-r1000 with its own filings, quarters and manifest.",
+    destination: "Local D: addendum only; no pinned-file or production write.", requirements: ["driveD"], notes: "Disabled until Claude accepts phase 1. The registry --sets default remains 50,rest,six and its output path is unchanged.",
+  }),
+  job({
+    id: "facts-fetch-r1000", name: "Russell 1000 incremental companyfacts", group: "fundamentals", mode: "scheduled", cron: "50 23 * * *", defaultEnabled: false, dependsOn: ["sp500-facts-daily"],
+    ...npx("worker/facts-fetch.mts", ["--universe", "research-universe-r1000-current.json"]), purpose: "Collect relevant new SEC companyfacts for current Russell 1000 and still-listed former companies through the existing incremental collector.",
+    input: "research-universe-r1000-current.json, recent financial/XBRL forms and amendments, shared per-CIK raw cache and manifests.", output: "Resumable raw snapshots and local factsSnapshot ingests with first-filed availability preserved.",
+    destination: "Local MySQL and the existing D: raw cache; no production or research-database write.", requirements: ["network", "server", "mysql", "driveD"], notes: "Disabled until Claude accepts phase 1. Existing registry collection stays unchanged; two item attempts then todo and continue.",
+  }),
+  job({
     id: "research-series", name: "Canonical research series", group: "fundamentals", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["facts-fetch-daily"],
     ...npx("scripts/build-research-series.mts", ["--universe", "research-universe-50.json"]), purpose: "Convert current local facts into canonical vintage-aware series points.",
     input: "Local facts snapshots written by facts-fetch-daily.", output: "Atomically replaced series_points per CIK.",

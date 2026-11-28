@@ -13,7 +13,7 @@ import { createHash } from "node:crypto";
 import { createReadStream, existsSync, mkdirSync, readFileSync, realpathSync, renameSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { createInterface } from "node:readline";
-import { buildCompanyAddendum, periodEndAccuracy, type AddendumQuarter, type CachedManifestFiling } from "../worker/lib/calendar-addendum";
+import { buildCompanyAddendum, calendarAddendumSets, periodEndAccuracy, type AddendumQuarter, type CachedManifestFiling } from "../worker/lib/calendar-addendum";
 import type { CalendarFiling } from "../worker/lib/event-calendar";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 
@@ -21,7 +21,7 @@ const arg = (name: string) => { const index = process.argv.indexOf(name); return
 const calendarDir = path.resolve(arg("--calendar") ?? "D:/research/alpha-engine/engine/events");
 const cacheDir = path.resolve(arg("--cache") ?? "worker/cache/edgar");
 const dryRun = process.argv.includes("--dry-run");
-const SETS = ["50", "rest", "six"];
+const SETS = calendarAddendumSets(arg("--sets"));
 if (!existsSync(calendarDir) || !existsSync(cacheDir)) throw new Error(`The release calendar (${calendarDir}) or the SEC cache (${cacheDir}) is not there; nothing was written`);
 if (!arg("--calendar") && !/^d:/i.test(realpathSync(calendarDir))) throw new Error("The release calendar must resolve to D:");
 
@@ -68,8 +68,9 @@ const sha = (text: string) => createHash("sha256").update(text).digest("hex");
 const filingsText = jsonl(filings), quartersText = jsonl(quarters);
 const accuracy = periodEndAccuracy(allPinnedQuarters);
 const releases = new Set(quarters.flatMap((quarter) => quarter.earningsFilings.map((filing) => filing.accessionNo)));
+const outputDir = path.resolve(arg("--out") ?? path.join(calendarDir, "addendum"));
 const manifest = {
-  schemaVersion: 1, generatedAt: new Date().toISOString(), calendarDir: calendarDir.replaceAll("\\", "/"),
+  schemaVersion: 1, generatedAt: new Date().toISOString(), calendarDir: calendarDir.replaceAll("\\", "/"), outputDir: outputDir.replaceAll("\\", "/"),
   counts: {
     companies: pinnedFilings.size, companiesWithoutManifest: withoutManifest, filings: filings.length, filingsWithoutAcceptanceTime: withoutTimes,
     quarters: quarters.length, paired: quarters.filter((quarter) => quarter.pairingBasis === "earnings_8k").length, periodicOnly: quarters.filter((quarter) => quarter.pairingBasis === "periodic_only").length,
@@ -81,10 +82,9 @@ const manifest = {
   unplaced,
 };
 if (!dryRun) {
-  const out = path.join(calendarDir, "addendum");
-  mkdirSync(out, { recursive: true });
+  mkdirSync(outputDir, { recursive: true });
   // the two lists first, the manifest last: a reader checks the lists against the manifest's hashes
-  for (const [name, text] of [["filings-new.jsonl", filingsText], ["quarters-new.jsonl", quartersText]] as const) { writeFileSync(path.join(out, `${name}.tmp`), text); renameSync(path.join(out, `${name}.tmp`), path.join(out, name)); }
-  writeJsonAtomic(path.join(out, "manifest.json"), manifest, true);
+  for (const [name, text] of [["filings-new.jsonl", filingsText], ["quarters-new.jsonl", quartersText]] as const) { writeFileSync(path.join(outputDir, `${name}.tmp`), text); renameSync(path.join(outputDir, `${name}.tmp`), path.join(outputDir, name)); }
+  writeJsonAtomic(path.join(outputDir, "manifest.json"), manifest, true);
 }
 console.log(`[calendar-addendum] ${dryRun ? "dry run · " : ""}${manifest.counts.filings} filings since the calendar (to ${manifest.newestFiling}) · quarters ${manifest.counts.quarters}: ${manifest.counts.paired} paired, ${manifest.counts.inferred} inferred, ${manifest.counts.periodicOnly} without a release · ${manifest.counts.releases} releases · ${manifest.counts.unplaced} unplaced · ${withoutTimes} filings without an acceptance time · period-end rule exact ${manifest.periodEndRule.exactShare}, within a week ${manifest.periodEndRule.withinWeekShare} of ${accuracy.pairs} · ${calendarDir}`);
