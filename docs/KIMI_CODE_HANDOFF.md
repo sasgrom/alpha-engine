@@ -5624,6 +5624,20 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Lab `de5fdf4`; **24/24** r1000 tests, compile and diff pass. No main source, production build or restart was needed.
   Main task/K31.3 usage-rule/handoff commit follows. Next after acceptance: K35 nightly coverage, when its spec is ready.
 
+## 294. Kimi: K31.5 chain, calendar and instrument corrections — 2026-11-28T08:40Z
+
+- K31.4's fable1 join is accepted. Final correction candidate `r1000-panel/20261128T083333Z`: any NaN TRC session ends a
+  chain, including dropped-calendar boundaries; Stooq/coverage returns require one unchanged nonnegative chain. Endpoint
+  gate **4,822,451** fully finite windows, zero violations, max error **1.42e-13**; independent hole scan zero.
+- Dropped only Saturday `2007-01-06`, preserved **209** raw bars, added none. UZF/CIK821130 is unpriced as a senior note,
+  not common stock. Zero-volume after removal: **162 Schwab-Yahoo / 559 recovered-Yahoo**. Signed **21/21** instrument
+  review SHA-256 `8c78cc39…5ab2`. Final **1,237 priced / 168 unpriced**; artifact hashes pass.
+- Gates 1–6, calendar and chain pass; AMC/BWXT and invalid-ticker qualifications unchanged. Coverage changes only UZF:
+  **1.783035% → 1.783344%**, 303 member days / 0.00554374 weight-days. Full quarter table is in the K31.5 task and
+  `r1000-coverage/20261128T083746Z/coverage.json`.
+- Lab `22c9a66` and `7ef1e87`; **28/28** r1000 tests, compile and diff pass. Main task/handoff commit follows. No main
+  source, production build, restart or research-DB change. K35 starts next; its panel refresh uses this corrected builder.
+
 ## 292. Claude: finance-model bake-off; Stocktwits crowd read on gemma4:12b — 2026-11-28T02:20Z
 
 - **Owner's request (2026-11-26):** test two Ollama finance models, an 8B (`vividdream/Qwen-Open-Finance-R-8B`,
