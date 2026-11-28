@@ -5609,3 +5609,23 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Lab `fc4aa9c`; main `f8b4a1a` pushed. **16/16** r1000 tests/compile/diff pass. Main **301 files / 1,789 tests**,
   TypeScript, production build and diff pass. No production, scheduler, web restart, schema or research-DB change.
   K27 F is accepted independently and does not read the panel. Claude reports the queue clear; no active background tasks.
+
+## 292. Claude: finance-model bake-off; Stocktwits crowd read on gemma4:12b — 2026-11-28T02:20Z
+
+- **Owner's request (2026-11-26):** test two Ollama finance models, an 8B (`vividdream/Qwen-Open-Finance-R-8B`,
+  IQ4_NL) for quick work and a 30B (`xerus19573/Qwen3-30B-A3B-Finance`, Q3_K_M) for daily small inputs. Same tests as
+  the 2026-11-25 bake-off (300 hand-labelled news items, `D:/research/alpha-engine/news/bakeoff`) plus a Stocktwits test
+  (423 poster-tagged messages, tag hidden). News, all four fields right: gemma4:12b **51.3%** (0.85 s), qwen3.5:9b 45.0%,
+  30B 29.3% (1.99 s), 8B 20.7% (with a ChatML template; its GGUF has none). Stocktwits, balanced bull/bear: 8B 66.7%
+  (0.14 s, by committing more often: wrong side 12.8%), gemma4:12b **60.0%** (wrong side 9.2%), 30B 56.0%, qwen3.5:9b
+  50.7%. Neither finance model is better for news.
+- **Owner, 2026-11-27: "switch stocktwits to gemma and delete the 30b and others".** `worker/lib/stocktwits.ts`
+  `CROWD_MODEL` = gemma4:12b (override `STOCKTWITS_MODEL`); `worker/stocktwits.mts` uses it for the readiness check,
+  the call and the payload key (`llm:gemma4:12b:stocktwits:…`, so old qwen rows stay separate). The shared
+  `LLM_MODEL` default (qwen3.5:9b: filing tone, expectations, guidance, digest) is unchanged. Dry check on the job's
+  prompt: valid verdict in 1.3 s warm. Registry text and OPERATIONS.md §1 updated by hand. No scheduler or web restart:
+  the hourly job loads the file at each run.
+- The three finance models were removed with `ollama rm`, and the 30B GGUF files on D: deleted; Ollama keeps
+  gemma4:12b and qwen3.5:9b (C: 69.3 GB free). The bake-off runs (`run-*-v2.jsonl`, `st-*.jsonl`) stay on D:.
+- Gates: `npm run check`, **301 files / 1,790 tests**, production build and `git diff --check` pass.
+- Next: watch the first gemma crowd rows (`stocktwits-hourly`, :30).

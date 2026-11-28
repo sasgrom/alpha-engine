@@ -12,9 +12,9 @@ dns.setDefaultResultOrder("ipv4first");
 import "dotenv/config";
 import { fetchJson } from "./lib/http";
 import { postSignals, type SignalRow } from "./lib/ingest";
-import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from "./lib/stocktwits";
+import { aggregateStream, buildCrowdRow, buildStocktwitsRows, CROWD_MODEL, crowdPrompt } from "./lib/stocktwits";
 import { loadUniverse } from "./lib/universe";
-import { extractVerdict, generate, LLM_MODEL, status as ollamaStatus } from "./lib/ollama";
+import { extractVerdict, generate, status as ollamaStatus } from "./lib/ollama";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const ingestUrl = process.env.INGEST_URL ?? "http://127.0.0.1:3000/api/worker/ingest";
@@ -22,8 +22,8 @@ const ingestUrl = process.env.INGEST_URL ?? "http://127.0.0.1:3000/api/worker/in
 // 5d: LLM crowd read is OPTIONAL — the GPU is never a point of failure for
 // the deterministic rows. Daemon down/model missing → crowd rows skipped.
 const llm = await ollamaStatus();
-const llmReady = llm.ok && llm.models.some((m) => m === LLM_MODEL || m.startsWith(`${LLM_MODEL.split(":")[0]}:`));
-console.log(`[stocktwits] LLM crowd read: ${llmReady ? LLM_MODEL : "OFF (daemon/model unavailable — deterministic rows only)"}`);
+const llmReady = llm.ok && llm.models.includes(CROWD_MODEL);
+console.log(`[stocktwits] LLM crowd read: ${llmReady ? CROWD_MODEL : "OFF (daemon/model unavailable — deterministic rows only)"}`);
 
 const universe = loadUniverse();
 const rows: SignalRow[] = [];
@@ -40,9 +40,9 @@ for (const co of universe) {
     let crowd = "";
     if (llmReady && agg.newestId) {
       try {
-        const v = extractVerdict((await generate(crowdPrompt(co.ticker, messages))).text);
+        const v = extractVerdict((await generate(crowdPrompt(co.ticker, messages), { model: CROWD_MODEL })).text);
         if (v) {
-          const row = buildCrowdRow(co.cik, agg, LLM_MODEL, v.score, v.why);
+          const row = buildCrowdRow(co.cik, agg, CROWD_MODEL, v.score, v.why);
           if (row) { rows.push(row); crowd = ` +crowd ${v.score >= 0 ? "+" : ""}${v.score.toFixed(2)}`; }
         }
       } catch (e: any) {

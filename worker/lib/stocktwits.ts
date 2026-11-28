@@ -75,6 +75,13 @@ export function buildStocktwitsRows(cik: number, agg: StAggregate): SignalRow[] 
 // human-label rows; blending happens at digest time, not in the store.
 // ---------------------------------------------------------------------------
 
+/**
+ * Model for the crowd read (owner, 2026-11-27: "switch stocktwits to gemma"). gemma4:12b is already loaded for the news
+ * reader, so the hourly job no longer swaps a second model onto the GPU. On 423 poster-tagged messages it read 60.0%
+ * balanced against 50.7% for qwen3.5:9b. The model name rides in the payload key, so rows of the two models never mix.
+ */
+export const CROWD_MODEL = process.env.STOCKTWITS_MODEL ?? "gemma4:12b";
+
 /** Prompt for one company's stream dump. Messages truncated, numbered. */
 export function crowdPrompt(ticker: string, messages: StMessage[]): string {
   const dump = messages

@@ -4,7 +4,7 @@
  */
 import { describe, expect, it } from "vitest";
 import { toneFromBins, hourBucket, dayBucket, countArticles, buildGdeltRows } from "./gdelt";
-import { aggregateStream, buildCrowdRow, buildStocktwitsRows, crowdPrompt } from "./stocktwits";
+import { aggregateStream, buildCrowdRow, buildStocktwitsRows, CROWD_MODEL, crowdPrompt } from "./stocktwits";
 import { splitCsv, detectKind, artlistToBuzz, timelineToTone } from "./gdelt-csv";
 import { extractScore, extractVerdict, isBoilerplateRationale, sanitizeWhy, tonePrompt, tonePromptV2, tonePromptV3, tonePromptV4, generate } from "./ollama";
 import { buildDigestPrompt } from "./digest";
@@ -280,6 +280,9 @@ describe("stocktwits: aggregateStream + rows", () => {
     expect(row?.signalType).toBe("tone");
     expect(row?.note).toContain("Blackwell hype");
     expect(buildCrowdRow(1, aggregateStream([]), "m", 0, null)).toBeNull();
+  });
+  it("the crowd read uses gemma4:12b unless STOCKTWITS_MODEL overrides it", () => {
+    expect(CROWD_MODEL).toBe(process.env.STOCKTWITS_MODEL ?? "gemma4:12b");
   });
 });
 

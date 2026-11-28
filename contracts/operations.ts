@@ -28,8 +28,8 @@ export const OPERATION_JOBS: OperationJob[] = [
   job({
     id: "stocktwits-hourly", name: "Stocktwits hourly pulse", group: "live", mode: "scheduled", cron: "30 * * * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/stocktwits.mts"), purpose: "Capture the latest public message window without disturbing EDGAR or the GPU.",
-    input: "worker/universe.json; public 30-message stream per active ticker.", output: "Deterministic buzz and labeled-sentiment rows; optional local-LLM crowd rows when Ollama is available.",
-    destination: "Reviewed deterministic rows use the existing direct ingest contract; probation LLM rows follow INGEST_URL.", requirements: ["network", "server"], notes: "Reruns dedupe by newest message payload key. The GPU is never a hard dependency for deterministic rows.",
+    input: "worker/universe.json; public 30-message stream per active ticker.", output: "Deterministic buzz and labeled-sentiment rows; optional local-LLM crowd rows (gemma4:12b since 2026-11-27, qwen3.5:9b before) when Ollama is available.",
+    destination: "Reviewed deterministic rows use the existing direct ingest contract; probation LLM rows follow INGEST_URL.", requirements: ["network", "server"], notes: "Reruns dedupe by newest message payload key. The GPU is never a hard dependency for deterministic rows. The crowd model is in the payload key, so gemma and qwen rows never mix.",
   }),
   job({
     id: "edgar-fetch-daily", name: "EDGAR filing cache refresh", group: "sec", mode: "scheduled", cron: "0 2 * * *", defaultEnabled: true, dependsOn: [],
