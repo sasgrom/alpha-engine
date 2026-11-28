@@ -3,7 +3,7 @@ import dns from "node:dns";
 dns.setDefaultResultOrder("ipv4first");
 /**
  * EDGAR document fetcher (5b, stage 1 of 2 — network only, no GPU needed).
- * Run: npx tsx worker/edgar-fetch.mts [--only TICKER] [--from YYYY-MM-DD] [--limit N] [--forms 10-K,10-Q]
+ * Run: npx tsx worker/edgar-fetch.mts [--only TICKER] [--from YYYY-MM-DD] [--limit N] [--forms 10-K,10-Q,8-K] [--metadata-only]
  *
  * Downloads the FULL history of 10-K/10-Q/8-K primary documents for the EDGAR
  * universe (worker/edgar-universe.json) into worker/cache/edgar/<cik>/<accn>.htm
@@ -118,6 +118,8 @@ const retryFailed = process.argv.includes("--retry-failed");
 // --exhibits-only: repair EX-99 from existing manifests without another
 // submissions-API crawl or any primary-document downloads.
 const exhibitsOnly = process.argv.includes("--exhibits-only");
+const metadataOnly = process.argv.includes("--metadata-only");
+if (metadataOnly && exhibitsOnly) throw new Error("--metadata-only cannot be combined with --exhibits-only");
 const universeIdx = process.argv.indexOf("--universe");
 const universeFile =
   universeIdx > -1 ? process.argv[universeIdx + 1] : "edgar-universe.json";
@@ -187,7 +189,7 @@ for (const co of universe) {
     failed = 0,
     exhibitFetched = 0;
   prog.stage(
-    `${co.ticker} [${companyIdx}/${totalCompanies}]: ${filings.length} filings${exhibitsOnly ? " (existing manifests, EX-99 only)" : ` (${formFilter ? [...formFilter].join("/") : "10-K/10-Q/8-K"})`}`
+    `${co.ticker} [${companyIdx}/${totalCompanies}]: ${filings.length} filings${exhibitsOnly ? " (existing manifests, EX-99 only)" : ` (${formFilter ? [...formFilter].join("/") : "10-K/10-Q/8-K"})`}${metadataOnly ? " (metadata-only)" : ""}`
   );
   for (let i = 0; i < filings.length; i++) {
     const f = filings[i];
@@ -199,6 +201,15 @@ for (const co of universe) {
       fresh++;
     } else {
       fillFilingDetails(entry, f as ManifestEntry);
+    }
+    if (metadataOnly) {
+      if (!entry.fetched) entry.docName = f.primaryDoc;
+      if ((i + 1) % 25 === 0) {
+        assertDiskSpace();
+        saveManifest(co.cik, manifest);
+        prog.item(i + 1, filings.length, `metadata only, no primary or EX-99 downloads`);
+      }
+      continue;
     }
     if (exhibitsOnly && !entry.fetched) continue;
     // legacy errors (pre-dead-flag runs) get two last chances, not infinity
@@ -287,7 +298,7 @@ for (const co of universe) {
   }
   saveManifest(co.cik, manifest);
   prog.stageDone(
-    `${co.ticker}: ${filings.length} filings, ${fresh} new, ${fetched} primary, ${exhibitFetched} EX-99, ${failed} failed`
+    `${co.ticker}: ${filings.length} filings, ${fresh} new, ${fetched} primary, ${exhibitFetched} EX-99, ${failed} failed${metadataOnly ? " (metadata-only)" : ""}`
   );
 }
 prog.done(`all done — ${totalCompanies} companies`);

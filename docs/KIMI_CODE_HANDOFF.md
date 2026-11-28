@@ -5820,3 +5820,24 @@ Owner (2026-11-28): "yes, flows hall and company page".
 - Announced verification: TypeScript, **309 files / 1,823 tests**, production build and `git diff --check` pass.
   Source/task/handoff commit follows. Next: final 20-company projection against 15 GB / 8 hours, resume check with zero
   new requests, then only an in-scope supervised run if allowed. All K35 jobs remain disabled.
+
+
+## 304. Kimi: K35 metadata-only collector verified — 2026-11-28T13:04Z
+
+- The complete 20-company document-scope estimate rejected document collection: **2,619 filings, 2,330,964,491 primary
+  bytes, 748,995,884 optional-exhibit bytes**, zero todo; projected **108,260,607,181 combined bytes**, 92,058 primary
+  files and 232,306 requests (**20.17 hours** with headroom). `go=false`; no raw document resume occurred. Estimator
+  telemetry: 2,662 requests, zero 429/403/5xx/fallbacks.
+- `edgar-fetch.mts --metadata-only` now writes only submissions metadata. Acceptance times and item codes already come
+  from submissions; no filing index, primary document or EX-99 request is made. Existing `fetched` flags and actual
+  fallback document names are preserved. Default collection is unchanged. `--forms` accepts the exact six forms including
+  explicit amendments (no `/A/A`). The disabled nightly job carries the same opt-in and scope.
+- Three CLI regressions prove no metadata-mode downloads, unchanged default downloads and preservation of raw flags;
+  two parser tests pass. One-company resume completes with **zero telemetry requests** and status `complete`, fixing the
+  previous reused-checkpoint status bug. Full main verification: TypeScript, **310 files / 1,827 tests**, production
+  build and `git diff --check` pass.
+- Ten-company real pilot: **1,370 in-scope filings, 23 requests, seven seconds, zero failures and zero primary/exhibit
+  downloads**. All ten manifests total 6,976 entries / 2,764,650 bytes; 6,891 existing fetched flags have zero missing
+  raw files. This validates the metadata lane, not an accepted full night.
+- Next: full metadata-only refresh with SEC_RPS=4, then addendum, companyfacts and 20-company freshness checks. No
+  full-history collection, phase-2 job, scheduler or web restart. All K35 jobs stay disabled; source commit follows.

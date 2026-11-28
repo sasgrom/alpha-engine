@@ -219,3 +219,17 @@ _(Kimi appends results per phase here.)_
 - TypeScript, **309 files / 1,823 tests**, production build and `git diff --check` pass. Next: finish the 20-company
   estimate against 15 GB / 8 hours, verify idempotent resume with zero new requests, then proceed only if within limits.
   No phase-2 collector, scheduler or web restart; every K35 job remains disabled.
+
+## Metadata-only collector and real pilot — Kimi, 2026-11-28T13:04Z
+
+- Document collection is rejected by the completed 20-company estimate: **108,260,607,181 projected combined bytes and
+  20.17 hours with headroom**, `go=false`. The estimate itself made 2,662 metadata requests with zero 429/403/5xx.
+- `--metadata-only` now writes submission manifests without primary or EX-99 downloads. Acceptance times/items already
+  come from submissions; existing `fetched` flags and fallback names survive and default collection is unchanged. The
+  exact six-form argument is accepted, including explicit amendments. The disabled job has the same flags.
+- CLI regressions prove no metadata downloads, unchanged default downloads and preservation of raw evidence. Parser
+  tests also pass. A one-company resume now ends `complete` with **zero telemetry requests**, fixing the reused-status bug.
+- Real pilot: **1,370 in-scope filings, 23 requests, seven seconds, zero failures, zero primary/exhibit downloads**.
+  The ten manifests contain 6,976 entries / 2,764,650 bytes; all 6,891 existing fetched flags retain their raw files.
+- TypeScript, **310 files / 1,827 tests**, production build and `git diff --check` pass. Next: full metadata-only
+  refresh at SEC_RPS=4, then addendum, companyfacts and 20-company freshness checks. All jobs stay disabled.

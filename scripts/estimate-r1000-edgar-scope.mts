@@ -67,6 +67,10 @@ function saveSummary() {
   };
   manifest.byForm = byForm;
   manifest.projection = projection;
+  if (["running", "partial", "complete"].includes(manifest.status)) {
+    const completeCiks = new Set(manifest.companies.filter((row: any) => row.status === "complete").map((row: any) => row.cik));
+    manifest.status = completeCiks.size === sample.length ? "complete" : "partial";
+  }
   manifest.go = manifest.status === "complete" && projection?.withinLimits === true;
   writeJsonAtomic(runFile, manifest, true);
 }

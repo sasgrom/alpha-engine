@@ -9,8 +9,8 @@ export function edgarFetchLimit(value: string | null): number | null {
 export function edgarFetchForms(value: string | null): Set<string> | null {
   if (value === null) return null;
   const forms = value.split(",").map(form => form.trim().toUpperCase());
-  if (!forms.length || forms.some(form => !["10-K", "10-Q"].includes(form))) {
-    throw new Error("--forms currently accepts only 10-K and 10-Q");
+  if (!forms.length || forms.some(form => !["10-K", "10-K/A", "10-Q", "10-Q/A", "8-K", "8-K/A"].includes(form))) {
+    throw new Error("--forms accepts 10-K, 10-Q and 8-K");
   }
-  return new Set(forms.flatMap(form => [form, `${form}/A`]));
+  return new Set(forms.flatMap(form => form.endsWith("/A") ? [form] : [form, `${form}/A`]));
 }
