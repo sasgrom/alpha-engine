@@ -235,3 +235,22 @@ _(Kimi appends results per phase here.)_
   The ten manifests contain 6,976 entries / 2,764,650 bytes; all 6,891 existing fetched flags retain their raw files.
 - TypeScript, **310 files / 1,827 tests**, production build and `git diff --check` pass. Next: full metadata-only
   refresh at SEC_RPS=4, then addendum, companyfacts and 20-company freshness checks. All jobs stay disabled.
+
+## Phase 1 first run and freshness — Kimi, 2026-11-28T13:32Z
+
+- Metadata: **703/703**, 65 new manifest rows, **1,176 requests / about 5 minutes / zero failures / zero raw documents**.
+  All in-scope acceptance times and 8-K item fields are populated. Manifest-set SHA-256
+  `50110d889f7749c793c383b1041c25ece1819b9e60cde9eb96b00b6d3323036b`.
+- Addendum: **13 filings / 1 quarter / 1 paired release / 0 unplaced / 0 missing acceptance times**, through 2026-11-27.
+  Manifest SHA-256 `4da51bec1cea8d35e4f353324cd173dd69ad7aec2d6c09a0eb7c8e2a6b5f0622`.
+- Companyfacts: **703 checked, 2 refreshed (BJ and RIVN), 700 unchanged, one source gap**, 13,057,872 fact rows,
+  **1,181 requests / about 11 minutes**, zero 429/403/5xx/fallbacks. OZK's official 404 was attempted twice, retained
+  as the sole gap and not retried again. Raw D: bytes **1,963,358,588**; manifest-set SHA-256
+  `2be6a386521b1bad3c9921913dbeb941be6644450af5f3abe74535ac7acafeee`.
+- Freshness: **20/20** seed-35 companies have matching latest accessions, facts periods and normalized payload hashes
+  against fresh SEC responses. **56 requests, zero 429/403/5xx/fallbacks**; all 20 checkpoints resume with zero requests.
+  Run SHA-256 `6d6bed0395bde244c5463811fbe9c9615128c92bfb3f4a2d35520db9b474744a`.
+  OZK is not in the sample and remains an explicit source gap.
+- TypeScript, **311 files / 1,831 tests**, production build and `git diff --check` pass. Phase 1 is ready for Claude's
+  review and remains disabled. Phase-2 supervised collection starts only after this handoff; no production, scheduler,
+  web restart or research-DB action.

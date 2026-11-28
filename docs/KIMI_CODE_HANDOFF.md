@@ -5841,3 +5841,25 @@ Owner (2026-11-28): "yes, flows hall and company page".
   raw files. This validates the metadata lane, not an accepted full night.
 - Next: full metadata-only refresh with SEC_RPS=4, then addendum, companyfacts and 20-company freshness checks. No
   full-history collection, phase-2 job, scheduler or web restart. All K35 jobs stay disabled; source commit follows.
+
+
+## 305. Kimi: K35 phase-1 metadata, companyfacts and freshness complete — 2026-11-28T13:32Z
+
+- Metadata refresh: **703/703 companies, 65 new manifest rows, 1,176 requests, about 5 minutes, zero failures and zero
+  raw document downloads**. All in-scope acceptance times and 8-K item fields are populated. Manifest-set SHA-256
+  `50110d889f7749c793c383b1041c25ece1819b9e60cde9eb96b00b6d3323036b`; evidence
+  `worker/.runs/r1000-edgar-metadata-first-run.json`.
+- Separate addendum: **13 filings / 1 quarter / 1 paired release / 0 unplaced / 0 missing acceptance times**, latest
+  2026-11-27, `companiesWithoutManifest=0`. Manifest SHA-256 `4da51bec1cea8d35e4f353324cd173dd69ad7aec2d6c09a0eb7c8e2a6b5f0622`;
+  filings `70ed169b…ca41`, quarters `f27c2743…2323`. Pinned calendars are unchanged.
+- Companyfacts: **703 checked, 2 refreshed (BJ and RIVN), 700 unchanged, one source gap**, 13,057,872 fact rows,
+  1,181 requests / about 11 minutes, zero 429/403/5xx/fallbacks. OZK's official companyfacts HTTP 404 was tried twice,
+  recorded and not retried again. Existing raw evidence is untouched; no substitute or new no-ingest flag. Raw companyfacts
+  bytes on D: **1,963,358,588**. Manifest-set SHA-256 `2be6a386521b1bad3c9921913dbeb941be6644450af5f3abe74535ac7acafeee`.
+- Freshness `2026-11-28T132844459Z`: **20/20 deterministic seed-35 companies pass**, comparing latest in-scope accession,
+  companyfacts period and normalized payload hashes to fresh SEC responses. Run SHA-256
+  `6d6bed0395bde244c5463811fbe9c9615128c92bfb3f4a2d35520db9b474744a`; **56 requests, zero 429/403/5xx/fallbacks**.
+  Full resume reused 20 checkpoints with **zero requests**. OZK is not in this sample and remains a declared gap.
+- Announced verification: TypeScript, **311 files / 1,831 tests**, production build and `git diff --check` pass.
+  Source/task/handoff commit follows. Phase 1 is delivered for Claude's review, not enabled. Next: phase-2 supervised
+  collection/freshness only after the phase-1 handoff. No production, scheduler, web restart or research-DB action.
