@@ -136,3 +136,37 @@ _(Kimi appends results per phase here.)_
   disabled; operations §22j is updated. The lab builder also accepts `R1000_SCHWAB_ROOT` without changing its default.
 - Focused tests **14/14**. Full main TypeScript, **304 files / 1,802 tests**, production build and `git diff --check`
   pass. No Schwab/Yahoo collection or panel build has started. Main source/task/handoff commit follows.
+
+## Phase 3 and security-type correction — Kimi, 2026-11-28T10:40Z
+
+- `worker/r1000-security-types.mts` collects Schwab `quotes?fields=reference` for every K26 candidate into a dated D:
+  archive with exact raw responses and hashes. `--raw <folder>` replays without new requests. The live capture resolved
+  1,352 / 1,355 candidates after replay with the provider's actual `assetMainType` field; its first failed gate left the
+  previous universe intact. Metadata `2026-11-28T101740417Z.json` SHA-256
+  `7215a98b24157e1aa60f89fbaa4c995eeb63959c4bca0220174f4a4d3237480f`.
+- The corrected current universe has **703 companies (515 members / 188 former-listed)**, 716 verified common tickers
+  and 79 scoped exclusions. Every common-primary correction is applied; TWOD/ATHS have no common line, and Light & Wonder
+  and Leslie's leave with unapproved OTC lines. FCNCB/FWONB/GLIBB/LLYVB are COE class-B OTC lines excluded pending an
+  explicit hand-list decision. Worker SHA-256 `dbb8fa9224007ab024c9d57cb2c3808c5502755937c9db19f08399a993a985ae`;
+  evidence `2026-11-28T102032380Z.json` SHA-256 `86db628f7f4283205253e32ff121bf361af6476946488e82775756b9e60a9a9c`.
+- Final panel `20261128T103252Z`: **1,405 companies / 1,228 priced**. Overlap, membership, Stooq, identity, calendar,
+  chain and security-type gates pass; **4,818,386** finite chain windows, zero violations, max error **1.42e-13**.
+  Accepted K31.5 is unchanged. Independent array comparison changes only the seven named companies plus ROKU (absent
+  from the current SEC exchange file) and Leslie's; all other price/return/volume/chain columns are identical. The seven
+  are unpriced and carry verified common or CIK fallback labels. Artifact hashes: px
+  `c8ebf02d9853c282bd9212d9d93fddaf128a44c534456b63ccf3841d4066fffd`; member
+  `d2a207df916a605045d34c7034b15ff2b683bafc6b48f13698411bd4c08614cb`; entities
+  `1a8f43722d50b5816ea92442c77b76752aff9e97b3037622b939dd7516b82109`; gates
+  `f6bb1c96c4a66c54859f0aa15051acb0a19cb33b5b724bcf412f78a92312d280`.
+- LNG insider smoke `insiders/r1000/20261128T100517Z` is `awaiting_qa`: **2 filings / 2 owners / 2 transactions**, zero
+  duplicates/errors. Build SHA-256 `b0a35e06ca710fb391eca79b48e4e1f71e73c10ea83d2a0e896a9ec6fd6f2d5f`.
+  Registry filtering covers fresh/saved/unsaved readings and pre-mapping unknown issuers; the opt-in filter is part of
+  the saved-reading key without changing default keys. Insider price inputs follow the gated panel pointer.
+- FINRA regenerated with zero requests: **703 companies / 24 settlements / zero ambiguous symbols**; SHA-256
+  `363f0fc0e281338397d5b6057f8d90b43d3137e44442add2e37eff4fc0bf3071`.
+- Full lab suite **33/33** and main TypeScript pass. The first announced full main run had one stale 707-count failure
+  (1,811 other tests passed); the test now derives the generated count and checks MSA's primary. Targeted 4/4 passes.
+  The announced full rerun passes **306 files / 1,812 tests**; TypeScript, production build and `git diff --check` pass.
+  Main/lab source commits and the ordinary main push follow. The lab has no `origin` remote.
+- Every K35 job remains disabled. No scheduler/web restart, production, schema, research-database or enablement action.
+  Supervised first-night collection and freshness checks are still pending. Claude owns enablement and any restart.

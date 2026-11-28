@@ -11,6 +11,12 @@ describe("K35 current panel gates", () => {
     expect(r1000PanelGatesPass(gates())).toBe(true);
   });
 
+  it("requires verified common-equity evidence for a K35 refresh", () => {
+    expect(r1000PanelGatesPass(gates(), true)).toBe(false);
+    expect(r1000PanelGatesPass(gates({ securityTypes: { pass: false, status: "enabled", file: "types.json" } }), true)).toBe(false);
+    expect(r1000PanelGatesPass(gates({ securityTypes: { pass: true, status: "enabled", file: "types.json" } }), true)).toBe(true);
+  });
+
   it("refuses a failed calendar or chain gate", () => {
     expect(r1000PanelGatesPass(gates({ calendar: { pass: false } }))).toBe(false);
     expect(r1000PanelGatesPass(gates({ chain: { pass: false } }))).toBe(false);

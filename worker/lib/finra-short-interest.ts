@@ -133,6 +133,10 @@ export interface DeskShortInterestFile {
  * Each company's readings over the given settlement files. A company is matched by its ticker in FINRA's spelling;
  * one without a row in a file simply has no reading for that date. A symbol two companies share is given to neither.
  */
+export function r1000FinraCompanies(rows: Array<{ cik: number; ticker: string; tickers?: string[] }>) {
+  return rows.flatMap(row => (row.tickers ?? [row.ticker]).map(ticker => ({ cik: row.cik, ticker })));
+}
+
 export function buildDeskShortInterest(params: { files: FinraShortInterestRow[][]; companies: { cik: number; ticker: string }[]; builtAt: string; shareCounts?: Map<number, ShareCount[]> }): DeskShortInterestFile {
   const bySymbol = new Map<string, number>(), ambiguous = new Set<string>();
   for (const company of params.companies) {

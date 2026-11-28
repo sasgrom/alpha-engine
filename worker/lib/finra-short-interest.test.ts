@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildDeskShortInterest, finraSymbol, parseFinraShortInterest, shareCountAt, shareCountsFromStatements, shortInterestCandidates } from "./finra-short-interest";
+import { buildDeskShortInterest, finraSymbol, parseFinraShortInterest, r1000FinraCompanies, shareCountAt, shareCountsFromStatements, shortInterestCandidates } from "./finra-short-interest";
 
 const HEADER = `"accountingYearMonthNumber"|"symbolCode"|"issueName"|"issuerServicesGroupExchangeCode"|"marketClassCode"|"currentShortPositionQuantity"|"previousShortPositionQuantity"|"stockSplitFlag"|"averageDailyVolumeQuantity"|"daysToCoverQuantity"|"revisionFlag"|"changePercent"|"changePreviousNumber"|"settlementDate"`;
 const line = (symbol: string, shares: string, volume: string, days: string, date: string) => `"${date.replaceAll("-", "")}"|"${symbol}"|"Name"|"A"|"NYSE"|"${shares}"|"1"||"${volume}"|"${days}"||"0.00"|"0"|"${date}"`;
@@ -93,5 +93,12 @@ describe("the desk's short interest history", () => {
   it("refuses a settlement read twice and no file at all", () => {
     expect(() => buildDeskShortInterest({ files: [october, october], companies, builtAt: "x" })).toThrow(/read twice/);
     expect(() => buildDeskShortInterest({ files: [], companies, builtAt: "x" })).toThrow(/No FINRA/);
+  });
+
+  it("keeps every r1000 common-share class", () => {
+    expect(r1000FinraCompanies([
+      { cik: 1, ticker: "AAA", tickers: ["AAA", "AAAB"] },
+      { cik: 2, ticker: "BBB" },
+    ])).toEqual([{ cik: 1, ticker: "AAA" }, { cik: 1, ticker: "AAAB" }, { cik: 2, ticker: "BBB" }]);
   });
 });

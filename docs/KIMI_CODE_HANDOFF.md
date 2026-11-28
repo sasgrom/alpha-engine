@@ -5687,3 +5687,32 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   gemma4:12b and qwen3.5:9b (C: 69.3 GB free). The bake-off runs (`run-*-v2.jsonl`, `st-*.jsonl`) stay on D:.
 - Gates: `npm run check`, **301 files / 1,790 tests**, production build and `git diff --check` pass.
 - Next: watch the first gemma crowd rows (`stocktwits-hourly`, :30).
+
+
+## 298. Kimi: K35 phase 3 and common-equity correction — 2026-11-28T10:40Z
+
+- Corrected universe: **703 companies (515 members / 188 former-listed)**, 716 verified common tickers, 79 scoped
+  exclusions. Worker SHA-256 `dbb8fa9224007ab024c9d57cb2c3808c5502755937c9db19f08399a993a985ae`; evidence
+  `2026-11-28T102032380Z.json` SHA-256 `86db628f7f4283205253e32ff121bf361af6476946488e82775756b9e60a9a9c`.
+  Schwab metadata replay `2026-11-28T101740417Z.json`: 1,352 resolved / 3 unresolved of 1,355 candidates; SHA-256
+  `7215a98b24157e1aa60f89fbaa4c995eeb63959c4bca0220174f4a4d3237480f`. First `assetMainType` mapping failed closed;
+  raw replay made no new request and did not overwrite the previous universe.
+- Final panel `20261128T103252Z`: **1,228 priced / 1,405**; all required gates plus common-equity pass. Chain
+  **4,818,386** finite windows / zero violations / max error **1.42e-13**. Only the seven reported companies plus ROKU
+  (missing current SEC metadata) and Leslie's (OTC) changed against accepted K31.5; every other array column is exact.
+  Seven bad lines are unpriced with common/CIK labels. Accepted K31.5 is untouched. Hashes: px
+  `c8ebf02d9853c282bd9212d9d93fddaf128a44c534456b63ccf3841d4066fffd`; member
+  `d2a207df916a605045d34c7034b15ff2b683bafc6b48f13698411bd4c08614cb`; entities
+  `1a8f43722d50b5816ea92442c77b76752aff9e97b3037622b939dd7516b82109`; gates
+  `f6bb1c96c4a66c54859f0aa15051acb0a19cb33b5b724bcf412f78a92312d280`.
+- Insider smoke `20261128T100517Z` is `awaiting_qa`, **2 filings / 2 owners / 2 transactions / no duplicates**. Registry
+  filter and pointer lineage fixes are covered by fresh/saved/unsaved tests. Price input follows the gated pointer.
+  FINRA zero-request output: **703 companies / 24 settlements / zero ambiguous**, SHA-256
+  `363f0fc0e281338397d5b6057f8d90b43d3137e44442add2e37eff4fc0bf3071`.
+- Full lab **33/33**, TypeScript and focused tests pass. First full main run had only the old 707 count assertion;
+  1,811 other tests passed. Fixed to derive the generated count and test MSA; targeted 4/4 pass. Announced full rerun
+  **306 files / 1,812 tests**, TypeScript, production build and `git diff --check` pass. Main/lab source commits and the
+  ordinary main push follow; the lab has no `origin` remote.
+- All jobs remain disabled. No scheduler/web restart, production, schema or research-DB action. Four OTC COE class-B
+  lines (FCNCB/FWONB/GLIBB/LLYVB) await Claude's hand-list decision. Supervised first nights/freshness checks are next
+  after delivery; Claude enables accepted jobs and performs any restart. Task file has full evidence.

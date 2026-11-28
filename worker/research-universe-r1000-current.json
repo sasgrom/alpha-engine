@@ -24,8 +24,7 @@
   "cik": 5513,
   "ticker": "UNM",
   "tickers": [
-   "UNM",
-   "UNMA"
+   "UNM"
   ],
   "name": "Unum Group",
   "reason": "member",
@@ -65,8 +64,7 @@
   "cik": 7789,
   "ticker": "ASB",
   "tickers": [
-   "ASB",
-   "ASBA"
+   "ASB"
   ],
   "name": "ASSOCIATED BANC-CORP",
   "reason": "former-listed",
@@ -268,8 +266,7 @@
   "cik": 28917,
   "ticker": "DDS",
   "tickers": [
-   "DDS",
-   "DDT"
+   "DDS"
   ],
   "name": "DILLARD'S, INC.",
   "reason": "member",
@@ -508,9 +505,8 @@
  },
  {
   "cik": 66570,
-  "ticker": "MNESP",
+  "ticker": "MSA",
   "tickers": [
-   "MNESP",
    "MSA"
   ],
   "name": "MSA Safety Inc",
@@ -569,9 +565,8 @@
  },
  {
   "cik": 70866,
-  "ticker": "NCRRP",
+  "ticker": "VYX",
   "tickers": [
-   "NCRRP",
    "VYX"
   ],
   "name": "NCR Voyix Corp",
@@ -874,8 +869,7 @@
   "cik": 109380,
   "ticker": "ZION",
   "tickers": [
-   "ZION",
-   "ZIONP"
+   "ZION"
   ],
   "name": "ZIONS BANCORPORATION, NATIONAL ASSOCIATION /UT/",
   "reason": "member",
@@ -1065,8 +1059,7 @@
   "cik": 720672,
   "ticker": "SF",
   "tickers": [
-   "SF",
-   "SFB"
+   "SF"
   ],
   "name": "STIFEL FINANCIAL CORP",
   "reason": "member",
@@ -1113,17 +1106,6 @@
   "lastQuarter": "2026-09-30"
  },
  {
-  "cik": 750004,
-  "ticker": "LAWIL",
-  "tickers": [
-   "LAWIL",
-   "LNWO"
-  ],
-  "name": "Light & Wonder, Inc.",
-  "reason": "former-listed",
-  "lastQuarter": "2025-09-30"
- },
- {
   "cik": 751364,
   "ticker": "NNN",
   "tickers": [
@@ -1147,9 +1129,7 @@
   "cik": 763901,
   "ticker": "BPOP",
   "tickers": [
-   "BPOP",
-   "BPOPM",
-   "BPOPO"
+   "BPOP"
   ],
   "name": "POPULAR, INC.",
   "reason": "member",
@@ -1309,11 +1289,7 @@
   "cik": 798941,
   "ticker": "FCNCA",
   "tickers": [
-   "FCNCA",
-   "FCNCB",
-   "FCNCN",
-   "FCNCO",
-   "FCNCP"
+   "FCNCA"
   ],
   "name": "FIRST CITIZENS BANCSHARES INC /DE/",
   "reason": "member",
@@ -1383,10 +1359,7 @@
   "cik": 821130,
   "ticker": "AD",
   "tickers": [
-   "AD",
-   "UZD",
-   "UZE",
-   "UZF"
+   "AD"
   ],
   "name": "ARRAY DIGITAL INFRASTRUCTURE, INC.",
   "reason": "former-listed",
@@ -1504,9 +1477,8 @@
  },
  {
   "cik": 860748,
-  "ticker": "KMPB",
+  "ticker": "KMPR",
   "tickers": [
-   "KMPB",
    "KMPR"
   ],
   "name": "KEMPER Corp",
@@ -1787,8 +1759,7 @@
   "cik": 898174,
   "ticker": "RGA",
   "tickers": [
-   "RGA",
-   "RZC"
+   "RGA"
   ],
   "name": "REINSURANCE GROUP OF AMERICA INC",
   "reason": "member",
@@ -1798,8 +1769,7 @@
   "cik": 899689,
   "ticker": "VNO",
   "tickers": [
-   "VNO",
-   "VNORP"
+   "VNO"
   ],
   "name": "VORNADO REALTY TRUST",
   "reason": "member",
@@ -1907,9 +1877,8 @@
  },
  {
   "cik": 912958,
-  "ticker": "MLCMF",
+  "ticker": "TIGO",
   "tickers": [
-   "MLCMF",
    "TIGO"
   ],
   "name": "MILLICOM INTERNATIONAL CELLULAR SA",
@@ -2018,9 +1987,8 @@
  },
  {
   "cik": 921638,
-  "ticker": "SSRGF",
+  "ticker": "SSRM",
   "tickers": [
-   "SSRGF",
    "SSRM"
   ],
   "name": "SSR MINING INC.",
@@ -2211,11 +2179,7 @@
   "cik": 1004434,
   "ticker": "AMG",
   "tickers": [
-   "AMG",
-   "MGR",
-   "MGRB",
-   "MGRD",
-   "MGRE"
+   "AMG"
   ],
   "name": "AFFILIATED MANAGERS GROUP, INC.",
   "reason": "member",
@@ -2245,8 +2209,7 @@
   "cik": 1015328,
   "ticker": "WTFC",
   "tickers": [
-   "WTFC",
-   "WTFCN"
+   "WTFC"
   ],
   "name": "WINTRUST FINANCIAL CORP",
   "reason": "member",
@@ -2376,8 +2339,7 @@
   "cik": 1032033,
   "ticker": "SLM",
   "tickers": [
-   "SLM",
-   "SLMBP"
+   "SLM"
   ],
   "name": "SLM Corp",
   "reason": "member",
@@ -2417,11 +2379,7 @@
   "cik": 1042046,
   "ticker": "AFG",
   "tickers": [
-   "AFG",
-   "AFGB",
-   "AFGC",
-   "AFGD",
-   "AFGE"
+   "AFG"
   ],
   "name": "AMERICAN FINANCIAL GROUP INC",
   "reason": "member",
@@ -2531,11 +2489,7 @@
   "cik": 1050446,
   "ticker": "MSTR",
   "tickers": [
-   "MSTR",
-   "STRC",
-   "STRD",
-   "STRF",
-   "STRK"
+   "MSTR"
   ],
   "name": "Strategy Inc",
   "reason": "member",
@@ -2565,9 +2519,7 @@
   "cik": 1055160,
   "ticker": "MFA",
   "tickers": [
-   "MFA",
-   "MFAN",
-   "MFAO"
+   "MFA"
   ],
   "name": "MFA FINANCIAL, INC.",
   "reason": "former-listed",
@@ -2797,8 +2749,7 @@
   "cik": 1109354,
   "ticker": "BRKR",
   "tickers": [
-   "BRKR",
-   "BRKRP"
+   "BRKR"
   ],
   "name": "BRUKER CORP",
   "reason": "member",
@@ -2936,9 +2887,8 @@
  },
  {
   "cik": 1159152,
-  "ticker": "JHIUF",
+  "ticker": "JHX",
   "tickers": [
-   "JHIUF",
    "JHX"
   ],
   "name": "James Hardie Industries plc",
@@ -3640,10 +3590,7 @@
   "cik": 1409493,
   "ticker": "CIM",
   "tickers": [
-   "CIM",
-   "CIMN",
-   "CIMO",
-   "CIMP"
+   "CIM"
   ],
   "name": "CHIMERA INVESTMENT CORP",
   "reason": "former-listed",
@@ -3713,13 +3660,7 @@
   "cik": 1423689,
   "ticker": "AGNC",
   "tickers": [
-   "AGNC",
-   "AGNCL",
-   "AGNCM",
-   "AGNCN",
-   "AGNCO",
-   "AGNCP",
-   "AGNCZ"
+   "AGNC"
   ],
   "name": "AGNC Investment Corp.",
   "reason": "member",
@@ -3884,16 +3825,6 @@
   "name": "STARWOOD PROPERTY TRUST, INC.",
   "reason": "member",
   "lastQuarter": "2026-09-30"
- },
- {
-  "cik": 1465740,
-  "ticker": "TWOD",
-  "tickers": [
-   "TWOD"
-  ],
-  "name": "TWO HARBORS INVESTMENT CORP.",
-  "reason": "former-listed",
-  "lastQuarter": "2020-03-31"
  },
  {
   "cik": 1467623,
@@ -4229,22 +4160,11 @@
   "cik": 1527166,
   "ticker": "CG",
   "tickers": [
-   "CG",
-   "CGABL"
+   "CG"
   ],
   "name": "Carlyle Group Inc.",
   "reason": "member",
   "lastQuarter": "2026-09-30"
- },
- {
-  "cik": 1527469,
-  "ticker": "ATHS",
-  "tickers": [
-   "ATHS"
-  ],
-  "name": "Athene Holding Ltd.",
-  "reason": "former-listed",
-  "lastQuarter": "2021-12-31"
  },
  {
   "cik": 1528396,
@@ -4361,7 +4281,6 @@
   "ticker": "FWONA",
   "tickers": [
    "FWONA",
-   "FWONB",
    "FWONK"
   ],
   "name": "Liberty Media Corp",
@@ -4422,8 +4341,7 @@
   "cik": 1569650,
   "ticker": "OZK",
   "tickers": [
-   "OZK",
-   "OZKAP"
+   "OZK"
   ],
   "name": "Bank OZK",
   "reason": "member",
@@ -4575,8 +4493,7 @@
   "cik": 1580864,
   "ticker": "VRM",
   "tickers": [
-   "VRM",
-   "VRMWW"
+   "VRM"
   ],
   "name": "Vroom, Inc.",
   "reason": "former-listed",
@@ -4656,8 +4573,7 @@
   "cik": 1590364,
   "ticker": "FTAI",
   "tickers": [
-   "FTAI",
-   "FTAIM"
+   "FTAI"
   ],
   "name": "FTAI Aviation Ltd.",
   "reason": "member",
@@ -4938,8 +4854,7 @@
   "cik": 1628171,
   "ticker": "RVMD",
   "tickers": [
-   "RVMD",
-   "RVMDW"
+   "RVMD"
   ],
   "name": "Revolution Medicines, Inc.",
   "reason": "member",
@@ -5179,8 +5094,7 @@
   "cik": 1657853,
   "ticker": "HTZ",
   "tickers": [
-   "HTZ",
-   "HTZWW"
+   "HTZ"
   ],
   "name": "HERTZ GLOBAL HOLDINGS, INC",
   "reason": "former-listed",
@@ -5340,12 +5254,7 @@
   "cik": 1685040,
   "ticker": "BHF",
   "tickers": [
-   "BHF",
-   "BHFAL",
-   "BHFAM",
-   "BHFAN",
-   "BHFAO",
-   "BHFAP"
+   "BHF"
   ],
   "name": "Brighthouse Financial, Inc.",
   "reason": "member",
@@ -5605,8 +5514,7 @@
   "cik": 1749723,
   "ticker": "NFE",
   "tickers": [
-   "NFE",
-   "NFEGP"
+   "NFE"
   ],
   "name": "New Fortress Energy Inc.",
   "reason": "former-listed",
@@ -5706,8 +5614,7 @@
   "cik": 1770450,
   "ticker": "XRX",
   "tickers": [
-   "XRX",
-   "XRXDW"
+   "XRX"
   ],
   "name": "Xerox Holdings Corp",
   "reason": "former-listed",
@@ -5937,10 +5844,7 @@
   "cik": 1801169,
   "ticker": "OPEN",
   "tickers": [
-   "OPEN",
-   "OPENL",
-   "OPENW",
-   "OPENZ"
+   "OPEN"
   ],
   "name": "Opendoor Technologies Inc.",
   "reason": "former-listed",
@@ -6107,16 +6011,6 @@
   "lastQuarter": "2026-09-30"
  },
  {
-  "cik": 1821806,
-  "ticker": "LESLQ",
-  "tickers": [
-   "LESLQ"
-  ],
-  "name": "Leslie's, Inc.",
-  "reason": "former-listed",
-  "lastQuarter": "2023-03-31"
- },
- {
   "cik": 1821825,
   "ticker": "OGN",
   "tickers": [
@@ -6208,9 +6102,8 @@
  },
  {
   "cik": 1829311,
-  "ticker": "BMNP",
+  "ticker": "BMNR",
   "tickers": [
-   "BMNP",
    "BMNR"
   ],
   "name": "BITMINE IMMERSION TECHNOLOGIES, INC.",
@@ -6371,8 +6264,7 @@
   "cik": 1849635,
   "ticker": "DJT",
   "tickers": [
-   "DJT",
-   "DJTWW"
+   "DJT"
   ],
   "name": "Trump Media & Technology Group Corp.",
   "reason": "former-listed",
@@ -6572,8 +6464,7 @@
   "cik": 1880661,
   "ticker": "TPG",
   "tickers": [
-   "TPG",
-   "TPGXL"
+   "TPG"
   ],
   "name": "TPG Inc.",
   "reason": "member",
@@ -6591,9 +6482,8 @@
  },
  {
   "cik": 1889539,
-  "ticker": "CRBD",
+  "ticker": "CRBG",
   "tickers": [
-   "CRBD",
    "CRBG"
   ],
   "name": "Corebridge Financial, Inc.",
@@ -6664,9 +6554,7 @@
   "cik": 1934850,
   "ticker": "FG",
   "tickers": [
-   "FG",
-   "FGN",
-   "FGSN"
+   "FG"
   ],
   "name": "F&G Annuities & Life, Inc.",
   "reason": "former-listed",
@@ -6957,7 +6845,6 @@
   "ticker": "GLIBA",
   "tickers": [
    "GLIBA",
-   "GLIBB",
    "GLIBK"
   ],
   "name": "Liberty Capital Corp/NV",
@@ -6966,9 +6853,8 @@
  },
  {
   "cik": 2064124,
-  "ticker": "FGRS",
+  "ticker": "FIGR",
   "tickers": [
-   "FGRS",
    "FIGR"
   ],
   "name": "Figure Technology Solutions, Inc.",
@@ -7040,7 +6926,6 @@
   "ticker": "LLYVA",
   "tickers": [
    "LLYVA",
-   "LLYVB",
    "LLYVK"
   ],
   "name": "Liberty Live Holdings, Inc.",

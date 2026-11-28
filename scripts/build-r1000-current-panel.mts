@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 import { r1000PanelGatesPass } from "../worker/lib/r1000-current-panel";
@@ -7,6 +7,10 @@ import { r1000PanelGatesPass } from "../worker/lib/r1000-current-panel";
 const labRoot = path.resolve("../alpha-engine-lab");
 const arg = (name: string) => { const index = process.argv.indexOf(name); return index > -1 ? process.argv[index + 1] : null; };
 const schwabRoot = path.resolve(arg("--root") ?? "D:/research/alpha-engine/schwab-r1000");
+const securityRoot = "D:/research/alpha-engine/index-membership/russell1000/security-types";
+const latestSecurityTypes = readdirSync(securityRoot).filter(file => /^\d{4}-\d{2}-\d{2}T\d{9}Z\.json$/.test(file)).sort().at(-1);
+const securityTypesFile = arg("--security-types") ?? (latestSecurityTypes ? path.join(securityRoot, latestSecurityTypes) : null);
+if (!securityTypesFile) throw new Error("No dated Russell security-type evidence is available");
 const evidenceRoot = "D:/research/alpha-engine";
 const env = {
   ...process.env,
@@ -19,6 +23,7 @@ const env = {
   R1000_FABLE1_JOIN: `${evidenceRoot}/engine/r1000-fable1-join/20261128T030114Z/fable1-matches.json`,
   R1000_UNPRICE_CIKS: "821130",
   R1000_SCHWAB_ROOT: schwabRoot,
+  R1000_SECURITY_TYPES: path.resolve(securityTypesFile),
 };
 const result = spawnSync("python", ["src/research/r1000/build_panel.py"], { cwd: labRoot, env, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 if (result.error) throw result.error;
@@ -27,10 +32,10 @@ const summary = JSON.parse(result.stdout.trim());
 const panel = summary.output as string;
 const manifest = JSON.parse(readFileSync(path.join(panel, "manifest.json"), "utf8"));
 const gates = JSON.parse(readFileSync(path.join(panel, "gates.json"), "utf8"));
-if (!r1000PanelGatesPass(gates)) throw new Error(`K35 panel gates failed; pointer not moved: ${panel}`);
+if (!r1000PanelGatesPass(gates, true)) throw new Error(`K35 panel gates failed; pointer not moved: ${panel}`);
 const pointer = path.join(panel, "..", "current.json");
 writeJsonAtomic(pointer, { schemaVersion: 1, updatedAt: new Date().toISOString(), panel, counts: manifest.counts,
   gates: { overlap: gates.overlap.pass, membership: gates.membership.pass, stooqContradictions: gates.stooqContradictions.pass,
-    identity: gates.identity.pass, calendar: gates.calendar.pass, chain: gates.chain.pass,
+    identity: gates.identity.pass, calendar: gates.calendar.pass, chain: gates.chain.pass, securityTypes: gates.securityTypes.pass,
     splits: gates.splits.pass, schwabInvalidBars: gates.schwabInvalidBars.pass }, productionWrite: false, databaseWrite: false }, true);
 console.log(JSON.stringify({ panel, pointer, counts: manifest.counts }, null, 1));

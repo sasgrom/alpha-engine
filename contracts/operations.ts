@@ -150,9 +150,9 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local D: only; no production write or registry-calendar replacement.", requirements: ["network", "driveD"], notes: "Disabled until Claude accepts phase 2. Same polite request spacing and failure rules as the registry watch.",
   }),
   job({
-    id: "r1000-panel-weekly", name: "Russell 1000 corrected panel", group: "research", mode: "scheduled", cron: "30 6 * * 0", defaultEnabled: false, dependsOn: ["yahoo-actions-r1000-weekly"],
-    ...npx("scripts/build-r1000-current-panel.mts", ["--root", "D:/research/alpha-engine/schwab-r1000"]), purpose: "Build a new-stamp Russell 1000 panel with the corrected K31.5 rules and advance current.json only after all six gates plus the chain gate pass.",
-    input: "Accepted K31.5 builder/exclusions, current Schwab history, Yahoo actions and fable1 evidence.", output: "A new r1000-panel stamp and current.json only on success; the previous pointer survives failure.",
+    id: "r1000-panel-weekly", name: "Russell 1000 corrected panel", group: "research", mode: "scheduled", cron: "30 6 * * 0", defaultEnabled: false, dependsOn: ["r1000-universe-weekly", "yahoo-actions-r1000-weekly"],
+    ...npx("scripts/build-r1000-current-panel.mts", ["--root", "D:/research/alpha-engine/schwab-r1000"]), purpose: "Build a new-stamp Russell 1000 panel with the corrected K31.5 rules and advance current.json only after all six gates plus the chain and common-equity gates pass.",
+    input: "Accepted K31.5 builder/exclusions, current Schwab history, Yahoo actions, fable1 evidence and dated Schwab common-equity classifications.", output: "A new r1000-panel stamp and current.json only on success; the previous pointer survives failure.",
     destination: "Local D: only; no production, scheduler or research-database write.", requirements: ["driveD"], notes: "Disabled until Claude accepts phase 2. Stamps are never overwritten and retention is the owner's.",
   }),
   job({
@@ -193,6 +193,13 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local D: archive and a local file read by company.shortInterest and the desk snapshot; no production write and no database write.", requirements: ["network", "mysql", "driveD"], notes: "The owner's go of 2026-11-24. Daily, because the publication day is not fixed: a settlement that is not out yet answers 403 or 404 and is asked again the next day (at most a few requests a day, one a second). A stored file is never fetched again or rewritten; each file read is checked against its manifest hash. A missing archive folder stops the run and creates nothing.",
   }),
   job({
+    id: "finra-short-interest-r1000", name: "FINRA short interest · Russell 1000", group: "research", mode: "scheduled", cron: "25 6 * * *", defaultEnabled: false, dependsOn: [],
+    ...npx("worker/finra-short-interest.mts", ["--universe", "research-universe-r1000-current.json", "--out", "worker/.runs/r1000-short-interest.json"]),
+    purpose: "Keep the current Russell 1000 and former-listed tickers in a separate FINRA short-interest history without changing the registry file or loaded standards.",
+    input: "The existing FINRA settlement archive, research-universe-r1000-current.json and optional new settlements.", output: "worker/.runs/r1000-short-interest.json with the newest 24 settlements and every common class.",
+    destination: "Local D: archive and local r1000 file only; no production, standard-table or registry-file write.", requirements: ["network", "driveD"], notes: "Disabled until Claude accepts phase 3. Existing archive and registry collector behavior remain unchanged; missing settlements are not invented.",
+  }),
+  job({
     id: "news-feeds-fast", name: "News: wires, SEC current 8-Ks and market feeds", group: "research", mode: "scheduled", cron: "2-59/5 * * * *", defaultEnabled: true, dependsOn: [],
     ...npx("worker/news-feeds.mts", ["--set", "fast"]), purpose: "Read the press wires, the SEC's current 8-K list and the market news feeds every five minutes and store every new item with our own first-seen time.",
     input: "Public RSS and Atom feeds (GlobeNewswire, PR Newswire, Seeking Alpha, MarketWatch, Benzinga, CNBC, Nasdaq earnings) and the SEC's current 8-K feed through secGet.", output: "D:/research/alpha-engine/news: raw answers gzipped, items/<UTC date>.jsonl (one row per new item: first-seen and published times, tags, story), state.",
@@ -218,9 +225,9 @@ export const OPERATION_JOBS: OperationJob[] = [
   }),
   job({
     id: "r1000-universe-weekly", name: "Russell 1000 current universe", group: "research", mode: "scheduled", cron: "20 5 * * 0", defaultEnabled: false, dependsOn: [],
-    ...npx("scripts/build-r1000-current-universe.mts"), purpose: "Rebuild the current Russell 1000 and still-listed former-company universe with exchange and N-PORT evidence, joiner/leaver reports and count gates.",
-    input: "K26 membership and companies; edgar-universe.json; SEC company_tickers_exchange.json through the shared client and D: cache.", output: "worker/research-universe-r1000-current.json and D:/research/alpha-engine/index-membership/russell1000/current-universe/<stamp>.json.",
-    destination: "Local universe file and D: evidence only; no production, database or app-registry write.", requirements: ["network", "driveD"], notes: "Disabled until Claude accepts the universe. CIK uniqueness, exchange resolution and the same-quarter ±5% gate are mandatory; a failed gate keeps the previous file.",
+    ...npx("scripts/build-r1000-current-universe.mts"), purpose: "Rebuild the current Russell 1000 and still-listed former-company universe with exchange, N-PORT and Schwab common-equity evidence, joiner/leaver reports and count gates.",
+    input: "K26 membership and companies; edgar-universe.json; SEC company_tickers_exchange.json through the shared client and D: cache; Schwab quotes fields=reference in a separate D: evidence archive.", output: "worker/research-universe-r1000-current.json and D:/research/alpha-engine/index-membership/russell1000/current-universe/<stamp>.json, including every excluded ticker and reason.",
+    destination: "Local universe file and D: evidence only; no production, database or app-registry write.", requirements: ["network", "driveD"], notes: "Disabled until Claude accepts the universe. CIK uniqueness, exchange resolution, verified common equity and the same-quarter ±5% gate are mandatory; a failed gate keeps the previous file.",
   }),
   job({
     id: "news-company-index", name: "News: company index for name resolution", group: "research", mode: "scheduled", cron: "50 5 * * 0", defaultEnabled: true, dependsOn: [],
@@ -264,6 +271,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     ...npx("../alpha-engine-lab/src/insiders/std-insiders-refresh.mts"), purpose: "Read the SEC's Form 3, 4 and 5 filings through the last completed trading session, rebuild the insider standard and publish the new build as files only after its acceptance checks and a regression against the published build pass.",
     input: "The SEC's daily form indexes and filing documents since the last quarterly bulk set, the bulk sets and the reviewed predecessor map on D:, the standard-price calendar and prices, and the app's completed daily bars of SPY for the sessions since the weekly price refresh.", output: "One build folder per run under D:/research/alpha-engine/insiders/std, the pointer current.json, rebuilt desk company files and worker/.runs/local-generated/std-insiders-refresh.json.",
     destination: "Local D: artifacts only; no production write, no database write (the research tables are loaded by std-insiders-db-load on Sundays).", requirements: ["network", "mysql", "driveD"], notes: "The owner's go of 2026-11-24. Forms are read through the completed session before the last one: the SEC publishes a filing's folder up to a day after its index lists it, so a form reaches the desk on the second morning after it is filed. Monday to Saturday: on Sundays std-insiders-db-load runs the same refresh with a full build. The build is incremental (companies without new filings are carried over as hard links) and replays the saved reading of the quarterly SEC sets in sec-345/reading/<key> instead of reading them again; measured 2026-11-24: 1.6 minutes for a build with every company carried over, 4 to 6 minutes when all are recomputed (after a code change or a standard-price change), about 10 minutes for the whole run with the form fetch and acceptance checks. A run with no new session and an unchanged price calendar ends as unchanged in seconds. A failed step stops the chain with an honest error; before the swap the stored build is untouched, and the pointer names the previous build until the new one is final. Every run keeps its own build folder and nothing is pruned, so D: grows with each build. The orchestrator refuses to start when the lab's insider code has uncommitted changes. Scheduled at 03:35 so its database load starts after the night's other loads.",
+  }),
+  job({
+    id: "r1000-insiders-refresh", name: "Russell 1000 insider filings and price basis", group: "research", mode: "scheduled", cron: "0 4 * * *", defaultEnabled: false, dependsOn: ["edgar-fetch-r1000"],
+    ...npx("../alpha-engine-lab/src/insiders/r1000-insiders-refresh.mts"), purpose: "Read the SEC's daily insider forms for the current Russell 1000 universe and write a separate build using the corrected panel and component-aware Yahoo split evidence.",
+    input: "SEC daily form indexes and documents, research-universe-r1000-current.json, the K31.5 panel and Yahoo split events, shared raw insider archives.", output: "D:/research/alpha-engine/insiders/r1000/<stamp> and r1000-price-input/<stamp>; no std_insider_* or S&P standard replacement.",
+    destination: "Local D: artifacts only; no production, research-database or standard-table write.", requirements: ["network", "driveD"], notes: "Disabled until Claude accepts phase 3. Uses the existing SEC parser/builder with a separate registry and roots; no fork of the standard refresh.",
   }),
   job({
     id: "std-insiders-db-load", name: "Insider standard weekly database load", group: "research", mode: "scheduled", cron: "10 4 * * 0", defaultEnabled: true, dependsOn: [],

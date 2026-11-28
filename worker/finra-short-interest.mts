@@ -16,13 +16,14 @@ import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { getDb } from "../api/queries/connection";
-import { buildDeskShortInterest, FINRA_SHORT_INTEREST_URL, parseFinraShortInterest, shareCountsFromStatements, shortInterestCandidates, type ShareCount } from "./lib/finra-short-interest";
+import { buildDeskShortInterest, FINRA_SHORT_INTEREST_URL, parseFinraShortInterest, r1000FinraCompanies, shareCountsFromStatements, shortInterestCandidates, type ShareCount } from "./lib/finra-short-interest";
 import { writeJsonAtomic } from "./lib/json-file";
 import { startProgress } from "./lib/progress";
 
 const arg = (name: string) => { const index = process.argv.indexOf(name); return index > -1 ? process.argv[index + 1] : null; };
 const root = path.resolve(arg("--root") ?? "D:/research/alpha-engine/shortint/finra");
 const out = path.resolve(arg("--out") ?? "worker/.runs/desk-short-interest.json");
+const universeFile = arg("--universe");
 const days = Number(arg("--days") ?? 100), keep = Number(arg("--keep") ?? 24);
 const dryRun = process.argv.includes("--dry-run"), noFetch = process.argv.includes("--no-fetch") || dryRun;
 if (!Number.isInteger(days) || days < 20 || !Number.isInteger(keep) || keep < 2) throw new Error("--days must be at least 20 and --keep at least 2");
@@ -79,9 +80,14 @@ const files = names.map((name) => {
   if (createHash("sha256").update(body).digest("hex") !== entry.sha256) throw new Error(`${name} does not match its manifest hash; the desk file was not rebuilt`);
   return parseFinraShortInterest(body.toString("utf8"));
 });
-const client = getDb().$client.promise();
-const [companies] = await client.query("SELECT cik, ticker FROM companies WHERE ticker IS NOT NULL AND ticker <> ''") as [Array<{ cik: number; ticker: string }>, unknown];
-await client.end();
+const companies = universeFile
+  ? r1000FinraCompanies(JSON.parse(readFileSync(path.resolve("worker", universeFile), "utf8")))
+  : await (async () => {
+    const client = getDb().$client.promise();
+    const [rows] = await client.query("SELECT cik, ticker FROM companies WHERE ticker IS NOT NULL AND ticker <> ''") as [Array<{ cik: number; ticker: string }>, unknown];
+    await client.end();
+    return rows;
+  })();
 // share counts from the desk's statements files (fundamentals standard); a company without one gets no share of shares
 const statementsDir = path.resolve("worker/.runs/desk-company/statements");
 const shareCounts = new Map<number, ShareCount[]>();

@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { schwabFetchPriceSeries, schwabPriceSeries, schwabSymbol } from "./schwab-price-series";
 import { SECTOR_ETF_TICKERS } from "./stooq-price-load";
@@ -40,7 +41,9 @@ describe("Schwab price-series universe", () => {
   it("keeps the fetch default and scopes the r1000 fetch without market funds", () => {
     expect(schwabFetchPriceSeries("research-universe-50.json", false)).toHaveLength(516);
     const series = schwabFetchPriceSeries("research-universe-r1000-current.json", true);
-    expect(series).toHaveLength(707);
+    const universe = JSON.parse(readFileSync("worker/research-universe-r1000-current.json", "utf8"));
+    expect(series).toHaveLength(universe.length);
+    expect(series.find(row => row.priceKey === 66570)?.ticker).toBe("MSA");
     expect(series.some(row => row.ticker === "SPY")).toBe(false);
     for (const ticker of SECTOR_ETF_TICKERS) expect(series.some(row => row.ticker === ticker)).toBe(false);
   });
