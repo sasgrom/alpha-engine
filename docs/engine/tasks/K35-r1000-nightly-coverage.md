@@ -67,7 +67,9 @@ Expected size today: about 517 + 192 ≈ 709 companies.
 
 Standard fundamentals and guidance for these companies (no Russell standard exists yet); 13F; Congress; per-company
 news feeds (the general feeds already resolve these names through the company index); Alpha Vantage (its free daily
-limit is used up by the registry until about 2026-12-15); the app's company registry, desk pages and `alpha_engine`; the
+limit is used up by the registry until about 2026-12-15); the app's company registry, desk pages and `alpha_engine`
+(one exception, corrected by Claude on 2026-11-28: `facts-fetch-r1000` ingests through the existing local facts route
+like `sp500-facts-daily`; 702 of the 703 companies already had `facts` rows from K27, so it only refreshes them); the
 research database; production.
 
 ## Rules
