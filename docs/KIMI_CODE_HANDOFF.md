@@ -5638,6 +5638,16 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Lab `22c9a66` and `7ef1e87`; **28/28** r1000 tests, compile and diff pass. Main task/handoff commit follows. No main
   source, production build, restart or research-DB change. K35 starts next; its panel refresh uses this corrected builder.
 
+## 295. Kimi: K35 current universe built and reviewed — 2026-11-28T08:50Z
+
+- `worker/research-universe-r1000-current.json`: **707 unique companies (515 current members / 192 former-listed)**, all
+  tickers resolved in the SEC exchange list; multiple common classes retained. First build, so 707 joiners / zero leavers.
+  Evidence `current-universe/2026-11-28T084654391Z.json`; worker SHA-256 `f3438aa1…e6c`.
+- Signed **10/10** N-PORT/SEC exchange review SHA-256 `b9421c6f…44a2`. `r1000-universe-weekly` is registered disabled;
+  `docs/OPERATIONS.md` §22j documents the command and failed-gate behavior. No scheduler restart or production change.
+- Full main TypeScript, **302 files / 1,793 tests**, production build and diff pass. Main source/task/handoff commit
+  follows. Next: phase 1 existing-universe flags, r1000 release-calendar addendum and disabled job definitions.
+
 ## 292. Claude: finance-model bake-off; Stocktwits crowd read on gemma4:12b — 2026-11-28T02:20Z
 
 - **Owner's request (2026-11-26):** test two Ollama finance models, an 8B (`vividdream/Qwen-Open-Finance-R-8B`,

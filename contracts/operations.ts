@@ -173,6 +173,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local D: archive only; research input; no production write and no database write.", requirements: ["gpu", "driveD"], notes: "The owner's go of 2026-11-25 (\"run gemma as scheduled job\"); the bake-off of 300 hand-labelled items chose gemma4:12b (subject 93.3%, event 79.3%, direction 79.7%, novelty 81.7%, about 0.9 s an item, so about 200 items a run and 30,000 a day). The three-minute budget keeps the scheduler's one lane free for live prices. The prompt is pinned by a test; changing it needs a new bake-off. An item without a valid answer is asked once more, then left with its rows as the record; three failed calls in a row (Ollama down) fail the run. Needs Ollama running on port 11434.",
   }),
   job({
+    id: "r1000-universe-weekly", name: "Russell 1000 current universe", group: "research", mode: "scheduled", cron: "20 5 * * 0", defaultEnabled: false, dependsOn: [],
+    ...npx("scripts/build-r1000-current-universe.mts"), purpose: "Rebuild the current Russell 1000 and still-listed former-company universe with exchange and N-PORT evidence, joiner/leaver reports and count gates.",
+    input: "K26 membership and companies; edgar-universe.json; SEC company_tickers_exchange.json through the shared client and D: cache.", output: "worker/research-universe-r1000-current.json and D:/research/alpha-engine/index-membership/russell1000/current-universe/<stamp>.json.",
+    destination: "Local universe file and D: evidence only; no production, database or app-registry write.", requirements: ["network", "driveD"], notes: "Disabled until Claude accepts the universe. CIK uniqueness, exchange resolution and the same-quarter ±5% gate are mandatory; a failed gate keeps the previous file.",
+  }),
+  job({
     id: "news-company-index", name: "News: company index for name resolution", group: "research", mode: "scheduled", cron: "50 5 * * 0", defaultEnabled: true, dependsOn: [],
     ...npx("worker/news-company-index.mts"), purpose: "Rebuild the index the news reader resolves company names with: the SEC's company list with tickers, the Russell 1000 identities with former names, and the registry.",
     input: "https://www.sec.gov/files/company_tickers.json through secGet (kept as received, one file a day at most); index-membership/russell1000/companies.json (K26); alpha_engine.companies (read only).", output: "D:/research/alpha-engine/news/lookup/company-index.json (atomic).",

@@ -97,3 +97,18 @@ research database; production.
 ## Delivery
 
 _(Kimi appends results per phase here.)_
+
+## Universe builder complete — Kimi, 2026-11-28T08:50Z
+
+- `scripts/build-r1000-current-universe.mts` and pure helpers in `worker/lib/r1000-current-universe.ts` build
+  `worker/research-universe-r1000-current.json`: **707 companies (515 newest-quarter members / 192 former-listed)**,
+  unique CIKs, every ticker resolved in the SEC exchange list. The registry has no duplicate collection; multiple common
+  classes are retained. This is the first build, so all 707 are joiners and there are no leavers.
+- Evidence `D:/research/alpha-engine/index-membership/russell1000/current-universe/2026-11-28T084654391Z.json` includes
+  source hashes, counts, exclusions and gates. Worker SHA-256 `f3438aa1cfcf9558cdfbe65aa02461e297dcaaa45d5316aab24916f97cd65e6c`.
+- Signed **10/10** N-PORT/SEC exchange review: `2026-11-28T084654391Z-review.reviewed.json`, SHA-256
+  `b9421c6fb7382cfe576022a0d8223007d79e57dde9eadcebd6a81f928a9d44a2`.
+- `r1000-universe-weekly` is registered in `contracts/operations.ts` with `defaultEnabled: false`; `docs/OPERATIONS.md`
+  §22j documents the weekly command, evidence and failed-gate behavior. No scheduler restart or production change.
+- Focused helper tests 3/3. Full main TypeScript, **302 files / 1,793 tests**, production build and `git diff --check`
+  pass. Main source/task/handoff commit follows.

@@ -1,0 +1,7160 @@
+[
+ {
+  "cik": 3570,
+  "ticker": "LNG",
+  "tickers": [
+   "LNG"
+  ],
+  "name": "Cheniere Energy, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 4457,
+  "ticker": "UHAL",
+  "tickers": [
+   "UHAL",
+   "UHAL-B"
+  ],
+  "name": "U-Haul Holding Co /NV/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 5513,
+  "ticker": "UNM",
+  "tickers": [
+   "UNM",
+   "UNMA"
+  ],
+  "name": "Unum Group",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 6201,
+  "ticker": "AAL",
+  "tickers": [
+   "AAL"
+  ],
+  "name": "American Airlines Group Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 7431,
+  "ticker": "AWI",
+  "tickers": [
+   "AWI"
+  ],
+  "name": "ARMSTRONG WORLD INDUSTRIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 7536,
+  "ticker": "ARW",
+  "tickers": [
+   "ARW"
+  ],
+  "name": "ARROW ELECTRONICS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 7789,
+  "ticker": "ASB",
+  "tickers": [
+   "ASB",
+   "ASBA"
+  ],
+  "name": "ASSOCIATED BANC-CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 8858,
+  "ticker": "AVT",
+  "tickers": [
+   "AVT"
+  ],
+  "name": "AVNET INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 12208,
+  "ticker": "BIO",
+  "tickers": [
+   "BIO",
+   "BIO-B"
+  ],
+  "name": "BIO-RAD LABORATORIES, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 12659,
+  "ticker": "HRB",
+  "tickers": [
+   "HRB"
+  ],
+  "name": "H&R BLOCK INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 14930,
+  "ticker": "BC",
+  "tickers": [
+   "BC"
+  ],
+  "name": "BRUNSWICK CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 15615,
+  "ticker": "MTZ",
+  "tickers": [
+   "MTZ"
+  ],
+  "name": "MASTEC INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 16040,
+  "ticker": "CBT",
+  "tickers": [
+   "CBT"
+  ],
+  "name": "CABOT CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 16058,
+  "ticker": "CACI",
+  "tickers": [
+   "CACI"
+  ],
+  "name": "CACI INTERNATIONAL INC /DE/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 16732,
+  "ticker": "CPB",
+  "tickers": [
+   "CPB"
+  ],
+  "name": "CAMPBELL'S Co",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 17843,
+  "ticker": "CRS",
+  "tickers": [
+   "CRS"
+  ],
+  "name": "CARPENTER TECHNOLOGY CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 18926,
+  "ticker": "LUMN",
+  "tickers": [
+   "LUMN"
+  ],
+  "name": "Lumen Technologies, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 19584,
+  "ticker": "CHE",
+  "tickers": [
+   "CHE"
+  ],
+  "name": "CHEMED CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 20212,
+  "ticker": "CHDN",
+  "tickers": [
+   "CHDN"
+  ],
+  "name": "Churchill Downs Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 21175,
+  "ticker": "CNA",
+  "tickers": [
+   "CNA"
+  ],
+  "name": "CNA FINANCIAL CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 22356,
+  "ticker": "CBSH",
+  "tickers": [
+   "CBSH"
+  ],
+  "name": "COMMERCE BANCSHARES INC /MO/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 23217,
+  "ticker": "CAG",
+  "tickers": [
+   "CAG"
+  ],
+  "name": "CONAGRA BRANDS INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 24545,
+  "ticker": "TAP",
+  "tickers": [
+   "TAP",
+   "TAP-A"
+  ],
+  "name": "MOLSON COORS BEVERAGE CO",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 25232,
+  "ticker": "CUZ",
+  "tickers": [
+   "CUZ"
+  ],
+  "name": "COUSINS PROPERTIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 25445,
+  "ticker": "CXT",
+  "tickers": [
+   "CXT"
+  ],
+  "name": "Crane NXT, Co.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 26324,
+  "ticker": "CW",
+  "tickers": [
+   "CW"
+  ],
+  "name": "CURTISS WRIGHT CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 28917,
+  "ticker": "DDS",
+  "tickers": [
+   "DDS",
+   "DDT"
+  ],
+  "name": "DILLARD'S, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 29644,
+  "ticker": "DCI",
+  "tickers": [
+   "DCI"
+  ],
+  "name": "DONALDSON Co INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 30625,
+  "ticker": "FLS",
+  "tickers": [
+   "FLS"
+  ],
+  "name": "FLOWSERVE CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 30697,
+  "ticker": "WEN",
+  "tickers": [
+   "WEN"
+  ],
+  "name": "Wendy's Co",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 36377,
+  "ticker": "FHB",
+  "tickers": [
+   "FHB"
+  ],
+  "name": "FIRST HAWAIIAN, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 36966,
+  "ticker": "FHN",
+  "tickers": [
+   "FHN"
+  ],
+  "name": "FIRST HORIZON CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 37785,
+  "ticker": "FMC",
+  "tickers": [
+   "FMC"
+  ],
+  "name": "FMC CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 37808,
+  "ticker": "FNB",
+  "tickers": [
+   "FNB"
+  ],
+  "name": "FNB CORP/PA/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 39263,
+  "ticker": "CFR",
+  "tickers": [
+   "CFR"
+  ],
+  "name": "CULLEN/FROST BANKERS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 39911,
+  "ticker": "GAP",
+  "tickers": [
+   "GAP"
+  ],
+  "name": "GAP INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 40729,
+  "ticker": "ALLY",
+  "tickers": [
+   "ALLY"
+  ],
+  "name": "Ally Financial Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 42582,
+  "ticker": "GT",
+  "tickers": [
+   "GT"
+  ],
+  "name": "GOODYEAR TIRE & RUBBER CO /OH/",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 42888,
+  "ticker": "GGG",
+  "tickers": [
+   "GGG"
+  ],
+  "name": "GRACO INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 46195,
+  "ticker": "BOH",
+  "tickers": [
+   "BOH"
+  ],
+  "name": "BANK OF HAWAII CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 46619,
+  "ticker": "HEI",
+  "tickers": [
+   "HEI",
+   "HEI-A"
+  ],
+  "name": "HEICO CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 46765,
+  "ticker": "HP",
+  "tickers": [
+   "HP"
+  ],
+  "name": "Helmerich & Payne, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 49600,
+  "ticker": "EGP",
+  "tickers": [
+   "EGP"
+  ],
+  "name": "EASTGROUP PROPERTIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 52827,
+  "ticker": "RYN",
+  "tickers": [
+   "RYN"
+  ],
+  "name": "RAYONIER INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 56047,
+  "ticker": "KEX",
+  "tickers": [
+   "KEX"
+  ],
+  "name": "KIRBY CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 59527,
+  "ticker": "LECO",
+  "tickers": [
+   "LECO"
+  ],
+  "name": "LINCOLN ELECTRIC HOLDINGS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 59558,
+  "ticker": "LNC",
+  "tickers": [
+   "LNC"
+  ],
+  "name": "LINCOLN NATIONAL CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 60519,
+  "ticker": "LPX",
+  "tickers": [
+   "LPX"
+  ],
+  "name": "LOUISIANA-PACIFIC CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 63276,
+  "ticker": "MAT",
+  "tickers": [
+   "MAT"
+  ],
+  "name": "MATTEL INC /DE/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 64996,
+  "ticker": "MCY",
+  "tickers": [
+   "MCY"
+  ],
+  "name": "MERCURY GENERAL CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 66570,
+  "ticker": "MNESP",
+  "tickers": [
+   "MNESP",
+   "MSA"
+  ],
+  "name": "MSA Safety Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 67215,
+  "ticker": "DY",
+  "tickers": [
+   "DY"
+  ],
+  "name": "DYCOM INDUSTRIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 67347,
+  "ticker": "MOD",
+  "tickers": [
+   "MOD"
+  ],
+  "name": "MODEXUS SOLUTIONS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 67716,
+  "ticker": "MDU",
+  "tickers": [
+   "MDU"
+  ],
+  "name": "MDU RESOURCES GROUP INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 70145,
+  "ticker": "NFG",
+  "tickers": [
+   "NFG"
+  ],
+  "name": "NATIONAL FUEL GAS CO",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 70318,
+  "ticker": "THC",
+  "tickers": [
+   "THC"
+  ],
+  "name": "TENET HEALTHCARE CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 70866,
+  "ticker": "NCRRP",
+  "tickers": [
+   "NCRRP",
+   "VYX"
+  ],
+  "name": "NCR Voyix Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 71691,
+  "ticker": "NYT",
+  "tickers": [
+   "NYT"
+  ],
+  "name": "NEW YORK TIMES CO",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 74260,
+  "ticker": "ORI",
+  "tickers": [
+   "ORI"
+  ],
+  "name": "OLD REPUBLIC INTERNATIONAL CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 74303,
+  "ticker": "OLN",
+  "tickers": [
+   "OLN"
+  ],
+  "name": "OLIN Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 78128,
+  "ticker": "WTRG",
+  "tickers": [
+   "WTRG"
+  ],
+  "name": "Essential Utilities, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 78239,
+  "ticker": "PVH",
+  "tickers": [
+   "PVH"
+  ],
+  "name": "PVH CORP. /DE/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 80420,
+  "ticker": "POWL",
+  "tickers": [
+   "POWL"
+  ],
+  "name": "POWELL INDUSTRIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 82811,
+  "ticker": "RRX",
+  "tickers": [
+   "RRX"
+  ],
+  "name": "REGAL REXNORD CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 84246,
+  "ticker": "RLI",
+  "tickers": [
+   "RLI"
+  ],
+  "name": "RLI CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 85535,
+  "ticker": "RGLD",
+  "tickers": [
+   "RGLD"
+  ],
+  "name": "ROYAL GOLD INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 85961,
+  "ticker": "R",
+  "tickers": [
+   "R"
+  ],
+  "name": "RYDER SYSTEM INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 88121,
+  "ticker": "SEB",
+  "tickers": [
+   "SEB"
+  ],
+  "name": "SEABOARD CORP /DE/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 88205,
+  "ticker": "SPXC",
+  "tickers": [
+   "SPXC"
+  ],
+  "name": "SPX Technologies, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 88941,
+  "ticker": "SMTC",
+  "tickers": [
+   "SMTC"
+  ],
+  "name": "SEMTECH CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 89089,
+  "ticker": "SCI",
+  "tickers": [
+   "SCI"
+  ],
+  "name": "SERVICE CORP INTERNATIONAL",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 89439,
+  "ticker": "MLI",
+  "tickers": [
+   "MLI"
+  ],
+  "name": "MUELLER INDUSTRIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 91388,
+  "ticker": "SFD",
+  "tickers": [
+   "SFD"
+  ],
+  "name": "SMITHFIELD FOODS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 91767,
+  "ticker": "SON",
+  "tickers": [
+   "SON"
+  ],
+  "name": "SONOCO PRODUCTS CO",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 96223,
+  "ticker": "JEF",
+  "tickers": [
+   "JEF"
+  ],
+  "name": "Jefferies Financial Group Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 96943,
+  "ticker": "TFX",
+  "tickers": [
+   "TFX"
+  ],
+  "name": "TELEFLEX INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 98362,
+  "ticker": "TKR",
+  "tickers": [
+   "TKR"
+  ],
+  "name": "TIMKEN CO",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 99780,
+  "ticker": "TRN",
+  "tickers": [
+   "TRN"
+  ],
+  "name": "TRINITY INDUSTRIES INC",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 102729,
+  "ticker": "VMI",
+  "tickers": [
+   "VMI"
+  ],
+  "name": "VALMONT INDUSTRIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 103379,
+  "ticker": "VFC",
+  "tickers": [
+   "VFC"
+  ],
+  "name": "V F CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 104889,
+  "ticker": "GHC",
+  "tickers": [
+   "GHC"
+  ],
+  "name": "Graham Holdings Co",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 105016,
+  "ticker": "WSO",
+  "tickers": [
+   "WSO",
+   "WSO-B"
+  ],
+  "name": "WATSCO INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 106640,
+  "ticker": "WHR",
+  "tickers": [
+   "WHR"
+  ],
+  "name": "WHIRLPOOL CORP /DE/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 107140,
+  "ticker": "WLY",
+  "tickers": [
+   "WLY",
+   "WLYB"
+  ],
+  "name": "JOHN WILEY & SONS, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 108312,
+  "ticker": "WWD",
+  "tickers": [
+   "WWD"
+  ],
+  "name": "Woodward, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 109177,
+  "ticker": "SPB",
+  "tickers": [
+   "SPB"
+  ],
+  "name": "Spectrum Brands Holdings, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 109380,
+  "ticker": "ZION",
+  "tickers": [
+   "ZION",
+   "ZIONP"
+  ],
+  "name": "ZIONS BANCORPORATION, NATIONAL ASSOCIATION /UT/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 109563,
+  "ticker": "AIT",
+  "tickers": [
+   "AIT"
+  ],
+  "name": "APPLIED INDUSTRIAL TECHNOLOGIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 110621,
+  "ticker": "RPM",
+  "tickers": [
+   "RPM"
+  ],
+  "name": "RPM INTERNATIONAL INC/DE/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 215466,
+  "ticker": "CDE",
+  "tickers": [
+   "CDE"
+  ],
+  "name": "Coeur Mining, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 216228,
+  "ticker": "ITT",
+  "tickers": [
+   "ITT"
+  ],
+  "name": "ITT INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 275880,
+  "ticker": "PSN",
+  "tickers": [
+   "PSN"
+  ],
+  "name": "PARSONS CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 313143,
+  "ticker": "HAE",
+  "tickers": [
+   "HAE"
+  ],
+  "name": "HAEMONETICS CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 315213,
+  "ticker": "RHI",
+  "tickers": [
+   "RHI"
+  ],
+  "name": "ROBERT HALF INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 315852,
+  "ticker": "RRC",
+  "tickers": [
+   "RRC"
+  ],
+  "name": "RANGE RESOURCES CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 317540,
+  "ticker": "COKE",
+  "tickers": [
+   "COKE"
+  ],
+  "name": "Coca-Cola Consolidated, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 350698,
+  "ticker": "AN",
+  "tickers": [
+   "AN"
+  ],
+  "name": "AUTONATION, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 350894,
+  "ticker": "SEIC",
+  "tickers": [
+   "SEIC"
+  ],
+  "name": "SEI INVESTMENTS CO",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 354707,
+  "ticker": "HE",
+  "tickers": [
+   "HE"
+  ],
+  "name": "HAWAIIAN ELECTRIC INDUSTRIES INC",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 355811,
+  "ticker": "GNTX",
+  "tickers": [
+   "GNTX"
+  ],
+  "name": "GENTEX CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 701985,
+  "ticker": "BBWI",
+  "tickers": [
+   "BBWI"
+  ],
+  "name": "Bath & Body Works, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 704532,
+  "ticker": "ONTO",
+  "tickers": [
+   "ONTO"
+  ],
+  "name": "ONTO INNOVATION INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 717423,
+  "ticker": "MUR",
+  "tickers": [
+   "MUR"
+  ],
+  "name": "MURPHY OIL CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 717605,
+  "ticker": "HXL",
+  "tickers": [
+   "HXL"
+  ],
+  "name": "HEXCEL CORP /DE/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 719413,
+  "ticker": "HL",
+  "tickers": [
+   "HL"
+  ],
+  "name": "HECLA MINING CO/DE/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 720672,
+  "ticker": "SF",
+  "tickers": [
+   "SF",
+   "SFB"
+  ],
+  "name": "STIFEL FINANCIAL CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 723612,
+  "ticker": "CAR",
+  "tickers": [
+   "CAR"
+  ],
+  "name": "AVIS BUDGET GROUP, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 730263,
+  "ticker": "THO",
+  "tickers": [
+   "THO"
+  ],
+  "name": "THOR INDUSTRIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 730272,
+  "ticker": "RGEN",
+  "tickers": [
+   "RGEN"
+  ],
+  "name": "REPLIGEN CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 737758,
+  "ticker": "TTC",
+  "tickers": [
+   "TTC"
+  ],
+  "name": "TORO CO",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 750004,
+  "ticker": "LAWIL",
+  "tickers": [
+   "LAWIL",
+   "LNWO"
+  ],
+  "name": "Light & Wonder, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-09-30"
+ },
+ {
+  "cik": 751364,
+  "ticker": "NNN",
+  "tickers": [
+   "NNN"
+  ],
+  "name": "NNN REIT, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 751978,
+  "ticker": "VICR",
+  "tickers": [
+   "VICR"
+  ],
+  "name": "VICOR CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 763901,
+  "ticker": "BPOP",
+  "tickers": [
+   "BPOP",
+   "BPOPM",
+   "BPOPO"
+  ],
+  "name": "POPULAR, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 764038,
+  "ticker": "SSB",
+  "tickers": [
+   "SSB"
+  ],
+  "name": "SouthState Bank Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 764065,
+  "ticker": "CLF",
+  "tickers": [
+   "CLF"
+  ],
+  "name": "CLEVELAND-CLIFFS INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 766421,
+  "ticker": "ALK",
+  "tickers": [
+   "ALK"
+  ],
+  "name": "ALASKA AIR GROUP, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 769520,
+  "ticker": "MIDD",
+  "tickers": [
+   "MIDD"
+  ],
+  "name": "MIDDLEBY Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 772406,
+  "ticker": "CRUS",
+  "tickers": [
+   "CRUS"
+  ],
+  "name": "CIRRUS LOGIC, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 775158,
+  "ticker": "OSK",
+  "tickers": [
+   "OSK"
+  ],
+  "name": "OSHKOSH CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 776867,
+  "ticker": "WTM",
+  "tickers": [
+   "WTM"
+  ],
+  "name": "WHITE MOUNTAINS INSURANCE GROUP LTD",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 785161,
+  "ticker": "EHC",
+  "tickers": [
+   "EHC"
+  ],
+  "name": "Encompass Health Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 790051,
+  "ticker": "CSL",
+  "tickers": [
+   "CSL"
+  ],
+  "name": "CARLISLE COMPANIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 790816,
+  "ticker": "BDN",
+  "tickers": [
+   "BDN"
+  ],
+  "name": "BRANDYWINE REALTY TRUST",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 793952,
+  "ticker": "HOG",
+  "tickers": [
+   "HOG"
+  ],
+  "name": "HARLEY-DAVIDSON, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 794170,
+  "ticker": "TOL",
+  "tickers": [
+   "TOL"
+  ],
+  "name": "Toll Brothers, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 794367,
+  "ticker": "M",
+  "tickers": [
+   "M"
+  ],
+  "name": "Macy's, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 795403,
+  "ticker": "WTS",
+  "tickers": [
+   "WTS"
+  ],
+  "name": "WATTS WATER TECHNOLOGIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 797721,
+  "ticker": "VSAT",
+  "tickers": [
+   "VSAT"
+  ],
+  "name": "VIASAT INC",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 798941,
+  "ticker": "FCNCA",
+  "tickers": [
+   "FCNCA",
+   "FCNCB",
+   "FCNCN",
+   "FCNCO",
+   "FCNCP"
+  ],
+  "name": "FIRST CITIZENS BANCSHARES INC /DE/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 802481,
+  "ticker": "PPC",
+  "tickers": [
+   "PPC"
+  ],
+  "name": "PILGRIMS PRIDE CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 812011,
+  "ticker": "MTN",
+  "tickers": [
+   "MTN"
+  ],
+  "name": "VAIL RESORTS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 812074,
+  "ticker": "OI",
+  "tickers": [
+   "OI"
+  ],
+  "name": "O-I Glass, Inc. /DE/",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 814453,
+  "ticker": "NWL",
+  "tickers": [
+   "NWL"
+  ],
+  "name": "NEWELL BRANDS INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 816761,
+  "ticker": "TDC",
+  "tickers": [
+   "TDC"
+  ],
+  "name": "TERADATA CORP /DE/",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 818479,
+  "ticker": "XRAY",
+  "tickers": [
+   "XRAY"
+  ],
+  "name": "DENTSPLY SIRONA Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 821130,
+  "ticker": "AD",
+  "tickers": [
+   "AD",
+   "UZD",
+   "UZE",
+   "UZF"
+  ],
+  "name": "ARRAY DIGITAL INFRASTRUCTURE, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 822818,
+  "ticker": "CLH",
+  "tickers": [
+   "CLH"
+  ],
+  "name": "CLEAN HARBORS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 824142,
+  "ticker": "AAON",
+  "tickers": [
+   "AAON"
+  ],
+  "name": "AAON, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 825542,
+  "ticker": "SMG",
+  "tickers": [
+   "SMG"
+  ],
+  "name": "SCOTTS MIRACLE-GRO CO",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 831641,
+  "ticker": "TTEK",
+  "tickers": [
+   "TTEK"
+  ],
+  "name": "TETRA TECH INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 842162,
+  "ticker": "LEA",
+  "tickers": [
+   "LEA"
+  ],
+  "name": "LEAR CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 849869,
+  "ticker": "SLGN",
+  "tickers": [
+   "SLGN"
+  ],
+  "name": "SILGAN HOLDINGS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 851205,
+  "ticker": "CGNX",
+  "tickers": [
+   "CGNX"
+  ],
+  "name": "COGNEX CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 851968,
+  "ticker": "MHK",
+  "tickers": [
+   "MHK"
+  ],
+  "name": "MOHAWK INDUSTRIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 853816,
+  "ticker": "LSTR",
+  "tickers": [
+   "LSTR"
+  ],
+  "name": "LANDSTAR SYSTEM INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 855658,
+  "ticker": "LSCC",
+  "tickers": [
+   "LSCC"
+  ],
+  "name": "LATTICE SEMICONDUCTOR CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 860546,
+  "ticker": "CDP",
+  "tickers": [
+   "CDP"
+  ],
+  "name": "COPT DEFENSE PROPERTIES",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 860748,
+  "ticker": "KMPB",
+  "tickers": [
+   "KMPB",
+   "KMPR"
+  ],
+  "name": "KEMPER Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 861884,
+  "ticker": "RS",
+  "tickers": [
+   "RS"
+  ],
+  "name": "RELIANCE, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 866291,
+  "ticker": "ALGM",
+  "tickers": [
+   "ALGM"
+  ],
+  "name": "ALLEGRO MICROSYSTEMS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 868857,
+  "ticker": "ACM",
+  "tickers": [
+   "ACM"
+  ],
+  "name": "AECOM",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 871763,
+  "ticker": "MAN",
+  "tickers": [
+   "MAN"
+  ],
+  "name": "ManpowerGroup Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 873303,
+  "ticker": "SRPT",
+  "tickers": [
+   "SRPT"
+  ],
+  "name": "Sarepta Therapeutics, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 874015,
+  "ticker": "IONS",
+  "tickers": [
+   "IONS"
+  ],
+  "name": "IONIS PHARMACEUTICALS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 874238,
+  "ticker": "STRL",
+  "tickers": [
+   "STRL"
+  ],
+  "name": "STERLING INFRASTRUCTURE, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 875357,
+  "ticker": "BOKF",
+  "tickers": [
+   "BOKF"
+  ],
+  "name": "BOK FINANCIAL CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 876437,
+  "ticker": "MTG",
+  "tickers": [
+   "MTG"
+  ],
+  "name": "MGIC INVESTMENT CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 879407,
+  "ticker": "ARWR",
+  "tickers": [
+   "ARWR"
+  ],
+  "name": "ARROWHEAD PHARMACEUTICALS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 880266,
+  "ticker": "AGCO",
+  "tickers": [
+   "AGCO"
+  ],
+  "name": "AGCO CORP /DE",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 883984,
+  "ticker": "ICUI",
+  "tickers": [
+   "ICUI"
+  ],
+  "name": "ICU MEDICAL INC/DE",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 884614,
+  "ticker": "UGI",
+  "tickers": [
+   "UGI"
+  ],
+  "name": "UGI CORP /PA/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 885550,
+  "ticker": "CACC",
+  "tickers": [
+   "CACC"
+  ],
+  "name": "CREDIT ACCEPTANCE CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 885639,
+  "ticker": "KSS",
+  "tickers": [
+   "KSS"
+  ],
+  "name": "KOHLS Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 887343,
+  "ticker": "COLB",
+  "tickers": [
+   "COLB"
+  ],
+  "name": "COLUMBIA BANKING SYSTEM, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 887936,
+  "ticker": "FCN",
+  "tickers": [
+   "FCN"
+  ],
+  "name": "FTI CONSULTING, INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 888491,
+  "ticker": "OHI",
+  "tickers": [
+   "OHI"
+  ],
+  "name": "OMEGA HEALTHCARE INVESTORS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 889331,
+  "ticker": "LFUS",
+  "tickers": [
+   "LFUS"
+  ],
+  "name": "LITTELFUSE INC /DE",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 889900,
+  "ticker": "PTEN",
+  "tickers": [
+   "PTEN"
+  ],
+  "name": "PATTERSON UTI ENERGY INC",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 891103,
+  "ticker": "MTCH",
+  "tickers": [
+   "MTCH"
+  ],
+  "name": "Match Group, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 893949,
+  "ticker": "MD",
+  "tickers": [
+   "MD"
+  ],
+  "name": "Pediatrix Medical Group, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 894315,
+  "ticker": "SITC",
+  "tickers": [
+   "SITC"
+  ],
+  "name": "SITE Centers Corp.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 895417,
+  "ticker": "ELS",
+  "tickers": [
+   "ELS"
+  ],
+  "name": "EQUITY LIFESTYLE PROPERTIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 895419,
+  "ticker": "WOLF",
+  "tickers": [
+   "WOLF"
+  ],
+  "name": "WOLFSPEED, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 896622,
+  "ticker": "ATR",
+  "tickers": [
+   "ATR"
+  ],
+  "name": "APTARGROUP, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 897723,
+  "ticker": "SANM",
+  "tickers": [
+   "SANM"
+  ],
+  "name": "SANMINA CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 898174,
+  "ticker": "RGA",
+  "tickers": [
+   "RGA",
+   "RZC"
+  ],
+  "name": "REINSURANCE GROUP OF AMERICA INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 899689,
+  "ticker": "VNO",
+  "tickers": [
+   "VNO",
+   "VNORP"
+  ],
+  "name": "VORNADO REALTY TRUST",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 906553,
+  "ticker": "BYD",
+  "tickers": [
+   "BYD"
+  ],
+  "name": "BOYD GAMING CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 906709,
+  "ticker": "NKTR",
+  "tickers": [
+   "NKTR"
+  ],
+  "name": "NEKTAR THERAPEUTICS",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 908255,
+  "ticker": "BWA",
+  "tickers": [
+   "BWA"
+  ],
+  "name": "BORGWARNER INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 908937,
+  "ticker": "SIRI",
+  "tickers": [
+   "SIRI"
+  ],
+  "name": "SIRIUS XM HOLDINGS INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 910073,
+  "ticker": "FLG",
+  "tickers": [
+   "FLG"
+  ],
+  "name": "FLAGSTAR BANK, NATIONAL ASSOCIATION",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 910406,
+  "ticker": "HAIN",
+  "tickers": [
+   "HAIN"
+  ],
+  "name": "HAIN CELESTIAL GROUP INC",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 912093,
+  "ticker": "VIAV",
+  "tickers": [
+   "VIAV"
+  ],
+  "name": "VIAVI SOLUTIONS INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 912242,
+  "ticker": "MAC",
+  "tickers": [
+   "MAC"
+  ],
+  "name": "MACERICH CO",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 912593,
+  "ticker": "SUI",
+  "tickers": [
+   "SUI"
+  ],
+  "name": "SUN COMMUNITIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 912615,
+  "ticker": "URBN",
+  "tickers": [
+   "URBN"
+  ],
+  "name": "URBAN OUTFITTERS INC",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 912958,
+  "ticker": "MLCMF",
+  "tickers": [
+   "MLCMF",
+   "TIGO"
+  ],
+  "name": "MILLICOM INTERNATIONAL CELLULAR SA",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 913144,
+  "ticker": "RNR",
+  "tickers": [
+   "RNR"
+  ],
+  "name": "RENAISSANCERE HOLDINGS LTD",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 914475,
+  "ticker": "NBIX",
+  "tickers": [
+   "NBIX"
+  ],
+  "name": "NEUROCRINE BIOSCIENCES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 915389,
+  "ticker": "EMN",
+  "tickers": [
+   "EMN"
+  ],
+  "name": "EASTMAN CHEMICAL CO",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 916540,
+  "ticker": "DAR",
+  "tickers": [
+   "DAR"
+  ],
+  "name": "DARLING INGREDIENTS INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 917251,
+  "ticker": "ADC",
+  "tickers": [
+   "ADC"
+  ],
+  "name": "AGREE REALTY CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 917273,
+  "ticker": "RMBS",
+  "tickers": [
+   "RMBS"
+  ],
+  "name": "RAMBUS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 917520,
+  "ticker": "IART",
+  "tickers": [
+   "IART"
+  ],
+  "name": "INTEGRA LIFESCIENCES HOLDINGS CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 918646,
+  "ticker": "EXP",
+  "tickers": [
+   "EXP"
+  ],
+  "name": "EAGLE MATERIALS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 920371,
+  "ticker": "SSD",
+  "tickers": [
+   "SSD"
+  ],
+  "name": "Simpson Manufacturing Co., Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 921082,
+  "ticker": "HIW",
+  "tickers": [
+   "HIW"
+  ],
+  "name": "HIGHWOODS PROPERTIES, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 921638,
+  "ticker": "SSRGF",
+  "tickers": [
+   "SSRGF",
+   "SSRM"
+  ],
+  "name": "SSR MINING INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 921738,
+  "ticker": "PENN",
+  "tickers": [
+   "PENN"
+  ],
+  "name": "PENN Entertainment, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 921825,
+  "ticker": "FR",
+  "tickers": [
+   "FR"
+  ],
+  "name": "FIRST INDUSTRIAL REALTY TRUST INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 922864,
+  "ticker": "AIV",
+  "tickers": [
+   "AIV"
+  ],
+  "name": "APARTMENT INVESTMENT & MANAGEMENT CO",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 924805,
+  "ticker": "FRHC",
+  "tickers": [
+   "FRHC"
+  ],
+  "name": "Freedom Holding Corp.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 927003,
+  "ticker": "AEIS",
+  "tickers": [
+   "AEIS"
+  ],
+  "name": "ADVANCED ENERGY INDUSTRIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 929008,
+  "ticker": "WCC",
+  "tickers": [
+   "WCC"
+  ],
+  "name": "WESCO INTERNATIONAL INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 929351,
+  "ticker": "STRZ",
+  "tickers": [
+   "STRZ"
+  ],
+  "name": "STARZ ENTERTAINMENT CORP /CN/",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 931015,
+  "ticker": "PII",
+  "tickers": [
+   "PII"
+  ],
+  "name": "Polaris Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 931148,
+  "ticker": "EAF",
+  "tickers": [
+   "EAF"
+  ],
+  "name": "GRAFTECH INTERNATIONAL LTD",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 933974,
+  "ticker": "AZTA",
+  "tickers": [
+   "AZTA"
+  ],
+  "name": "Azenta, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 939767,
+  "ticker": "EXEL",
+  "tickers": [
+   "EXEL"
+  ],
+  "name": "EXELIXIS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 944695,
+  "ticker": "THG",
+  "tickers": [
+   "THG"
+  ],
+  "name": "HANOVER INSURANCE GROUP, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 945394,
+  "ticker": "SVC",
+  "tickers": [
+   "SVC"
+  ],
+  "name": "Service Properties Trust",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 945841,
+  "ticker": "POOL",
+  "tickers": [
+   "POOL"
+  ],
+  "name": "POOL CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 949870,
+  "ticker": "SAM",
+  "tickers": [
+   "SAM"
+  ],
+  "name": "BOSTON BEER CO INC",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1000694,
+  "ticker": "NVAX",
+  "tickers": [
+   "NVAX"
+  ],
+  "name": "NOVAVAX INC",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1001838,
+  "ticker": "SCCO",
+  "tickers": [
+   "SCCO"
+  ],
+  "name": "SOUTHERN COPPER CORP/",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1003078,
+  "ticker": "MSM",
+  "tickers": [
+   "MSM"
+  ],
+  "name": "MSC INDUSTRIAL DIRECT CO INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1004434,
+  "ticker": "AMG",
+  "tickers": [
+   "AMG",
+   "MGR",
+   "MGRB",
+   "MGRD",
+   "MGRE"
+  ],
+  "name": "AFFILIATED MANAGERS GROUP, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1005284,
+  "ticker": "OLED",
+  "tickers": [
+   "OLED"
+  ],
+  "name": "UNIVERSAL DISPLAY CORP \\PA\\",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1013857,
+  "ticker": "PEGA",
+  "tickers": [
+   "PEGA"
+  ],
+  "name": "PEGASYSTEMS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1015328,
+  "ticker": "WTFC",
+  "tickers": [
+   "WTFC",
+   "WTFCN"
+  ],
+  "name": "WINTRUST FINANCIAL CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1015820,
+  "ticker": "QGEN",
+  "tickers": [
+   "QGEN"
+  ],
+  "name": "QIAGEN N.V.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1018963,
+  "ticker": "ATI",
+  "tickers": [
+   "ATI"
+  ],
+  "name": "ATI INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1019849,
+  "ticker": "PAG",
+  "tickers": [
+   "PAG"
+  ],
+  "name": "PENSKE AUTOMOTIVE GROUP, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1021561,
+  "ticker": "NUS",
+  "tickers": [
+   "NUS"
+  ],
+  "name": "NU SKIN ENTERPRISES, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1021635,
+  "ticker": "OGE",
+  "tickers": [
+   "OGE"
+  ],
+  "name": "OGE ENERGY CORP.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1021860,
+  "ticker": "NOV",
+  "tickers": [
+   "NOV"
+  ],
+  "name": "NOV Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1023128,
+  "ticker": "LAD",
+  "tickers": [
+   "LAD"
+  ],
+  "name": "LITHIA MOTORS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1024305,
+  "ticker": "COTY",
+  "tickers": [
+   "COTY"
+  ],
+  "name": "COTY INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1025378,
+  "ticker": "WPC",
+  "tickers": [
+   "WPC"
+  ],
+  "name": "W. P. Carey Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1025996,
+  "ticker": "KRC",
+  "tickers": [
+   "KRC"
+  ],
+  "name": "KILROY REALTY CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1029199,
+  "ticker": "EEFT",
+  "tickers": [
+   "EEFT"
+  ],
+  "name": "EURONET WORLDWIDE, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1031308,
+  "ticker": "BSY",
+  "tickers": [
+   "BSY"
+  ],
+  "name": "BENTLEY SYSTEMS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1032033,
+  "ticker": "SLM",
+  "tickers": [
+   "SLM",
+   "SLMBP"
+  ],
+  "name": "SLM Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1037976,
+  "ticker": "JLL",
+  "tickers": [
+   "JLL"
+  ],
+  "name": "JONES LANG LASALLE INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1039399,
+  "ticker": "FORM",
+  "tickers": [
+   "FORM"
+  ],
+  "name": "FORMFACTOR INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1040971,
+  "ticker": "SLG",
+  "tickers": [
+   "SLG"
+  ],
+  "name": "SL GREEN REALTY CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1042046,
+  "ticker": "AFG",
+  "tickers": [
+   "AFG",
+   "AFGB",
+   "AFGC",
+   "AFGD",
+   "AFGE"
+  ],
+  "name": "AMERICAN FINANCIAL GROUP INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1043219,
+  "ticker": "NLY",
+  "tickers": [
+   "NLY"
+  ],
+  "name": "ANNALY CAPITAL MANAGEMENT INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1045450,
+  "ticker": "EPR",
+  "tickers": [
+   "EPR"
+  ],
+  "name": "EPR PROPERTIES",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1046102,
+  "ticker": "RBA",
+  "tickers": [
+   "RBA"
+  ],
+  "name": "RB GLOBAL INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1046257,
+  "ticker": "INGR",
+  "tickers": [
+   "INGR"
+  ],
+  "name": "Ingredion Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1046311,
+  "ticker": "CHH",
+  "tickers": [
+   "CHH"
+  ],
+  "name": "CHOICE HOTELS INTERNATIONAL INC /DE",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1047127,
+  "ticker": "AMKR",
+  "tickers": [
+   "AMKR"
+  ],
+  "name": "AMKOR TECHNOLOGY, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1048268,
+  "ticker": "IESC",
+  "tickers": [
+   "IESC"
+  ],
+  "name": "IES Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1048477,
+  "ticker": "BMRN",
+  "tickers": [
+   "BMRN"
+  ],
+  "name": "BIOMARIN PHARMACEUTICAL INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1049502,
+  "ticker": "MKSI",
+  "tickers": [
+   "MKSI"
+  ],
+  "name": "MKS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1049521,
+  "ticker": "MRCY",
+  "tickers": [
+   "MRCY"
+  ],
+  "name": "MERCURY SYSTEMS INC",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1050446,
+  "ticker": "MSTR",
+  "tickers": [
+   "MSTR",
+   "STRC",
+   "STRD",
+   "STRF",
+   "STRK"
+  ],
+  "name": "Strategy Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1050797,
+  "ticker": "COLM",
+  "tickers": [
+   "COLM"
+  ],
+  "name": "COLUMBIA SPORTSWEAR CO",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1051512,
+  "ticker": "TDS",
+  "tickers": [
+   "TDS"
+  ],
+  "name": "TELEPHONE & DATA SYSTEMS INC /DE/",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1055160,
+  "ticker": "MFA",
+  "tickers": [
+   "MFA",
+   "MFAN",
+   "MFAO"
+  ],
+  "name": "MFA FINANCIAL, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1056696,
+  "ticker": "MANH",
+  "tickers": [
+   "MANH"
+  ],
+  "name": "MANHATTAN ASSOCIATES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1057877,
+  "ticker": "IDA",
+  "tickers": [
+   "IDA"
+  ],
+  "name": "IDACORP INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1060822,
+  "ticker": "CRI",
+  "tickers": [
+   "CRI"
+  ],
+  "name": "CARTERS INC",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1060955,
+  "ticker": "ICLR",
+  "tickers": [
+   "ICLR"
+  ],
+  "name": "ICON PLC",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1062579,
+  "ticker": "DOX",
+  "tickers": [
+   "DOX"
+  ],
+  "name": "AMDOCS LTD",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1065696,
+  "ticker": "LKQ",
+  "tickers": [
+   "LKQ"
+  ],
+  "name": "LKQ CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1068851,
+  "ticker": "PB",
+  "tickers": [
+   "PB"
+  ],
+  "name": "PROSPERITY BANCSHARES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1069157,
+  "ticker": "EWBC",
+  "tickers": [
+   "EWBC"
+  ],
+  "name": "EAST WEST BANCORP INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1069258,
+  "ticker": "KTOS",
+  "tickers": [
+   "KTOS"
+  ],
+  "name": "KRATOS DEFENSE & SECURITY SOLUTIONS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1069878,
+  "ticker": "TREX",
+  "tickers": [
+   "TREX"
+  ],
+  "name": "TREX CO INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1070494,
+  "ticker": "ACAD",
+  "tickers": [
+   "ACAD"
+  ],
+  "name": "ACADIA PHARMACEUTICALS INC",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1077428,
+  "ticker": "TXCP",
+  "tickers": [
+   "TXCP"
+  ],
+  "name": "TEXAS CAPITAL BANCSHARES INC/TX",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1082554,
+  "ticker": "UTHR",
+  "tickers": [
+   "UTHR"
+  ],
+  "name": "UNITED THERAPEUTICS Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1083301,
+  "ticker": "WULF",
+  "tickers": [
+   "WULF"
+  ],
+  "name": "TERAWULF INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1088856,
+  "ticker": "CORT",
+  "tickers": [
+   "CORT"
+  ],
+  "name": "CORCEPT THERAPEUTICS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1089063,
+  "ticker": "DKS",
+  "tickers": [
+   "DKS"
+  ],
+  "name": "DICK'S SPORTING GOODS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1090425,
+  "ticker": "LAMR",
+  "tickers": [
+   "LAMR"
+  ],
+  "name": "LAMAR ADVERTISING CO/NEW",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1093691,
+  "ticker": "PLUG",
+  "tickers": [
+   "PLUG"
+  ],
+  "name": "PLUG POWER INC",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1096343,
+  "ticker": "MKL",
+  "tickers": [
+   "MKL"
+  ],
+  "name": "MARKEL GROUP INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1101215,
+  "ticker": "BFH",
+  "tickers": [
+   "BFH"
+  ],
+  "name": "BREAD FINANCIAL HOLDINGS, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1101302,
+  "ticker": "ENTG",
+  "tickers": [
+   "ENTG"
+  ],
+  "name": "ENTEGRIS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1104506,
+  "ticker": "INSM",
+  "tickers": [
+   "INSM"
+  ],
+  "name": "INSMED Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1109354,
+  "ticker": "BRKR",
+  "tickers": [
+   "BRKR",
+   "BRKRP"
+  ],
+  "name": "BRUKER CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1111928,
+  "ticker": "IPGP",
+  "tickers": [
+   "IPGP"
+  ],
+  "name": "IPG PHOTONICS CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1116942,
+  "ticker": "TTMI",
+  "tickers": [
+   "TTMI"
+  ],
+  "name": "TTM TECHNOLOGIES INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1124198,
+  "ticker": "FLR",
+  "tickers": [
+   "FLR"
+  ],
+  "name": "FLUOR CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1125376,
+  "ticker": "ENSG",
+  "tickers": [
+   "ENSG"
+  ],
+  "name": "ENSIGN GROUP, INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1128928,
+  "ticker": "FLO",
+  "tickers": [
+   "FLO"
+  ],
+  "name": "FLOWERS FOODS INC",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1142417,
+  "ticker": "NXST",
+  "tickers": [
+   "NXST"
+  ],
+  "name": "NEXSTAR MEDIA GROUP, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1144215,
+  "ticker": "AYI",
+  "tickers": [
+   "AYI"
+  ],
+  "name": "ACUITY INC. (DE)",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1144879,
+  "ticker": "APLD",
+  "tickers": [
+   "APLD"
+  ],
+  "name": "Applied Digital Corp.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1157601,
+  "ticker": "MDGL",
+  "tickers": [
+   "MDGL"
+  ],
+  "name": "MADRIGAL PHARMACEUTICALS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1158114,
+  "ticker": "AAOI",
+  "tickers": [
+   "AAOI"
+  ],
+  "name": "APPLIED OPTOELECTRONICS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1158449,
+  "ticker": "AAP",
+  "tickers": [
+   "AAP"
+  ],
+  "name": "ADVANCE AUTO PARTS INC",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1158463,
+  "ticker": "JBLU",
+  "tickers": [
+   "JBLU"
+  ],
+  "name": "JETBLUE AIRWAYS CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1159036,
+  "ticker": "HALO",
+  "tickers": [
+   "HALO"
+  ],
+  "name": "HALOZYME THERAPEUTICS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1159152,
+  "ticker": "JHIUF",
+  "tickers": [
+   "JHIUF",
+   "JHX"
+  ],
+  "name": "James Hardie Industries plc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1166003,
+  "ticker": "XPO",
+  "tickers": [
+   "XPO"
+  ],
+  "name": "XPO, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1170010,
+  "ticker": "KMX",
+  "tickers": [
+   "KMX"
+  ],
+  "name": "CARMAX INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1177394,
+  "ticker": "SNX",
+  "tickers": [
+   "SNX"
+  ],
+  "name": "TD SYNNEX CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1177609,
+  "ticker": "FIVE",
+  "tickers": [
+   "FIVE"
+  ],
+  "name": "FIVE BELOW, INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1177702,
+  "ticker": "SAIA",
+  "tickers": [
+   "SAIA"
+  ],
+  "name": "SAIA INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1178670,
+  "ticker": "ALNY",
+  "tickers": [
+   "ALNY"
+  ],
+  "name": "ALNYLAM PHARMACEUTICALS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1179929,
+  "ticker": "MOH",
+  "tickers": [
+   "MOH"
+  ],
+  "name": "MOLINA HEALTHCARE, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1180262,
+  "ticker": "HLF",
+  "tickers": [
+   "HLF"
+  ],
+  "name": "HERBALIFE LTD.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1181412,
+  "ticker": "SPCX",
+  "tickers": [
+   "SPCX"
+  ],
+  "name": "SPACE EXPLORATION TECHNOLOGIES CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1206264,
+  "ticker": "SGI",
+  "tickers": [
+   "SGI"
+  ],
+  "name": "SOMNIGROUP INTERNATIONAL INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1212545,
+  "ticker": "WAL",
+  "tickers": [
+   "WAL"
+  ],
+  "name": "WESTERN ALLIANCE BANCORPORATION",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1214816,
+  "ticker": "AXS",
+  "tickers": [
+   "AXS"
+  ],
+  "name": "AXIS CAPITAL HOLDINGS LTD",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1219601,
+  "ticker": "CCK",
+  "tickers": [
+   "CCK"
+  ],
+  "name": "CROWN HOLDINGS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1232524,
+  "ticker": "JAZZ",
+  "tickers": [
+   "JAZZ"
+  ],
+  "name": "Jazz Pharmaceuticals plc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1236275,
+  "ticker": "QXO",
+  "tickers": [
+   "QXO"
+  ],
+  "name": "QXO, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1237831,
+  "ticker": "GMED",
+  "tickers": [
+   "GMED"
+  ],
+  "name": "GLOBUS MEDICAL INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1261333,
+  "ticker": "DOCU",
+  "tickers": [
+   "DOCU"
+  ],
+  "name": "DOCUSIGN, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1262823,
+  "ticker": "WLK",
+  "tickers": [
+   "WLK"
+  ],
+  "name": "WESTLAKE CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1273813,
+  "ticker": "AGO",
+  "tickers": [
+   "AGO"
+  ],
+  "name": "ASSURED GUARANTY LTD",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1278021,
+  "ticker": "MKTX",
+  "tickers": [
+   "MKTX"
+  ],
+  "name": "MARKETAXESS HOLDINGS INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1282637,
+  "ticker": "NEU",
+  "tickers": [
+   "NEU"
+  ],
+  "name": "NEWMARKET CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1286139,
+  "ticker": "LZ",
+  "tickers": [
+   "LZ"
+  ],
+  "name": "LEGALZOOM.COM, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1287865,
+  "ticker": "MPT",
+  "tickers": [
+   "MPT"
+  ],
+  "name": "MEDICAL PROPERTIES TRUST INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1288847,
+  "ticker": "FIVN",
+  "tickers": [
+   "FIVN"
+  ],
+  "name": "Five9, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1289419,
+  "ticker": "MORN",
+  "tickers": [
+   "MORN"
+  ],
+  "name": "Morningstar, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1289460,
+  "ticker": "TXRH",
+  "tickers": [
+   "TXRH"
+  ],
+  "name": "Texas Roadhouse, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1297989,
+  "ticker": "EXLS",
+  "tickers": [
+   "EXLS"
+  ],
+  "name": "ExlService Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1298675,
+  "ticker": "CUBE",
+  "tickers": [
+   "CUBE"
+  ],
+  "name": "CubeSmart",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1302215,
+  "ticker": "HLI",
+  "tickers": [
+   "HLI"
+  ],
+  "name": "HOULIHAN LOKEY, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1306830,
+  "ticker": "CE",
+  "tickers": [
+   "CE"
+  ],
+  "name": "Celanese Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1307954,
+  "ticker": "HUN",
+  "tickers": [
+   "HUN"
+  ],
+  "name": "Huntsman CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1308547,
+  "ticker": "DLB",
+  "tickers": [
+   "DLB"
+  ],
+  "name": "Dolby Laboratories, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1309108,
+  "ticker": "WEX",
+  "tickers": [
+   "WEX"
+  ],
+  "name": "WEX Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1311370,
+  "ticker": "LAZ",
+  "tickers": [
+   "LAZ"
+  ],
+  "name": "Lazard, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1315098,
+  "ticker": "RBLX",
+  "tickers": [
+   "RBLX"
+  ],
+  "name": "Roblox Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1316835,
+  "ticker": "BLDR",
+  "tickers": [
+   "BLDR"
+  ],
+  "name": "Builders FirstSource, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1321732,
+  "ticker": "PEN",
+  "tickers": [
+   "PEN"
+  ],
+  "name": "Penumbra Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1324948,
+  "ticker": "RBC",
+  "tickers": [
+   "RBC"
+  ],
+  "name": "RBC Bearings INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1326380,
+  "ticker": "GME",
+  "tickers": [
+   "GME"
+  ],
+  "name": "GameStop Corp.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1331875,
+  "ticker": "FNF",
+  "tickers": [
+   "FNF"
+  ],
+  "name": "Fidelity National Financial, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1333986,
+  "ticker": "EQH",
+  "tickers": [
+   "EQH"
+  ],
+  "name": "Equitable Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1334036,
+  "ticker": "CROX",
+  "tickers": [
+   "CROX"
+  ],
+  "name": "Crocs, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1336917,
+  "ticker": "UA",
+  "tickers": [
+   "UA",
+   "UAA"
+  ],
+  "name": "Under Armour, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1341766,
+  "ticker": "CELH",
+  "tickers": [
+   "CELH"
+  ],
+  "name": "Celsius Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1345105,
+  "ticker": "CPA",
+  "tickers": [
+   "CPA"
+  ],
+  "name": "Copa Holdings, S.A.",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1352010,
+  "ticker": "EPAM",
+  "tickers": [
+   "EPAM"
+  ],
+  "name": "EPAM Systems, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1357615,
+  "ticker": "KBR",
+  "tickers": [
+   "KBR"
+  ],
+  "name": "KBR, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1360604,
+  "ticker": "HR",
+  "tickers": [
+   "HR"
+  ],
+  "name": "Healthcare Realty Trust Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1360901,
+  "ticker": "EVR",
+  "tickers": [
+   "EVR"
+  ],
+  "name": "Evercore Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1361538,
+  "ticker": "PRIM",
+  "tickers": [
+   "PRIM"
+  ],
+  "name": "Primoris Services Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1361658,
+  "ticker": "TNL",
+  "tickers": [
+   "TNL"
+  ],
+  "name": "Travel & Leisure Co.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1364250,
+  "ticker": "DEI",
+  "tickers": [
+   "DEI"
+  ],
+  "name": "Douglas Emmett Inc",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1364954,
+  "ticker": "CHGG",
+  "tickers": [
+   "CHGG"
+  ],
+  "name": "CHEGG, INC",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1365135,
+  "ticker": "WU",
+  "tickers": [
+   "WU"
+  ],
+  "name": "Western Union CO",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1366868,
+  "ticker": "GSAT",
+  "tickers": [
+   "GSAT"
+  ],
+  "name": "Globalstar, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1368622,
+  "ticker": "AVAV",
+  "tickers": [
+   "AVAV"
+  ],
+  "name": "AeroVironment Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1370637,
+  "ticker": "ETSY",
+  "tickers": [
+   "ETSY"
+  ],
+  "name": "ETSY INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1370946,
+  "ticker": "OC",
+  "tickers": [
+   "OC"
+  ],
+  "name": "Owens Corning",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1381668,
+  "ticker": "TFSL",
+  "tickers": [
+   "TFSL"
+  ],
+  "name": "TFS Financial CORP",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1384905,
+  "ticker": "RNG",
+  "tickers": [
+   "RNG"
+  ],
+  "name": "RingCentral, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1385280,
+  "ticker": "CNK",
+  "tickers": [
+   "CNK"
+  ],
+  "name": "Cinemark Holdings, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1393584,
+  "ticker": "AMWL",
+  "tickers": [
+   "AMWL"
+  ],
+  "name": "American Well Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1395942,
+  "ticker": "OPLN",
+  "tickers": [
+   "OPLN"
+  ],
+  "name": "OPENLANE, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1397911,
+  "ticker": "LPLA",
+  "tickers": [
+   "LPLA"
+  ],
+  "name": "LPL Financial Holdings Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1398659,
+  "ticker": "G",
+  "tickers": [
+   "G"
+  ],
+  "name": "Genpact LTD",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1402436,
+  "ticker": "SSNC",
+  "tickers": [
+   "SSNC"
+  ],
+  "name": "SS&C Technologies Holdings Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1404655,
+  "ticker": "HUBS",
+  "tickers": [
+   "HUBS"
+  ],
+  "name": "HUBSPOT INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1408075,
+  "ticker": "GPK",
+  "tickers": [
+   "GPK"
+  ],
+  "name": "GRAPHIC PACKAGING HOLDING CO",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1408710,
+  "ticker": "FN",
+  "tickers": [
+   "FN"
+  ],
+  "name": "Fabrinet",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1409493,
+  "ticker": "CIM",
+  "tickers": [
+   "CIM",
+   "CIMN",
+   "CIMO",
+   "CIMP"
+  ],
+  "name": "CHIMERA INVESTMENT CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1411207,
+  "ticker": "ALSN",
+  "tickers": [
+   "ALSN"
+  ],
+  "name": "Allison Transmission Holdings Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1411579,
+  "ticker": "AMC",
+  "tickers": [
+   "AMC"
+  ],
+  "name": "AMC ENTERTAINMENT HOLDINGS, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1418121,
+  "ticker": "APLE",
+  "tickers": [
+   "APLE"
+  ],
+  "name": "Apple Hospitality REIT, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1418819,
+  "ticker": "IRDM",
+  "tickers": [
+   "IRDM"
+  ],
+  "name": "Iridium Communications Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1419612,
+  "ticker": "SEDG",
+  "tickers": [
+   "SEDG"
+  ],
+  "name": "SOLAREDGE TECHNOLOGIES, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1420800,
+  "ticker": "ENOV",
+  "tickers": [
+   "ENOV"
+  ],
+  "name": "Enovis CORP",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1423689,
+  "ticker": "AGNC",
+  "tickers": [
+   "AGNC",
+   "AGNCL",
+   "AGNCM",
+   "AGNCN",
+   "AGNCO",
+   "AGNCP",
+   "AGNCZ"
+  ],
+  "name": "AGNC Investment Corp.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1425205,
+  "ticker": "IOVA",
+  "tickers": [
+   "IOVA"
+  ],
+  "name": "IOVANCE BIOTHERAPEUTICS, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1433195,
+  "ticker": "APPF",
+  "tickers": [
+   "APPF"
+  ],
+  "name": "APPFOLIO INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1433270,
+  "ticker": "AR",
+  "tickers": [
+   "AR"
+  ],
+  "name": "ANTERO RESOURCES Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1433642,
+  "ticker": "HLNE",
+  "tickers": [
+   "HLNE"
+  ],
+  "name": "Hamilton Lane INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1434588,
+  "ticker": "LOPE",
+  "tickers": [
+   "LOPE"
+  ],
+  "name": "Grand Canyon Education, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1434621,
+  "ticker": "TREE",
+  "tickers": [
+   "TREE"
+  ],
+  "name": "LendingTree, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1437578,
+  "ticker": "BFAM",
+  "tickers": [
+   "BFAM"
+  ],
+  "name": "BRIGHT HORIZONS FAMILY SOLUTIONS INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1438133,
+  "ticker": "TNDM",
+  "tickers": [
+   "TNDM"
+  ],
+  "name": "TANDEM DIABETES CARE INC",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1439222,
+  "ticker": "AGIO",
+  "tickers": [
+   "AGIO"
+  ],
+  "name": "AGIOS PHARMACEUTICALS, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1441816,
+  "ticker": "MDB",
+  "tickers": [
+   "MDB"
+  ],
+  "name": "MongoDB, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1443646,
+  "ticker": "BAH",
+  "tickers": [
+   "BAH"
+  ],
+  "name": "Booz Allen Hamilton Holding Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1451505,
+  "ticker": "RIG",
+  "tickers": [
+   "RIG"
+  ],
+  "name": "Transocean Ltd.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1451809,
+  "ticker": "SITM",
+  "tickers": [
+   "SITM"
+  ],
+  "name": "SITIME Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1455863,
+  "ticker": "COLD",
+  "tickers": [
+   "COLD"
+  ],
+  "name": "AMERICOLD REALTY TRUST",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1463101,
+  "ticker": "ENPH",
+  "tickers": [
+   "ENPH"
+  ],
+  "name": "Enphase Energy, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1465128,
+  "ticker": "STWD",
+  "tickers": [
+   "STWD"
+  ],
+  "name": "STARWOOD PROPERTY TRUST, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1465740,
+  "ticker": "TWOD",
+  "tickers": [
+   "TWOD"
+  ],
+  "name": "TWO HARBORS INVESTMENT CORP.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1467623,
+  "ticker": "DBX",
+  "tickers": [
+   "DBX"
+  ],
+  "name": "DROPBOX, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1468174,
+  "ticker": "H",
+  "tickers": [
+   "H"
+  ],
+  "name": "Hyatt Hotels Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1468642,
+  "ticker": "AUGO",
+  "tickers": [
+   "AUGO"
+  ],
+  "name": "Aura Minerals Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1469367,
+  "ticker": "RUN",
+  "tickers": [
+   "RUN"
+  ],
+  "name": "Sunrun Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1472787,
+  "ticker": "FAF",
+  "tickers": [
+   "FAF"
+  ],
+  "name": "First American Financial Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1474432,
+  "ticker": "P",
+  "tickers": [
+   "P"
+  ],
+  "name": "Everpure, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1475922,
+  "ticker": "PRI",
+  "tickers": [
+   "PRI"
+  ],
+  "name": "Primerica, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1477294,
+  "ticker": "ST",
+  "tickers": [
+   "ST"
+  ],
+  "name": "Sensata Technologies Holding plc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1477333,
+  "ticker": "NET",
+  "tickers": [
+   "NET"
+  ],
+  "name": "Cloudflare, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1477449,
+  "ticker": "TDOC",
+  "tickers": [
+   "TDOC"
+  ],
+  "name": "Teladoc Health, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1478320,
+  "ticker": "ADPT",
+  "tickers": [
+   "ADPT"
+  ],
+  "name": "Adaptive Biotechnologies Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1479094,
+  "ticker": "STAG",
+  "tickers": [
+   "STAG"
+  ],
+  "name": "STAG Industrial, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1482512,
+  "ticker": "HPP",
+  "tickers": [
+   "HPP"
+  ],
+  "name": "Hudson Pacific Properties, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1486159,
+  "ticker": "CHRD",
+  "tickers": [
+   "CHRD"
+  ],
+  "name": "Chord Energy Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1486957,
+  "ticker": "BWXT",
+  "tickers": [
+   "BWXT"
+  ],
+  "name": "BWX Technologies, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1492691,
+  "ticker": "KNX",
+  "tickers": [
+   "KNX"
+  ],
+  "name": "Knight-Swift Transportation Holdings Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1493594,
+  "ticker": "MTSI",
+  "tickers": [
+   "MTSI"
+  ],
+  "name": "MACOM Technology Solutions Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1504008,
+  "ticker": "BKU",
+  "tickers": [
+   "BKU"
+  ],
+  "name": "BankUnited, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1506293,
+  "ticker": "PINS",
+  "tickers": [
+   "PINS"
+  ],
+  "name": "PINTEREST, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1507079,
+  "ticker": "FND",
+  "tickers": [
+   "FND"
+  ],
+  "name": "Floor & Decor Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1509991,
+  "ticker": "KOS",
+  "tickers": [
+   "KOS"
+  ],
+  "name": "Kosmos Energy Ltd.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1511737,
+  "ticker": "UI",
+  "tickers": [
+   "UI"
+  ],
+  "name": "Ubiquiti Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1514991,
+  "ticker": "AMCX",
+  "tickers": [
+   "AMCX"
+  ],
+  "name": "AMC Global Media Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1515673,
+  "ticker": "RARE",
+  "tickers": [
+   "RARE"
+  ],
+  "name": "Ultragenyx Pharmaceutical Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1516513,
+  "ticker": "DOCS",
+  "tickers": [
+   "DOCS"
+  ],
+  "name": "Doximity, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1517228,
+  "ticker": "VISN",
+  "tickers": [
+   "VISN"
+  ],
+  "name": "Vistance Networks, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1517413,
+  "ticker": "FSLY",
+  "tickers": [
+   "FSLY"
+  ],
+  "name": "Fastly, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1519751,
+  "ticker": "FBIN",
+  "tickers": [
+   "FBIN"
+  ],
+  "name": "Fortune Brands Innovations, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1520006,
+  "ticker": "MTDR",
+  "tickers": [
+   "MTDR"
+  ],
+  "name": "Matador Resources Co",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1520262,
+  "ticker": "ALKS",
+  "tickers": [
+   "ALKS"
+  ],
+  "name": "Alkermes plc.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1520697,
+  "ticker": "ACHC",
+  "tickers": [
+   "ACHC"
+  ],
+  "name": "Acadia Healthcare Company, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1524358,
+  "ticker": "VAC",
+  "tickers": [
+   "VAC"
+  ],
+  "name": "MARRIOTT VACATIONS WORLDWIDE Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1526520,
+  "ticker": "TRIP",
+  "tickers": [
+   "TRIP"
+  ],
+  "name": "TripAdvisor, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1527166,
+  "ticker": "CG",
+  "tickers": [
+   "CG",
+   "CGABL"
+  ],
+  "name": "Carlyle Group Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1527469,
+  "ticker": "ATHS",
+  "tickers": [
+   "ATHS"
+  ],
+  "name": "Athene Holding Ltd.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-12-31"
+ },
+ {
+  "cik": 1528396,
+  "ticker": "GWRE",
+  "tickers": [
+   "GWRE"
+  ],
+  "name": "Guidewire Software, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1528849,
+  "ticker": "RH",
+  "tickers": [
+   "RH"
+  ],
+  "name": "RH",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1530721,
+  "ticker": "CPRI",
+  "tickers": [
+   "CPRI"
+  ],
+  "name": "Capri Holdings Ltd",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1530950,
+  "ticker": "POST",
+  "tickers": [
+   "POST"
+  ],
+  "name": "Post Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1531152,
+  "ticker": "BJ",
+  "tickers": [
+   "BJ"
+  ],
+  "name": "BJ's Wholesale Club Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1534504,
+  "ticker": "PBF",
+  "tickers": [
+   "PBF"
+  ],
+  "name": "PBF Energy Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1535929,
+  "ticker": "VOYA",
+  "tickers": [
+   "VOYA"
+  ],
+  "name": "Voya Financial, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1541401,
+  "ticker": "ESRT",
+  "tickers": [
+   "ESRT"
+  ],
+  "name": "Empire State Realty Trust, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1552033,
+  "ticker": "TRU",
+  "tickers": [
+   "TRU"
+  ],
+  "name": "TransUnion",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1556593,
+  "ticker": "RITM",
+  "tickers": [
+   "RITM"
+  ],
+  "name": "Rithm Capital Corp.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1557860,
+  "ticker": "GLOB",
+  "tickers": [
+   "GLOB"
+  ],
+  "name": "Globant S.A.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1560385,
+  "ticker": "FWONA",
+  "tickers": [
+   "FWONA",
+   "FWONB",
+   "FWONK"
+  ],
+  "name": "Liberty Media Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1562088,
+  "ticker": "DUOL",
+  "tickers": [
+   "DUOL"
+  ],
+  "name": "Duolingo, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1562401,
+  "ticker": "AMH",
+  "tickers": [
+   "AMH"
+  ],
+  "name": "American Homes 4 Rent",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1567094,
+  "ticker": "CNH",
+  "tickers": [
+   "CNH"
+  ],
+  "name": "CNH Industrial N.V.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1567683,
+  "ticker": "CWEN",
+  "tickers": [
+   "CWEN"
+  ],
+  "name": "Clearway Energy, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1568100,
+  "ticker": "PD",
+  "tickers": [
+   "PD"
+  ],
+  "name": "PagerDuty, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1569650,
+  "ticker": "OZK",
+  "tickers": [
+   "OZK",
+   "OZKAP"
+  ],
+  "name": "Bank OZK",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1570585,
+  "ticker": "LBTYA",
+  "tickers": [
+   "LBTYA",
+   "LBTYB",
+   "LBTYK"
+  ],
+  "name": "Liberty Global Ltd.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1571123,
+  "ticker": "SAIC",
+  "tickers": [
+   "SAIC"
+  ],
+  "name": "Science Applications International Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1571283,
+  "ticker": "REXR",
+  "tickers": [
+   "REXR"
+  ],
+  "name": "Rexford Industrial Realty, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1573516,
+  "ticker": "MUSA",
+  "tickers": [
+   "MUSA"
+  ],
+  "name": "Murphy USA Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1575515,
+  "ticker": "SFM",
+  "tickers": [
+   "SFM"
+  ],
+  "name": "Sprouts Farmers Market, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1575965,
+  "ticker": "GLPI",
+  "tickers": [
+   "GLPI"
+  ],
+  "name": "Gaming & Leisure Properties, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1576280,
+  "ticker": "GH",
+  "tickers": [
+   "GH"
+  ],
+  "name": "Guardant Health, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1576789,
+  "ticker": "WIX",
+  "tickers": [
+   "WIX"
+  ],
+  "name": "Wix.com Ltd.",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1577526,
+  "ticker": "AI",
+  "tickers": [
+   "AI"
+  ],
+  "name": "C3.ai, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1579091,
+  "ticker": "CART",
+  "tickers": [
+   "CART"
+  ],
+  "name": "Maplebear Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1579298,
+  "ticker": "BURL",
+  "tickers": [
+   "BURL"
+  ],
+  "name": "Burlington Stores, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1579428,
+  "ticker": "AXSM",
+  "tickers": [
+   "AXSM"
+  ],
+  "name": "Axsome Therapeutics, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1579877,
+  "ticker": "OUT",
+  "tickers": [
+   "OUT"
+  ],
+  "name": "OUTFRONT Media Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1579878,
+  "ticker": "FIG",
+  "tickers": [
+   "FIG"
+  ],
+  "name": "Figma, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1580864,
+  "ticker": "VRM",
+  "tickers": [
+   "VRM",
+   "VRMWW"
+  ],
+  "name": "Vroom, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-12-31"
+ },
+ {
+  "cik": 1581068,
+  "ticker": "BRX",
+  "tickers": [
+   "BRX"
+  ],
+  "name": "Brixmor Property Group Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1582961,
+  "ticker": "DOCN",
+  "tickers": [
+   "DOCN"
+  ],
+  "name": "DigitalOcean Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1583708,
+  "ticker": "S",
+  "tickers": [
+   "S"
+  ],
+  "name": "SentinelOne, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1584207,
+  "ticker": "OMF",
+  "tickers": [
+   "OMF"
+  ],
+  "name": "OneMain Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1584509,
+  "ticker": "ARMK",
+  "tickers": [
+   "ARMK"
+  ],
+  "name": "Aramark",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1585364,
+  "ticker": "PRGO",
+  "tickers": [
+   "PRGO"
+  ],
+  "name": "PERRIGO Co plc",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1585521,
+  "ticker": "ZM",
+  "tickers": [
+   "ZM"
+  ],
+  "name": "Zoom Communications, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1590364,
+  "ticker": "FTAI",
+  "tickers": [
+   "FTAI",
+   "FTAIM"
+  ],
+  "name": "FTAI Aviation Ltd.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1590714,
+  "ticker": "ESI",
+  "tickers": [
+   "ESI"
+  ],
+  "name": "Element Solutions Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1590895,
+  "ticker": "CZR",
+  "tickers": [
+   "CZR"
+  ],
+  "name": "Caesars Entertainment, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1590955,
+  "ticker": "PAYC",
+  "tickers": [
+   "PAYC"
+  ],
+  "name": "Paycom Software, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1591698,
+  "ticker": "PCTY",
+  "tickers": [
+   "PCTY"
+  ],
+  "name": "Paylocity Holding Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1592386,
+  "ticker": "VIRT",
+  "tickers": [
+   "VIRT"
+  ],
+  "name": "Virtu Financial, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1597033,
+  "ticker": "SABR",
+  "tickers": [
+   "SABR"
+  ],
+  "name": "Sabre Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1599298,
+  "ticker": "SMMT",
+  "tickers": [
+   "SMMT"
+  ],
+  "name": "Summit Therapeutics Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1600033,
+  "ticker": "ELF",
+  "tickers": [
+   "ELF"
+  ],
+  "name": "e.l.f. Beauty, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1603923,
+  "ticker": "WFRD",
+  "tickers": [
+   "WFRD"
+  ],
+  "name": "Weatherford International Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1604028,
+  "ticker": "WMS",
+  "tickers": [
+   "WMS"
+  ],
+  "name": "ADVANCED DRAINAGE SYSTEMS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1604821,
+  "ticker": "NTRA",
+  "tickers": [
+   "NTRA"
+  ],
+  "name": "Natera, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1607678,
+  "ticker": "VKTX",
+  "tickers": [
+   "VKTX"
+  ],
+  "name": "Viking Therapeutics, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1609550,
+  "ticker": "INSP",
+  "tickers": [
+   "INSP"
+  ],
+  "name": "Inspire Medical Systems, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1611052,
+  "ticker": "PCOR",
+  "tickers": [
+   "PCOR"
+  ],
+  "name": "PROCORE TECHNOLOGIES, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1611647,
+  "ticker": "FRPT",
+  "tickers": [
+   "FRPT"
+  ],
+  "name": "Freshpet, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1612042,
+  "ticker": "ASND",
+  "tickers": [
+   "ASND"
+  ],
+  "name": "Ascendis Pharma A/S",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1616707,
+  "ticker": "W",
+  "tickers": [
+   "W"
+  ],
+  "name": "Wayfair Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1616862,
+  "ticker": "AXTA",
+  "tickers": [
+   "AXTA"
+  ],
+  "name": "Axalta Coating Systems Ltd.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1617406,
+  "ticker": "PK",
+  "tickers": [
+   "PK"
+  ],
+  "name": "Park Hotels & Resorts Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1617640,
+  "ticker": "Z",
+  "tickers": [
+   "Z",
+   "ZG"
+  ],
+  "name": "ZILLOW GROUP, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1618673,
+  "ticker": "PFGC",
+  "tickers": [
+   "PFGC"
+  ],
+  "name": "Performance Food Group Co",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1618732,
+  "ticker": "NTNX",
+  "tickers": [
+   "NTNX"
+  ],
+  "name": "Nutanix, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1618756,
+  "ticker": "QSR",
+  "tickers": [
+   "QSR"
+  ],
+  "name": "Restaurant Brands International Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1622536,
+  "ticker": "TLN",
+  "tickers": [
+   "TLN"
+  ],
+  "name": "Talen Energy Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1623925,
+  "ticker": "AM",
+  "tickers": [
+   "AM"
+  ],
+  "name": "Antero Midstream Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1626450,
+  "ticker": "CMRC",
+  "tickers": [
+   "CMRC"
+  ],
+  "name": "Commerce.com, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1627223,
+  "ticker": "CC",
+  "tickers": [
+   "CC"
+  ],
+  "name": "Chemours Co",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1628171,
+  "ticker": "RVMD",
+  "tickers": [
+   "RVMD",
+   "RVMDW"
+  ],
+  "name": "Revolution Medicines, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1632127,
+  "ticker": "CABO",
+  "tickers": [
+   "CABO"
+  ],
+  "name": "Cable One, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1632790,
+  "ticker": "ENR",
+  "tickers": [
+   "ENR"
+  ],
+  "name": "ENERGIZER HOLDINGS, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1632970,
+  "ticker": "AHR",
+  "tickers": [
+   "AHR"
+  ],
+  "name": "American Healthcare REIT, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1635088,
+  "ticker": "ROIV",
+  "tickers": [
+   "ROIV"
+  ],
+  "name": "Roivant Sciences Ltd.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1635327,
+  "ticker": "FLUT",
+  "tickers": [
+   "FLUT"
+  ],
+  "name": "Flutter Entertainment plc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1636222,
+  "ticker": "WING",
+  "tickers": [
+   "WING"
+  ],
+  "name": "Wingstop Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1636519,
+  "ticker": "MSGK",
+  "tickers": [
+   "MSGK"
+  ],
+  "name": "MSG Knickerbockers Corp.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1637207,
+  "ticker": "PLNT",
+  "tickers": [
+   "PLNT"
+  ],
+  "name": "Planet Fitness, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1639300,
+  "ticker": "OLLI",
+  "tickers": [
+   "OLLI"
+  ],
+  "name": "Ollie's Bargain Outlet Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1639438,
+  "ticker": "CAVA",
+  "tickers": [
+   "CAVA"
+  ],
+  "name": "CAVA GROUP, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1639825,
+  "ticker": "PTON",
+  "tickers": [
+   "PTON"
+  ],
+  "name": "PELOTON INTERACTIVE, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1639920,
+  "ticker": "SPOT",
+  "tickers": [
+   "SPOT"
+  ],
+  "name": "Spotify Technology S.A.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1640147,
+  "ticker": "SNOW",
+  "tickers": [
+   "SNOW"
+  ],
+  "name": "Snowflake Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1642896,
+  "ticker": "IOT",
+  "tickers": [
+   "IOT"
+  ],
+  "name": "Samsara Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1645113,
+  "ticker": "NVCR",
+  "tickers": [
+   "NVCR"
+  ],
+  "name": "NovoCure Ltd",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1646972,
+  "ticker": "ACI",
+  "tickers": [
+   "ACI"
+  ],
+  "name": "Albertsons Companies, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1647088,
+  "ticker": "WSC",
+  "tickers": [
+   "WSC"
+  ],
+  "name": "WillScot Holdings Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1647639,
+  "ticker": "UPST",
+  "tickers": [
+   "UPST"
+  ],
+  "name": "Upstart Holdings, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1650164,
+  "ticker": "TOST",
+  "tickers": [
+   "TOST"
+  ],
+  "name": "Toast, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1650372,
+  "ticker": "TEAM",
+  "tickers": [
+   "TEAM"
+  ],
+  "name": "Atlassian Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1650729,
+  "ticker": "SITE",
+  "tickers": [
+   "SITE"
+  ],
+  "name": "SiteOne Landscape Supply, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1653482,
+  "ticker": "GTLB",
+  "tickers": [
+   "GTLB"
+  ],
+  "name": "Gitlab Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1655210,
+  "ticker": "BYND",
+  "tickers": [
+   "BYND"
+  ],
+  "name": "BEYOND MEAT, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1657853,
+  "ticker": "HTZ",
+  "tickers": [
+   "HTZ",
+   "HTZWW"
+  ],
+  "name": "HERTZ GLOBAL HOLDINGS, INC",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1658566,
+  "ticker": "PR",
+  "tickers": [
+   "PR"
+  ],
+  "name": "Permian Resources Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1660134,
+  "ticker": "OKTA",
+  "tickers": [
+   "OKTA"
+  ],
+  "name": "Okta, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1665918,
+  "ticker": "USFD",
+  "tickers": [
+   "USFD"
+  ],
+  "name": "US Foods Holding Corp.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1668397,
+  "ticker": "MEDP",
+  "tickers": [
+   "MEDP"
+  ],
+  "name": "Medpace Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1669162,
+  "ticker": "KNSL",
+  "tickers": [
+   "KNSL"
+  ],
+  "name": "Kinsale Capital Group, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1670061,
+  "ticker": "ALM",
+  "tickers": [
+   "ALM"
+  ],
+  "name": "Almonty Industries Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1670592,
+  "ticker": "YETI",
+  "tickers": [
+   "YETI"
+  ],
+  "name": "YETI Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1671933,
+  "ticker": "TTD",
+  "tickers": [
+   "TTD"
+  ],
+  "name": "Trade Desk, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1673358,
+  "ticker": "YUMC",
+  "tickers": [
+   "YUMC"
+  ],
+  "name": "Yum China Holdings, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1674168,
+  "ticker": "HGV",
+  "tickers": [
+   "HGV"
+  ],
+  "name": "Hilton Grand Vacations Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1674862,
+  "ticker": "ASH",
+  "tickers": [
+   "ASH"
+  ],
+  "name": "ASHLAND INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1674910,
+  "ticker": "VVV",
+  "tickers": [
+   "VVV"
+  ],
+  "name": "VALVOLINE INC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1675149,
+  "ticker": "AA",
+  "tickers": [
+   "AA"
+  ],
+  "name": "Alcoa Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1679273,
+  "ticker": "LW",
+  "tickers": [
+   "LW"
+  ],
+  "name": "Lamb Weston Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1681459,
+  "ticker": "FTI",
+  "tickers": [
+   "FTI"
+  ],
+  "name": "TechnipFMC plc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1685040,
+  "ticker": "BHF",
+  "tickers": [
+   "BHF",
+   "BHFAL",
+   "BHFAM",
+   "BHFAN",
+   "BHFAO",
+   "BHFAP"
+  ],
+  "name": "Brighthouse Financial, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1688568,
+  "ticker": "DXC",
+  "tickers": [
+   "DXC"
+  ],
+  "name": "DXC Technology Co",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1689796,
+  "ticker": "JBGS",
+  "tickers": [
+   "JBGS"
+  ],
+  "name": "JBG SMITH Properties",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1691421,
+  "ticker": "LMND",
+  "tickers": [
+   "LMND"
+  ],
+  "name": "Lemonade, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1691493,
+  "ticker": "NU",
+  "tickers": [
+   "NU"
+  ],
+  "name": "Nu Holdings Ltd.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1692063,
+  "ticker": "SNDR",
+  "tickers": [
+   "SNDR"
+  ],
+  "name": "Schneider National, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1699031,
+  "ticker": "GRAL",
+  "tickers": [
+   "GRAL"
+  ],
+  "name": "GRAIL, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1702780,
+  "ticker": "OPTU",
+  "tickers": [
+   "OPTU"
+  ],
+  "name": "Optimum Communications, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1703056,
+  "ticker": "ADT",
+  "tickers": [
+   "ADT"
+  ],
+  "name": "ADT Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1706946,
+  "ticker": "SPCE",
+  "tickers": [
+   "SPCE"
+  ],
+  "name": "Virgin Galactic Holdings, Inc",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1707753,
+  "ticker": "ESTC",
+  "tickers": [
+   "ESTC"
+  ],
+  "name": "Elastic N.V.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1709048,
+  "ticker": "GFS",
+  "tickers": [
+   "GFS"
+  ],
+  "name": "GLOBALFOUNDRIES Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1713683,
+  "ticker": "ZS",
+  "tickers": [
+   "ZS"
+  ],
+  "name": "Zscaler, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1717115,
+  "ticker": "TEM",
+  "tickers": [
+   "TEM"
+  ],
+  "name": "Tempus AI, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1718512,
+  "ticker": "GTES",
+  "tickers": [
+   "GTES"
+  ],
+  "name": "Gates Industrial Corp Ltd.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1720635,
+  "ticker": "NVT",
+  "tickers": [
+   "NVT"
+  ],
+  "name": "nVent Electric plc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1722482,
+  "ticker": "AVTR",
+  "tickers": [
+   "AVTR"
+  ],
+  "name": "Avantor, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1722684,
+  "ticker": "WH",
+  "tickers": [
+   "WH"
+  ],
+  "name": "WYNDHAM HOTELS & RESORTS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1727263,
+  "ticker": "FTDR",
+  "tickers": [
+   "FTDR"
+  ],
+  "name": "Frontdoor, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1734722,
+  "ticker": "PATH",
+  "tickers": [
+   "PATH"
+  ],
+  "name": "UiPath, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1736297,
+  "ticker": "ALAB",
+  "tickers": [
+   "ALAB"
+  ],
+  "name": "Astera Labs, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1739104,
+  "ticker": "ELAN",
+  "tickers": [
+   "ELAN"
+  ],
+  "name": "Elanco Animal Health Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1740332,
+  "ticker": "REZI",
+  "tickers": [
+   "REZI"
+  ],
+  "name": "RESIDEO TECHNOLOGIES, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1743881,
+  "ticker": "BBIO",
+  "tickers": [
+   "BBIO"
+  ],
+  "name": "BridgeBio Pharma, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1745201,
+  "ticker": "VIK",
+  "tickers": [
+   "VIK"
+  ],
+  "name": "Viking Holdings Ltd",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1745431,
+  "ticker": "STNE",
+  "tickers": [
+   "STNE"
+  ],
+  "name": "StoneCo Ltd.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1749723,
+  "ticker": "NFE",
+  "tickers": [
+   "NFE",
+   "NFEGP"
+  ],
+  "name": "New Fortress Energy Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1755672,
+  "ticker": "CTVA",
+  "tickers": [
+   "CTVA"
+  ],
+  "name": "Corteva, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1757073,
+  "ticker": "NVST",
+  "tickers": [
+   "NVST"
+  ],
+  "name": "Envista Holdings Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1758730,
+  "ticker": "TW",
+  "tickers": [
+   "TW"
+  ],
+  "name": "Tradeweb Markets Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1759509,
+  "ticker": "LYFT",
+  "tickers": [
+   "LYFT"
+  ],
+  "name": "Lyft, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1764046,
+  "ticker": "CLVT",
+  "tickers": [
+   "CLVT"
+  ],
+  "name": "CLARIVATE PLC",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1766502,
+  "ticker": "CHWY",
+  "tickers": [
+   "CHWY"
+  ],
+  "name": "Chewy, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1768267,
+  "ticker": "CRNC",
+  "tickers": [
+   "CRNC"
+  ],
+  "name": "Cerence Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2020-03-31"
+ },
+ {
+  "cik": 1769628,
+  "ticker": "CRWV",
+  "tickers": [
+   "CRWV"
+  ],
+  "name": "CoreWeave, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1770121,
+  "ticker": "SANA",
+  "tickers": [
+   "SANA"
+  ],
+  "name": "Sana Biotechnology, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1770450,
+  "ticker": "XRX",
+  "tickers": [
+   "XRX",
+   "XRXDW"
+  ],
+  "name": "Xerox Holdings Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1770787,
+  "ticker": "TXG",
+  "tickers": [
+   "TXG"
+  ],
+  "name": "10x Genomics, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1771515,
+  "ticker": "GO",
+  "tickers": [
+   "GO"
+  ],
+  "name": "Grocery Outlet Holding Corp.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1772016,
+  "ticker": "BRBR",
+  "tickers": [
+   "BRBR"
+  ],
+  "name": "BELLRING BRANDS, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1773383,
+  "ticker": "DT",
+  "tickers": [
+   "DT"
+  ],
+  "name": "Dynatrace, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1777393,
+  "ticker": "CHPT",
+  "tickers": [
+   "CHPT"
+  ],
+  "name": "ChargePoint Holdings, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1780232,
+  "ticker": "GFL",
+  "tickers": [
+   "GFL"
+  ],
+  "name": "GFL Environmental Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1780312,
+  "ticker": "ASTS",
+  "tickers": [
+   "ASTS"
+  ],
+  "name": "AST SpaceMobile, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1783398,
+  "ticker": "UWMC",
+  "tickers": [
+   "UWMC"
+  ],
+  "name": "UWM Holdings Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1786352,
+  "ticker": "BILL",
+  "tickers": [
+   "BILL"
+  ],
+  "name": "BILL Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1786431,
+  "ticker": "REYN",
+  "tickers": [
+   "REYN"
+  ],
+  "name": "Reynolds Consumer Products Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1786842,
+  "ticker": "VNT",
+  "tickers": [
+   "VNT"
+  ],
+  "name": "Vontier Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1787425,
+  "ticker": "XP",
+  "tickers": [
+   "XP"
+  ],
+  "name": "XP Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1791863,
+  "ticker": "BEPC",
+  "tickers": [
+   "BEPC"
+  ],
+  "name": "Brookfield Renewable Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1791942,
+  "ticker": "JBS",
+  "tickers": [
+   "JBS"
+  ],
+  "name": "JBS N.V.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1792580,
+  "ticker": "OVV",
+  "tickers": [
+   "OVV"
+  ],
+  "name": "Ovintiv Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1794515,
+  "ticker": "GTM",
+  "tickers": [
+   "GTM"
+  ],
+  "name": "ZoomInfo Technologies Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1794669,
+  "ticker": "FOUR",
+  "tickers": [
+   "FOUR"
+  ],
+  "name": "Shift4 Payments, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1795250,
+  "ticker": "SPHR",
+  "tickers": [
+   "SPHR"
+  ],
+  "name": "Sphere Entertainment Co.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1795586,
+  "ticker": "CHYM",
+  "tickers": [
+   "CHYM"
+  ],
+  "name": "Chime Financial, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1796209,
+  "ticker": "APG",
+  "tickers": [
+   "APG"
+  ],
+  "name": "APi Group Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1800227,
+  "ticker": "PPLI",
+  "tickers": [
+   "PPLI"
+  ],
+  "name": "People Inc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1800667,
+  "ticker": "FROG",
+  "tickers": [
+   "FROG"
+  ],
+  "name": "JFrog Ltd",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1801169,
+  "ticker": "OPEN",
+  "tickers": [
+   "OPEN",
+   "OPENL",
+   "OPENW",
+   "OPENZ"
+  ],
+  "name": "Opendoor Technologies Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1801368,
+  "ticker": "MP",
+  "tickers": [
+   "MP"
+  ],
+  "name": "MP Materials Corp. / DE",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1801661,
+  "ticker": "FIRY",
+  "tickers": [
+   "FIRY"
+  ],
+  "name": "Firy Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1802768,
+  "ticker": "RPRX",
+  "tickers": [
+   "RPRX"
+  ],
+  "name": "Royalty Pharma plc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1803599,
+  "ticker": "CNXC",
+  "tickers": [
+   "CNXC"
+  ],
+  "name": "Concentrix Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1804745,
+  "ticker": "DRVN",
+  "tickers": [
+   "DRVN"
+  ],
+  "name": "Driven Brands Holdings Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1805284,
+  "ticker": "RKT",
+  "tickers": [
+   "RKT"
+  ],
+  "name": "Rocket Companies, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1807794,
+  "ticker": "CRDO",
+  "tickers": [
+   "CRDO"
+  ],
+  "name": "Credo Technology Group Holding Ltd",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1810806,
+  "ticker": "U",
+  "tickers": [
+   "U"
+  ],
+  "name": "Unity Software Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1811210,
+  "ticker": "LCID",
+  "tickers": [
+   "LCID"
+  ],
+  "name": "Lucid Group, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1811414,
+  "ticker": "QS",
+  "tickers": [
+   "QS"
+  ],
+  "name": "QuantumScape Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1818201,
+  "ticker": "CCC",
+  "tickers": [
+   "CCC"
+  ],
+  "name": "CCC Intelligent Solutions Holdings Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1818874,
+  "ticker": "SOFI",
+  "tickers": [
+   "SOFI"
+  ],
+  "name": "SoFi Technologies, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1819928,
+  "ticker": "DV",
+  "tickers": [
+   "DV"
+  ],
+  "name": "DoubleVerify Holdings, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1819994,
+  "ticker": "RKLB",
+  "tickers": [
+   "RKLB"
+  ],
+  "name": "Rocket Lab Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1820721,
+  "ticker": "ARRY",
+  "tickers": [
+   "ARRY"
+  ],
+  "name": "Array Technologies, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2021-03-31"
+ },
+ {
+  "cik": 1820953,
+  "ticker": "AFRM",
+  "tickers": [
+   "AFRM"
+  ],
+  "name": "Affirm Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1821806,
+  "ticker": "LESLQ",
+  "tickers": [
+   "LESLQ"
+  ],
+  "name": "Leslie's, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1821825,
+  "ticker": "OGN",
+  "tickers": [
+   "OGN"
+  ],
+  "name": "Organon & Co.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1822479,
+  "ticker": "SHC",
+  "tickers": [
+   "SHC"
+  ],
+  "name": "Sotera Health Co",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1823239,
+  "ticker": "MRVI",
+  "tickers": [
+   "MRVI"
+  ],
+  "name": "MARAVAI LIFESCIENCES HOLDINGS, INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1823945,
+  "ticker": "OWL",
+  "tickers": [
+   "OWL"
+  ],
+  "name": "BLUE OWL CAPITAL INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1824920,
+  "ticker": "IONQ",
+  "tickers": [
+   "IONQ"
+  ],
+  "name": "IonQ, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1826470,
+  "ticker": "WOOF",
+  "tickers": [
+   "WOOF"
+  ],
+  "name": "Petco Health & Wellness Company, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1827090,
+  "ticker": "CERT",
+  "tickers": [
+   "CERT"
+  ],
+  "name": "Certara, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1828016,
+  "ticker": "PLTK",
+  "tickers": [
+   "PLTK"
+  ],
+  "name": "Playtika Holding Corp.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1828108,
+  "ticker": "AUR",
+  "tickers": [
+   "AUR"
+  ],
+  "name": "Aurora Innovation, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1829311,
+  "ticker": "BMNP",
+  "tickers": [
+   "BMNP",
+   "BMNR"
+  ],
+  "name": "BITMINE IMMERSION TECHNOLOGIES, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1830214,
+  "ticker": "DNA",
+  "tickers": [
+   "DNA"
+  ],
+  "name": "Ginkgo Bioworks Holdings, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1831097,
+  "ticker": "AGL",
+  "tickers": [
+   "AGL"
+  ],
+  "name": "agilon health, inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1831651,
+  "ticker": "SHLS",
+  "tickers": [
+   "SHLS"
+  ],
+  "name": "Shoals Technologies Group, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1833756,
+  "ticker": "DRS",
+  "tickers": [
+   "DRS"
+  ],
+  "name": "Leonardo DRS, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1833835,
+  "ticker": "PSFE",
+  "tickers": [
+   "PSFE"
+  ],
+  "name": "Paysafe Ltd",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1834488,
+  "ticker": "NABL",
+  "tickers": [
+   "NABL"
+  ],
+  "name": "N-able, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1834584,
+  "ticker": "CPNG",
+  "tickers": [
+   "CPNG"
+  ],
+  "name": "Coupang, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1834622,
+  "ticker": "HAYW",
+  "tickers": [
+   "HAYW"
+  ],
+  "name": "Hayward Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1835830,
+  "ticker": "KVYO",
+  "tickers": [
+   "KVYO"
+  ],
+  "name": "Klaviyo, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1836833,
+  "ticker": "PL",
+  "tickers": [
+   "PL"
+  ],
+  "name": "Planet Labs PBC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1842022,
+  "ticker": "DTM",
+  "tickers": [
+   "DTM"
+  ],
+  "name": "DT Midstream, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1845097,
+  "ticker": "AMBP",
+  "tickers": [
+   "AMBP"
+  ],
+  "name": "Ardagh Metal Packaging S.A.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1846576,
+  "ticker": "FIGS",
+  "tickers": [
+   "FIGS"
+  ],
+  "name": "FIGS, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1849056,
+  "ticker": "OKLO",
+  "tickers": [
+   "OKLO"
+  ],
+  "name": "Oklo Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1849253,
+  "ticker": "RYAN",
+  "tickers": [
+   "RYAN"
+  ],
+  "name": "RYAN SPECIALTY HOLDINGS, INC.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1849635,
+  "ticker": "DJT",
+  "tickers": [
+   "DJT",
+   "DJTWW"
+  ],
+  "name": "Trump Media & Technology Group Corp.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1852131,
+  "ticker": "NXT",
+  "tickers": [
+   "NXT"
+  ],
+  "name": "Nextpower Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1852244,
+  "ticker": "GXO",
+  "tickers": [
+   "GXO"
+  ],
+  "name": "GXO Logistics, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1853868,
+  "ticker": "FRVO",
+  "tickers": [
+   "FRVO"
+  ],
+  "name": "Fervo Energy Co",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1856437,
+  "ticker": "VSXY",
+  "tickers": [
+   "VSXY"
+  ],
+  "name": "Victoria's Secret & Co.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1856485,
+  "ticker": "SLVM",
+  "tickers": [
+   "SLVM"
+  ],
+  "name": "Sylvamo Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1856525,
+  "ticker": "CNM",
+  "tickers": [
+   "CNM"
+  ],
+  "name": "Core & Main, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1858985,
+  "ticker": "ONON",
+  "tickers": [
+   "ONON"
+  ],
+  "name": "On Holding AG",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1859392,
+  "ticker": "GLXY",
+  "tickers": [
+   "GLXY"
+  ],
+  "name": "Galaxy Digital Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1861795,
+  "ticker": "DH",
+  "tickers": [
+   "DH"
+  ],
+  "name": "Definitive Healthcare Corp.",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1866581,
+  "ticker": "BROS",
+  "tickers": [
+   "BROS"
+  ],
+  "name": "Dutch Bros Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1867072,
+  "ticker": "KD",
+  "tickers": [
+   "KD"
+  ],
+  "name": "Kyndryl Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1868159,
+  "ticker": "LINE",
+  "tickers": [
+   "LINE"
+  ],
+  "name": "Lineage, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1868941,
+  "ticker": "FLNC",
+  "tickers": [
+   "FLNC"
+  ],
+  "name": "Fluence Energy, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1872195,
+  "ticker": "BLSH",
+  "tickers": [
+   "BLSH"
+  ],
+  "name": "Bullish",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1873923,
+  "ticker": "ONL",
+  "tickers": [
+   "ONL"
+  ],
+  "name": "Orion Properties Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2022-03-31"
+ },
+ {
+  "cik": 1874178,
+  "ticker": "RIVN",
+  "tickers": [
+   "RIVN"
+  ],
+  "name": "Rivian Automotive, Inc. / DE",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1876042,
+  "ticker": "CRCL",
+  "tickers": [
+   "CRCL"
+  ],
+  "name": "Circle Internet Group, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1877322,
+  "ticker": "ESAB",
+  "tickers": [
+   "ESAB"
+  ],
+  "name": "ESAB Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1878848,
+  "ticker": "IREN",
+  "tickers": [
+   "IREN"
+  ],
+  "name": "IREN Ltd",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1880661,
+  "ticker": "TPG",
+  "tickers": [
+   "TPG",
+   "TPGXL"
+  ],
+  "name": "TPG Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1883685,
+  "ticker": "DKNG",
+  "tickers": [
+   "DKNG"
+  ],
+  "name": "DraftKings Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1889539,
+  "ticker": "CRBD",
+  "tickers": [
+   "CRBD",
+   "CRBG"
+  ],
+  "name": "Corebridge Financial, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1897762,
+  "ticker": "INGM",
+  "tickers": [
+   "INGM"
+  ],
+  "name": "Ingram Micro Holding Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1901440,
+  "ticker": "ULS",
+  "tickers": [
+   "ULS"
+  ],
+  "name": "UL Solutions Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1902733,
+  "ticker": "NCNO",
+  "tickers": [
+   "NCNO"
+  ],
+  "name": "nCino, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 1906324,
+  "ticker": "QDEL",
+  "tickers": [
+   "QDEL"
+  ],
+  "name": "QuidelOrtho Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1915657,
+  "ticker": "DINO",
+  "tickers": [
+   "DINO"
+  ],
+  "name": "HF Sinclair Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1929561,
+  "ticker": "RXO",
+  "tickers": [
+   "RXO"
+  ],
+  "name": "RXO, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1934850,
+  "ticker": "FG",
+  "tickers": [
+   "FG",
+   "FGN",
+   "FGSN"
+  ],
+  "name": "F&G Annuities & Life, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-12-31"
+ },
+ {
+  "cik": 1937926,
+  "ticker": "BAM",
+  "tickers": [
+   "BAM"
+  ],
+  "name": "Brookfield Asset Management Ltd.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1941365,
+  "ticker": "MBC",
+  "tickers": [
+   "MBC"
+  ],
+  "name": "MasterBrand, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1943896,
+  "ticker": "RBRK",
+  "tickers": [
+   "RBRK"
+  ],
+  "name": "Rubrik, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1944013,
+  "ticker": "CR",
+  "tickers": [
+   "CR"
+  ],
+  "name": "Crane Co",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1944558,
+  "ticker": "VTS",
+  "tickers": [
+   "VTS"
+  ],
+  "name": "Vitesse Energy, Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2023-03-31"
+ },
+ {
+  "cik": 1952976,
+  "ticker": "NLOP",
+  "tickers": [
+   "NLOP"
+  ],
+  "name": "Net Lease Office Properties",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1957132,
+  "ticker": "SN",
+  "tickers": [
+   "SN"
+  ],
+  "name": "SharkNinja, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1965040,
+  "ticker": "FTRE",
+  "tickers": [
+   "FTRE"
+  ],
+  "name": "Fortrea Holdings Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1967649,
+  "ticker": "VSTS",
+  "tickers": [
+   "VSTS"
+  ],
+  "name": "Vestis Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 1968915,
+  "ticker": "PHIN",
+  "tickers": [
+   "PHIN"
+  ],
+  "name": "PHINIA INC.",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1973832,
+  "ticker": "AU",
+  "tickers": [
+   "AU"
+  ],
+  "name": "AngloGold Ashanti PLC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1974138,
+  "ticker": "NATL",
+  "tickers": [
+   "NATL"
+  ],
+  "name": "NCR Atleos Corp",
+  "reason": "former-listed",
+  "lastQuarter": "2024-06-30"
+ },
+ {
+  "cik": 1977102,
+  "ticker": "BIRK",
+  "tickers": [
+   "BIRK"
+  ],
+  "name": "Birkenstock Holding plc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1981792,
+  "ticker": "HHH",
+  "tickers": [
+   "HHH"
+  ],
+  "name": "Howard Hughes Holdings Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 1988894,
+  "ticker": "AS",
+  "tickers": [
+   "AS"
+  ],
+  "name": "Amer Sports, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2000178,
+  "ticker": "LOAR",
+  "tickers": [
+   "LOAR"
+  ],
+  "name": "Loar Holdings Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2009684,
+  "ticker": "SEG",
+  "tickers": [
+   "SEG"
+  ],
+  "name": "Seaport Entertainment Group Inc.",
+  "reason": "former-listed",
+  "lastQuarter": "2025-03-31"
+ },
+ {
+  "cik": 2011286,
+  "ticker": "AMTM",
+  "tickers": [
+   "AMTM"
+  ],
+  "name": "Amentum Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2015845,
+  "ticker": "ECG",
+  "tickers": [
+   "ECG"
+  ],
+  "name": "Everus Construction Group, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2017206,
+  "ticker": "MRP",
+  "tickers": [
+   "MRP"
+  ],
+  "name": "Millrose Properties, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2019410,
+  "ticker": "CAI",
+  "tickers": [
+   "CAI"
+  ],
+  "name": "Caris Life Sciences, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2025410,
+  "ticker": "SARO",
+  "tickers": [
+   "SARO"
+  ],
+  "name": "StandardAero, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2030781,
+  "ticker": "SAIL",
+  "tickers": [
+   "SAIL"
+  ],
+  "name": "SailPoint, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2040127,
+  "ticker": "KRMN",
+  "tickers": [
+   "KRMN"
+  ],
+  "name": "Karman Holdings Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2041385,
+  "ticker": "RAL",
+  "tickers": [
+   "RAL"
+  ],
+  "name": "Ralliant Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2042694,
+  "ticker": "PRMB",
+  "tickers": [
+   "PRMB"
+  ],
+  "name": "Primo Brands Corp",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2046386,
+  "ticker": "MDLN",
+  "tickers": [
+   "MDLN"
+  ],
+  "name": "Medline Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2054696,
+  "ticker": "NIQ",
+  "tickers": [
+   "NIQ"
+  ],
+  "name": "NIQ Global Intelligence plc",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2057463,
+  "ticker": "GLIBA",
+  "tickers": [
+   "GLIBA",
+   "GLIBB",
+   "GLIBK"
+  ],
+  "name": "Liberty Capital Corp/NV",
+  "reason": "former-listed",
+  "lastQuarter": "2026-03-31"
+ },
+ {
+  "cik": 2064124,
+  "ticker": "FGRS",
+  "tickers": [
+   "FGRS",
+   "FIGR"
+  ],
+  "name": "Figure Technology Solutions, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2064953,
+  "ticker": "SOLS",
+  "tickers": [
+   "SOLS"
+  ],
+  "name": "Solstice Advanced Materials Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2065601,
+  "ticker": "CBC",
+  "tickers": [
+   "CBC"
+  ],
+  "name": "Central Bancompany, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2065636,
+  "ticker": "MWH",
+  "tickers": [
+   "MWH"
+  ],
+  "name": "SOLV Energy, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2067876,
+  "ticker": "VSNT",
+  "tickers": [
+   "VSNT"
+  ],
+  "name": "Versant Media Group, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2071778,
+  "ticker": "FRMI",
+  "tickers": [
+   "FRMI"
+  ],
+  "name": "Fermi Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2074176,
+  "ticker": "VNOM",
+  "tickers": [
+   "VNOM"
+  ],
+  "name": "Viper Energy, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2078416,
+  "ticker": "LLYVA",
+  "tickers": [
+   "LLYVA",
+   "LLYVB",
+   "LLYVK"
+  ],
+  "name": "Liberty Live Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2080126,
+  "ticker": "FPS",
+  "tickers": [
+   "FPS"
+  ],
+  "name": "Forgent Power Solutions, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2082866,
+  "ticker": "PNFP",
+  "tickers": [
+   "PNFP"
+  ],
+  "name": "Pinnacle Financial Partners, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2083785,
+  "ticker": "SUNB",
+  "tickers": [
+   "SUNB"
+  ],
+  "name": "Sunbelt Rentals Holdings, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2088281,
+  "ticker": "MFP",
+  "tickers": [
+   "MFP"
+  ],
+  "name": "Midera Food Processing, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2088896,
+  "ticker": "XE",
+  "tickers": [
+   "XE"
+  ],
+  "name": "X-Energy, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2090312,
+  "ticker": "MBGL",
+  "tickers": [
+   "MBGL"
+  ],
+  "name": "Mobility Global Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2100805,
+  "ticker": "JAN",
+  "tickers": [
+   "JAN"
+  ],
+  "name": "Janus Living, Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2107018,
+  "ticker": "DPC",
+  "tickers": [
+   "DPC"
+  ],
+  "name": "DPC Holdings PLC",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2109150,
+  "ticker": "INIO",
+  "tickers": [
+   "INIO"
+  ],
+  "name": "INNIO N.V.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2110105,
+  "ticker": "QNT",
+  "tickers": [
+   "QNT"
+  ],
+  "name": "Quantinuum Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ },
+ {
+  "cik": 2127043,
+  "ticker": "JMKE",
+  "tickers": [
+   "JMKE"
+  ],
+  "name": "Jersey Mike's Subs Inc.",
+  "reason": "member",
+  "lastQuarter": "2026-09-30"
+ }
+]

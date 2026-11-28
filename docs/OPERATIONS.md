@@ -1447,6 +1447,16 @@ Not implemented — M5 only after REST/UI review
 Frozen — no automated or manual GDELT requests
 ```
 
+### 22j. Russell 1000 current universe (added 2026-11-28, K35)
+
+- **ID:** `r1000-universe-weekly` · **Cron:** Sunday 05:20 · **Enabled by default:** no; Claude enables it after acceptance.
+- **Command:** `npx tsx scripts/build-r1000-current-universe.mts` (`SEC_RPS=1` for SEC collection).
+- **Purpose:** Rebuild the current Russell 1000 universe outside the app registry, plus still-listed former members, with one row per CIK and every current common-share class. Later registry joiners drop out automatically; delisted companies leave with the reason recorded and their raw data retained.
+- **Input:** K26 `membership.json` newest quarter and `companies.json`, `worker/edgar-universe.json`, and the SEC `company_tickers_exchange.json` fetched through `secGet` and cached on D:.
+- **Output:** `worker/research-universe-r1000-current.json` (atomic, only after every gate passes) and `D:/research/alpha-engine/index-membership/russell1000/current-universe/<stamp>.json` plus the 10-company review file. Evidence includes source hashes, counts and joiners/leavers.
+- **Gates:** unique CIKs, every ticker resolves in the SEC exchange file, nonempty output, and within ±5% of the previous count unless a new N-PORT quarter explains the change. A failed gate leaves the previous worker file in place.
+- **Destination:** Local universe file and D: evidence only; no production, database, app-registry, scheduler or web change.
+
 ## 6. Daily review checklist
 
 1. Open `/workers` → **Daily report**. Require an online scheduler, same-day Schwab capture for every expected ticker and zero failed checks. The report is operational evidence, separate from the LLM morning digest.
