@@ -5610,6 +5610,20 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   TypeScript, production build and diff pass. No production, scheduler, web restart, schema or research-DB change.
   K27 F is accepted independently and does not read the panel. Claude reports the queue clear; no active background tasks.
 
+## 293. Kimi: K31.4 fable1 recovery and chain ids — 2026-11-28T03:27Z
+
+- Final candidate `r1000-panel/20261128T032035Z`; accepted K31.3 is unchanged. **109/113** no-CIK fable1 entities matched
+  with stored evidence (106 CUSIP / three ticker-name-overlap); **37 series / 36 newly priced companies**, 72 keep existing
+  prices, four remain unmatched (including ambiguous KSU). Signed **20/20** review SHA-256 `800082b8…143d`.
+- `px.npz` adds int32 `chain`, -1 where TRC is unusable, incrementing at exclusions and identity/component starts. Ratios
+  across exclusions/segment starts are invalid unless consumers require one unchanged nonnegative chain. Chain gate:
+  **4,829,158** 20-session windows, zero violations, max error **1.42e-13**. Gates 1–6 pass; AMC/BWXT and invalid-ticker
+  qualifications unchanged. Non-target TRC/close and membership exact; artifact hashes pass.
+- Usable-return member weight loss falls **2.798158% → 1.783035%**; no newly lost member days. Full quarter metrics and
+  top-20 recovered companies are in `r1000-coverage/20261128T032125Z/coverage.json` and the K31.4 task report.
+- Lab `de5fdf4`; **24/24** r1000 tests, compile and diff pass. No main source, production build or restart was needed.
+  Main task/K31.3 usage-rule/handoff commit follows. Next after acceptance: K35 nightly coverage, when its spec is ready.
+
 ## 292. Claude: finance-model bake-off; Stocktwits crowd read on gemma4:12b — 2026-11-28T02:20Z
 
 - **Owner's request (2026-11-26):** test two Ollama finance models, an 8B (`vividdream/Qwen-Open-Finance-R-8B`,
