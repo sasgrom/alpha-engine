@@ -170,3 +170,23 @@ _(Kimi appends results per phase here.)_
   Main/lab source commits and the ordinary main push follow. The lab has no `origin` remote.
 - Every K35 job remains disabled. No scheduler/web restart, production, schema, research-database or enablement action.
   Supervised first-night collection and freshness checks are still pending. Claude owns enablement and any restart.
+
+## Delisted-history correction — Kimi, 2026-11-28T11:10Z
+
+- The initial 1,228-price candidate was not accepted. Final panel `20261128T110745Z` has **1,229 priced / 1,405**;
+  all required gates and security types pass. Chain: **4,820,656** finite windows, zero violations, max error
+  **1.42e-13**. Dates/ids and all membership arrays equal accepted K31.5. All artifact hashes independently match.
+- The only array changes are the seven named companies and LESLQ. **ROKU is byte-identical** to K31.5, retaining its
+  Nasdaq history through 2026-11-06 under `delisted, current metadata absent`. LESLQ is truncated at **2026-10-05**:
+  36 OTC bars removed and zero listed bars survive, supported by its SEC 8-K. The former LESL history request returned
+  zero candles, so no substitute was inferred.
+- `security-types/review/history-review-2026-11-28T105604Z.json` records and hashes the raw SEC/provider evidence.
+  Missing metadata requires a reviewed listed history; preferred suffixes cannot use the delisted-history exception.
+  The four OTC second classes stay refused because their companies already have exchange-listed common classes.
+- Final SHA-256: px `36b33081fb53f214aabebedb766b9b0cbac5ebec088a051381b71da96e55c509`; member
+  `d2a207df916a605045d34c7034b15ff2b683bafc6b48f13698411bd4c08614cb`; entities
+  `c943dd32a0a4805541d2ea055be2520a48a54576319e89a19add06b554405601`; gates
+  `b2370e8963e3bc86cebc666d40aa05c219b7403d86706ade94339d1202468d58`.
+- Full lab **37/37**, main TypeScript, **306 files / 1,812 tests**, production build and `git diff --check` pass.
+  All K35 jobs remain disabled; no restart or enablement. Follow-up source commits and main push follow. Supervised
+  first-night collection and freshness checks remain the next phase after Claude's acceptance.

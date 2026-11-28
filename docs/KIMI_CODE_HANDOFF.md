@@ -5714,8 +5714,9 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
   **306 files / 1,812 tests**, TypeScript, production build and `git diff --check` pass. Main/lab source commits and the
   ordinary main push follow; the lab has no `origin` remote.
 - All jobs remain disabled. No scheduler/web restart, production, schema or research-DB action. Four OTC COE class-B
-  lines (FCNCB/FWONB/GLIBB/LLYVB) await Claude's hand-list decision. Supervised first nights/freshness checks are next
-  after delivery; Claude enables accepted jobs and performs any restart. Task file has full evidence.
+  lines (FCNCB/FWONB/GLIBB/LLYVB) are refused because each company is covered by its listed class. The initial panel
+  was not accepted: delisted-history handling is corrected in handoff 300. Supervised first nights/freshness checks
+  are next after delivery; Claude enables accepted jobs and performs any restart. Task file has full evidence.
 
 ## 299. Claude: volume flows — ETF share counts, minute history, daily flows, peers, first screen — 2026-11-28T12:00Z
 
@@ -5741,3 +5742,26 @@ plus business composition; "check into etfs").
 - Gates: `npm run check`, full tests 306 files / 1,812, build, `git diff --check` pass. One scheduler restart follows.
 - Next: which session each ETF count belongs to (after a few days of hourly captures); live flows from the nightly
   prices; desk display (owner to confirm: Flows hall + company page).
+
+
+## 300. Kimi: K35 delisted-history correction — 2026-11-28T11:10Z
+
+- Claude rejected the initial 1,228-price gate as too strict for delisted companies. Final panel
+  `D:/research/alpha-engine/engine/r1000-panel/20261128T110745Z`: **1,229 priced / 1,405**. Overlap, membership, Stooq,
+  identity, calendar, chain and common-equity gates pass; **4,820,656** fully finite chain windows, zero violations,
+  max error **1.42e-13**. Accepted K31.5 `20261128T083333Z` is unchanged.
+- Independent one-pass comparison: dates/ids and all membership arrays match K31.5; close/TRC/TRO/volume/chain differ
+  only for the seven reported companies and LESLQ. **ROKU is byte-identical**, preserving its Nasdaq history through
+  2026-11-06. LESLQ is cut at **2026-10-05** (Nasdaq suspension at the 2026-10-06 open, then Pink Limited): **36 OTC
+  bars removed, zero listed bars survive**. Former-symbol LESL returned zero candles; no history is inferred.
+- Review `security-types/review/history-review-2026-11-28T105604Z.json` is hash-linked to SEC submissions/8-K and Schwab
+  metadata. Missing current metadata requires reviewed listed evidence; preferred suffixes do not masquerade as delisted
+  common. Only proven non-common lines are unpriced. FCNCB/FWONB/GLIBB/LLYVB remain refused as OTC second classes.
+- Artifact SHA-256: px `36b33081fb53f214aabebedb766b9b0cbac5ebec088a051381b71da96e55c509`; member
+  `d2a207df916a605045d34c7034b15ff2b683bafc6b48f13698411bd4c08614cb`; entities
+  `c943dd32a0a4805541d2ea055be2520a48a54576319e89a19add06b554405601`; gates
+  `b2370e8963e3bc86cebc666d40aa05c219b7403d86706ade94339d1202468d58`. All independently recomputed and matched.
+- Announced verification: full lab **37/37**, main TypeScript, **306 files / 1,812 tests**, production build and
+  `git diff --check` pass. Follow-up main/lab commits and ordinary main push follow. The lab has no `origin` remote.
+  Jobs remain disabled; no scheduler/web restart, production, schema or research-DB action. Next: Claude's acceptance,
+  then supervised first-night collection and 20-company freshness checks; Claude owns enablement/restarts.

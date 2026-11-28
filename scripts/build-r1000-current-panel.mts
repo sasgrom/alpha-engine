@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { writeJsonAtomic } from "../worker/lib/json-file";
 import { r1000PanelGatesPass } from "../worker/lib/r1000-current-panel";
@@ -11,6 +11,9 @@ const securityRoot = "D:/research/alpha-engine/index-membership/russell1000/secu
 const latestSecurityTypes = readdirSync(securityRoot).filter(file => /^\d{4}-\d{2}-\d{2}T\d{9}Z\.json$/.test(file)).sort().at(-1);
 const securityTypesFile = arg("--security-types") ?? (latestSecurityTypes ? path.join(securityRoot, latestSecurityTypes) : null);
 if (!securityTypesFile) throw new Error("No dated Russell security-type evidence is available");
+const reviewRoot = path.join(securityRoot, "review");
+const latestReview = existsSync(reviewRoot) ? readdirSync(reviewRoot).filter(file => /^history-review-.*\.json$/.test(file)).sort().at(-1) : undefined;
+const securityReviewFile = arg("--security-review") ?? (latestReview ? path.join(reviewRoot, latestReview) : null);
 const evidenceRoot = "D:/research/alpha-engine";
 const env = {
   ...process.env,
@@ -24,6 +27,7 @@ const env = {
   R1000_UNPRICE_CIKS: "821130",
   R1000_SCHWAB_ROOT: schwabRoot,
   R1000_SECURITY_TYPES: path.resolve(securityTypesFile),
+  ...(securityReviewFile ? { R1000_SECURITY_REVIEW: path.resolve(securityReviewFile) } : {}),
 };
 const result = spawnSync("python", ["src/research/r1000/build_panel.py"], { cwd: labRoot, env, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 if (result.error) throw result.error;

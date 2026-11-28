@@ -152,7 +152,7 @@ export const OPERATION_JOBS: OperationJob[] = [
   job({
     id: "r1000-panel-weekly", name: "Russell 1000 corrected panel", group: "research", mode: "scheduled", cron: "30 6 * * 0", defaultEnabled: false, dependsOn: ["r1000-universe-weekly", "yahoo-actions-r1000-weekly"],
     ...npx("scripts/build-r1000-current-panel.mts", ["--root", "D:/research/alpha-engine/schwab-r1000"]), purpose: "Build a new-stamp Russell 1000 panel with the corrected K31.5 rules and advance current.json only after all six gates plus the chain and common-equity gates pass.",
-    input: "Accepted K31.5 builder/exclusions, current Schwab history, Yahoo actions, fable1 evidence and dated Schwab common-equity classifications.", output: "A new r1000-panel stamp and current.json only on success; the previous pointer survives failure.",
+    input: "Accepted K31.5 builder/exclusions, current Schwab history, Yahoo actions, fable1 evidence, dated Schwab common-equity classifications and hash-linked historical listing/OTC-cutoff reviews.", output: "A new r1000-panel stamp and current.json only on success; the previous pointer survives failure.",
     destination: "Local D: only; no production, scheduler or research-database write.", requirements: ["driveD"], notes: "Disabled until Claude accepts phase 2. Stamps are never overwritten and retention is the owner's.",
   }),
   job({
