@@ -5658,6 +5658,16 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - Full main TypeScript, **302 files / 1,794 tests**, production build and diff pass. Main commit follows. Supervised
   first-night SEC collection/freshness checks remain pending; phase 1 is not claimed accepted. Next: phase 2 sources.
 
+## 297. Kimi: K35 phase 2 disabled implementation verified — 2026-11-28T09:15Z
+
+- R1000-only Schwab, Yahoo actions and split-calendar scopes are implemented with separate D: outputs and unchanged
+  registry defaults. Yahoo preserves raw responses, at most two retries and per-ticker resume/todo evidence.
+- `r1000-panel-weekly` uses K31.5 and moves `current.json` only when overlap, membership, Stooq, identity, calendar and
+  chain gates pass; documented split/invalid-ticker qualifications stay explicit. All four phase 2 jobs are disabled.
+- Focused tests 14/14. Full main TypeScript, **304 files / 1,802 tests**, production build and diff pass. Lab builder
+  accepts `R1000_SCHWAB_ROOT` without changing its default. No Schwab/Yahoo collection or panel build has started.
+- Main source/task/handoff commit follows. Supervised first-night collection remains pending. Next: phase 3 sources.
+
 ## 292. Claude: finance-model bake-off; Stocktwits crowd read on gemma4:12b — 2026-11-28T02:20Z
 
 - **Owner's request (2026-11-26):** test two Ollama finance models, an 8B (`vividdream/Qwen-Open-Finance-R-8B`,

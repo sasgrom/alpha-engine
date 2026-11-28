@@ -53,3 +53,7 @@ export function readSplitCalendar(answer: any): UpcomingSplit[] {
 
 /** The share ratio as a person reads it: "4-for-1", "1-for-20". */
 export const ratioText = (split: Pick<UpcomingSplit, "oldShares" | "newShares">) => `${split.newShares}-for-${split.oldShares}`;
+
+export function splitCalendarUniverseFiles(universeFile?: string | null) {
+  return universeFile ? ["research-universe-53.json", "edgar-universe.json", universeFile] : undefined;
+}

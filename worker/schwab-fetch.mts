@@ -10,7 +10,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statfsSync, wr
 import path from "node:path";
 import { schwabDailyPriceHistoryPath, schwabTokenDirectory } from "./lib/schwab";
 import { createSchwabSession } from "./lib/schwab-paced";
-import { schwabPriceSeries, schwabSymbol } from "./lib/schwab-price-series";
+import { schwabFetchPriceSeries, schwabSymbol } from "./lib/schwab-price-series";
 import { sha256Text } from "./lib/schwab-normalize";
 import { isSchwabBodyOverflow, mergeSchwabChunks, monthlySchwabChunks } from "./lib/schwab-chain-chunks";
 import { schwabChainFile, schwabChunkDirectory, schwabChunkDirectoryFromFile, schwabQuoteFile } from "./lib/schwab-snapshot";
@@ -39,7 +39,7 @@ await session.prepare();
 const excludeFile = arg("--exclude");
 const excluded = new Set(excludeFile ? loadEdgarUniverse(excludeFile).map((company) => company.ticker) : []);
 const candidates = process.argv.includes("--price-series")
-  ? schwabPriceSeries().map((series) => ({ cik: series.priceKey, ticker: series.ticker, name: series.ticker }))
+  ? schwabFetchPriceSeries(universeFile, process.argv.includes("--skip-market-series")).map((series) => ({ cik: series.priceKey, ticker: series.ticker, name: series.ticker }))
   : dedupeExpectationUniverse(loadEdgarUniverse(universeFile));
 const universeAll = candidates.filter((company) => !excluded.has(company.ticker) && (!only || company.ticker === only));
 if (only && !universeAll.length) throw new Error(`Unknown ticker ${only}`);

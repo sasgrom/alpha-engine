@@ -61,3 +61,8 @@ export function schwabPriceSeries(
   }
   return [...byTicker.values()];
 }
+
+export function schwabFetchPriceSeries(universeFile: string, skipMarketSeries: boolean) {
+  const files = universeFile === "research-universe-50.json" ? undefined : [universeFile];
+  return schwabPriceSeries(files, !skipMarketSeries);
+}

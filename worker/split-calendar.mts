@@ -12,12 +12,13 @@
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { isUsListing, ratioText, readSplitCalendar, splitCalendarQuery, type UpcomingSplit } from "./lib/split-calendar";
+import { isUsListing, ratioText, readSplitCalendar, splitCalendarQuery, splitCalendarUniverseFiles, type UpcomingSplit } from "./lib/split-calendar";
 import { schwabPriceSeries } from "./lib/schwab-price-series";
 
 const args = process.argv.slice(2);
 const days = Number(args[args.indexOf("--days") + 1]) || 60;
-const OUT = "D:/research/alpha-engine/prices/split-calendar";
+const OUT = path.resolve(args[args.indexOf("--out") + 1] ?? "D:/research/alpha-engine/prices/split-calendar");
+const universeFiles = splitCalendarUniverseFiles(args[args.indexOf("--universe") + 1] ?? null);
 const HEADERS = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)", Accept: "*/*" };
 const today = new Date().toISOString().slice(0, 10);
 const until = new Date(Date.now() + days * 86_400_000).toISOString().slice(0, 10);
@@ -46,7 +47,7 @@ for (let offset = 0; pages < 8; offset += 250) {
   await wait(2000);
 }
 
-const ours = new Map(schwabPriceSeries().map((series) => [series.ticker.toUpperCase(), series]));
+const ours = new Map(schwabPriceSeries(universeFiles).map((series) => [series.ticker.toUpperCase(), series]));
 const us = all.filter((split) => isUsListing(split.ticker));
 const universe = us.filter((split) => ours.has(split.ticker) || ours.has(split.ticker.replace("-", ".")));
 const summary = {

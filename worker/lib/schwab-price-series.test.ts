@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { schwabPriceSeries, schwabSymbol } from "./schwab-price-series";
+import { schwabFetchPriceSeries, schwabPriceSeries, schwabSymbol } from "./schwab-price-series";
 import { SECTOR_ETF_TICKERS } from "./stooq-price-load";
 
 describe("Schwab price-series universe", () => {
@@ -35,5 +35,13 @@ describe("Schwab price-series universe", () => {
   it("uses the provider's class-share symbol without changing the registry ticker", () => {
     expect(schwabSymbol("BRK.B")).toBe("BRK/B");
     expect(schwabSymbol("BF-B")).toBe("BF/B");
+  });
+
+  it("keeps the fetch default and scopes the r1000 fetch without market funds", () => {
+    expect(schwabFetchPriceSeries("research-universe-50.json", false)).toHaveLength(516);
+    const series = schwabFetchPriceSeries("research-universe-r1000-current.json", true);
+    expect(series).toHaveLength(707);
+    expect(series.some(row => row.ticker === "SPY")).toBe(false);
+    for (const ticker of SECTOR_ETF_TICKERS) expect(series.some(row => row.ticker === ticker)).toBe(false);
   });
 });

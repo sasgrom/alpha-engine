@@ -124,3 +124,15 @@ _(Kimi appends results per phase here.)_
   calendar. No output was written.
 - Full main TypeScript, **302 files / 1,794 tests**, production build and `git diff --check` pass. Main commit follows.
   **Supervised first-night collection and freshness checks are still pending; this is not phase-1 acceptance.**
+
+## Phase 2 implementation — Kimi, 2026-11-28T09:15Z
+
+- `schwabFetchPriceSeries` preserves the 516-series default and scopes r1000 without SPY/sector funds.
+  `split-calendar-r1000` has its own output and explicit universe option; the registry watch is unchanged.
+- `worker/yahoo-r1000-actions.mts` preserves exact raw responses, retries at most twice, resumes per ticker and writes
+  manifest/todo on D:. `scripts/build-r1000-current-panel.mts` uses K31.5 and advances `current.json` only when overlap,
+  membership, Stooq, identity, calendar and chain checks pass; AMC/BWXT and invalid-ticker qualifications stay explicit.
+- `schwab-fetch-r1000`, `yahoo-actions-r1000-weekly`, `split-calendar-r1000` and `r1000-panel-weekly` are registered
+  disabled; operations §22j is updated. The lab builder also accepts `R1000_SCHWAB_ROOT` without changing its default.
+- Focused tests **14/14**. Full main TypeScript, **304 files / 1,802 tests**, production build and `git diff --check`
+  pass. No Schwab/Yahoo collection or panel build has started. Main source/task/handoff commit follows.

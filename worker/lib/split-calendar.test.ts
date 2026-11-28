@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isUsListing, ratioText, readSplitCalendar, splitCalendarQuery } from "./split-calendar";
+import { isUsListing, ratioText, readSplitCalendar, splitCalendarQuery, splitCalendarUniverseFiles } from "./split-calendar";
 
 // the shape of Yahoo's answer, with rows as returned on 2026-11-13
 const answer = {
@@ -35,5 +35,12 @@ describe("Yahoo's split calendar", () => {
 
   it("keeps US listings and drops other exchanges", () => {
     expect(["HUBC", "0381.HK", "PASHUPATI.NS", "EFY.MU", "BRK-B", "NVDA"].filter(isUsListing)).toEqual(["HUBC", "BRK-B", "NVDA"]);
+  });
+
+  it("preserves the default watch and adds the r1000 universe only when requested", () => {
+    expect(splitCalendarUniverseFiles(null)).toBeUndefined();
+    expect(splitCalendarUniverseFiles("research-universe-r1000-current.json")).toEqual([
+      "research-universe-53.json", "edgar-universe.json", "research-universe-r1000-current.json",
+    ]);
   });
 });

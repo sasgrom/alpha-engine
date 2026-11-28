@@ -130,6 +130,32 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local D: only; no production write.", requirements: ["network", "driveD"], notes: "First run 2026-11-13: SNDK 8-for-1 on 2026-11-20. The daily bars job re-bases a series when Schwab re-bases its history; this calendar says which splits to expect. A failed fetch fails the job, so it shows on the desk's operations banner.",
   }),
   job({
+    id: "schwab-fetch-r1000", name: "Schwab Russell 1000 daily prices", group: "options", mode: "scheduled", cron: "10 17 * * 1-5", defaultEnabled: false, dependsOn: ["schwab-fetch-sp500"],
+    ...npx("worker/schwab-fetch.mts", ["--price-series", "--universe", "research-universe-r1000-current.json", "--skip-market-series", "--skip-preferences", "--root", "D:/research/alpha-engine/schwab-r1000"]),
+    purpose: "Capture chains, quotes, daily price history and instruments for the current Russell 1000 and still-listed former companies in a separate archive.",
+    input: "Schwab Market Data Production; research-universe-r1000-current.json; local token file.", output: "D:/research/alpha-engine/schwab-r1000 with atomic per-ticker checkpoints and resume evidence.",
+    destination: "Local D: market-data archive only; no orders, accounts, production or existing archive write.", requirements: ["network", "driveD"], notes: "Weekdays after the S&P fetch, 1,000 ms spacing. Disabled until Claude accepts phase 2. Two item retries then todo and continue.",
+  }),
+  job({
+    id: "yahoo-actions-r1000-weekly", name: "Yahoo Russell 1000 corporate actions", group: "research", mode: "scheduled", cron: "0 6 * * 0", defaultEnabled: false, dependsOn: [],
+    ...npx("worker/yahoo-r1000-actions.mts"), purpose: "Refresh dividends and split events for the current Russell 1000 and still-listed former companies into a new dated archive with per-ticker resume checkpoints.",
+    input: "Yahoo chart events only; research-universe-r1000-current.json.", output: "D:/research/alpha-engine/prices/yahoo/r1000-actions-<stamp>, manifest.json and todo.jsonl.",
+    destination: "Local D: only; no prices for the app and no production write.", requirements: ["network", "driveD"], notes: "Generic client, 1.5 s spacing and at most two retries per ticker before todo. Disabled until Claude accepts phase 2.",
+  }),
+  job({
+    id: "split-calendar-r1000", name: "Upcoming splits · Russell 1000", group: "research", mode: "scheduled", cron: "20 6 * * *", defaultEnabled: false, dependsOn: [],
+    ...npx("worker/split-calendar.mts", ["--universe", "research-universe-r1000-current.json", "--out", "D:/research/alpha-engine/prices/split-calendar-r1000"]),
+    purpose: "Flag upcoming splits for the Russell 1000 universe in a separate calendar without changing the registry calendar.",
+    input: "Yahoo split calendar and the price-series universe including research-universe-r1000-current.json.", output: "D:/research/alpha-engine/prices/split-calendar-r1000/<date>.json and latest.json.",
+    destination: "Local D: only; no production write or registry-calendar replacement.", requirements: ["network", "driveD"], notes: "Disabled until Claude accepts phase 2. Same polite request spacing and failure rules as the registry watch.",
+  }),
+  job({
+    id: "r1000-panel-weekly", name: "Russell 1000 corrected panel", group: "research", mode: "scheduled", cron: "30 6 * * 0", defaultEnabled: false, dependsOn: ["yahoo-actions-r1000-weekly"],
+    ...npx("scripts/build-r1000-current-panel.mts", ["--root", "D:/research/alpha-engine/schwab-r1000"]), purpose: "Build a new-stamp Russell 1000 panel with the corrected K31.5 rules and advance current.json only after all six gates plus the chain gate pass.",
+    input: "Accepted K31.5 builder/exclusions, current Schwab history, Yahoo actions and fable1 evidence.", output: "A new r1000-panel stamp and current.json only on success; the previous pointer survives failure.",
+    destination: "Local D: only; no production, scheduler or research-database write.", requirements: ["driveD"], notes: "Disabled until Claude accepts phase 2. Stamps are never overwritten and retention is the owner's.",
+  }),
+  job({
     id: "desk-snapshot", name: "Desk market snapshot", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-daily-bars"],
     ...npx("scripts/build-desk-snapshot.mts"), purpose: "Rebuild the one precomputed file behind the desk view (market map, screener, earnings, research tools) once the day's closes are stored.",
     input: "Local companies, daily closes (Stooq history, Schwab bars after it), earnings events, short interest, Form 4 rows, the Schwab fundamentals and latest quotes of both archives on D:, and the option features report.", output: "public/reports/desk-snapshot.json and its dist copy: one row per index company with returns, range, fundamentals, earnings dates, option features, plus breadth, sectors and the registry check.",
