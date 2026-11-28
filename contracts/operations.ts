@@ -230,6 +230,18 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local universe file and D: evidence only; no production, database or app-registry write.", requirements: ["network", "driveD"], notes: "Disabled until Claude accepts the universe. CIK uniqueness, exchange resolution, verified common equity and the same-quarter ±5% gate are mandatory; a failed gate keeps the previous file.",
   }),
   job({
+    id: "etf-shares-hourly", name: "ETF share counts (money flows)", group: "research", mode: "scheduled", cron: "7 * * * *", defaultEnabled: true, dependsOn: [],
+    ...npx("worker/etf-shares.mts"), purpose: "Capture the shares outstanding of 51 market, sector and industry ETFs every hour: a fund creates or cancels shares when money comes in or goes out, so the change times the price is a real daily money flow (owner's volume-flows plan, 2026-11-28). Hourly captures around the clock also show when each fund's count changes, which settles the trading day a count belongs to.",
+    input: "Schwab Market Data Production: one batched quotes request (fields quote, fundamental, reference, regular) for the funds in worker/lib/etf-flows.ts; the local token file.", output: "D:/research/alpha-engine/etf-shares: <UTC date>/<HHMM>Z.raw.json as received, shares.jsonl (one compact row per fund and capture, append only), manifest.jsonl (SHA-256 and funds without a count).",
+    destination: "Local D: archive only; research input; no production or database write.", requirements: ["network", "driveD"], notes: "About two seconds and one request. A fund without a count is recorded in the manifest and the run continues; an empty answer fails the run. Nothing is deleted.",
+  }),
+  job({
+    id: "schwab-minute-history-weekly", name: "Schwab 1- and 5-minute history save", group: "research", mode: "scheduled", cron: "0 8 * * 6", defaultEnabled: true, dependsOn: [],
+    ...npx("worker/schwab-minute-history.mts"), purpose: "Save Schwab's rolling intraday history every Saturday before it rolls off: 1-minute bars reach back about 34 sessions and 5-minute bars about 180 (measured 2026-11-28), and the buy/sell split of volume needs bars of five minutes or less (daily bars only restate the day's move).",
+    input: "Schwab Market Data Production pricehistory (frequencyType minute, regular session) for every daily price series plus the ETF funds, one request per symbol and bar size, 1 s apart; the local token file.", output: "D:/research/alpha-engine/schwab-minute/<date>/{1m,5m}/<TICKER>.json as received, manifest.jsonl (candles, first and last bar, SHA-256), todo.json.",
+    destination: "Local D: archive only; research input; no production or database write.", requirements: ["network", "driveD"], notes: "About 1,110 requests and 18 minutes on Saturday morning, when no market-data job runs. A symbol that fails three attempts goes to todo.json and the run moves on; a rerun on the same date keeps the files already written. Weekly saves overlap by design. Nothing is deleted.",
+  }),
+  job({
     id: "news-company-index", name: "News: company index for name resolution", group: "research", mode: "scheduled", cron: "50 5 * * 0", defaultEnabled: true, dependsOn: [],
     ...npx("worker/news-company-index.mts"), purpose: "Rebuild the index the news reader resolves company names with: the SEC's company list with tickers, the Russell 1000 identities with former names, and the registry.",
     input: "https://www.sec.gov/files/company_tickers.json through secGet (kept as received, one file a day at most); index-membership/russell1000/companies.json (K26); alpha_engine.companies (read only).", output: "D:/research/alpha-engine/news/lookup/company-index.json (atomic).",

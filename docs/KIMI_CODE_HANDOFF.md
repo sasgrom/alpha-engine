@@ -5716,3 +5716,28 @@ Owner: "look for the free substitute first" (for analyst estimates), "start step
 - All jobs remain disabled. No scheduler/web restart, production, schema or research-DB action. Four OTC COE class-B
   lines (FCNCB/FWONB/GLIBB/LLYVB) await Claude's hand-list decision. Supervised first nights/freshness checks are next
   after delivery; Claude enables accepted jobs and performs any restart. Task file has full evidence.
+
+## 299. Claude: volume flows — ETF share counts, minute history, daily flows, peers, first screen — 2026-11-28T12:00Z
+
+Owner (2026-11-28): track volume flow per company, peers, sector and the S&P 500, ideally buy vs sell; later
+"go ahead with the volume flows plan"; peers as owner defined them (NVDA/AMD yes, not all four big techs; co-movement
+plus business composition; "check into etfs").
+- Verified facts: Schwab has no trade-by-trade feed (streamer Level 1 is conflated, CHART_EQUITY = 1-minute candles);
+  pricehistory keeps 1-minute bars about 34 sessions, 5-minute about 180. A daily bar's buy/sell estimate agrees with
+  1-minute bars only 0.35 (rank) and is the day's return restated (lab `src/research/flows/agreement.py`).
+- ETF `fundamental.sharesOutstanding` moves in creation units (SPY 50,000) = real money flows; the daily quote archive
+  already holds SPY + 11 sector SPDRs since 2026-11-11.
+- Main (this commit): `worker/lib/etf-flows.ts` (+4 tests, 51 funds), `worker/etf-shares.mts`,
+  `worker/schwab-minute-history.mts`; jobs `etf-shares-hourly` (:07 hourly) and `schwab-minute-history-weekly`
+  (Saturday 08:00), both enabled; OPERATIONS.md §22k. First runs: ETF 51/51 funds; minute save
+  `D:/research/alpha-engine/schwab-minute/2026-11-28` 1,110 files, 0 todo.
+- Lab `src/research/flows/` (a0418b1 … 74a765d): `daily_flows.py` (out `D:/research/alpha-engine/flows/daily/20261128T103317Z`,
+  on panel K31.5 `20261128T083333Z`; groups complete through 2026-11-10 because the panel's S&P part ends there);
+  `etf_nport_fetch.mts` (N-PORT of 48 funds since 2019, `D:/research/alpha-engine/etf-holdings/nport`; SPY/DIA/MDY are
+  unit trusts without N-PORT); `etf_holdings.py` (CUSIP, ISIN fallback). Peers: residual co-movement ≥ 0.30 vs an
+  equal-weighted market, confirmed by a shared industry ETF; NVDA → AVGO, CRDO, MPWR, KLAC, LRCX, AMD.
+- First screen (`flow_screen.py`): no volume signal ranks next-week or next-month returns net of reversal (all
+  |t| < 1.5; one half-sample t 2.09 unstable). Volume flows = desk information, not alpha so far.
+- Gates: `npm run check`, full tests 306 files / 1,812, build, `git diff --check` pass. One scheduler restart follows.
+- Next: which session each ETF count belongs to (after a few days of hourly captures); live flows from the nightly
+  prices; desk display (owner to confirm: Flows hall + company page).

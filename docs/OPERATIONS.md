@@ -1463,6 +1463,27 @@ Frozen — no automated or manual GDELT requests
 - **Phase 3 jobs, both disabled until Claude accepts them:** `r1000-insiders-refresh` (04:00, after `edgar-fetch-r1000`) runs `../alpha-engine-lab/src/insiders/r1000-insiders-refresh.mts` into `insiders/r1000` and `insiders/r1000-price-input`; `finra-short-interest-r1000` (06:25 daily) runs `worker/finra-short-interest.mts --universe research-universe-r1000-current.json --out worker/.runs/r1000-short-interest.json`.
 - **Phase 3 behavior:** the SEC insider parser and builder use a separate registry and roots, the gated `r1000-panel/current.json` close and component-aware Yahoo split indices; no `std_insider_*` table, S&P standard or research-database write. FINRA reads and hash-checks the existing archive and writes only the r1000 file, preserving every verified common-share class.
 
+### 22k. Volume flows: ETF share counts and minute history (added 2026-11-28, Claude)
+
+The owner asked for volume flows per company, peers, sector and the market, ideally split into buying and selling.
+A daily bar cannot split volume (its estimate is the day's price move restated; agreement with 1-minute bars 0.35),
+so two collectors build the history that can: real ETF money flows and minute bars. Research code and results are in
+the lab, `src/research/flows/`.
+
+- **ID:** `etf-shares-hourly` · **Cron:** every hour at :07 · **Enabled by default:** yes.
+- **Command:** `npx tsx worker/etf-shares.mts`
+- **What it does:** one batched Schwab quote request for the 51 funds of `worker/lib/etf-flows.ts` (market, the eleven
+  sector SPDRs, industry funds). `fundamental.sharesOutstanding` changes in whole creation units (SPY: 50,000 shares)
+  when money enters or leaves; change × the regular-session price is the dollar flow. Schwab's `closePrice` after the
+  session equals the regular close; `lastPrice` includes after-hours trades.
+- **Output:** `D:/research/alpha-engine/etf-shares/<UTC date>/<HHMM>Z.raw.json`, `shares.jsonl`, `manifest.jsonl`.
+- **ID:** `schwab-minute-history-weekly` · **Cron:** Saturday 08:00 · **Enabled by default:** yes.
+- **Command:** `npx tsx worker/schwab-minute-history.mts [--date YYYY-MM-DD] [--only TICKER]`
+- **What it does:** saves Schwab's 1-minute (about 34 sessions back) and 5-minute (about 180 sessions) bars for every
+  daily price series and the ETF funds before they roll off. First save 2026-11-28 (1,110 files, 0 failures).
+- **Output:** `D:/research/alpha-engine/schwab-minute/<date>/{1m,5m}/<TICKER>.json`, `manifest.jsonl`, `todo.json`.
+- **Both:** market data only, D: only, nothing deleted; a failing symbol is recorded and skipped.
+
 ## 6. Daily review checklist
 
 1. Open `/workers` → **Daily report**. Require an online scheduler, same-day Schwab capture for every expected ticker and zero failed checks. The report is operational evidence, separate from the LLM morning digest.
