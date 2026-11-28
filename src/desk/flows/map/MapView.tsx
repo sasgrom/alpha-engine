@@ -5,16 +5,16 @@
  */
 import { useMemo, useState, type ReactNode } from "react";
 import { Search, X } from "lucide-react";
-import { FUND_CATEGORY_LABEL, type FlowActivistsFile, type FlowInsidersFile, type FlowPoliticiansFile, type FundCategory, type FlowQuarter, type FundFlowsCompany, type FundFlowsFund, type FundFlowsOverview } from "@contracts/fund-flows";
+import { FUND_CATEGORY_LABEL, type FlowActivistsFile, type FlowInsidersFile, type FlowPoliticiansFile, type FlowTradingFile, type FundCategory, type FlowQuarter, type FundFlowsCompany, type FundFlowsFund, type FundFlowsOverview } from "@contracts/fund-flows";
 import type { ChartPalette } from "../../charts/color";
-import { divergingColor } from "../../charts/color";
+import { divergingColor, tradingColor } from "../../charts/color";
 import { fmtCap, fmtPct, personName } from "../../format";
 import { ACTIVIST_FUNDS, FAMOUS_FACES } from "../hall/famous";
-import { quarterLabel } from "../data";
+import { quarterLabel, timesNormal, weekLabel } from "../data";
 import MoneyMap, { type MapPerson, type MapPick, type MapThread } from "./MoneyMap";
 import { buildMapPlan, initialsOf, placePeople, type Tile } from "./layout";
 
-type Mode = "flow" | "outcome" | "held";
+type Mode = "flow" | "outcome" | "held" | "trading";
 type Group = "famous" | "insiders" | "politicians" | "activists" | FundCategory;
 /** A person standing on a company's tile (an insider, or a 13D filer), as the list and the map show it. */
 interface TileRow { id: number; cik: number; ticker: string; label: string; sub: string; tone: MapPerson["tone"]; right: string; size: number; hover: string[] }
@@ -47,6 +47,8 @@ interface Props {
   insiders: FlowInsidersFile | null | undefined;
   activists: FlowActivistsFile | null | undefined;
   politicians: FlowPoliticiansFile | null | undefined;
+  /** The trading layer ("How it trades"): the file and the week shown, and the layer's own hue. */
+  trading?: { file: FlowTradingFile; week: number; hue: string } | null;
   onPick: (pick: MapPick) => void;
   bar: ReactNode;
   panel: ReactNode | null;
@@ -54,7 +56,14 @@ interface Props {
 }
 
 export default function MapView(props: Props) {
-  const { data, row, mode, deflator, palette, dark, focus, fund, company, fundFile, companyFile, insiders, activists, politicians, onPick } = props;
+  const { data, row, mode, deflator, palette, dark, focus, fund, company, fundFile, companyFile, insiders, activists, politicians, onPick, trading } = props;
+  // the trading layer of the week shown: each company's dollar volume and its ratio to its usual week
+  const traded = useMemo(() => {
+    if (!trading) return null;
+    const w = trading.week;
+    return new Map(trading.file.companies.map(([cik, dollars, vs]) => [cik, { dollars: dollars[w], vs: vs[w] }]));
+  }, [trading]);
+  const tradedSectors = useMemo(() => new Map((trading?.file.sectors ?? []).map((entry) => [entry.sector, entry])), [trading]);
   const [group, setGroup] = useState<Group>("famous");
   const [query, setQuery] = useState("");
 
@@ -79,7 +88,9 @@ export default function MapView(props: Props) {
     const out = new Map<number, string>();
     for (const tile of plan.tiles) {
       const flow = flows.get(tile.cik);
-      if (mode === "held") {
+      if (mode === "trading") {
+        out.set(tile.cik, tradingColor(traded?.get(tile.cik)?.vs ?? null, palette, trading?.hue ?? palette.accent));
+      } else if (mode === "held") {
         const held = flow?.held ?? 0, before = previousHeld.get(tile.cik) ?? 0;
         out.set(tile.cik, divergingColor(held > 0 && before > 0 ? held / before - 1 : null, 0.25, palette));
       } else if (mode === "outcome") {
@@ -90,7 +101,7 @@ export default function MapView(props: Props) {
       }
     }
     return out;
-  }, [plan, flows, previousHeld, mode, deflator, palette]);
+  }, [plan, flows, previousHeld, mode, deflator, palette, traded, trading?.hue]);
 
   const streams = useMemo(() => (mode === "flow" ? row.rotation.filter((link) => link.from !== link.to).sort((a, b) => b.usd - a.usd).slice(0, 10) : []), [row, mode]);
 
@@ -222,6 +233,12 @@ export default function MapView(props: Props) {
   }, [plan, homes, people]);
 
   const districtNote = (name: string) => {
+    if (mode === "trading") {
+      const entry = tradedSectors.get(name), w = trading?.week ?? -1;
+      if (!entry || w < 0) return "";
+      const share = entry.share[w];
+      return [share === null ? null : `${(share * 100).toFixed(1)}% of trading`, entry.vsNormal[w] === null ? null : timesNormal(entry.vsNormal[w])].filter(Boolean).join(" · ");
+    }
     const sector = row.sectors.find((entry) => entry.sector === name);
     if (!sector) return "";
     if (mode === "held") {
@@ -234,6 +251,14 @@ export default function MapView(props: Props) {
   const describeTile = (tile: Tile) => {
     const flow = flows.get(tile.cik), entry = companiesByCik.get(tile.cik);
     const lines = [`${tile.ticker} · ${tile.name}`];
+    if (mode === "trading" && trading) {
+      const week = trading.file.weeks[trading.week], value = traded?.get(tile.cik);
+      lines.push(value?.dollars ? `${weekLabel(week.end)}: ${fmtCap(value.dollars)} traded · ${timesNormal(value.vs)}` : `${weekLabel(week.end)}: no trading stored`);
+      lines.push("Trading has no direction: every share bought was sold");
+      if (entry) lines.push(entry.sector);
+      lines.push("Click: who traded it in the 13F reports");
+      return lines;
+    }
     if (flow) lines.push(`${quarterLabel(row.quarter)}: net ${flow.net < 0 ? "−" : "+"}${fmtCap(Math.abs(flow.net))} · held ${fmtCap(flow.held)}`);
     const before = previousHeld.get(tile.cik);
     if (flow && before) lines.push(`value held ${fmtPct(flow.held / before - 1, 1)} over the quarter (prices and trades)`);
@@ -308,10 +333,11 @@ export default function MapView(props: Props) {
       </aside>
       <div className="desk-map-main">
         <MoneyMap
-          plan={plan} fills={fills} people={people} positions={positions} streams={streams}
+          // in the trading layer the tiles tell the story: the funds' people stay in the list, a chosen one on the map
+          plan={plan} fills={fills} people={mode === "trading" ? people.filter((person) => person.cik === fund) : people} positions={positions} streams={streams}
           selection={{ kind: fund ? "fund" : company ? "company" : null, id: fund ?? company, threads }}
           focus={focus} districtNote={districtNote} describeTile={describeTile} describePerson={describePerson}
-          palette={palette} dark={dark} inset={{ left: 0, right: 0, top: 0, bottom: 0 }} onPick={onPick} quarterKey={`${row.quarter}|${mode}|${deflator}`}
+          palette={palette} dark={dark} inset={{ left: 0, right: 0, top: 0, bottom: 0 }} onPick={onPick} quarterKey={`${row.quarter}|${mode}|${deflator}|${trading?.week ?? ""}`}
         />
       </div>
       <div className="desk-map-foot">{props.foot}</div>

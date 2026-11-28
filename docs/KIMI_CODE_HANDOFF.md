@@ -5765,3 +5765,21 @@ plus business composition; "check into etfs").
   `git diff --check` pass. Follow-up main/lab commits and ordinary main push follow. The lab has no `origin` remote.
   Jobs remain disabled; no scheduler/web restart, production, schema or research-DB action. Next: Claude's acceptance,
   then supervised first-night collection and 20-company freshness checks; Claude owns enablement/restarts.
+
+## 301. Claude: volume flows on the desk — money map "How it trades", company peers and trading strip — 2026-11-28T11:35Z
+
+Owner (2026-11-28): "yes, flows hall and company page".
+- Data: `scripts/build-flow-trading.mts` (+ `worker/lib/flow-trading.ts`, 6 tests) → `worker/.runs/desk-flows/trading.json`
+  and `trading/<cik>.json`. Source: Schwab daily bars in `prices` ('schwab', else 'schwab-hist'; volumes agree), 324
+  sessions 2025-08-15..2026-11-27, 53 weeks; peers from the lab build `flows/daily/20261128T103317Z` (2026-09-30);
+  ETF flows from the daily quote archive (12 funds since 11-11) and `etf-shares.jsonl` (51 funds since 11-28).
+  First build: market week to 11-27 $1.95T (0.98× usual), IT 50.4% of trading, SPY +$7.26B; NVDA week to 11-13 3.87×.
+- Contract: `FlowTradingFile` / `FlowTradingCompany` in `contracts/fund-flows.ts`; read-only procedures
+  `desk.flowsTrading`, `desk.flowsTradingCompany` (needs the web restart below).
+- Desk: money map mode "How it trades" (map only): tiles in one violet hue by week vs usual (blue/red stay money
+  in/out), week timeline, panel with sectors' share, vs usual and SPDR fund flow, fund flows, busiest companies; the
+  13F people pins are hidden in this mode. Company page: measured peers (corr, this week vs usual; industry list only
+  when nothing is measured, labelled; "not available" when the file is missing) and a 60-session trading strip under
+  the price chart. DevNotes updated (no direction; screen found no predictive volume signal).
+- Job `flow-trading` after `schwab-daily-bars`, enabled; OPERATIONS.md §22k.
+- Gates: check, 308 files / 1,821 tests, build, diff --check pass. Web server and scheduler restarted after this commit.

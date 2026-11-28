@@ -370,3 +370,83 @@ export interface FlowPoliticiansFile {
   source: string;
   quarters: Record<string, FlowPoliticianRow[]>;
 }
+
+/**
+ * Trading: how much of each company, sector and the market changed hands, week by week (owner, 2026-11-28: volume flow
+ * per company, peers, sector and the market; scripts/build-flow-trading.mts → worker/.runs/desk-flows/trading.json and
+ * trading/<cik>.json).
+ * - Dollar volume = shares traded × close, from the stored daily Schwab bars (regular session, consolidated volume).
+ * - "Against normal" = the week's dollar volume over what the company usually trades: the week's sessions × the median
+ *   daily dollar volume of the 20 sessions before the week. 1 = a normal week, 2 = twice the usual.
+ * - Daily bars cannot tell buying from selling (every share bought is sold; a split from one bar only restates the
+ *   day's move), so trading has no direction here. Real money in and out comes from ETF share counts (`etf`): a fund
+ *   creates or cancels shares when money arrives or leaves, so a change in its shares outstanding × its price is a
+ *   real flow. Counts are as Schwab reported them between two captures; the session a change belongs to is still
+ *   being measured.
+ */
+export interface FlowTradingWeek {
+  /** The week's last session (YYYY-MM-DD). */
+  end: string;
+  sessions: number;
+}
+export interface FlowTradingSeries {
+  /** Dollar volume per week, null when the company did not trade or was not covered. */
+  dollars: (number | null)[];
+  /** Against normal per week (1 = usual), null without 10 earlier sessions. */
+  vsNormal: (number | null)[];
+}
+export interface FlowTradingSector extends FlowTradingSeries {
+  sector: string;
+  /** Share of all covered companies' dollar volume per week (0..1). */
+  share: (number | null)[];
+  /** The SPDR sector fund that holds the sector. */
+  fund: string;
+}
+export interface FlowEtfFlow {
+  fund: string;
+  group: "market" | "sector" | "industry";
+  covers: string;
+  /** Net dollars in (+) or out (−) per week, null before the counts start. */
+  dollars: (number | null)[];
+  /** First and last capture used. */
+  from: string | null;
+  to: string | null;
+}
+export interface FlowTradingFile {
+  schemaVersion: 1;
+  builtAt: string;
+  latestSession: string;
+  weeks: FlowTradingWeek[];
+  /** Per company of the money map, in the overview's order: [cik, dollars per week, against normal per week]. */
+  companies: [number, (number | null)[], (number | null)[]][];
+  market: FlowTradingSeries & { companies: number[] };
+  sectors: FlowTradingSector[];
+  etf: FlowEtfFlow[];
+  source: string;
+}
+export interface FlowTradingPeer {
+  cik: number;
+  ticker: string;
+  /** Residual daily co-movement after the market over the two years before the quarter end. */
+  corr: number;
+  /** The peer's latest week against normal. */
+  vsNormal: number | null;
+}
+export interface FlowTradingCompany {
+  schemaVersion: 1;
+  builtAt: string;
+  cik: number;
+  ticker: string;
+  sector: string | null;
+  /** The last sessions: date, dollar volume, against the 20 sessions before (1 = usual). */
+  days: [string, number, number | null][];
+  peers: {
+    quarter: string;
+    /** "confirmed": move together and share an industry ETF; "measured-only": the company sits in no industry ETF. */
+    basis: "confirmed" | "measured-only";
+    funds: string[];
+    list: FlowTradingPeer[];
+    /** Peers' combined latest week against normal. */
+    vsNormal: number | null;
+  } | null;
+}

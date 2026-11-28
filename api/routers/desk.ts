@@ -20,7 +20,7 @@ import { z } from "zod";
 import { readDeskOptionChain } from "../services/desk-option-chain";
 import type { DeskCompanyActions, DeskCompanyFilings, DeskCompanyGuidance, DeskCompanyHolders, DeskCompanyInsiders, DeskCompanyStatements, DeskGuidanceMarket, DeskInsiderMarket, DeskScreen } from "@contracts/desk-company";
 import type { EngineFlowCompany, EngineFlowIndex } from "@contracts/engine-flow";
-import type { FlowActivistsFile, FlowInsidersFile, FlowPoliticiansFile, FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
+import type { FlowActivistsFile, FlowInsidersFile, FlowPoliticiansFile, FlowTradingCompany, FlowTradingFile, FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
 import { operationsHealth } from "../../worker/lib/operations-health";
 import { readSourceFreshness } from "../services/source-freshness";
 import { readSecuritySummary } from "../services/security-events";
@@ -54,6 +54,9 @@ export const deskRouter = createRouter({
   flowsActivists: authedQuery.query(() => readFundFlowsFile<FlowActivistsFile>("activists.json")),
   // members of Congress trading our companies (public House and Senate transaction reports), like the overview
   flowsPoliticians: authedQuery.query(() => readFundFlowsFile<FlowPoliticiansFile>("politicians.json")),
+  // how much of each company, sector and the market traded, and the ETF money flows (public market data), like the overview
+  flowsTrading: authedQuery.query(() => readFundFlowsFile<FlowTradingFile>("trading.json")),
+  flowsTradingCompany: authedQuery.input(entity).query(({ input }) => readFundFlowsFile<FlowTradingCompany>(`trading/${input.cik}.json`)),
   companyStatements: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyStatements>(`statements/${input.cik}.json`)),
   companyActions: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyActions>(`actions/${input.cik}.json`)),
   companyHolders: authedQuery.input(entity).query(({ input }) => readDeskCompanyFile<DeskCompanyHolders>(`holders/${input.cik}.json`)),

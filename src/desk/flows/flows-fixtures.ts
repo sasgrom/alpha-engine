@@ -1,5 +1,5 @@
 /** Small fund-flow files for the desk's tests: three quarters, three funds, four companies in two sectors. */
-import type { FlowOutcome, FlowQuarter, FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
+import type { FlowOutcome, FlowQuarter, FlowTradingCompany, FlowTradingFile, FundFlowsCompany, FundFlowsFund, FundFlowsOverview } from "@contracts/fund-flows";
 
 const outcome = (bought: number | null, sold: number | null): FlowOutcome => ({ bought, sold, spread: bought !== null && sold !== null ? bought - sold : null });
 
@@ -126,4 +126,39 @@ export const FLOWS_COMPANY: FundFlowsCompany = {
     { quarter: "2026-06-30", buyers: [{ cik: 2012383, name: "BlackRock", usd: 18e9, kind: "add" }], sellers: [{ cik: 1067983, name: "Berkshire Hathaway", usd: -15e9, kind: "trim" }] },
     { quarter: "2026-03-31", buyers: [{ cik: 2012383, name: "BlackRock", usd: 12e9, kind: "add" }], sellers: [{ cik: 1067983, name: "Berkshire Hathaway", usd: -14e9, kind: "trim" }] },
   ],
+};
+
+/** Two weeks of trading for the four companies, with real ETF flows only in the second week. */
+export const FLOWS_TRADING: FlowTradingFile = {
+  schemaVersion: 1,
+  builtAt: "2026-11-28T12:00:00.000Z",
+  latestSession: "2026-11-27",
+  weeks: [{ end: "2026-11-20", sessions: 5 }, { end: "2026-11-27", sessions: 4 }],
+  companies: [
+    [1045810, [400e9, 270e9], [3.87, 1.36]],
+    [320193, [60e9, 45e9], [1.1, 0.9]],
+    [34088, [20e9, 18e9], [1.0, 1.05]],
+    [93410, [10e9, 9e9], [0.9, 0.95]],
+  ],
+  market: { dollars: [490e9, 342e9], vsNormal: [2.6, 1.2], companies: [4, 4] },
+  sectors: [
+    { sector: "Information Technology", fund: "XLK", dollars: [460e9, 315e9], share: [0.939, 0.921], vsNormal: [3.2, 1.25] },
+    { sector: "Energy", fund: "XLE", dollars: [30e9, 27e9], share: [0.061, 0.079], vsNormal: [0.97, 1.01] },
+  ],
+  etf: [
+    { fund: "SPY", group: "market", covers: "S&P 500", dollars: [null, 7.26e9], from: "2026-11-21T00:38:00.000Z", to: "2026-11-28T09:41:57.535Z" },
+    { fund: "XLK", group: "sector", covers: "information technology", dollars: [null, 1.04e9], from: "2026-11-21T00:38:00.000Z", to: "2026-11-28T09:41:57.535Z" },
+    { fund: "XLE", group: "sector", covers: "energy", dollars: [null, -0.43e9], from: "2026-11-21T00:38:00.000Z", to: "2026-11-28T09:41:57.535Z" },
+  ],
+  source: "test",
+};
+
+export const FLOWS_TRADING_COMPANY: FlowTradingCompany = {
+  schemaVersion: 1,
+  builtAt: "2026-11-28T12:00:00.000Z",
+  cik: 320193,
+  ticker: "AAPL",
+  sector: "Information Technology",
+  days: [["2026-11-24", 14.6e9, 0.95], ["2026-11-25", 19.3e9, 1.21], ["2026-11-27", 8.1e9, 0.5]],
+  peers: { quarter: "2026-09-30", basis: "confirmed", funds: ["SMH", "SOXX"], list: [{ cik: 1045810, ticker: "NVDA", corr: 0.41, vsNormal: 1.36 }, { cik: 99999, ticker: "CRDO", corr: 0.33, vsNormal: null }], vsNormal: 1.3 },
 };

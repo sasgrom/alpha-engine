@@ -443,6 +443,12 @@ export const OPERATION_JOBS: OperationJob[] = [
     destination: "Local file read by the desk; no production write and no database write.", requirements: ["driveD"], notes: "The owner's request of 2026-11-26. Listed stock only, amounts as the reported ranges, re-filed rows counted once, restricted-stock awards left out. About 5 s.",
   }),
   job({
+    id: "flow-trading", name: "Money map: how it trades", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["schwab-daily-bars"],
+    ...npx("scripts/build-flow-trading.mts"), purpose: "Rebuild the money map's trading layer and the company pages' trading strip and measured peers after the evening prices: dollar volume per company, sector and market, week by week against each company's usual day, and the ETF money flows from share counts (owner's request of 2026-11-28).",
+    input: "Local MySQL prices (Schwab daily bars, read only); worker/.runs/desk-flows/overview.json; the newest lab volume-flows peers (D:/research/alpha-engine/flows/daily/<stamp>/peers.json); the daily quote archive and etf-shares.jsonl for ETF share counts.", output: "worker/.runs/desk-flows/trading.json and trading/<cik>.json, read by desk.flowsTrading and desk.flowsTradingCompany.",
+    destination: "Local files read by the desk; no production write and no database write.", requirements: ["mysql", "driveD"], notes: "About 20 s. Trading has no direction (a daily bar cannot split buying from selling); the only real money in and out is the ETF share counts. Peers are measured quarterly in the lab (daily_flows.py), not by this job.",
+  }),
+  job({
     id: "flow-activists", name: "Money map: activists (Schedule 13D)", group: "research", mode: "scheduled", cron: null, defaultEnabled: true, dependsOn: ["edgar-fetch-daily"],
     ...npx("scripts/build-flow-activists.mts"), purpose: "Rebuild the money map's Activists group: the Schedule 13D stakes of more than 5% in our companies, per quarter, new, raised, cut or below 5%.",
     input: "The 13D filings the nightly SEC fetch keeps under worker/cache/edgar (no download), the CUSIP map of index-membership and the flows overview's companies.", output: "worker/.runs/desk-flows/activists.json, read by desk.flowsActivists.",

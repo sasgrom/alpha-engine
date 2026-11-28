@@ -77,6 +77,17 @@ export function divergingColor(value: number | null, limit: number, palette: Cha
   return mixOklab(palette.mid, value >= 0 ? palette.pos : palette.neg, t);
 }
 
+/**
+ * Trading against normal (1 = a usual week): one hue, light to dark, from usual (and below) to four times usual or
+ * more on a log scale. Its own hue, because blue and red mean money in and out on the desk, and trading volume has no
+ * direction.
+ */
+export const TRADING_HUE: Record<ResolvedTheme, string> = { light: "#6a4bc4", dark: "#9a80ee" };
+export function tradingColor(vsNormal: number | null, palette: ChartPalette, hue: string): string {
+  if (vsNormal === null || !Number.isFinite(vsNormal) || vsNormal <= 1) return palette.mid;
+  return mixOklab(palette.mid, hue, Math.min(1, Math.log2(vsNormal) / 2));
+}
+
 /** Symmetric clamp of the diverging scale per return period. */
 export const DIVERGING_LIMIT: Record<string, number> = { d1: 0.03, w1: 0.06, m1: 0.1, m3: 0.2, ytd: 0.3, y1: 0.4 };
 

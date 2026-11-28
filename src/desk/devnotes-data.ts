@@ -74,6 +74,8 @@ export const DEV_NOTES = {
       "The engine's reading for this company.",
       "Exact times for 8-Ks absent from the release calendar: those markers are explicitly filing-date only; calendar releases carry their exact ET publication time.",
       "Analyst consensus: Alpha Vantage's EPS estimates are collected since 25 November 2026 (25 companies a day, all within about three weeks), not shown here yet.",
+      "Peers (since 2026-11-28) are measured: daily moves after the market correlate at 0.30 or more over two years, and the two share an industry ETF (N-PORT holdings). They are measured once a quarter, on the Russell 1000 research panel, so they lag by up to a quarter; a company in no industry ETF shows its measured peers marked as such, one with none shows the largest of its industry, labelled as not measured. A peer outside the index has no trading figure.",
+      "Trading strip under the price chart: the last 60 sessions' dollar volume against the usual day; it has no direction (buying and selling are not split).",
       "News: the last 30 days of stories since collection began on 25 November 2026; “About it” needs the model's reading, the company's own SEC filing or a wire's ticker tag, so a story not yet read shows only under “Every mention” when its company feed returned it. A followed company's News card opens with its brief (owner and NDA reviewers): the morning brief since the previous close and the day's updates, shown for three days.",
     ],
     better: [
@@ -165,8 +167,11 @@ export const DEV_NOTES = {
       "The money map (the main view since 2026-11-26): tiles are sized by the latest quarter's holdings, so a company the funds held only earlier is small or absent in old quarters; at most 60 pins of a group stand on the map; no logos on the tiles yet; the map is not reachable by keyboard (the lists on both sides are).",
       "The map table places a company at today's headquarters (its SEC record keeps no history), so a company that moved, such as Tesla or Oracle to Texas, counts there in earlier quarters too; 23 companies headquartered abroad share one flag.",
       "Leaders: 92 of the largest filers have a leader from public sources (men and women as the sources name them); the other funds stand as wooden mannequins.",
+      "How it trades (added 2026-11-28): dollar volume of the map's companies, week by week, against each company's usual day. It has no direction: a daily bar cannot split buying from selling (its estimate is the day's move restated). Real money in and out shows only for ETFs, from their share counts: SPY and the sector funds since 2026-11-11, 51 funds since 2026-11-28; the session each count belongs to is still being measured. The 3D hall and the reading view do not have this layer.",
+      "Buying against selling from minute bars (the split daily bars cannot make): Schwab's 1-minute bars are saved weekly since 2026-11-28 and 5-minute bars reach back to March 2026, but no buy/sell estimate is built or shown yet.",
     ],
     better: [
+      ["A volume measure that predicts returns", "evidence: a first screen found none, no daily volume measure (own, peers', up-day share) ranked next-week or next-month returns of the Russell 1000, 2019-2026, beyond the known short-term reversal"],
       ["A test of whether following the money pays, with intervals and a hold-out period", "time: the figures shown are a description of 22 quarters, not a test"],
       ["Books that open: a company's page inside the hall with price, reports and the funds around it", "time only"],
       ["Walking the hall by keyboard alone, with every book and person reachable in order", "time; the reading view is the accessible twin until then"],

@@ -20,6 +20,7 @@ import { CompanyNews } from "./company/News";
 import { OptionChainDialog } from "./company/OptionChain";
 import { CompanyRisk } from "./company/Risk";
 import { CompanyStatements } from "./company/Statements";
+import { CompanyPeers, TradingStrip } from "./company/Trading";
 
 type DailyRange = "1M" | "3M" | "6M" | "YTD" | "1Y" | "5Y" | "ALL";
 type Range = "1D" | "5D" | DailyRange;
@@ -211,6 +212,7 @@ export default function CompanyPage() {
           ) : (
             <div className={history.isFetching && history.data ? "desk-refetching" : undefined}>
               {history.isLoading ? <Shimmer height={320} /> : points.length >= 2 ? <PriceChart points={points} events={eventDates} cone={isPresentation ? cone : null} palette={palette} /> : <div className="desk-empty">No stored price history for this range.</div>}
+              <TradingStrip cik={cik} />
             </div>
           )}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10, gap: 12, flexWrap: "wrap" }}>
@@ -299,8 +301,8 @@ export default function CompanyPage() {
             {chainOpen && <OptionChainDialog ticker={company.ticker} onClose={() => setChainOpen(false)} />}
           </Card>
         ) : (
-          <Card className="desk-span-4" title="Peers" subtitle={`${company.industry ?? company.sector} · largest first`}>
-            <PeerList peers={peers} />
+          <Card className="desk-span-4" title="Peers" subtitle="Measured: daily moves together, beyond the market · correlation · this week's trading">
+            <CompanyPeers cik={cik} fallback={peers} />
           </Card>
         )}
 
@@ -323,8 +325,8 @@ export default function CompanyPage() {
 
         <CompanyInsiders cik={cik} />
 
-        <Card className="desk-span-5" title={isPresentation && company.options ? "Peers" : "Compared with the index"} subtitle={isPresentation && company.options ? `${company.industry ?? company.sector} · largest first` : "Returns of this company, its sector and the S&P 500"}>
-          {isPresentation && company.options ? <PeerList peers={peers} /> : <Comparison company={company} />}
+        <Card className="desk-span-5" title={isPresentation && company.options ? "Peers" : "Compared with the index"} subtitle={isPresentation && company.options ? "Measured: daily moves together, beyond the market · correlation · this week's trading" : "Returns of this company, its sector and the S&P 500"}>
+          {isPresentation && company.options ? <CompanyPeers cik={cik} fallback={peers} /> : <Comparison company={company} />}
         </Card>
 
         <CompanyStatements cik={cik} />
@@ -335,26 +337,6 @@ export default function CompanyPage() {
       </div>
 
       <DevNotes page="company" />
-    </div>
-  );
-}
-
-function PeerList({ peers }: { peers: DeskCompany[] }) {
-  if (!peers.length) return <div className="desk-empty">No peers in the index.</div>;
-  return (
-    <div>
-      {peers.map((peer) => (
-        <CompanyLink key={peer.cik} company={peer} className="desk-list-row">
-          <span className="desk-list-main">
-            <span className="desk-ticker" style={{ minWidth: 52 }}>{peer.ticker}</span>
-            <span className="name">{peer.name}</span>
-          </span>
-          <span className="desk-list-side">
-            <span className="desk-muted" style={{ fontSize: 12 }}>{fmtCap(peer.marketCap)}</span>
-            <Delta value={peer.returns.d1} digits={2} />
-          </span>
-        </CompanyLink>
-      ))}
     </div>
   );
 }

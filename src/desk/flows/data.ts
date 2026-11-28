@@ -30,6 +30,28 @@ export function useFlowsPoliticians(enabled = true) {
   return trpc.desk.flowsPoliticians.useQuery(undefined, { ...LONG, enabled });
 }
 
+/** The trading layer: weekly dollar volume per company, sector and market, and the ETF money flows. */
+export function useFlowsTrading(enabled = true) {
+  return trpc.desk.flowsTrading.useQuery(undefined, { ...LONG, enabled });
+}
+
+/** One company's last sessions of trading and its measured peers (the company page's strip). */
+export function useFlowsTradingCompany(cik: number | null) {
+  return trpc.desk.flowsTradingCompany.useQuery({ cik: cik ?? 0 }, { ...LONG, enabled: !!cik });
+}
+
+/** "2026-11-27" → "week to 27 Nov". */
+export function weekLabel(end: string): string {
+  const date = new Date(`${end}T12:00:00Z`);
+  return `week to ${date.getUTCDate()} ${date.toLocaleString("en-US", { month: "short", timeZone: "UTC" })}`;
+}
+
+/** 1.42 → "1.4× normal"; null → "—". */
+export function timesNormal(value: number | null | undefined): string {
+  if (value === null || value === undefined) return "—";
+  return `${value >= 10 ? value.toFixed(0) : value.toFixed(value >= 3 ? 1 : 2)}× normal`;
+}
+
 export function useFlowsCompany(cik: number | null) {
   return trpc.desk.flowsCompany.useQuery({ cik: cik ?? 0 }, { ...LONG, enabled: !!cik });
 }

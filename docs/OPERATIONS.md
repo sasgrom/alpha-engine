@@ -1483,6 +1483,16 @@ the lab, `src/research/flows/`.
   daily price series and the ETF funds before they roll off. First save 2026-11-28 (1,110 files, 0 failures).
 - **Output:** `D:/research/alpha-engine/schwab-minute/<date>/{1m,5m}/<TICKER>.json`, `manifest.jsonl`, `todo.json`.
 - **Both:** market data only, D: only, nothing deleted; a failing symbol is recorded and skipped.
+- **ID:** `flow-trading` · **Runs after:** `schwab-daily-bars` · **Enabled by default:** yes.
+- **Command:** `npx tsx scripts/build-flow-trading.mts`
+- **What it does:** the desk's display (owner, 2026-11-28: "flows hall and company page"). Dollar volume per company,
+  sector and market, week by week, against each company's usual day (median of the 20 sessions before the week);
+  ETF money flows per week from the share counts; each company's last 130 sessions and its measured peers.
+- **Output:** `worker/.runs/desk-flows/trading.json` and `trading/<cik>.json`, read by `desk.flowsTrading` and
+  `desk.flowsTradingCompany` (the money map's "How it trades" and the company page's Peers card and trading strip).
+- **Peers** come from the newest lab build `D:/research/alpha-engine/flows/daily/<stamp>/peers.json` (measured
+  co-movement confirmed by a shared industry ETF); refresh them by rerunning `etf_holdings.py` and `daily_flows.py`
+  in the lab after new N-PORT quarters.
 
 ## 6. Daily review checklist
 

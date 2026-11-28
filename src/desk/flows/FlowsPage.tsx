@@ -12,7 +12,9 @@ import { useDesk, useDocumentTitle } from "../context";
 import { DevNotes } from "../DevNotes";
 import { fmtCap, fmtDate, fmtPct } from "../format";
 import { FlowTape, FlowTimeline, RotationDiagram } from "./charts";
-import { deflatorSince, quarterLabel, quarterSentence, standingOf, useFlowsCompany, useFlowsActivists, useFlowsFund, useFlowsInsiders, useFlowsOverview, useFlowsPoliticians, type Who } from "./data";
+import { deflatorSince, quarterLabel, quarterSentence, standingOf, timesNormal, useFlowsCompany, useFlowsActivists, useFlowsFund, useFlowsInsiders, useFlowsOverview, useFlowsPoliticians, useFlowsTrading, weekLabel, type Who } from "./data";
+import { TradingLegend, TradingPanel, WeekTimeline } from "./map/TradingParts";
+import { TRADING_HUE } from "../charts/color";
 import type { StageSelection, StageTarget } from "./hall/stage";
 import type { HallRest } from "./Library3D";
 import type { StreamPart } from "./hall/streams";
@@ -28,7 +30,7 @@ const TOUR_KEY = "alpha.desk.flows.tour";
 // the money map is the main view since 2026-11-26 (owner: "create new look per your recommendations"); the 3D library
 // stays as it was ("leave 3d as it is done, let it survive for now")
 type View = "map" | "library" | "reading";
-type Mode = "flow" | "outcome" | "held";
+type Mode = "flow" | "outcome" | "held" | "trading";
 type Tab = "quarter" | "find" | "selected";
 
 function useFlowState(overview: FundFlowsOverview | null | undefined) {
@@ -67,7 +69,8 @@ export default function FlowsPage() {
   const viewParam = params.get("view");
   const view: View = viewParam === "reading" ? "reading" : viewParam === "library" && canWalk ? "library" : "map";
   const show = params.get("show");
-  const mode: Mode = show === "outcome" ? "outcome" : show === "held" ? "held" : "flow";
+  // "How it trades" lives on the map only; the 3D library and the reading view keep the 13F colours
+  const mode: Mode = show === "outcome" ? "outcome" : show === "held" ? "held" : show === "trading" && view === "map" ? "trading" : "flow";
   const real = params.get("real") === "1";
   const audience = params.get("audience") === "people" ? "people" : "funds";
   const whoParam = params.get("who");
@@ -83,7 +86,8 @@ export default function FlowsPage() {
   // The details panel opens with a selection (a fund or a company: who traded what) and keeps the hall to itself
   // otherwise; the reader can open or close it by hand, and a new selection takes it back.
   const [panelChoice, setPanelChoice] = useState<{ open: boolean; key: string } | null>(null);
-  const panelOpen = panelChoice && panelChoice.key === selectionKey ? panelChoice.open : Boolean(selectionKey);
+  // the trading layer opens with its week's table (sectors, fund flows, busiest companies) beside the map
+  const panelOpen = panelChoice && panelChoice.key === selectionKey ? panelChoice.open : Boolean(selectionKey) || mode === "trading";
   const togglePanel = () => setPanelChoice({ open: !panelOpen, key: selectionKey });
   const [helpOpen, setHelpOpen] = useState(false);
   const [displayOpen, setDisplayOpen] = useState(false);
@@ -163,6 +167,10 @@ export default function FlowsPage() {
   const insiders = useFlowsInsiders(flowsOpen && view === "map");
   const activists = useFlowsActivists(flowsOpen && view === "map");
   const politicians = useFlowsPoliticians(flowsOpen && view === "map");
+  const tradingFile = useFlowsTrading(flowsOpen && view === "map" && mode === "trading");
+  const weekCount = tradingFile.data?.weeks.length ?? 0;
+  const weekParam = params.get("wk");
+  const weekIndex = weekCount ? Math.max(0, (tradingFile.data!.weeks.findIndex((entry) => entry.end === weekParam) + 1 || weekCount) - 1) : -1;
 
   // the hall runs edge to edge and fills the window below the header and any banners (an operations alert or the
   // view-as line would otherwise push its bottom out of sight): the stylesheet needs the width of the window without
@@ -283,7 +291,7 @@ export default function FlowsPage() {
       label="What the colour shows"
       value={mode}
       onChange={(next) => set({ show: next === "flow" ? null : next })}
-      options={[{ value: "flow", label: "Where it went" }, { value: "outcome", label: "What it earned" }, { value: "held", label: "What is held" }]}
+      options={[{ value: "flow", label: "Where it went" }, { value: "outcome", label: "What it earned" }, { value: "held", label: "What is held" }, ...(view === "map" ? [{ value: "trading" as Mode, label: "How it trades" }] : [])]}
     />
   );
   const inflation = (
@@ -305,7 +313,7 @@ export default function FlowsPage() {
   const panel: ReactNode = (
     <>
       <div className="desk-lib-tabs" role="tablist" aria-label="Panel">
-        <button type="button" role="tab" aria-selected={tab === "quarter"} onClick={() => setTab("quarter")}>{quarterLabel(row.quarter)}</button>
+        <button type="button" role="tab" aria-selected={tab === "quarter"} onClick={() => setTab("quarter")}>{mode === "trading" && tradingFile.data && weekIndex >= 0 ? weekLabel(tradingFile.data.weeks[weekIndex].end).replace(/^week/, "Week") : quarterLabel(row.quarter)}</button>
         <button type="button" role="tab" aria-selected={tab === "find"} onClick={() => setTab("find")}>Find a player</button>
         {(fund || company) && (
           <button type="button" role="tab" aria-selected={tab === "selected"} onClick={() => setTab("selected")}>
@@ -317,7 +325,13 @@ export default function FlowsPage() {
         )}
       </div>
       <div className="desk-lib-panel-body">
-        {tab === "quarter" && <QuarterPanel overview={data} row={row} focus={sector} nav={nav} deflator={deflator} />}
+        {tab === "quarter" && mode === "trading" && tradingFile.data && weekIndex >= 0 && (
+          <TradingPanel file={tradingFile.data} week={weekIndex} tickers={new Map(data.companies.map((entry) => [entry.cik, entry.ticker]))} focus={sector} onSector={(name) => nav.sector(name)} onCompany={(cik) => nav.company(cik)} />
+        )}
+        {tab === "quarter" && mode === "trading" && !tradingFile.data && (
+          <p className="desk-muted" style={{ fontSize: 12.5 }}>{tradingFile.isLoading ? "Loading the trading figures…" : "The trading file is not built yet (scripts/build-flow-trading.mts)."}</p>
+        )}
+        {tab === "quarter" && mode !== "trading" && <QuarterPanel overview={data} row={row} focus={sector} nav={nav} deflator={deflator} />}
         {tab === "find" && <CatalogPanel overview={data} nav={nav} />}
         {tab === "selected" && fund && <FundPanel cik={fund} quarter={row.quarter} latest={data.latestQuarter} nav={nav} palette={palette} />}
         {tab === "selected" && company && <CompanyPanel cik={company} quarter={row.quarter} nav={nav} palette={palette} />}
@@ -340,12 +354,20 @@ export default function FlowsPage() {
       else if (pick.kind === "sector") set({ sector: pick.name === sector ? null : pick.name, fund: null, company: null });
       else set({ fund: null, company: null });
     };
+    const tradingData = mode === "trading" && tradingFile.data && weekIndex >= 0 ? tradingFile.data : null;
+    const hue = TRADING_HUE[theme.resolved === "dark" ? "dark" : "light"];
     const bar = (
       <>
         <div>
           <h1>Money map</h1>
           <p>
-            <strong>{quarterLabel(row.quarter)}</strong> · {row.funds} funds · bought <strong>{fmtCap(row.bought)}</strong> · sold <strong>{fmtCap(row.sold)}</strong>
+            {tradingData ? (
+              <><strong>{weekLabel(tradingData.weeks[weekIndex].end)}</strong> · {tradingData.market.companies[weekIndex]} companies traded <strong>{fmtCap(tradingData.market.dollars[weekIndex] ?? 0)}</strong> · {timesNormal(tradingData.market.vsNormal[weekIndex])}</>
+            ) : mode === "trading" ? (
+              <>{tradingFile.isLoading ? "Loading the trading figures…" : "The trading file is not built yet"}</>
+            ) : (
+              <><strong>{quarterLabel(row.quarter)}</strong> · {row.funds} funds · bought <strong>{fmtCap(row.bought)}</strong> · sold <strong>{fmtCap(row.sold)}</strong></>
+            )}
             {sector ? <> · <button type="button" className="desk-lib-chip" onClick={() => nav.sector(null)} aria-label={`Clear: ${sector}`}>{sector} <X size={12} aria-hidden="true" /></button></> : null}
           </p>
         </div>
@@ -359,7 +381,16 @@ export default function FlowsPage() {
         </div>
       </>
     );
-    const foot = (
+    const foot = tradingData ? (
+      <>
+        <div className="desk-lib-time">
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <WeekTimeline file={tradingData} selected={weekIndex} onSelect={(index) => set({ wk: index === tradingData.weeks.length - 1 ? null : tradingData.weeks[index].end })} palette={palette} hue={hue} />
+          </div>
+        </div>
+        <TradingLegend palette={palette} hue={hue} />
+      </>
+    ) : (
       <>
         <div className="desk-lib-time">
           {playButton}
@@ -375,6 +406,7 @@ export default function FlowsPage() {
             data={data} row={row} mode={mode} deflator={deflator} palette={palette} dark={theme.resolved === "dark"}
             focus={sector} fund={fund} company={company}
             fundFile={fundFile.data ?? undefined} companyFile={companyFile.data ?? undefined} insiders={insiders.data} activists={activists.data} politicians={politicians.data}
+            trading={tradingData ? { file: tradingData, week: weekIndex, hue } : null}
             onPick={onMapPick} bar={bar} foot={foot} panel={panelOpen ? panel : null}
           />
         </Suspense>
@@ -399,7 +431,7 @@ export default function FlowsPage() {
       <>
         <div className="desk-lib" ref={hall} data-full={full ? "on" : undefined}>
           <Suspense fallback={<div className="desk-lib-stage"><Shimmer height={520} /></div>}>
-            <Library3D overview={data} row={row} mode={mode} real={real} focus={sector} selection={selection} dark={theme.resolved === "dark"} palette={palette} rest={rest.view} restTick={rest.tick} inset={panelOpen ? 412 : 0} insetBottom={tour !== null && story[tour] ? 210 : 110} game={full} who={who} audience={audience} streams={mode === "held" ? "all" : streams} onPick={onPick} />
+            <Library3D overview={data} row={row} mode={mode === "trading" ? "flow" : mode} real={real} focus={sector} selection={selection} dark={theme.resolved === "dark"} palette={palette} rest={rest.view} restTick={rest.tick} inset={panelOpen ? 412 : 0} insetBottom={tour !== null && story[tour] ? 210 : 110} game={full} who={who} audience={audience} streams={mode === "held" ? "all" : streams} onPick={onPick} />
           </Suspense>
           {full && <div className="desk-lib-keys" aria-hidden="true">Drag to turn · scroll to move in · <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> to walk · <kbd>Esc</kbd> to leave</div>}
           <header className="desk-lib-bar">
